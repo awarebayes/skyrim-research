@@ -7,7 +7,8 @@ Describe the result, exact target/source revisions, reproduction and limitations
 - [ ] I read LEGAL.md, PROVENANCE.md and the licensing scope, and can contribute this material.
 - [ ] No game bytes, raw exports, dumps, proprietary symbols, assets, secrets or unlicensed code.
 - [ ] External sources, AI assistance and source exposure are declared.
-- [ ] Any reconstructed source or implementation transfer has explicit maintainer review.
+- [ ] Any reconstructed source meets the acceptance rule in `docs/verification.md` (including a
+  Reviewer `approve`); any implementation transfer has the `docs/clean-room.md` boundary review.
 - [ ] Progress describes real results; infrastructure CI is not presented as a Skyrim match.
 
 ## Validation

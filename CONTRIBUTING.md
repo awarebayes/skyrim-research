@@ -31,6 +31,9 @@ then recover one small function. Do not add dummy matches to make the website lo
 
 ## Publication
 
-Maintainer review is required before publishing reconstructed game functions or approving
-behavior specifications for transfer. Keep executable-building tools separate if pursued later,
+Reconstructed game functions are published only when accepted under the acceptance rule in
+`docs/verification.md`: reproduced comparator pass, approval by a fresh Reviewer subagent that
+checks plausibility and provenance, and integration. Do not ask the maintainer to review
+individual functions; escalate only as that rule lists. Approving behavior specifications for
+transfer to Mudcrab still needs the boundary review in `docs/clean-room.md`. Keep executable-building tools separate if pursued later,
 with a fresh review of scope and publication policy. No such builder exists here today.

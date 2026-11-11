@@ -125,8 +125,10 @@ Prerequisite: step 3. All initial fixtures can be original synthetic inputs.
 - [ ] Reproduce the checks independently. Implement report/source consistency checks for CI.
 
 **Finish when:** synthetic positive and negative cases establish what the comparator checks,
-and a reviewer can reproduce them. The public `matched` gate remains disabled until the real
-comparison in step 5 is also reproduced and reviewed. A hand-authored success flag is insufficient.
+and another host or agent can reproduce them. The public `matched` gate remains disabled until
+the real comparison in step 5 is also reproduced and the gate change passes its own Reviewer pass
+under the [acceptance rule](verification.md#acceptance-rule). A hand-authored success flag is
+insufficient.
 
 ## 5. Reconstruct and accept the first real function
 
@@ -142,10 +144,14 @@ Prerequisites: steps 2, 3 and 4.
   Permission to use an AI agent does not by itself authorize uploading game-derived material.
 - [ ] If it will not match, investigate types, ABI, compiler choice and optimization settings.
   Record a blocked experiment when appropriate; do not weaken the comparison to claim success.
-- [ ] Have the maintainer review provenance/publication of reconstructed source and independently
-  rerun the real comparison against the pinned source, recipe and image.
-- [ ] Land a reviewed gate/schema change tying accepted reports to integrated source. Require
-  the reproduction and negative tests from step 4; then accept the function as `matched`.
+- [ ] Reproduce the real comparison on a second verifier host against the pinned source, recipe
+  and image.
+- [ ] Land the gate/schema change tying accepted reports to integrated source (Engineer, with the
+  reproduction and negative tests from step 4, plus a separate Reviewer pass on the change).
+- [ ] Have a fresh Reviewer subagent check the reconstructed source for plausibility, name
+  origins and provenance; then integrate, rerun checks and verifier, and record it as `matched`
+  under the [acceptance rule](verification.md#acceptance-rule). The maintainer is not asked to
+  review the function; escalate only as that rule lists.
 
 **Finish when:** one integrated function has a reproducible accepted report and public metadata
 passes validation. Only then should the site display its first accepted match. A byte match
@@ -180,8 +186,9 @@ negative result narrows it. Behavior research does not increase byte-match count
 - [ ] Add historical charts, contributor/model credit and cost records only from real accepted
   records, with metric definitions and dates. Git history remains the audit trail.
 - [ ] If running multiple agents later, define claims, ownership, expiry and integration checks
-  before dispatch. Each match must be rechecked after integration; private inputs stay isolated
-  from untrusted public PR jobs.
+  before dispatch. Each match must be rechecked after integration and pass Reviewer approval; run
+  the sampling safeguard from [verification](verification.md#acceptance-rule). Private inputs stay
+  isolated from untrusted public PR jobs.
 
 **Finish when:** a second researcher can reproduce the pilot and new work uses the same evidence
 contract. Full executable building is a separate future project, not part of this first milestone.
@@ -200,8 +207,10 @@ python3 tools/build_site.py
 git diff --cached --check
 ```
 
-3. Review staged content for provenance, private data and secrets, then commit/push through the
-   normal review process. Keep raw outputs under `.local/`. GitHub Actions publishes the report.
+3. Review staged content for provenance, private data and secrets, then commit and push (the
+   integrating Engineer, or the orchestrator when run with a shell); reconstructed functions also
+   need the acceptance rule in [verification](verification.md#acceptance-rule). No per-commit
+   maintainer review. Keep raw outputs under `.local/`. GitHub Actions publishes the report.
 4. Close an issue only when its acceptance criteria and public evidence are satisfied. A website
    deployment or passing infrastructure tests alone does not close a research task.
 

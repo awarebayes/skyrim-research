@@ -29,8 +29,10 @@ of the linked project's practices or a license to reproduce its contents.
 ## Research publication and source reconstruction
 
 Original tooling, factual metadata, reviewed explanations and synthetic fixtures are the intended
-public outputs. Reconstructed game implementations need explicit maintainer provenance review
-before publication; their copyright status is not settled by matching bytes or withholding binaries.
+public outputs. Reconstructed game implementations need a provenance review before publication,
+done per function by a Reviewer subagent under the acceptance rule in `docs/verification.md`, with
+provenance or legal doubt escalated to the maintainer, who sets the publication policy. Their
+copyright status is not settled by matching bytes or withholding binaries.
 Nothing in this repository grants third-party rights. See `LICENSE` for the narrow infrastructure
 license; do not label the entire repository MIT or copy FNV code, which has no license grant.
 Contributor authorship alone does not establish rights to all underlying material.
