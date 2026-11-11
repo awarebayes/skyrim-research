@@ -26,10 +26,12 @@ byte match, or edit `docs/authorizations.md`.
   or the acceptance rule. Start it fresh (never a fork); never send it a function that the same
   agent drafted or triaged. Its brief names the task id, the functions as `(build id, RVA, size)`,
   the source revision and paths, the report paths, and the gates in force (G2 is required). It
-  returns its review as text; have the integrating Engineer save it verbatim to
-  `.local/reviews/<task-id>.md` and, on `approve`, run `tools/accept_function.py`, which writes
-  the sanitized verdict record beside the report and sets the entry to `matched` only if the
-  validator accepts it. When G2 is granted, give the Reviewer the paths of the function's private
+  returns its review as text; the integrating Engineer passes that text to
+  `tools/accept_function.py --all-approved --review -` (stdin, or a saved transcript outside the
+  repository), which saves it to `.local/reviews/<task-id>.md`, writes the sanitized verdict
+  records beside the reports and sets the approved entries to `matched` only if the validator
+  accepts the result. For accepted functions whose unit changed (`tools/check.py` reports them as
+  stale), brief the Reviewer for a delta review from `tools/review_packet.py --stale`. When G2 is granted, give the Reviewer the paths of the function's private
   decompiler output and listing so it can judge "pasted decompiler output" against them.
 
 Give code-writing workers `isolation: "worktree"` when more than one may edit the repo at once.

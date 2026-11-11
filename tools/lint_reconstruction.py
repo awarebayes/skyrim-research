@@ -5,7 +5,8 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
 
 - layout: `reconstruction/<area>/<Class>.h` and `.cpp` with a lowercase area and a class-named
   file; the .cpp includes its own header by quoted name and the header declares the class;
-  recipes are `reconstruction/recipes/*.json`; README.md is the only other file;
+  recipes are `reconstruction/recipes/*.json`; README.md and the generated INDEX.md are the only
+  other files;
 - banned constructs, checked on the spliced logical lines of tools/source_digest.py (backslash-
   newline joined first) and on all text alike, comments and literals included: there is no
   lexer to mislead, so a word in prose is refused too (over-refusal is the accepted direction).
@@ -16,7 +17,13 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   separators (`1'000`, refused so that no literal can hide from the byte-list rule), string
   literals of `\\x` escapes, and braced lists of eight or more byte-sized integer or character
   literals; `#pragma` other than `once`, `pack` and `warning` (the rest steer code generation
-  only), and any `#pragma` line whose first word is not plainly one of those;
+  only), and any `#pragma` line whose first word is not plainly one of those; universal
+  character names (`\\u`, `\\U`) anywhere;
+- justified constructs: `__forceinline`, `[[msvc::...]]` attributes and codegen intrinsics
+  (`INTRINSICS`) only with a `//` comment of three or more words on the same or previous line;
+- name-origin labels: in a file whose leading comment says `Labels: v2`, every label is on a
+  `// <names>: <LABEL> [<LABEL>...][; note]` line, LABEL being `COMMUNITY(<owner>/<repo>@<rev>,
+  <licence>)`, `GUESS`, `GUESS(low|medium|high)`, `EXE_RTTI`, `STANDIN` or `OBSERVED`;
 - header comment fields: the leading comment block names the pinned build id and a `Source
   exposure:` category from PROVENANCE.md; a .cpp also gives `RVA 0x...`, `<n> bytes`,
   `Evidence:` with an existing findings/ or reports/ path, `Drafted by` and `Recipe:` with an
@@ -62,8 +69,35 @@ BANNED = (
     # with a letter and are not matched.
     (re.compile(r"(?<![A-Za-z0-9_.])\.?\d[0-9A-Za-z_.]*'[0-9A-Za-z]"), "digit separator (')"),
     (re.compile(r'"(?:[^"\\\n]|\\.)*(?:\\x[0-9A-Fa-f]{1,2}(?:[^"\\\n]|\\.)*){4,}"'), 'string of \\x byte escapes'),
+    # A universal character name can spell any character of an identifier or literal in a way the
+    # other rules do not read; nothing in a reconstruction needs one.
+    (re.compile(r'\\[uU]'), 'universal character name (\\u or \\U escape)'),
 )
+# Allowed only with a justification comment on the same or the previous line, because they steer
+# code generation without changing what the code means; the Reviewer judges the justification.
+INTRINSICS = (r'__builtin_\w+|_mm\d*_\w+|_Interlocked\w+|_BitScan\w+|_bittest\w*|__assume|__noop|__nop'
+              r'|_ReturnAddress|_AddressOfReturnAddress|__debugbreak|__fastfail|__(?:read|write)(?:fs|gs)\w+'
+              r'|__movs[bdwq]|__stos[bdwq]|_rot[lr]\w*|__rdtsc\w*|__cpuid\w*|__lzcnt\w*|__popcnt\w*'
+              r'|_byteswap_\w+|__umulh|__mulh|_u?mul128|__shift(?:left|right)128|_addcarry\w*|_subborrow\w*'
+              r'|__faststorefence|_ReadWriteBarrier|_ReadBarrier|_WriteBarrier|__prefetch\w*')
+JUSTIFIED = (
+    (re.compile(r'(?<![A-Za-z0-9_])__forceinline(?![A-Za-z0-9_])'), '__forceinline'),
+    (re.compile(r'\[\[\s*msvc\s*::'), '[[msvc::...]] attribute'),
+    (re.compile(rf'(?<![A-Za-z0-9_])(?:{INTRINSICS})(?![A-Za-z0-9_])'), 'codegen intrinsic'),
+)
+JUSTIFICATION = re.compile(r'//\s*(\S+\s+){2,}\S')
 DECLSPEC = re.compile(r'(?<![A-Za-z0-9_])__declspec\s*\(')
+# Name-origin label grammar, enforced in files whose leading comment says `Labels: v2`
+# (docs/drafter-card.md). Older units keep free-form labels: editing them would change their
+# digests and reopen accepted matches.
+LABELS_VERSION = re.compile(r'\bLabels:\s*v(\d+)\b')
+LABEL = (r'(?:COMMUNITY\([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{7,40}, [A-Za-z0-9.+-]+\)'
+         r'|GUESS(?:\((?:low|medium|high)\))?|EXE_RTTI|STANDIN|OBSERVED)')
+LABEL_LINE = re.compile(rf'^\s*//\s*(?P<names>\S(?:.*?\S)?)\s*:\s*(?P<labels>{LABEL}(?:\s+{LABEL})*)'
+                        r'\s*(?:;\s*(?P<note>.*))?$')
+LABEL_WORD = re.compile(r'(?<![A-Za-z0-9_])(?:COMMUNITY|GUESS|EXE_RTTI|STANDIN|OBSERVED)[A-Za-z0-9_]*'
+                        r'|(?<![A-Za-z0-9_])(?:EXE[- ]RTTI|STAND[- _]IN)(?![A-Za-z0-9_])')
+ORIGIN_LABEL = re.compile(r'COMMUNITY\(|GUESS|EXE_RTTI|OBSERVED')
 DEFINE = re.compile(r'^[ \t]*#[ \t]*define\b(.*)$', re.M)
 DEFINE_BANNED = re.compile(rf'(?<![A-Za-z0-9_])(?:__declspec|__pragma|_Pragma|{ASM}|__emit|{CODEGEN_DECLSPEC})'
                            r'(?![A-Za-z0-9_])')
@@ -118,6 +152,14 @@ def construct_problems(name, text):
     for pos, args in declspec_arguments(text):
         if re.search(rf'(?<![A-Za-z0-9_])(?:{CODEGEN_DECLSPEC})(?![A-Za-z0-9_])', args):
             problems.append(f'{name}:{line_of(text, pos)}: codegen-only __declspec is not allowed')
+    lines = text.split('\n')
+    for pattern, what in JUSTIFIED:
+        for hit in pattern.finditer(text):
+            number = line_of(text, hit.start())
+            here, before = lines[number - 1], lines[number - 2].strip() if number > 1 else ''
+            if not (JUSTIFICATION.search(here) or (before.startswith('//') and JUSTIFICATION.search(before))):
+                problems.append(f'{name}:{number}: {what} needs a justification comment (three or more words '
+                                'after //) on the same or the previous line')
     for m in DEFINE.finditer(text):
         if DEFINE_BANNED.search(m.group(1)):
             problems.append(f'{name}:{line_of(text, m.start())}: #define naming __declspec, a pragma operator, '
@@ -135,6 +177,34 @@ def construct_problems(name, text):
             shown = word or m.group(1).strip()[:20]
             problems.append(f'{name}:{line_of(text, m.start())}: #pragma {shown} is not allowed '
                             f'(only {", ".join(sorted(ALLOWED_PRAGMAS))}, spelled plainly)')
+    return problems
+
+
+def label_problems(name, text, header, ext):
+    """`Labels: v2` grammar: a label line is `// <names>: <LABEL> [<LABEL>...][; note]`, and no
+    label word appears anywhere else, so every label is attached to the names it describes."""
+    version = LABELS_VERSION.search(header)
+    if not version:
+        return []
+    if version.group(1) != '2':
+        return [f'{name}: unknown "Labels: v{version.group(1)}" (only v2 is defined)']
+    problems, labelled = [], 0
+    for number, line in enumerate(text.split('\n'), 1):
+        if not LABEL_WORD.search(line):
+            continue
+        m = LABEL_LINE.match(line)
+        rest = m and (m.group('names') + ' ' + (m.group('note') or ''))
+        if not m or LABEL_WORD.search(rest):
+            problems.append(f'{name}:{number}: label outside the v2 grammar; write "// <names>: <LABEL> ...[; note]" '
+                            'with LABEL one of COMMUNITY(<owner>/<repo>@<rev>, <licence>), GUESS, '
+                            'GUESS(low|medium|high), EXE_RTTI, STANDIN, OBSERVED')
+            continue
+        if not ORIGIN_LABEL.search(m.group('labels')):
+            problems.append(f'{name}:{number}: STANDIN also needs the origin of the name (COMMUNITY(...), GUESS, '
+                            'EXE_RTTI or OBSERVED)')
+        labelled += 1
+    if ext == 'h' and not labelled:
+        problems.append(f'{name}: a "Labels: v2" header needs at least one "// <names>: <LABEL>" line')
     return problems
 
 
@@ -189,7 +259,7 @@ def lint_file(root, name, target_build):
     root = Path(root)
     problems = []
     path = PurePosixPath(name)
-    if name == 'reconstruction/README.md':
+    if name in ('reconstruction/README.md', 'reconstruction/INDEX.md'):
         return problems
     if len(path.parts) == 3 and path.parts[1] == 'recipes':
         if path.suffix != '.json':
@@ -224,6 +294,7 @@ def lint_file(root, name, target_build):
     header = leading_comment(text)
     if target_build and target_build not in header:
         problems.append(f'{name}: header comment must name the build id {target_build}')
+    problems += label_problems(name, spliced, header, ext)
     exposure = re.search(r'Source exposure:\s*([a-z-]+)', header)
     if not exposure or exposure.group(1) not in EXPOSURE:
         problems.append(f'{name}: header comment needs "Source exposure: <{"|".join(EXPOSURE)}>"')

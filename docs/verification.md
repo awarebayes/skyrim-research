@@ -51,7 +51,12 @@ accept individual functions or batches. A function is accepted only when ALL of 
    - the source is plausible C++ for what the function does, not a contrivance to force bytes:
      no inline assembly, raw byte arrays or `__emit`, no `#pragma` or attribute tricks aimed only
      at codegen, no nonsensical control flow or dead code whose only purpose is matching;
-     anything unusual is justified in a source comment;
+     anything unusual is justified in a source comment. `__forceinline`, `[[msvc::...]]`
+     attributes and codegen intrinsics (`_BitScanForward`, `_InterlockedIncrement`, `__assume`,
+     `_mm_*` and the rest of `INTRINSICS` in `tools/lint_reconstruction.py`) are allowed only
+     with a one-line justification comment on the same or the previous line (lint-enforced);
+     the Reviewer judges whether the justification is a plausible reason a programmer had, not
+     a way to force bytes, and rejects otherwise;
    - names and types are labelled by origin (community source and revision, or `GUESS`), and
      unknowns are preserved rather than filled plausibly;
    - provenance: no decompiler output pasted as source, no code from unlicensed projects (such
@@ -193,7 +198,18 @@ Match record, recomputed from the tree:
 - **Result.** Every report has result `pass`, every function byte covered exactly or by
   reference, and unwind info `covered` or `none-in-range`.
 - **Reproduction.** There are at least two runs, from at least two compile hosts and two
-  compare hosts. The record says how independent those hosts are. Host names are self-reported
+  compare hosts. The record says how independent those hosts are. A machine booted from a disk
+  fork (a copy) of another verifier machine counts as a different machine for acceptance: it
+  compiles and compares in its own process, file system and object paths, which is what the
+  second run checks. It shares the toolchain install and image, so it does not check those
+  against an independent copy: the record labels such a pair with a note line starting
+  `independence: fork` (otherwise `independence: separate-machine`, or
+  `independence: third-party` for a host run by someone else). At least one accepted function
+  per batch, or per day of acceptances if that is sooner, is also re-run on a machine that is not
+  a fork of the compile hosts (a separately provisioned machine from the pinned recipe, or the
+  macOS host for the comparison), and that re-check is recorded in the batch's handoff and in
+  the summary report. An optional third-party host may be added later. The gate does not read the
+  `independence` label yet; it is policy, checked by the sampling safeguard. Host names are self-reported
   labels: the gate cannot verify which machine produced a run. As a tripwire against one report
   copied under two labels, runs from different compile hosts must name different candidate
   object hashes (two clean compiles differ in time stamp and path records, so identical objects
@@ -205,7 +221,14 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
 
 - exactly the fields `review_record_schema`, `function_id`, `build_id`, `rva`, `size`,
   `source_digest_method`, `source_digest`, `reviewer_model`, `review_task_id`, `verdict`,
-  `escalation_category`, `review_sha256` and `review_date`, so no free text is published;
+  `escalation_category`, `review_sha256` and `review_date` (schema 1), plus `review_kind`,
+  `previous_source_digest`, `previous_review_sha256`, `previous_code_section_sha256` and
+  `code_section_sha256` (schema 2, written by `tools/accept_function.py`), so no free text is
+  published;
+- schema 2: a `full` review has no previous fields and its `code_section_sha256` equals the
+  match record's (or both are absent); a `delta` review names a previous digest other than its
+  own, a previous review hash, and a previous code-section hash equal to its own and to the
+  match record's (next section);
 - the function identity equals the inventory entry's, and the source digest equals the match
   record's, so an approval cannot be reused for other source or another function, and a change
   to any file in the compiled file's include closure (above) makes it stale together with the
@@ -215,22 +238,62 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
 - a Reviewer record for an entry that is not `matched` is rejected, so a leftover approval never
   reads as acceptance.
 
+## Stale acceptances and delta reviews
+
+A `matched` entry stays bound to the exact unit digest, so adding a function to a unit, or any
+other edit to a file in its include closure, makes its acceptance stale. `tools/check.py` reports
+every such entry by name, with its record and unit, as `Stale acceptance (unit changed)` (the
+match record no longer binds the integrated source) or `Stale acceptance (review behind)` (the
+record was regenerated but the Reviewer record binds the earlier digest), and fails until it is
+cleared; CI and the pre-commit check are blocked meanwhile. The inventory status stays `matched`
+during that window (no revoke), and `reconstruction/INDEX.md` shows `STALE`. Clearing it:
+
+1. Re-confirm: `tools/verifier/confirm` regenerates the unit's match records by real runs on two
+   hosts, as for a new function. Until then nothing else can proceed.
+2. Re-review: a Reviewer approves the function again, either by a full review or by a delta
+   review. A delta review reads only the unit diff from the digest the earlier approve bound to
+   the new one (`tools/review_packet.py` prints it, from the commit where that digest was
+   current) and needs the compared code section hash (`candidate.code_section_sha256`,
+   `reports/README.md`) to be the same in the approved record and the new one: the function's
+   own compiled code did not change, so only what the diff shows (renames, labels, stand-ins,
+   comments, new code) is new to review. If the hash changed, is missing from either record, or
+   no earlier approve of that digest is found, only a full review is accepted.
+3. Accept: `tools/accept_function.py` (`--all-approved` for a batch) checks the review block
+   (`review_kind: delta`, `previous_source_digest`, `code_section_unchanged: yes`), that the
+   superseded Reviewer record approved exactly `previous_source_digest`, and that the previous
+   code-section hash (from that record, or from the match record at the commit where the digest
+   was current) equals the new one; then it replaces the Reviewer record with a schema 2 record
+   binding both digests and both hashes.
+
+A delta review is not weaker evidence of a match (the reproduced comparator pass is the
+evidence and is re-run in step 1); it narrows what the Reviewer re-reads to what changed. The
+code-section hash is not yet emitted by the comparator, so until it is, every stale acceptance
+needs a full re-review.
+
+## Acceptance tool, source lint and tests
+
 `tools/accept_function.py` checks the private review file (its block for the function says
 `approve`, no escalation, fresh context, not drafted or triaged by the Reviewer, a model, and the
 match record's source digest) before writing the Reviewer record, then re-runs the validator and
 changes nothing if it fails. The validator cannot see the private review, so the record's hash is
-what ties it to the file kept under `.local/reviews/`.
+what ties it to the file kept under `.local/reviews/`. With `--all-approved` it accepts every
+`approve` block of one review in one all-or-nothing step; the review may come from stdin or a
+transcript outside the repository, and is then saved to `.local/reviews/<task-id>.md` first. It
+also refreshes `updated_at` and `reconstruction/INDEX.md` and prints the files to stage.
 
 Source lint: `tools/check.py` also runs `tools/lint_reconstruction.py` on every file under
 `reconstruction/` (tracked or new; the index tree with `--staged`). It checks the mechanical part
 of the Reviewer's list: no inline assembly, `__emit`, raw byte arrays or `\x` byte strings,
-pragma operators, codegen-only `#pragma` or `__declspec`; the header comment fields of
+universal character names (`\u`, `\U`) anywhere, pragma operators, codegen-only `#pragma` or
+`__declspec`; a justification comment beside `__forceinline`, `[[msvc::...]]` and codegen
+intrinsics; the name-origin label grammar in files that declare `Labels: v2`; the header comment fields of
 `reconstruction/README.md`; the one-class-per-pair layout; and include style (quoted repository
 headers, no include in a block comment or conditional block). Passing the lint does not replace
 the Reviewer; it only spares the Reviewer those checks. Tests: `tests/test_lint_reconstruction.py`.
 
 The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,
-stale or inconsistent, and `tests/test_accept_function.py` covers the acceptance tool. They use
+stale or inconsistent, `tests/test_accept_function.py` covers the acceptance tool, and `tests/test_acceptance_flow.py`
+covers stale acceptances, delta reviews, batch acceptance and the generated index. They use
 reports that the comparator produced from synthetic fixtures. The step 4 comparator tests in
 `tests/test_compare.py` are unchanged.
 

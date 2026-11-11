@@ -74,7 +74,7 @@ reasons: synthetic
     def test_approve_flips_only_this_entry_and_passes_the_gate(self):
         before = self.progress()
         changed = self.accept()
-        self.assertEqual(changed, ['data/progress.json', REVIEW])
+        self.assertEqual(changed, ['data/progress.json', REVIEW, 'reconstruction/INDEX.md'])
         after = self.progress()
         self.assertEqual(after['functions'][0]['status'], 'matched')
         self.assertEqual(after['functions'][0]['report'], RECORD)
@@ -214,7 +214,7 @@ reasons: synthetic
         self.assertEqual(after['functions'][0]['status'], 'mapped')
         self.assertNotIn('report', after['functions'][0])
         self.assertEqual(after['functions'][1], before['functions'][1])
-        self.assertEqual(sorted(changed), sorted(['data/progress.json', REVIEW, RECORD]))
+        self.assertEqual(sorted(changed), sorted(['data/progress.json', 'reconstruction/INDEX.md', REVIEW, RECORD]))
         self.assertFalse((self.root / REVIEW).exists() or (self.root / RECORD).exists())
         self.assertEqual(finding, 'findings/synthetic.md')
         self.assertIn('2000-01-03', note)

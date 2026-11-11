@@ -18,7 +18,7 @@ match, and you cannot substitute for it. You can only approve or veto.
   have context from drafting it, return `escalate` (category `other`) and stop.
 - Do not modify any file: no edits to the reviewed source, the comparator, the validator, reports,
   `data/progress.json`, gates or git state. Bash is only for read-only inspection: hashing
-  (`shasum -a 256`, `python3 tools/source_digest.py <unit files>`), `git log`, `git show`,
+  (`shasum -a 256`, `python3 tools/source_digest.py <unit files>`, `python3 tools/review_packet.py`), `git log`, `git show`,
   `git diff`, `git rev-parse`, `ls`, and `python3 tools/check.py` without `--fix`-style options. No redirection into files, no `git`
   commands that change refs, index or worktree, no installs, no network, no comparator or
   verifier runs.
@@ -29,15 +29,42 @@ match, and you cannot substitute for it. You can only approve or veto.
   Say in the review whether you read them. Never quote them, and never read binary dumps.
 - Do not push, post publicly, mark `matched`, or start further agents.
 
+## Start from the review packet
+
+Run `python3 tools/review_packet.py <RVA or id> ...` (or `--stale` for every stale acceptance)
+first. It prints one compact view per unit: the digest the records bind against the digest
+computed now, recipe and flags, hosts, coverage, code-section hash, the record notes once, the
+current Reviewer record and the review each function needs. Read the packet instead of the raw
+match records; open a record only when the packet leaves a question. The packet is a reading aid
+from public files, not evidence; still compute the digest yourself for checklist item 4.
+
+## Delta reviews
+
+A function already accepted whose unit changed (another function added, a stand-in edited) shows
+`needs: full review, or delta review with previous_source_digest: <digest>`. You may approve it
+from the diff alone (a delta review) only when the packet says
+`code section since approval: unchanged`: then the function's own compiled code is the code the
+earlier approve covered, and what is new to you is only the diff. Review the diff with the full
+checklist below (new or renamed names and their labels, changed stand-ins, comments, new code,
+anything that changes what the earlier source claimed). Read the rest of the unit as far as you
+need to judge the diff in context. If the code section changed or is unavailable, or the diff
+touches the function's own definition or the declarations it uses in a way you cannot judge
+from the diff, do a full review instead (`review_kind: full`). A new function in the same unit
+always gets a full review, in the same review document.
+
 ## Checklist (per function)
 
 1. **Plausible source.** It is C++ a programmer could have written for what the function does,
    not a contrivance to force bytes: no inline assembly, raw byte arrays or `__emit`, no `#pragma`
    or attribute tricks aimed only at codegen, no nonsensical control flow or dead code whose only
-   purpose is matching. Anything unusual is justified in a source comment.
+   purpose is matching. Anything unusual is justified in a source comment. `__forceinline`,
+   `[[msvc::...]]` attributes and codegen intrinsics carry a one-line justification (the lint
+   checks it is there); reject one whose only plausible reason is forcing bytes.
 2. **Names and types.** Each is labelled by origin (`COMMUNITY` with source and immutable
    revision, `EXE_RTTI`, `OBSERVED`, or `GUESS` with confidence); unknowns are preserved rather
-   than filled plausibly.
+   than filled plausibly. In a file with `Labels: v2` the lint has checked the label syntax
+   (`// <names>: COMMUNITY(<owner>/<repo>@<rev>, <licence>) | GUESS | EXE_RTTI | STANDIN | OBSERVED`);
+   you check that each label is true: a community name is `COMMUNITY`, not `GUESS`.
 3. **Provenance.** No decompiler output pasted as source (tells: `undefined8`, `param_1`,
    `local_28`, `FUN_`/`DAT_` names, decompiler casts; with G2, compare structure against the
    decompiler output itself), no code from unlicensed projects such as
@@ -86,6 +113,9 @@ decompiler_output_read: <yes|no>
 
 verdict: <approve|reject|escalate>
 escalation_category: <provenance|legal|systemic|other|none>
+review_kind: <full|delta>
+previous_source_digest: <delta only: the approved digest the packet names>
+code_section_unchanged: <delta only: yes, as the packet shows>
 source_paths: <translation-unit files>
 source_digest: <tu-sha256-v1 digest you computed>
 report_path: <path>
@@ -99,11 +129,14 @@ checks:
 reasons: <short prose; no code, bytes or disassembly>
 ```
 
-The integrating Engineer accepts an `approve` with
-`python3 tools/accept_function.py --build-id <build id> --rva <RVA hex> --review .local/reviews/<task-id>.md --verdict approve`,
-which refuses unless your block for that function says `approve`, `escalation_category: none`,
+Omit the two delta-only lines in a full review. The integrating Engineer accepts the `approve`
+blocks with `python3 tools/accept_function.py --all-approved --review <saved review or ->`
+(or one function with `--build-id <build id> --rva <RVA hex> --review ... --verdict approve`),
+which refuses unless each block says `approve`, `escalation_category: none`,
 `fresh_context: yes`, `drafted_or_triaged_any_reviewed_function: no`, names `reviewer_model`, and
-gives the `source_digest` the match record binds. It publishes only a sanitized record
+gives the `source_digest` the match record binds; for a delta it also checks
+`previous_source_digest` against the superseded approval and the code-section hashes itself. It publishes only a sanitized record
 (`reports/<build id>/<rva>.review.json`): function identity, source digest, reviewer model,
-review task id, verdict, escalation category, review file SHA-256 and date. Your prose stays
+review task id, verdict, escalation category, review file SHA-256, date, review kind and, for a
+delta, the previous digest, previous review hash and code-section hashes. Your prose stays
 private.
