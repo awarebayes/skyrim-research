@@ -1,0 +1,642 @@
+{
+  "cases": [
+    {
+      "case": "c3-neg-semantic",
+      "description": "Integrated source with one semantic change (the return condition inverted), same recipe.",
+      "expected": "fail",
+      "runs": [
+        {
+          "compared_on": "boat-fork-of-standing-verifier",
+          "compiled_on": "boat-fork-of-standing-verifier",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "275150a7ed8366af6a9dd707f24120079e443cc4120683901ae7fcaa3f991d21"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": 84,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "code differs at +0x4c",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7581072,
+              "size": 84,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "code-byte-mismatch",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "cc565ba875fae63e1375a06bd6c569be35d396aeaf901632bf5538e7283bc98e"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-semantic"
+          }
+        },
+        {
+          "compared_on": "boat-fresh-from-recipe",
+          "compiled_on": "boat-fresh-from-recipe",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "11e4affd23d17be7dc93324800b686085388711fbe3da2aa62c09705c12b6762"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": 84,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "code differs at +0x4c",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7581072,
+              "size": 84,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "code-byte-mismatch",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "cc565ba875fae63e1375a06bd6c569be35d396aeaf901632bf5538e7283bc98e"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-semantic"
+          }
+        }
+      ]
+    },
+    {
+      "case": "c4a-shift-prev-map-unchanged",
+      "description": "Correct object; task range moved to the preceding function (0x73ad00, 95 bytes); symbol map unchanged.",
+      "expected": "fail",
+      "runs": [
+        {
+          "compared_on": "boat-fork-of-standing-verifier",
+          "compiled_on": "boat-fork-of-standing-verifier",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "36b126684ca41394e9adb9d2523ca57cee6eb02bbc370822774c3640d95b48a3"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": null,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "symbol map places the function elsewhere",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7580928,
+              "size": 95,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "symbol-map-conflict",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-c4a"
+          }
+        },
+        {
+          "compared_on": "boat-fresh-from-recipe",
+          "compiled_on": "boat-fresh-from-recipe",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "79396bcb9dbc40bb6f0514ca6f50462ed3bf4fae81f170d0821083b42777881e"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": null,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "symbol map places the function elsewhere",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7580928,
+              "size": 95,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "symbol-map-conflict",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-c4a"
+          }
+        }
+      ]
+    },
+    {
+      "case": "c4b-shift-prev-map-moved",
+      "description": "Correct object; task range moved to the preceding function (0x73ad00, 95 bytes); symbol map edited to place the task symbol there and drop the neighbour.",
+      "expected": "fail",
+      "runs": [
+        {
+          "compared_on": "boat-fork-of-standing-verifier",
+          "compiled_on": "boat-fork-of-standing-verifier",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "36b126684ca41394e9adb9d2523ca57cee6eb02bbc370822774c3640d95b48a3"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": null,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "candidate function is 84 bytes; task range is 95 bytes",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7580928,
+              "size": 95,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "function-size-mismatch",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-c4b"
+          }
+        },
+        {
+          "compared_on": "boat-fresh-from-recipe",
+          "compiled_on": "boat-fresh-from-recipe",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "79396bcb9dbc40bb6f0514ca6f50462ed3bf4fae81f170d0821083b42777881e"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": null,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "candidate function is 84 bytes; task range is 95 bytes",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7580928,
+              "size": 95,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "function-size-mismatch",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-c4b"
+          }
+        }
+      ]
+    },
+    {
+      "case": "c4c-shift-next-map-moved",
+      "description": "Correct object; task range moved to the start of the following function (0x73ae00, 84 bytes); symbol map edited likewise.",
+      "expected": "fail",
+      "runs": [
+        {
+          "compared_on": "boat-fork-of-standing-verifier",
+          "compiled_on": "boat-fork-of-standing-verifier",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "36b126684ca41394e9adb9d2523ca57cee6eb02bbc370822774c3640d95b48a3"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": 84,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "code differs at +0x7",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7581184,
+              "size": 84,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "code-byte-mismatch",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-c4c"
+          }
+        },
+        {
+          "compared_on": "boat-fresh-from-recipe",
+          "compiled_on": "boat-fresh-from-recipe",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "79396bcb9dbc40bb6f0514ca6f50462ed3bf4fae81f170d0821083b42777881e"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 0,
+              "code_bytes_total": 84,
+              "relocations_by_type": {},
+              "unwind": "not-checked",
+              "unwind_bytes_exact": 0,
+              "unwind_entries": 0
+            },
+            "detail": "code differs at +0x7",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7581184,
+              "size": 84,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "code-byte-mismatch",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "fail",
+            "source": {
+              "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
+              "source_revision": "615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "neg-c4c"
+          }
+        }
+      ]
+    },
+    {
+      "case": "c1-attempt01",
+      "description": "The Drafter's original single-file source (attempt-01, before integration), recompiled; its source revision is that file's own digest.",
+      "expected": "pass",
+      "runs": [
+        {
+          "compared_on": "boat-fork-of-standing-verifier",
+          "compiled_on": "boat-fork-of-standing-verifier",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "75ce63dde5606a85c80aefb01631724558513f24f6bb0efd592f68d0ce609b0a"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 84,
+              "code_bytes_total": 84,
+              "relocations_by_type": {},
+              "unwind": "covered",
+              "unwind_bytes_exact": 12,
+              "unwind_entries": 1
+            },
+            "detail": "all contract v1 checks passed",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7581072,
+              "size": 84,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "all-checks-passed",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "pass",
+            "source": {
+              "path": "ArmorRatingVisitor.cpp",
+              "source_revision": "c3dbeacec089e2ae962b0189467915e60f678d8898cfa28193447ce77e0b9a6b"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "p3-recheck-attempt01"
+          }
+        },
+        {
+          "compared_on": "boat-fresh-from-recipe",
+          "compiled_on": "boat-fresh-from-recipe",
+          "report": {
+            "acceptance": "not-evaluated",
+            "candidate": {
+              "object_sha256": "bf34dabd3185b4ca48853c5f9440b2426e514b572d5f0550025fa3ffdd344641"
+            },
+            "comparator": {
+              "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+              "version": "0.1.0"
+            },
+            "contract_version": 1,
+            "coverage": {
+              "aliases_declared": [],
+              "code_bytes_by_reference": 0,
+              "code_bytes_exact": 84,
+              "code_bytes_total": 84,
+              "relocations_by_type": {},
+              "unwind": "covered",
+              "unwind_bytes_exact": 12,
+              "unwind_entries": 1
+            },
+            "detail": "all contract v1 checks passed",
+            "function": {
+              "build_id": "sse-steam-1-7-104",
+              "rva": 7581072,
+              "size": 84,
+              "symbol": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z"
+            },
+            "reason": "all-checks-passed",
+            "recipe": {
+              "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+              "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+              "flags": [
+                "/nologo",
+                "/c",
+                "/O2",
+                "/MD",
+                "/GS-",
+                "/EHsc",
+                "/GR",
+                "/fp:precise",
+                "/Gy"
+              ],
+              "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+            },
+            "report_schema": 1,
+            "result": "pass",
+            "source": {
+              "path": "ArmorRatingVisitor.cpp",
+              "source_revision": "c3dbeacec089e2ae962b0189467915e60f678d8898cfa28193447ce77e0b9a6b"
+            },
+            "target": {
+              "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+              "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+            },
+            "task_id": "p3-recheck-attempt01"
+          }
+        }
+      ]
+    }
+  ],
+  "evidence_schema": 1,
+  "function_id": "sse-steam-1-7-104-0x73ad90",
+  "purpose": "Second-host re-check: cases that must fail, and the pre-integration source. Reports are embedded as the comparator wrote them. Not a match record."
+}

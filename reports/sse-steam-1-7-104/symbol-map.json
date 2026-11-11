@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z": {
+      "rva": 7581072,
+      "size": 84
+    },
+    "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z": {
+      "rva": 7580928,
+      "size": 95
+    },
+    "?Visit@ArmorRatingVisitorBase@@UEAA?AW4ForEachResult@BSContainer@@PEAVInventoryEntryData@@@Z": {
+      "rva": 7581184,
+      "size": 172
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "database": "Address Library 1.7.104.0 versionlib-1-7-104-0.bin sha256 8aab3dd251d135b849bd983f86a4a205c920fa3e81f8e30c0e63ccfef9423842",
+    "names": "CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT); mangled forms are the reconstruction's chosen declarations",
+    "entries": [
+      {
+        "name": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z",
+        "ae_id": 40297,
+        "rva": "0x73ad90",
+        "size_from": ".pdata",
+        "community_name": "ArmorRatingVisitor::HaveNotVisitedArmor"
+      },
+      {
+        "name": "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z",
+        "ae_id": 40293,
+        "rva": "0x73ad00",
+        "size_from": ".pdata",
+        "community_name": "ArmorRatingVisitor::VisitArmor"
+      },
+      {
+        "name": "?Visit@ArmorRatingVisitorBase@@UEAA?AW4ForEachResult@BSContainer@@PEAVInventoryEntryData@@@Z",
+        "ae_id": 40299,
+        "rva": "0x73ae00",
+        "size_from": ".pdata",
+        "community_name": "ArmorRatingVisitorBase::Visit"
+      }
+    ]
+  }
+}

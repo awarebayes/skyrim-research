@@ -1,10 +1,12 @@
 # Comparator contract, version 1
 
 Status: **draft for maintainer review.** Implemented by `tools/compare.py` (comparator version
-0.1.0) with parsing in `tools/pecoff.py`, exercised only by original synthetic fixtures generated
-in `tests/synthetic_pecoff.py`. It has not been run against any Skyrim image. A `pass` result is
+0.1.0) with parsing in `tools/pecoff.py`, exercised by original synthetic fixtures generated
+in `tests/synthetic_pecoff.py`, and run against the pinned image for the first function
+(`findings/first-function.md`). A `pass` result is
 evidence for review under [verification](verification.md); it is not acceptance, never sets a
-function to `matched`, and the bootstrap validator's rejection of `matched` is unchanged.
+function to `matched`. A `matched` status needs a match record that `tools/check.py` accepts
+(`docs/verification.md`, "Match gate").
 
 ## Inputs
 
@@ -155,8 +157,12 @@ stated here; changing any of them is a contract change.
    schema change that enables `matched`.
 4. **"Exact compiler binary hash, SDK/library provenance."** It does not say who verifies these.
    Here they are recorded inputs, bound to the object through the build record, and not verified.
-5. **Re-check by a second host.** The comparator is deterministic over its inputs, but how the
-   second run is recorded alongside the first (and the CI report/source consistency check from
-   plan step 4) is not specified and not implemented.
+5. **Re-check by a second host.** Proposed answer, not yet accepted: runs are recorded side by side in a
+   match record (`reports/README.md`), and `tools/check.py` checks them against integrated source
+   (`docs/verification.md`, "Match gate"). The comparator and report format are unchanged. A
+   whole-object hash differs between clean compiles (COFF timestamp, the object path in
+   `.debug$S`, and the `.chks64` checksum of that section), so each run binds its own object
+   through its build record. Reproduction means every run passes against the same image from
+   the same source digest and recipe; it does not mean identical objects.
 6. **Referenced data.** It says data references are checked, which version 1 does as addresses
    only. Whether referenced constants must also match is not stated.

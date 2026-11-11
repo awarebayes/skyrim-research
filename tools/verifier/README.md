@@ -24,6 +24,13 @@ was built with, and no step compares anything against the game.
   `tools/compare.py` on object A against image B for each pilot function, plus negative cases.
   The work directory must be under `.local/` because the comparator writes diagnostics there.
 - `synthetic/`: original test sources. No third-party code.
+- `verify_function.py`: runs `tools/compare.py` for one candidate function from a task
+  description file and prints a sanitized summary.
+- `tu_task.py`: writes that task description and the build record for a compiled
+  translation unit under `reconstruction/`. It takes identity from the inventory and
+  `builds/target.json`, and the source revision from `tools/source_digest.py`.
+- `match_record.py`: assembles a match record under `reports/` from comparator reports and refuses
+  any record `tools/check.py` would reject (`reports/README.md`).
 - `boat_up.sh`, `boat_run.sh`, `boat_down.sh` (with `boat_lib.sh`): resume the standing Boat
   verifier machine and check `pinned.sha256`, run one task in its own `~/tasks/<task-id>` with a
   file round trip, and stop it while printing compute used. Usage and rules are in

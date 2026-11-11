@@ -1,11 +1,16 @@
 """Validate metadata and common publication mistakes; never compares Skyrim bytes."""
 import argparse
 from datetime import datetime
+import hashlib
 import json
 from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
+
+from compare import COMPARATOR_VERSION, CONTRACT_VERSION, REPORT_SCHEMA, comparator_source_sha256, sanitized
+from source_digest import DIGEST_METHOD, tu_digest
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED = set('.exe .dll .pdb .obj .o .lib .a .so .dylib .dmp .mdmp .bin .bsa .ba2 .esm .esp .esl .nif .dds .pex .hkx .ess .skse .gdt .gpr .idb .i64 .zip .7z .iso .vhdx .qcow2 .png .jpg .jpeg .pdf'.split())
@@ -24,7 +29,145 @@ def integer(value):
     return type(value) is int and value >= 0
 
 
-def validate(data, target):
+SHA256 = re.compile(r'[0-9a-f]{64}')
+MATCH_RECORD_SCHEMA = 1
+TOOLCHAIN_PIN = 'tools/verifier/pinned.sha256'
+MIN_HOSTS = 2
+
+
+def is_hash(value):
+    return isinstance(value, str) and bool(SHA256.fullmatch(value))
+
+
+def file_sha256(root, name):
+    return hashlib.sha256((root / name).read_bytes()).hexdigest()
+
+
+def public_path(name, prefixes, what, root):
+    require(text(name), f'Match record: missing {what} path')
+    path = Path(name)
+    require(not path.is_absolute() and '..' not in path.parts and path.parts[0] in prefixes,
+            f'Match record: {what} must be under {"/".join(sorted(prefixes))}/')
+    require((root / path).is_file(), f'Match record: {what} {name} does not exist')
+    return path.as_posix()
+
+
+def pinned_compiler_sha256(root):
+    for line in (root / TOOLCHAIN_PIN).read_text().splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == 'cl.exe':
+            return parts[0]
+    raise ValueError(f'{TOOLCHAIN_PIN} names no cl.exe')
+
+
+def validate_match(fn, target, root=None):
+    """Tie a `matched` inventory entry to integrated source, pinned inputs and comparator reports.
+
+    Every check here is repeatable from public files alone, which is all CI has: it shows that the
+    published reports are consistent with the published source, recipe, toolchain pin, target
+    manifest and comparator, not that a comparison against the game took place. Acceptance itself
+    is the maintainer committing the record after an independent re-run (docs/verification.md).
+    """
+    root = ROOT if root is None else root
+    record_path = public_path(fn.get('report'), {'reports'}, 'report', root)
+    try:
+        record = json.loads((root / record_path).read_text())
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f'Match record: {record_path} is not JSON ({exc})') from None
+    require(isinstance(record, dict) and record.get('match_record_schema') == MATCH_RECORD_SCHEMA,
+            'Match record: unknown match_record_schema')
+    require(record.get('function_id') == fn['id'], 'Match record: function_id is not this inventory entry')
+
+    source = record.get('source') or {}
+    require(source.get('digest_method') == DIGEST_METHOD, 'Match record: unknown source digest method')
+    unit = source.get('translation_unit')
+    require(isinstance(unit, list) and unit, 'Match record: translation_unit must list the source files')
+    unit = [public_path(name, {'reconstruction'}, 'source file', root) for name in unit]
+    compiled = source.get('compiled')
+    require(compiled in unit, 'Match record: the compiled file is not part of the translation unit')
+    digest = tu_digest(root, unit)
+    require(source.get('digest') == digest, 'Match record: source digest is stale for the integrated source')
+
+    recipe_ref = record.get('recipe') or {}
+    recipe_path = public_path(recipe_ref.get('path'), {'reconstruction'}, 'recipe', root)
+    recipe_sha = file_sha256(root, recipe_path)
+    require(recipe_ref.get('sha256') == recipe_sha, 'Match record: recipe hash is stale')
+    recipe = json.loads((root / recipe_path).read_text())
+    compiler = recipe.get('compiler') or {}
+    require(is_hash(compiler.get('binary_sha256')) and text(compiler.get('version')),
+            'Match record: recipe does not pin a compiler hash and version')
+    flags = recipe.get('flags')
+    require(isinstance(flags, list) and flags and all(text(f) for f in flags), 'Match record: recipe has no flags')
+
+    pin = record.get('toolchain_pin') or {}
+    require(pin.get('path') == TOOLCHAIN_PIN, f'Match record: toolchain_pin must be {TOOLCHAIN_PIN}')
+    require(pin.get('sha256') == file_sha256(root, TOOLCHAIN_PIN), 'Match record: toolchain pin is stale')
+    require(compiler['binary_sha256'] == pinned_compiler_sha256(root),
+            'Match record: recipe compiler is not the pinned cl.exe')
+    require(text(record.get('reproduction')), 'Match record: missing reproduction command')
+
+    # The map decides placement, alias and overlap checks, so the one the runs used is pinned too.
+    map_ref = record.get('symbol_map') or {}
+    map_path = public_path(map_ref.get('path'), {'reports'}, 'symbol map', root)
+    require(map_ref.get('sha256') == file_sha256(root, map_path), 'Match record: symbol map hash is stale')
+    symbol_map = json.loads((root / map_path).read_text())
+    require(symbol_map.get('schema') == 1 and symbol_map.get('build_id') == target['build_id'],
+            'Match record: symbol map is for another build')
+
+    runs = record.get('runs')
+    require(isinstance(runs, list) and len(runs) >= MIN_HOSTS, f'Match record: needs at least {MIN_HOSTS} runs')
+    compiled_on, compared_on, symbols = set(), set(), set()
+    current_comparator = comparator_source_sha256()
+    for run in runs:
+        require(isinstance(run, dict) and text(run.get('compiled_on')) and text(run.get('compared_on')),
+                'Match record: each run names the host that compiled and the host that compared')
+        compiled_on.add(run['compiled_on'])
+        compared_on.add(run['compared_on'])
+        report = run.get('report')
+        require(isinstance(report, dict), 'Match record: run without a comparator report')
+        sanitized(report)
+        require(report.get('report_schema') == REPORT_SCHEMA and report.get('contract_version') == CONTRACT_VERSION,
+                'Match record: report schema or contract version differs from this comparator')
+        comparator = report.get('comparator') or {}
+        require(comparator.get('version') == COMPARATOR_VERSION
+                and comparator.get('source_sha256') == current_comparator,
+                'Match record: report comes from a different comparator version; re-run it')
+        require(report.get('acceptance') == 'not-evaluated', 'Match record: report was edited (acceptance)')
+        require(report.get('result') == 'pass' and report.get('reason') == 'all-checks-passed',
+                'Match record: report result is not pass')
+        ident = report.get('function') or {}
+        require(ident.get('build_id') == target['build_id'] == fn['build_id']
+                and ident.get('rva') == fn['rva'] and ident.get('size') == fn['size'] and text(ident.get('symbol')),
+                'Match record: report function identity differs from the inventory entry')
+        symbols.add(ident['symbol'])
+        src = report.get('source') or {}
+        require(src.get('source_revision') == digest and src.get('path') == compiled,
+                'Match record: report was produced from other source than the integrated file')
+        tgt = report.get('target') or {}
+        require(tgt.get('image_sha256') == tgt.get('expected_image_sha256') == target['image_sha256'],
+                'Match record: report target image is not the pinned image')
+        used = report.get('recipe') or {}
+        require(used.get('recipe_sha256') == recipe_sha and used.get('compiler_binary_sha256') == compiler['binary_sha256']
+                and used.get('compiler_version') == compiler['version'] and used.get('flags') == flags,
+                'Match record: report recipe differs from the pinned recipe')
+        require(is_hash((report.get('candidate') or {}).get('object_sha256')),
+                'Match record: report does not name its candidate object')
+        cov = report.get('coverage') or {}
+        require(cov.get('code_bytes_total') == fn['size']
+                and integer(cov.get('code_bytes_exact')) and integer(cov.get('code_bytes_by_reference'))
+                and cov['code_bytes_exact'] + cov['code_bytes_by_reference'] == fn['size']
+                and cov.get('unwind') in {'covered', 'none-in-range'},
+                'Match record: report coverage is incomplete')
+    require(len(symbols) == 1, 'Match record: runs compared different symbols')
+    entry = (symbol_map.get('symbols') or {}).get(next(iter(symbols)))
+    require(isinstance(entry, dict) and entry.get('rva') == fn['rva'] and entry.get('size') == fn['size'],
+            'Match record: symbol map does not place the function at the inventory range')
+    require(len(compiled_on) >= MIN_HOSTS and len(compared_on) >= MIN_HOSTS,
+            f'Match record: runs must come from at least {MIN_HOSTS} compile hosts and {MIN_HOSTS} compare hosts')
+    return record
+
+
+def validate(data, target, root=None):
     require(data['schema_version'] == target['schema_version'] == 1, 'Unknown schema version')
     require(text(data['phase']), 'Missing phase')
     require(datetime.fromisoformat(data['updated_at'].replace('Z', '+00:00')).utcoffset() is not None,
@@ -51,7 +194,6 @@ def validate(data, target):
         require(text(fn['id']) and fn['id'] not in seen, 'Duplicate/missing function identity')
         seen.add(fn['id'])
         require(fn['status'] in {'mapped', 'analyzed', 'reconstructed', 'matched'}, 'Invalid function state')
-        require(fn['status'] != 'matched', 'Matching disabled until reviewed comparator is implemented')
         require(integer(fn['rva']) and integer(fn['size']) and fn['size'] > 0, 'Invalid function range')
         start, end = fn['rva'], fn['rva'] + fn['size']
         require(not any(start < b and a < end for a, b in ranges), 'Overlapping function ranges')
@@ -62,7 +204,9 @@ def validate(data, target):
         path = Path(fn['evidence'])
         require(not path.is_absolute() and '..' not in path.parts and path.parts[0] in {'findings', 'reports'},
                 'Evidence must reference public findings or reports')
-        require((ROOT / path).is_file(), 'Evidence does not exist')
+        require(((ROOT if root is None else root) / path).is_file(), 'Evidence does not exist')
+        if fn['status'] == 'matched':
+            validate_match(fn, target, root)
     seen = set()
     for item in data['work_items']:
         require(isinstance(item['id'], str) and re.fullmatch(r'[a-z0-9][a-z0-9-]*', item['id'])
@@ -80,11 +224,15 @@ def validate(data, target):
 
 
 def load(staged=False):
-    def read(name):
-        if staged:
-            return json.loads(subprocess.check_output(['git', 'show', ':' + name], cwd=ROOT))
-        return json.loads((ROOT / name).read_text())
-    return validate(read('data/progress.json'), read('builds/target.json'))
+    if not staged:
+        return validate(json.loads((ROOT / 'data/progress.json').read_text()),
+                        json.loads((ROOT / 'builds/target.json').read_text()))
+    # Match records, source and recipe are checked as staged too, so the index gets its own tree.
+    with tempfile.TemporaryDirectory() as tmp:
+        subprocess.check_call(['git', 'checkout-index', '--all', f'--prefix={tmp}/'], cwd=ROOT)
+        root = Path(tmp)
+        return validate(json.loads((root / 'data/progress.json').read_text()),
+                        json.loads((root / 'builds/target.json').read_text()), root)
 
 
 def inspect_payload(name, payload, mode='100644'):
