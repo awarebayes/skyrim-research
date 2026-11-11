@@ -684,6 +684,20 @@ def shared_unit_functions(unit_cpp):
     return out
 
 
+AREA_PREFIXES = (('Ni', 'netimmerse'), ('BS', 'bsengine'), ('TES', 'forms'), ('BGS', 'forms'))
+ACTOR_CLASSES = {'Actor', 'Character', 'PlayerCharacter'}
+
+
+def area_for(cls):
+    """The area by prefix rule 2 of reconstruction/README.md, or None when the rule has no line for it."""
+    if cls in ACTOR_CLASSES or cls.endswith('Process'):
+        return 'actors'
+    for prefix, area in AREA_PREFIXES:
+        if cls.startswith(prefix) and cls[len(prefix):len(prefix) + 1].isupper():
+            return area
+    return None
+
+
 def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts):
     tdir = task_root / task_id
     tdir.mkdir(parents=True, exist_ok=True)
@@ -832,8 +846,11 @@ def cmd_packs(args):
         cls = items[0][0]['identity']['owning_class'] or 'Unknown'
         existing = sorted((REPO / 'reconstruction').glob(f'*/{cls}.cpp'))
         # A class already reconstructed keeps its unit: one pair per class (reconstruction/README.md).
+        if not units and not existing and area_for(cls) is None:
+            raise SystemExit(f'task {task_id}: no area rule covers class {cls}; name the unit in the list file '
+                             '(reconstruction/README.md, "<area>")')
         unit = units.pop() if units else (existing[0].relative_to(REPO).as_posix() if existing
-                                          else f'reconstruction/misc/{cls}.cpp')
+                                          else f'reconstruction/{area_for(cls)}/{cls}.cpp')
         write_task(task_id, unit, args.recipe, [p for p, _ in items], target, REPO / '.local/tasks',
                    args.max_attempts)
     t_py = time.monotonic() - t0

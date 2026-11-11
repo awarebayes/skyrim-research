@@ -12,7 +12,7 @@ A task directory is private (inside a `.local/` directory) and holds `task.json`
      "max_attempts": 12,                                # optional budget, enforced by attempt
      "record_notes": ["..."]}                           # optional, confirm adds them to records
 
-Sources are read from the checkout the command runs from (a Drafter's worktree), never from the
+Sources are read from the checkout the command runs from, never from the
 task directory. Only these files go to a verifier host: the comparator and its helpers, the
 toolchain pin, the target manifest, the unit's include closure, the recipe and the symbol map.
 """

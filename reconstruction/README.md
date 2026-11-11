@@ -23,9 +23,24 @@ Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source
   set and rejects a record that omits or adds a file (`docs/verification.md`, "Match gate"). This stays the rule until the original
   translation units are evidenced (for example by RTTI or layout showing which classes shared an
   object); then a unit may hold several classes, as that evidence shows.
-- **`<area>`** is the engine area that community headers make evident for the class, such as
-  its base class or owning system (`inventory/` for the `InventoryChanges` item visitors). Use
-  lowercase. When no area is evident, use `misc/` rather than guessing.
+- **`<area>`** (lowercase) is chosen by this rule, first match wins. CommonLibSSE-NG groups its
+  headers only alphabetically (`include/RE/A/...`), so its layout says nothing about areas; the
+  rule uses the owning system and the engine's own library prefixes instead:
+  1. an owning system the community headers make evident for the class, such as `inventory/` for
+     the `InventoryChanges` item visitors;
+  2. the class-name prefix: `Ni*` -> `netimmerse/` (the NetImmerse/Gamebryo scene-graph library),
+     `BS*` -> `bsengine/` (Bethesda's engine library), `TES*` and `BGS*` -> `forms/` (form and
+     reference types), `Actor`, `Character`, `PlayerCharacter` and `*Process` classes ->
+     `actors/`;
+  3. otherwise ask for a new prefix line here before adding the unit. There is no `misc/`: an
+     area chosen by default would only have to move later.
+  `tools/ghidra/export_pack.py` proposes the unit path by rules 2 and 3 (`area_for`); rule 1 is
+  given in the list file.
+- **Stand-ins.** A unit may declare the other classes its functions use as minimal per-unit
+  stand-ins (only the members and slots the compared code needs). Label them in the header as
+  stand-ins, with the community source of each name. When a class is declared by several units
+  (two units already declare their own `Actor`), it moves to one shared header in its own area;
+  that move changes every affected unit's digest, so it is done together with their re-confirmation.
 - **One recipe per source unit.** A match record binds a translation unit to one recipe in
   `recipes/<compiler>-<flags>.json` (compiler binary hash and version, flags, SDK, host). If a
   class's functions need different recipes, split them into separate units, one per recipe,

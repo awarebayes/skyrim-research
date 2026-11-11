@@ -35,7 +35,8 @@ python3 tools/ghidra/export_pack.py bind --task .local/tasks/<id> [--object <can
 
 List file: one function per line, `<build id> <rva> <task id> [<unit .cpp>]`, `#` comments.
 Lines with the same task id form one task and must name the same unit (or none: the tool then
-reuses `reconstruction/*/<Class>.cpp` if it exists, else proposes `reconstruction/misc/<Class>.cpp`).
+reuses `reconstruction/*/<Class>.cpp` if it exists, else proposes `reconstruction/<area>/<Class>.cpp` by the
+prefix rule of `reconstruction/README.md` and stops when no rule covers the class).
 Only the pinned build is accepted; addresses never transfer between builds.
 
 Timing on the maintainer's Mac (Ghidra 12.2, project already analysed): about 8 to 9 s of fixed
@@ -120,4 +121,4 @@ binding cannot produce a pass, because the comparator checks every relocation ag
 - Suitability is a prediction from the image and the analysis; only the comparator decides.
 - Community names are joined through the Address Library by id. For wrappers the name is the
   nearest enclosing definition (`how: enclosing`), a heuristic that is sometimes wrong.
-- The exporter does not decide the engine area of a unit; pass it in the list file.
+- The exporter applies only the prefix rule for areas; an owning-system area is passed in the list file.
