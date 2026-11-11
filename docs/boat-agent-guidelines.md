@@ -56,6 +56,7 @@ synchronously, longer or 0 streams *(docs; 3 s timeout measured: exit 143, `time
 | step | wall time | notes |
 |---|---|---|
 | fresh machine + `setup_boat_machine.sh` (pilot) | about 7 min; 404 s billed | apt, 748 MB download, unpack |
+| fresh machine + `setup_boat_machine.sh` (second host) | 93 s setup; 209 s billed for the machine's whole life including one task | hashes matched `pinned.sha256` |
 | `boat resume` to ready, cold (more than 10 min after stop) | 4.7 s | new machine, disk intact, hashes OK |
 | first reads after cold resume (hash 4 compiler files) | 14.3 s, then 4.3 s warm | files download lazily on first read; `build_pilot.sh` then 19.6 s |
 | `boat_up.sh` within 10 min of a stop | 4 s total | same machine taken back, no restore |
@@ -130,6 +131,8 @@ or use `large`/`xlarge`. If a limit blocks the task (`429 limit_reached`, `rate_
 | `409 snapshot_data_expired` | disk retention ended; rebuild (lifecycle rule 3) *(docs)* |
 | `400 trial_auto_stop_required` | TTL above 7200 or `--no-auto-stop` on trial |
 | `sha256sum -c` FAILED in `boat_up.sh` | do not verify on that machine; report it, do not reinstall silently |
+| `boat_up.sh` create path exits 141 and leaves a machine | SIGPIPE from the ready-line parser under `pipefail` (fixed). Earlier copies: finish by hand with `boat push` of `tools/`, then `setup_boat_machine.sh`, then `sha256sum -c` |
+| first `boat push` right after create fails | seen once on a new machine; it succeeded when repeated |
 | `setup_boat_machine.sh` exits 3 | `pinned.sha256` missing next to it (pilot run 1) |
 | comparator `invalid-task` | task ids must not contain underscores (pilot) |
 | comparator import error under `python3 -I` | run `tools/compare.py` without `-I` so it finds `pecoff.py` (pilot) |

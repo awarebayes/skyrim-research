@@ -39,10 +39,18 @@ case "${STATE:-missing}" in
         ID=$("$BOAT" new --no-env --type default --ttl "$TTL" --name "$BOAT_VERIFIER_NAME" --json \
             | python3 -I -c '
 import json, sys
+# Read to the end: stopping at the first ready line closes the pipe while boat new is still
+# writing, and the SIGPIPE exit then aborts this script under pipefail with a machine created.
+found = None
 for line in sys.stdin:
-    f = json.loads(line)
-    if f.get("event") == "ready" or (f.get("id") and f.get("state") == "ready"):
-        print(f["id"]); break
+    try:
+        f = json.loads(line)
+    except ValueError:
+        continue
+    if found is None and (f.get("event") == "ready" or (f.get("id") and f.get("state") == "ready")):
+        found = f["id"]
+if found:
+    print(found)
 ')
         [ -n "$ID" ] || die "boat new did not report a ready machine"
         ;;

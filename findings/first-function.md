@@ -1,10 +1,14 @@
-# Finding: first pilot function selected and prepared for verification
+# Finding: first pilot function selected, reconstructed and re-checked
 
-Status: OBSERVED (range, unwind form and reference counts measured on the pinned image);
-mapped, reconstruction not started. No comparison against a compiled candidate has been made.
+Status: **comparator pass reproduced on 3 hosts (2 compiling, 3 comparing); awaiting maintainer
+review; not accepted.** The inventory entry stays `mapped`. Range, unwind form and reference
+counts are OBSERVED on the pinned image. The reconstructed source is not published here.
 Author / human operator: awarebayes
-AI assistance / model: Claude Code Engineer worker (claude-opus-5-5), task p3-first-function-prep,
-run locally on the operator's Mac. No game file, game-derived output or database was uploaded.
+AI assistance / model: Claude Code workers. Engineer (claude-opus-5-5): task p3-first-function-prep
+(selection and analysis, local) and task p3-second-host-and-gate (re-check). Drafter
+(claude-sonnet-5-5): task p3-first-function-draft (reconstruction). With the recorded G5 grant, only
+`SkyrimSE.exe` and the reconstructed source were uploaded, to private Boat machines, and deleted
+afterwards. The Address Library database and Ghidra material stayed on the Mac.
 Date (UTC): 2026-11-11
 Target build id / image SHA-256: `sse-steam-1-7-104` /
 `846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f` (re-measured before use; equal)
@@ -122,6 +126,68 @@ The last truncation case shows that a range cut short inside a real function fai
 compared byte agrees. Its object held target code, so it was deleted after the run; only its hash
 is kept privately. **No positive case was produced or attempted.** No report claims a match.
 
+## Reconstruction and second-host re-check
+
+The Drafter's first reconstruction compiled to a passing comparison on the standing Boat verifier
+machine. It was compiled twice there, and both runs passed. An independent re-check then did the
+following:
+
+1. **Inputs.** The source, recipe, both objects and the image were re-hashed on the Mac and equal
+   the build records and reports. The task's RVA and size equal the inventory and the image's
+   single `.pdata` entry. With no relocations, the symbol map matters only for placement checks.
+   The reports hash the same image bytes they compare.
+2. **Independent parser.** A separate stdlib COFF/PE reader that does not use `tools/pecoff.py`
+   extracted the function's COMDAT section and its `.pdata`/`.xdata` from each object. All 84
+   code bytes and the 12 unwind bytes equal the image's.
+3. **Integration.** The source was split into one translation unit, a class header plus a .cpp
+   (proposed layout `reconstruction/inventory/ArmorRatingVisitor.{h,cpp}`). Only comments and
+   NG's member names changed; no code changed. Its revision is the digest of both files (`tu-sha256-v1`,
+   `615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f`).
+4. **Hosts.** Same recipe (`recipe_sha256` `923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838`),
+   cl 19.16.27054 x64 under Wine, comparator 0.1.0
+   (source hash `da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5`):
+
+| host | how it got the compiler | compiled | compared | integrated source | Drafter's source |
+|---|---|---|---|---|---|
+| standing verifier machine (Drafter's runs) | pinned recipe, pilot | yes | yes | not run | pass, twice |
+| fork of the stopped standing machine | copy of the standing disk | yes | yes | pass | pass |
+| fresh machine built by `setup_boat_machine.sh` | pinned recipe, from scratch; binaries matched `pinned.sha256` | yes | yes | pass | pass |
+| macOS arm64 (operator's Mac) | none | no | objects from both Boat hosts | pass, both | pass (fork object) |
+
+Independence: the fork is a second machine but not a second environment. It shares the standing
+machine's disk, toolchain install and Wine. The fresh machine installed the toolchain again from
+the pinned manifest. Its compiler binaries hash the same, and it uses the same Ubuntu image and
+Wine package, so it is independent of the standing install but not of the recipe. The Mac run checks the
+comparator on a different OS and CPU architecture over the same objects; it does not compile.
+
+Negative cases on both Boat hosts, same result on each (`reports/sse-steam-1-7-104/0x73ad90-recheck-cases.json`):
+
+| case | result / reason |
+|---|---|
+| integrated source with the return condition inverted | fail / `code-byte-mismatch` at +0x4c |
+| correct object, task moved to the preceding function (0x73ad00, 95 bytes), map unchanged | fail / `symbol-map-conflict` |
+| same range, map edited to place the task symbol there | fail / `function-size-mismatch` (84 vs 95) |
+| correct object, task at the following function's start (0x73ae00, 84 bytes), map edited | fail / `code-byte-mismatch` at +0x7 |
+
+Whole-object hashes differ between clean compiles. A field-level comparison of four objects
+(two by the Drafter, one per new host) found differences only in these places. The COFF header
+`TimeDateStamp` differs. The `S_OBJNAME` record in `.debug$S` holds the absolute object path
+(Wine `Z:\...` form), so its length moves every later `PointerToRawData`/`PointerToRelocations`
+and `PointerToSymbolTable` by the length difference. The `.debug$S` symbol's auxiliary length
+changes with it. The `.chks64` entry for `.debug$S` differs too. The other 16 of the 18 sections have
+identical contents and relocations, including the function's COMDAT and its unwind data. The two new hosts' objects are the same
+size (3614 bytes); only the timestamp, the path and that checksum differ. The build record
+therefore binds each run to its own object, which is what the comparator contract requires.
+Reproduction is every run passing from the same source digest, recipe and image, not identical
+objects. Neither `docs/verification.md` nor the contract requires identical objects, so nothing
+was loosened. Pinning a normalized object hash as well would need a reviewed contract change. A
+fixed build directory plus a timestamp-free compiler option might make whole objects identical;
+that is untested here and would be a new recipe.
+
+The reports name the comparator version as `comparator.version` (`0.1.0`) beside
+`comparator.source_sha256`, as the contract lists. No report field is named `comparator_version`,
+so a reader looking for that top-level key finds nothing. That is not a reporting bug.
+
 ## Interpretation and alternatives
 
 This function is a good first target for contract v1. Every byte is compared exactly, and there are
@@ -147,18 +213,29 @@ python3 -I .local/experiments/first-function/negatives.py /path/to/SkyrimSE.exe
 python3 -m unittest tests.test_verify_function -v
 ```
 
+The re-check's reproduction command is in `reports/sse-steam-1-7-104/0x73ad90.json`
+(`reproduction`). It needs the reconstructed source, which is not published here.
+
 The private notes, listings, task inputs and negative-case reports are under `.local/`. Nothing
 here contains code bytes, disassembly, decompiler output or reconstructed source.
 
 ## Negative results and limitations
 
-- No reconstruction exists yet, and nothing has been compiled for this function.
-- The compiler group and LTCG membership are unknown for this function.
-- The name is a community name. Only the class, the vftable slot and two member offsets were checked.
-- One host and one run. The negative cases have not been reproduced on a second host.
-- The private symbol map gives RVAs for the function and two neighbours only. That is enough for
-  this function, which references nothing. It is not a general map.
+- A byte match shows that this source and recipe produce the checked code. It does not verify
+  the community method name, which is NG's, and it does not show the original source looked
+  like this. Only the class, the vftable slot and two member offsets were checked otherwise.
+- The compiler group and LTCG membership are unknown. The match shows this compiler and these
+  flags can produce these bytes; it does not show the game was built with them.
+- Host independence is partial (see the table): the fork shares the standing install, all Boat
+  hosts share the recipe, Ubuntu image and Wine package, and the Mac only compares.
+- The function has no relocations. The match exercises none of the comparator's reference paths.
+- The symbol map (`reports/sse-steam-1-7-104/symbol-map.json`, Address Library id/offset pairs)
+  covers the function and two neighbours only. It is not a general map.
+- Not accepted. Publishing the reconstructed source, and the gate change that would allow
+  `matched`, wait on maintainer review.
 
 ## Reviewer and outcome
 
-Pending maintainer review. Status: mapped, reconstruction not started.
+Pending maintainer review: provenance and publication of the reconstructed source, an
+independent re-run of the comparison, and the proposed gate change. Status: `mapped`; comparator
+pass reproduced, not accepted.

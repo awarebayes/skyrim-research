@@ -3,11 +3,11 @@
 ## Bootstrap gate
 
 `data/progress.json` is the sole public progress input. `tools/check.py` validates it and
-`tools/build_site.py` derives all headline totals. There is no working Skyrim matcher yet.
-**The validator deliberately rejects every `matched` function at bootstrap.** Enabling
-matches requires a reviewed implementation of the checks below, synthetic negative tests,
-a real locally reproduced comparison, and a documented schema change. Do not simply remove
-the rejection or replace it with a manually authored `success: true` report.
+`tools/build_site.py` derives all headline totals. A function may be `matched` only when its
+inventory entry names a match record under `reports/` that `tools/check.py` accepts (the
+"Match gate" section below). A status flip, a `success: true` flag or a hand-written report is
+rejected. Weakening the gate is a reviewed change to this file, `tools/check.py` and
+`tests/test_match_gate.py` together.
 
 Function inventory is empty and scope totals are unknown (`null`). No overall percentage is
 shown until a reviewed inventory defines scope and exclusions. Task completion, type coverage,
@@ -28,6 +28,31 @@ All are mutually exclusive current states, not cumulative counts. A reconstructi
   no bytes or disassembly. Include report schema/comparator version and reproduction command.
 - Independent maintainer review and re-check against the pinned source and target. Claims accepted
   into the report must refer to integrated source, not merely an unmerged agent submission.
+
+## Match gate
+
+Each `matched` inventory entry has a `report` path to a match record (`reports/README.md`).
+`tools/check.py` recomputes, from the committed tree, the following:
+
+- **Source.** The digest of the translation unit under `reconstruction/` equals the record's,
+  and every report names that digest and the compiled file's path.
+- **Target.** Every report's image hash equals `builds/target.json`. Its build id, RVA and size
+  equal the inventory entry's, and the pinned symbol map places the symbol at that range.
+- **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match
+  their recorded hashes. The recipe's compiler is the pinned `cl.exe`, and every report names
+  that recipe's hash, compiler and flags.
+- **Comparator.** Every report comes from the current comparator version and source hash.
+- **Result.** Every report has result `pass`, every function byte covered exactly or by
+  reference, and unwind info `covered` or `none-in-range`.
+- **Reproduction.** There are at least two runs, from at least two compile hosts and two
+  compare hosts. The record says how independent those hosts are.
+
+The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,
+stale or inconsistent. They use reports that the comparator produced from synthetic fixtures.
+The step 4 comparator tests in `tests/test_compare.py` are unchanged.
+The gate does not and cannot show that a comparison against the game took place. That rests on
+the runs being real, which is why the maintainer re-runs the comparison independently and accepts
+a match by committing its record. Git history is the audit trail of that acceptance.
 
 Public CI cannot prove a match without private game inputs. It should check report/source
 consistency, not represent that check as an independent comparison to Skyrim. Once an authorized

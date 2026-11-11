@@ -38,10 +38,11 @@ class IntegrityTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'inventory'):
             validate(self.data, self.target)
 
-    def test_matches_disabled_even_for_pinned_target(self):
+    def test_matched_needs_a_match_record_even_for_pinned_target(self):
+        # tests/test_match_gate.py covers the record itself; a bare status flip must still fail.
         self.pin()
         self.data['functions'][0]['status'] = 'matched'
-        with self.assertRaisesRegex(ValueError, 'Matching disabled'):
+        with self.assertRaisesRegex(ValueError, 'missing report path'):
             validate(self.data, self.target)
 
     def test_cross_build_function_rejected(self):
