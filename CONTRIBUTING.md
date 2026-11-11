@@ -31,7 +31,8 @@ then recover one small function. Do not add dummy matches to make the website lo
 
 ## Publication
 
-Reconstructed game functions are published only when accepted under the acceptance rule in
+Reconstructed source is published in this repository by engine area, per the maintainer's
+decision in `LEGAL.md`. Each function is published only when accepted under the acceptance rule in
 `docs/verification.md`: reproduced comparator pass, approval by a fresh Reviewer subagent that
 checks plausibility and provenance, and integration. Do not ask the maintainer to review
 individual functions; escalate only as that rule lists. Approving behavior specifications for

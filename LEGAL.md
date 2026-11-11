@@ -9,8 +9,9 @@ preservation. No affiliation, sponsorship or endorsement by Bethesda, ZeniMax, M
 middleware vendors is claimed. Game names and marks identify the subject only; ownership
 remains with their holders. No proprietary logos, artwork or branding are used by this project.
 
-The repository currently contains original infrastructure and documentation, not recovered
-Skyrim functions. This policy is a contribution rule, not a legal opinion or guarantee.
+The repository contains original infrastructure and documentation and, under `reconstruction/`,
+reconstructed source for individual functions as described below. This policy is a contribution
+rule, not a legal opinion or guarantee.
 
 ## Inputs and prohibited publication
 
@@ -28,11 +29,23 @@ of the linked project's practices or a license to reproduce its contents.
 
 ## Research publication and source reconstruction
 
-Original tooling, factual metadata, reviewed explanations and synthetic fixtures are the intended
-public outputs. Reconstructed game implementations need a provenance review before publication,
-done per function by a Reviewer subagent under the acceptance rule in `docs/verification.md`, with
-provenance or legal doubt escalated to the maintainer, who sets the publication policy. Their
-copyright status is not settled by matching bytes or withholding binaries.
+Original tooling, factual metadata, reviewed explanations and synthetic fixtures are public
+outputs.
+
+**Publication of reconstructed source: maintainer decision.** The maintainer (awarebayes) has
+decided that reconstructed source is published in this repository, in the same manner as the FNV
+decompilation project publishes its reconstruction: as source files in the public repository,
+organized by engine area (`reconstruction/<area>/`, see `reconstruction/README.md`). This records
+the maintainer's policy decision; it is not a legal opinion, and no further conclusion is drawn
+from it here. It changes no other rule in this file or in `PROVENANCE.md`: only reconstructed
+source and its sanitized records are published, never game files, binary bytes, disassembly,
+decompiler output, objects, or leaked, proprietary or unlicensed material, and no FNV code is
+copied. Following FNV's manner of publication is not a licence to reuse FNV's material.
+
+Each function is published only once accepted under the acceptance rule in
+`docs/verification.md`, which includes a per-function provenance review by a Reviewer subagent,
+with provenance or legal doubt escalated to the maintainer. The copyright status of reconstructed
+implementations is not settled by matching bytes or withholding binaries.
 Nothing in this repository grants third-party rights. See `LICENSE` for the narrow infrastructure
 license; do not label the entire repository MIT or copy FNV code, which has no license grant.
 Contributor authorship alone does not establish rights to all underlying material.

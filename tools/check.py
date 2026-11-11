@@ -10,7 +10,7 @@ import sys
 import tempfile
 
 from compare import COMPARATOR_VERSION, CONTRACT_VERSION, REPORT_SCHEMA, comparator_source_sha256, sanitized
-from source_digest import DIGEST_METHOD, tu_digest
+from source_digest import DIGEST_METHOD, include_closure, tu_digest
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED = set('.exe .dll .pdb .obj .o .lib .a .so .dylib .dmp .mdmp .bin .bsa .ba2 .esm .esp .esl .nif .dds .pex .hkx .ess .skse .gdt .gpr .idb .i64 .zip .7z .iso .vhdx .qcow2 .png .jpg .jpeg .pdf'.split())
@@ -67,6 +67,23 @@ def pinned_compiler_sha256(root):
     raise ValueError(f'{TOOLCHAIN_PIN} names no cl.exe')
 
 
+def check_unit(root, compiled, unit, what):
+    """Require the listed translation unit to be exactly the compiled file's quoted-include closure.
+
+    The digest only hashes the files a record lists, so an omitted header could change later without
+    making the record stale; deriving the list closes that. Angle-bracket includes are toolchain and
+    SDK headers outside the repository, bound by the pinned toolchain hash rather than this digest.
+    """
+    try:
+        closure = include_closure(root, compiled)
+    except (ValueError, OSError) as exc:
+        raise ValueError(f'{what}: translation unit of {compiled}: {exc}') from None
+    missing = sorted(set(closure) - set(unit))
+    extra = sorted(set(unit) - set(closure))
+    require(not missing, f'{what}: translation_unit omits files {compiled} includes: {", ".join(missing)}')
+    require(not extra, f'{what}: translation_unit lists files {compiled} does not include: {", ".join(extra)}')
+
+
 def validate_match(fn, target, root=None):
     """Tie a `matched` inventory entry to integrated source, pinned inputs and comparator reports.
 
@@ -91,8 +108,10 @@ def validate_match(fn, target, root=None):
     unit = source.get('translation_unit')
     require(isinstance(unit, list) and unit, 'Match record: translation_unit must list the source files')
     unit = [public_path(name, {'reconstruction'}, 'source file', root) for name in unit]
+    require(len(set(unit)) == len(unit), 'Match record: translation_unit lists a file twice')
     compiled = source.get('compiled')
     require(compiled in unit, 'Match record: the compiled file is not part of the translation unit')
+    check_unit(root, compiled, unit, 'Match record')
     digest = tu_digest(root, unit)
     require(source.get('digest') == digest, 'Match record: source digest is stale for the integrated source')
 
@@ -106,6 +125,9 @@ def validate_match(fn, target, root=None):
             'Match record: recipe does not pin a compiler hash and version')
     flags = recipe.get('flags')
     require(isinstance(flags, list) and flags and all(text(f) for f in flags), 'Match record: recipe has no flags')
+    # A forced include adds a header to the unit without any #include directive the closure can see.
+    require(not any(f[:1] in '/-' and f[1:3].upper() == 'FI' for f in flags),
+            'Match record: recipe uses a forced include (/FI), which the translation unit cannot bind')
 
     pin = record.get('toolchain_pin') or {}
     require(pin.get('path') == TOOLCHAIN_PIN, f'Match record: toolchain_pin must be {TOOLCHAIN_PIN}')
@@ -125,6 +147,7 @@ def validate_match(fn, target, root=None):
     runs = record.get('runs')
     require(isinstance(runs, list) and len(runs) >= MIN_HOSTS, f'Match record: needs at least {MIN_HOSTS} runs')
     compiled_on, compared_on, symbols = set(), set(), set()
+    object_hosts = {}
     current_comparator = comparator_source_sha256()
     for run in runs:
         require(isinstance(run, dict) and text(run.get('compiled_on')) and text(run.get('compared_on')),
@@ -160,6 +183,7 @@ def validate_match(fn, target, root=None):
                 'Match record: report recipe differs from the pinned recipe')
         require(is_hash((report.get('candidate') or {}).get('object_sha256')),
                 'Match record: report does not name its candidate object')
+        object_hosts.setdefault(report['candidate']['object_sha256'], set()).add(run['compiled_on'])
         cov = report.get('coverage') or {}
         require(cov.get('code_bytes_total') == fn['size']
                 and integer(cov.get('code_bytes_exact')) and integer(cov.get('code_bytes_by_reference'))
@@ -172,6 +196,12 @@ def validate_match(fn, target, root=None):
             'Match record: symbol map does not place the function at the inventory range')
     require(len(compiled_on) >= MIN_HOSTS and len(compared_on) >= MIN_HOSTS,
             f'Match record: runs must come from at least {MIN_HOSTS} compile hosts and {MIN_HOSTS} compare hosts')
+    # Host names are self-reported. Without /Brepro, two clean compiles do not yield the same object
+    # (COFF time stamp and path records differ), so one object under two compile hosts means one
+    # run was relabelled, not repeated. A deterministic recipe would trip this and needs a gate change.
+    shared = sorted(h for hosts in object_hosts.values() if len(hosts) > 1 for h in hosts)
+    require(not shared, f'Match record: one candidate object is claimed by compile hosts {", ".join(shared)}; '
+            'runs from different hosts must have different object hashes')
     return record
 
 

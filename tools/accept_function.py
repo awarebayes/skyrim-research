@@ -65,8 +65,12 @@ def fields(lines):
     return out
 
 
-def parse_review(text, build_id, rva):
-    """Header fields and this function's block from a review in the reviewer.md output format."""
+def parse_review(text, build_id, rva, size):
+    """Header fields and this function's block from a review in the reviewer.md output format.
+
+    The block heading is `## <build id> 0x<rva> <size>`; the size must equal the inventory's, so a
+    review of a differently sized range at the same address is not taken for this function.
+    """
     lines = text.splitlines()
     title = next((m.group(1) for m in (re.fullmatch(r'# Review (\S+)\s*', l) for l in lines) if m), None)
     starts = [i for i, l in enumerate(lines) if l.startswith('## ')]
@@ -77,11 +81,15 @@ def parse_review(text, build_id, rva):
         if len(parts) >= 2 and parts[0] == build_id:
             try:
                 if int(parts[1], 16) == rva:
-                    blocks.append(fields(lines[i + 1:starts[n + 1] if n + 1 < len(starts) else len(lines)]))
+                    body = fields(lines[i + 1:starts[n + 1] if n + 1 < len(starts) else len(lines)])
+                    blocks.append((parts[2:], body))
             except ValueError:
                 continue
     refuse(len(blocks) == 1, f'review has {len(blocks)} blocks for {build_id} 0x{rva:x}; expected exactly 1')
-    return title, header, blocks[0]
+    rest, block = blocks[0]
+    refuse(len(rest) == 1 and rest[0] == str(size),
+           f'review block for {build_id} 0x{rva:x} gives size {" ".join(rest) or "none"}, not the inventory size {size}')
+    return title, header, block
 
 
 def load(root):
@@ -129,7 +137,7 @@ def accept(root, build_id, rva, review_file, verdict, when=None):
     refuse(private in review_file.parents, f'review file must be under {REVIEWS}/')
     refuse(review_file.is_file(), f'review file {review_file} does not exist')
     blob = review_file.read_bytes()
-    title, header, block = parse_review(blob.decode('utf-8'), build_id, rva)
+    title, header, block = parse_review(blob.decode('utf-8'), build_id, rva, fn['size'])
     refuse(title is not None and re.fullmatch(r'[a-z0-9][a-z0-9-]*', title),
            'review has no "# Review <task-id>" title with a lowercase task id')
     refuse(block.get('verdict') == verdict, f'review says verdict {block.get("verdict")!r}, not {verdict!r}')
@@ -157,14 +165,21 @@ def accept(root, build_id, rva, review_file, verdict, when=None):
     new['functions'][index]['status'] = 'matched'
     new['updated_at'] = when.strftime('%Y-%m-%dT%H:%M:%SZ')
     unchanged_elsewhere(data, new, index)
-    out.write_text(json.dumps(review, indent=2, sort_keys=True) + '\n')
+    progress_before = (root / PROGRESS).read_bytes()
+    # From the first write on, any failure, including an interrupt or a failed progress write, must
+    # leave neither a review record nor a half-updated inventory behind.
     try:
-        validate_review(new['functions'][index], record, root)
-        validate(new, target, root)
-    except (ValueError, KeyError, TypeError) as exc:
-        out.unlink()
-        raise Refused(f'validator rejects the result: {exc}') from None
-    write_progress(root, new)
+        out.write_text(json.dumps(review, indent=2, sort_keys=True) + '\n')
+        try:
+            validate_review(new['functions'][index], record, root)
+            validate(new, target, root)
+        except (ValueError, KeyError, TypeError) as exc:
+            raise Refused(f'validator rejects the result: {exc}') from None
+        write_progress(root, new)
+    except BaseException:
+        out.unlink(missing_ok=True)
+        (root / PROGRESS).write_bytes(progress_before)
+        raise
     return [PROGRESS, review_record_path(fn)]
 
 

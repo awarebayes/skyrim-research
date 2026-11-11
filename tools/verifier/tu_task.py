@@ -10,7 +10,8 @@ Run from the repository root (or from a copy that keeps the repository layout) a
 Function identity (build id, RVA, size) is read from data/progress.json and the image hash from
 builds/target.json, so a task cannot drift from the inventory it will be checked against. The
 source revision is the translation-unit digest of tools/source_digest.py, the same value
-tools/check.py recomputes from integrated source. --rva/--size override the inventory only for
+tools/check.py recomputes from integrated source. --unit must be exactly the quoted-include closure
+of --compiled (tools/source_digest.py `include_closure`); the task is refused otherwise. --rva/--size override the inventory only for
 negative tests; a task built that way can never satisfy the gate for the inventory entry.
 """
 import argparse
@@ -21,7 +22,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from source_digest import tu_digest  # noqa: E402
+from source_digest import include_closure, tu_digest  # noqa: E402
 
 
 def sha256(path):
@@ -47,6 +48,17 @@ def main():
     repo = a.repo.resolve()
     if a.compiled not in a.unit:
         raise SystemExit('--compiled must be one of --unit')
+    # Same rule as tools/check.py: a task bound to an incomplete unit would yield a record whose
+    # digest misses a header that can then change unnoticed.
+    try:
+        closure = include_closure(repo, a.compiled)
+    except (ValueError, OSError) as exc:
+        raise SystemExit(f'translation unit of {a.compiled}: {exc}')
+    if sorted(set(a.unit)) != closure or len(set(a.unit)) != len(a.unit):
+        missing = sorted(set(closure) - set(a.unit))
+        extra = sorted(set(a.unit) - set(closure))
+        raise SystemExit(f'--unit must list each file of the include closure of {a.compiled} once; '
+                         f'missing: {missing or "none"}; not included: {extra or "none"}')
     target = json.loads((repo / 'builds/target.json').read_text())
     progress = json.loads((repo / 'data/progress.json').read_text())
     fns = [f for f in progress['functions'] if f['id'] == a.function_id]

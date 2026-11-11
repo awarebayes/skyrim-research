@@ -50,7 +50,8 @@ for controlled runtime experiments. Read [verification](docs/verification.md).
 - `builds/`: public target manifests containing metadata and hashes, never executable bytes.
 - `findings/`: provenance-bearing research notes, including uncertainty and negative results.
 - `specs/`: implementation-independent behavior specifications; separately reviewed for exposure.
-- `reconstruction/`: reserved for reviewed source reconstruction; currently no game functions.
+- `reconstruction/`: reconstructed source by engine area, published per the maintainer's
+  decision in [LEGAL.md](LEGAL.md); a function counts only once accepted under the acceptance rule.
 - `reports/`: sanitized verification records; no raw compiler output or binary attachments.
 - `tools/`, `tests/`, `site/`: original infrastructure, publication guard and progress website.
 - `.local/`: private, ignored inputs and generated research artifacts.
@@ -59,7 +60,7 @@ for controlled runtime experiments. Read [verification](docs/verification.md).
 
 - [FNV reconstruction](https://github.com/momusdigital/fnv_decomp): function-level matching workflow.
 - [FNV executable tools](https://github.com/momusdigital/fnv_decomp_exe): separation of reconstruction
-  from local executable building. We do not currently implement either executable building or matching.
+  from local executable building. We do not implement executable building.
 - [FNV progress report](https://www.fnvdecomp.com/) and [Fallout 3 report](https://f3decomp.com/):
   evidence-based progress reporting and clear scope.
 - [Skyrim RE Toolkit](https://github.com/ByteBard97/skyrim-re-toolkit): community type archives,
@@ -82,6 +83,11 @@ disassembly listings, memory dumps, saves, proprietary SDKs or debug-symbol file
 uploaded to issues, published in Actions artifacts or distributed in releases.** Do not submit leaked,
 confidential or unlawfully obtained material, or material copied without permission. This project
 provides no copy-protection removal tools or instructions.
+
+Reconstructed source is published in this repository, organized by engine area, in the same
+manner as the FNV decompilation project publishes its reconstruction; this is the maintainer's
+decision, recorded in [LEGAL.md](LEGAL.md) with the rules that still apply. It is not a legal
+opinion, and FNV code is not copied.
 
 Public availability is not permission to copy. Original infrastructure has a narrowly scoped MIT
 license; other material has no general license grant. See [LICENSE](LICENSE), [LEGAL.md](LEGAL.md)

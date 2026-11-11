@@ -9,11 +9,14 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import struct
+import subprocess
 import sys
 import tempfile
 import unittest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+TOOLS = Path(__file__).resolve().parents[1] / 'tools'
+sys.path.insert(0, str(TOOLS))
 from check import validate, validate_match
 from compare import compare
 from source_digest import tu_digest
@@ -21,6 +24,8 @@ import synthetic_pecoff as fx
 
 CPP = 'reconstruction/synthetic/SyntheticSum.cpp'
 HDR = 'reconstruction/synthetic/SyntheticSum.h'
+EXTRA = 'reconstruction/synthetic/SyntheticExtra.h'
+NESTED = 'reconstruction/synthetic/detail/SyntheticNested.h'
 RECIPE = 'reconstruction/recipes/synthetic.json'
 MAP = 'reports/synthetic-fixture/symbol-map.json'
 RECORD = 'reports/synthetic-fixture/0x1010.json'
@@ -30,6 +35,13 @@ PIN = 'tools/verifier/pinned.sha256'
 
 def sha256(blob):
     return hashlib.sha256(blob).hexdigest()
+
+
+def compiled_object(stamp):
+    """The fixture object with its COFF time stamp set, as two clean compiles on two hosts differ."""
+    obj = bytearray(fx.coff_object())
+    struct.pack_into('<I', obj, 4, stamp)
+    return bytes(obj)
 
 
 class GateFixture:
@@ -83,9 +95,10 @@ class GateFixture:
         return json.loads(json.dumps(compare(**args)))
 
     def make_record(self, runs=None):
-        report = self.run_comparator()
         if runs is None:
-            runs = [('host-a', 'host-a', report), ('host-b', 'host-b', report), ('host-a', 'host-c', report)]
+            a = self.run_comparator(obj=compiled_object(1))
+            b = self.run_comparator(obj=compiled_object(2))
+            runs = [('host-a', 'host-a', a), ('host-b', 'host-b', b), ('host-a', 'host-c', a)]
         return {'match_record_schema': 1, 'function_id': self.fn['id'],
                 'source': {'translation_unit': [CPP, HDR], 'compiled': CPP, 'digest_method': 'tu-sha256-v1',
                            'digest': tu_digest(self.root, [CPP, HDR])},
@@ -314,6 +327,95 @@ class MatchGateTests(GateFixture, unittest.TestCase):
         self.save_record()
         self.assertGateRejects('at least 2 compile hosts')
 
+    def test_one_report_under_two_compile_hosts_rejected(self):
+        # Host labels are self-reported; the same object under two hosts is one compile relabelled.
+        report = self.run_comparator(obj=compiled_object(1))
+        self.record = self.make_record(runs=[('host-a', 'host-a', report), ('host-b', 'host-b', report)])
+        self.save_record()
+        self.assertGateRejects('claimed by compile hosts host-a, host-b')
+
+    def test_one_object_compared_on_two_hosts_accepted(self):
+        report = self.run_comparator(obj=compiled_object(1))
+        other = self.run_comparator(obj=compiled_object(2))
+        self.record = self.make_record(runs=[('host-a', 'host-a', report), ('host-a', 'host-c', report),
+                                             ('host-b', 'host-b', other)])
+        self.save_record()
+        self.check()
+
+    # Translation unit: the listed files must be exactly the compiled file's quoted-include closure.
+
+    def rebind(self, unit):
+        """Regenerate record, reports and review for `unit` so only the unit's completeness is at issue."""
+        revision = tu_digest(self.root, unit)
+        a = self.run_comparator(obj=compiled_object(1), source_revision=revision)
+        b = self.run_comparator(obj=compiled_object(2), source_revision=revision)
+        self.record = self.make_record(runs=[('host-a', 'host-a', a), ('host-b', 'host-b', b)])
+        self.record['source'].update(translation_unit=sorted(unit), digest=revision)
+        self.save_record()
+        self.review['source_digest'] = revision
+        self.save_review()
+
+    def include(self, name, line):
+        self.write(name, f'{line}\n' + (self.root / name).read_text())
+
+    def test_unlisted_direct_header_rejected(self):
+        self.write(EXTRA, 'int SyntheticExtra;\n')
+        self.include(CPP, '#include "SyntheticExtra.h"')
+        self.rebind([CPP, HDR])
+        self.assertGateRejects('translation_unit omits files .* includes: ' + EXTRA)
+
+    def test_unlisted_nested_header_rejected(self):
+        self.write(NESTED, 'int SyntheticNested;\n')
+        self.include(HDR, '#include "detail/SyntheticNested.h"')
+        self.rebind([CPP, HDR])
+        self.assertGateRejects('translation_unit omits files .* includes: ' + NESTED)
+
+    def test_complete_nested_unit_accepted(self):
+        # The nested header names its includer's directory, which MSVC searches next; angle includes
+        # are toolchain headers and stay out of the unit.
+        self.write(NESTED, '#include "SyntheticSum.h"\n#include <cstdint>\nint SyntheticNested;\n')
+        self.include(HDR, '#include "detail/SyntheticNested.h"')
+        self.rebind([CPP, HDR, NESTED])
+        self.check()
+
+    def test_header_through_include_root_accepted(self):
+        self.write(EXTRA, 'int SyntheticExtra;\n')
+        self.include(CPP, '#include "synthetic/SyntheticExtra.h"')
+        self.rebind([CPP, HDR, EXTRA])
+        self.check()
+
+    def test_unresolvable_quoted_include_rejected(self):
+        self.include(CPP, '#include "SyntheticMissing.h"')
+        self.rebind([CPP, HDR])
+        self.assertGateRejects('"SyntheticMissing.h" cannot be resolved inside the repository')
+
+    def test_include_outside_repository_rejected(self):
+        self.include(CPP, '#include "../../../outside.h"')
+        self.rebind([CPP, HDR])
+        self.assertGateRejects('cannot be resolved inside the repository')
+
+    def test_ambiguous_quoted_include_rejected(self):
+        self.write('reconstruction/SyntheticSum.h', 'int SyntheticShadow;\n')
+        self.rebind([CPP, HDR])
+        self.assertGateRejects('is ambiguous')
+
+    def test_computed_include_rejected(self):
+        self.include(CPP, '#include SYNTHETIC_HEADER')
+        self.rebind([CPP, HDR])
+        self.assertGateRejects('neither "..." nor <...>')
+
+    def test_listed_unreachable_file_rejected(self):
+        self.write(EXTRA, 'int SyntheticExtra;\n')
+        self.rebind([CPP, HDR, EXTRA])
+        self.assertGateRejects('translation_unit lists files .* does not include: ' + EXTRA)
+
+    def test_forced_include_in_recipe_rejected(self):
+        self.recipe_bytes = fx.recipe(flags=('/O2', '/Gy', '/FISyntheticExtra.h'))
+        self.write(RECIPE, self.recipe_bytes)
+        self.record = self.make_record()
+        self.save_record()
+        self.assertGateRejects('forced include')
+
     # Reviewer approval: a sanitized record bound to this function and this source.
 
     def test_missing_review_record_rejected(self):
@@ -391,6 +493,46 @@ class MatchGateTests(GateFixture, unittest.TestCase):
 
     def test_validate_match_direct_call(self):
         validate_match(self.fn, self.target, self.root)
+
+
+class TuTaskUnitTests(GateFixture, unittest.TestCase):
+    """tools/verifier/tu_task.py refuses a unit the gate would reject, before any report exists."""
+
+    def run_task(self, unit):
+        self.write('data/progress.json', json.dumps(self.data))
+        self.write('builds/target.json', json.dumps(self.target))
+        obj = self.root / 'work/candidate.obj'
+        obj.parent.mkdir(parents=True, exist_ok=True)
+        obj.write_bytes(compiled_object(1))
+        return subprocess.run(
+            [sys.executable, '-I', str(TOOLS / 'verifier/tu_task.py'), '--repo', str(self.root),
+             '--function-id', self.fn['id'], '--symbol', fx.FUNCTION, '--compiled', CPP, '--unit', *unit,
+             '--recipe', RECIPE, '--symbols', str(self.root / MAP), '--object', str(obj),
+             '--out', str(self.root / 'work/task')], capture_output=True, text=True)
+
+    def test_complete_unit_writes_task(self):
+        result = self.run_task([CPP, HDR])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        task = json.loads((self.root / 'work/task/task-file.json').read_text())['task']
+        self.assertEqual(task['source_revision'], tu_digest(self.root, [CPP, HDR]))
+
+    def test_unlisted_header_refused(self):
+        result = self.run_task([CPP])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(f"missing: ['{HDR}']", result.stderr)
+        self.assertFalse((self.root / 'work/task').exists())
+
+    def test_unreachable_file_refused(self):
+        self.write(EXTRA, 'int SyntheticExtra;\n')
+        result = self.run_task([CPP, HDR, EXTRA])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(f"not included: ['{EXTRA}']", result.stderr)
+
+    def test_unresolvable_include_refused(self):
+        self.write(CPP, '#include "SyntheticMissing.h"\n' + (self.root / CPP).read_text())
+        result = self.run_task([CPP, HDR])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('cannot be resolved inside the repository', result.stderr)
 
 
 class SourceDigestTests(unittest.TestCase):

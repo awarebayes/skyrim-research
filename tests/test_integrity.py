@@ -33,6 +33,18 @@ class IntegrityTests(unittest.TestCase):
         self.assertIn('Not measured', page)
         self.assertNotIn('100%', page)
 
+    def test_page_states_gate_from_data(self):
+        page = render(self.data, 'synthetic-revision')
+        self.assertNotIn('not implemented', page)
+        self.assertNotIn('disabled during bootstrap', page)
+        self.assertIn('Matching gate implemented; no function accepted yet', page)
+        self.assertIn('Scope remains unknown; no completion percentage', page)
+        self.pin()
+        self.data['functions'][0]['status'] = 'matched'
+        page = render(self.data, 'synthetic-revision')
+        self.assertIn('<strong>1</strong><small>Each: comparator pass on 2+ hosts and a Reviewer approve', page)
+        self.assertNotIn('%', page.split('Scope note')[0].split('metrics')[-1])
+
     def test_fake_scope_rejected(self):
         self.data['scope'].update(functions=100, bytes=1000)
         with self.assertRaisesRegex(ValueError, 'inventory'):

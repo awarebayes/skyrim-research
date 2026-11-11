@@ -162,7 +162,9 @@ Prerequisites: steps 2, 3 and 4.
 
 Status: `sse-steam-1-7-104` `0x73ad90` is reconstructed, integrated and reproduced on 3 hosts
 (`findings/first-function.md`); it is `mapped` and awaits a fresh Reviewer pass and
-`tools/accept_function.py`.
+`tools/accept_function.py`. Publication: the maintainer has decided that reconstructed source is
+published in this repository by engine area (`LEGAL.md`); this function's source is pushed with
+its acceptance.
 
 **Finish when:** one integrated function has a reproducible accepted report and public metadata
 passes validation. Only then should the site display its first accepted match. A byte match

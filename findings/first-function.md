@@ -78,8 +78,9 @@ Name and identity:
   This supports the class and slot. It does not prove the method name, which is NG's.
 - EXE_RTTI also shows the class lives in an anonymous namespace (the type descriptor name has an
   `_anon_` prefix) together with `ArmorRatingVisitorBase` and `GetClothingValueVisitor`. That puts
-  the three classes in one translation unit. A reconstruction must still use a named namespace,
-  because contract v1 needs an external symbol.
+  the three classes in one translation unit. The reconstruction instead declares the class in the
+  global namespace with external linkage, because contract v1 needs an external symbol; a
+  named namespace would also give one, but the source does not use one.
 - The function reads two members of the class. Their offsets agree with NG's declared layout of
   `ArmorRatingVisitor::armors` (`BSScrapArray<TESObjectARMO*>`). This supports those two offsets on
   this build. It does not support the rest of NG's layout.

@@ -7,6 +7,12 @@ artifacts. CI checks that these files agree with the integrated source and pinne
 does not compare anything with the game, and metadata validation alone does not prove that a
 comparison ran.
 
+Host names in the runs and the whole Reviewer record are self-reported by whoever wrote them;
+nothing here authenticates them. The gate checks that the public files agree with each other. It
+cannot show that a comparison or a review took place, or on which machine. The safeguards for
+that are the sampling re-check in `docs/verification.md` (a second independent Reviewer pass and
+a from-scratch comparator re-run) and git history as the audit trail.
+
 ## Layout
 
 - `reports/<build id>/<rva>.json`: the match record for the function at that RVA, with the RVA
@@ -27,12 +33,15 @@ Written by `tools/verifier/match_record.py`, which refuses to write a record tha
 
 - `function_id`: the inventory entry.
 - `source`: the translation-unit files under `reconstruction/`, the compiled file, and their
-  `tu-sha256-v1` digest (`tools/source_digest.py`).
+  `tu-sha256-v1` digest (`tools/source_digest.py`). The files must be exactly the compiled file's
+  quoted-include closure (`docs/verification.md`, "Match gate"); angle-bracket includes are
+  toolchain headers bound by the toolchain pin.
 - `recipe`, `toolchain_pin` (`tools/verifier/pinned.sha256`), `symbol_map`: path and SHA-256 of each.
 - `reproduction`: the commands to recompile and re-run the comparison.
 - `runs`: at least two comparator reports, embedded exactly as `tools/compare.py` wrote them,
   each with the host that compiled the object and the host that compared it. Runs must come
-  from at least two compile hosts and two compare hosts.
+  from at least two compile hosts and two compare hosts, and runs from different compile hosts
+  must name different candidate object hashes (a copied report under a second host label fails).
 - `notes`: limitations, including how independent the hosts were.
 
 Whenever an entry names a record, `tools/check.py` requires each of these to be present and

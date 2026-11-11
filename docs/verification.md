@@ -112,8 +112,18 @@ stale unnoticed. A `matched` entry must name one, and must also have a Reviewer 
 
 Match record, recomputed from the tree:
 
-- **Source.** The digest of the translation unit under `reconstruction/` equals the record's,
-  and every report names that digest and the compiled file's path.
+- **Source.** The record's `translation_unit` is exactly the include closure of its compiled
+  file: every repository file reachable through quoted `#include "..."` directives,
+  transitively, and nothing else. A quoted include resolves against the including file's
+  directory, then the directories of the files that included it (innermost first, as MSVC
+  searches), then the include root `reconstruction/` (a source relying on it is compiled with
+  `/I reconstruction`). It must resolve to exactly one regular file inside the repository; an
+  unresolvable, ambiguous or out-of-repository quoted include, a computed `#include MACRO`, and a
+  recipe forced include (`/FI`) all fail closed. Angle-bracket includes are toolchain and SDK
+  headers, not repository files: they are bound by the pinned toolchain hash, not by the source
+  digest. The digest of that unit (`tools/source_digest.py`) equals the record's, and every report
+  names that digest and the compiled file's path. `tools/verifier/tu_task.py` applies the same
+  closure rule, so a verifier task cannot be built from an incomplete unit.
 - **Target.** Every report's image hash equals `builds/target.json`. Its build id, RVA and size
   equal the inventory entry's, and the pinned symbol map places the symbol at that range.
 - **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match
@@ -124,7 +134,12 @@ Match record, recomputed from the tree:
 - **Result.** Every report has result `pass`, every function byte covered exactly or by
   reference, and unwind info `covered` or `none-in-range`.
 - **Reproduction.** There are at least two runs, from at least two compile hosts and two
-  compare hosts. The record says how independent those hosts are.
+  compare hosts. The record says how independent those hosts are. Host names are self-reported
+  labels: the gate cannot verify which machine produced a run. As a tripwire against one report
+  copied under two labels, runs from different compile hosts must name different candidate
+  object hashes (two clean compiles differ in time stamp and path records, so identical objects
+  mean one compile was relabelled). A recipe that makes compiles bit-identical, such as
+  `/Brepro`, would trip it and needs a gate change first.
 
 Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory id), for every
 `matched` entry:
@@ -133,8 +148,9 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
   `source_digest_method`, `source_digest`, `reviewer_model`, `review_task_id`, `verdict`,
   `escalation_category`, `review_sha256` and `review_date`, so no free text is published;
 - the function identity equals the inventory entry's, and the source digest equals the match
-  record's, so an approval cannot be reused for other source or another function, and any source
-  change makes it stale;
+  record's, so an approval cannot be reused for other source or another function, and a change
+  to any file in the compiled file's include closure (above) makes it stale together with the
+  match record;
 - a reviewer model is named, the verdict is `approve` with escalation category `none`, the review
   hash is a SHA-256 and the date is a valid ISO date;
 - a Reviewer record for an entry that is not `matched` is rejected, so a leftover approval never
@@ -149,9 +165,16 @@ what ties it to the file kept under `.local/reviews/`.
 The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,
 stale or inconsistent, and `tests/test_accept_function.py` covers the acceptance tool. They use
 reports that the comparator produced from synthetic fixtures. The step 4 comparator tests in
-`tests/test_compare.py` are unchanged. The gate does not and cannot show that a comparison
-against the game took place, or that a Reviewer read the source; those rest on the runs and the
-review being real, which the sampling safeguard re-checks. Git history is the audit trail.
+`tests/test_compare.py` are unchanged.
+
+What the gate can and cannot show: it checks that public files agree with each other (source,
+recipe, pins, reports, Reviewer record). Host identity in the runs and the whole Reviewer record
+are self-reported by whoever wrote them; nothing in the tree authenticates them. The gate
+therefore cannot show that a comparison against the game took place, that it ran on the hosts
+named, or that a Reviewer read the source. Those rest on the runs and the review being real. The
+safeguards for that are the sampling safeguard above (a second independent Reviewer pass and a
+from-scratch comparator re-run for a sample of accepted functions) and git history as the audit
+trail, not the validator.
 
 Public CI cannot prove a match without private game inputs. It should check report/source
 consistency, not represent that check as an independent comparison to Skyrim. Once an authorized

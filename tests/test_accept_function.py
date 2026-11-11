@@ -35,9 +35,10 @@ class AcceptFunctionTests(GateFixture, unittest.TestCase):
         self.write_review()
 
     def write_review(self, verdict='approve', category='none', digest=None, rva=None, model='claude-opus-5-5',
-                     fresh='yes', drafted='no'):
+                     fresh='yes', drafted='no', size=None):
         digest = digest or self.record['source']['digest']
         rva = self.fn['rva'] if rva is None else rva
+        size = self.fn['size'] if size is None else size
         self.write(REVIEW_FILE, f'''# Review synthetic-review
 
 reviewer_model: {model}
@@ -47,7 +48,7 @@ gates_in_force: G2
 source_revision: 0000000
 sampling_second_pass: no
 
-## synthetic-fixture 0x{rva:x} {self.fn["size"]}
+## synthetic-fixture 0x{rva:x} {size}
 
 verdict: {verdict}
 escalation_category: {category}
@@ -119,6 +120,46 @@ reasons: synthetic
     def test_review_of_other_function_refused(self):
         self.write_review(rva=0x3000)
         self.assertRefused('0 blocks')
+
+    def test_review_block_for_other_size_refused(self):
+        self.write_review(size=self.fn['size'] + 1)
+        self.assertRefused('not the inventory size')
+
+    def test_review_block_without_size_refused(self):
+        self.write_review(size='')
+        self.assertRefused('gives size none')
+
+    def assertRolledBack(self, target, error):
+        before = (self.root / 'data/progress.json').read_bytes()
+        original = getattr(af, target)
+
+        calls = []
+
+        def fail(*args, **kwargs):
+            # Only fail inside the window after the review record is written, which is what is tested.
+            if not (self.root / REVIEW).exists():
+                return original(*args, **kwargs)
+            calls.append(target)
+            raise error
+
+        setattr(af, target, fail)
+        try:
+            with self.assertRaises(type(error)):
+                self.accept()
+        finally:
+            setattr(af, target, original)
+        self.assertEqual(calls, [target])
+        self.assertEqual((self.root / 'data/progress.json').read_bytes(), before)
+        self.assertFalse((self.root / REVIEW).exists())
+
+    def test_unexpected_error_during_validation_rolls_back(self):
+        self.assertRolledBack('validate_review', RuntimeError('synthetic crash'))
+
+    def test_interrupt_during_validation_rolls_back(self):
+        self.assertRolledBack('validate', KeyboardInterrupt())
+
+    def test_failed_progress_write_rolls_back(self):
+        self.assertRolledBack('write_progress', OSError('synthetic disk full'))
 
     def test_review_without_model_refused(self):
         self.write_review(model='')

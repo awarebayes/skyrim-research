@@ -23,10 +23,18 @@ def render(data, revision):
     events = ''.join(f'<li><time>{escape(e["date"])}</time><div><h3>{escape(e["title"])}</h3>'
                      f'<p>{escape(e["detail"])}</p></div></li>' for e in reversed(data['milestones']))
     tasks = Counter(item['status'] for item in data['work_items'])
+    # Derived from the validated inventory so the page cannot claim a gate state or total the data lacks.
+    matched = counts['matched']
+    matched_note = ('Matching gate implemented; no function accepted yet' if not matched else
+                    'Each: comparator pass on 2+ hosts and a Reviewer approve')
+    matched_bytes_note = 'No function accepted yet' if not matched else 'Sum of accepted functions\' sizes'
+    scope_note = ('Scope remains unknown; no completion percentage' if data['scope']['functions'] is None
+                  else f'{data["scope"]["functions"]:,} functions in measured scope')
     return Template((ROOT / 'site/index.html').read_text()).substitute(
         phase=escape(data['phase']), updated=escape(data['updated_at']), revision=escape(revision),
         target=escape(data['target_build_id'] or 'Not pinned'), inventory=len(data['functions']),
-        matched=counts['matched'], matched_bytes=sum(fn['size'] for fn in data['functions'] if fn['status'] == 'matched'),
+        matched=matched, matched_note=escape(matched_note), matched_bytes_note=escape(matched_bytes_note),
+        scope_note=escape(scope_note), matched_bytes=sum(fn['size'] for fn in data['functions'] if fn['status'] == 'matched'),
         scope=escape(data['scope']['notes']), pipeline=pipeline, work=''.join(items), events=events,
         planned=tasks['planned'], active=tasks['active'], blocked=tasks['blocked'], done=tasks['done'])
 

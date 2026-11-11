@@ -3,11 +3,13 @@
 Reconstructed source for functions that have a match record under `reports/`. A byte match does
 not settle copyright status, and it does not verify a function's name or show what the original
 source looked like. Each function's provenance is checked by a Reviewer subagent under the
-acceptance rule in `docs/verification.md`, with provenance or legal doubt escalated. Whether
-reconstructed source may be published at all is the maintainer's policy decision under
-`LEGAL.md`; changes to the matching gate follow the acceptance rule's machinery-change path.
-Source is pushed only together with its acceptance (`CONTRIBUTING.md`, "Publication"); a branch
-that holds integrated source still awaiting a Reviewer approve stays local.
+acceptance rule in `docs/verification.md`, with provenance or legal doubt escalated. The
+maintainer has decided that reconstructed source is published in this repository, organized by
+engine area as below, in the same manner as the FNV decompilation project publishes its
+reconstruction (`LEGAL.md`, "Publication of reconstructed source"). Changes to the matching gate
+follow the acceptance rule's machinery-change path. Source is pushed only together with its
+acceptance (`CONTRIBUTING.md`, "Publication"); a branch that holds integrated source still
+awaiting a Reviewer approve stays local.
 Do not copy FNV code, raw decompiler output, proprietary middleware or unlicensed implementations.
 Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source.
 
@@ -16,7 +18,9 @@ Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source
 - **One pair per class**: `reconstruction/<area>/<Class>.cpp` holds the class's reconstructed
   member functions, and `reconstruction/<area>/<Class>.h` beside it the type declarations they
   need. The .cpp includes its header by a quoted name, so the unit compiles from the repository
-  root with the recipe's flags and no include path. This stays the rule until the original
+  root with the recipe's flags and no include path. Every repository file a unit reaches through
+  quoted includes belongs to its match record's translation unit; `tools/check.py` derives that
+  set and rejects a record that omits or adds a file (`docs/verification.md`, "Match gate"). This stays the rule until the original
   translation units are evidenced (for example by RTTI or layout showing which classes shared an
   object); then a unit may hold several classes, as that evidence shows.
 - **`<area>`** is the engine area that community headers make evident for the class, such as
