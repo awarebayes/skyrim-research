@@ -28,21 +28,50 @@ to a file whose name ends in `.GPL-local-only.*`; do not publish or paste from t
 
 ```sh
 python3 tools/ghidra/export_pack.py packs <list file> [--recipe msvc-19.16.27054-o2] [--max-attempts 12]
+        [--attempts-per-function 4] [--fpfast keep|unit|drop] [--class-material]
 python3 tools/ghidra/export_pack.py survey --sample 2000 --seed 1     # suitability only, random functions
 python3 tools/ghidra/export_pack.py survey --named                    # every NG-named function
+python3 tools/ghidra/export_pack.py plan --label <name> [--extend <Class>] [--area <Class>=<area>]
+        [--classes 8] [--per-class 5] [--total 40] [--task-prefix <prefix>]   # class units from the survey
+python3 tools/ghidra/export_pack.py refresh [<pack dir>...] [--tasks .local/tasks/<id>...]  # no Ghidra
 python3 tools/ghidra/export_pack.py bind --task .local/tasks/<id> [--object <candidate.obj>]
 ```
 
-List file: one function per line, `<build id> <rva> <task id> [<unit .cpp>]`, `#` comments.
+List file: one function per line, `<build id> <rva> <task id> [<unit .cpp>] [recipe=<name>]`, `#` comments.
 Lines with the same task id form one task and must name the same unit (or none: the tool then
 reuses `reconstruction/*/<Class>.cpp` if it exists, else proposes `reconstruction/<area>/<Class>.cpp` by the
 prefix rule of `reconstruction/README.md` and stops when no rule covers the class).
 Only the pinned build is accepted; addresses never transfer between builds.
 
+`--attempts-per-function N` sets a task's budget to N times its compared functions. `--fpfast`
+handles functions whose listing tests float equality without a parity branch (the `/fp:fast`
+pattern; `/fp:precise` guards `==` with `jp`): `unit` moves the whole task to `--fpfast-recipe` when its
+other functions are recipe-neutral (no float arithmetic, compare or conversion) and otherwise drops
+the flagged ones; `drop` always drops them; `keep` (default) only notes them in the pack. A second
+`<Class>_fpfast` unit is not offered: the source lint ties a unit's file name to the class it declares.
+`--class-material` also writes the class directories below and points each pack README at its class.
+
+### plan: class units from the survey
+
+`plan` reads the latest `survey --named` output (no Ghidra run) and keeps a function when its v1
+verdict is `supported` (or `caution` only for a padded leaf without `.pdata`), CommonLibSSE-NG names
+it, its owning class's NG body declares the method (a check on the enclosing-name heuristic), it is
+not middleware (`GFx*`, `hk*`, Scaleform, SKSE) or a free function, it is at most
+`--max-function-bytes` and not yet in the inventory. Classes with at least `--min-functions` such
+functions and an area (prefix rule, an existing unit, or `--area` for rule 1) are candidates; a class
+with an existing unit only when it is the `--extend` class, whose accepted functions become
+regression entries. Per class it takes the two smallest functions over 100 bytes, then the smallest
+others, within `--max-unit-bytes`; it chooses one class per kind (form by RTTI ancestry, extra data,
+NetImmerse, BS utility, menu/UI, magic, actor, manager or singleton) and fills missing kinds from
+unused ones. Output: `.local/packs/_plan/<label>/list.txt` (input for `packs`) and `plan.json`
+(criteria, choice, runners-up with reasons, rejection counts, and per-class statistics of the
+supported named functions for sizing later batches). Review the list before running `packs`.
+
 Timing on the maintainer's Mac (Ghidra 12.2, project already analysed): about 8 to 9 s of fixed
 Ghidra start-up per run, then roughly 0.003 s per function for the listing and decompilation of a
 random sample. A run of 8 functions took 8.6 s (1.1 s per function); 2,000 functions took 15.7 s
-(0.01 s per function). Batch many functions per run.
+(0.01 s per function). Batch many functions per run. `plan` takes about 0.6 s; `packs` for 40
+functions with class material 11.5 s (9.3 s Ghidra); `refresh --tasks` for them 1.4 s.
 
 ## Pack: `.local/packs/<build id>/<rva>/`
 
@@ -84,6 +113,16 @@ literal's contents), `import` (`__imp_<name>`, the IAT slot), `image-base` (`__I
 Branches inside the function and segment-relative operands (TLS through `gs:`) carry no
 relocation and are not listed.
 
+## Class material: `.local/packs/<build id>/class/<Class>/`
+
+Written once per class for all its functions in the run (also when they span several tasks):
+`README.md` (functions, files, calling convention per function, other classes the functions use),
+`class-excerpt.h` trimmed by the union of observed offsets and selected methods, `offsets.md`
+(displacements observed across all the class's listings, with the community member at each offset
+of the class's own body), `vtables.txt`, `signature-types.h`, `reference-decls.h` and `class.json`.
+`class/_shared-classes.json` lists classes that more than one unit of the run uses (own class, RTTI
+bases, signature types, reference owners): candidates for a shared header later.
+
 ## Task: `.local/tasks/<task id>/`
 
 `task.json` is the format `tools/verifier/pipeline.py` reads (`load_task`); extra keys are ignored
@@ -104,6 +143,8 @@ by it and kept for people:
 ```
 
 - One task is one translation unit and one recipe; several functions of one unit share a task.
+- `BRIEF.md` (at most 25 lines): unit, recipe, budget, class material path, functions smallest first
+  with their references and cautions, and known risks; a Drafter brief can point to it.
 - `symbol` is the placeholder `unbound:<community name>` until binding fills it. The comparator
   identifies the candidate only by that exact decorated name (external, at offset 0 of its own `/Gy`
   COMDAT), and the name depends on the Drafter's declarations, so it cannot be derived before the

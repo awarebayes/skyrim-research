@@ -4,6 +4,8 @@ Usage (repository root; see tools/ghidra/README.md):
 
     python3 tools/ghidra/export_pack.py packs <list file>     # packs + task dirs
     python3 tools/ghidra/export_pack.py refresh .local/packs/<build id>/<rva> ...  # aids only, no Ghidra
+    python3 tools/ghidra/export_pack.py refresh --tasks .local/tasks/<id> ...     # + class material, BRIEF
+    python3 tools/ghidra/export_pack.py plan --extend Actor --label batch3        # propose class units
     python3 tools/ghidra/export_pack.py survey --sample 2000 --seed 1
     python3 tools/ghidra/export_pack.py bind --task .local/tasks/<id> [--object <candidate.obj>]  # attempt does this itself
 
@@ -730,7 +732,45 @@ def convention_notes(decl, owning_class):
     return notes
 
 
-def drafter_aids(pack_dir, img, addrlib, comms, ident, listing_text, excerpt):
+LISTING_ROW = re.compile(r'\s*\+0x([0-9a-f]+)\s+(\S+)')
+FP_COMPARE = {'UCOMISS', 'UCOMISD', 'COMISS', 'COMISD'}
+EQUALITY_USE = {'JZ', 'JNZ', 'JE', 'JNE', 'SETZ', 'SETNZ', 'SETE', 'SETNE', 'CMOVZ', 'CMOVNZ', 'CMOVE', 'CMOVNE'}
+PARITY_USE = {'JP', 'JNP', 'JPE', 'JPO', 'SETP', 'SETNP', 'SETPE', 'SETPO', 'CMOVP', 'CMOVNP'}
+
+
+def fp_equality_without_parity(listing):
+    """Offsets of SSE compares whose flags feed an equality test with no parity test nearby.
+
+    Under /fp:precise MSVC guards a float ==/!= with a parity test (an unordered compare sets
+    ZF and PF), so an equality use of ZF right after (u)comis with no parity use in the next few
+    instructions points to /fp:fast. Ordered tests (ja/jb...) need no parity check either way.
+    """
+    rows = [(int(m.group(1), 16), m.group(2).upper()) for m in map(LISTING_ROW.match, listing.splitlines()) if m]
+    out = []
+    for i, (off, mnem) in enumerate(rows):
+        if mnem not in FP_COMPARE:
+            continue
+        window = [mn for _, mn in rows[i + 1:i + 5]]
+        # Flags survive only until the next instruction that writes them; stop the window there.
+        for k, mn in enumerate(window):
+            if mn in FP_COMPARE or mn in ('TEST', 'CMP', 'ADD', 'SUB', 'AND', 'OR', 'XOR', 'INC', 'DEC'):
+                window = window[:k]
+                break
+        if any(mn in EQUALITY_USE for mn in window) and not any(mn in PARITY_USE for mn in window):
+            out.append(off)
+    return out
+
+
+FP_SENSITIVE = re.compile(r'^(?:(?:ADD|SUB|MUL|DIV|SQRT|MIN|MAX|CMP|RCP|RSQRT)(?:SS|SD|PS|PD)|U?COMIS[SD]|CVT\w+)$')
+
+
+def fp_sensitive(listing):
+    """True when the listing computes, compares or converts floats, where /fp:fast and /fp:precise can
+    differ. Moves, loads, stores and XORPS zeroing are emitted the same under both."""
+    return any(FP_SENSITIVE.match(m.group(2).upper()) for m in map(LISTING_ROW.match, listing.splitlines()) if m)
+
+
+def drafter_aids(pack_dir, img, addrlib, comms, ident, listing_text, excerpt, build_id=None):
     """Write vtables.txt, signature-types.h and the convention/offset notes; returns README lines and files."""
     files, lines = {}, []
     cls = ident.get('owning_class') if ident else None
@@ -769,8 +809,18 @@ def drafter_aids(pack_dir, img, addrlib, comms, ident, listing_text, excerpt):
         if parts:
             (pack_dir / 'signature-types.h').write_text('\n'.join(parts))
             files['signature_types'] = 'signature-types.h'
+    fp_eq = fp_equality_without_parity(listing_text or '')
+    if fp_eq:
+        lines += ['', '**Float equality without a parity branch** at ' + ', '.join(f'+0x{o:x}' for o in fp_eq)
+                  + ': `/fp:precise` (the default recipe) emits `jp` there, `/fp:fast` does not. The function',
+                  'likely needs the `o2-fpfast` recipe; its task says which recipe it uses.']
     lines += ['', 'Virtual slots: `' + files.get('vtables', 'none (no community vtable id)') + '`; types in the '
               'signature: `' + files.get('signature_types', 'none') + '`.', '']
+    if cls and build_id:
+        class_dir = REPO / '.local/packs' / build_id / 'class' / cls
+        if (class_dir / 'README.md').is_file():
+            lines += [f'Class material shared by every function of `{cls}` in this batch (vtables, offsets '
+                      f'observed across all of them, declarations): `{class_dir.relative_to(REPO)}/README.md`.', '']
     return files, lines
 
 
@@ -874,8 +924,10 @@ def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing, img):
         'indirect_calls': fact.get('ghidra', {}).get('indirect_calls'),
         'fp_arith': fact.get('ghidra', {}).get('fp_arith'),
         'cond_branches': fact.get('ghidra', {}).get('cond_branches'),
-        'files': files, 'timing_seconds': timing}
-    aid_files, aid_lines = drafter_aids(pack_dir, img, addrlib, comms, pack['identity'], listing, excerpt)
+        'files': files, 'timing_seconds': timing,
+        'fp_equality_without_parity': fp_equality_without_parity(listing)}
+    aid_files, aid_lines = drafter_aids(pack_dir, img, addrlib, comms, pack['identity'], listing, excerpt,
+                                       target['build_id'])
     files.update(aid_files)
     (pack_dir / 'pack.json').write_text(json.dumps(pack, indent=2, default=hex) + '\n')
     (pack_dir / 'README.md').write_text(render_pack_readme(pack) + '\n'.join(aid_lines))
@@ -953,7 +1005,7 @@ def area_for(cls):
     return None
 
 
-def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts):
+def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts, attempts_per_function=None):
     tdir = task_root / task_id
     tdir.mkdir(parents=True, exist_ok=True)
     old = {}
@@ -974,6 +1026,14 @@ def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts
                 symbols[r['symbol']] = {'rva': r['target_rva'], 'size': None}
                 provenance.append({'name': r['symbol'], 'rva': hex(r['target_rva']), 'from': r['resolution']})
     shared = shared_unit_functions(unit_cpp)
+    public_map = REPO / 'reports' / target['build_id'] / 'symbol-map.json'
+    if shared and public_map.is_file():
+        # The accepted functions of a shared unit resolve their references through the published
+        # map; seeding the task map with it keeps the regression comparison bindable from the start.
+        for k, v in json.loads(public_map.read_text())['symbols'].items():
+            if k not in symbols:
+                symbols[k] = v
+                provenance.append({'name': k, 'rva': hex(v['rva']), 'from': public_map.relative_to(REPO).as_posix()})
     for rec in shared:
         # Compared on every attempt too, so an edit to the shared unit that breaks an accepted
         # function shows up at once instead of at integration.
@@ -983,12 +1043,18 @@ def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts
                               'name_origin': 'COMMUNITY', 'verdict': 'already ' + rec['status'],
                               'pack': None, 'role': 'regression'})
             symbols.setdefault(rec['symbol'], {'rva': int(rec['rva'], 16), 'size': rec['size']})
+    if attempts_per_function:
+        # Several functions share one budget; each needs a few compile-compare rounds of its own.
+        max_attempts = attempts_per_function * sum(1 for f in functions if f.get('role') != 'regression')
+    classes = sorted({p['identity'].get('owning_class') or 'Unknown' for p in packs})
     task = {'task_id': task_id, 'build_id': target['build_id'], 'compiled': unit_cpp,
             'recipe': f'reconstruction/recipes/{recipe}.json', 'symbols': 'symbols.json',
             'functions': functions, 'max_attempts': max_attempts,
             'export': {'generator': 'tools/ghidra/export_pack.py', 'task_schema': TASK_SCHEMA,
                        'target_image_sha256': target['image_sha256'],
-                       'unit_already_records': shared}}
+                       'unit_already_records': shared,
+                       'class_material': [f'.local/packs/{target["build_id"]}/class/{c}' for c in classes],
+                       'brief': f'.local/tasks/{task_id}/BRIEF.md'}}
     (tdir / 'task.json').write_text(json.dumps(task, indent=2) + '\n')
     smap_path = tdir / 'symbols.json'
     if smap_path.is_file():
@@ -1001,6 +1067,7 @@ def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts
                                 'note': 'bind adds task and reference symbols from the compiled object'}}
     smap_path.write_text(json.dumps(smap, indent=2) + '\n')
     (tdir / 'README.md').write_text(render_task_readme(task, packs))
+    (tdir / 'BRIEF.md').write_text(render_brief(task, packs))
     return tdir
 
 
@@ -1051,6 +1118,491 @@ def render_task_readme(task, packs):
     return '\n'.join(lines)
 
 
+def member_offsets(excerpt_text):
+    """{offset: declaration} from `// NNN` offset comments in the class's own body (not nested types)."""
+    out, depth = {}, 0
+    for line in (excerpt_text or '').splitlines():
+        code, _, comment = line.partition('//')
+        if depth == 1 and code.strip() and 'virtual' not in code and '(' not in code:
+            m = re.match(r'\s*([0-9A-Fa-f]{2,4})\b', comment)
+            if m:
+                out.setdefault(int(m.group(1), 16), ' '.join(code.split()))
+        depth += code.count('{') - code.count('}')
+    return out
+
+
+def class_material(cls, packs, listings, img, addrlib, comms):
+    """Class-level aids from every selected function of one class: {file name: text} and facts."""
+    files, facts = {}, {'class': cls, 'referenced_classes': set(), 'gpl_local_only': []}
+    excerpt = None
+    for c in comms:
+        excerpt = c.class_excerpt(cls, limit=4000)
+        if excerpt:
+            break
+    observed = {}
+    for p in packs:
+        for disp, reg, width, at in observed_offsets(listings.get(p['rva_hex'], '')):
+            observed.setdefault(disp, []).append((p['rva_hex'], reg, width, at))
+    methods = sorted({short_name(p['identity']['community_name']).split('::')[-1] for p in packs
+                      if p['identity'].get('community_name')})
+    members = member_offsets(excerpt['text']) if excerpt else {}
+    if excerpt:
+        text, trimmed = trim_excerpt(excerpt['text'], set(observed), methods, full_limit=6000)
+        name = 'class-excerpt.GPL-local-only.h' if 'GPL' in excerpt['origin'] else 'class-excerpt.h'
+        files[name] = (f'// {excerpt["origin"]}: {excerpt["path"]}:{excerpt["line"]}'
+                       + (' (trimmed to the declaration head, virtuals, the selected methods and the members at '
+                          'offsets observed in any selected function)' if trimmed else '') + '\n' + text + '\n')
+    rows = ['| displacement | community member at that offset (own body only) | uses: function +at reg width |',
+            '|---|---|---|']
+    for disp in sorted(observed):
+        uses = '; '.join(f'{rva} +0x{at:x} {reg} {width}' for rva, reg, width, at in observed[disp][:8])
+        more = len(observed[disp]) - 8
+        rows.append(f'| 0x{disp:x} | {members.get(disp, "-")} | {uses}{f"; +{more} more" if more > 0 else ""} |')
+    files['offsets.md'] = '\n'.join(
+        [f'# Memory operands observed across the selected {cls} functions', '',
+         'Non-stack displacements from every listing of this batch\'s functions of the class. The base',
+         'register is as at that instruction, so a row is `this` only where the register holds it (RCX at',
+         'entry, or a copy); other rows belong to other objects. The member column matches the displacement',
+         'against offset comments of the class\'s own body only: inherited members are not resolved here.', '']
+        + (rows if observed else ['None observed.']) + [''])
+    vt = vtable_text(img, addrlib, comms, cls)
+    if vt:
+        files['vtables.txt'] = vt
+        own = {i: rva for rva, ids in addrlib['by_rva'].items() for i in ids}.get(vtable_index(comms).get(cls))
+        bases = rtti_bases(img, own) if own is not None else []
+        facts['referenced_classes'].update(b.split('__')[-1] for b in bases[1:])
+    sig_types, parts = set(), []
+    for p in packs:
+        method = short_name(p['identity']['community_name'] or '').split('::')[-1]
+        decl = declaration_of(excerpt['text'] if excerpt else '', method)
+        if decl:
+            sig_types.update(w for w in TYPE_WORD.findall(decl) if w not in (cls, method))
+    for name in sorted(sig_types):
+        for c in comms:
+            if 'GPL' in c.licence:
+                continue
+            ex = c.class_excerpt(name, limit=120)
+            if ex:
+                body, _ = trim_excerpt(ex['text'], set(), [], full_limit=1500)
+                parts.append(f'// {ex["origin"]}: {ex["path"]}:{ex["line"]}\n{body}\n')
+                facts['referenced_classes'].add(name)
+                break
+    if parts:
+        files['signature-types.h'] = '\n'.join(parts)
+    refs = [r for p in packs for r in p.get('references', [])]
+    for r in refs:
+        for cn in r.get('community_names', [])[:1]:
+            owner = owning_class(cn['name'])
+            if owner and owner != cls:
+                facts['referenced_classes'].add(owner)
+    decls = reference_declarations(refs, comms)
+    if decls:
+        name = 'reference-decls.GPL-local-only.h' if any('GPL' in d for d in decls) else 'reference-decls.h'
+        files[name] = '\n'.join(decls) + '\n'
+    facts['referenced_classes'].discard(cls)
+    facts['methods'] = methods
+    facts['gpl_local_only'] = sorted(n for n in files if 'GPL-local-only' in n)
+    return files, facts
+
+
+def write_class_material(task_dirs, target, img, addrlib, comms):
+    """Write .local/packs/<build>/class/<Class>/ for every class owning a function of the given tasks.
+
+    One directory per class even when its functions are split over several tasks (one per recipe),
+    so a Drafter taking the class reads the vtables, offsets and declarations once. Also writes
+    _shared-classes.json: classes that more than one of these units uses, the candidates for a
+    shared header."""
+    by_class, units = {}, {}
+    for t in task_dirs:
+        task = json.loads((Path(t) / 'task.json').read_text())
+        for f in task['functions']:
+            if not f.get('pack'):
+                continue
+            pack = json.loads((REPO / f['pack'] / 'pack.json').read_text())
+            cls = pack['identity'].get('owning_class') or 'Unknown'
+            by_class.setdefault(cls, {})[pack['rva_hex']] = pack
+            units.setdefault(cls, set()).add(task['compiled'])
+    root = REPO / '.local/packs' / target['build_id'] / 'class'
+    users = {}
+    for cls, packs_by_rva in sorted(by_class.items()):
+        packs = sorted(packs_by_rva.values(), key=lambda p: (p['size'] or 0, p['rva']))
+        listings = {p['rva_hex']: (REPO / '.local/packs' / target['build_id'] / p['rva_hex'] / 'listing.txt')
+                    .read_text() for p in packs
+                    if (REPO / '.local/packs' / target['build_id'] / p['rva_hex'] / 'listing.txt').is_file()}
+        files, facts = class_material(cls, packs, listings, img, addrlib, comms)
+        d = root / cls
+        if d.is_dir():
+            for old in d.iterdir():
+                old.unlink()  # a re-run must not leave a stale file from an earlier selection
+        d.mkdir(parents=True, exist_ok=True)
+        for name, text in files.items():
+            (d / name).write_text(text)
+        for other in facts['referenced_classes'] | {cls}:
+            users.setdefault(other, set()).add(cls)
+        lines = [f'# PRIVATE class material: {cls} ({target["build_id"]})', '',
+                 'Game-derived. Local use only; never copy any part into a tracked file, issue, PR, log or upload.',
+                 'Shared by every function of this class in the batch; the per-function packs keep the listing,',
+                 'decompiler output and references of each function.', '',
+                 f'Units: {", ".join(f"`{u}`" for u in sorted(units[cls]))}.', '',
+                 '| RVA | size | community name | verdict | float == without parity | pack |', '|---|---|---|---|---|---|']
+        for p in packs:
+            fp = ', '.join(f'+0x{o:x}' for o in p.get('fp_equality_without_parity') or []) or '-'
+            lines.append(f'| {p["rva_hex"]} | {p["size"]} | `{p["identity"]["community_name"]}` | {p["verdict"]} | '
+                         f'{fp} | `.local/packs/{target["build_id"]}/{p["rva_hex"]}/` |')
+        lines += ['', '## Files', '']
+        notes = {'class-excerpt.h': 'community class body, trimmed to the head, virtuals, the selected methods and '
+                                    'members at offsets observed in any selected function',
+                 'offsets.md': 'displacements observed across all selected functions, with the member at each',
+                 'vtables.txt': 'slot tables of the class and its RTTI bases',
+                 'signature-types.h': 'trimmed declarations of the types in the selected methods\' signatures',
+                 'reference-decls.h': 'declarations of everything the selected functions call or read'}
+        for name in sorted(files):
+            base = name.replace('.GPL-local-only', '')
+            lines.append(f'- `{name}`: {notes.get(base, "")}'
+                         + (' (GPL-3.0 fallback: local naming aid only, never publish)' if 'GPL' in name else '.'))
+        lines += ['', '## Calling convention per function', '']
+        excerpt_text = files.get('class-excerpt.h') or files.get('class-excerpt.GPL-local-only.h') or ''
+        for p in packs:
+            method = short_name(p['identity']['community_name'] or '').split('::')[-1]
+            lines.append(f'`{p["rva_hex"]}` {method}:')
+            lines += ['  ' + n for n in convention_notes(declaration_of(excerpt_text, method), cls)]
+        lines += ['', 'Other classes these functions use (declare minimal stand-ins, labelled with their source): '
+                  + (', '.join(f'`{c}`' for c in sorted(facts['referenced_classes'])) or 'none') + '.', '']
+        (d / 'README.md').write_text('\n'.join(lines))
+        (d / 'class.json').write_text(json.dumps({
+            'class': cls, 'build_id': target['build_id'], 'units': sorted(units[cls]),
+            'functions': [p['rva_hex'] for p in packs], 'files': sorted(files),
+            'referenced_classes': sorted(facts['referenced_classes'])}, indent=2) + '\n')
+        print(f'class {cls}: {len(packs)} functions, {", ".join(sorted(files))}')
+    shared = {c: sorted(u) for c, u in sorted(users.items()) if len(u) > 1}
+    root.mkdir(parents=True, exist_ok=True)
+    (root / '_shared-classes.json').write_text(json.dumps({
+        'units': sorted(by_class), 'used_by_more_than_one_unit': shared,
+        'note': 'Candidates for a shared header in their own area; moving a class there changes the digest '
+                'of every unit that includes it.'}, indent=2) + '\n')
+    return shared
+
+
+def render_brief(task, packs):
+    """At most 25 lines a Drafter brief can point to: functions smallest first, packs, risks."""
+    by_rva = {p['rva_hex']: p for p in packs}
+    compared = sorted((f for f in task['functions'] if f.get('role') != 'regression'),
+                      key=lambda f: (f['size'] or 0, f['rva']))
+    regress = [f for f in task['functions'] if f.get('role') == 'regression']
+    cls = (packs[0]['identity'].get('owning_class') if packs else None) or 'Unknown'
+    total = sum(f['size'] or 0 for f in compared)
+    lines = [f'# Brief: {task["task_id"]}', '',
+             f'Unit `{task["compiled"]}` (+ `.h`), recipe `{task["recipe"].rsplit("/", 1)[-1][:-5]}`, '
+             f'budget {task["max_attempts"]} attempts for {len(compared)} functions ({total} B).',
+             f'Class material first: `.local/packs/{task["build_id"]}/class/{cls}/README.md`; per-function packs '
+             f'`.local/packs/{task["build_id"]}/<rva>/`.', '',
+             'Order (smallest first): RVA, size, community name, references, notes']
+    for i, f in enumerate(compared, 1):
+        p = by_rva.get(f['rva'], {})
+        notes = []
+        if p.get('fp_equality_without_parity'):
+            notes.append('float == without parity (fp:fast pattern)')
+        notes += [c.split(':')[0] for c in p.get('cautions', [])]
+        unnamed = sum(1 for r in p.get('references', []) if not r['community_names'] and not r['symbol'])
+        if unnamed:
+            notes.append(f'{unnamed} unnamed target(s): GUESS names + bind hint')
+        if any(r['resolution'] == 'import' for r in p.get('references', [])):
+            notes.append('import call')
+        refs = ', '.join(f'{k} {v}' for k, v in sorted((p.get('reference_counts') or {}).items())) or 'none'
+        lines.append(f'{i}. `{f["rva"]}` {f["size"]} B `{f["community_name"]}`; refs {refs}'
+                     + (f'; {"; ".join(notes)}' if notes else ''))
+    lines += ['', 'Known risks:']
+    risks = []
+    if regress:
+        risks.append('- Shared unit: it already holds ' + ', '.join(f'`{f["community_name"]}` ({f["rva"]})'
+                     for f in regress) + '; every attempt re-checks it, keep it passing and its source unchanged.')
+    if task['recipe'].endswith('fpfast.json'):
+        risks.append('- `/fp:fast` recipe: some functions test float equality without a parity branch; the others '
+                     'do no float arithmetic, compare or conversion, so the recipe does not change them.')
+    elif any(by_rva.get(f['rva'], {}).get('fp_equality_without_parity') for f in compared):
+        risks.append('- A function shows the `/fp:fast` pattern under the default recipe: report it, do not '
+                     'change the recipe.')
+    area = task['compiled'].split('/')[1]
+    if not regress and area_for(cls) != area:
+        risks.append(f'- Area `{area}/` is an owning-system choice (README rule 1), not the prefix rule; '
+                     'the maintainer confirms it before integration.')
+    risks.append('- Class and member names are COMMUNITY (unverified); enclosing-definition names may be wrong.')
+    risks.append('- Declare other classes as minimal stand-ins in your header; do not edit other units.')
+    lines += risks
+    return '\n'.join(lines[:25]) + '\n'
+
+
+# ---------------------------------------------------------------------------------------------
+# plan: propose class-grouped units from the community-named survey.
+
+MIDDLEWARE = re.compile(r'^(GFx\w*|GAS\w*|Scaleform|hk[A-Z]\w*|Bink\w*|SKSE|REL|stl|std|WinAPI)$')
+KIND_ORDER = ('form', 'extra-data', 'netimmerse', 'bs-utility', 'menu-ui', 'magic-effect', 'actor',
+              'manager-singleton')
+BENIGN_CAUTION = 'no-pdata: leaf'
+
+
+def class_kind(cls, area, has_singleton, bases=()):
+    if cls.startswith('Extra'):
+        return 'extra-data'
+    if re.search(r'Menu|HUD|Hud|^UI[A-Z]|^UI$', cls):
+        return 'menu-ui'
+    if area == 'actors':
+        return 'actor'
+    if re.match(r'(Magic|ActiveEffect|Spell|Enchant|Effect)', cls) or cls.endswith('Effect'):
+        return 'magic-effect'
+    if cls.startswith('Ni') and cls[2:3].isupper():
+        return 'netimmerse'
+    if has_singleton or re.search(r'(Manager|Interface)$', cls):
+        return 'manager-singleton'
+    if 'TESForm' in bases or cls == 'TESForm':
+        # The prefix rule files TESFile and other non-forms under forms/ too; RTTI tells forms apart.
+        return 'form'
+    if area == 'inventory' or cls.startswith('Inventory'):
+        return 'inventory'
+    if cls.startswith('BS') and cls[2:3].isupper():
+        return 'bs-utility'
+    return 'other'
+
+
+def pick_functions(elig, per_class, min_big, big_bytes, max_unit_bytes):
+    """Up to per_class functions: the smallest `min_big` over big_bytes, then the smallest others."""
+    elig = sorted(elig, key=lambda f: (f['size'], f['rva']))
+    big = [f for f in elig if f['size'] > big_bytes][:min_big]
+    rest = [f for f in elig if f not in big]
+    chosen = big + rest[:max(0, per_class - len(big))]
+    if len(chosen) < per_class:
+        chosen += [f for f in elig if f not in chosen][:per_class - len(chosen)]
+    chosen.sort(key=lambda f: (f['size'], f['rva']))
+    while sum(f['size'] for f in chosen) > max_unit_bytes and len(chosen) > 1:
+        chosen.pop()  # drop the largest until the unit is a sensible size
+    return chosen
+
+
+def plan_candidates(rows, accepted, existing_units, area_overrides, extend, opts, comms, bases_of=lambda c: ()):
+    """Group survey rows by owning class and apply the selection criteria.
+
+    rows: dicts with rva, size, verdict, cautions, name, how, origin. Returns ({class: info}, rejections)
+    where rejections counts functions per reason."""
+    rejected, classes = {}, {}
+
+    def reject(reason):
+        rejected[reason] = rejected.get(reason, 0) + 1
+
+    ng = comms[0]
+    for r in rows:
+        if not r['name']:
+            reject('no community name')
+            continue
+        if 'NG' not in r['origin']:
+            reject('named only by the GPL fork')
+            continue
+        parts = [p for p in r['name'].split('::') if p]
+        cls = owning_class(r['name'])
+        if not cls:
+            reject('free function (no owning class)')
+            continue
+        if any(MIDDLEWARE.match(p) for p in parts[:-1]):
+            reject('middleware or non-engine namespace')
+            continue
+        if r['verdict'] == 'unsupported':
+            reject('unsupported by comparator v1')
+            continue
+        if r['verdict'] == 'caution' and any(not c.startswith(BENIGN_CAUTION) for c in r['cautions']):
+            reject('caution other than a padded leaf without .pdata')
+            continue
+        if r['size'] > opts['max_function_bytes']:
+            reject(f'over {opts["max_function_bytes"]} bytes')
+            continue
+        info = classes.setdefault(cls, {'class': cls, 'functions': [], 'regression': [], 'notes': []})
+        if r['rva'] in accepted:
+            info['regression'].append(r)
+            continue
+        info['functions'].append(r)
+    out = {}
+    for cls, info in classes.items():
+        ex = ng.class_excerpt(cls, limit=6000)
+        if not ex:
+            for r in info['functions']:
+                reject('class not defined in NG headers')
+            continue
+        body = ex['text']
+        declared = []
+        for r in info['functions']:
+            method = r['name'].split('::')[-1]
+            if re.search(r'\b' + re.escape(method) + r'\s*\(', body):
+                declared.append(r)
+            else:
+                reject('method not declared in the NG class body (enclosing-name doubt)')
+        info['functions'] = declared
+        existing = existing_units.get(cls)
+        area = area_overrides.get(cls) or (existing.split('/')[1] if existing else None) or area_for(cls)
+        info['area'] = area
+        info['unit'] = existing or (f'reconstruction/{area}/{cls}.cpp' if area else None)
+        info['existing_unit'] = bool(existing)
+        info['kind'] = class_kind(cls, area, bool(re.search(r'\bGetSingleton\s*\(', body)), bases_of(cls))
+        info['eligible'] = len(declared)
+        if len(declared) < opts['min_functions']:
+            info['status'] = f'fewer than {opts["min_functions"]} eligible functions'
+        elif not area:
+            info['status'] = 'no area rule (reconstruction/README.md rule 3: ask first)'
+        elif existing and cls != extend:
+            info['status'] = 'extends an existing unit (re-opens its records); not the chosen extension'
+        else:
+            info['status'] = 'candidate'
+        info['picked'] = pick_functions(declared, opts['per_class'], opts['min_big'], opts['big_bytes'],
+                                        opts['max_unit_bytes'])
+        info['score'] = (len(declared) >= opts['min_functions'],
+                         min(sum(1 for f in declared if f['size'] > opts['big_bytes']), opts['min_big']),
+                         sum(1 for f in declared if f['how'] == 'table'), len(declared))
+        out[cls] = info
+    return out, rejected
+
+
+def plan_select(cands, n_classes, extend):
+    """One class per kind in KIND_ORDER (the extension forced into its kind), then the best of the rest."""
+    ok = {c: i for c, i in cands.items() if i['status'] == 'candidate'}
+    chosen, missing = [], []
+    for kind in KIND_ORDER:
+        pool = sorted((i for i in ok.values() if i['kind'] == kind and i['class'] not in chosen),
+                      key=lambda i: (i['class'] != extend, tuple(-x for x in i['score']), i['class']))
+        if extend in ok and ok[extend]['kind'] == kind and extend not in chosen:
+            pool.sort(key=lambda i: i['class'] != extend)
+        if pool:
+            chosen.append(pool[0]['class'])
+        else:
+            missing.append(kind)
+    if extend in ok and extend not in chosen:
+        chosen.append(extend)
+    rest = sorted((i for i in ok.values() if i['class'] not in chosen),
+                  key=lambda i: (tuple(-x for x in i['score']), i['class']))
+    used = {ok[c]['kind'] for c in chosen}
+    # Fill from kinds not yet used first, so the batch stays varied.
+    rest.sort(key=lambda i: i['kind'] in used)
+    chosen += [i['class'] for i in rest[:max(0, n_classes - len(chosen))]]
+    return chosen[:n_classes], missing
+
+
+def cmd_plan(args):
+    cfg = load_config(args.config)
+    target, img, addrlib, comms = setup(cfg)
+    survey = Path(args.survey or REPO / '.local/packs/_survey' / f'{target["build_id"]}-named')
+    gmeta, grefs = load_ghidra(survey / 'ghidra')
+    progress = json.loads((REPO / 'data/progress.json').read_text())
+    # Entries citing --reuse-evidence came from this plan earlier; counting them as claimed would make
+    # a re-run propose a different batch instead of reproducing the recorded one.
+    claimed = {fn['rva'] for fn in progress['functions'] if fn['build_id'] == target['build_id']
+               and fn['evidence'] not in (args.reuse_evidence or [])}
+    accepted = {fn['rva'] for fn in progress['functions'] if fn['status'] == 'matched'}
+    existing_units = {p.stem: p.relative_to(REPO).as_posix() for p in (REPO / 'reconstruction').glob('*/*.cpp')}
+    rows = []
+    for rva in sorted(gmeta):
+        fact = classify(img, addrlib, comms, rva, gmeta[rva], grefs.get(rva, []))
+        ident, _ = community_identity(comms, addrlib['by_rva'].get(rva, []))
+        if rva in claimed and rva not in accepted:
+            continue  # already in the inventory for another task
+        rows.append({'rva': rva, 'size': fact.get('size') or 0, 'verdict': fact['verdict'],
+                     'cautions': fact['cautions'], 'reasons': fact['reasons'],
+                     'name': short_name(ident['name']) if ident else None,
+                     'how': ident['how'] if ident else None, 'origin': ident['origin'] if ident else '',
+                     'refs': fact.get('reference_counts', {}),
+                     'imports': sum(1 for r in fact.get('references', []) if r['resolution'] == 'import')})
+    overrides = dict(a.split('=', 1) for a in args.area or [])
+    opts = {'min_functions': args.min_functions, 'per_class': args.per_class, 'min_big': 2,
+            'big_bytes': 100, 'max_function_bytes': args.max_function_bytes, 'max_unit_bytes': args.max_unit_bytes}
+    vt_ids = vtable_index(comms)
+    by_id = {i: rva for rva, ids in addrlib['by_rva'].items() for i in ids}
+
+    def bases_of(cls):
+        own = by_id.get(vt_ids.get(cls))
+        return [b.split('__')[-1] for b in rtti_bases(img, own)] if own is not None else []
+    cands, rejected = plan_candidates(rows, accepted, existing_units, overrides, args.extend, opts, comms, bases_of)
+    for cls in args.exclude or []:
+        if cls in cands:
+            cands[cls]['status'] = 'excluded by the operator'
+    chosen, missing = plan_select(cands, args.classes, args.extend)
+    if args.total:
+        # Short classes leave the batch under the requested total: grow, one function at a time, the
+        # class with the most eligible functions left, never past per_class + 2.
+        while sum(len(cands[x]['picked']) for x in chosen) < args.total:
+            growable = []
+            for c in chosen:
+                info = cands[c]
+                if len(info['picked']) >= args.per_class + 2:
+                    continue
+                grown = pick_functions(info['functions'], len(info['picked']) + 1, opts['min_big'],
+                                       opts['big_bytes'], opts['max_unit_bytes'])
+                if len(grown) > len(info['picked']):
+                    growable.append((-(info['eligible'] - len(info['picked'])), len(info['picked']), c, grown))
+            if not growable:
+                break
+            _, _, c, grown = min(growable)
+            cands[c]['picked'] = grown
+    # Statistics for sizing later batches: supported named functions per class.
+    sup = [r for r in rows if r['verdict'] != 'unsupported' and r['name'] and owning_class(r['name'])]
+    per_class = {}
+    for r in sup:
+        per_class[owning_class(r['name'])] = per_class.get(owning_class(r['name']), 0) + 1
+    hist = {}
+    for n in per_class.values():
+        b = '1' if n == 1 else '2-3' if n <= 3 else '4-5' if n <= 5 else '6-9' if n <= 9 else '10+'
+        hist[b] = hist.get(b, 0) + 1
+    all_named = [r for r in rows if r['name']]
+    stats = {
+        'ng_named_functions': len(all_named),
+        'supported': sum(1 for r in all_named if r['verdict'] == 'supported'),
+        'caution': sum(1 for r in all_named if r['verdict'] == 'caution'),
+        'unsupported': sum(1 for r in all_named if r['verdict'] == 'unsupported'),
+        'supported_or_caution_with_owning_class': len(sup),
+        'classes_with_supported': len(per_class),
+        'classes_with_at_least_4_supported': sum(1 for n in per_class.values() if n >= 4),
+        'class_size_histogram': {k: hist.get(k, 0) for k in ('1', '2-3', '4-5', '6-9', '10+')},
+        'functions_in_classes_by_size': {
+            k: sum(n for n in per_class.values()
+                   if (k == '1' and n == 1) or (k == '2-3' and 2 <= n <= 3) or (k == '4-5' and 4 <= n <= 5)
+                   or (k == '6-9' and 6 <= n <= 9) or (k == '10+' and n >= 10))
+            for k in ('1', '2-3', '4-5', '6-9', '10+')},
+        'classes_meeting_all_plan_criteria': sum(1 for i in cands.values() if i['status'] == 'candidate'),
+        'eligible_functions_in_those_classes': sum(i['eligible'] for i in cands.values()
+                                                   if i['status'] == 'candidate')}
+    out_dir = REPO / '.local/packs/_plan' / args.label
+    out_dir.mkdir(parents=True, exist_ok=True)
+    list_lines = ['# build id         rva        task id                         unit',
+                  f'# generated by export_pack.py plan ({args.label}); review before running packs']
+    for c in chosen:
+        info = cands[c]
+        for f in info['picked']:
+            # Task ids are lowercase (tools/verifier/pipeline.py load_task); the class keeps its case in the unit.
+            list_lines.append(f'{target["build_id"]}  0x{f["rva"]:x}  {(args.task_prefix + c).lower()}  {info["unit"]}')
+    (out_dir / 'list.txt').write_text('\n'.join(list_lines) + '\n')
+
+    def brief_fn(f):
+        return {'rva': hex(f['rva']), 'size': f['size'], 'name': f['name'], 'how': f['how'], 'verdict': f['verdict'],
+                'refs': f['refs'], 'imports': f['imports']}
+    plan = {'build_id': target['build_id'], 'survey': str(survey.relative_to(REPO)), 'criteria': opts | {
+                'extend': args.extend, 'area_overrides': overrides, 'kinds': KIND_ORDER,
+                'excluded': args.exclude or []},
+            'chosen': [{'class': c, 'kind': cands[c]['kind'], 'unit': cands[c]['unit'],
+                        'existing_unit': cands[c]['existing_unit'], 'eligible': cands[c]['eligible'],
+                        'functions': [brief_fn(f) for f in cands[c]['picked']],
+                        'bytes': sum(f['size'] for f in cands[c]['picked']),
+                        'regression': [hex(f['rva']) for f in cands[c]['regression']]} for c in chosen],
+            'kinds_without_candidate': missing,
+            'other_classes': sorted(({'class': c, 'kind': i['kind'], 'eligible': i['eligible'], 'status': i['status'],
+                                      'area': i['area']} for c, i in cands.items() if c not in chosen),
+                                    key=lambda d: (-d['eligible'], d['class'])),
+            'function_rejections': dict(sorted(rejected.items(), key=lambda kv: -kv[1])),
+            'stats': stats}
+    (out_dir / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
+    for c in plan['chosen']:
+        print(f'{c["class"]:28s} {c["kind"]:18s} {c["unit"]:48s} {len(c["functions"])} fns {c["bytes"]} B '
+              + ' '.join(str(f['size']) for f in c['functions']) + (' +regression' if c['regression'] else ''))
+    print('kinds without a candidate:', ', '.join(missing) or 'none')
+    print('runners-up:', ', '.join(f'{d["class"]}({d["kind"]},{d["eligible"]},{d["status"][:24]})'
+                                   for d in plan['other_classes'] if d['eligible'] >= 3)[:1200])
+    print(json.dumps(stats))
+    print(f'wrote {out_dir.relative_to(REPO)}/list.txt and plan.json')
+
+
 # ---------------------------------------------------------------------------------------------
 # bind: the shared implementation is tools/verifier/bind.py, which attempt runs on every compile.
 
@@ -1078,22 +1630,59 @@ def cmd_packs(args):
         if build != target['build_id']:
             raise SystemExit(f'{build}: only the pinned build {target["build_id"]} has packs; '
                              'addresses never transfer between builds')
-        rows.append((rva, task_id, parts[3] if len(parts) > 3 else None))
+        if not re.fullmatch(r'[a-z0-9][a-z0-9.-]*', task_id):
+            raise SystemExit(f'task id {task_id}: attempt accepts only [a-z0-9][a-z0-9.-]*')
+        unit, recipe = None, None
+        for tok in parts[3:]:
+            if tok.startswith('recipe='):
+                recipe = tok[len('recipe='):]
+            else:
+                unit = tok
+        rows.append((rva, task_id, unit, recipe))
     run = REPO / '.local/packs/_runs' / time.strftime('%Y%m%dT%H%M%S')
     run.mkdir(parents=True, exist_ok=True)
-    (run / 'rvas.txt').write_text(''.join('0x%x\n' % r for r, _, _ in rows))
+    (run / 'rvas.txt').write_text(''.join('0x%x\n' % r for r, *_ in rows))
     t_ghidra = run_ghidra(cfg, str(run / 'rvas.txt'), run / 'ghidra', 'full', run / 'ghidra.log')
     gmeta, grefs = load_ghidra(run / 'ghidra')
     t0 = time.monotonic()
-    packs, by_task = {}, {}
-    for rva, task_id, unit in rows:
+    packs, by_task, recipes, moved = {}, {}, {}, []
+    for rva, task_id, unit, recipe in rows:
         fact = classify(img, addrlib, comms, rva, gmeta.get(rva), grefs.get(rva, []))
         pack = write_pack(REPO / '.local/packs' / target['build_id'] / hex(rva), fact, target, addrlib, comms,
                           run / 'ghidra', {'ghidra_share': round(t_ghidra / len(rows), 2)}, img)
         packs[rva] = pack
+        recipes.setdefault(task_id, recipe or args.recipe)
+        if recipes[task_id] != (recipe or recipes[task_id]):
+            raise SystemExit(f'task {task_id}: one task is one recipe, got {recipes[task_id]} and {recipe}')
         by_task.setdefault(task_id, []).append((pack, unit))
+        fp_eq = pack.get('fp_equality_without_parity')
         print(f'{hex(rva)} {pack["size"]} B {pack["verdict"]} {",".join(pack["reasons"])} '
-              f'{pack["identity"]["community_name"]}')
+              f'{pack["identity"]["community_name"]}' + (f' fp== without parity {fp_eq}' if fp_eq else ''))
+    if args.fpfast != 'keep':
+        # One unit has one recipe (reconstruction/README.md), and a second unit per class would need a
+        # second class name (the lint ties a unit's file name to the class it declares). So a task with
+        # a function showing the /fp:fast pattern takes the fp:fast recipe as a whole when its other
+        # functions are recipe-neutral (no float arithmetic, compare or conversion); otherwise the
+        # flagged functions leave the batch.
+        for task_id, items in list(by_task.items()):
+            if recipes[task_id] != args.recipe:
+                continue
+            flagged = [p for p, _ in items if p.get('fp_equality_without_parity')]
+            if not flagged:
+                continue
+            listing = {p['rva_hex']: (REPO / '.local/packs' / target['build_id'] / p['rva_hex'] / 'listing.txt')
+                       for p, _ in items}
+            others = [p for p, _ in items if p not in flagged]
+            if args.fpfast == 'unit' and not any(
+                    fp_sensitive(listing[p['rva_hex']].read_text()) for p in others if listing[p['rva_hex']].is_file()):
+                recipes[task_id] = args.fpfast_recipe
+                moved += [(p['rva_hex'], task_id, 'unit recipe ' + args.fpfast_recipe) for p in flagged]
+                print(f'task {task_id}: recipe {args.fpfast_recipe} (other functions are recipe-neutral)')
+            else:
+                by_task[task_id] = [(p, u) for p, u in items if p not in flagged]
+                moved += [(p['rva_hex'], task_id, 'dropped') for p in flagged]
+                print(f'task {task_id}: dropped ' + ', '.join(p['rva_hex'] for p in flagged))
+    task_dirs = []
     for task_id, items in by_task.items():
         units = {u for _, u in items if u}
         if len(units) > 1:
@@ -1106,8 +1695,15 @@ def cmd_packs(args):
                              '(reconstruction/README.md, "<area>")')
         unit = units.pop() if units else (existing[0].relative_to(REPO).as_posix() if existing
                                           else f'reconstruction/{area_for(cls)}/{cls}.cpp')
-        write_task(task_id, unit, args.recipe, [p for p, _ in items], target, REPO / '.local/tasks',
-                   args.max_attempts)
+        task_dirs.append(write_task(task_id, unit, recipes[task_id], [p for p, _ in items], target,
+                                    REPO / '.local/tasks', args.max_attempts, args.attempts_per_function))
+    if args.class_material:
+        shared = write_class_material(task_dirs, target, img, addrlib, comms)
+        for rva in packs:
+            refresh_pack(REPO / '.local/packs' / target['build_id'] / hex(rva), target, img, addrlib, comms)
+        print('classes used by more than one unit:', json.dumps(shared))
+    if moved:
+        (run / 'fpfast.json').write_text(json.dumps(moved, indent=2) + '\n')
     t_py = time.monotonic() - t0
     total = t_setup + t_ghidra + t_py
     timing = {'functions': len(rows), 'setup_s': round(t_setup, 1), 'ghidra_s': round(t_ghidra, 1),
@@ -1116,37 +1712,57 @@ def cmd_packs(args):
     print(json.dumps(timing))
 
 
+def refresh_pack(pack_dir, target, img, addrlib, comms):
+    """Rewrite one pack's Drafter aids, trimmed excerpt and README from pack.json (no Ghidra run)."""
+    pack_dir = Path(pack_dir)
+    pack = json.loads((pack_dir / 'pack.json').read_text())
+    if pack['image_sha256'] != target['image_sha256']:
+        raise SystemExit(f'{pack_dir}: pack is for another image')
+    ident = pack['identity']
+    for key in ('instructions', 'cond_branches', 'indirect_calls', 'fp_arith'):
+        pack.setdefault(key, None)  # packs from earlier exporter versions lack some counts
+    listing = (pack_dir / 'listing.txt').read_text() if (pack_dir / 'listing.txt').is_file() else ''
+    pack['fp_equality_without_parity'] = fp_equality_without_parity(listing)
+    excerpt = None
+    if ident.get('owning_class'):
+        for c in comms:
+            excerpt = c.class_excerpt(ident['owning_class'])
+            if excerpt:
+                break
+    name = pack['files'].get('class_excerpt')
+    if excerpt and name:
+        method = (ident.get('community_name') or '').split('::')[-1]
+        text, trimmed = trim_excerpt(excerpt['text'], {o for o, *_ in observed_offsets(listing)}, [method])
+        (pack_dir / name).write_text(f'// {excerpt["origin"]}: {excerpt["path"]}:{excerpt["line"]}'
+                                     + (' (trimmed to the declaration head, virtuals, this method and the members '
+                                        'at observed offsets)' if trimmed else '') + '\n' + text + '\n')
+    files, lines = drafter_aids(pack_dir, img, addrlib, comms, ident, listing, excerpt, target['build_id'])
+    pack['files'].update(files)
+    (pack_dir / 'pack.json').write_text(json.dumps(pack, indent=2, default=hex) + '\n')
+    (pack_dir / 'README.md').write_text(render_pack_readme(pack) + '\n'.join(lines))
+    return pack, files
+
+
 def cmd_refresh(args):
-    """Rewrite the Drafter aids, trimmed excerpt and README of existing packs from pack.json (no Ghidra run)."""
+    """Rewrite the Drafter aids of existing packs; with --tasks also their class material and briefs."""
     cfg = load_config(args.config)
     target, img, addrlib, comms = setup(cfg)
-    for d in args.pack:
-        pack_dir = Path(d)
-        pack = json.loads((pack_dir / 'pack.json').read_text())
-        if pack['image_sha256'] != target['image_sha256']:
-            raise SystemExit(f'{pack_dir}: pack is for another image')
-        ident = pack['identity']
-        for key in ('instructions', 'cond_branches', 'indirect_calls', 'fp_arith'):
-            pack.setdefault(key, None)  # packs from earlier exporter versions lack some counts
-        listing = (pack_dir / 'listing.txt').read_text() if (pack_dir / 'listing.txt').is_file() else ''
-        excerpt = None
-        if ident.get('owning_class'):
-            for c in comms:
-                excerpt = c.class_excerpt(ident['owning_class'])
-                if excerpt:
-                    break
-        name = pack['files'].get('class_excerpt')
-        if excerpt and name:
-            method = (ident.get('community_name') or '').split('::')[-1]
-            text, trimmed = trim_excerpt(excerpt['text'], {o for o, *_ in observed_offsets(listing)}, [method])
-            (pack_dir / name).write_text(f'// {excerpt["origin"]}: {excerpt["path"]}:{excerpt["line"]}'
-                                         + (' (trimmed to the declaration head, virtuals, this method and the members '
-                                            'at observed offsets)' if trimmed else '') + '\n' + text + '\n')
-        files, lines = drafter_aids(pack_dir, img, addrlib, comms, ident, listing, excerpt)
-        pack['files'].update(files)
-        (pack_dir / 'pack.json').write_text(json.dumps(pack, indent=2, default=hex) + '\n')
-        (pack_dir / 'README.md').write_text(render_pack_readme(pack) + '\n'.join(lines))
-        print(f'{pack_dir}: ' + ', '.join(sorted(files)) or 'no aids')
+    pack_dirs = list(args.pack)
+    tasks = [Path(t) for t in args.tasks or []]
+    for t in tasks:
+        task = json.loads((t / 'task.json').read_text())
+        pack_dirs += [REPO / f['pack'] for f in task['functions'] if f.get('pack')]
+    if tasks:
+        # Class material first, so the refreshed function READMEs can point at it.
+        write_class_material(tasks, target, img, addrlib, comms)
+    for d in dict.fromkeys(str(p) for p in pack_dirs):
+        _, files = refresh_pack(d, target, img, addrlib, comms)
+        print(f'{d}: ' + (', '.join(sorted(files)) or 'no aids'))
+    for t in tasks:
+        task = json.loads((t / 'task.json').read_text())
+        packs = [json.loads((REPO / f['pack'] / 'pack.json').read_text()) for f in task['functions'] if f.get('pack')]
+        (t / 'README.md').write_text(render_task_readme(task, packs))
+        (t / 'BRIEF.md').write_text(render_brief(task, packs))
 
 
 def named_rvas(img, addrlib, comms):
@@ -1218,12 +1834,37 @@ def main():
     a.add_argument('list')
     a.add_argument('--recipe', default=DEFAULT_RECIPE)
     a.add_argument('--max-attempts', type=int, default=12)
+    a.add_argument('--attempts-per-function', type=int, default=None,
+                   help='Budget = N x compared functions of the task (overrides --max-attempts)')
+    a.add_argument('--fpfast', choices=('keep', 'unit', 'drop'), default='keep',
+                   help='Functions with a float equality test lacking a parity branch: keep them under the '
+                        'default recipe, move the whole task to --fpfast-recipe when its other functions are '
+                        'recipe-neutral (else drop them), or drop them')
+    a.add_argument('--fpfast-recipe', default='o2-fpfast')
+    a.add_argument('--class-material', action='store_true',
+                   help='Also write .local/packs/<build>/class/<Class>/ for the classes of these tasks')
+    pl = sub.add_parser('plan', help='Propose class-grouped units from the community-named survey')
+    pl.add_argument('--survey', default=None, help='Default: .local/packs/_survey/<build>-named')
+    pl.add_argument('--label', default='plan')
+    pl.add_argument('--classes', type=int, default=8)
+    pl.add_argument('--per-class', type=int, default=5)
+    pl.add_argument('--total', type=int, default=None, help='Grow short batches toward this many functions')
+    pl.add_argument('--min-functions', type=int, default=4)
+    pl.add_argument('--max-function-bytes', type=int, default=500)
+    pl.add_argument('--max-unit-bytes', type=int, default=1200)
+    pl.add_argument('--extend', default=None, help='The one class whose existing unit this batch extends')
+    pl.add_argument('--area', action='append', help='CLASS=AREA for an owning-system area (rule 1)')
+    pl.add_argument('--exclude', action='append', help='Class to leave out')
+    pl.add_argument('--task-prefix', default='batch-')
+    pl.add_argument('--reuse-evidence', action='append',
+                    help='Inventory entries citing this findings/ file stay selectable (reproduce a recorded plan)')
     s = sub.add_parser('survey')
     s.add_argument('--sample', type=int, default=2000)
     s.add_argument('--seed', type=int, default=1)
     s.add_argument('--named', action='store_true', help='Every community-named function instead of a sample')
     r = sub.add_parser('refresh', help='Rebuild Drafter aids of existing packs without running Ghidra')
-    r.add_argument('pack', nargs='+')
+    r.add_argument('pack', nargs='*')
+    r.add_argument('--tasks', nargs='+', help='Task dirs: refresh their packs, class material, README and BRIEF')
     b = sub.add_parser('bind')
     b.add_argument('--task', required=True)
     b.add_argument('--object', default=None, help='Default: the newest attempts/<NNN>/candidate.obj')
@@ -1234,6 +1875,8 @@ def main():
         cmd_survey(args)
     elif args.cmd == 'refresh':
         cmd_refresh(args)
+    elif args.cmd == 'plan':
+        cmd_plan(args)
     else:
         sys.exit(bind(args.task, args.object))
 
