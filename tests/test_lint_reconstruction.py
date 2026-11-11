@@ -93,6 +93,9 @@ class LintTests(unittest.TestCase):
             "digit separator": "int n = 1'000; __declspec(naked) int m;",
             # A banned argument that is not the first one.
             'codegen-only __declspec ': '} __declspec(noinline, naked) void f() {',
+            # The keyword reached through an identity macro, or separated from its parenthesis.
+            'codegen-only __declspec word': '}\n#define ID(x) x\nID(__declspec)(safebuffers) void f() {',
+            'codegen-only __declspec word ': '} __declspec/**/(naked) void f() {',
             'codegen-only __declspec  ': '} __declspec(align(16) safebuffers) void f() {',
             'token pasting': '\n#define P(a, b) a##b\n',
             '#define naming __declspec': '\n#define NAKED __declspec(naked)\n',

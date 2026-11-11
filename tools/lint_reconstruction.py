@@ -54,6 +54,10 @@ BANNED = (
     (re.compile(r'(?<![A-Za-z0-9_])__emit(?![A-Za-z0-9_])'), '__emit'),
     (re.compile(r'(?<![A-Za-z0-9_])(?:__pragma|_Pragma)(?![A-Za-z0-9_])'), 'pragma operator'),
     (re.compile(r'##'), 'token pasting (##)'),
+    # Refused as bare words, not only inside a parsed `__declspec(...)`: the keyword can reach its
+    # argument list through an identity macro or with a comment before the parenthesis.
+    (re.compile(rf'(?<![A-Za-z0-9_])(?:{CODEGEN_DECLSPEC})(?![A-Za-z0-9_])'),
+     'codegen-only __declspec word (naked, code_seg, allocate, safebuffers)'),
     # A numeric literal with a separator; `u8'a'` and other prefixed character literals start
     # with a letter and are not matched.
     (re.compile(r"(?<![A-Za-z0-9_.])\.?\d[0-9A-Za-z_.]*'[0-9A-Za-z]"), "digit separator (')"),
