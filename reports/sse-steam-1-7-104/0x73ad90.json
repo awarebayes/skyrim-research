@@ -2,10 +2,11 @@
   "function_id": "sse-steam-1-7-104-0x73ad90",
   "match_record_schema": 1,
   "notes": [
-    "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated; acceptance is the maintainer committing this record.",
+    "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest (reports/sse-steam-1-7-104/0x73ad90.review.json), and integration by tools/accept_function.py.",
     "Host independence: the fork is a copy of the standing verifier machine's disk, so it shares that toolchain install. The fresh machine installed the toolchain from the pinned recipe, and its compiler binaries matched pinned.sha256. Both Boat hosts are the same machine type and Ubuntu 24.04.4 image. The macOS host only compared; it did not compile.",
     "Whole-object hashes differ between compiles in three places only: the COFF timestamp, the object path recorded in .debug$S, and the .chks64 checksum of that section. The function section, its unwind data and every other section were identical.",
-    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this."
+    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
+    "The reconstruction does not model the class's virtual function table: it declares only the destructor and HaveNotVisitedArmor, so its slot positions differ from the game's (slot 4) and VisitArmor and Visit are omitted. The compared function does not depend on the table, so the byte match is unaffected; the class layout beyond the two checked member offsets is not claimed."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",

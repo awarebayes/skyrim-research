@@ -24,6 +24,7 @@ HDR = 'reconstruction/synthetic/SyntheticSum.h'
 RECIPE = 'reconstruction/recipes/synthetic.json'
 MAP = 'reports/synthetic-fixture/symbol-map.json'
 RECORD = 'reports/synthetic-fixture/0x1010.json'
+REVIEW = 'reports/synthetic-fixture/0x1010.review.json'
 PIN = 'tools/verifier/pinned.sha256'
 
 
@@ -31,7 +32,9 @@ def sha256(blob):
     return hashlib.sha256(blob).hexdigest()
 
 
-class MatchGateTests(unittest.TestCase):
+class GateFixture:
+    """A synthetic repository with one function, a consistent match record and, by default, an approve."""
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
@@ -59,6 +62,8 @@ class MatchGateTests(unittest.TestCase):
                      'functions': [self.fn], 'work_items': [], 'milestones': []}
         self.record = self.make_record()
         self.save_record()
+        self.review = self.make_review()
+        self.save_review()
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -93,6 +98,16 @@ class MatchGateTests(unittest.TestCase):
     def save_record(self):
         self.write(RECORD, json.dumps(self.record, indent=2))
 
+    def make_review(self):
+        return {'review_record_schema': 1, 'function_id': self.fn['id'], 'build_id': self.fn['build_id'],
+                'rva': self.fn['rva'], 'size': self.fn['size'], 'source_digest_method': 'tu-sha256-v1',
+                'source_digest': self.record['source']['digest'], 'reviewer_model': 'claude-opus-5-5',
+                'review_task_id': 'synthetic-review', 'verdict': 'approve', 'escalation_category': 'none',
+                'review_sha256': 'a' * 64, 'review_date': '2000-01-02'}
+
+    def save_review(self):
+        self.write(REVIEW, json.dumps(self.review, indent=2))
+
     def check(self):
         return validate(self.data, self.target, root=self.root)
 
@@ -100,6 +115,8 @@ class MatchGateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, pattern):
             self.check()
 
+
+class MatchGateTests(GateFixture, unittest.TestCase):
     # Positive case: the pipeline's own output, consistent with integrated source, passes.
 
     def test_consistent_record_accepted(self):
@@ -109,7 +126,19 @@ class MatchGateTests(unittest.TestCase):
     def test_unmatched_entries_need_no_record(self):
         self.fn['status'] = 'reconstructed'
         del self.fn['report']
+        (self.root / REVIEW).unlink()
         self.check()
+
+    def test_mapped_entry_with_record_awaiting_review_accepted(self):
+        self.fn['status'] = 'mapped'
+        (self.root / REVIEW).unlink()
+        self.check()
+
+    def test_record_awaiting_review_still_checked(self):
+        self.fn['status'] = 'mapped'
+        (self.root / REVIEW).unlink()
+        self.write(CPP, (self.root / CPP).read_text() + '// edited\n')
+        self.assertGateRejects('source digest is stale')
 
     # A success claim without a record, or a hand-written one, is not enough.
 
@@ -284,6 +313,81 @@ class MatchGateTests(unittest.TestCase):
             run['compiled_on'] = 'host-a'
         self.save_record()
         self.assertGateRejects('at least 2 compile hosts')
+
+    # Reviewer approval: a sanitized record bound to this function and this source.
+
+    def test_missing_review_record_rejected(self):
+        (self.root / REVIEW).unlink()
+        self.assertGateRejects('is missing; matched needs a Reviewer approve')
+
+    def test_review_reject_verdict_rejected(self):
+        self.review.update(verdict='reject')
+        self.save_review()
+        self.assertGateRejects('verdict is reject, not approve')
+
+    def test_review_escalate_verdict_rejected(self):
+        self.review.update(verdict='escalate', escalation_category='provenance')
+        self.save_review()
+        self.assertGateRejects('verdict is escalate, not approve')
+
+    def test_approve_with_escalation_category_rejected(self):
+        self.review['escalation_category'] = 'legal'
+        self.save_review()
+        self.assertGateRejects('no escalation category')
+
+    def test_review_of_other_source_digest_rejected(self):
+        self.review['source_digest'] = tu_digest(self.root, [CPP])
+        self.save_review()
+        self.assertGateRejects('reviewed other source')
+
+    def test_review_outlives_source_change_rejected(self):
+        # Source and match record move on together; the old approval must not carry over.
+        self.write(CPP, (self.root / CPP).read_text() + '// edited\n')
+        self.record = self.make_record()
+        self.save_record()
+        self.assertGateRejects('reviewed other source')
+
+    def test_review_for_other_function_rejected(self):
+        self.review['function_id'] = 'synthetic-fixture-0x2000'
+        self.save_review()
+        self.assertGateRejects('reviewed another function')
+
+    def test_review_for_other_range_rejected(self):
+        self.review['size'] += 1
+        self.save_review()
+        self.assertGateRejects('reviewed another function')
+
+    def test_review_at_other_function_path_not_used(self):
+        (self.root / REVIEW).rename(self.root / 'reports/synthetic-fixture/0x2000.review.json')
+        self.assertGateRejects('is missing')
+
+    def test_review_without_model_rejected(self):
+        self.review['reviewer_model'] = ''
+        self.save_review()
+        self.assertGateRejects('names no reviewer model')
+
+    def test_review_with_free_text_rejected(self):
+        self.review['reasons'] = 'prose that nobody sanitized'
+        self.save_review()
+        self.assertGateRejects('fields must be exactly')
+
+    def test_review_without_hash_rejected(self):
+        self.review['review_sha256'] = 'not-a-hash'
+        self.save_review()
+        self.assertGateRejects('review_sha256')
+
+    def test_review_bad_date_rejected(self):
+        self.review['review_date'] = '2000-02-30'
+        self.save_review()
+        self.assertGateRejects('review_date')
+
+    def test_review_not_json_rejected(self):
+        self.write(REVIEW, 'verdict: approve\n')
+        self.assertGateRejects('is not JSON')
+
+    def test_leftover_review_for_unmatched_entry_rejected(self):
+        self.fn['status'] = 'mapped'
+        self.assertGateRejects('belongs to no matched inventory entry')
 
     def test_validate_match_direct_call(self):
         validate_match(self.fn, self.target, self.root)

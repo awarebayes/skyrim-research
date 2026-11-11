@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T21:02:00Z",
+  "updated_at": "2026-11-11T21:15:51Z",
   "phase": "Bootstrap",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -61,7 +61,7 @@
       "title": "Implement and review the matching gate",
       "status": "active",
       "owner": "awarebayes",
-      "acceptance": "Use synthetic negative fixtures for bytes, relocations, calls, data references and exception coverage; reproduce locally before enabling matches.",
+      "acceptance": "Use synthetic negative fixtures for bytes, relocations, calls, data references and exception coverage; reproduce locally before enabling matches; the gate change passes its own Reviewer pass under the acceptance rule. So far: gate implemented in tools/check.py with a Reviewer record and negative tests, run as the CI consistency check; the first real comparison is reproduced on more than one host. Its Reviewer pass is pending.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/5"
     },
     {
@@ -69,7 +69,7 @@
       "title": "Recover and verify the first small function",
       "status": "active",
       "owner": "awarebayes",
-      "acceptance": "Publish reviewed provenance and sanitized reproducible evidence after the matching gate is implemented.",
+      "acceptance": "Accept one small function under the acceptance rule: reproduced comparator pass, a fresh Reviewer approve recorded by tools/accept_function.py, and sanitized reproducible evidence. So far: 0x73ad90 reconstructed, integrated and reproduced on 3 hosts; awaiting Reviewer approval; not accepted.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/6"
     },
     {

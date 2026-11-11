@@ -10,7 +10,8 @@
 Reports are embedded exactly as the comparator wrote them; nothing in them is edited or
 summarized. The record is refused unless tools/check.py's match validation accepts it for the
 inventory entry as if that entry were `matched`. Writing a record does not change the inventory
-and is not acceptance; the maintainer accepts by committing it after an independent re-run.
+and is not acceptance; acceptance follows the acceptance rule in docs/verification.md and is
+recorded by tools/accept_function.py after a Reviewer approve.
 """
 import argparse
 import copy

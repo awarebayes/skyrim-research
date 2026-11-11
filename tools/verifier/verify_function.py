@@ -15,7 +15,8 @@ checks that what comes back is a sanitized report and refuses to summarize anyth
 
 Outputs: the comparator's sanitized JSON report at --report, raw byte-level diagnostics only
 under the checkout's .local/ directory, and a one-screen summary on stdout that never contains
-code bytes. A `pass` is evidence for maintainer review; it does not make a function `matched`.
+code bytes. A `pass` is comparator evidence for the acceptance rule in docs/verification.md;
+it does not make a function `matched`.
 Exit status: 0 pass, 1 fail, 2 the comparator could not produce a report.
 """
 import argparse

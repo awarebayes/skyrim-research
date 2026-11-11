@@ -53,8 +53,17 @@ class VerifyFunctionTests(unittest.TestCase):
         return status, text, json.loads(report.read_text())
 
     def assert_no_bytes(self, text):
+        # The report and diagnostics paths are the caller's own; a checkout under a hex-named
+        # directory (agent worktrees) must not fail the check. Everything else stays scanned.
+        for path in (self.work / 'out' / 'report.json', self.private / 'diagnostics.json'):
+            for spelling in {str(path), str(path.resolve())}:
+                text = text.replace(spelling, '<caller-path>')
         for run in LONG_HEX.findall(text):
             self.fail(f'summary carries a long hex run: {run[:8]}...')
+
+    def test_byte_check_still_catches_hex_outside_caller_paths(self):
+        with self.assertRaises(AssertionError):
+            self.assert_no_bytes(f'report {self.work / "out" / "report.json"} detail 4883ec284883ec28')
 
     def test_synthetic_pass_is_not_acceptance(self):
         status, text, report = self.verify(self.write_inputs())

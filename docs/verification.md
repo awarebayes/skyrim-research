@@ -4,16 +4,18 @@
 
 `data/progress.json` is the sole public progress input. `tools/check.py` validates it and
 `tools/build_site.py` derives all headline totals. A function may be `matched` only when its
-inventory entry names a match record under `reports/` that `tools/check.py` accepts (the
-"Match gate" section below). A status flip, a `success: true` flag or a hand-written report is
-rejected. Weakening the gate is a machinery change under the acceptance rule below, made to this
-file, `tools/check.py` and `tests/test_match_gate.py` together.
+inventory entry names a match record under `reports/` and has a Reviewer record beside it, both
+of which `tools/check.py` accepts (the "Match gate" section below). A status flip, a
+`success: true` flag or a hand-written report is rejected. Weakening the gate is a machinery
+change under the acceptance rule below, made to this file, `tools/check.py`,
+`tests/test_match_gate.py` and `tests/test_accept_function.py` together.
 
-Function inventory is empty and scope totals are unknown (`null`). No overall percentage is
-shown until a reviewed inventory defines scope and exclusions. Task completion, type coverage,
-behavioral validation and byte-match coverage must never be combined into one completion score.
-The initial function states are `mapped`, `analyzed`, `reconstructed` and reserved `matched`.
-All are mutually exclusive current states, not cumulative counts. A reconstruction is not a match.
+The function inventory holds individually selected entries only, and scope totals are unknown
+(`null`). No overall percentage is shown until a reviewed inventory defines scope and
+exclusions. Task completion, type coverage, behavioral validation and byte-match coverage must
+never be combined into one completion score. The function states are `mapped`, `analyzed`,
+`reconstructed` and `matched`. All are mutually exclusive current states, not cumulative counts.
+A reconstruction is not a match.
 
 ## Requirements for a future accepted match
 
@@ -62,12 +64,14 @@ accept individual functions or batches. A function is accepted only when ALL of 
 
    Verdicts are `approve`, `reject` (back to the Drafter or Engineer with reasons) or `escalate`
    (with a category: `provenance`, `legal`, `systemic` or `other`). The review is kept privately
-   at `.local/reviews/<task-id>.md`; a sanitized verdict record (reviewer model, verdict, review
-   file SHA-256, date) goes alongside the public report.
+   at `.local/reviews/<task-id>.md`; a sanitized verdict record (reviewer model, verdict,
+   escalation category, review file SHA-256, date, and the function identity and source digest
+   it reviewed) goes alongside the public report as `reports/<build id>/<rva>.review.json`.
 3. **Integration.** An Engineer merges the passing branch, reruns the full checks and the
-   verifier on the integrated tree, and the change is then committed and pushed by the
-   integrating Engineer (or the orchestrator when run with a shell) after the pre-push checks in
-   `AGENTS.md`.
+   verifier on the integrated tree, and records the acceptance with `tools/accept_function.py`,
+   which writes the verdict record and sets that one entry to `matched` only if the validator
+   accepts the result. The change is then committed and pushed by the integrating Engineer (or
+   the orchestrator when run with a shell) after the pre-push checks in `AGENTS.md`.
 
 Reviewer passes need G2, since they read reconstructed source. A `reject` or `escalate` stops
 acceptance of that function until a later Reviewer pass on a revised source returns `approve`.
@@ -91,6 +95,8 @@ matches; new gates or spend beyond recorded limits; and changes to this acceptan
 it. Revocation, or a failed re-run of an accepted function, sets its status back to `mapped` in
 `data/progress.json` in a commit that adds a dated note to the function's finding stating the
 reason; the earlier report stays in git history and is not cited as current evidence.
+`tools/accept_function.py --revoke` makes the data change (status, `report`, review and match
+records) and prints the note to add.
 
 **Changes to the machinery.** Changes to the comparator, the validator's gate logic or this rule
 are not covered by automated acceptance of functions. They need an Engineer change with tests and
@@ -99,8 +105,12 @@ are not blocked waiting for the maintainer, except changes to this rule itself, 
 
 ## Match gate
 
-Each `matched` inventory entry has a `report` path to a match record (`reports/README.md`).
-`tools/check.py` recomputes, from the committed tree, the following:
+This is how `tools/check.py` enforces items 1 and 2 of the acceptance rule on the committed tree.
+An inventory entry may name a match record in `report` (`reports/README.md`) before it is
+accepted; that record is checked whenever it is named, so a record awaiting review cannot go
+stale unnoticed. A `matched` entry must name one, and must also have a Reviewer record.
+
+Match record, recomputed from the tree:
 
 - **Source.** The digest of the translation unit under `reconstruction/` equals the record's,
   and every report names that digest and the compiled file's path.
@@ -109,18 +119,39 @@ Each `matched` inventory entry has a `report` path to a match record (`reports/R
 - **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match
   their recorded hashes. The recipe's compiler is the pinned `cl.exe`, and every report names
   that recipe's hash, compiler and flags.
-- **Comparator.** Every report comes from the current comparator version and source hash.
+- **Comparator.** Every report comes from the current comparator version and source hash. A
+  change to `tools/compare.py` or `tools/pecoff.py` therefore makes every record stale.
 - **Result.** Every report has result `pass`, every function byte covered exactly or by
   reference, and unwind info `covered` or `none-in-range`.
 - **Reproduction.** There are at least two runs, from at least two compile hosts and two
   compare hosts. The record says how independent those hosts are.
 
+Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory id), for every
+`matched` entry:
+
+- exactly the fields `review_record_schema`, `function_id`, `build_id`, `rva`, `size`,
+  `source_digest_method`, `source_digest`, `reviewer_model`, `review_task_id`, `verdict`,
+  `escalation_category`, `review_sha256` and `review_date`, so no free text is published;
+- the function identity equals the inventory entry's, and the source digest equals the match
+  record's, so an approval cannot be reused for other source or another function, and any source
+  change makes it stale;
+- a reviewer model is named, the verdict is `approve` with escalation category `none`, the review
+  hash is a SHA-256 and the date is a valid ISO date;
+- a Reviewer record for an entry that is not `matched` is rejected, so a leftover approval never
+  reads as acceptance.
+
+`tools/accept_function.py` checks the private review file (its block for the function says
+`approve`, no escalation, fresh context, not drafted or triaged by the Reviewer, a model, and the
+match record's source digest) before writing the Reviewer record, then re-runs the validator and
+changes nothing if it fails. The validator cannot see the private review, so the record's hash is
+what ties it to the file kept under `.local/reviews/`.
+
 The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,
-stale or inconsistent. They use reports that the comparator produced from synthetic fixtures.
-The step 4 comparator tests in `tests/test_compare.py` are unchanged.
-The gate does not and cannot show that a comparison against the game took place. That rests on
-the runs being real and reproduced on a second host; acceptance follows the acceptance rule
-above. Git history is the audit trail of that acceptance.
+stale or inconsistent, and `tests/test_accept_function.py` covers the acceptance tool. They use
+reports that the comparator produced from synthetic fixtures. The step 4 comparator tests in
+`tests/test_compare.py` are unchanged. The gate does not and cannot show that a comparison
+against the game took place, or that a Reviewer read the source; those rest on the runs and the
+review being real, which the sampling safeguard re-checks. Git history is the audit trail.
 
 Public CI cannot prove a match without private game inputs. It should check report/source
 consistency, not represent that check as an independent comparison to Skyrim. Once an authorized

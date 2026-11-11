@@ -130,28 +130,39 @@ the real comparison in step 5 is also reproduced and the gate change passes its 
 under the [acceptance rule](verification.md#acceptance-rule). A hand-authored success flag is
 insufficient.
 
+Status: the report/source consistency check (the match gate in `tools/check.py`, with the
+Reviewer record) and its negative tests (`tests/test_match_gate.py`,
+`tests/test_accept_function.py`) are implemented and run in CI. The first function's real
+comparison is reproduced on more than one host. The gate change still needs its own Reviewer
+pass before this step is finished.
+
 ## 5. Reconstruct and accept the first real function
 
 Issue: [#6 — First function](https://github.com/awarebayes/skyrim-research/issues/6).
 Prerequisites: steps 2, 3 and 4.
 
-- [ ] Select a short function with well-supported boundaries and few dependencies. Prefer
+- [x] Select a short function with well-supported boundaries and few dependencies. Prefer
   engine code over unidentified middleware; record any uncertainty about origin.
-- [ ] Add its build ID, RVA, size, name origin, owner and finding path to the inventory as
+- [x] Add its build ID, RVA, size, name origin, owner and finding path to the inventory as
   `mapped`. Do not define whole-game scope from this one selected function.
-- [ ] Analyze it locally and document the signature, used fields, references and uncertainties.
-- [ ] Reconstruct privately, compile with candidate settings, compare, and retain each result.
+- [x] Analyze it locally and document the signature, used fields, references and uncertainties.
+- [x] Reconstruct privately, compile with candidate settings, compare, and retain each result.
   Permission to use an AI agent does not by itself authorize uploading game-derived material.
 - [ ] If it will not match, investigate types, ABI, compiler choice and optimization settings.
   Record a blocked experiment when appropriate; do not weaken the comparison to claim success.
-- [ ] Reproduce the real comparison on a second verifier host against the pinned source, recipe
+  (Not needed for the first function: the first draft passed.)
+- [x] Reproduce the real comparison on a second verifier host against the pinned source, recipe
   and image.
 - [ ] Land the gate/schema change tying accepted reports to integrated source (Engineer, with the
   reproduction and negative tests from step 4, plus a separate Reviewer pass on the change).
 - [ ] Have a fresh Reviewer subagent check the reconstructed source for plausibility, name
   origins and provenance; then integrate, rerun checks and verifier, and record it as `matched`
-  under the [acceptance rule](verification.md#acceptance-rule). The maintainer is not asked to
+  with `tools/accept_function.py` under the [acceptance rule](verification.md#acceptance-rule). The maintainer is not asked to
   review the function; escalate only as that rule lists.
+
+Status: `sse-steam-1-7-104` `0x73ad90` is reconstructed, integrated and reproduced on 3 hosts
+(`findings/first-function.md`); it is `mapped` and awaits a fresh Reviewer pass and
+`tools/accept_function.py`.
 
 **Finish when:** one integrated function has a reproducible accepted report and public metadata
 passes validation. Only then should the site display its first accepted match. A byte match

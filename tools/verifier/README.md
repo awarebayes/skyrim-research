@@ -1,12 +1,14 @@
-# Verifier worker recipe (pilot)
+# Verifier worker recipe and scripts
 
 Reproduces the compiler worker described in `findings/boat-pilot.md`: MSVC v141
 (Visual Studio 2017 15.9 Build Tools, x64 host and target) under Wine on a fresh x86-64
-Ubuntu 24.04 machine, then builds and compares original synthetic code. Nothing here touches
-game data; the comparator is exercised only on the synthetic pilot sources.
+Ubuntu 24.04 machine. The pilot scripts build and compare original synthetic code only.
+`verify_function.py`, `tu_task.py` and `match_record.py` are the per-function path: they compare
+a compiled reconstruction against the pinned image you supply (private, under the gates in
+`AGENTS.md`) and assemble the sanitized match record. No script here contains game data.
 
-This establishes a build worker. It does not establish that this is the compiler the target
-was built with, and no step compares anything against the game.
+The recipe establishes a build worker. It does not establish that this is the compiler the
+target was built with.
 
 ## Files
 
@@ -35,6 +37,16 @@ was built with, and no step compares anything against the game.
   verifier machine and check `pinned.sha256`, run one task in its own `~/tasks/<task-id>` with a
   file round trip, and stop it while printing compute used. Usage and rules are in
   `docs/boat-agent-guidelines.md`; `BOAT_CLI` overrides the CLI path.
+
+Related tools outside this directory:
+
+- `tools/compare.py` (with `tools/pecoff.py`): the comparator, contract in
+  `docs/comparator-contract.md`. Changing either file makes every match record stale.
+- `tools/source_digest.py`: the `tu-sha256-v1` digest of a translation unit, used as the source
+  revision by tasks, records and Reviewer records.
+- `tools/check.py`: the validator, including the match gate (`docs/verification.md`).
+- `tools/accept_function.py`: records a Reviewer `approve` and sets one inventory entry to
+  `matched`, or revokes an acceptance (`--revoke`). It refuses anything the gate would reject.
 
 ## Steps
 

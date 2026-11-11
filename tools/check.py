@@ -31,6 +31,13 @@ def integer(value):
 
 SHA256 = re.compile(r'[0-9a-f]{64}')
 MATCH_RECORD_SCHEMA = 1
+REVIEW_RECORD_SCHEMA = 1
+REVIEW_FIELDS = {'review_record_schema', 'function_id', 'build_id', 'rva', 'size', 'source_digest_method',
+                 'source_digest', 'reviewer_model', 'review_task_id', 'verdict', 'escalation_category',
+                 'review_sha256', 'review_date'}
+REVIEW_VERDICTS = {'approve', 'reject', 'escalate'}
+ESCALATION_CATEGORIES = {'none', 'provenance', 'legal', 'systemic', 'other'}
+MODEL_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9._-]*')
 TOOLCHAIN_PIN = 'tools/verifier/pinned.sha256'
 MIN_HOSTS = 2
 
@@ -65,8 +72,9 @@ def validate_match(fn, target, root=None):
 
     Every check here is repeatable from public files alone, which is all CI has: it shows that the
     published reports are consistent with the published source, recipe, toolchain pin, target
-    manifest and comparator, not that a comparison against the game took place. Acceptance itself
-    is the maintainer committing the record after an independent re-run (docs/verification.md).
+    manifest and comparator, not that a comparison against the game took place. It is checked for
+    every entry that names a record, so a record awaiting review cannot go stale unnoticed; the
+    Reviewer approval that acceptance also needs is validate_review (docs/verification.md).
     """
     root = ROOT if root is None else root
     record_path = public_path(fn.get('report'), {'reports'}, 'report', root)
@@ -167,6 +175,53 @@ def validate_match(fn, target, root=None):
     return record
 
 
+def review_record_path(fn):
+    """Where a function's sanitized Reviewer record lives: one per (build id, RVA), beside the reports."""
+    return f'reports/{fn["build_id"]}/0x{fn["rva"]:x}.review.json'
+
+
+def validate_review(fn, record, root=None):
+    """Require a sanitized Reviewer `approve` bound to this function and to the source the record matched.
+
+    The record is the policy's public trace of the Reviewer step: the full review stays private under
+    .local/reviews/ and is bound by its hash. Binding the function identity and the translation-unit
+    digest means an approval cannot be carried over to other source or another function; any source
+    change makes it stale together with the match record.
+    """
+    root = ROOT if root is None else root
+    name = review_record_path(fn)
+    require((root / name).is_file(), f'Review record: {name} is missing; matched needs a Reviewer approve')
+    try:
+        review = json.loads((root / name).read_text())
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f'Review record: {name} is not JSON ({exc})') from None
+    require(isinstance(review, dict) and review.get('review_record_schema') == REVIEW_RECORD_SCHEMA,
+            'Review record: unknown review_record_schema')
+    # Only known fields: free text here would be an unreviewed publication channel.
+    require(set(review) == REVIEW_FIELDS, f'Review record: fields must be exactly {sorted(REVIEW_FIELDS)}')
+    require(review['function_id'] == fn['id'] and review['build_id'] == fn['build_id']
+            and review['rva'] == fn['rva'] and review['size'] == fn['size'],
+            'Review record: it reviewed another function than this inventory entry')
+    require(review['source_digest_method'] == DIGEST_METHOD and review['source_digest'] == record['source']['digest'],
+            'Review record: it reviewed other source than the match record binds')
+    require(isinstance(review['reviewer_model'], str) and bool(MODEL_ID.fullmatch(review['reviewer_model'])),
+            'Review record: names no reviewer model')
+    require(isinstance(review['review_task_id'], str) and bool(re.fullmatch(r'[a-z0-9][a-z0-9-]*', review['review_task_id'])),
+            'Review record: invalid review_task_id')
+    require(review['verdict'] in REVIEW_VERDICTS and review['escalation_category'] in ESCALATION_CATEGORIES,
+            'Review record: unknown verdict or escalation category')
+    require(review['verdict'] == 'approve', f'Review record: verdict is {review["verdict"]}, not approve')
+    require(review['escalation_category'] == 'none', 'Review record: an approve carries no escalation category')
+    require(is_hash(review['review_sha256']), 'Review record: review_sha256 is not a SHA-256')
+    date = review['review_date']
+    try:
+        valid_date = datetime.fromisoformat(date).date().isoformat() == date
+    except (TypeError, ValueError):
+        valid_date = False
+    require(valid_date, 'Review record: invalid review_date')
+    return review
+
+
 def validate(data, target, root=None):
     require(data['schema_version'] == target['schema_version'] == 1, 'Unknown schema version')
     require(text(data['phase']), 'Missing phase')
@@ -206,7 +261,16 @@ def validate(data, target, root=None):
                 'Evidence must reference public findings or reports')
         require(((ROOT if root is None else root) / path).is_file(), 'Evidence does not exist')
         if fn['status'] == 'matched':
+            validate_review(fn, validate_match(fn, target, root), root)
+        elif fn.get('report') is not None:
+            # A record awaiting review must still be consistent with the integrated tree.
             validate_match(fn, target, root)
+    matched = {review_record_path(fn) for fn in data['functions'] if fn['status'] == 'matched'}
+    reports = (ROOT if root is None else root) / 'reports'
+    for path in sorted(reports.glob('*/*.review.json')) if reports.is_dir() else []:
+        name = path.relative_to(reports.parent).as_posix()
+        # A leftover approval would read as acceptance of an entry the inventory does not accept.
+        require(name in matched, f'Review record: {name} belongs to no matched inventory entry')
     seen = set()
     for item in data['work_items']:
         require(isinstance(item['id'], str) and re.fullmatch(r'[a-z0-9][a-z0-9-]*', item['id'])

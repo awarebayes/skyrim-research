@@ -139,7 +139,8 @@ orchestrator does not start a phase until the previous one's finish condition fr
 - **Budget**: the orchestrator tallies machine-hours and subagent runs against the G3 cap from
   worker reports and stops dispatching at the cap; workers stop their machines on completion.
 - **Integration**: an Engineer merges passing, Reviewer-approved worktree branches, reruns the
-  full checks and the verifier on the integrated tree, records `matched`, then commits and pushes.
+  full checks and the verifier on the integrated tree, records `matched` with
+  `tools/accept_function.py` (which writes the sanitized Reviewer record), then commits and pushes.
   Claims refer to integrated source only. The maintainer gets periodic summaries, not commits.
 
 ### Worker briefs and handoffs
@@ -151,6 +152,7 @@ brief lifts the push and `matched` parts, and only for work that meets the accep
 Reviewer brief also names the functions, source revision and report paths. Every worker writes a
 handoff to `.local/handoffs/<task-id>.md` (model, inputs and their revisions, commands, outcome,
 blockers, next step) and returns its summary. A Reviewer's full review is stored at
-`.local/reviews/<task-id>.md`, with a sanitized verdict record alongside the public report. The
+`.local/reviews/<task-id>.md`, with a sanitized verdict record alongside the public report
+(`reports/<build id>/<rva>.review.json`). The
 orchestrator works from handoffs and reviews, not memory, and reports gate blockers and the
 escalations listed in `docs/verification.md` to the maintainer rather than working around them.

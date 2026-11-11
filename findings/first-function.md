@@ -1,8 +1,12 @@
 # Finding: first pilot function selected, reconstructed and re-checked
 
-Status: **comparator pass reproduced on 3 hosts (2 compiling, 3 comparing); awaiting maintainer
-review; not accepted.** The inventory entry stays `mapped`. Range, unwind form and reference
-counts are OBSERVED on the pinned image. The reconstructed source is not published here.
+Status: **comparator pass reproduced on 3 hosts (2 compiling, 3 comparing) with partial
+independence; integrated; awaiting Reviewer approval; not accepted.** The inventory entry is
+`mapped` and names the match record `reports/sse-steam-1-7-104/0x73ad90.json`; there is no
+Reviewer record. The integrated source is `reconstruction/inventory/ArmorRatingVisitor.{h,cpp}`
+(translation-unit digest `615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f`).
+Range, unwind form and reference counts are OBSERVED on the pinned image. The function name is a
+community name and is not verified.
 Author / human operator: awarebayes
 AI assistance / model: Claude Code workers. Engineer (claude-opus-5-5): task p3-first-function-prep
 (selection and analysis, local) and task p3-second-host-and-gate (re-check). Drafter
@@ -140,7 +144,7 @@ following:
    extracted the function's COMDAT section and its `.pdata`/`.xdata` from each object. All 84
    code bytes and the 12 unwind bytes equal the image's.
 3. **Integration.** The source was split into one translation unit, a class header plus a .cpp
-   (proposed layout `reconstruction/inventory/ArmorRatingVisitor.{h,cpp}`). Only comments and
+   (`reconstruction/inventory/ArmorRatingVisitor.{h,cpp}`, layout in `reconstruction/README.md`). Only comments and
    NG's member names changed; no code changed. Its revision is the digest of both files (`tu-sha256-v1`,
    `615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f`).
 4. **Hosts.** Same recipe (`recipe_sha256` `923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838`),
@@ -214,10 +218,10 @@ python3 -m unittest tests.test_verify_function -v
 ```
 
 The re-check's reproduction command is in `reports/sse-steam-1-7-104/0x73ad90.json`
-(`reproduction`). It needs the reconstructed source, which is not published here.
+(`reproduction`). It uses the integrated source under `reconstruction/inventory/`.
 
-The private notes, listings, task inputs and negative-case reports are under `.local/`. Nothing
-here contains code bytes, disassembly, decompiler output or reconstructed source.
+The private notes, listings, task inputs and negative-case reports are under `.local/`. This
+finding contains no code bytes, disassembly, decompiler output or reconstructed source.
 
 ## Negative results and limitations
 
@@ -231,11 +235,30 @@ here contains code bytes, disassembly, decompiler output or reconstructed source
 - The function has no relocations. The match exercises none of the comparator's reference paths.
 - The symbol map (`reports/sse-steam-1-7-104/symbol-map.json`, Address Library id/offset pairs)
   covers the function and two neighbours only. It is not a general map.
-- Not accepted. Publishing the reconstructed source, and the gate change that would allow
-  `matched`, wait on maintainer review.
+- The reconstruction does not model the class's virtual function table. It declares only the
+  destructor and `HaveNotVisitedArmor`, so its slot positions differ from the game's (the
+  function is slot 4 there), and `VisitArmor` and `Visit` are omitted. The compared function does
+  not use the table, so the byte match is unaffected, but nothing about the class layout beyond
+  the two checked member offsets is claimed. The source is not changed to say this in its header,
+  because that would change the digest the comparator runs are bound to.
+- The name `ArmorRatingVisitor::HaveNotVisitedArmor` is CommonLibSSE-NG's community name. EXE_RTTI
+  supports the class and slot only.
+- Not accepted. Acceptance needs a fresh Reviewer `approve` on this integrated tree, recorded by
+  `tools/accept_function.py` (`docs/verification.md`, acceptance rule). The gate change itself
+  needs its own Reviewer pass as a machinery change. Whether reconstructed source may be
+  published at all is a maintainer policy decision under `LEGAL.md` that has not been made; this
+  tree is not pushed.
 
 ## Reviewer and outcome
 
-Pending maintainer review: provenance and publication of the reconstructed source, an
-independent re-run of the comparison, and the proposed gate change. Status: `mapped`; comparator
-pass reproduced, not accepted.
+Under the acceptance rule in `docs/verification.md` the maintainer does not review this function.
+A first Reviewer pass returned `reject` on consistency grounds only: it judged the source,
+labelling and hash binding acceptable, but found this finding, the record's notes and the docs
+describing acceptance as a maintainer step while the same proposal set `matched`. Those texts now
+follow the acceptance rule, the entry is back to `mapped`, and the vtable limitation above is
+stated here and in the record's notes. That first Reviewer judged "no pasted decompiler output"
+by the form of the source only and did not read decompiler output.
+
+Next: a fresh Reviewer pass on the integrated tree (with G2, reading decompiler output where it
+needs to compare against it), then `tools/accept_function.py` on an `approve`. Status: `mapped`;
+comparator pass reproduced; integrated; awaiting Reviewer approval; not accepted.

@@ -3,10 +3,10 @@
 Status: **draft for maintainer review.** Implemented by `tools/compare.py` (comparator version
 0.1.0) with parsing in `tools/pecoff.py`, exercised by original synthetic fixtures generated
 in `tests/synthetic_pecoff.py`, and run against the pinned image for the first function
-(`findings/first-function.md`). A `pass` result is
-evidence for review under [verification](verification.md); it is not acceptance, never sets a
-function to `matched`. A `matched` status needs a match record that `tools/check.py` accepts
-(`docs/verification.md`, "Match gate").
+(`findings/first-function.md`). A `pass` result is evidence under
+[verification](verification.md); it is not acceptance and never sets a function to `matched`.
+A `matched` status needs a match record and a Reviewer `approve` record that `tools/check.py`
+accepts (`docs/verification.md`, "Acceptance rule" and "Match gate").
 
 ## Inputs
 
@@ -157,9 +157,11 @@ stated here; changing any of them is a contract change.
    schema change that enables `matched`.
 4. **"Exact compiler binary hash, SDK/library provenance."** It does not say who verifies these.
    Here they are recorded inputs, bound to the object through the build record, and not verified.
-5. **Re-check by a second host.** Proposed answer, not yet accepted: runs are recorded side by side in a
-   match record (`reports/README.md`), and `tools/check.py` checks them against integrated source
-   (`docs/verification.md`, "Match gate"). The comparator and report format are unchanged. A
+5. **Re-check by a second host.** Answered by the match gate, which as a machinery change still
+   needs its own Reviewer pass under the acceptance rule: runs are recorded side by side in a
+   match record (`reports/README.md`), and `tools/check.py` requires at least two compile hosts
+   and two compare hosts and checks every run against integrated source (`docs/verification.md`,
+   "Match gate"). The comparator and report format are unchanged. A
    whole-object hash differs between clean compiles (COFF timestamp, the object path in
    `.debug$S`, and the `.chks64` checksum of that section), so each run binds its own object
    through its build record. Reproduction means every run passes against the same image from
