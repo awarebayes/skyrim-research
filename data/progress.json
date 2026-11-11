@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T20:12:37Z",
+  "updated_at": "2026-11-11T20:30:00Z",
   "phase": "Bootstrap",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -8,7 +8,20 @@
     "bytes": null,
     "notes": "Inventory and exclusions have not been established. No completion percentage is meaningful yet."
   },
-  "functions": [],
+  "functions": [
+    {
+      "id": "sse-steam-1-7-104-0x73ad90",
+      "build_id": "sse-steam-1-7-104",
+      "rva": 7581072,
+      "size": 84,
+      "status": "mapped",
+      "name": "ArmorRatingVisitor::HaveNotVisitedArmor",
+      "name_origin": "COMMUNITY",
+      "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), src/RE/A/ArmorRatingVisitor.cpp, joined through Address Library 1.7.104.0. RVA 0x73ad90; size from the image's single .pdata entry.",
+      "owner": "awarebayes",
+      "evidence": "findings/first-function.md"
+    }
+  ],
   "work_items": [
     {
       "id": "pin-target",
@@ -53,7 +66,7 @@
     {
       "id": "first-function",
       "title": "Recover and verify the first small function",
-      "status": "planned",
+      "status": "active",
       "owner": "awarebayes",
       "acceptance": "Publish reviewed provenance and sanitized reproducible evidence after the matching gate is implemented.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/6"

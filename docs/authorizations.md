@@ -16,3 +16,4 @@ and adding a dated note.
 ## Notes
 
 For microsoft license: individual for my own opensource project
+PL CommonLibSSE for naming and publishing id/offset pairs approved
