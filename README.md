@@ -9,6 +9,7 @@ independent engine implementations such as [Mudcrab](https://github.com/Mudcrab-
 byte matches, and no playable replacement is provided.** The compiler and matching pipeline
 remain research tasks. Infrastructure CI does not verify Skyrim behavior or machine-code matches.
 
+[Step-by-step execution plan](docs/plan.md) ·
 [Progress report](https://awarebayes.github.io/skyrim-research/) ·
 [Work queue](https://github.com/awarebayes/skyrim-research/issues) ·
 [Contribution guide](CONTRIBUTING.md) · [Agent instructions](AGENTS.md)
