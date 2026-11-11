@@ -369,6 +369,11 @@ def function_line(fn, fdir, obj):
     cov = report.get('coverage') or {}
     if result == 'pass' or cov.get('unwind') not in (None, 'not-checked'):
         parts.append(f'unwind {cov.get("unwind")}')
+    if reason == 'function-symbol-missing':
+        parts.append(f'(object does not define {fn["symbol"]})')
+    elif reason == 'unresolved-symbol':
+        # The comparator's detail names the symbol only; it holds no bytes.
+        parts.append(f'({detail})')
     return '  '.join(parts), result
 
 

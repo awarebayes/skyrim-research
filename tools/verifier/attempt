@@ -4,13 +4,17 @@
     tools/verifier/attempt <task-dir>            # .local/tasks/<task-id>/ with task.json
     tools/verifier/attempt --stop [<task-dir>]   # stop the standing machine (and remove the task's files on it)
 
-Run from the checkout whose reconstruction/ sources you are trying (your worktree). The command
-resumes the standing machine if needed (or extends its auto-stop deadline), uploads only files
-that changed since the last attempt, compiles with the task's recipe, compares every listed
-function against the pinned image kept on the machine, and fetches private diagnostics to
-<task-dir>/attempts/<NNN>/. It prints a few lines: one per function with the reason code, first
-mismatch offset and candidate/target sizes, and where to read the side-by-side disassembly.
-The machine stays up between attempts until its deadline; stop it with --stop when done.
+Run from the checkout whose reconstruction/ sources you are trying. The command resumes the
+standing machine if needed (or extends its auto-stop deadline), uploads only files that changed
+since the last attempt, compiles with the task's recipe, compares every listed function against
+the pinned image kept on the machine, and fetches private diagnostics to
+<task-dir>/attempts/<NNN>/. When a function or reference is not yet bound (`unbound:` symbols, a
+renamed declaration, a new callee) it binds the names from the compiled object
+(tools/verifier/bind.py, hints in <task-dir>/bind-hints.json) and compares again in the same
+invocation; a run in which nothing could be compared because of binding does not count against
+max_attempts. It prints one line per function with the reason code, first mismatch offset and
+candidate/target sizes, what was bound or is still missing, and where to read the side-by-side
+disassembly. The machine stops itself at its deadline; --stop is for an Engineer ending a session.
 
 Exit status: 0 every function passed, 1 a function failed, 3 compile failed, 4 unit or include
 problem, 5 budget exhausted, 2 anything else. A pass is evidence for review only; it makes
@@ -24,12 +28,48 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import bind  # noqa: E402
 import boatctl  # noqa: E402
 import disasm  # noqa: E402
 import pipeline  # noqa: E402
 from pipeline import PipelineError  # noqa: E402
 
 LABEL = 'standing'
+
+
+def counted_attempts(log):
+    """Attempts that count against max_attempts: every logged run except binding-only ones."""
+    if not log.is_file():
+        return 0
+    rows = [json.loads(line) for line in log.read_text().splitlines() if line.strip()]
+    return sum(1 for r in rows if r.get('counted', True))
+
+
+def results_of(task, dest):
+    out = {}
+    for fn in task['functions']:
+        try:
+            report = json.loads((dest / f'0x{fn["rva"]:x}' / 'report.json').read_text())
+        except (OSError, ValueError):
+            report = {}
+        out[fn['rva']] = report.get('reason')
+    return out
+
+
+def needs_binding(task, results):
+    return any(fn['symbol'].startswith(bind.UNBOUND) for fn in task['functions']) \
+        or any(reason in bind.BINDING_REASONS for reason in results.values())
+
+
+def run_once(task, host, files, task_dir, dest):
+    code, out = host.run(files, task_dir / '.attempt')
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        host.fetch(dest)
+    except boatctl.BoatError:
+        dest.mkdir(parents=True, exist_ok=True)
+    (dest / 'remote.txt').write_text(out)
+    return code
 
 
 def attempt(task_dir):
@@ -41,7 +81,8 @@ def attempt(task_dir):
     done = sorted(p for p in attempts.glob('[0-9][0-9][0-9]') if p.is_dir()) if attempts.is_dir() else []
     number = int(done[-1].name) + 1 if done else 1
     budget = task['max_attempts']
-    if budget is not None and number > budget:
+    used = counted_attempts(task_dir / 'attempts.jsonl')
+    if budget is not None and used >= budget:
         print(f'attempt budget exhausted: {budget} of {budget} used. Write your result lines and stop.')
         return 5
     files, closure = pipeline.unit_manifest(task)
@@ -49,16 +90,35 @@ def attempt(task_dir):
     machine, how = pipeline.ensure_standing()
     host = pipeline.Host(machine, LABEL, f'{boatctl.REMOTE_HOME}/tasks/{task["task_id"]}', task,
                          state_path=task_dir / '.attempt' / 'sync.json', local_image=config.get('image'))
-    code, out = host.run(files, task_dir / '.attempt')
     dest = attempts / f'{number:03d}'
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        host.fetch(dest)
-    except boatctl.BoatError:
-        dest.mkdir(parents=True, exist_ok=True)
-    (dest / 'remote.txt').write_text(out)
+    code = run_once(task, host, files, task_dir, dest)
+    bind_lines = []
+    if code in (0, 1) and not (dest / 'error.json').is_file() and (dest / 'candidate.obj').is_file() \
+            and needs_binding(task, results_of(task, dest)):
+        if task['symbols_repo'] is not None:
+            bind_lines.append('  binding skipped: task.json names the repository map; bind edits private maps only')
+        else:
+            try:
+                report = bind.bind(task_dir, dest / 'candidate.obj', config.get('image'), config.get('objdump'))
+            except (OSError, ValueError) as exc:
+                report = None
+                bind_lines.append(f'  binding failed: {exc}')
+            if report is not None:
+                bind_lines += bind.describe(report, task_dir)
+                if report['changed']:
+                    # Same source, new names: compile and compare again so this invocation reports real results.
+                    task = pipeline.load_task(task_dir)
+                    files, closure = pipeline.unit_manifest(task)
+                    host.task = task
+                    code = run_once(task, host, files, task_dir, dest)
+                    bind_lines.append('  re-compared after binding (same source)')
+    results = results_of(task, dest)
+    binding_only = code in (0, 1) and bool(results) and all(r in bind.BINDING_REASONS for r in results.values())
+    counted = not binding_only
     lines, all_rows = [], []
-    head = f'attempt {number}' + (f'/{budget}' if budget else '') + f' {task["task_id"]} ({task["compiled"]})'
+    shown = used + (1 if counted else 0)
+    head = (f'attempt {number} {task["task_id"]} ({task["compiled"]}); counted {shown}'
+            + (f'/{budget}' if budget else '') + ('' if counted else ' (binding only, not counted)'))
     error = None
     if (dest / 'error.json').is_file():
         error = json.loads((dest / 'error.json').read_text())
@@ -69,30 +129,32 @@ def attempt(task_dir):
         lines.append(f'    {error["detail"][:300]}')
     else:
         objdump = disasm.find_objdump(config.get('objdump'))
-        rows, results = [], []
+        rows, outcome = [], []
         for fn in task['functions']:
             fdir = dest / f'0x{fn["rva"]:x}'
             line, result = pipeline.function_line(fn, fdir, dest / 'candidate.obj')
             rows.append('  ' + line)
-            results.append(result)
+            outcome.append(result)
             sbs, why = disasm.write_side_by_side(fdir / 'side-by-side.txt', objdump, config.get('image'),
                                                  dest / 'candidate.obj', fn['symbol'], fn['rva'], fn['size'])
             if sbs is None and why and not any('side-by-side' in r for r in rows):
                 rows.append(f'  (no side-by-side: {why})')
-        passed = sum(r == 'pass' for r in results)
-        lines.append(f'{head}: {passed}/{len(results)} pass; includes = closure ({len(closure)} repo files)')
+        passed = sum(r == 'pass' for r in outcome)
+        lines.append(f'{head}: {passed}/{len(outcome)} pass; includes = closure ({len(closure)} repo files)')
         all_rows = rows
         lines += rows[:10]
         if len(rows) > 10:
             lines.append(f'  ... {len(rows) - 10} more lines in {dest / "attempt.txt"}')
+    lines += bind_lines
     rel = dest.relative_to(Path.cwd()) if dest.is_relative_to(Path.cwd()) else dest
     lines.append(f'private: {rel}/ (0x<rva>/side-by-side.txt, compile.log; read locally, never paste)')
-    lines.append(f'machine: {boatctl.STANDING} {how}; stop with tools/verifier/attempt --stop')
+    lines.append(f'machine: {boatctl.STANDING} {how}; it stops itself at its deadline')
     lines.append(f'time {time.monotonic() - started:.1f} s')
     text = '\n'.join(lines)
     (dest / 'attempt.txt').write_text(text + '\n' + ''.join(f'{r}\n' for r in all_rows))
     with open(task_dir / 'attempts.jsonl', 'a') as log:
-        log.write(json.dumps({'attempt': number, 'exit': code, 'seconds': round(time.monotonic() - started, 1),
+        log.write(json.dumps({'attempt': number, 'exit': code, 'counted': counted,
+                              'seconds': round(time.monotonic() - started, 1),
                               'source_revision': _revision(dest)}) + '\n')
     print(text)
     return {0: 0, 1: 1, 3: 3, 4: 4}.get(code, 2)

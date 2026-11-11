@@ -34,17 +34,28 @@ def image_base(path):
 
 
 def parse(text, start):
-    """[(offset, bytes, text)] from llvm-objdump output; relocation lines are appended to the text."""
+    """[(offset, bytes, text, relocation offsets)] from llvm-objdump output; relocations are appended to the text."""
     rows = []
     for line in text.splitlines():
         m = INSN.match(line)
         if m:
-            rows.append([int(m.group(1), 16) - start, m.group(2).strip(), ' '.join(m.group(3).split())])
+            rows.append([int(m.group(1), 16) - start, m.group(2).strip(), ' '.join(m.group(3).split()), []])
             continue
         r = RELOC.match(line)
         if r and rows:
             rows[-1][2] += f'  <{r.group(2).replace("IMAGE_REL_AMD64_", "")} {r.group(3).strip()}>'
+            rows[-1][3].append(int(r.group(1), 16) - start)
     return rows
+
+
+def masked(row, relocs):
+    """The row's bytes with each 4-byte relocated field blanked, so placeholder bytes compare equal."""
+    data = row[1].split()
+    for off in relocs:
+        for i in range(off - row[0], off - row[0] + 4):
+            if 0 <= i < len(data):
+                data[i] = '..'
+    return data
 
 
 def target_rows(objdump, image, rva, size):
@@ -62,14 +73,19 @@ def candidate_rows(objdump, obj, symbol):
 
 
 def side_by_side(target, candidate, width=58):
-    """Aligned by instruction index; `*` marks rows whose bytes differ (relocated operands differ too)."""
+    """Aligned by instruction index; `*` marks rows whose bytes differ outside relocated fields.
+
+    A candidate's relocated field holds a placeholder until link time, so a row that differs only
+    there is not marked; whether the reference resolves to the right target is the comparator's call.
+    """
     lines = [f'  {"off":>5}  {"target":<{width}}  {"off":>5}  candidate',
              f'  {"":>5}  {"-" * width}  {"":>5}  {"-" * width}']
     first = None
     for i in range(max(len(target), len(candidate))):
         t = target[i] if i < len(target) else None
         c = candidate[i] if i < len(candidate) else None
-        differs = t is None or c is None or t[1] != c[1]
+        differs = t is None or c is None or (t[1] != c[1] and (
+            t[0] != c[0] or masked(t, c[3]) != masked(c, c[3])))
         if differs and first is None:
             first = i
         left = f'{t[0]:>5x}  {t[2][:width]:<{width}}' if t else f'{"":>5}  {"":<{width}}'

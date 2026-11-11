@@ -149,6 +149,18 @@ class SideBySide(unittest.TestCase):
         self.assertTrue(text.splitlines()[4].startswith('*'))
         self.assertTrue(text.splitlines()[3].startswith(' '))
 
+    def test_relocation_placeholder_rows_are_not_marked(self):
+        target = disasm.parse('  140001000: e8 fb 0f 00 00    call 0x140002000\n'
+                              '  140001005: 8b 05 10 00 00 00    mov eax, [rip+0x10]\n', 0x140001000)
+        candidate = disasm.parse('       0: e8 00 00 00 00    call 0x5\n'
+                                 '      0000000000000001:  IMAGE_REL_AMD64_REL32  F\n'
+                                 '       5: 8b 0d 00 00 00 00    mov ecx, [rip]\n'
+                                 '      0000000000000007:  IMAGE_REL_AMD64_REL32  G\n', 0)
+        lines = disasm.side_by_side(target, candidate).splitlines()
+        self.assertTrue(lines[3].startswith(' '), lines[3])
+        self.assertTrue(lines[4].startswith('*'), lines[4])
+        self.assertIn('first differing row 1', lines[0])
+
     def test_missing_inputs_give_a_reason(self):
         path, why = disasm.write_side_by_side('/nonexistent/x', None, None, 'x.obj', 'f', 0, 1)
         self.assertIsNone(path)

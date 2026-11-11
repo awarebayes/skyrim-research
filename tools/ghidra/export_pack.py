@@ -4,7 +4,7 @@ Usage (repository root; see tools/ghidra/README.md):
 
     python3 tools/ghidra/export_pack.py packs <list file>     # packs + task dirs
     python3 tools/ghidra/export_pack.py survey --sample 2000 --seed 1
-    python3 tools/ghidra/export_pack.py bind --task .local/tasks/<id> --object <candidate.obj>
+    python3 tools/ghidra/export_pack.py bind --task .local/tasks/<id> [--object <candidate.obj>]  # attempt does this itself
 
 The list file has one function per line: `<build id> <rva> <task id> [<unit .cpp path>]`.
 Machine-specific paths (Ghidra, project, image, community checkouts) come from a private config,
@@ -763,99 +763,33 @@ def render_task_readme(task, packs):
               '2. Every call, jump or data reference that leaves the function becomes a relocation against a',
               '   symbol you declared (or a compiler constant such as `__real@...`). The symbol map must give',
               '   each one the RVA the game encodes; a wrong or missing entry fails the comparison.',
-              '3. `symbol` starts as `unbound:<community name>`. Run one attempt (it compiles; the comparator',
-              '   fails the unbound function), then fill the symbols from the fetched object:', '',
-              '   ```sh',
-              f'   python3 tools/ghidra/export_pack.py bind --task .local/tasks/{task["task_id"]}',
-              '   ```', '',
-              '   It matches `?Method@Class@@...` definitions to the community names of the functions and',
-              '   undefined symbols to the community names of the references, adds constants and imports, and',
-              '   lists what it could not bind. Bind the rest by hand in `symbols.json` from the pack tables',
-              '   (name -> RVA of the target), never by guessing.',
-              '4. Re-run `tools/verifier/attempt .local/tasks/' + task['task_id'] + '` from your worktree after',
-              '   binding, and bind again whenever you change a declaration. Exit 0 is review evidence only,',
-              '   never `matched`.', '']
+              '3. `symbol` starts as `unbound:<community name>`. `attempt` binds names itself: after compiling',
+              '   it finds each compared function in the object (by hint, by the community name, or by its',
+              '   member name when that is unique, so your class or function names may differ), binds each',
+              '   reference by the target\'s own encoded address when that is one of the pack\'s listed',
+              '   targets, compares again in the same run, and does not count a run that could compare',
+              '   nothing because of binding. It prints what it bound and what is still missing.',
+              '4. When it cannot bind something (a target without a community name that the code does not',
+              '   reach at the same offset, an ambiguous name), add a hint to',
+              f'   `.local/tasks/{task["task_id"]}/bind-hints.json`: a JSON object mapping a decorated name',
+              '   (`?...`) or a qualified name as you wrote it (`Class::member`, `FreeFunction`) to the RVA',
+              '   from the pack\'s reference table, for example',
+              '   `{"BSTimer::QGlobalTimeMultiplier": "0x20ccac8", "?GetArmorKind@@YAHPEAVTESObjectARMO@@@Z": "0x27edf0"}`.',
+              '   A hint whose RVA is a compared function\'s RVA names that function. Never edit `symbols.json`',
+              '   or `task.json` by hand, and never give an RVA the pack does not list.',
+              '5. Re-run `tools/verifier/attempt .local/tasks/' + task['task_id'] + '` after every source change.',
+              '   Exit 0 is review evidence only, never `matched`.', '']
     return '\n'.join(lines)
 
 
 # ---------------------------------------------------------------------------------------------
-# bind: fill task symbols and reference symbols from a compiled object.
-
-def demangle_simple(name):
-    """Qualified name for plain `?name@scope@...@@` decorations; None for templates and operators."""
-    m = re.match(r'\?\?([01])(\w+)@((?:\w+@)*)@', name)
-    if m:
-        scopes = [m.group(2)] + [x for x in m.group(3).split('@') if x]
-        return '::'.join(reversed(scopes)) + '::' + ('~' if m.group(1) == '1' else '') + m.group(2)
-    m = re.match(r'\?(\w+)@((?:\w+@)*)@', name)
-    if not m:
-        return None
-    scopes = [x for x in m.group(2).split('@') if x]
-    return '::'.join(list(reversed(scopes)) + [m.group(1)])
-
+# bind: the shared implementation is tools/verifier/bind.py, which attempt runs on every compile.
 
 def bind(task_dir, obj_path=None):
-    task_dir = Path(task_dir)
-    if obj_path is None:
-        # The attempt command fetches each compiled object into attempts/<NNN>/.
-        objs = sorted(task_dir.glob('attempts/[0-9][0-9][0-9]/candidate.obj'))
-        if not objs:
-            raise SystemExit(f'no attempts/*/candidate.obj under {task_dir}; pass --object')
-        obj_path = objs[-1]
-        print(f'object: {obj_path}')
-    task = json.loads((task_dir / 'task.json').read_text())
-    smap = json.loads((task_dir / 'symbols.json').read_text())
-    obj = CoffObject(Path(obj_path).read_bytes())
-    defined, section_of = {}, {}
-    for sym in obj.symbols.values():
-        if sym.storage == 2 and sym.section > 0 and obj.section(sym.section).flags & 0x20 and sym.value == 0:
-            defined[sym.name] = demangle_simple(sym.name)
-            section_of[sym.name] = sym.section
-    report = {'bound_functions': [], 'bound_references': [], 'unbound_references': [], 'unbound_functions': []}
-    for f in task['functions']:
-        hits = [n for n, q in defined.items() if q and f['community_name'] and q == f['community_name']]
-        if len(hits) == 1 and (not f.get('symbol') or f['symbol'].startswith(UNBOUND) or f['symbol'] == hits[0]):
-            f['symbol'] = hits[0]
-            smap['symbols'][hits[0]] = {'rva': int(f['rva'], 16), 'size': f['size']}
-            report['bound_functions'].append((f['rva'], hits[0]))
-        elif not f.get('symbol') or f['symbol'].startswith(UNBOUND):
-            report['unbound_functions'].append((f['rva'], f['community_name'], hits))
-    by_name = {}
-    for f in task['functions']:
-        if not f.get('pack'):
-            continue
-        pack = json.loads((REPO / f['pack'] / 'pack.json').read_text())
-        for r in pack['references']:
-            for cn in r['community_names']:
-                if cn['kind'] in ('vtable', 'rtti', 'nirtti'):
-                    continue
-                by_name.setdefault(short_name(cn['name']), set()).add(r['target_rva'])
-    task_syms = {f['symbol'] for f in task['functions'] if f.get('symbol') and not f['symbol'].startswith(UNBOUND)}
-    # Only relocations inside the compared functions need map entries; RTTI, destructors and
-    # other helpers of the unit are never compared.
-    needed = set()
-    for name in task_syms:
-        if name not in section_of:
-            continue
-        sec = obj.section(section_of[name])
-        for rel in sec.relocs:
-            target = obj.symbols[rel.symbol]
-            if target.section != section_of[name]:
-                needed.add(target.name)
-    for name in sorted(needed):
-        if name in smap['symbols'] or name in task_syms:
-            continue
-        q = demangle_simple(name)
-        targets = by_name.get(q, set()) if q else set()
-        if len(targets) == 1:
-            smap['symbols'][name] = {'rva': next(iter(targets)), 'size': None}
-            report['bound_references'].append((name, hex(next(iter(targets)))))
-        else:
-            report['unbound_references'].append(name)
-    (task_dir / 'task.json').write_text(json.dumps(task, indent=2) + '\n')
-    (task_dir / 'symbols.json').write_text(json.dumps(smap, indent=2) + '\n')
-    print(json.dumps(report, indent=2))
-    return 0 if not (report['unbound_functions'] or report['unbound_references']) else 1
+    sys.path.insert(0, str(REPO / 'tools' / 'verifier'))
+    import bind as binding
+    args = ['--task', str(task_dir)] + (['--object', str(obj_path)] if obj_path else [])
+    return binding.main(args)
 
 
 # ---------------------------------------------------------------------------------------------

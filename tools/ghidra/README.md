@@ -91,23 +91,29 @@ by it and kept for people:
 ```
 
 - One task is one translation unit and one recipe; several functions of one unit share a task.
-- `symbol` is the placeholder `unbound:<community name>` until `bind` fills it. The comparator
+- `symbol` is the placeholder `unbound:<community name>` until binding fills it. The comparator
   identifies the candidate only by that exact decorated name (external, at offset 0 of its own `/Gy`
   COMDAT), and the name depends on the Drafter's declarations, so it cannot be derived before the
-  first compile. The first attempt therefore compiles and fails the unbound function; `bind` then
-  reads the object the attempt fetched (`attempts/<NNN>/candidate.obj`, the newest by default).
+  first compile. `tools/verifier/attempt` binds after each compile and compares again in the same
+  run; a run that compared nothing because of binding is not counted against `max_attempts`.
 - If the unit already backs a match record, `unit_already_records` lists it and the accepted
   function is added to `functions` with `"role": "regression"`, so every attempt re-checks it. An
   edit to the unit changes its digest and leaves that record stale until it is re-verified.
 - `symbols.json` is the comparator symbol map (schema 1). The exporter pre-fills only names it can
   derive (constants, imports, `__ImageBase`); re-running the exporter keeps entries already bound.
 
-`bind` reads the compiled object: it binds each task function to the one external code symbol
-whose simple demangling (`?Method@Class@@...`, constructors and destructors) equals the community
-name, and binds each symbol the compared functions relocate against when its demangled name equals
-the community name of exactly one reference target. Templates, operators and unnamed targets are
-reported as unbound; bind those by hand from the pack's reference table. A wrong binding cannot
-produce a pass, because the comparator checks every relocation against the bytes of the image.
+Binding (`tools/verifier/bind.py`, run by `attempt`; `export_pack.py bind` runs it by hand) reads
+the compiled object. A task function is bound by a hint, by keeping a symbol the object still
+defines, by the one defined function whose qualified name (template arguments, types and
+parameters dropped, demangled with `llvm-undname` when available) equals the community name, or
+by the one whose member name does; so Drafters' class names may differ from the community ones.
+A symbol that disappears and is replaced is reported as "decorated name changed" with both names.
+A reference is bound by a hint, by position (the target's own relocated field at the same offset,
+decoded from the local image, accepted only if it is one of the pack's listed targets), or by a
+unique community or member name. What remains is listed with the file to edit:
+`<task dir>/bind-hints.json`, a JSON object of decorated or qualified name -> RVA (format in the
+module docstring). `symbols.json` and `task.json` are written by the tools, not by hand. A wrong
+binding cannot produce a pass, because the comparator checks every relocation against the image.
 
 ## Limits
 
