@@ -95,17 +95,35 @@ functions with class material 11.5 s (9.3 s Ghidra); `refresh --tasks` for them 
 - `python3 tools/ghidra/export_pack.py refresh <pack dir>...` rebuilds these aids for existing
   packs without running Ghidra.
 
-### Comparator v1 verdict
+### Comparator v2 verdict
 
-`unsupported` when any of these hold (each is a contract v1 refusal, `docs/comparator-contract.md`):
-`exception-handler`, `chained-unwind`, `unwind-version`, `multiple-pdata`, `pdata-not-at-entry`,
-`split-body` (analysis body not contiguous), `addr64` (a DIR64 base relocation patches the range),
-`jump-table` (an indirect jump with two or more recovered targets), `thunk`, `import-thunk`,
-`unresolvable-reference` (a reference into the middle of another function, or outside the image),
-`not-a-function`. `caution` when the function is supported but needs care: no `.pdata` (a leaf whose
+`unsupported` when any of these hold (each is a contract v2 refusal, `docs/comparator-contract.md`,
+or something the exporter cannot give the map): `unwind-version`, `unsupported-unwind` (a chain
+combined with a handler), `unsupported-eh-handler` (a handler outside the contract's list, such as
+`__CxxFrameHandler4`), `eh-handler-unidentified` (no import thunk, configured name or community
+name names the handler RVA; add it to `eh_handler_names` in the private config, `{"0x<rva>": "<name>"}`),
+`eh-funcinfo-unsupported`, `eh-funclet-without-pdata`, `eh-code-outside-function-and-funclets`,
+`multiple-pdata` (a `.pdata` entry in the range that is neither chained to the function nor one of its
+funclets), `pdata-not-at-entry`, `split-body` (analysis body or a chained entry outside the
+function's contiguous range and funclets), `addr64` (a DIR64 base relocation patches the range),
+`jump-table` (two or more recovered switch targets but no table after the code), `thunk`,
+`import-thunk`, `unresolvable-reference` (a reference into the middle of another function, or
+outside the image), `not-a-function`.
+
+Exception handlers, chained unwind and switch tables are not reasons by themselves. The size runs
+to the last chained `.pdata` entry and then over the switch tables after the code (a dword table
+of image-relative entries into the function, and a byte index table when the function references
+the byte after it). The handler data is walked with the comparator's own layouts
+(`tools/pecoff.py`: `unwind_header`, `EH_HANDLERS`, `EH_LAYOUTS`) on the image: the handler and each
+caught type are listed as references (`eh-handler` with the handler's name, `eh-type` with the
+`??_R0...@8` TypeDescriptor symbol read from the image) and so reach the task's `symbols.json`;
+funclets are listed in `pack.json` (`eh.funclets`). Funclet code references are not listed, since
+the analysis covers the parent only, and the pack says so as a caution.
+
+`caution` when the function is supported but needs care: no `.pdata` (a leaf whose
 size comes from the analysis; flagged again when code rather than int3 padding follows it), an
 indirect jump without recovered targets, a referenced function or datum without an Address Library
-id, a string literal, code addresses outside any analysed function. Otherwise `supported`.
+id, a string literal, code addresses outside any analysed function, funclets. Otherwise `supported`.
 
 References are classified as `addrlib-id`, `constant` (`__real@`/`__xmm@` names derived from the
 literal's contents), `import` (`__imp_<name>`, the IAT slot), `image-base` (`__ImageBase`),

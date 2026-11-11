@@ -157,7 +157,7 @@ def function_view(root, fn, record, shown):
         section = record_code_section(record)
     except ValueError as exc:
         section = f'inconsistent ({exc})'
-    out.append(f'code section: {section or "absent (comparator does not emit it yet)"}')
+    out.append(f'code section: {section or "absent (record from before comparator version 2)"}')
     review = _json_or_none(root / review_record_path(fn))
     if review is None:
         out.append('review record: none' + ('' if fn['status'] == 'matched' else '; needs: full review'))

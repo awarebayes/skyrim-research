@@ -52,11 +52,10 @@ Written by `tools/verifier/match_record.py`, which refuses to write a record tha
   must name different candidate object hashes (a copied report under a second host label fails).
 - `notes`: limitations, including how independent the hosts were.
 
-Per-function code-section hash (field defined, not yet emitted by the comparator): each report's
-`candidate` block may carry `code_section_sha256`, a SHA-256 of the candidate object's COFF section
-that holds the compared function, computed so that it is identical for every compile of the same
-function code (no time stamp, object path or symbol-table index in it) and changes when any byte of
-that section or any relocation's offset, type or target symbol name changes. `tools/check.py`
+Per-function code-section hash: each comparator version 2 report's `candidate` block carries
+`code_section_sha256` over the function's code and funclet sections, identical for every compile
+of the same function code and changed by any code byte or relocation target
+(`docs/comparator-contract.md`, "Report"). `tools/check.py`
 requires it from every run or from none, and the runs to agree; it is what lets a delta review
 show that the compared code did not change when the rest of its unit did
 (`docs/verification.md`, "Stale acceptances and delta reviews").

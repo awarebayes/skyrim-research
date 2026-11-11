@@ -31,7 +31,8 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 sys.path.insert(0, str(REPO / 'tools'))
 sys.path.insert(0, str(HERE))
-from pecoff import CoffObject, PeImage  # noqa: E402
+from pecoff import (EH_HANDLERS, EH_LAYOUTS, FUNCINFO_MAGIC, TYPE_DESCRIPTOR_NAME, UNW_FLAG_CHAININFO,  # noqa: E402
+                    UNW_FLAG_EHANDLER, UNW_FLAG_UHANDLER, CoffObject, PeImage, Reject, eh_size, unwind_header)
 import community_ids  # noqa: E402
 
 PACK_SCHEMA = 1
@@ -46,10 +47,13 @@ REGS = ['RAX', 'RCX', 'RDX', 'RBX', 'RSP', 'RBP', 'RSI', 'RDI'] + ['R%d' % i for
 UWOP = {0: 'PUSH_NONVOL', 1: 'ALLOC_LARGE', 2: 'ALLOC_SMALL', 3: 'SET_FPREG', 4: 'SAVE_NONVOL',
         5: 'SAVE_NONVOL_FAR', 6: 'EPILOG', 7: 'SPARE', 8: 'SAVE_XMM128', 9: 'SAVE_XMM128_FAR',
         10: 'PUSH_MACHFRAME'}
-# Reasons that make comparator contract v1 refuse the function outright.
-UNSUPPORTED = {'exception-handler', 'chained-unwind', 'unwind-version', 'multiple-pdata', 'pdata-not-at-entry',
-               'addr64', 'jump-table', 'import-thunk', 'thunk', 'unresolvable-reference', 'split-body',
-               'not-a-function'}
+# Reasons that make comparator contract v2 refuse the function outright (or that leave the
+# exporter unable to give the map what the comparator needs). Handlers, chained entries, several
+# .pdata entries and switch tables are compared by v2 and are no longer reasons by themselves.
+UNSUPPORTED = {'unwind-version', 'unsupported-unwind', 'unsupported-eh-handler', 'eh-handler-unidentified',
+               'eh-funcinfo-unsupported', 'eh-funclet-without-pdata', 'eh-code-outside-function-and-funclets',
+               'eh-data-unreadable', 'multiple-pdata', 'pdata-not-at-entry', 'addr64', 'jump-table',
+               'import-thunk', 'thunk', 'unresolvable-reference', 'split-body', 'not-a-function'}
 
 
 def sha256_bytes(blob):
@@ -191,6 +195,206 @@ def unwind_form(u):
     return 'v%d flags=%s prolog=%d slots=%d%s: %s' % (
         u['version'], '|'.join(flag_names) or '0', u['prolog_size'], u['code_slots'],
         (' frame=' + u['frame_register']) if u['frame_register'] else '', '; '.join(u['codes']) or 'no codes')
+
+
+# ---------------------------------------------------------------------------------------------
+# Target-side reading of what comparator contract v2 compares: chained unwind entries, switch
+# tables after the code, and exception handler data. The unwind header rules and the handler
+# data layouts are the comparator's own (tools/pecoff.py: unwind_header, EH_HANDLERS, EH_LAYOUTS),
+# so this walk reads the image with the same definitions instead of a second copy of them. It
+# reads only the target; whether a candidate matches is still the comparator's decision.
+
+EXEC = 0x20000000
+
+
+def chain_root(img, begin, unwind_rva, depth=0):
+    """The begin RVA of the entry an unwind chain ends at (the entry itself when not chained)."""
+    try:
+        flags, length = unwind_header(img.read(unwind_rva, 4), 'unwind info')
+    except Reject:
+        return begin
+    if not flags & UNW_FLAG_CHAININFO or depth > 32:
+        return begin
+    parent, _, parent_unwind = struct.unpack('<III', img.read(unwind_rva + length, 12))
+    return chain_root(img, parent, parent_unwind, depth + 1)
+
+
+def chained_parts(img, rva):
+    """Every .pdata entry other than `rva`'s own whose unwind chain ends at `rva`, in address order."""
+    if getattr(img, '_chained', None) is None:
+        img._chained = {}
+        for b, e, u in img.pdata:
+            root = chain_root(img, b, u)
+            if root != b:
+                img._chained.setdefault(root, []).append((b, e, u))
+    return sorted(img._chained.get(rva, []))
+
+
+def is_padding(blob):
+    return all(b == 0xCC for b in blob)
+
+
+def function_extent(img, rva, end):
+    """(end, chained entries, split): the range grows over chained entries that follow it with
+    only int3 padding between; a chained entry elsewhere means a split function (unsupported)."""
+    parts, split = chained_parts(img, rva), False
+    for b, e, _ in parts:
+        between = [x for x in img.pdata_begins[bisect.bisect_right(img.pdata_begins, end - 1):]
+                   if x < b] if b > end else []
+        if b == end or (b > end and not between and is_padding(img.read(end, b - end))):
+            end = e
+        else:
+            split = True
+    return end, parts, split
+
+
+def next_boundary(img, end):
+    """The next .pdata begin at or after `end`, bounding how far a switch table can reach."""
+    i = bisect.bisect_left(img.pdata_begins, end)
+    return img.pdata_begins[i] if i < len(img.pdata_begins) else end + 0x10000
+
+
+def switch_tables(img, rva, code_end, referenced):
+    """End of the switch tables MSVC places after the code in the function's section, or code_end.
+
+    A dword table is a run of two or more image-relative entries into [rva, code_end), starting at
+    the next 4-byte boundary after int3 padding. A byte index table follows it when the function
+    references the byte after the dword table (`referenced`: data targets the analysis saw); its
+    length is not encoded anywhere, so it runs to int3 padding or the next .pdata entry.
+    """
+    limit = next_boundary(img, code_end)
+    start = (code_end + 3) & ~3
+    if start + 8 > limit or not is_padding(img.read(code_end, start - code_end)):
+        return code_end, 0
+    pos, entries = start, 0
+    while pos + 4 <= limit and rva <= struct.unpack('<I', img.read(pos, 4))[0] < code_end:
+        pos += 4
+        entries += 1
+    if entries < 2:
+        return code_end, 0
+    if pos in referenced:
+        while pos < limit and img.read(pos, 1)[0] < entries:
+            pos += 1
+    return pos, entries
+
+
+def handler_name(img, handler_rva, addrlib, communities):
+    """Name of a language-specific handler: an import thunk's import, a configured name, or a
+    community name for its Address Library id; None when nothing names it."""
+    try:
+        head = img.read(handler_rva, 6)
+    except Exception:
+        return None
+    if head[:2] == b'\xff\x25':
+        slot = handler_rva + 6 + struct.unpack('<i', head[2:])[0]
+        if slot in img.imports:
+            return img.imports[slot][1]
+    named = getattr(img, 'handler_names', {}).get(handler_rva)
+    if named:
+        return named
+    for c in communities:
+        for n in c.names(addrlib['by_rva'].get(handler_rva, [])):
+            if n['name'].split('::')[-1] in EH_HANDLERS:
+                return n['name'].split('::')[-1]
+    return None
+
+
+def type_descriptor_symbol(img, td_rva):
+    """The object-file symbol of a TypeDescriptor: `??_R0` + its decorated name without the dot + `@8`."""
+    name = img.pe.read(td_rva + TYPE_DESCRIPTOR_NAME, 256, 'type descriptor')[1].split(b'\0', 1)[0]
+    text = name.decode('ascii', 'replace')
+    return '??_R0' + text[1:] + '@8' if text.startswith('.') else None
+
+
+def eh_facts(img, addrlib, communities, rva, entries):
+    """Handlers, caught types and funclets the comparator will need for this function's entries.
+
+    Walks every unwind entry (the function's, then each funclet's) the way the comparator binds
+    them: handler RVA after the codes, handler data by EH_HANDLERS/EH_LAYOUTS, code fields outside
+    the function's range are funclets with their own .pdata entries. Returns reasons for anything
+    contract v2 refuses or this walk cannot name.
+    """
+    reasons, handlers, types, funclets, inner = [], {}, {}, {}, []
+    seen_structs, queue, done = set(), list(entries), set()
+    lo, hi = entries[0][0], entries[-1][1]
+
+    def code(target):
+        if not target or lo <= target < hi or target in funclets:
+            return
+        entry = img.pdata_at.get(target)
+        if entry is None:
+            # An IP-to-state boundary inside a funclet; checked once every funclet is known.
+            inner.append(target)
+            return
+        funclets[target] = entry[0] - target
+        queue.append((target, entry[0], entry[1]))
+
+    def walk(kind, at, count=1):
+        size = eh_size(kind)
+        for i in range(count):
+            base = at + i * size
+            if (kind, base) in seen_structs:
+                continue
+            seen_structs.add((kind, base))
+            values = {}
+            for n, fdef in enumerate(EH_LAYOUTS[kind]):
+                name, how = fdef[0], fdef[1]
+                value = struct.unpack('<I', img.read(base + 4 * n, 4))[0]
+                values[name] = value
+                if how == 'code':
+                    code(value)
+                elif how == 'type' and value:
+                    types[value] = type_descriptor_symbol(img, value)
+                elif how == 'code_or_int':
+                    sec = img.section(value) if value else None
+                    if sec is not None and sec.flags & EXEC:
+                        code(value)
+                elif how == 'array' and value:
+                    walk(fdef[2], value, values[fdef[3]] if fdef[3] else 1)
+            if kind == 'funcinfo' and values['magic'] != FUNCINFO_MAGIC:
+                reasons.append('eh-funcinfo-unsupported')
+
+    while queue:
+        begin, end, unwind_rva = queue.pop(0)
+        if begin in done:
+            continue
+        done.add(begin)
+        try:
+            flags, length = unwind_header(img.read(unwind_rva, 4), 'unwind info')
+        except Reject as exc:
+            reasons.append(exc.reason)
+            continue
+        if not flags & (UNW_FLAG_EHANDLER | UNW_FLAG_UHANDLER):
+            continue
+        h_rva = struct.unpack('<I', img.read(unwind_rva + length, 4))[0]
+        name = handler_name(img, h_rva, addrlib, communities)
+        if name is None:
+            reasons.append('eh-handler-unidentified')
+            continue
+        if name not in EH_HANDLERS:
+            reasons.append('unsupported-eh-handler')
+            continue
+        handlers[name] = h_rva
+        data = unwind_rva + length + 4
+        for layout in EH_HANDLERS[name]:
+            if layout == 'funcinfo':
+                walk('funcinfo', struct.unpack('<I', img.read(data, 4))[0])
+                data += 4
+            elif layout == 'scope_table':
+                count = struct.unpack('<I', img.read(data, 4))[0]
+                walk('scope_entry', data + 4, count)
+                data += 4 + count * eh_size('scope_entry')
+    for t in sorted(set(inner)):
+        if any(n and f <= t < f + n for f, n in funclets.items()):
+            continue
+        sec = img.section(t)
+        if sec is None or not sec.flags & EXEC:
+            reasons.append('eh-code-outside-function-and-funclets')
+        elif not any(f <= t < f + n for f, n in funclets.items() if n):
+            # A leaf funclet (an unwind action that only adjusts and jumps) has no .pdata entry,
+            # so its length is known only from the candidate's section, which the comparator binds.
+            funclets[t] = None
+    return {'handlers': handlers, 'caught_types': types, 'funclets': funclets, 'reasons': sorted(set(reasons))}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -370,7 +574,7 @@ def load_ghidra(out_dir):
 
 
 # ---------------------------------------------------------------------------------------------
-# Suitability for comparator contract v1.
+# Suitability for comparator contract v2.
 
 def constant_symbol(img, target, mnemonic):
     # MSVC names scalar and vector literals by content (__real@ / __xmm@); the operand width
@@ -398,7 +602,8 @@ def constant_symbol(img, target, mnemonic):
 
 
 def classify(img, addrlib, communities, rva, gmeta, grefs):
-    """Return the pack facts for one function: range, unwind, references and a v1 verdict."""
+    """Return the pack facts for one function: range, unwind, exception data, references and a
+    verdict against comparator contract v2."""
     reasons, cautions = [], []
     if not gmeta or not gmeta['found']:
         return {'rva': rva, 'verdict': 'unsupported', 'reasons': ['not-a-function'], 'cautions': []}
@@ -406,10 +611,15 @@ def classify(img, addrlib, communities, rva, gmeta, grefs):
     ranges = gmeta['ranges']
     body_lo = min(r[0] for r in ranges)
     body_hi = max(r[1] for r in ranges)
-    if len(ranges) > 1:
-        reasons.append('split-body')
+    own, eh, tables = [], None, 0
     if entry:
         end, unwind_rva = entry
+        # Chained entries continue the same function (contract v2 compares them); its size runs
+        # to the last one, as the candidate's section does.
+        end, parts, split = function_extent(img, rva, end)
+        if split:
+            reasons.append('split-body')
+        own = [(rva, entry[0], unwind_rva)] + parts
         size = end - rva
         unwind = img.unwind(unwind_rva)
     else:
@@ -429,34 +639,51 @@ def classify(img, addrlib, communities, rva, gmeta, grefs):
             if tail.strip(b'\xcc'):
                 cautions.append('code, not int3 padding, follows the analysis body: an unaligned compiler '
                                 'thunk (adjustor, EH helper) or a wrong size')
+    # A switch's tables follow the code inside the function's section, so they belong to its size.
+    table_end, tables = switch_tables(img, rva, rva + size, {r['target'] for r in grefs})
+    size = table_end - rva
+    if own:
+        try:
+            eh = eh_facts(img, addrlib, communities, rva, own)
+        except (Reject, struct.error, ValueError) as exc:
+            eh = {'handlers': {}, 'caught_types': {}, 'funclets': {}, 'reasons': ['eh-data-unreadable']}
+            cautions.append(f'exception data could not be read: {exc}')
+        reasons += eh['reasons']
+    funclets = sorted((eh or {}).get('funclets', {}).items())
+
+    def inside(t):
+        return rva <= t < rva + size or any(f <= t < f + (n or 1) for f, n in funclets)
+
+    if len(ranges) > 1 and not all(inside(a) and inside(b - 1) for a, b in ranges if b > a):
+        reasons.append('split-body')
     hi = max(rva + size, body_hi)
     lo = min(rva, body_lo)
     entries = img.pdata_intersecting(lo, hi)
-    if len(entries) > 1:
+    known = {b for b, _, _ in own} | {f for f, _ in funclets}
+    if any(b not in known for b, _, _ in entries):
         reasons.append('multiple-pdata')
-    if body_hi > rva + size and entry:
+    if body_hi > rva + size and entry and not inside(body_hi - 1):
         cautions.append('analysis body extends %d bytes past the .pdata end' % (body_hi - rva - size))
     for b, e, u in entries:
-        info = img.unwind(u)
-        if info['version'] != 1:
+        if b in known and img.unwind(u)['version'] != 1:
             reasons.append('unwind-version')
-        if info['flags'] & 4:
-            reasons.append('chained-unwind')
-        if info['flags'] & 3:
-            reasons.append('exception-handler')
     if img.dir64_in(rva, rva + size):
         reasons.append('addr64')
-    if gmeta['computed_targets'] >= 2:
+    if gmeta['computed_targets'] >= 2 and not tables:
+        # Recovered switch targets but no table after the code: a layout contract v2 does not compare.
         reasons.append('jump-table')
-    elif gmeta['computed_jumps']:
+    elif gmeta['computed_jumps'] and not tables:
         cautions.append('indirect jump without recovered targets (tail call through a register or memory, '
                         'or an unrecovered switch)')
+    if funclets:
+        cautions.append('funclet code references are not listed (the analysis covered the parent only); '
+                        'bind them by hint or by position')
     if gmeta['thunk']:
         reasons.append('thunk')
     refs, seen = [], set()
     for r in grefs:
         t = r['target']
-        if rva <= t < rva + size:
+        if inside(t):
             continue
         if r['target_entry'] == rva and r['ref_type'] not in ('DATA', 'READ', 'WRITE', 'READ_WRITE'):
             # A branch into this function's own code past the primary .pdata range: no relocation,
@@ -517,6 +744,18 @@ def classify(img, addrlib, communities, rva, gmeta, grefs):
         ref['community_names'] = [{'name': n['name'], 'kind': n['kind'], 'how': n['how'], 'source': n['source'],
                                    'origin': n['origin'], 'ae_id': n['ae_id']} for n in names[:4]]
         refs.append(ref)
+    # The comparator resolves the handler and each caught type through the symbol map like any
+    # external reference, so they are listed as references and reach the task's symbols.json.
+    for name, h_rva in sorted((eh or {}).get('handlers', {}).items()):
+        refs.append({'from_offset': None, 'kind': 'eh-handler', 'ghidra_ref_type': None, 'mnemonic': None,
+                     'target_rva': h_rva, 'section': None, 'ae_ids': addrlib['by_rva'].get(h_rva, []),
+                     'ghidra_names': '', 'symbol': name, 'resolution': 'eh-handler', 'community_names': []})
+    for td_rva, symbol in sorted((eh or {}).get('caught_types', {}).items()):
+        if symbol is None:
+            cautions.append('caught type at 0x%x has no readable decorated name' % td_rva)
+        refs.append({'from_offset': None, 'kind': 'eh-type', 'ghidra_ref_type': None, 'mnemonic': None,
+                     'target_rva': td_rva, 'section': None, 'ae_ids': addrlib['by_rva'].get(td_rva, []),
+                     'ghidra_names': '', 'symbol': symbol, 'resolution': 'eh-type', 'community_names': []})
     reasons = sorted(set(reasons))
     verdict = 'unsupported' if reasons else ('caution' if cautions else 'supported')
     counts = {}
@@ -525,7 +764,10 @@ def classify(img, addrlib, communities, rva, gmeta, grefs):
     return {'rva': rva, 'size': size, 'verdict': verdict, 'reasons': reasons, 'cautions': sorted(set(cautions)),
             'pdata_entries': len(entries), 'unwind': unwind, 'unwind_form': unwind_form(unwind),
             'dir64_in_range': len(img.dir64_in(rva, rva + size)), 'ghidra': gmeta, 'references': refs,
-            'reference_counts': counts}
+            'reference_counts': counts, 'chained_entries': len(own) - 1 if own else 0, 'switch_table_entries': tables,
+            'eh': {'handlers': {k: hex(v) for k, v in (eh or {}).get('handlers', {}).items()},
+                   'caught_types': len((eh or {}).get('caught_types', {})),
+                   'funclets': [{'rva': hex(f), 'size': n} for f, n in funclets]}}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -839,6 +1081,8 @@ def load_config(path):
 def setup(cfg):
     target = json.loads((REPO / 'builds/target.json').read_text())
     img = ImageFacts(cfg['image'])
+    # Statically linked handlers have no import to name them; the private config may.
+    img.handler_names = {int(k, 16): v for k, v in (cfg.get('eh_handler_names') or {}).items()}
     if img.sha256 != target['image_sha256']:
         raise SystemExit('image SHA-256 differs from builds/target.json; packs are only built for the pinned image')
     addrlib = read_addrlib_v5(cfg['addrlib'])
@@ -918,6 +1162,8 @@ def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing, img):
             'ghidra_name': fact.get('ghidra', {}).get('ghidra_name')},
         'pdata_entries': fact.get('pdata_entries'), 'unwind': fact.get('unwind'),
         'unwind_form': fact.get('unwind_form'), 'dir64_in_range': fact.get('dir64_in_range'),
+        'chained_entries': fact.get('chained_entries'), 'switch_table_entries': fact.get('switch_table_entries'),
+        'eh': fact.get('eh'),
         'verdict': fact['verdict'], 'reasons': fact['reasons'], 'cautions': fact['cautions'],
         'reference_counts': fact.get('reference_counts', {}), 'references': fact.get('references', []),
         'instructions': fact.get('ghidra', {}).get('n_instr'),
@@ -939,7 +1185,8 @@ def render_pack_readme(p):
     lines = [f'# PRIVATE context pack: {p["build_id"]} {p["rva_hex"]}', '',
              'Game-derived (listing, decompiler output, community excerpts). Local use only; never copy any',
              'part into a tracked file, issue, PR, log or upload.', '',
-             f'- Size: {p["size"]} bytes (from .pdata unless a caution says otherwise); '
+             f'- Size: {p["size"]} bytes (from .pdata, through {p.get("chained_entries") or 0} chained entries and '
+             f'{p.get("switch_table_entries") or 0} switch-table entries, unless a caution says otherwise); '
              f'{p["instructions"]} instructions; {p["cond_branches"]} conditional branches; '
              f'{p["indirect_calls"]} indirect calls (register or vtable unless listed below); {p["fp_arith"]} SSE arithmetic instructions.',
              f'- Community name: `{ident["community_name"]}` ({ident["name_origin"]}, unverified; '
@@ -949,7 +1196,10 @@ def render_pack_readme(p):
              f'name use site: `{p["files"].get("source_excerpt", "none")}`.',
              f'- Unwind: {p["unwind_form"]}; .pdata entries touching the range: {p["pdata_entries"]}; '
              f'DIR64 relocations in range: {p["dir64_in_range"]}.',
-             f'- Comparator v1 verdict: **{p["verdict"]}**' + (f' ({", ".join(p["reasons"])})' if p['reasons'] else '')
+             f'- Exception data: handlers {", ".join(f"`{k}` at {v}" for k, v in ((p.get("eh") or {}).get("handlers") or {}).items()) or "none"}; '
+             f'{(p.get("eh") or {}).get("caught_types", 0)} caught types; '
+             f'{len((p.get("eh") or {}).get("funclets") or [])} funclets (compared apart from the size).',
+             f'- Comparator v2 verdict: **{p["verdict"]}**' + (f' ({", ".join(p["reasons"])})' if p['reasons'] else '')
              + '.']
     for c in p['cautions']:
         lines.append(f'- Caution: {c}.')
@@ -960,7 +1210,8 @@ def render_pack_readme(p):
         cn = r['community_names'][0] if r['community_names'] else None
         cname = f'`{short_name(cn["name"])}` ({cn["how"]}, {cn["origin"].split(" ")[0]} {cn["source"]})' if cn else \
             f'Ghidra `{r["ghidra_names"]}`'
-        lines.append(f'| 0x{r["from_offset"]:x} | {r["kind"]} {r["mnemonic"]} | 0x{r["target_rva"]:x} | '
+        offset = 'EH data' if r['from_offset'] is None else f'0x{r["from_offset"]:x}'
+        lines.append(f'| {offset} | {r["kind"]} {r["mnemonic"] or ""} | 0x{r["target_rva"]:x} | '
                      f'{r["section"]} | {r["resolution"]} | {r["ae_ids"] or "-"} | {cname} | '
                      f'`{r["symbol"] or "Drafter declares"}` |')
     if not p['references']:
@@ -1405,7 +1656,7 @@ def plan_candidates(rows, accepted, existing_units, area_overrides, extend, opts
             reject('middleware or non-engine namespace')
             continue
         if r['verdict'] == 'unsupported':
-            reject('unsupported by comparator v1')
+            reject('unsupported by comparator v2')
             continue
         if r['verdict'] == 'caution' and any(not c.startswith(BENIGN_CAUTION) for c in r['cautions']):
             reject('caution other than a padded leaf without .pdata')

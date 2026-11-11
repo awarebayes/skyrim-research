@@ -1,9 +1,11 @@
 """Stale acceptances, delta reviews, batch acceptance, review packets and the generated index.
 
 Synthetic repository from test_match_gate.GateFixture; comparator reports come from running
-tools/compare.py on the synthetic fixtures. The per-function code-section hash is not emitted by
-the comparator yet, so these tests add `candidate.code_section_sha256` to its reports the way the
-comparator is specified to (reports/README.md); everything else in the reports is as written.
+tools/compare.py on the synthetic fixtures, including the `candidate.code_section_sha256` the
+comparator computes. Only two situations are simulated by editing that one field, because the
+synthetic fixture has a single passing object: a record written before the comparator emitted it
+(field removed) and an approval of other code (field replaced on the approved side, or on the
+new side for a record the approval no longer describes).
 """
 import contextlib
 import copy
@@ -28,7 +30,7 @@ from source_digest import tu_digest  # noqa: E402
 from test_match_gate import CPP, HDR, RECORD, REVIEW, GateFixture  # noqa: E402
 
 WHEN = datetime(2000, 1, 3, 4, 5, 6, tzinfo=timezone.utc)
-SECTION = 'c' * 64
+REAL = object()  # keep the hash the comparator computed
 OTHER_SECTION = 'd' * 64
 OTHER = {'id': 'synthetic-fixture-0x3000', 'build_id': 'synthetic-fixture', 'rva': 0x3000, 'size': 8,
          'status': 'reconstructed', 'name': 'Other', 'name_origin': 'GUESS', 'owner': 'test',
@@ -57,7 +59,8 @@ class FlowFixture(GateFixture):
         (self.root / REVIEW).unlink()
         self.fn['status'] = 'mapped'
         self.data['functions'].append(copy.deepcopy(OTHER))
-        self.regenerate(SECTION)
+        self.regenerate()
+        self.real = self.record['runs'][0]['report']['candidate']['code_section_sha256']
         self.save_data()
         self.write('builds/target.json', json.dumps(self.target, indent=2) + '\n')
 
@@ -67,12 +70,20 @@ class FlowFixture(GateFixture):
     def progress(self):
         return json.loads((self.root / 'data/progress.json').read_text())
 
-    def regenerate(self, section):
-        """What tools/verifier/confirm does after a unit change: fresh runs bound to the new digest."""
+    def regenerate(self, section=REAL):
+        """What tools/verifier/confirm does after a unit change: fresh runs bound to the new digest.
+
+        `section` None drops the field (a record from before the comparator emitted it); a string
+        replaces it in every run (a record of other code than the synthetic object).
+        """
         self.record = self.make_record()
         for run in self.record['runs']:
-            if section is not None:
-                run['report']['candidate']['code_section_sha256'] = section
+            candidate = run['report']['candidate']
+            self.assertTrue(len(candidate['code_section_sha256']) == 64)
+            if section is None:
+                del candidate['code_section_sha256']
+            elif section is not REAL:
+                candidate['code_section_sha256'] = section
         self.save_record()
 
     def review_file(self, task, blocks, preamble=''):
@@ -87,7 +98,7 @@ class FlowFixture(GateFixture):
         changed, _ = af.accept_many(self.root, str(self.review_file(task, [self.block()])), when=WHEN)
         return changed
 
-    def grow_unit(self, section=SECTION):
+    def grow_unit(self, section=REAL):
         """Add a second function to the unit and re-confirm it; returns the approved digest."""
         old = self.record['source']['digest']
         self.write(CPP, (self.root / CPP).read_text() + GROWN)
@@ -148,7 +159,7 @@ class DeltaReviewTests(FlowFixture, unittest.TestCase):
     def test_delta_review_clears_stale_acceptance(self):
         self.accept_full()
         first = json.loads((self.root / REVIEW).read_text())
-        self.assertEqual((first['review_kind'], first['code_section_sha256']), ('full', SECTION))
+        self.assertEqual((first['review_kind'], first['code_section_sha256']), ('full', self.real))
         old = self.grow_unit()
         changed, _ = self.delta(old)
         self.assertIn(REVIEW, changed)
@@ -157,8 +168,8 @@ class DeltaReviewTests(FlowFixture, unittest.TestCase):
         self.assertEqual(review['previous_source_digest'], old)
         self.assertEqual(review['source_digest'], tu_digest(self.root, [CPP, HDR]))
         self.assertEqual(review['previous_review_sha256'], first['review_sha256'])
-        self.assertEqual(review['previous_code_section_sha256'], SECTION)
-        self.assertEqual(review['code_section_sha256'], SECTION)
+        self.assertEqual(review['previous_code_section_sha256'], self.real)
+        self.assertEqual(review['code_section_sha256'], self.real)
         self.validate()
         check_index(self.root, self.progress())
         self.assertIn('| matched | delta |', (self.root / build_index.INDEX).read_text())
@@ -170,14 +181,23 @@ class DeltaReviewTests(FlowFixture, unittest.TestCase):
         self.assertEqual({p: (self.root / p).read_bytes() for p in before}, before)
 
     def test_delta_refused_when_code_section_changed(self):
+        # The approval covered other code; the re-confirmed record is the comparator's own output.
+        self.regenerate(OTHER_SECTION)
         self.accept_full()
-        self.approved = self.grow_unit(section=OTHER_SECTION)
+        self.approved = self.grow_unit()
         self.assertDeltaRefused('compared code section changed')
 
-    def test_delta_refused_without_code_section_hash(self):
+    def test_delta_refused_when_new_record_has_no_code_section_hash(self):
         self.accept_full()
         self.approved = self.grow_unit(section=None)
         self.assertDeltaRefused('carries no code-section hash')
+
+    def test_delta_refused_when_approved_record_had_no_code_section_hash(self):
+        # Approved from a record written before the comparator emitted the hash; no git history here.
+        self.regenerate(None)
+        self.accept_full()
+        self.approved = self.grow_unit()
+        self.assertDeltaRefused('no code-section hash for the approved digest')
 
     def test_delta_refused_from_other_previous_digest(self):
         self.accept_full()
@@ -201,11 +221,12 @@ class DeltaReviewTests(FlowFixture, unittest.TestCase):
             self.delta(self.approved)
 
     def test_full_rereview_clears_stale_acceptance(self):
+        self.regenerate(OTHER_SECTION)
         self.accept_full()
-        self.grow_unit(section=OTHER_SECTION)
+        self.grow_unit()
         af.accept_many(self.root, str(self.review_file('review-again', [self.block()])), when=WHEN)
         review = json.loads((self.root / REVIEW).read_text())
-        self.assertEqual((review['review_kind'], review['code_section_sha256']), ('full', OTHER_SECTION))
+        self.assertEqual((review['review_kind'], review['code_section_sha256']), ('full', self.real))
         self.validate()
 
     def test_current_acceptance_still_refused_as_already_matched(self):
@@ -378,10 +399,11 @@ class GitHistoryTests(FlowFixture, unittest.TestCase):
         block = self.block(review_kind='delta', previous_source_digest=self.approved, code_section_unchanged='yes')
         af.accept_many(self.root, str(self.review_file('review-delta', [block])), when=WHEN)
         review = json.loads((self.root / REVIEW).read_text())
-        self.assertEqual((review['review_kind'], review['previous_code_section_sha256']), ('delta', SECTION))
+        self.assertEqual((review['review_kind'], review['previous_code_section_sha256']), ('delta', self.real))
         self.validate()
 
     def test_delta_refused_when_history_record_had_other_section(self):
+        # The committed approval holds the comparator's hash; the new record stands for other code.
         self.grow_unit(section=OTHER_SECTION)
         block = self.block(review_kind='delta', previous_source_digest=self.approved, code_section_unchanged='yes')
         with self.assertRaisesRegex(af.Refused, 'compared code section changed'):

@@ -22,7 +22,8 @@ A reconstruction is not a match.
 - A pinned executable hash/store/version/architecture and stable function RVA + length.
 - A reproducible source revision, source path and recipe, exact compiler binary hash,
   SDK/library provenance, command flags and tool versions.
-- All function bytes covered, including exception-related code in the selected scope;
+- All function bytes covered, including exception-related code in the selected scope (the scope
+  comparator contract version 2 defines in `docs/comparator-contract.md`);
   calls, data references, relocations and alias/fold handling checked rather than masked away.
 - Explicit definitions for generated code, linked libraries, thunks, padding, excluded entries
   and overlapping function ranges. No silent scope shrinkage to improve a percentage.
@@ -193,10 +194,16 @@ Match record, recomputed from the tree:
 - **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match
   their recorded hashes. The recipe's compiler is the pinned `cl.exe`, and every report names
   that recipe's hash, compiler and flags.
-- **Comparator.** Every report comes from the current comparator version and source hash. A
-  change to `tools/compare.py` or `tools/pecoff.py` therefore makes every record stale.
+- **Comparator.** Every report comes from the current comparator version and source hash and
+  names the current contract version (`docs/comparator-contract.md`, version 2). A change to
+  `tools/compare.py` or `tools/pecoff.py` therefore makes every record stale.
 - **Result.** Every report has result `pass`, every function byte covered exactly or by
-  reference, and unwind info `covered` or `none-in-range`.
+  reference, and unwind info `covered` or `none-in-range`. Under contract version 2 a `pass`
+  also means that the exception-related scope the contract defines (handler data, funclets,
+  chained unwind info, several `.pdata` entries per function, jump tables) was compared and
+  fully covered; the contract, not this file, defines that scope and its unsupported cases.
+  Each report carries `candidate.code_section_sha256` over the function and funclet sections,
+  which the gate requires from all runs or none, equal across runs (delta reviews below).
 - **Reproduction.** There are at least two runs, from at least two compile hosts and two
   compare hosts. The record says how independent those hosts are. A machine booted from a disk
   fork (a copy) of another verifier machine counts as a different machine for acceptance: it
@@ -266,9 +273,9 @@ during that window (no revoke), and `reconstruction/INDEX.md` shows `STALE`. Cle
    binding both digests and both hashes.
 
 A delta review is not weaker evidence of a match (the reproduced comparator pass is the
-evidence and is re-run in step 1); it narrows what the Reviewer re-reads to what changed. The
-code-section hash is not yet emitted by the comparator, so until it is, every stale acceptance
-needs a full re-review.
+evidence and is re-run in step 1); it narrows what the Reviewer re-reads to what changed. Records
+written before comparator version 2 carry no code-section hash; a stale acceptance whose
+approved record lacks it needs a full re-review.
 
 ## Acceptance tool, source lint and tests
 
@@ -294,8 +301,8 @@ the Reviewer; it only spares the Reviewer those checks. Tests: `tests/test_lint_
 The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,
 stale or inconsistent, `tests/test_accept_function.py` covers the acceptance tool, and `tests/test_acceptance_flow.py`
 covers stale acceptances, delta reviews, batch acceptance and the generated index. They use
-reports that the comparator produced from synthetic fixtures. The step 4 comparator tests in
-`tests/test_compare.py` are unchanged.
+reports that the comparator produced from synthetic fixtures. The comparator itself is tested
+in `tests/test_compare.py` against its contract (`docs/comparator-contract.md`).
 
 What the gate can and cannot show: it checks that public files agree with each other (source,
 recipe, pins, reports, Reviewer record). Host identity in the runs and the whole Reviewer record

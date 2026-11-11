@@ -12,6 +12,7 @@ import tempfile
 from compare import COMPARATOR_VERSION, CONTRACT_VERSION, REPORT_SCHEMA, comparator_source_sha256, sanitized
 from source_digest import DIGEST_METHOD, INCLUDE_ROOTS, include_closure, recipe_flag_problem, tu_digest
 from lint_reconstruction import lint_tree
+import cost_ledger
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED = set('.exe .dll .pdb .obj .o .lib .a .so .dylib .dmp .mdmp .bin .bsa .ba2 .esm .esp .esl .nif .dds .pex .hkx .ess .skse .gdt .gpr .idb .i64 .zip .7z .iso .vhdx .qcow2 .png .jpg .jpeg .pdf'.split())
@@ -48,8 +49,9 @@ REVIEW_DELTA_FIELDS = {'review_kind', 'previous_source_digest', 'previous_review
 REVIEW_SCHEMA_FIELDS = {1: REVIEW_FIELDS, 2: REVIEW_FIELDS | REVIEW_DELTA_FIELDS}
 REVIEW_RECORD_SCHEMA = 2
 REVIEW_KINDS = {'full', 'delta'}
-# Per-function hash of the candidate's compared code section, written by the comparator into each
-# report's `candidate` block (reports/README.md). Optional until the comparator emits it.
+# Per-function hash of the candidate's compared code sections, written by the comparator into each
+# report's `candidate` block (docs/comparator-contract.md, "Report"). Records made before comparator
+# version 2 lack it, so it stays optional; a delta review requires it.
 CODE_SECTION_KEY = 'code_section_sha256'
 REVIEW_VERDICTS = {'approve', 'reject', 'escalate'}
 ESCALATION_CATEGORIES = {'none', 'provenance', 'legal', 'systemic', 'other'}
@@ -532,6 +534,24 @@ def check_index(root, data):
             f'{INDEX} is out of date with data/progress.json and the records; run python3 tools/build_index.py')
 
 
+COST_LEDGER = 'data/costs.json'
+
+
+def check_costs(root, data):
+    """The cost ledger's schema and allocations (docs/costs.md), against this inventory.
+
+    An allocation to a function the inventory no longer holds would attribute cost to nothing,
+    so the ledger is checked against the same progress data as everything else here.
+    """
+    path = root / COST_LEDGER
+    if not path.is_file():
+        return
+    try:
+        cost_ledger.validate(json.loads(path.read_text()), data)
+    except (ValueError, KeyError, TypeError, AttributeError) as exc:
+        raise ValueError(f'Cost ledger {COST_LEDGER}: {exc}') from None
+
+
 def load(staged=False):
     if not staged:
         data = validate(json.loads((ROOT / 'data/progress.json').read_text()),
@@ -541,6 +561,7 @@ def load(staged=False):
                                          '--', 'reconstruction'], cwd=ROOT).decode('utf-8').split('\0')
         lint(ROOT, sorted({n for n in names if n and (ROOT / n).is_file()}))
         check_index(ROOT, data)
+        check_costs(ROOT, data)
         return data
     # Match records, source and recipe are checked as staged too, so the index gets its own tree.
     with tempfile.TemporaryDirectory() as tmp:
@@ -550,6 +571,7 @@ def load(staged=False):
                         json.loads((root / 'builds/target.json').read_text()), root)
         lint(root)
         check_index(root, data)
+        check_costs(root, data)
         return data
 
 
