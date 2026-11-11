@@ -13,16 +13,11 @@ verifier task both require the listed unit to equal that closure. Angle-bracket 
 toolchain and SDK headers: they are not repository files and are bound by the pinned toolchain
 hash (tools/verifier/pinned.sha256), not by this digest.
 
-The parser fails closed by construction: it normalises each file the way the compiler's early
-translation phases do, then treats every directive it cannot classify as an error rather than
-skipping it. Per file: strict UTF-8 (one leading BOM stripped), line endings normalised,
-backslash-newline continuations spliced, then comments removed by a state machine that respects
-string and character literals. Refused anywhere: non-UTF-8 bytes; a backslash followed only by
-blanks at a line end; trigraphs `??=` and `??/`; a digraph `%:` starting a line; raw string
-literals; an unterminated block comment; `include_alias` (also via `_Pragma`); `__has_include`.
-Refused as a directive: `#import`, `#include_next`, and any `#include` that is not exactly
-`#include "path"` or `#include <path>`. A quoted include resolves, in order, against the including
-file's directory, the directories of the files that included it (innermost first, as MSVC
+The scan fails closed by construction and keeps no lexical state (see the comment above
+`quoted_includes` and docs/verification.md, "Match gate"): after strict UTF-8 decoding, one BOM
+stripped, newline normalisation and continuation splicing, every logical line is either a strict
+include (counted, even inside a comment), harmless, or a refusal. A quoted include resolves, in
+order, against the including file's directory, the directories of the files that included it (innermost first, as MSVC
 searches), then INCLUDE_ROOTS, and must reach exactly one regular file whose real path stays inside
 the repository and outside `.local/` and `.git/`, with no symlink in any path component and with
 the exact on-disk spelling of every component (Windows hosts look names up case-insensitively).
@@ -40,9 +35,19 @@ DIGEST_METHOD = 'tu-sha256-v1'
 # relies on one must be compiled with the matching `/I <root>`.
 INCLUDE_ROOTS = ('reconstruction',)
 PRIVATE_DIRS = {'.local', '.git'}
-DIRECTIVE = re.compile(r'#[ \t\f\v]*([A-Za-z_][A-Za-z0-9_]*)')
-STRICT_INCLUDE = re.compile(r'#[ \t\f\v]*include[ \t\f\v]*(?:"([^"<>\n]+)"|<([^"<>\n]+)>)[ \t\f\v]*')
-RAW_PREFIX = re.compile(r'(?:^|[^A-Za-z0-9_])(?:u8|u|U|L)?R$')
+STRICT_INCLUDE = re.compile(r'[ \t]*#[ \t]*include[ \t]*(?:"([^"<>\n]+)"|<([^"<>\n]+)>)[ \t]*')
+DIRECTIVE_NAME = re.compile(r'#[ \t\f\v]*([A-Za-z_][A-Za-z0-9_]*)')
+ALLOWED_DIRECTIVES = {'define', 'undef', 'if', 'ifdef', 'ifndef', 'elif', 'else', 'endif', 'pragma', 'error', 'line'}
+INCLUDE_WORDS = ('include', 'import')
+# Refused anywhere in a file, whatever lexical context the text might be in.
+FILE_REFUSALS = (
+    (re.compile(r'include_alias'), '#pragma include_alias remaps include names'),
+    (re.compile(r'__has_include'), '__has_include makes the unit depend on files it does not include'),
+    (re.compile(r'_Pragma'), '_Pragma can issue pragmas the line scan cannot see'),
+    (re.compile(r'(?<![A-Za-z0-9_])(?:u8|u|U|L)?R"'), 'raw string literal prefix'),
+    (re.compile(r'\bimport[ \t\f\v]*["<]'), 'import of a header unit'),
+    (re.compile(r'%:'), 'digraph %: (an alternative spelling of #)'),
+)
 BLANKS = ' \t\f\v'
 
 
@@ -50,44 +55,8 @@ def _refuse(name, what):
     raise ValueError(f'{name}: {what}; the translation unit cannot be derived')
 
 
-def _strip_comments(text, name):
-    """`text` with comments replaced by a space plus the newlines they held; literals kept intact.
-
-    Keeping a block comment's newlines can only turn more text into line starts, so it can make
-    the parser see more directives than the compiler does, never fewer.
-    """
-    out, i, n = [], 0, len(text)
-    while i < n:
-        c = text[i]
-        if c == '/' and text.startswith('/*', i):
-            end = text.find('*/', i + 2)
-            if end < 0:
-                _refuse(name, 'unterminated block comment')
-            out.append(' ' + '\n' * text.count('\n', i, end))
-            i = end + 2
-        elif c == '/' and text.startswith('//', i):
-            end = text.find('\n', i)
-            i = n if end < 0 else end
-            out.append(' ')
-        elif c in '"\'':
-            if c == '"' and RAW_PREFIX.search(''.join(out[-4:])):
-                # A raw string may hold quotes and comment markers this scanner cannot delimit.
-                _refuse(name, 'raw string literal')
-            j = i + 1
-            while j < n and text[j] != c and text[j] != '\n':
-                j += 2 if text[j] == '\\' else 1
-            # An unterminated literal ends at the line end, as the scanner then resumes on code.
-            j = min(j + 1, n) if j < n and text[j] == c else min(j, n)
-            out.append(text[i:j])
-            i = j
-        else:
-            out.append(c)
-            i += 1
-    return ''.join(out)
-
-
 def logical_lines(blob, name):
-    """The file's lines after the normalisation described in the module doc."""
+    """The file's logical lines: strict UTF-8, one BOM stripped, newlines normalised, continuations spliced."""
     try:
         text = blob.decode('utf-8')
     except UnicodeDecodeError as exc:
@@ -101,35 +70,44 @@ def logical_lines(blob, name):
         # Compilers disagree on whether this splices lines, so its meaning is not fixed.
         _refuse(name, 'backslash followed by blanks at a line end')
     spliced = text.replace('\\\n', '')
-    # Checked before comment removal, raw and spliced, so neither a comment nor a continuation hides it.
-    if 'include_alias' in text or 'include_alias' in spliced:
-        _refuse(name, '#pragma include_alias remaps include names')
-    return _strip_comments(spliced, name).split('\n')
+    for pattern, what in FILE_REFUSALS:
+        # Checked raw and spliced, so a continuation cannot split the word.
+        if pattern.search(text) or pattern.search(spliced):
+            _refuse(name, what)
+    return spliced.split('\n')
 
 
+# Why no quoted include that MSVC compiles can escape this scan. The scan keeps no lexical state:
+# every logical line is examined whether or not it sits in a comment, string or `#if 0`, so it
+# can only over-include or refuse. A directive must begin a logical line with `#`, possibly after
+# whitespace or comments, and its name `include` must be spelled out on that same logical line:
+# continuations are spliced first, macros cannot produce directives, and the other spellings of
+# `#` (trigraph `??=`, digraph `%:`) and of a name (universal character names) are refused.
+# Hence any line holding a real quoted include contains both `#` and `include`, and such a line
+# is either exactly `#include "path"` (counted) or refused. A line whose first non-blank character
+# is `#` and whose directive is not on the fixed allow-list is refused, which removes comment
+# tricks between `#` and the name, null directives and unknown directives. Lines that are only
+# inside comments or strings may be counted or refused too: that over-includes, never under.
 def quoted_includes(blob, name):
-    """The quoted include targets of one file, in order; raises on anything it cannot classify."""
+    """The quoted include targets of one file, in order; raises on any line it cannot classify."""
     targets = []
     for number, line in enumerate(logical_lines(blob, name), 1):
-        stripped = line.lstrip(BLANKS)
-        if stripped.startswith('%:'):
-            _refuse(f'{name}:{number}', 'digraph %: starts a line')
-        if '__has_include' in line:
-            _refuse(f'{name}:{number}', '__has_include makes the unit depend on files it does not include')
-        if not stripped.startswith('#'):
-            continue
-        directive = DIRECTIVE.match(stripped)
-        if directive is None:
-            continue
-        word = directive.group(1)
-        if word in {'import', 'include_next'}:
-            _refuse(f'{name}:{number}', f'#{word} is not supported')
-        if word.startswith('include') or word.startswith('import'):
-            strict = STRICT_INCLUDE.fullmatch(stripped.rstrip(BLANKS))
-            if strict is None or word != 'include':
-                _refuse(f'{name}:{number}', 'include line is not exactly #include "path" or #include <path>')
+        where = f'{name}:{number}'
+        strict = STRICT_INCLUDE.fullmatch(line)
+        if strict is not None:
             if strict.group(1) is not None:
                 targets.append(strict.group(1))
+            continue
+        if '#' in line and any(word in line for word in INCLUDE_WORDS):
+            _refuse(where, 'a line with # and include/import is not exactly #include "path" or #include <path> '
+                    '(reconstruction sources must not mention #include in comments or strings)')
+        if '#' in line and re.search(r'\\[uU]', line):
+            _refuse(where, 'universal character name on a line with #')
+        stripped = line.lstrip(BLANKS)
+        if stripped.startswith('#'):
+            directive = DIRECTIVE_NAME.match(stripped)
+            if directive is None or directive.group(1) not in ALLOWED_DIRECTIVES:
+                _refuse(where, 'directive is not one of ' + ', '.join(sorted(ALLOWED_DIRECTIVES | {'include'})))
     return targets
 
 

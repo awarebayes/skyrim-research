@@ -427,13 +427,70 @@ class MatchGateTests(GateFixture, unittest.TestCase):
         self.rebind([CPP, HDR, EXTRA])
         self.check()
 
-    def test_comment_before_unlisted_include_rejected(self):
+    def test_comment_before_include_rejected(self):
         self.unlisted_extra('/**/#include "SyntheticExtra.h"\n')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_spaced_comment_before_include_rejected(self):
+        self.unlisted_extra('/* x */ #include "SyntheticExtra.h"\n')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_multiline_comment_before_include_rejected(self):
+        self.unlisted_extra('/* a\n */ #include "SyntheticExtra.h"\n')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_comment_between_hash_and_include_rejected(self):
+        self.unlisted_extra('# /**/ include "SyntheticExtra.h"\n')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_digit_separator_does_not_hide_include(self):
+        # A lexer that took 1'000 for a character literal saw the "/*" as a comment opening and
+        # swallowed the include; the line scan keeps no lexical state.
+        self.unlisted_extra('int n = 1\'000; const char* s = "\'/*";\n#include "SyntheticExtra.h"\n// */\n')
         self.assertGateRejects('omits files .* includes: ' + EXTRA)
 
-    def test_multiline_comment_before_unlisted_include_rejected(self):
-        self.unlisted_extra('/* a\n */ #include "SyntheticExtra.h"\n')
+    def test_digit_separator_unit_with_header_accepted(self):
+        self.unlisted_extra('int n = 1\'000; const char* s = "\'/*";\n#include "SyntheticExtra.h"\n// */\n')
+        self.rebind([CPP, HDR, EXTRA])
+        self.check()
+
+    def test_include_inside_block_comment_counted(self):
+        self.unlisted_extra('/*\n#include "SyntheticExtra.h"\n*/\n')
         self.assertGateRejects('omits files .* includes: ' + EXTRA)
+
+    def test_include_inside_block_comment_listed_accepted(self):
+        self.unlisted_extra('/*\n#include "SyntheticExtra.h"\n*/\n')
+        self.rebind([CPP, HDR, EXTRA])
+        self.check()
+
+    def test_comments_mentioning_include_without_hash_accepted(self):
+        self.write(CPP, '// This file include-s its header; see the include closure rule.\n'
+                        '/* include order matters; import nothing */\n' + (self.root / CPP).read_text())
+        self.rebind([CPP, HDR])
+        self.check()
+
+    def test_comment_mentioning_hash_include_rejected(self):
+        # Style constraint for reconstruction sources: never write "#" and "include" on one line.
+        self.unlisted_extra('// see #include order\n')
+        self.assertGateRejects('must not mention #include in comments')
+
+    def test_null_directive_rejected(self):
+        self.unlisted_extra('#\n')
+        self.assertGateRejects('directive is not one of')
+
+    def test_unknown_directive_rejected(self):
+        self.unlisted_extra('#warning synthetic\n')
+        self.assertGateRejects('directive is not one of')
+
+    def test_universal_character_name_in_directive_rejected(self):
+        self.unlisted_extra('/**/#\\u0069nclude "SyntheticExtra.h"\n')
+        self.assertGateRejects('universal character name')
+
+    def test_allowed_directives_accepted(self):
+        self.write(CPP, '#pragma once\n#define SYNTHETIC 1\n#if SYNTHETIC\n#elif 0\n#else\n#endif\n'
+                        '#ifdef X\n#endif\n#ifndef Y\n#undef SYNTHETIC\n#endif\n' + (self.root / CPP).read_text())
+        self.rebind([CPP, HDR])
+        self.check()
 
     def test_continuation_inside_unlisted_include_rejected(self):
         self.unlisted_extra('#\\\ninclude "SyntheticExtra.h"\n')
@@ -461,11 +518,23 @@ class MatchGateTests(GateFixture, unittest.TestCase):
 
     def test_import_rejected(self):
         self.unlisted_extra('#import "SyntheticExtra.h"\n')
-        self.assertGateRejects('#import is not supported')
+        self.assertGateRejects('import of a header unit')
+
+    def test_import_without_header_name_rejected(self):
+        self.unlisted_extra('#import SYNTHETIC_LIB\n')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_header_unit_import_rejected(self):
+        self.unlisted_extra('import "SyntheticExtra.h";\n')
+        self.assertGateRejects('import of a header unit')
 
     def test_include_next_rejected(self):
         self.unlisted_extra('#include_next "SyntheticExtra.h"\n')
-        self.assertGateRejects('#include_next is not supported')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_pragma_operator_rejected(self):
+        self.unlisted_extra('_Pragma("once")\n')
+        self.assertGateRejects('_Pragma')
 
     def test_has_include_rejected(self):
         self.unlisted_extra('#if __has_include("SyntheticExtra.h")\n#endif\n')
@@ -632,9 +701,16 @@ class TuTaskUnitTests(GateFixture, unittest.TestCase):
         self.assertIn('cannot be resolved inside the repository', result.stderr)
 
     def test_hidden_include_refused(self):
-        # tu_task uses the same parser: a BOM and a comment do not hide an unlisted header.
+        # tu_task uses the same parser: a comment before the directive is refused, not skipped.
         self.write(EXTRA, 'int SyntheticExtra;\n')
         self.write(CPP, b'\xef\xbb\xbf/**/#include "SyntheticExtra.h"\n' + (self.root / CPP).read_bytes())
+        result = self.run_task([CPP, HDR])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('not exactly #include "path"', result.stderr)
+
+    def test_block_comment_include_counted(self):
+        self.write(EXTRA, 'int SyntheticExtra;\n')
+        self.write(CPP, '/*\n#include "SyntheticExtra.h"\n*/\n' + (self.root / CPP).read_text())
         result = self.run_task([CPP, HDR])
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(f"missing: ['{EXTRA}']", result.stderr)

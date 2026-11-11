@@ -114,21 +114,34 @@ Match record, recomputed from the tree:
 
 - **Source.** The record's `translation_unit` is exactly the include closure of its compiled
   file: every repository file reachable through quoted `#include "..."` directives,
-  transitively, and nothing else. Before looking for directives the parser normalises each file
-  as the compiler's early phases do: strict UTF-8 with one leading BOM stripped, line endings
-  normalised, backslash-newline continuations spliced, comments removed by a scanner that
-  respects string and character literals (a block comment keeps its line breaks, so the parser
-  can only see more line starts than the compiler, never fewer). Anything it cannot classify is
-  an error, never skipped. Refused:
-  - non-UTF-8 bytes; a backslash followed only by blanks at a line end; an unterminated block
-    comment; trigraphs `??=` and `??/`; a line starting with the digraph `%:`; raw string
-    literals (their delimiters are not scanned);
-  - `include_alias` anywhere in a file, including in comments, strings or `_Pragma`;
-  - `__has_include` anywhere, since it makes the unit depend on files it does not include;
-  - the directives `#import` and `#include_next`, and any `#include` line that is not exactly
-    `#include "path"` or `#include <path>` (computed `#include MACRO`, trailing tokens,
-    unterminated names);
-  - a recipe forced include (`/FI`).
+  transitively, and nothing else. The scan keeps no lexical state: it does not try to tell
+  comments or string literals from code, because approximating the C++ lexer is how earlier
+  versions missed includes. Each file is decoded as strict UTF-8 with one leading BOM stripped,
+  line endings are normalised and backslash-newline continuations spliced; then every logical
+  line is examined wherever it sits (comment, string, `#if 0`):
+  - a line that is exactly `#include "path"` or `#include <path>` (only spaces or tabs around
+    the tokens, nothing after them) counts; a quoted one joins the closure even if it is
+    commented out, which can only over-include, and an unresolvable one fails;
+  - any other line holding both `#` and `include` or `import` is refused. This is a style
+    constraint on reconstruction sources: never write `#` and `include` on one line in a
+    comment or string (`// see #include order` is refused), and never put a comment or trailing
+    text on an include line;
+  - a line whose first non-blank character is `#` must name a directive from the allow-list
+    `define`, `undef`, `if`, `ifdef`, `ifndef`, `elif`, `else`, `endif`, `pragma`, `error`,
+    `line`; anything else (`# /**/ include`, a null `#`, `#warning`, `#import`,
+    `#include_next`) is refused;
+  - a line holding `#` and a universal character name (`\u`, `\U`) is refused.
+
+  Refused anywhere in a file, raw or spliced: non-UTF-8 bytes; a backslash followed only by
+  blanks at a line end; trigraphs `??=` and `??/`; the digraph `%:`; `include_alias`;
+  `__has_include`; `_Pragma`; a raw string literal prefix (`R"`, `u8R"`, `LR"`, ...); `import`
+  followed by `"` or `<` (header units). Why no quoted include that MSVC compiles can escape: a
+  directive begins a logical line with `#`, possibly after whitespace or comments, and its name
+  must be spelled out on that logical line, since continuations are spliced, macros cannot
+  produce directives and the other spellings of `#` and of names are refused. So every real
+  quoted include is on a line holding both `#` and `include`, which is either counted or
+  refused. The argument is written out above `quoted_includes` in `tools/source_digest.py`.
+  A recipe forced include (`/FI`) is refused too.
 
   A quoted include resolves against the including file's directory, then the directories of the
   files that included it (innermost first, as MSVC searches), then the include root
@@ -142,6 +155,9 @@ Match record, recomputed from the tree:
   digest definition (`tu-sha256-v1`) is unchanged. The digest of that unit equals the record's, and every report
   names that digest and the compiled file's path. `tools/verifier/tu_task.py` applies the same
   closure rule, so a verifier task cannot be built from an incomplete unit.
+  Follow-up, not implemented: when a verifier builds a task, cross-check the derived closure
+  against the compiler's own `/showIncludes` output for that compile (repository files only),
+  and refuse the task on any difference.
 - **Target.** Every report's image hash equals `builds/target.json`. Its build id, RVA and size
   equal the inventory entry's, and the pinned symbol map places the symbol at that range.
 - **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match
