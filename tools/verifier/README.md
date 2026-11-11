@@ -24,6 +24,10 @@ was built with, and no step compares anything against the game.
   `tools/compare.py` on object A against image B for each pilot function, plus negative cases.
   The work directory must be under `.local/` because the comparator writes diagnostics there.
 - `synthetic/`: original test sources. No third-party code.
+- `boat_up.sh`, `boat_run.sh`, `boat_down.sh` (with `boat_lib.sh`): resume the standing Boat
+  verifier machine and check `pinned.sha256`, run one task in its own `~/tasks/<task-id>` with a
+  file round trip, and stop it while printing compute used. Usage and rules are in
+  `docs/boat-agent-guidelines.md`; `BOAT_CLI` overrides the CLI path.
 
 ## Steps
 

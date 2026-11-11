@@ -121,6 +121,9 @@ until the previous one's finish condition from `docs/plan.md` is met and its gat
 - **Verifier fleet**: machines cloned from the phase 2 snapshot, all at the same comparator commit
   and recipe. Every pass is re-run on a different machine before it is reported. Machines carry
   only the inputs their gate allows, auto-stop at their deadline, and never run untrusted PR code.
+- **Boat use**: every agent that touches a Boat machine follows `docs/boat-agent-guidelines.md`
+  (resume or fork the standing verifier machine, never rebuild by hand; buy nothing; stop
+  machines and record compute before and after in the handoff).
 - **Budget**: the orchestrator tallies machine-hours and subagent runs against the G3 cap from
   worker reports and stops dispatching at the cap; workers stop their machines on completion.
 - **Integration**: an Engineer merges passing worktree branches, reruns the full checks and the

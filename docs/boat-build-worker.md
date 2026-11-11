@@ -1,7 +1,10 @@
 # Boat as a build worker candidate
 
-Status: RESEARCHED, NOT REPRODUCED. Checked against official documentation 2026-11-11.
-No account, machine, compiler installation or proprietary input upload was performed.
+Status: REPRODUCED for synthetic builds (pilot, [findings/boat-pilot.md](../findings/boat-pilot.md)):
+cl 19.16.27054 under Wine on a Boat `default` machine; no game comparison yet. Operating rules
+for agents: [boat-agent-guidelines.md](boat-agent-guidelines.md).
+The sections below are the original documentation review (2026-11-11), written before any
+account, machine or compiler installation existed; prices and limits there may have changed.
 Research assistance: Codex subagent; human maintainer remains responsible for acceptance.
 
 ## Fit
