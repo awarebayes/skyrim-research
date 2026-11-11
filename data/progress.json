@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T19:14:33Z",
+  "updated_at": "2026-11-11T20:12:37Z",
   "phase": "Bootstrap",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -21,7 +21,7 @@
     {
       "id": "reproduce-import",
       "title": "Reproduce Ghidra types and address import",
-      "status": "blocked",
+      "status": "done",
       "owner": "awarebayes",
       "acceptance": "Record tool/archive revisions and validate representative types and address mappings on the selected build.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/2"
@@ -29,7 +29,7 @@
     {
       "id": "compiler-worker",
       "title": "Prove a Windows compiler worker",
-      "status": "blocked",
+      "status": "done",
       "owner": "awarebayes",
       "acceptance": "Compile a synthetic fixture, identify Skyrim compiler candidates, and record exact tools and VM compatibility.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/3"
@@ -37,7 +37,7 @@
     {
       "id": "boat-worker",
       "title": "Validate Boat as an x64 build worker",
-      "status": "planned",
+      "status": "done",
       "owner": "awarebayes",
       "acceptance": "Synthetic exact-MSVC compile under Wine, recorded toolchain, cost limit and cleanup; no proprietary uploads without separate authorization.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/4"
@@ -77,6 +77,16 @@
       "date": "2026-11-11",
       "title": "Target executable pinned",
       "detail": "Steam SkyrimSE.exe 1.7.104.0 (build id sse-steam-1-7-104) fingerprinted locally by SHA-256. Metadata only; no function analysis or matching yet."
+    },
+    {
+      "date": "2026-11-11",
+      "title": "Ghidra import and address-mapping anchors checked",
+      "detail": "Pinned image imported and analyzed in Ghidra 12.2; Address Library 1.7.104.0 mapping checked against the image. RTTI vtable and type-descriptor ids agree (8,013 of 8,015; 7,319 of 7,321), with 4 identity failures and 1 unexplained case; function identity is supported only for about 20 individually checked anchors. One host, one run; no matches or completion figures claimed."
+    },
+    {
+      "date": "2026-11-11",
+      "title": "Compiler worker reproduced on Boat with synthetic code",
+      "detail": "MSVC cl 19.16.27054 (VS 2017 15.9 Build Tools) under Wine on one Boat machine compiled original synthetic C++ with identical code across clean builds; the comparator passed five synthetic functions and rejected three negative cases. Establishes a worker only: not shown to be the game's original compiler, nothing compared against the game, setup not yet repeated on a second machine."
     }
   ]
 }

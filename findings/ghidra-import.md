@@ -1,5 +1,15 @@
 # Finding: Ghidra import of the pinned target and community mapping availability
 
+> **Update (later in the same research phase; original text below is unchanged).** The statements
+> below that community address mappings for 1.7.104.0 are missing or blocked were true when written
+> and are superseded as to availability. The maintainer later supplied the Address Library database
+> for 1.7.104.0; its parse, the structural checks and the anchor checks are in
+> `findings/address-mapping.md`, including its failed checks and limitations. That finding also
+> records that powerof3/CommonLibSSE (GPL-3.0) was not used while a maintainer decision was pending.
+> The maintainer has since approved local use of powerof3/CommonLibSSE for naming; it has not yet
+> been used. This approval was relayed to the author of this note and is not yet recorded in
+> `docs/authorizations.md`.
+
 Status: OBSERVED (import and analyzability); HYPOTHESIS (type-size agreement interpretation)
 Author / human operator: awarebayes
 AI assistance / model: Claude Code Engineer worker (claude-opus-5-5), run locally; no game file
@@ -170,6 +180,11 @@ Private evidence: `.local/experiments/ghidra-import/` (section survey, survey an
 logs) and the project under `.local/analysis/`. No bytes, disassembly or decompiler output published.
 
 ## Negative results and limitations
+
+> **Update:** the first bullet below (no Address Library database available) is superseded. The
+> database for 1.7.104.0 was later supplied by the maintainer, and the mapping checks are in
+> `findings/address-mapping.md`. Powerof3/CommonLibSSE (GPL-3.0) has since been approved by the
+> maintainer for local naming use and has not yet been used. The other limitations still apply.
 
 - No 1.7.104 Address Library database was available under the gates and licences in force. No
   community function or variable RVA was checked. Checks that need a mapping (string-referencing
