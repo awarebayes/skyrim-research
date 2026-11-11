@@ -68,4 +68,4 @@ pass; a match record alone means a reproduced pass awaiting review, not an accep
 
 | record | function | state |
 |---|---|---|
-| `sse-steam-1-7-104/0x73ad90.json` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial); no Reviewer record; **not accepted**, entry `mapped`. See `findings/first-function.md`. |
+| `sse-steam-1-7-104/0x73ad90.json` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial); Reviewer record `0x73ad90.review.json` (approve); **accepted**, entry `matched`. See `findings/first-function.md`. |

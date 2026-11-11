@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T21:15:51Z",
+  "updated_at": "2026-11-11T21:40:58Z",
   "phase": "Bootstrap",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -14,7 +14,7 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 7581072,
       "size": 84,
-      "status": "mapped",
+      "status": "matched",
       "name": "ArmorRatingVisitor::HaveNotVisitedArmor",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), src/RE/A/ArmorRatingVisitor.cpp, joined through Address Library 1.7.104.0. RVA 0x73ad90; size from the image's single .pdata entry.",
@@ -59,17 +59,17 @@
     {
       "id": "matching-gate",
       "title": "Implement and review the matching gate",
-      "status": "active",
+      "status": "done",
       "owner": "awarebayes",
-      "acceptance": "Use synthetic negative fixtures for bytes, relocations, calls, data references and exception coverage; reproduce locally before enabling matches; the gate change passes its own Reviewer pass under the acceptance rule. So far: gate implemented in tools/check.py with a Reviewer record and negative tests, run as the CI consistency check; the first real comparison is reproduced on more than one host. Its Reviewer pass is pending.",
+      "acceptance": "Use synthetic negative fixtures for bytes, relocations, calls, data references and exception coverage; reproduce locally before enabling matches; the gate change passes its own Reviewer pass under the acceptance rule. So far: gate implemented in tools/check.py with a Reviewer record and negative tests, run as the CI consistency check; the first real comparison is reproduced on more than one host. The gate passed its Reviewer pass after four fix rounds.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/5"
     },
     {
       "id": "first-function",
       "title": "Recover and verify the first small function",
-      "status": "active",
+      "status": "done",
       "owner": "awarebayes",
-      "acceptance": "Accept one small function under the acceptance rule: reproduced comparator pass, a fresh Reviewer approve recorded by tools/accept_function.py, and sanitized reproducible evidence. So far: 0x73ad90 reconstructed, integrated and reproduced on 3 hosts; awaiting Reviewer approval; not accepted.",
+      "acceptance": "Accept one small function under the acceptance rule: reproduced comparator pass, a fresh Reviewer approve recorded by tools/accept_function.py, and sanitized reproducible evidence. So far: 0x73ad90 reconstructed, integrated and reproduced on 3 hosts; Reviewer approved; accepted as matched.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/6"
     },
     {
@@ -101,6 +101,11 @@
       "date": "2026-11-11",
       "title": "Compiler worker reproduced on Boat with synthetic code",
       "detail": "MSVC cl 19.16.27054 (VS 2017 15.9 Build Tools) under Wine on one Boat machine compiled original synthetic C++ with identical code across clean builds; the comparator passed five synthetic functions and rejected three negative cases. Establishes a worker only: not shown to be the game's original compiler, nothing compared against the game, setup not yet repeated on a second machine."
+    },
+    {
+      "date": "2026-11-11",
+      "title": "First function accepted as byte-matched",
+      "detail": "ArmorRatingVisitor::HaveNotVisitedArmor (community name, unverified), RVA 0x73ad90, 84 bytes: comparator pass with full code and unwind coverage reproduced on 2 compile hosts and 3 compare hosts with partial independence, plus a Reviewer approve. A byte match of the checked code only; scope is still undefined, so no completion percentage."
     }
   ]
 }

@@ -1,9 +1,10 @@
 # Finding: first pilot function selected, reconstructed and re-checked
 
 Status: **comparator pass reproduced on 3 hosts (2 compiling, 3 comparing) with partial
-independence; integrated; awaiting Reviewer approval; not accepted.** The inventory entry is
-`mapped` and names the match record `reports/sse-steam-1-7-104/0x73ad90.json`; there is no
-Reviewer record. The integrated source is `reconstruction/inventory/ArmorRatingVisitor.{h,cpp}`
+independence; integrated; Reviewer approved; accepted as `matched` under the acceptance rule.**
+The inventory entry is `matched` and names the match record
+`reports/sse-steam-1-7-104/0x73ad90.json`; the Reviewer record is
+`reports/sse-steam-1-7-104/0x73ad90.review.json`. The integrated source is `reconstruction/inventory/ArmorRatingVisitor.{h,cpp}`
 (translation-unit digest `615045612a209905c4d4f49ef35574b4bddb4a6b76a4c2cf69691b531517f85f`).
 Range, unwind form and reference counts are OBSERVED on the pinned image. The function name is a
 community name and is not verified.
@@ -244,11 +245,11 @@ finding contains no code bytes, disassembly, decompiler output or reconstructed 
   because that would change the digest the comparator runs are bound to.
 - The name `ArmorRatingVisitor::HaveNotVisitedArmor` is CommonLibSSE-NG's community name. EXE_RTTI
   supports the class and slot only.
-- Not accepted. Acceptance needs a fresh Reviewer `approve` on this integrated tree, recorded by
-  `tools/accept_function.py` (`docs/verification.md`, acceptance rule). The gate change itself
-  needs its own Reviewer pass as a machinery change. Whether reconstructed source may be
-  published at all is a maintainer policy decision under `LEGAL.md` that has not been made; this
-  tree is not pushed.
+- Accepted by a fresh Reviewer `approve` on the integrated tree, recorded by
+  `tools/accept_function.py` (`docs/verification.md`, acceptance rule). Acceptance means a byte
+  match of the checked code only; the Reviewer record is self-reported. The gate change passed
+  its own Reviewer pass as a machinery change after four fix rounds on the include-closure rule. The maintainer decided that reconstructed source is published in this
+  repository (`LEGAL.md`).
 
 ## Reviewer and outcome
 
@@ -260,6 +261,5 @@ follow the acceptance rule, the entry is back to `mapped`, and the vtable limita
 stated here and in the record's notes. That first Reviewer judged "no pasted decompiler output"
 by the form of the source only and did not read decompiler output.
 
-Next: a fresh Reviewer pass on the integrated tree (with G2, reading decompiler output where it
-needs to compare against it), then `tools/accept_function.py` on an `approve`. Status: `mapped`;
-comparator pass reproduced; integrated; awaiting Reviewer approval; not accepted.
+Next: the sampling safeguard's second Reviewer pass and clean re-run, which the first functions
+under a new recipe require (`docs/verification.md`). Status: `matched`.

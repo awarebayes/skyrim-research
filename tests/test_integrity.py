@@ -34,6 +34,9 @@ class IntegrityTests(unittest.TestCase):
         self.assertNotIn('100%', page)
 
     def test_page_states_gate_from_data(self):
+        # The live inventory may already hold accepted functions; the empty-state wording needs none.
+        for function in self.data['functions']:
+            function['status'] = 'mapped'
         page = render(self.data, 'synthetic-revision')
         self.assertNotIn('not implemented', page)
         self.assertNotIn('disabled during bootstrap', page)

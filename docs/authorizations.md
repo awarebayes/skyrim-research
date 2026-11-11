@@ -17,3 +17,5 @@ and adding a dated note.
 
 For microsoft license: individual for my own opensource project
 PL CommonLibSSE for naming and publishing id/offset pairs approved
+Reconstructed source will be published in this repository, similar to the FNV decompilation project (maintainer decision, stated to the orchestrator 2026-11-11 and recorded here by it).
+The maintainer does not review individual functions; acceptance follows the automated rule in docs/verification.md (maintainer decision, 2026-11-11).
