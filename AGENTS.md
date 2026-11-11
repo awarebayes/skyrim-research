@@ -37,7 +37,8 @@ Cargo/build/cache instructions here or modify its checkout as part of a research
 ## Work safely and leave a usable handoff
 
 - Claim a small issue before a long task. Record human owner, agent/model if used, exact build,
-  reproduction command, outcome, blockers and next step. Do not launch extra agents unless asked.
+  reproduction command, outcome, blockers and next step. Launch agents only as described in
+  "Multi-agent execution" below, or when the human maintainer asks.
 - All shell commands run from this repo. Private command paths must stay in local configs.
 - Keep ordinary CLI/tooling work on macOS; Windows Arm VM and live Skyrim/SKSE compatibility are
   unverified. Do not install a VM, change a game install or provision paid machines without scope.
@@ -48,3 +49,89 @@ Cargo/build/cache instructions here or modify its checkout as part of a research
 - PRs describe evidence and limitations. Do not claim CI proves legality or gameplay parity.
 - Protect the research/implementation boundary. Do not port reconstructed functions into Mudcrab
   or declare a specification clean-room-safe just because it is prose or lives in another repo.
+
+## Multi-agent execution
+
+The project runs as one orchestrator directing worker subagents, with deterministic verifier
+machines deciding results. Nothing in this section grants an authorization; every gate below
+must be recorded in `docs/authorizations.md` by the human maintainer before work that needs it.
+
+### Roles
+
+| role | who | does | never does |
+|---|---|---|---|
+| Maintainer | awarebayes (human) | grants gates, sets budgets, reviews and pushes commits, closes issues, accepts matches | delegates acceptance to a model |
+| Orchestrator | Claude Fable, latest available (`claude-fable-5-1` today) via `.claude/agents/orchestrator.md` | plans, splits work into tasks, writes worker briefs, dispatches, reads handoffs, triages failures, tracks spend against the cap, reports to the maintainer | writes or edits any file, runs commands, judges a match, pushes, posts publicly |
+| Engineer | Claude Opus 5.5 (`claude-opus-5-5`) subagent | tooling, comparator, Ghidra/import work, failure analysis on near-misses, provenance review, integration of worker branches | marks anything `matched` |
+| Drafter | Claude Sonnet 5.5 (`claude-sonnet-5-5`) subagent | bounded high-volume tasks: reconstruction drafts, synthetic fixtures, report formatting, doc updates | decides scope or accepts its own output |
+| Verifier | deterministic job on a worker host (local Mac first, Boat VMs later) | compiles a pinned source revision with the pinned recipe and runs the comparator; emits a sanitized report | involves a model in the pass/fail decision |
+
+The orchestrator's tool set is limited to reading files and starting or messaging subagents, so
+"no code from the orchestrator" is enforced, not just requested. Any file change, including
+`data/progress.json`, is delegated to a worker. A model saying a reconstruction "looks right" is
+never evidence; only a comparator report counts, as `docs/verification.md` requires.
+
+Start the orchestrator from the repository root:
+
+```sh
+claude --agent orchestrator
+```
+
+### Authorization gates
+
+Recorded in `docs/authorizations.md` with scope, limits, date and grantor. Absent = not granted.
+
+- **G1 local tools**: install JDK, Ghidra and other analysis tools under `.local/` on the Mac.
+- **G2 model exposure**: send game-derived text (disassembly, decompiler output, reconstructed
+  source) to Anthropic models in prompts or tool results. Until granted, agents may run local tools
+  on private inputs but read back only sanitized results: counts, hashes, pass/fail, and RVAs/names
+  that come from public community sources. They must not `Read` or `cat` raw game-derived output.
+- **G3 paid compute**: provision Boat machines. Must state machine size, maximum concurrent
+  machines, spend cap, per-machine auto-stop deadline and deletion/snapshot policy.
+- **G4 toolchain on cloud**: install a licensed Microsoft compiler/SDK on remote machines.
+- **G5 game data on cloud**: place the target executable, slices of it, or reconstructed source
+  on remote machines. G3 alone covers only original and synthetic inputs.
+
+### Phases
+
+Each phase finishes with a maintainer-reviewed commit. The orchestrator does not start a phase
+until the previous one's finish condition from `docs/plan.md` is met and its gates are recorded.
+
+1. **Local foundations** (G1; G2 optional). Three independent tracks run in parallel:
+   - Ghidra import and anchor checks, plan step 2, issue #2 (Engineer).
+   - Comparator and its negative tests on original synthetic COFF/PE fixtures, step 4, issue #5
+     (Engineer, Drafter for fixtures). Needs no game data and no MSVC.
+   - Compiler-candidate research from public sources and the pinned target's header metadata,
+     step 3 paper part, issue #3 (Engineer).
+2. **Single verifier pilot** (G3, G4). One Boat machine: Wine plus the candidate MSVC, synthetic
+   C++ compiled twice with identical output, comparator run there, machine stopped and billing
+   checked. Issue #4. Record the machine recipe so later machines are clones, not hand setups.
+3. **First real function** (G2, and G5 if compiled remotely). Plan step 5, issue #6: one function,
+   one Drafter reconstruction loop, Engineer triage of near-misses, verifier report reproduced on a
+   second host, maintainer review, then the reviewed gate change that enables `matched`.
+4. **Fan-out** (all gates, explicit concurrency and spend cap). Only after phase 3 is reproduced.
+
+### Fan-out design (phase 4)
+
+- **Queue**: the orchestrator picks functions from a reviewed inventory slice, each identified by
+  `(build id, RVA, size)`. One task = one function; a worker claims it by task id.
+- **Draft loop**: a Drafter writes a reconstruction in its own git worktree (`isolation:
+  "worktree"`), submits it to a verifier, reads only the sanitized diff summary, and retries within
+  an attempt limit set in the brief. Stuck tasks go to an Engineer with the attempt history.
+- **Verifier fleet**: machines cloned from the phase 2 snapshot, all at the same comparator commit
+  and recipe. Every pass is re-run on a different machine before it is reported. Machines carry
+  only the inputs their gate allows, auto-stop at their deadline, and never run untrusted PR code.
+- **Budget**: the orchestrator tallies machine-hours and subagent runs against the G3 cap from
+  worker reports and stops dispatching at the cap; workers stop their machines on completion.
+- **Integration**: an Engineer merges passing worktree branches, reruns the full checks and the
+  verifier on the integrated tree, then hands the maintainer a staged commit. Claims refer to
+  integrated source only.
+
+### Worker briefs and handoffs
+
+Every brief from the orchestrator states: task id, plan step and issue, gates in force and what
+they forbid, allowed inputs, the exact output paths, acceptance criteria, attempt and time limits,
+and "do not push, post publicly, mark `matched`, or start further agents." Every worker writes a
+handoff to `.local/handoffs/<task-id>.md` (model, inputs and their revisions, commands, outcome,
+blockers, next step) and returns its summary. The orchestrator works from handoffs, not memory,
+and reports blockers to the maintainer rather than working around a gate.
