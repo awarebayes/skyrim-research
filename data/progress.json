@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T18:17:04Z",
+  "updated_at": "2026-11-11T18:31:53Z",
   "phase": "Bootstrap",
-  "target_build_id": null,
+  "target_build_id": "sse-steam-1-7-104",
   "scope": {
     "functions": null,
     "bytes": null,
@@ -13,7 +13,7 @@
     {
       "id": "pin-target",
       "title": "Pin one legally obtained Skyrim executable",
-      "status": "planned",
+      "status": "done",
       "owner": "awarebayes",
       "acceptance": "Record store, actual version, x86-64 architecture, SHA-256 and scope notes; no game bytes.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/1"
@@ -72,6 +72,11 @@
       "date": "2026-11-11",
       "title": "Research repository scaffolded",
       "detail": "Agent guidance, publication policies, research templates and a versioned progress report created. No target or match claims."
+    },
+    {
+      "date": "2026-11-11",
+      "title": "Target executable pinned",
+      "detail": "Steam SkyrimSE.exe 1.7.104.0 (build id sse-steam-1-7-104) fingerprinted locally by SHA-256. Metadata only; no function analysis or matching yet."
     }
   ]
 }
