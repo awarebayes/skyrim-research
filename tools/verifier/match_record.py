@@ -5,7 +5,11 @@
         --compiled reconstruction/<area>/<Class>.cpp --recipe reconstruction/recipes/<r>.json \
         --symbols reports/<build id>/symbol-map.json \
         --run <compiled-on> <compared-on> <report.json> [--run ...] \
-        --reproduction '<command>' --out reports/<build id>/<rva>.json
+        --reproduction '<command>' --build build.json --out reports/<build id>/<rva>.json
+
+`--build` is the record's `build` block (reports/README.md): the flags each compile host
+actually ran, the environment it cleared, its object hash and the repository files the compiler
+opened, as the hosts' build records state them. `tools/verifier/confirm` writes it.
 
 Reports are embedded exactly as the comparator wrote them; nothing in them is edited or
 summarized. The record is refused unless tools/check.py's match validation accepts it for the
@@ -39,6 +43,7 @@ def build(args, root=ROOT):
         'toolchain_pin': {'path': TOOLCHAIN_PIN, 'sha256': file_sha256(root, TOOLCHAIN_PIN)},
         'symbol_map': {'path': args.symbols, 'sha256': file_sha256(root, args.symbols)},
         'reproduction': args.reproduction,
+        'build': json.loads(Path(args.build).read_text()),
         'notes': args.note or [],
         'runs': runs,
     }
@@ -54,6 +59,7 @@ def main():
     p.add_argument('--run', nargs=3, action='append', required=True,
                    metavar=('COMPILED_ON', 'COMPARED_ON', 'REPORT'))
     p.add_argument('--reproduction', required=True)
+    p.add_argument('--build', required=True, help='JSON file with the build block')
     p.add_argument('--note', action='append')
     p.add_argument('--out', required=True, type=Path)
     args = p.parse_args()

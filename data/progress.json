@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T22:05:30Z",
+  "updated_at": "2026-11-11T22:21:09Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -14,13 +14,12 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 7581072,
       "size": 84,
-      "status": "matched",
+      "status": "mapped",
       "name": "ArmorRatingVisitor::HaveNotVisitedArmor",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), src/RE/A/ArmorRatingVisitor.cpp, joined through Address Library 1.7.104.0. RVA 0x73ad90; size from the image's single .pdata entry.",
       "owner": "awarebayes",
-      "evidence": "findings/first-function.md",
-      "report": "reports/sse-steam-1-7-104/0x73ad90.json"
+      "evidence": "findings/first-function.md"
     },
     {
       "id": "sse-steam-1-7-104-0xef8900",

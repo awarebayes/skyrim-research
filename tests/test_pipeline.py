@@ -11,6 +11,16 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools' / 'verifier'))
 import disasm  # noqa: E402
 import pipeline  # noqa: E402
+from importlib.machinery import SourceFileLoader  # noqa: E402
+import importlib.util  # noqa: E402
+
+
+def load_script(name):
+    loader = SourceFileLoader(name, str(ROOT / 'tools' / 'verifier' / name))
+    spec = importlib.util.spec_from_loader(name, loader)
+    module = importlib.util.module_from_spec(spec)
+    loader.exec_module(module)
+    return module
 
 TARGET = json.loads((ROOT / 'builds/target.json').read_text())
 
@@ -74,6 +84,35 @@ class TaskFiles(unittest.TestCase):
         self.assertEqual(pipeline.resolve_task_dir(self.task_dir), self.task_dir)
         self.assertEqual(pipeline.resolve_task_dir('.local/tasks/not-here'),
                          (pipeline.main_checkout() / '.local/tasks/not-here').resolve())
+
+    def test_confirm_build_block_states_what_ran(self):
+        confirm = load_script('confirm')
+        task = {'compiled': 'reconstruction/x/A.cpp', 'functions': [{'rva': 0x10}, {'rva': 0x20}]}
+        recipe_flags = ['/nologo', '/c', '/O2']
+        host = self.tmp / 'host'
+        env = {'cleared': ['INCLUDE', 'LIB', 'LIBPATH', 'CL', '_CL_', 'EXTERNAL_INCLUDE'],
+               'added_flags': ['/showIncludes'],
+               'show_includes': {'repository_files': ['reconstruction/x/A.cpp', 'reconstruction/x/A.h'],
+                                 'equals_closure': True}}
+        for rva in ('0x10', '0x20'):
+            (host / rva).mkdir(parents=True)
+            (host / rva / 'build-record.json').write_text(json.dumps({'object_sha256': 'a' * 64, 'environment': env}))
+        (host / 'compile-command.json').write_text(json.dumps(
+            recipe_flags + ['/showIncludes', '/Fo/w/candidate.obj', 'reconstruction/x/A.cpp']))
+        block = confirm.build_block(task, {'h': host})
+        self.assertIn('self-reported', block['claim'])
+        self.assertEqual(block['hosts']['h']['command_flags'], recipe_flags + ['/showIncludes'])
+        self.assertEqual(block['hosts']['h']['object_sha256'], 'a' * 64)
+        env['cleared'] = ['INCLUDE']
+        (host / '0x10' / 'build-record.json').write_text(json.dumps({'object_sha256': 'a' * 64, 'environment': env}))
+        (host / '0x20' / 'build-record.json').write_text(json.dumps({'object_sha256': 'a' * 64, 'environment': env}))
+        with self.assertRaises(pipeline.PipelineError):
+            confirm.build_block(task, {'h': host})
+        recipe = {'flags': recipe_flags, 'compiler': {'version': '19.16.27054 x'}}
+        line = confirm.reproduction(dict(task, build_id='b', recipe='r.json', symbols_repo='m.json'),
+                                    {'rva': 0x10, 'symbol': '?f@@YAXXZ'}, ['reconstruction/x/A.cpp'], recipe)
+        self.assertIn('env -u CL -u EXTERNAL_INCLUDE -u INCLUDE -u LIB -u LIBPATH -u _CL_', line)
+        self.assertIn('/O2 /showIncludes /Fo<work>/candidate.obj reconstruction/x/A.cpp', line)
 
     def test_changed_files(self):
         files = {'a': '1', 'b': '2'}

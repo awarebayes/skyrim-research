@@ -263,3 +263,7 @@ by the form of the source only and did not read decompiler output.
 
 Next: the sampling safeguard's second Reviewer pass and clean re-run, which the first functions
 under a new recipe require (`docs/verification.md`). Status: `matched`.
+
+## Revocation
+
+- 2026-11-11: acceptance revoked; status back to `mapped`. Reason: The match record format changed (schema 2 binds the compile hosts' build facts) and the unit gained ArmorRatingVisitorBase::Visit (0x73ae00), so the record and its Reviewer approve no longer bind the integrated source. The function is to be re-confirmed by real runs and re-reviewed with the unit. The earlier match record (reports/sse-steam-1-7-104/0x73ad90.json) stays in git history and is not current evidence.

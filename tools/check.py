@@ -31,7 +31,13 @@ def integer(value):
 
 
 SHA256 = re.compile(r'[0-9a-f]{64}')
-MATCH_RECORD_SCHEMA = 1
+MATCH_RECORD_SCHEMA = 2
+# What every compile host must have done beyond the recipe (tools/verifier/unit_build.py): the
+# flag it adds to the recipe's and the environment variables it removes before compiling.
+BUILD_ADDED_FLAGS = ['/showIncludes']
+BUILD_CLEARED_ENV = ['CL', 'EXTERNAL_INCLUDE', 'INCLUDE', 'LIB', 'LIBPATH', '_CL_']
+BUILD_FIELDS = {'claim', 'added_flags', 'cleared_environment', 'hosts'}
+BUILD_HOST_FIELDS = {'command_flags', 'object_sha256', 'repository_files_opened', 'opened_equals_closure'}
 REVIEW_RECORD_SCHEMA = 1
 REVIEW_FIELDS = {'review_record_schema', 'function_id', 'build_id', 'rva', 'size', 'source_digest_method',
                  'source_digest', 'reviewer_model', 'review_task_id', 'verdict', 'escalation_category',
@@ -205,7 +211,43 @@ def validate_match(fn, target, root=None):
     shared = sorted(h for hosts in object_hosts.values() if len(hosts) > 1 for h in hosts)
     require(not shared, f'Match record: one candidate object is claimed by compile hosts {", ".join(shared)}; '
             'runs from different hosts must have different object hashes')
+    check_build(record.get('build'), flags, unit, runs)
     return record
+
+
+def check_build(build, flags, unit, runs):
+    """Require the record's build facts to be present and consistent with its runs and unit.
+
+    The facts are what each compile host wrote into its build record: the flags it actually passed
+    to cl, the environment it cleared, the object it produced and the repository files the
+    compiler reported opening. CI cannot observe a compile, so this checks that the facts are
+    there, name exactly the flags and variables the verifier is defined to use, belong to the
+    runs' compile hosts and objects and list this unit; it cannot check that they are true, and
+    the record says so in `claim`.
+    """
+    require(isinstance(build, dict) and set(build) == BUILD_FIELDS,
+            f'Match record: build must have exactly the fields {sorted(BUILD_FIELDS)}')
+    require(text(build['claim']) and 'self-reported' in build['claim'],
+            'Match record: build.claim must state that the build facts are self-reported')
+    require(build['added_flags'] == BUILD_ADDED_FLAGS,
+            f'Match record: build.added_flags must be {BUILD_ADDED_FLAGS}')
+    require(build['cleared_environment'] == BUILD_CLEARED_ENV,
+            f'Match record: build.cleared_environment must be {BUILD_CLEARED_ENV}')
+    hosts = build['hosts']
+    objects = {}
+    for run in runs:
+        objects.setdefault(run['compiled_on'], set()).add(run['report']['candidate']['object_sha256'])
+    require(isinstance(hosts, dict) and set(hosts) == set(objects),
+            'Match record: build.hosts must name exactly the compile hosts of the runs')
+    for name, host in hosts.items():
+        require(isinstance(host, dict) and set(host) == BUILD_HOST_FIELDS,
+                f'Match record: build.hosts.{name} must have exactly the fields {sorted(BUILD_HOST_FIELDS)}')
+        require(host['command_flags'] == flags + BUILD_ADDED_FLAGS,
+                f'Match record: build.hosts.{name}.command_flags are not the recipe flags plus the added flags')
+        require(objects[name] == {host['object_sha256']},
+                f'Match record: build.hosts.{name}.object_sha256 is not the object its runs compared')
+        require(host['opened_equals_closure'] is True and host['repository_files_opened'] == sorted(unit),
+                f'Match record: build.hosts.{name} does not report opening exactly the translation unit')
 
 
 def review_record_path(fn):

@@ -6,10 +6,17 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
 - layout: `reconstruction/<area>/<Class>.h` and `.cpp` with a lowercase area and a class-named
   file; the .cpp includes its own header by quoted name and the header declares the class;
   recipes are `reconstruction/recipes/*.json`; README.md is the only other file;
-- banned constructs: inline assembly (`__asm`, `asm`), `__emit`, `__pragma`, `_Pragma`,
-  `__declspec(naked|code_seg|allocate|safebuffers)`, string literals of `\\x` escapes, and braced
-  lists of eight or more byte-sized integer literals (raw code or data bytes); `#pragma` other
-  than `once`, `pack` and `warning` (the rest steer code generation only);
+- banned constructs, checked on the spliced logical lines of tools/source_digest.py (backslash-
+  newline joined first) and on all text alike, comments and literals included: there is no
+  lexer to mislead, so a word in prose is refused too (over-refusal is the accepted direction).
+  Inline assembly (`__asm__`, `__asm`, `_asm`, `asm`), `__emit`, `__pragma`, `_Pragma`, token
+  pasting `##`, a `#define` whose body names `__declspec`, `__pragma`, `_Pragma`, an assembly
+  keyword, `__emit` or a code-generation-only `__declspec` argument, `__declspec(...)` with
+  `naked`, `code_seg`, `allocate` or `safebuffers` anywhere in its argument list, digit
+  separators (`1'000`, refused so that no literal can hide from the byte-list rule), string
+  literals of `\\x` escapes, and braced lists of eight or more byte-sized integer or character
+  literals; `#pragma` other than `once`, `pack` and `warning` (the rest steer code generation
+  only), and any `#pragma` line whose first word is not plainly one of those;
 - header comment fields: the leading comment block names the pinned build id and a `Source
   exposure:` category from PROVENANCE.md; a .cpp also gives `RVA 0x...`, `<n> bytes`,
   `Evidence:` with an existing findings/ or reports/ path, `Drafted by` and `Recipe:` with an
@@ -18,6 +25,10 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   include of a repository file is quoted, and no include sits inside a block comment or a
   conditional block (other than the header guard), because the verifier requires the compiler's
   /showIncludes list to equal the closure and such includes are counted but never opened.
+
+The byte-data rules (`\\x` strings, byte lists) are heuristics: they catch the obvious ways of
+smuggling code or data bytes into source, not every way. The Reviewer remains responsible for
+rejecting source whose content is raw bytes in any spelling (docs/verification.md).
 
     python3 tools/lint_reconstruction.py [files...]   # default: every file under reconstruction/
 """
@@ -28,49 +39,99 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from source_digest import INCLUDE_ROOTS, STRICT_INCLUDE, quoted_includes  # noqa: E402
+from source_digest import INCLUDE_ROOTS, STRICT_INCLUDE, logical_lines, quoted_includes  # noqa: E402
 
 EXPOSURE = ('black-box', 'community-headers', 'binary-analysis', 'mixed')
 NAME_ORIGINS = ('COMMUNITY', 'GUESS', 'EXE_RTTI', 'OBSERVED')
 ALLOWED_PRAGMAS = {'once', 'pack', 'warning'}
 SOURCE = re.compile(r'reconstruction/([a-z][a-z0-9_]*)/([A-Z][A-Za-z0-9_]*)\.(h|cpp)')
+CODEGEN_DECLSPEC = r'naked|code_seg|allocate|safebuffers'
+ASM = r'__asm__|__asm|_asm|asm'
+# Applied to the whole spliced text with no comment or literal state, so nothing can be hidden
+# from them by a lexing disagreement; prose that uses these words is refused as well.
 BANNED = (
-    (re.compile(r'\b(?:__asm|_asm|asm)\b'), 'inline assembly'),
-    (re.compile(r'\b__emit\b'), '__emit'),
-    (re.compile(r'\b__pragma\b|\b_Pragma\b'), 'pragma operator'),
-    (re.compile(r'__declspec\s*\(\s*(?:naked|code_seg|allocate|safebuffers)\b'), 'codegen-only __declspec'),
+    (re.compile(rf'(?<![A-Za-z0-9_])(?:{ASM})(?![A-Za-z0-9_])'), 'inline assembly'),
+    (re.compile(r'(?<![A-Za-z0-9_])__emit(?![A-Za-z0-9_])'), '__emit'),
+    (re.compile(r'(?<![A-Za-z0-9_])(?:__pragma|_Pragma)(?![A-Za-z0-9_])'), 'pragma operator'),
+    (re.compile(r'##'), 'token pasting (##)'),
+    # A numeric literal with a separator; `u8'a'` and other prefixed character literals start
+    # with a letter and are not matched.
+    (re.compile(r"(?<![A-Za-z0-9_.])\.?\d[0-9A-Za-z_.]*'[0-9A-Za-z]"), "digit separator (')"),
     (re.compile(r'"(?:[^"\\\n]|\\.)*(?:\\x[0-9A-Fa-f]{1,2}(?:[^"\\\n]|\\.)*){4,}"'), 'string of \\x byte escapes'),
 )
+DECLSPEC = re.compile(r'(?<![A-Za-z0-9_])__declspec\s*\(')
+DEFINE = re.compile(r'^[ \t]*#[ \t]*define\b(.*)$', re.M)
+DEFINE_BANNED = re.compile(rf'(?<![A-Za-z0-9_])(?:__declspec|__pragma|_Pragma|{ASM}|__emit|{CODEGEN_DECLSPEC})'
+                           r'(?![A-Za-z0-9_])')
 INT_LITERAL = re.compile(r'(?<![\w.])(0[xX][0-9A-Fa-f]+|\d+)[uUlL]*(?![\w.])')
+CHAR_LITERAL = re.compile(r"(?:u8|u|U|L)?'(\\x[0-9A-Fa-f]+|\\[0-7]{1,3}|\\.|[^'\\\n])'")
 BRACED = re.compile(r'\{([^{}]*)\}', re.S)
-PRAGMA = re.compile(r'^[ \t]*#[ \t]*pragma[ \t]+([A-Za-z_]\w*)', re.M)
+PRAGMA_LINE = re.compile(r'^[ \t]*#[ \t]*pragma\b(.*)$', re.M)
+PRAGMA_WORD = re.compile(r'[ \t]+([A-Za-z_]\w*)\b(?![ \t]*[^ \t(\n])|[ \t]+([A-Za-z_]\w*)[ \t]*\(')
 
 
-def strip_comments(text):
-    """Text with comments blanked (strings kept), so code rules do not fire on prose."""
-    out, i, n = [], 0, len(text)
-    while i < n:
-        c = text[i]
-        if text.startswith('//', i):
-            j = text.find('\n', i)
-            j = n if j < 0 else j
-            out.append(' ' * (j - i))
-            i = j
-        elif text.startswith('/*', i):
-            j = text.find('*/', i + 2)
-            j = n if j < 0 else j + 2
-            out.append(''.join(ch if ch == '\n' else ' ' for ch in text[i:j]))
-            i = j
-        elif c in '"\'':
-            j = i + 1
-            while j < n and text[j] != c and text[j] != '\n':
-                j += 2 if text[j] == '\\' else 1
-            out.append(text[i:j + 1])
-            i = j + 1
-        else:
-            out.append(c)
+def spliced_text(blob, name):
+    """The file as tools/source_digest.py sees it: logical lines with continuations joined."""
+    return '\n'.join(logical_lines(blob, name))
+
+
+def line_of(text, pos):
+    return text.count('\n', 0, pos) + 1
+
+
+def declspec_arguments(text):
+    """(position, argument text) of every `__declspec(...)`, up to its balanced closing parenthesis."""
+    for m in DECLSPEC.finditer(text):
+        depth, i = 1, m.end()
+        while i < len(text) and depth:
+            depth += {'(': 1, ')': -1}.get(text[i], 0)
             i += 1
-    return ''.join(out)
+        yield m.start(), text[m.end():i - 1]
+
+
+def literal_value(item):
+    lit = INT_LITERAL.fullmatch(item)
+    if lit:
+        return int(lit.group(1), 0)
+    ch = CHAR_LITERAL.fullmatch(item)
+    if ch:
+        body = ch.group(1)
+        if body.startswith('\\x'):
+            return int(body[2:], 16)
+        if re.fullmatch(r'\\[0-7]{1,3}', body):
+            return int(body[1:], 8)
+        return 0
+    return None
+
+
+def construct_problems(name, text):
+    """Banned-construct findings for one file's spliced text."""
+    problems = []
+    for pattern, what in BANNED:
+        hit = pattern.search(text)
+        if hit:
+            problems.append(f'{name}:{line_of(text, hit.start())}: {what} is not allowed')
+    for pos, args in declspec_arguments(text):
+        if re.search(rf'(?<![A-Za-z0-9_])(?:{CODEGEN_DECLSPEC})(?![A-Za-z0-9_])', args):
+            problems.append(f'{name}:{line_of(text, pos)}: codegen-only __declspec is not allowed')
+    for m in DEFINE.finditer(text):
+        if DEFINE_BANNED.search(m.group(1)):
+            problems.append(f'{name}:{line_of(text, m.start())}: #define naming __declspec, a pragma operator, '
+                            'assembly, __emit or a codegen-only __declspec argument is not allowed')
+    for m in BRACED.finditer(text):
+        values = [literal_value(x.strip()) for x in m.group(1).split(',') if x.strip()]
+        values = [v for v in values if v is not None]
+        if len(values) >= 8 and all(v <= 0xFF for v in values):
+            problems.append(f'{name}:{line_of(text, m.start())}: braced list of 8+ byte-sized integer or '
+                            'character literals (raw bytes?)')
+    for m in PRAGMA_LINE.finditer(text):
+        word = PRAGMA_WORD.match(m.group(1))
+        word = word and (word.group(1) or word.group(2))
+        if word not in ALLOWED_PRAGMAS:
+            shown = word or m.group(1).strip()[:20]
+            problems.append(f'{name}:{line_of(text, m.start())}: #pragma {shown} is not allowed '
+                            f'(only {", ".join(sorted(ALLOWED_PRAGMAS))}, spelled plainly)')
+    return problems
 
 
 def leading_comment(text):
@@ -83,18 +144,6 @@ def leading_comment(text):
         else:
             break
     return '\n'.join(lines)
-
-
-def byte_lists(code):
-    for m in BRACED.finditer(code):
-        items = [x.strip() for x in m.group(1).split(',') if x.strip()]
-        values = []
-        for item in items:
-            lit = INT_LITERAL.fullmatch(item)
-            if lit:
-                values.append(int(lit.group(1), 0))
-        if len(values) >= 8 and all(v <= 0xFF for v in values):
-            yield code.count('\n', 0, m.start()) + 1
 
 
 def include_layout_problems(name, text):
@@ -156,23 +205,18 @@ def lint_file(root, name, target_build):
     except ValueError as exc:
         problems.append(str(exc))
         targets = []
-    problems += include_layout_problems(name, text)
+    problems += include_layout_problems(name, text.replace('\\\n', ''))
     for kind, target in targets:
         if kind == '<':
             for base in INCLUDE_ROOTS:
                 if (root / base / target).exists():
                     problems.append(f'{name}: repository header <{target}> must be included as "{target}"')
-    code = strip_comments(text)
-    for pattern, what in BANNED:
-        hit = pattern.search(code)
-        if hit:
-            problems.append(f'{name}:{code.count(chr(10), 0, hit.start()) + 1}: {what} is not allowed')
-    for line in byte_lists(code):
-        problems.append(f'{name}:{line}: braced list of 8+ byte-sized integer literals (raw bytes?)')
-    for pm in PRAGMA.finditer(code):
-        if pm.group(1) not in ALLOWED_PRAGMAS:
-            problems.append(f'{name}:{code.count(chr(10), 0, pm.start()) + 1}: #pragma {pm.group(1)} is not allowed '
-                            f'(only {", ".join(sorted(ALLOWED_PRAGMAS))})')
+    try:
+        spliced = spliced_text(blob, name)
+    except ValueError as exc:
+        problems.append(str(exc))
+        spliced = text
+    problems += construct_problems(name, spliced)
     header = leading_comment(text)
     if target_build and target_build not in header:
         problems.append(f'{name}: header comment must name the build id {target_build}')
@@ -202,7 +246,7 @@ def lint_file(root, name, target_build):
     else:
         if not any(re.search(rf'\b{o}\b', header) for o in NAME_ORIGINS):
             problems.append(f'{name}: header comment must label name origin ({", ".join(NAME_ORIGINS)})')
-        if not re.search(rf'\b(?:class|struct)\s+{re.escape(cls)}\b(?!\s*;)', code):
+        if not re.search(rf'\b(?:class|struct)\s+{re.escape(cls)}\b(?!\s*;)', spliced):
             problems.append(f'{name}: header must declare class {cls}')
     return problems
 

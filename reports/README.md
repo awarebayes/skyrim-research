@@ -26,7 +26,7 @@ a from-scratch comparator re-run) and git history as the audit trail.
   contract "Mapping source symbols to target RVAs"). It holds RVAs, sizes and names from public
   community sources only, with their provenance.
 
-## Match record (`match_record_schema` 1)
+## Match record (`match_record_schema` 2)
 
 Written by `tools/verifier/match_record.py`, which refuses to write a record that
 `tools/check.py` would reject. It holds:
@@ -37,7 +37,15 @@ Written by `tools/verifier/match_record.py`, which refuses to write a record tha
   quoted-include closure (`docs/verification.md`, "Match gate"); angle-bracket includes are
   toolchain headers bound by the toolchain pin.
 - `recipe`, `toolchain_pin` (`tools/verifier/pinned.sha256`), `symbol_map`: path and SHA-256 of each.
-- `reproduction`: the commands to recompile and re-run the comparison.
+- `reproduction`: the commands the compile hosts ran, with the cleared environment and the added
+  `/showIncludes`, then the commands to rebuild the comparator task and re-run the comparison.
+- `build`: per compile host, the flags actually passed to `cl` (recipe flags plus `added_flags`),
+  the object hash, the repository files the compiler reported opening and whether they equalled
+  the unit; plus the `cleared_environment` names and a `claim` stating that these facts are
+  self-reported. `tools/check.py` requires the block, requires `added_flags` to be exactly
+  `/showIncludes` and `cleared_environment` exactly the verifier's list, the hosts to be the
+  runs' compile hosts with the runs' object hashes, and the opened files to be the unit. It cannot
+  check that the facts are true. Schema 1 records had no such block and are no longer accepted.
 - `runs`: at least two comparator reports, embedded exactly as `tools/compare.py` wrote them,
   each with the host that compiled the object and the host that compared it. Runs must come
   from at least two compile hosts and two compare hosts, and runs from different compile hosts
@@ -68,4 +76,4 @@ pass; a match record alone means a reproduced pass awaiting review, not an accep
 
 | record | function | state |
 |---|---|---|
-| `sse-steam-1-7-104/0x73ad90.json` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial); Reviewer record `0x73ad90.review.json` (approve); **accepted**, entry `matched`. See `findings/first-function.md`. |
+| `sse-steam-1-7-104/0x73ad90.json` (removed; in git history) | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | acceptance revoked, entry `mapped`: the record format changed and the unit gained a function. Re-confirmation and review pending. See `findings/first-function.md`. |

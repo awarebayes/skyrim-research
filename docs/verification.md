@@ -170,13 +170,17 @@ Match record, recomputed from the tree:
   wrapper then sets `INCLUDE` to toolchain and SDK directories, and the build fails if any entry
   lies outside the toolchain root. The value, the cleared names and the added flag are recorded
   in the private build record (`environment`). The compile adds `/showIncludes` to the recipe
-  flags (measured: it changes no object section except the object-path record in `.debug$S`);
+  flags (measured once, on the first accepted unit: it changed no object section except the
+  object-path record in `.debug$S` and its `.chks64` checksum; not re-measured per unit);
   every file the compiler opened must be under the toolchain root or a repository file, and the
   repository files must equal the include closure exactly, or the build is refused. A closure
   entry the compiler never opened (an include in a comment or dead `#if` branch) is a difference
   too; `tools/lint_reconstruction.py` refuses such includes earlier.
   These checks run on the verifier, not in `tools/check.py`: CI has no compiler. The match record
-  states them in a note; the gate does not verify that note.
+  carries each compile host's report of them in its `build` block (flags actually run, cleared
+  variables, object hash, files opened) and its `reproduction` names the same command and
+  environment; the gate requires that block and checks it for consistency with the runs and the
+  unit, but cannot check that it is true, and the block says so.
   Follow-up, not implemented: the manual reproduction path (`tu_task.py` plus a hand-run `cl`)
   does not apply these checks; a third party reproducing by hand should clear the same variables.
 - **Target.** Every report's image hash equals `builds/target.json`. Its build id, RVA and size

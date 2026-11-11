@@ -1,6 +1,6 @@
 // ArmorRatingVisitor::HaveNotVisitedArmor, build sse-steam-1-7-104, RVA 0x73ad90, 84 bytes.
 //
-// Evidence: reports/sse-steam-1-7-104/0x73ad90.json and findings/first-function.md.
+// Evidence: findings/first-function.md.
 // Source exposure: mixed. Drafted by a model worker (claude-sonnet-5-5) from a local instruction
 // listing and decompiler output of the pinned image, with types from the header beside this file.
 // A byte match shows that this source and recipe produce the checked code; it does not verify the

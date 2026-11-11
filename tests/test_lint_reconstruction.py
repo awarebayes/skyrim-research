@@ -72,14 +72,41 @@ class LintTests(unittest.TestCase):
             'pragma operator': '__pragma(optimize("", off))',
             'codegen-only __declspec': '} __declspec(naked) void f() {',
             'byte escapes': 'const char* s = "\\x48\\x89\\x5c\\x24";',
-            'byte-sized integer literals': 'static const unsigned char b[] = {0x48, 0x89, 0x5c, 0x24, 8, 0x57, 0x48, 0x83};',
+            'braced list of 8+': 'static const unsigned char b[] = {0x48, 0x89, 0x5c, 0x24, 8, 0x57, 0x48, 0x83};',
         }
         for needle, snippet in cases.items():
             with self.subTest(needle):
                 self.assert_problem(needle, source=body.replace('{}', snippet))
 
-    def test_banned_words_in_comments_are_fine(self):
-        self.write(source=SOURCE + '// no __asm or __emit here; asm is only mentioned\n')
+    def test_banned_words_in_comments_are_refused_too(self):
+        # No comment state is kept, so a lexing disagreement cannot hide code; prose pays for it.
+        self.assert_problem('inline assembly', source=SOURCE + '// no __asm here\n')
+
+    def test_reviewer_bypasses(self):
+        body = SOURCE.replace('{ return value; }', '{{ {} return value; }}')
+        cases = {
+            # Backslash-newline inside a directive or a __declspec argument list.
+            '#pragma optimize': '\n#pra\\\ngma optimize("", off)\n',
+            '#pragma /*': '\n#pragma /**/ optimize("", off)\n',
+            'codegen-only __declspec': '} __declspec(na\\\nked) void f() {',
+            # The old lexer took a digit separator for a character literal and stopped seeing code.
+            "digit separator": "int n = 1'000; __declspec(naked) int m;",
+            # A banned argument that is not the first one.
+            'codegen-only __declspec ': '} __declspec(noinline, naked) void f() {',
+            'codegen-only __declspec  ': '} __declspec(align(16) safebuffers) void f() {',
+            'token pasting': '\n#define P(a, b) a##b\n',
+            '#define naming __declspec': '\n#define NAKED __declspec(naked)\n',
+            '#define naming __declspec ': '\n#define WORD naked\n',
+            '#define naming __declspec  ': '\n#define EMIT __emit\n',
+            'inline assembly': '__asm__("nop");',
+            'byte-sized integer or character literals': "static const char b[] = {'\\x48', '\\x89', 'H', 1, 2, 3, 4, 5};",
+        }
+        for needle, snippet in cases.items():
+            with self.subTest(needle):
+                self.assert_problem(needle.strip(), source=body.replace('{}', snippet))
+
+    def test_digit_separator_free_literals_pass(self):
+        self.write(source=SOURCE.replace('return value;', "return value + 1000 + u8'a' + L'b' + '1';"))
         self.assertEqual(self.problems(), [])
 
     def test_codegen_pragmas(self):

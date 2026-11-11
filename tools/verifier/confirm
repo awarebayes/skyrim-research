@@ -37,6 +37,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import boatctl  # noqa: E402
 import pipeline  # noqa: E402
+import check  # noqa: E402  (pipeline puts tools/ on the path)
 from pipeline import REPO, PipelineError  # noqa: E402
 
 STANDING_LABEL = 'boat-standing-verifier'
@@ -57,8 +58,12 @@ def notes(task, recipe):
         'and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.',
         'Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed '
         'before the compile, INCLUDE then set by the msvc-wine wrapper to toolchain and SDK directories only; '
-        '/showIncludes added to the recipe flags, and the repository files the compiler opened equalled the '
-        'include closure. /showIncludes changes no object section except the object-path record in .debug$S.',
+        '/showIncludes added after the recipe flags, and the repository files the compiler opened equalled the '
+        'include closure. Each host\'s flags, cleared variables, object hash and opened files are in the build '
+        'block, as that host reported them; the gate checks that block for presence and consistency with the runs, '
+        'not for truth.',
+        '/showIncludes was measured once, on the first accepted unit, to change no object section except the '
+        'object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.',
         'Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S '
         '(each host compiles to its own path) and the .chks64 checksum of that section.',
         'A byte match shows that this source and recipe produce the checked code. It does not verify the '
@@ -67,17 +72,47 @@ def notes(task, recipe):
 
 
 def reproduction(task, fn, closure, recipe):
-    flags = ' '.join(recipe['flags'])
+    """The commands the compile hosts ran, in the order and with the environment they used."""
+    flags = ' '.join(recipe['flags'] + check.BUILD_ADDED_FLAGS)
+    unset = ' '.join(f'-u {name}' for name in check.BUILD_CLEARED_ENV)
     unit = ' '.join(closure)
-    return (f'From the repository root, with cl {recipe["compiler"]["version"].split(" ")[0]} x64 whose binaries match '
-            f'tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it): '
-            f'cl {flags} /Fo<work>/candidate.obj {task["compiled"]} ; '
+    return (f'From the repository root, with cl {recipe["compiler"]["version"].split(" ")[0]} x64 under msvc-wine whose '
+            f'binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): '
+            f'env {unset} <msvc>/bin/x64/cl {flags} /Fo<work>/candidate.obj {task["compiled"]} '
+            f'(the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the '
+            f'repository files /showIncludes lists to equal --unit below) ; '
             f'python3 -I tools/verifier/tu_task.py --function-id {task["build_id"]}-0x{fn["rva"]:x} '
             f"--symbol '{fn['symbol']}' --compiled {task['compiled']} --unit {unit} --recipe {task['recipe']} "
             f'--symbols {task["symbols_repo"]} --object <work>/candidate.obj --out <work> ; '
             f'python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object '
             f'<work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> '
             f'--report <work>/report.json')
+
+
+def build_block(task, host_dirs):
+    """The record's `build` block from each compile host's compile command and build record."""
+    hosts = {}
+    for label, host_dir in host_dirs.items():
+        cmd = json.loads((host_dir / 'compile-command.json').read_text())
+        out = [i for i, arg in enumerate(cmd) if arg.startswith('/Fo')]
+        if len(out) != 1 or cmd[out[0] + 1:] != [task['compiled']]:
+            raise PipelineError(f'{label}: compile command does not end in /Fo<object> {task["compiled"]}')
+        records = [json.loads((host_dir / f'0x{fn["rva"]:x}' / 'build-record.json').read_text())
+                   for fn in task['functions']]
+        env = records[0].get('environment') or {}
+        if any(r != records[0] for r in records):
+            raise PipelineError(f'{label}: build records of one compile differ')
+        if sorted(env.get('cleared') or []) != check.BUILD_CLEARED_ENV or env.get('added_flags') != check.BUILD_ADDED_FLAGS:
+            raise PipelineError(f'{label}: build record environment is not the verifier\'s')
+        shown = env.get('show_includes') or {}
+        hosts[label] = {'command_flags': cmd[:out[0]], 'object_sha256': records[0]['object_sha256'],
+                        'repository_files_opened': shown.get('repository_files'),
+                        'opened_equals_closure': shown.get('equals_closure')}
+    return {'claim': 'Build facts are self-reported by each compile host (tools/verifier/unit_build.py build '
+                     'record). tools/check.py verifies only that they are present and consistent with the runs '
+                     'and the translation unit.',
+            'added_flags': list(check.BUILD_ADDED_FLAGS), 'cleared_environment': list(check.BUILD_CLEARED_ENV),
+            'hosts': hosts}
 
 
 def preflight(task, closure, replace):
@@ -212,12 +247,16 @@ def confirm(task_dir, replace, stop_after):
         if failed:
             lines.append('  no record written: every run must pass; a pass that fails to reproduce is escalated')
         else:
+            build_path = task['dir'] / 'confirm' / 'build.json'
+            build_path.write_text(json.dumps(build_block(task, {label: outcome[label][1] for label in hosts}),
+                                             indent=2) + '\n')
             for fn in task['functions']:
                 fid = f'{task["build_id"]}-0x{fn["rva"]:x}'
                 out = f'reports/{task["build_id"]}/0x{fn["rva"]:x}.json'
                 cmd = [sys.executable, str(HERE / 'match_record.py'), '--function-id', fid, '--unit', *closure,
                        '--compiled', task['compiled'], '--recipe', task['recipe'], '--symbols', task['symbols_repo'],
-                       '--reproduction', reproduction(task, fn, closure, recipe), '--out', out]
+                       '--reproduction', reproduction(task, fn, closure, recipe), '--build', str(build_path),
+                       '--out', out]
                 for compiled_on, compared_on, report in runs[fn['rva']]:
                     cmd += ['--run', compiled_on, compared_on, str(report)]
                 for note in notes(task, recipe):

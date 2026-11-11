@@ -52,4 +52,4 @@ compile. Comments explain why, never when or at whose request.
 
 | unit | function | build / RVA / size | record | state |
 |---|---|---|---|---|
-| `inventory/ArmorRatingVisitor` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | `sse-steam-1-7-104` / `0x73ad90` / 84 | `reports/sse-steam-1-7-104/0x73ad90.json` | accepted (`matched`) |
+| `inventory/ArmorRatingVisitor` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | `sse-steam-1-7-104` / `0x73ad90` / 84 | none current (earlier record in git history) | `mapped`: acceptance revoked, re-confirmation and review pending (`findings/first-function.md`) |

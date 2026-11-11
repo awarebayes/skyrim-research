@@ -17,7 +17,7 @@ import unittest
 
 TOOLS = Path(__file__).resolve().parents[1] / 'tools'
 sys.path.insert(0, str(TOOLS))
-from check import validate, validate_match
+from check import BUILD_ADDED_FLAGS, BUILD_CLEARED_ENV, MATCH_RECORD_SCHEMA, validate, validate_match
 from compare import compare
 from source_digest import tu_digest
 import synthetic_pecoff as fx
@@ -99,7 +99,7 @@ class GateFixture:
             a = self.run_comparator(obj=compiled_object(1))
             b = self.run_comparator(obj=compiled_object(2))
             runs = [('host-a', 'host-a', a), ('host-b', 'host-b', b), ('host-a', 'host-c', a)]
-        return {'match_record_schema': 1, 'function_id': self.fn['id'],
+        return {'match_record_schema': MATCH_RECORD_SCHEMA, 'function_id': self.fn['id'],
                 'source': {'translation_unit': [CPP, HDR], 'compiled': CPP, 'digest_method': 'tu-sha256-v1',
                            'digest': tu_digest(self.root, [CPP, HDR])},
                 'recipe': {'path': RECIPE, 'sha256': sha256(self.recipe_bytes)},
@@ -108,7 +108,23 @@ class GateFixture:
                 'reproduction': 'synthetic', 'notes': [],
                 'runs': [{'compiled_on': c, 'compared_on': h, 'report': copy.deepcopy(r)} for c, h, r in runs]}
 
-    def save_record(self):
+    def build_block(self):
+        """What tools/verifier/confirm derives from the compile hosts' build records for this record."""
+        flags = json.loads(self.recipe_bytes)['flags']
+        hosts = {}
+        for run in self.record['runs']:
+            hosts[run['compiled_on']] = {
+                'command_flags': flags + BUILD_ADDED_FLAGS,
+                'object_sha256': run['report'].get('candidate', {}).get('object_sha256'),
+                'repository_files_opened': sorted(self.record['source']['translation_unit']),
+                'opened_equals_closure': True}
+        return {'claim': 'Build facts are self-reported by each compile host.', 'added_flags': list(BUILD_ADDED_FLAGS),
+                'cleared_environment': list(BUILD_CLEARED_ENV), 'hosts': hosts}
+
+    def save_record(self, keep_build=False):
+        # Other tests change runs or the unit; the build block follows them unless a test edits it.
+        if not keep_build:
+            self.record['build'] = self.build_block()
         self.write(RECORD, json.dumps(self.record, indent=2))
 
     def make_review(self):
@@ -309,6 +325,49 @@ class MatchGateTests(GateFixture, unittest.TestCase):
         self.assertGateRejects('long hex run')
 
     # Reproduction on more than one host.
+
+    def test_missing_build_block_rejected(self):
+        del self.record['build']
+        self.save_record(keep_build=True)
+        self.assertGateRejects('build must have exactly the fields')
+
+    def test_build_block_not_claiming_self_reported_rejected(self):
+        self.record['build']['claim'] = 'Verified by CI.'
+        self.save_record(keep_build=True)
+        self.assertGateRejects('self-reported')
+
+    def test_build_without_show_includes_rejected(self):
+        for host in self.record['build']['hosts'].values():
+            host['command_flags'] = host['command_flags'][:-1]
+        self.save_record(keep_build=True)
+        self.assertGateRejects('command_flags are not the recipe flags')
+
+    def test_build_with_fewer_cleared_variables_rejected(self):
+        self.record['build']['cleared_environment'] = ['CL', 'INCLUDE']
+        self.save_record(keep_build=True)
+        self.assertGateRejects('cleared_environment must be')
+
+    def test_build_host_not_a_compile_host_rejected(self):
+        hosts = self.record['build']['hosts']
+        hosts['host-z'] = hosts.pop('host-b')
+        self.save_record(keep_build=True)
+        self.assertGateRejects('exactly the compile hosts')
+
+    def test_build_object_differs_from_runs_rejected(self):
+        self.record['build']['hosts']['host-a']['object_sha256'] = 'f' * 64
+        self.save_record(keep_build=True)
+        self.assertGateRejects('not the object its runs compared')
+
+    def test_build_opened_other_files_rejected(self):
+        self.record['build']['hosts']['host-a']['repository_files_opened'] = [CPP]
+        self.save_record(keep_build=True)
+        self.assertGateRejects('exactly the translation unit')
+
+    def test_build_constants_match_the_verifier(self):
+        sys.path.insert(0, str(TOOLS / 'verifier'))
+        import unit_build
+        self.assertEqual(sorted(unit_build.CLEARED_ENV), BUILD_CLEARED_ENV)
+        self.assertEqual([unit_build.SHOW_INCLUDES], BUILD_ADDED_FLAGS)
 
     def test_single_run_rejected(self):
         self.record['runs'] = self.record['runs'][:1]
@@ -805,7 +864,11 @@ class IntegratedRecordTests(unittest.TestCase):
         root = TOOLS.parent
         records = sorted(p for p in (root / 'reports').glob('*/0x*.json')
                          if not p.name.endswith(('.review.json', '-recheck-cases.json')))
-        self.assertTrue(records)
+        named = sorted(root / f['report'] for f in json.loads((root / 'data/progress.json').read_text())['functions']
+                       if f.get('report'))
+        self.assertEqual(records, named, 'every record in the tree is named by its inventory entry')
+        if not records:
+            self.skipTest('no match records in the tree')
         for path in records:
             source = json.loads(path.read_text())['source']
             self.assertEqual(include_closure(root, source['compiled']), sorted(source['translation_unit']))
