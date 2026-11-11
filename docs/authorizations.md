@@ -9,8 +9,10 @@ and adding a dated note.
 |---|---|---|---|---|
 | G1 local tools | granted | all | awarebayes | 2026-11-11 |
 | G2 model exposure | granted | all | awarebayes | 2026-11-11 |
-| G3 paid compute | not granted | machine size, max concurrent machines, spend cap, auto-stop deadline, deletion/snapshot policy | | |
-| G4 toolchain on cloud | not granted | compiler/SDK identity and licence basis | | |
-| G5 game data on cloud | not granted | which inputs, which service, terms reviewed | | |
+| G3 paid compute | granted | granted all its sub based anyways so no surprise bills | awarebayes | |
+| G4 toolchain on cloud | granted | all granted | awarebayes | |
+| G5 game data on cloud | granted | all on boat dev | awarebayes | 2026-11-11 |
 
 ## Notes
+
+For microsoft license: individual for my own opensource project
