@@ -67,4 +67,9 @@ compile. Comments explain why, never when or at whose request.
 
 | unit | function | build / RVA / size | record | state |
 |---|---|---|---|---|
-| `inventory/ArmorRatingVisitor` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | `sse-steam-1-7-104` / `0x73ad90` / 84 | none current (earlier record in git history) | `mapped`: acceptance revoked, re-confirmation and review pending (`findings/first-function.md`) |
+| `inventory/ArmorRatingVisitor` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | `sse-steam-1-7-104` / `0x73ad90` / 84 | `reports/sse-steam-1-7-104/0x73ad90.json` (recipe `msvc-19.16.27054-o2`) | acceptance revoked (`findings/first-function.md`); re-confirmed, `mapped`, awaiting review |
+| `inventory/ArmorRatingVisitor` | `ArmorRatingVisitorBase::Visit` (COMMUNITY name) | `sse-steam-1-7-104` / `0x73ae00` / 172 | `reports/sse-steam-1-7-104/0x73ae00.json` (recipe `msvc-19.16.27054-o2`) | `mapped`, awaiting review |
+| `netimmerse/NiTimeController` | `NiTimeController::ProcessClone` (COMMUNITY name) | `sse-steam-1-7-104` / `0xef8900` / 53 | `reports/sse-steam-1-7-104/0xef8900.json` (recipe `msvc-19.16.27054-o2`) | `mapped`, awaiting review |
+| `bsengine/BSPointerHandleManagerInterface` | `BSPointerHandleManagerInterface::GetHandle` (COMMUNITY name) | `sse-steam-1-7-104` / `0x240f50` / 54 | `reports/sse-steam-1-7-104/0x240f50.json` (recipe `msvc-19.16.27054-o2`) | `mapped`, awaiting review |
+| `bsengine/BSTimer` | `BSTimer::SetGlobalTimeMultiplier` (COMMUNITY name) | `sse-steam-1-7-104` / `0xce3970` / 76 | `reports/sse-steam-1-7-104/0xce3970.json` (recipe `o2-fpfast`) | `mapped`, awaiting review |
+| `actors/Actor` | `Actor::HasOutfitItems` (COMMUNITY name) | `sse-steam-1-7-104` / `0x2e7fc0` / 156 | `reports/sse-steam-1-7-104/0x2e7fc0.json` (recipe `msvc-19.16.27054-o2`) | `mapped`, awaiting review |

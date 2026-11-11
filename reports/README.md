@@ -76,4 +76,9 @@ pass; a match record alone means a reproduced pass awaiting review, not an accep
 
 | record | function | state |
 |---|---|---|
-| `sse-steam-1-7-104/0x73ad90.json` (removed; in git history) | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | acceptance revoked, entry `mapped`: the record format changed and the unit gained a function. Re-confirmation and review pending. See `findings/first-function.md`. |
+| `sse-steam-1-7-104/0x73ad90.json` | `ArmorRatingVisitor::HaveNotVisitedArmor` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial: the fork copies the standing machine); re-confirmed after the acceptance was revoked (`findings/first-function.md`); entry `mapped`, review pending. |
+| `sse-steam-1-7-104/0x73ae00.json` | `ArmorRatingVisitorBase::Visit` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial: the fork copies the standing machine); entry `mapped`, review pending. |
+| `sse-steam-1-7-104/0xef8900.json` | `NiTimeController::ProcessClone` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial: the fork copies the standing machine); entry `mapped`, review pending. |
+| `sse-steam-1-7-104/0x240f50.json` | `BSPointerHandleManagerInterface::GetHandle` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial: the fork copies the standing machine); entry `mapped`, review pending. |
+| `sse-steam-1-7-104/0xce3970.json` | `BSTimer::SetGlobalTimeMultiplier` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial: the fork copies the standing machine); `/fp:fast` recipe; entry `mapped`, review pending. |
+| `sse-steam-1-7-104/0x2e7fc0.json` | `Actor::HasOutfitItems` (COMMUNITY name) | comparator pass on 4 runs (2 compile hosts, 3 compare hosts; independence partial: the fork copies the standing machine); entry `mapped`, review pending. |

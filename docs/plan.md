@@ -160,9 +160,9 @@ Prerequisites: steps 2, 3 and 4.
   with `tools/accept_function.py` under the [acceptance rule](verification.md#acceptance-rule). The maintainer is not asked to
   review the function; escalate only as that rule lists.
 
-Status: `sse-steam-1-7-104` `0x73ad90` is reconstructed, integrated and reproduced on 3 hosts
-(`findings/first-function.md`); it is `mapped` and awaits a fresh Reviewer pass and
-`tools/accept_function.py`. Publication: the maintainer has decided that reconstructed source is
+Status: `sse-steam-1-7-104` `0x73ad90` was accepted, then revoked when its unit gained a function
+and the record format changed; it is re-confirmed and `mapped` again, awaiting a fresh Reviewer
+pass with the second batch (`findings/first-function.md`, `reconstruction/README.md`). Publication: the maintainer has decided that reconstructed source is
 published in this repository by engine area (`LEGAL.md`); this function's source is pushed with
 its acceptance.
 

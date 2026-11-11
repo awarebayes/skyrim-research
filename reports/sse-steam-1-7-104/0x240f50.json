@@ -1,0 +1,340 @@
+{
+  "build": {
+    "added_flags": [
+      "/showIncludes"
+    ],
+    "claim": "Build facts are self-reported by each compile host (tools/verifier/unit_build.py build record). tools/check.py verifies only that they are present and consistent with the runs and the translation unit.",
+    "cleared_environment": [
+      "CL",
+      "EXTERNAL_INCLUDE",
+      "INCLUDE",
+      "LIB",
+      "LIBPATH",
+      "_CL_"
+    ],
+    "hosts": {
+      "boat-fork-of-standing-verifier": {
+        "command_flags": [
+          "/nologo",
+          "/c",
+          "/O2",
+          "/MD",
+          "/GS-",
+          "/EHsc",
+          "/GR",
+          "/fp:precise",
+          "/Gy",
+          "/showIncludes"
+        ],
+        "object_sha256": "261a786a4f5e3d7ced93de440c3ea286f313f12a63ed7d788292527193285907",
+        "opened_equals_closure": true,
+        "repository_files_opened": [
+          "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+          "reconstruction/bsengine/BSPointerHandleManagerInterface.h"
+        ]
+      },
+      "boat-standing-verifier": {
+        "command_flags": [
+          "/nologo",
+          "/c",
+          "/O2",
+          "/MD",
+          "/GS-",
+          "/EHsc",
+          "/GR",
+          "/fp:precise",
+          "/Gy",
+          "/showIncludes"
+        ],
+        "object_sha256": "e55a02a37a794512ca062145300ccbf864569cf2298648d9240fe5439a686d4c",
+        "opened_equals_closure": true,
+        "repository_files_opened": [
+          "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+          "reconstruction/bsengine/BSPointerHandleManagerInterface.h"
+        ]
+      }
+    }
+  },
+  "function_id": "sse-steam-1-7-104-0x240f50",
+  "match_record_schema": 2,
+  "notes": [
+    "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.",
+    "Host independence: the fork is a copy of the standing verifier machine's disk, so it shares that toolchain install and Ubuntu image; each Boat host checked its compiler binaries against pinned.sha256 and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.",
+    "Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed before the compile, INCLUDE then set by the msvc-wine wrapper to toolchain and SDK directories only; /showIncludes added after the recipe flags, and the repository files the compiler opened equalled the include closure. Each host's flags, cleared variables, object hash and opened files are in the build block, as that host reported them; the gate checks that block for presence and consistency with the runs, not for truth.",
+    "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
+    "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
+    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this."
+  ],
+  "recipe": {
+    "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
+    "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+  },
+  "reproduction": "From the repository root, with cl 19.16.27054 x64 under msvc-wine whose binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): env -u CL -u EXTERNAL_INCLUDE -u INCLUDE -u LIB -u LIBPATH -u _CL_ <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSPointerHandleManagerInterface.cpp (the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the repository files /showIncludes lists to equal --unit below) ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x240f50 --symbol '?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z' --compiled reconstruction/bsengine/BSPointerHandleManagerInterface.cpp --unit reconstruction/bsengine/BSPointerHandleManagerInterface.cpp reconstruction/bsengine/BSPointerHandleManagerInterface.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/symbol-map.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "runs": [
+    {
+      "compared_on": "boat-standing-verifier",
+      "compiled_on": "boat-standing-verifier",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "object_sha256": "e55a02a37a794512ca062145300ccbf864569cf2298648d9240fe5439a686d4c"
+        },
+        "comparator": {
+          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+          "version": "0.1.0"
+        },
+        "contract_version": 1,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 8,
+          "code_bytes_exact": 46,
+          "code_bytes_total": 54,
+          "relocations_by_type": {
+            "REL32": 2
+          },
+          "unwind": "covered",
+          "unwind_bytes_exact": 8,
+          "unwind_entries": 1
+        },
+        "detail": "all contract v1 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2363216,
+          "size": 54,
+          "symbol": "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+          "source_revision": "30549aba0df43d0c7bbb7431b1819e056d02c4efe4e1700b2b464acd447fa633"
+        },
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x240f50"
+      }
+    },
+    {
+      "compared_on": "macos-arm64-local",
+      "compiled_on": "boat-standing-verifier",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "object_sha256": "e55a02a37a794512ca062145300ccbf864569cf2298648d9240fe5439a686d4c"
+        },
+        "comparator": {
+          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+          "version": "0.1.0"
+        },
+        "contract_version": 1,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 8,
+          "code_bytes_exact": 46,
+          "code_bytes_total": 54,
+          "relocations_by_type": {
+            "REL32": 2
+          },
+          "unwind": "covered",
+          "unwind_bytes_exact": 8,
+          "unwind_entries": 1
+        },
+        "detail": "all contract v1 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2363216,
+          "size": 54,
+          "symbol": "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+          "source_revision": "30549aba0df43d0c7bbb7431b1819e056d02c4efe4e1700b2b464acd447fa633"
+        },
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x240f50"
+      }
+    },
+    {
+      "compared_on": "boat-fork-of-standing-verifier",
+      "compiled_on": "boat-fork-of-standing-verifier",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "object_sha256": "261a786a4f5e3d7ced93de440c3ea286f313f12a63ed7d788292527193285907"
+        },
+        "comparator": {
+          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+          "version": "0.1.0"
+        },
+        "contract_version": 1,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 8,
+          "code_bytes_exact": 46,
+          "code_bytes_total": 54,
+          "relocations_by_type": {
+            "REL32": 2
+          },
+          "unwind": "covered",
+          "unwind_bytes_exact": 8,
+          "unwind_entries": 1
+        },
+        "detail": "all contract v1 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2363216,
+          "size": 54,
+          "symbol": "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+          "source_revision": "30549aba0df43d0c7bbb7431b1819e056d02c4efe4e1700b2b464acd447fa633"
+        },
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x240f50"
+      }
+    },
+    {
+      "compared_on": "macos-arm64-local",
+      "compiled_on": "boat-fork-of-standing-verifier",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "object_sha256": "261a786a4f5e3d7ced93de440c3ea286f313f12a63ed7d788292527193285907"
+        },
+        "comparator": {
+          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
+          "version": "0.1.0"
+        },
+        "contract_version": 1,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 8,
+          "code_bytes_exact": 46,
+          "code_bytes_total": 54,
+          "relocations_by_type": {
+            "REL32": 2
+          },
+          "unwind": "covered",
+          "unwind_bytes_exact": 8,
+          "unwind_entries": 1
+        },
+        "detail": "all contract v1 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2363216,
+          "size": 54,
+          "symbol": "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+          "source_revision": "30549aba0df43d0c7bbb7431b1819e056d02c4efe4e1700b2b464acd447fa633"
+        },
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x240f50"
+      }
+    }
+  ],
+  "source": {
+    "compiled": "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+    "digest": "30549aba0df43d0c7bbb7431b1819e056d02c4efe4e1700b2b464acd447fa633",
+    "digest_method": "tu-sha256-v1",
+    "translation_unit": [
+      "reconstruction/bsengine/BSPointerHandleManagerInterface.cpp",
+      "reconstruction/bsengine/BSPointerHandleManagerInterface.h"
+    ]
+  },
+  "symbol_map": {
+    "path": "reports/sse-steam-1-7-104/symbol-map.json",
+    "sha256": "4d0b6ea41728266f057d95986cf9039bb9cbaf86cb2478f793d9ebc54c5c0646"
+  },
+  "toolchain_pin": {
+    "path": "tools/verifier/pinned.sha256",
+    "sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  }
+}
