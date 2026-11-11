@@ -73,3 +73,7 @@ and are unverified. Leaf sizes without `.pdata` come from Ghidra. One host, one 
 ## Reviewer and outcome
 
 Not reviewed. Inventory entries added as `mapped` only.
+
+Update 2026-11-12: all five were reconstructed, reproduced on two compile hosts and approved by a
+Reviewer; they are now `matched` (records and Reviewer records under `reports/sse-steam-1-7-104/`).
+`0xce3970` needed a recipe with `/fp:fast`; that one function is the only evidence for the flag.

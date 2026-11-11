@@ -268,3 +268,5 @@ under a new recipe require (`docs/verification.md`). Status: `matched`.
 
 - 2026-11-11: acceptance revoked; status back to `mapped`. Reason: The match record format changed (schema 2 binds the compile hosts' build facts) and the unit gained ArmorRatingVisitorBase::Visit (0x73ae00), so the record and its Reviewer approve no longer bind the integrated source. The function is to be re-confirmed by real runs and re-reviewed with the unit. The earlier match record (reports/sse-steam-1-7-104/0x73ad90.json) stays in git history and is not current evidence.
 - Re-confirmed with the extended unit by `tools/verifier/confirm` (4 runs, 2 compile hosts, 3 compare hosts); a new schema 2 record is at the same path. Status `mapped` until a fresh Reviewer approve and `tools/accept_function.py`.
+- 2026-11-12: re-accepted as `matched`. The extended unit (new digest) was re-confirmed on two compile
+  hosts and approved again in batch review `review-batch-2`; the Reviewer record binds the new digest.

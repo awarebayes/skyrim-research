@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T22:36:50Z",
+  "updated_at": "2026-11-11T22:43:58Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -14,7 +14,7 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 7581072,
       "size": 84,
-      "status": "mapped",
+      "status": "matched",
       "name": "ArmorRatingVisitor::HaveNotVisitedArmor",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), src/RE/A/ArmorRatingVisitor.cpp, joined through Address Library 1.7.104.0. RVA 0x73ad90; size from the image's single .pdata entry.",
@@ -27,7 +27,7 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15698176,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
       "name": "NiTimeController::ProcessClone",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), src/RE/N/NiTimeController.cpp (nearest enclosing definition of the id, a heuristic), joined through Address Library 1.7.104.0. RVA 0xef8900; size from the image's single .pdata entry.",
@@ -40,7 +40,7 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 2363216,
       "size": 54,
-      "status": "mapped",
+      "status": "matched",
       "name": "BSPointerHandleManagerInterface::GetHandle",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), include/RE/B/BSPointerHandle.h (nearest enclosing definition of the id, a heuristic), joined through Address Library 1.7.104.0. RVA 0x240f50; size from the image's single .pdata entry.",
@@ -53,7 +53,7 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 7581184,
       "size": 172,
-      "status": "mapped",
+      "status": "matched",
       "name": "ArmorRatingVisitorBase::Visit",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), src/RE/A/ArmorRatingVisitorBase.cpp (nearest enclosing definition of the id, a heuristic), joined through Address Library 1.7.104.0. RVA 0x73ae00; size from the image's single .pdata entry.",
@@ -66,7 +66,7 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 13515120,
       "size": 76,
-      "status": "mapped",
+      "status": "matched",
       "name": "BSTimer::SetGlobalTimeMultiplier",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), include/RE/B/BSTimer.h (nearest enclosing definition of the id, a heuristic), joined through Address Library 1.7.104.0. RVA 0xce3970; no .pdata entry (leaf); size from the Ghidra 12.2 function body, followed by int3 padding.",
@@ -79,7 +79,7 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 3047360,
       "size": 156,
-      "status": "mapped",
+      "status": "matched",
       "name": "Actor::HasOutfitItems",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), src/RE/A/Actor.cpp (nearest enclosing definition of the id, a heuristic), joined through Address Library 1.7.104.0. RVA 0x2e7fc0; size from the image's single .pdata entry.",
@@ -171,6 +171,11 @@
       "date": "2026-11-11",
       "title": "First function accepted as byte-matched",
       "detail": "ArmorRatingVisitor::HaveNotVisitedArmor (community name, unverified), RVA 0x73ad90, 84 bytes: comparator pass with full code and unwind coverage reproduced on 2 compile hosts and 3 compare hosts with partial independence, plus a Reviewer approve. A byte match of the checked code only; scope is still undefined, so no completion percentage."
+    },
+    {
+      "date": "2026-11-12",
+      "title": "Six functions accepted as byte-matched",
+      "detail": "Five more functions of varied shape (calls, a global read, floating point, a loop with branches) reconstructed by Sonnet drafters with one-command attempts, reproduced on two compile hosts and approved in one batch review; the first function was re-confirmed after its unit was extended. 595 bytes in total. The second host is a disk fork of the first, so host independence is partial. Scope is still undefined."
     }
   ]
 }
