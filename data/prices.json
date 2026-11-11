@@ -1,0 +1,11 @@
+{
+ "comment": "ASSUMPTIONS for `tools/cost_ledger.py report --money`; not measured and not authoritative. All rates are null until the maintainer fills them from the provider's current price list and the Boat bill. Token rates are per million tokens for each category the ledger counts: input (fresh input), cache_creation (cache writes), cache_read (cache hits) and output. boat_per_hour is the price of one machine-hour of Boat compute. Record where each value came from in source before relying on the totals.",
+ "currency": "USD",
+ "source": null,
+ "models": {
+  "claude-fable-5-2": {"input": null, "cache_creation": null, "cache_read": null, "output": null},
+  "claude-opus-5-5": {"input": null, "cache_creation": null, "cache_read": null, "output": null},
+  "claude-sonnet-5-5": {"input": null, "cache_creation": null, "cache_read": null, "output": null}
+ },
+ "boat_per_hour": null
+}
