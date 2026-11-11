@@ -290,6 +290,9 @@ def confirm(task_dir, replace, stop_after):
         else:
             lines.append(f'  {boatctl.STANDING} left running until its deadline (tools/verifier/attempt --stop)')
         after = boatctl.compute_used()
+        used = [after.get('trialComputeUsedSeconds'), before.get('trialComputeUsedSeconds')]
+        if None not in used:
+            pipeline.record_cost(task, 'confirm', used[0] - used[1], time.monotonic() - started)
         lines.append(f'  private: {out_root}/  time {time.monotonic() - started:.0f} s; compute '
                      f'{before["trialComputeUsedSeconds"]} -> {after["trialComputeUsedSeconds"]} s (counter may lag)')
         print('\n'.join(lines))

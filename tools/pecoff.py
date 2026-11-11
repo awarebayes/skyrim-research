@@ -229,15 +229,59 @@ class PeImage:
         return [struct.unpack_from('<III', table, i) for i in range(0, size, RUNTIME_FUNCTION_SIZE)]
 
 
-def unwind_info_length(blob, what):
-    """Length of the fixed UNWIND_INFO part the contract compares, after rejecting unsupported forms."""
+def unwind_header(blob, what):
+    """Return (flags, length of header plus codes) for a version 1 UNWIND_INFO.
+
+    The length includes the padding slot that keeps an odd code count 4-byte aligned; whatever
+    follows (handler RVA and data, or a chained RUNTIME_FUNCTION) depends on the flags.
+    """
     version_flags, _prolog, count, _frame = unpack('<BBBB', blob, 0, what)
     version, flags = version_flags & 0x7, version_flags >> 3
     if version != 1:
         raise Reject('unsupported-unwind', f'{what} has version {version}; only version 1 is decoded')
-    if flags & UNW_FLAG_CHAININFO:
-        raise Reject('unsupported-unwind', f'{what} is chained to another entry')
-    if flags & (UNW_FLAG_EHANDLER | UNW_FLAG_UHANDLER):
-        # Handler-specific data has a layout chosen by the handler; its length cannot be derived here.
-        raise Reject('unsupported-unwind', f'{what} names an exception/termination handler')
-    return 4 + 2 * (count + (count & 1))
+    if flags & UNW_FLAG_CHAININFO and flags & (UNW_FLAG_EHANDLER | UNW_FLAG_UHANDLER):
+        raise Reject('unsupported-unwind', f'{what} combines a chain with a handler')
+    return flags, 4 + 2 * (count + (count & 1))
+
+
+# Language-specific handlers whose data layout contract v2 decodes, by the name the object
+# references. The value names the layout of the data that follows the handler RVA.
+EH_HANDLERS = {
+    '__CxxFrameHandler3': ('funcinfo',),
+    '__GSHandlerCheck_EH': ('funcinfo', 'gs'),
+    '__C_specific_handler': ('scope_table',),
+    '__GSHandlerCheck_SEH': ('scope_table', 'gs'),
+    '__GSHandlerCheck': ('gs',),
+}
+FUNCINFO_MAGIC = 0x19930522
+GS_HAS_ALIGNMENT = 0x4
+
+# x64 C++ EH structures as MSVC 19.16 emits them; every field is 4 bytes. Field kinds:
+#   int          compared as a value; no relocation may fall on it
+#   code         image-relative address of code (null allowed where MSVC leaves it empty)
+#   type         image-relative address of a TypeDescriptor, null for catch (...)
+#   code_or_int  scope-table handler/target: an address when relocated, otherwise a constant
+#   array        image-relative address of `count` consecutive structures of another kind;
+#                `count` names an earlier field, or None for exactly one structure
+EH_LAYOUTS = {
+    'funcinfo': (('magic', 'int'), ('max_state', 'int'),
+                 ('unwind_map', 'array', 'unwind_map_entry', 'max_state'), ('n_try_blocks', 'int'),
+                 ('try_block_map', 'array', 'try_block', 'n_try_blocks'), ('n_ip_map', 'int'),
+                 ('ip_to_state_map', 'array', 'ip_to_state', 'n_ip_map'), ('unwind_help', 'int'),
+                 ('es_type_list', 'array', 'es_type_list', None), ('eh_flags', 'int')),
+    'unwind_map_entry': (('to_state', 'int'), ('action', 'code')),
+    'try_block': (('try_low', 'int'), ('try_high', 'int'), ('catch_high', 'int'), ('n_catches', 'int'),
+                  ('handler_array', 'array', 'handler_type', 'n_catches')),
+    'handler_type': (('adjectives', 'int'), ('type_descriptor', 'type'), ('catch_object', 'int'),
+                     ('handler', 'code'), ('frame', 'int')),
+    'ip_to_state': (('ip', 'code'), ('state', 'int')),
+    'es_type_list': (('n_types', 'int'), ('types', 'array', 'handler_type', 'n_types')),
+    'scope_entry': (('begin', 'code'), ('end', 'code'), ('handler', 'code_or_int'),
+                    ('jump_target', 'code_or_int')),
+}
+# A TypeDescriptor is a vtable pointer and a spare pointer, then the decorated name.
+TYPE_DESCRIPTOR_NAME = 16
+
+
+def eh_size(kind):
+    return 4 * len(EH_LAYOUTS[kind])

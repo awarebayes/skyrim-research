@@ -56,6 +56,15 @@ without `--replace`. Both keep the target image on each machine at `~/private/<b
 - `pilot_compare.py compare A B --work .local/... --recipe recipe.json`: runs
   `tools/compare.py` on object A against image B for each pilot function, plus negative cases.
   The work directory must be under `.local/` because the comparator writes diagnostics there.
+- `build_eh.sh <msvc-dir> <new-output-dir>`: compiles `synthetic/eh_cases.cpp` with the first
+  recipe's flags and `synthetic/eh_gs.cpp` with `/GS` added, and links `eh.dll` with a map.
+- `eh_compare.py <build-dir>`: comparator contract v2 on that build: every exported function
+  compared object against DLL (try/catch, destructors, SEH, GS handlers, jump tables, chained
+  unwind), then negative cases on altered copies of the image or map. Metadata output only.
+- `eh_census.py <image> [--sample verdicts.tsv]`: walks every function's unwind chain and handler
+  data in an image with the comparator's layouts and prints counts only: handlers by kind, how
+  many decode completely, reasons for the rest, and with `--sample` the survey sample's supported
+  share before and after contract v2.
 - `synthetic/`: original test sources. No third-party code.
 - `verify_function.py`: runs `tools/compare.py` for one candidate function from a task
   description file and prints a sanitized summary.
@@ -68,6 +77,10 @@ without `--replace`. Both keep the target image on each machine at `~/private/<b
   verifier machine and check `pinned.sha256`, run one task in its own `~/tasks/<task-id>` with a
   file round trip, and stop it while printing compute used. Usage and rules are in
   `docs/boat-agent-guidelines.md`; `BOAT_CLI` overrides the CLI path.
+
+`attempt` and `confirm` queue their Boat usage for the cost ledger through `tools/cost_hooks.py`
+when that module is present (wall time for an attempt, the compute counter delta for a confirm);
+without it they skip the bookkeeping.
 
 Related tools outside this directory:
 

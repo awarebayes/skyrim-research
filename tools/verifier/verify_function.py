@@ -33,13 +33,13 @@ PRIVATE_ROOT = REPO / '.local'
 DEFAULT_DIAGNOSTICS = PRIVATE_ROOT / 'verifier' / 'diagnostics'
 TASK_SCHEMA = 1
 HEX_RUN = re.compile(r'[0-9a-fA-F]{16,}')
-HASH_KEYS = {'image_sha256', 'expected_image_sha256', 'object_sha256', 'recipe_sha256',
+HASH_KEYS = {'image_sha256', 'expected_image_sha256', 'object_sha256', 'code_section_sha256', 'recipe_sha256',
              'compiler_binary_sha256', 'source_sha256', 'source_revision'}
 
 # One line of next-step guidance per reason code, so a reconstruction loop can act on the
 # result without seeing bytes. Codes not listed fall back to the comparator's own detail.
 HINTS = {
-    'all-checks-passed': 'Every byte and the unwind info agree. Keep the inputs; ask for a second-host re-run.',
+    'all-checks-passed': 'Every byte, the unwind info, EH data and funclets agree. Keep the inputs; ask for a second-host re-run.',
     'code-byte-mismatch': 'Same length, different code. Revisit types, field offsets, control flow or flags.',
     'function-size-mismatch': 'Candidate length differs from the target range. Code shape or inlining differs.',
     'relocation-target-mismatch': 'A call or data reference resolves to the wrong RVA, or the symbol map is wrong.',
@@ -49,7 +49,21 @@ HINTS = {
     'unwind-coverage-extra': 'Candidate has unwind info the target lacks: prologue/frame differs.',
     'unwind-info-mismatch': 'Prologue or saved-register layout differs from the target.',
     'unwind-entry-crosses-boundary': 'The task range cuts through a target .pdata entry; the range is wrong.',
-    'unsupported-unwind': 'Exception handler or chained unwind: outside contract v1.',
+    'unsupported-unwind': 'Unwind info version 2: outside contract v2.',
+    'unwind-chain-mismatch': 'A chained .pdata entry names another parent: prolog split or register saves differ.',
+    'unwind-entry-overlap': '.pdata entries overlap; the target range or the object is malformed.',
+    'unsupported-eh-handler': 'Handler other than __CxxFrameHandler3, __C_specific_handler or a GS check.',
+    'eh-handler-mismatch': 'Target uses another handler: try/catch vs destructors vs __try, or /GS differs.',
+    'eh-data-mismatch': 'EH tables differ (states, try ranges, catch adjectives/offsets): scopes or locals differ.',
+    'eh-reference-mismatch': 'An EH table points elsewhere: a different IP boundary, catch type or missing funclet.',
+    'eh-catch-type-mismatch': 'A catch clause names another type than the target.',
+    'eh-funcinfo-unsupported': 'FuncInfo shape the contract does not decode.',
+    'eh-data-unaccounted': 'Candidate EH data has bytes or relocations the target structures do not explain.',
+    'eh-data-overlap': 'Two EH structures share bytes in the candidate.',
+    'eh-unexpected-relocation': 'A relocation sits on an integer EH field.',
+    'eh-unrelocated-reference': 'A non-null EH reference has no relocation.',
+    'eh-reference-kind': 'An EH reference points to data where code is expected, or the reverse.',
+    'eh-funclet-overlap': 'A funclet would sit over the function or another funclet in the target.',
     'function-symbol-missing': 'The object does not define the task symbol. Check the declaration and mangling.',
     'candidate-boundary-unsupported': 'Symbol is not external, not at offset 0 of its own section, or shares it (/Gy?).',
     'image-hash-mismatch': 'Wrong target image: its SHA-256 is not the pinned one.',

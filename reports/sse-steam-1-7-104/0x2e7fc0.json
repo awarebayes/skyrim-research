@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "0c6ea694336470c19bad910e7a2f02d5187f0403f94af1cbba2b0d4f2aaa540a",
+        "object_sha256": "9b75ad04df72f47f85df1e6750af686d3e59162b3d593b730bdc898209d9c54d",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/actors/Actor.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "165f6096199b03c1b10b707816eb04b91d6862fb18066e964e2247f5ba048787",
+        "object_sha256": "ef7c617676a6f648c1ea1e80483d870f4c15cec7b43ca23ad0dbc6915810921a",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/actors/Actor.cpp",
@@ -77,26 +77,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "165f6096199b03c1b10b707816eb04b91d6862fb18066e964e2247f5ba048787"
+          "code_section_sha256": "5e385f0fb9849ebf2c0d987ed53efbbe0aad305bde73018f128700179ca88cf4",
+          "code_sections": 1,
+          "object_sha256": "ef7c617676a6f648c1ea1e80483d870f4c15cec7b43ca23ad0dbc6915810921a"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 8,
           "code_bytes_exact": 148,
           "code_bytes_total": 156,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 2
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 3047360,
@@ -139,26 +155,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "165f6096199b03c1b10b707816eb04b91d6862fb18066e964e2247f5ba048787"
+          "code_section_sha256": "5e385f0fb9849ebf2c0d987ed53efbbe0aad305bde73018f128700179ca88cf4",
+          "code_sections": 1,
+          "object_sha256": "ef7c617676a6f648c1ea1e80483d870f4c15cec7b43ca23ad0dbc6915810921a"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 8,
           "code_bytes_exact": 148,
           "code_bytes_total": 156,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 2
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 3047360,
@@ -201,26 +233,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "0c6ea694336470c19bad910e7a2f02d5187f0403f94af1cbba2b0d4f2aaa540a"
+          "code_section_sha256": "5e385f0fb9849ebf2c0d987ed53efbbe0aad305bde73018f128700179ca88cf4",
+          "code_sections": 1,
+          "object_sha256": "9b75ad04df72f47f85df1e6750af686d3e59162b3d593b730bdc898209d9c54d"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 8,
           "code_bytes_exact": 148,
           "code_bytes_total": 156,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 2
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 3047360,
@@ -263,26 +311,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "0c6ea694336470c19bad910e7a2f02d5187f0403f94af1cbba2b0d4f2aaa540a"
+          "code_section_sha256": "5e385f0fb9849ebf2c0d987ed53efbbe0aad305bde73018f128700179ca88cf4",
+          "code_sections": 1,
+          "object_sha256": "9b75ad04df72f47f85df1e6750af686d3e59162b3d593b730bdc898209d9c54d"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 8,
           "code_bytes_exact": 148,
           "code_bytes_total": 156,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 2
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 3047360,

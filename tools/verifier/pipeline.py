@@ -37,6 +37,10 @@ sys.path.insert(0, str(HERE))
 from source_digest import include_closure, recipe_flag_problem  # noqa: E402
 import boatctl  # noqa: E402
 import disasm  # noqa: E402
+try:
+    import cost_hooks  # noqa: E402  (optional: the cost ledger may not be installed)
+except ImportError:
+    cost_hooks = None
 
 TOOL_FILES = ('tools/compare.py', 'tools/pecoff.py', 'tools/source_digest.py', 'tools/verifier/verify_function.py',
               'tools/verifier/unit_build.py', 'tools/verifier/pinned.sha256', 'builds/target.json')
@@ -76,6 +80,21 @@ def load_config(task_dir, repo=REPO):
         if path.is_file():
             return json.loads(path.read_text())
     return {}
+
+
+def cost_targets(task):
+    """Functions a verifier run spends compute on, as '<build id>:0x<rva>' for the cost ledger."""
+    return [f'{task["build_id"]}:0x{fn["rva"]:x}' for fn in task['functions']]
+
+
+def record_cost(task, stage, seconds, wall):
+    """Queue Boat usage for the cost ledger when its hook module is installed; never fails a run."""
+    if cost_hooks is None or seconds is None:
+        return
+    try:
+        cost_hooks.record_boat(task['task_id'], stage, seconds, wall, cost_targets(task))
+    except Exception:  # cost bookkeeping must never change a verifier result
+        pass
 
 
 def parse_int(value, what):

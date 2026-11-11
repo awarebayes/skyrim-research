@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "a47d2a93341de45e52d1f6c56141cbce9ac59c10dafaf62455df3bc49abe7b4b",
+        "object_sha256": "8d8ec9b6cf0c39adaa7a2825f04d3d0f259c3659f234a8557db7cec37c3f307d",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/ArmorRatingVisitor.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "5af8ceab2e92ac9d4dafb79466f07e3564d502d4630c0e570cc9ffecafde600d",
+        "object_sha256": "5f3ff9f93b6894f69262cc4a91b672b0d87d24857794554c5017b253e9a6d4c0",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/ArmorRatingVisitor.cpp",
@@ -77,26 +77,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "5af8ceab2e92ac9d4dafb79466f07e3564d502d4630c0e570cc9ffecafde600d"
+          "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
+          "code_sections": 1,
+          "object_sha256": "5f3ff9f93b6894f69262cc4a91b672b0d87d24857794554c5017b253e9a6d4c0"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 12,
           "code_bytes_exact": 160,
           "code_bytes_total": 172,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 7581184,
@@ -139,26 +155,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "5af8ceab2e92ac9d4dafb79466f07e3564d502d4630c0e570cc9ffecafde600d"
+          "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
+          "code_sections": 1,
+          "object_sha256": "5f3ff9f93b6894f69262cc4a91b672b0d87d24857794554c5017b253e9a6d4c0"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 12,
           "code_bytes_exact": 160,
           "code_bytes_total": 172,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 7581184,
@@ -201,26 +233,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "a47d2a93341de45e52d1f6c56141cbce9ac59c10dafaf62455df3bc49abe7b4b"
+          "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
+          "code_sections": 1,
+          "object_sha256": "8d8ec9b6cf0c39adaa7a2825f04d3d0f259c3659f234a8557db7cec37c3f307d"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 12,
           "code_bytes_exact": 160,
           "code_bytes_total": 172,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 7581184,
@@ -263,26 +311,42 @@
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
-          "object_sha256": "a47d2a93341de45e52d1f6c56141cbce9ac59c10dafaf62455df3bc49abe7b4b"
+          "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
+          "code_sections": 1,
+          "object_sha256": "8d8ec9b6cf0c39adaa7a2825f04d3d0f259c3659f234a8557db7cec37c3f307d"
         },
         "comparator": {
-          "source_sha256": "da2180f0a93f3e1c9c19ea7164f5c7e7db968b872756023973630726cacb86e5",
-          "version": "0.1.0"
+          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
+          "version": "0.2.0"
         },
-        "contract_version": 1,
+        "contract_version": 2,
         "coverage": {
           "aliases_declared": [],
           "code_bytes_by_reference": 12,
           "code_bytes_exact": 160,
           "code_bytes_total": 172,
+          "eh": {
+            "bytes": 16,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
           },
+          "self_rva_fields": 0,
           "unwind": "covered",
           "unwind_bytes_exact": 16,
+          "unwind_chained_entries": 0,
           "unwind_entries": 1
         },
-        "detail": "all contract v1 checks passed",
+        "detail": "all contract v2 checks passed",
         "function": {
           "build_id": "sse-steam-1-7-104",
           "rva": 7581184,
