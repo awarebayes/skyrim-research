@@ -402,12 +402,109 @@ class MatchGateTests(GateFixture, unittest.TestCase):
     def test_computed_include_rejected(self):
         self.include(CPP, '#include SYNTHETIC_HEADER')
         self.rebind([CPP, HDR])
-        self.assertGateRejects('neither "..." nor <...>')
+        self.assertGateRejects('not exactly #include "path"')
 
     def test_listed_unreachable_file_rejected(self):
         self.write(EXTRA, 'int SyntheticExtra;\n')
         self.rebind([CPP, HDR, EXTRA])
         self.assertGateRejects('translation_unit lists files .* does not include: ' + EXTRA)
+
+    # The parser normalises like the compiler's early phases and fails on what it cannot classify.
+
+    def unlisted_extra(self, prefix):
+        """Prepend `prefix` (which reaches SyntheticExtra.h) to the .cpp and bind a unit without it."""
+        self.write(EXTRA, 'int SyntheticExtra;\n')
+        body = (self.root / CPP).read_bytes()
+        self.write(CPP, (prefix.encode() if isinstance(prefix, str) else prefix) + body)
+        self.rebind([CPP, HDR])
+
+    def test_bom_before_unlisted_include_rejected(self):
+        self.unlisted_extra(b'\xef\xbb\xbf#include "SyntheticExtra.h"\n')
+        self.assertGateRejects('omits files .* includes: ' + EXTRA)
+
+    def test_bom_file_with_listed_header_accepted(self):
+        self.unlisted_extra(b'\xef\xbb\xbf#include "SyntheticExtra.h"\n')
+        self.rebind([CPP, HDR, EXTRA])
+        self.check()
+
+    def test_comment_before_unlisted_include_rejected(self):
+        self.unlisted_extra('/**/#include "SyntheticExtra.h"\n')
+        self.assertGateRejects('omits files .* includes: ' + EXTRA)
+
+    def test_multiline_comment_before_unlisted_include_rejected(self):
+        self.unlisted_extra('/* a\n */ #include "SyntheticExtra.h"\n')
+        self.assertGateRejects('omits files .* includes: ' + EXTRA)
+
+    def test_continuation_inside_unlisted_include_rejected(self):
+        self.unlisted_extra('#\\\ninclude "SyntheticExtra.h"\n')
+        self.assertGateRejects('omits files .* includes: ' + EXTRA)
+
+    def test_comment_marker_inside_string_does_not_hide_include(self):
+        self.unlisted_extra('const char* s = "/*";\n#include "SyntheticExtra.h"\n// */\n')
+        self.assertGateRejects('omits files .* includes: ' + EXTRA)
+
+    def test_malformed_include_line_rejected(self):
+        self.unlisted_extra('#include "SyntheticExtra.h" trailing\n')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_unterminated_include_rejected(self):
+        self.unlisted_extra('#include "SyntheticExtra.h\n')
+        self.assertGateRejects('not exactly #include "path"')
+
+    def test_include_alias_rejected(self):
+        self.unlisted_extra('#pragma include_alias("Alias.h", "SyntheticExtra.h")\n')
+        self.assertGateRejects('include_alias')
+
+    def test_include_alias_split_by_continuation_rejected(self):
+        self.unlisted_extra('#pragma include_\\\nalias("Alias.h", "SyntheticExtra.h")\n')
+        self.assertGateRejects('include_alias')
+
+    def test_import_rejected(self):
+        self.unlisted_extra('#import "SyntheticExtra.h"\n')
+        self.assertGateRejects('#import is not supported')
+
+    def test_include_next_rejected(self):
+        self.unlisted_extra('#include_next "SyntheticExtra.h"\n')
+        self.assertGateRejects('#include_next is not supported')
+
+    def test_has_include_rejected(self):
+        self.unlisted_extra('#if __has_include("SyntheticExtra.h")\n#endif\n')
+        self.assertGateRejects('__has_include')
+
+    def test_trigraph_hash_rejected(self):
+        self.unlisted_extra('??=include "SyntheticExtra.h"\n')
+        self.assertGateRejects('trigraph')
+
+    def test_digraph_hash_rejected(self):
+        self.unlisted_extra('%:include "SyntheticExtra.h"\n')
+        self.assertGateRejects('digraph')
+
+    def test_raw_string_rejected(self):
+        self.unlisted_extra('const char* s = R"(/*)";\n')
+        self.assertGateRejects('raw string literal')
+
+    def test_backslash_blank_line_end_rejected(self):
+        self.unlisted_extra('// note \\ \n#include "SyntheticExtra.h"\n')
+        self.assertGateRejects('backslash followed by blanks')
+
+    def test_non_utf8_source_rejected(self):
+        self.unlisted_extra(b'// \xff\n')
+        self.assertGateRejects('not UTF-8')
+
+    def test_include_through_symlinked_directory_rejected(self):
+        (self.root / 'reconstruction/linked').symlink_to(self.root / 'reconstruction/synthetic',
+                                                         target_is_directory=True)
+        self.unlisted_extra('#include "../linked/SyntheticExtra.h"\n')
+        self.assertGateRejects('"../linked/SyntheticExtra.h" cannot be resolved inside the repository')
+
+    def test_include_into_private_dir_rejected(self):
+        self.write('.local/Private.h', 'int SyntheticPrivate;\n')
+        self.unlisted_extra('#include "../../.local/Private.h"\n')
+        self.assertGateRejects('cannot be resolved inside the repository')
+
+    def test_include_with_other_case_rejected(self):
+        self.unlisted_extra('#include "syntheticextra.h"\n')
+        self.assertGateRejects('cannot be resolved inside the repository')
 
     def test_forced_include_in_recipe_rejected(self):
         self.recipe_bytes = fx.recipe(flags=('/O2', '/Gy', '/FISyntheticExtra.h'))
@@ -533,6 +630,29 @@ class TuTaskUnitTests(GateFixture, unittest.TestCase):
         result = self.run_task([CPP, HDR])
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('cannot be resolved inside the repository', result.stderr)
+
+    def test_hidden_include_refused(self):
+        # tu_task uses the same parser: a BOM and a comment do not hide an unlisted header.
+        self.write(EXTRA, 'int SyntheticExtra;\n')
+        self.write(CPP, b'\xef\xbb\xbf/**/#include "SyntheticExtra.h"\n' + (self.root / CPP).read_bytes())
+        result = self.run_task([CPP, HDR])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(f"missing: ['{EXTRA}']", result.stderr)
+
+
+class IntegratedRecordTests(unittest.TestCase):
+    """Every record in the tree lists exactly its include closure and its digest is unchanged."""
+
+    def test_records_in_tree_still_bind_their_closure(self):
+        from source_digest import include_closure
+        root = TOOLS.parent
+        records = sorted(p for p in (root / 'reports').glob('*/0x*.json')
+                         if not p.name.endswith(('.review.json', '-recheck-cases.json')))
+        self.assertTrue(records)
+        for path in records:
+            source = json.loads(path.read_text())['source']
+            self.assertEqual(include_closure(root, source['compiled']), sorted(source['translation_unit']))
+            self.assertEqual(tu_digest(root, source['translation_unit']), source['digest'])
 
 
 class SourceDigestTests(unittest.TestCase):
