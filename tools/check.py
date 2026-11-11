@@ -92,6 +92,20 @@ def check_unit(root, compiled, unit, what):
 
 
 def validate_match(fn, target, root=None):
+    """`check_match` with the inventory entry, record and unit named in any failure."""
+    try:
+        return check_match(fn, target, root)
+    except ValueError as exc:
+        record = fn.get('report') or 'no record'
+        unit = None
+        try:
+            unit = json.loads(((ROOT if root is None else root) / record).read_text())['source']['compiled']
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+        raise ValueError(f'{exc} [entry {fn.get("id")}, record {record}, unit {unit or "unknown"}]') from None
+
+
+def check_match(fn, target, root=None):
     """Tie a `matched` inventory entry to integrated source, pinned inputs and comparator reports.
 
     Every check here is repeatable from public files alone, which is all CI has: it shows that the

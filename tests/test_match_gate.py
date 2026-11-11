@@ -205,6 +205,7 @@ class MatchGateTests(GateFixture, unittest.TestCase):
     def test_source_edited_after_report_rejected(self):
         self.write(CPP, (self.root / CPP).read_text() + '// edited\n')
         self.assertGateRejects('source digest is stale')
+        self.assertGateRejects(f'entry {self.fn["id"]}, record {RECORD}, unit {CPP}')
 
     def test_header_edited_after_report_rejected(self):
         self.write(HDR, 'int SyntheticAddOne(long);\n')
