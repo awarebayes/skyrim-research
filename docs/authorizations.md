@@ -7,8 +7,8 @@ and adding a dated note.
 
 | gate | status | scope and limits | granted by | date (UTC) |
 |---|---|---|---|---|
-| G1 local tools | not granted | | | |
-| G2 model exposure | not granted | | | |
+| G1 local tools | granted | all | awarebayes | 2026-11-11 |
+| G2 model exposure | granted | all | awarebayes | 2026-11-11 |
 | G3 paid compute | not granted | machine size, max concurrent machines, spend cap, auto-stop deadline, deletion/snapshot policy | | |
 | G4 toolchain on cloud | not granted | compiler/SDK identity and licence basis | | |
 | G5 game data on cloud | not granted | which inputs, which service, terms reviewed | | |

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T18:31:53Z",
+  "updated_at": "2026-11-11T19:14:33Z",
   "phase": "Bootstrap",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -21,7 +21,7 @@
     {
       "id": "reproduce-import",
       "title": "Reproduce Ghidra types and address import",
-      "status": "planned",
+      "status": "blocked",
       "owner": "awarebayes",
       "acceptance": "Record tool/archive revisions and validate representative types and address mappings on the selected build.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/2"
@@ -29,7 +29,7 @@
     {
       "id": "compiler-worker",
       "title": "Prove a Windows compiler worker",
-      "status": "planned",
+      "status": "blocked",
       "owner": "awarebayes",
       "acceptance": "Compile a synthetic fixture, identify Skyrim compiler candidates, and record exact tools and VM compatibility.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/3"
@@ -45,7 +45,7 @@
     {
       "id": "matching-gate",
       "title": "Implement and review the matching gate",
-      "status": "planned",
+      "status": "active",
       "owner": "awarebayes",
       "acceptance": "Use synthetic negative fixtures for bytes, relocations, calls, data references and exception coverage; reproduce locally before enabling matches.",
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/5"
