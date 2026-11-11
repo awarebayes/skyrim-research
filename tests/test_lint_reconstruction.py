@@ -147,5 +147,72 @@ class LintTests(unittest.TestCase):
         self.assertEqual(self.problems(), [])
 
 
+V2_HEADER = f"""// Types for Widget, build {BUILD}.
+// Source exposure: community-headers. Labels: v2
+// Widget, Widget::Get: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e832f263dbef44e44cbe2936622a02f91a, MIT)
+// Widget::value: GUESS(low); the only member the function reads
+// Gadget: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+#pragma once
+
+class Widget {{
+public:
+    int Get() const;
+    int value;
+}};
+"""
+
+
+class ReviewerFollowUpTests(LintTests):
+    def test_universal_character_names_refused_anywhere(self):
+        for snippet in ('int caf\\u00e9 = 0;', 'const char* s = "\\U0001F600";', '// see \\u0041'):
+            with self.subTest(snippet):
+                self.assert_problem('universal character name', source=SOURCE + snippet + '\n')
+
+    def test_codegen_constructs_need_a_justification(self):
+        cases = {
+            '__forceinline': '__forceinline int Twice(int x) { return x * 2; }',
+            '[[msvc::': '[[msvc::forceinline]] int Twice(int x) { return x * 2; }',
+            'codegen intrinsic': 'unsigned long Low(unsigned long m) { unsigned long i; _BitScanForward(&i, m); return i; }',
+        }
+        for needle, line in cases.items():
+            with self.subTest(needle):
+                self.assert_problem(needle, source=SOURCE + line + '\n')
+                self.write(source=SOURCE + '// the engine forces this accessor inline everywhere\n' + line + '\n')
+                self.assertEqual(self.problems(), [])
+                self.write(source=SOURCE + line + '  // inlined by the original engine\n')
+                self.assertEqual(self.problems(), [])
+                self.assert_problem(needle, source=SOURCE + '// to match\n' + line + '\n')
+
+    def test_labels_v2_grammar_accepted(self):
+        self.write(header=V2_HEADER)
+        self.assertEqual(self.problems(), [])
+
+    def test_labels_v2_grammar_refusals(self):
+        cases = {
+            'Names are COMMUNITY and unverified.': 'label outside the v2 grammar',
+            'Widget: COMMUNITY (CommonLibSSE-NG b93280e, MIT)': 'label outside the v2 grammar',
+            'Widget: COMMUNITY(CharmedBaryon/CommonLibSSE-NG, MIT)': 'label outside the v2 grammar',
+            'Widget: GUESS names': 'label outside the v2 grammar',
+            'Widget: GUESSED': 'label outside the v2 grammar',
+            'Widget: EXE-RTTI': 'label outside the v2 grammar',
+            'Widget: GUESS; agrees with EXE_RTTI': 'label outside the v2 grammar',
+            'Gadget: STANDIN': 'STANDIN also needs the origin',
+        }
+        for line, needle in cases.items():
+            with self.subTest(line):
+                self.assert_problem(needle, header=V2_HEADER.replace('#pragma once', f'// {line}\n#pragma once'))
+
+    def test_labels_v2_header_needs_a_label_line(self):
+        header = '\n'.join(l for l in V2_HEADER.splitlines() if ': ' not in l or 'Labels' in l or 'exposure' in l) + '\n'
+        self.assert_problem('needs at least one', header=header)
+
+    def test_unknown_labels_version_refused(self):
+        self.assert_problem('unknown "Labels: v3"', header=V2_HEADER.replace('Labels: v2', 'Labels: v3'))
+
+    def test_free_form_labels_still_pass_without_v2(self):
+        self.write(header=HEADER.replace('Names are GUESS.', 'Names are GUESS names; COMMUNITY (NG b93280e, MIT).'))
+        self.assertEqual(self.problems(), [])
+
+
 if __name__ == '__main__':
     unittest.main()

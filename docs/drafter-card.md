@@ -28,9 +28,15 @@ RVA the pack does not list. `decorated name changed` means a declaration change 
 **Source rules** (`python3 tools/check.py` runs the lint; a Reviewer rejects the rest):
 - Plausible C++ for what the function does. Not allowed anywhere in a file, comments included:
   inline asm (`asm`, `__asm`, `__asm__`), `__emit`, `__pragma`/`_Pragma`, `##`, digit separators
-  (`1'000`), byte arrays or `\x` strings, `#pragma` other than `once`/`pack`/`warning`,
-  `__declspec(naked|code_seg|allocate|safebuffers)` or a `#define` naming any of these. No dead
-  code or odd control flow only to force bytes; justify anything unusual in a comment.
+  (`1'000`), byte arrays or `\x` strings, `\u`/`\U` escapes, `#pragma` other than
+  `once`/`pack`/`warning`, `__declspec(naked|code_seg|allocate|safebuffers)` or a `#define`
+  naming any of these. No dead code or odd control flow only to force bytes; justify anything
+  unusual in a comment.
+- `__forceinline`, `[[msvc::...]]` attributes and codegen intrinsics (`_BitScanForward`,
+  `_Interlocked*`, `__assume`, `_mm_*`, ...) only with a justification comment of a few words on
+  the same or the previous line, saying why a programmer would have written it
+  (`// hot path: the engine inlines this accessor everywhere`). The lint checks that the comment
+  is there; the Reviewer rejects a justification that is only "to match".
 - One class per `reconstruction/<area>/<Class>.{h,cpp}`; the area follows the rule in
   `reconstruction/README.md` (`Ni*` netimmerse, `BS*` bsengine, `TES*`/`BGS*` forms, actor
   classes actors, or the owning system your brief names). The .cpp includes its header as
@@ -48,7 +54,13 @@ RVA the pack does not list. `decorated name changed` means a declaration change 
   cite the `findings/` file your brief names for the function (the one its inventory entry cites);
   never cite a `reports/` path that does not exist yet. The match record is linked from the
   inventory later, so the source never has to change when it is written.
-  The .h labels each name `COMMUNITY` (repository, revision, licence) or `GUESS`.
+  Put `Labels: v2` in the leading comment of both files and label names only on lines of this
+  form (the lint enforces it in v2 files):
+  `// <names>: <LABEL> [<LABEL>...][; note]`, LABEL one of
+  `COMMUNITY(<owner>/<repo>@<rev>, <licence>)` (e.g. `COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)`),
+  `GUESS` or `GUESS(low|medium|high)`, `EXE_RTTI`, `OBSERVED`, and `STANDIN` together with the
+  name's origin (`// TESObjectARMO: STANDIN COMMUNITY(...)`). A community name is `COMMUNITY`,
+  never `GUESS`; `GUESS` is only for names you made up. Do not write the label words anywhere else.
 - No decompiler output pasted as source, no code from unlicensed projects (FNV repositories),
   nothing leaked. Unknowns stay unknown (`unk28`), not invented names.
 

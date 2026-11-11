@@ -38,10 +38,19 @@ BUILD_ADDED_FLAGS = ['/showIncludes']
 BUILD_CLEARED_ENV = ['CL', 'EXTERNAL_INCLUDE', 'INCLUDE', 'LIB', 'LIBPATH', '_CL_']
 BUILD_FIELDS = {'claim', 'added_flags', 'cleared_environment', 'hosts'}
 BUILD_HOST_FIELDS = {'command_flags', 'object_sha256', 'repository_files_opened', 'opened_equals_closure'}
-REVIEW_RECORD_SCHEMA = 1
 REVIEW_FIELDS = {'review_record_schema', 'function_id', 'build_id', 'rva', 'size', 'source_digest_method',
                  'source_digest', 'reviewer_model', 'review_task_id', 'verdict', 'escalation_category',
                  'review_sha256', 'review_date'}
+# Schema 2 adds the delta-review binding (docs/verification.md, "Stale acceptances and delta reviews").
+# Schema 1 records stay valid as full reviews; tools/accept_function.py writes schema 2.
+REVIEW_DELTA_FIELDS = {'review_kind', 'previous_source_digest', 'previous_review_sha256',
+                       'previous_code_section_sha256', 'code_section_sha256'}
+REVIEW_SCHEMA_FIELDS = {1: REVIEW_FIELDS, 2: REVIEW_FIELDS | REVIEW_DELTA_FIELDS}
+REVIEW_RECORD_SCHEMA = 2
+REVIEW_KINDS = {'full', 'delta'}
+# Per-function hash of the candidate's compared code section, written by the comparator into each
+# report's `candidate` block (reports/README.md). Optional until the comparator emits it.
+CODE_SECTION_KEY = 'code_section_sha256'
 REVIEW_VERDICTS = {'approve', 'reject', 'escalate'}
 ESCALATION_CATEGORIES = {'none', 'provenance', 'legal', 'systemic', 'other'}
 MODEL_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9._-]*')
@@ -179,7 +188,7 @@ def check_match(fn, target, root=None):
         compared_on.add(run['compared_on'])
         report = run.get('report')
         require(isinstance(report, dict), 'Match record: run without a comparator report')
-        sanitized(report)
+        sanitized(without_code_section(report))
         require(report.get('report_schema') == REPORT_SCHEMA and report.get('contract_version') == CONTRACT_VERSION,
                 'Match record: report schema or contract version differs from this comparator')
         comparator = report.get('comparator') or {}
@@ -226,7 +235,34 @@ def check_match(fn, target, root=None):
     require(not shared, f'Match record: one candidate object is claimed by compile hosts {", ".join(shared)}; '
             'runs from different hosts must have different object hashes')
     check_build(record.get('build'), flags, unit, runs)
+    record_code_section(record)
     return record
+
+
+def without_code_section(report):
+    """The report with its code-section hash set aside for `sanitized`, which allows hex only in
+    the comparator's own hash keys; record_code_section checks that field as a SHA-256 itself."""
+    candidate = report.get('candidate')
+    if not isinstance(candidate, dict) or CODE_SECTION_KEY not in candidate:
+        return report
+    return dict(report, candidate={k: v for k, v in candidate.items() if k != CODE_SECTION_KEY})
+
+
+def record_code_section(record):
+    """The per-function code-section hash the record's runs agree on, or None if they carry none.
+
+    The section holding one function is the same for every compile of the same source and recipe
+    (time stamps and object paths live elsewhere), so runs that disagree cannot both describe
+    this unit. A delta review relies on this hash being unchanged between the approved record and
+    the new one, so it must be all-or-nothing across runs.
+    """
+    values = [((run.get('report') or {}).get('candidate') or {}).get(CODE_SECTION_KEY) for run in record['runs']]
+    if all(v is None for v in values):
+        return None
+    require(all(is_hash(v) for v in values),
+            f'Match record: every run or none must give candidate.{CODE_SECTION_KEY} as a SHA-256')
+    require(len(set(values)) == 1, f'Match record: runs disagree on candidate.{CODE_SECTION_KEY}')
+    return values[0]
 
 
 def check_build(build, flags, unit, runs):
@@ -284,10 +320,11 @@ def validate_review(fn, record, root=None):
         review = json.loads((root / name).read_text())
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError(f'Review record: {name} is not JSON ({exc})') from None
-    require(isinstance(review, dict) and review.get('review_record_schema') == REVIEW_RECORD_SCHEMA,
+    require(isinstance(review, dict) and review.get('review_record_schema') in REVIEW_SCHEMA_FIELDS,
             'Review record: unknown review_record_schema')
+    expected = REVIEW_SCHEMA_FIELDS[review['review_record_schema']]
     # Only known fields: free text here would be an unreviewed publication channel.
-    require(set(review) == REVIEW_FIELDS, f'Review record: fields must be exactly {sorted(REVIEW_FIELDS)}')
+    require(set(review) == expected, f'Review record: fields must be exactly {sorted(expected)}')
     require(review['function_id'] == fn['id'] and review['build_id'] == fn['build_id']
             and review['rva'] == fn['rva'] and review['size'] == fn['size'],
             'Review record: it reviewed another function than this inventory entry')
@@ -308,10 +345,106 @@ def validate_review(fn, record, root=None):
     except (TypeError, ValueError):
         valid_date = False
     require(valid_date, 'Review record: invalid review_date')
+    if review['review_record_schema'] >= 2:
+        check_review_kind(review, record)
     return review
 
 
-def validate(data, target, root=None):
+def check_review_kind(review, record):
+    """Schema 2: a full review binds the record's code-section hash if it has one; a delta review
+    re-approves an earlier approval from the unit diff and is valid only while the compared code
+    section is the one the earlier approval saw.
+
+    The validator sees only the tree, so the earlier record is not available here: that the
+    previous hash is what the earlier match record carried, and that the earlier approve existed,
+    is checked by tools/accept_function.py from the superseded review record or git history when
+    it writes this record. What is checked here is that the claim is complete and agrees with the
+    current record.
+    """
+    kind = review['review_kind']
+    require(kind in REVIEW_KINDS, f'Review record: review_kind must be one of {sorted(REVIEW_KINDS)}')
+    current = record_code_section(record)
+    if kind == 'full':
+        require(review['previous_source_digest'] is None and review['previous_review_sha256'] is None
+                and review['previous_code_section_sha256'] is None,
+                'Review record: a full review names no previous digest, review or code-section hash')
+        require(review['code_section_sha256'] == current,
+                'Review record: code_section_sha256 differs from the match record')
+        return
+    require(is_hash(review['previous_source_digest']) and review['previous_source_digest'] != review['source_digest'],
+            'Review record: a delta review needs a previous_source_digest other than source_digest')
+    require(is_hash(review['previous_review_sha256']), 'Review record: a delta review needs previous_review_sha256')
+    require(current is not None, f'Review record: a delta review needs a match record whose runs give '
+            f'candidate.{CODE_SECTION_KEY}')
+    require(review['code_section_sha256'] == current,
+            'Review record: code_section_sha256 differs from the match record')
+    require(review['previous_code_section_sha256'] == current,
+            'Review record: the compared code section changed since the approved digest; a delta review '
+            'does not cover that, a full review is needed')
+
+
+STALE_UNIT = 'unit changed'
+STALE_REVIEW = 'review behind'
+
+
+def _json_or_none(path):
+    try:
+        value = json.loads(path.read_text())
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
+def acceptance_staleness(fn, root=None):
+    """Why a `matched` entry's acceptance no longer binds the integrated source, or None.
+
+    `unit changed`: the compiled file's include closure no longer has the digest the match record
+    binds (re-confirm). `review behind`: the record is current but the Reviewer record binds an
+    earlier digest (re-review, full or delta). Only digests are compared here, so a record that is
+    broken for another reason is reported by check_match, not hidden behind this state.
+    """
+    return _staleness(fn, ROOT if root is None else root)[0]
+
+
+def _staleness(fn, root):
+    """(state, detail, compiled file) for acceptance_staleness and its message."""
+    record = _json_or_none(root / fn['report']) if text(fn.get('report')) else None
+    source = (record or {}).get('source')
+    if not isinstance(source, dict) or not text(source.get('compiled')):
+        return None, None, None
+    compiled, unit = source['compiled'], source.get('translation_unit')
+    # Paths outside reconstruction/ are a malformed record, not a unit that moved on.
+    if not isinstance(unit, list) or not all(isinstance(n, str) and n.startswith('reconstruction/') for n in unit + [compiled]):
+        return None, None, compiled
+    try:
+        digest = tu_digest(root, include_closure(root, compiled))
+    except (ValueError, OSError):
+        return None, None, compiled
+    if digest != source.get('digest'):
+        try:
+            check_unit(root, compiled, unit, 'Match record')
+            detail = 'Match record: source digest is stale for the integrated source'
+        except ValueError as exc:
+            detail = str(exc)
+        return STALE_UNIT, detail, compiled
+    review = _json_or_none(root / review_record_path(fn))
+    if review is not None and review.get('source_digest') != digest:
+        return STALE_REVIEW, 'Review record: it reviewed other source than the match record binds', compiled
+    return None, None, compiled
+
+
+def stale_message(fn, root=None):
+    state, detail, compiled = _staleness(fn, ROOT if root is None else root)
+    remedy = ('re-confirm with tools/verifier/confirm, then re-review' if state == STALE_UNIT else
+              're-review (a delta review from the approved digest is allowed)')
+    return (f'Stale acceptance ({state}): {detail}; {remedy} and accept with tools/accept_function.py '
+            f'(docs/verification.md, "Stale acceptances and delta reviews") '
+            f'[entry {fn["id"]}, record {fn.get("report")}, unit {compiled or "unknown"}]')
+
+
+def validate(data, target, root=None, stale_ok=False):
+    """Validate the inventory; `stale_ok` (for tools that are about to clear staleness) skips the
+    `matched` checks of stale entries instead of failing on them. The result is never acceptance."""
     require(data['schema_version'] == target['schema_version'] == 1, 'Unknown schema version')
     require(text(data['phase']), 'Missing phase')
     require(datetime.fromisoformat(data['updated_at'].replace('Z', '+00:00')).utcoffset() is not None,
@@ -330,7 +463,7 @@ def validate(data, target, root=None):
     require(text(data['scope']['notes']), 'Missing scope notes')
     require(data['scope']['functions'] is None and data['scope']['bytes'] is None,
             'Measured scope needs a reviewed inventory/schema extension; bootstrap totals stay null')
-    seen, ranges = set(), []
+    seen, ranges, stale = set(), [], []
     require(isinstance(data['functions'], list), 'functions must be a list')
     for fn in data['functions']:
         require(target['status'] == 'pinned', 'Pin target before recording functions')
@@ -349,7 +482,14 @@ def validate(data, target, root=None):
         require(not path.is_absolute() and '..' not in path.parts and path.parts[0] in {'findings', 'reports'},
                 'Evidence must reference public findings or reports')
         require(((ROOT if root is None else root) / path).is_file(), 'Evidence does not exist')
-        if fn['status'] == 'matched':
+        state = acceptance_staleness(fn, root) if fn['status'] == 'matched' else None
+        if state is not None:
+            # An accepted function whose unit moved on is reported by name, all at once, instead of
+            # failing on the first digest check; it still blocks until re-confirmed and re-reviewed.
+            if state == STALE_REVIEW:
+                validate_match(fn, target, root)
+            stale.append(stale_message(fn, root))
+        elif fn['status'] == 'matched':
             validate_review(fn, validate_match(fn, target, root), root)
         elif fn.get('report') is not None:
             # A record awaiting review must still be consistent with the integrated tree.
@@ -360,6 +500,7 @@ def validate(data, target, root=None):
         name = path.relative_to(reports.parent).as_posix()
         # A leftover approval would read as acceptance of an entry the inventory does not accept.
         require(name in matched, f'Review record: {name} belongs to no matched inventory entry')
+    require(stale_ok or not stale, '; '.join(stale))
     seen = set()
     for item in data['work_items']:
         require(isinstance(item['id'], str) and re.fullmatch(r'[a-z0-9][a-z0-9-]*', item['id'])
@@ -383,6 +524,14 @@ def lint(root, names=None):
             + (f' (and {len(problems) - 5} more)' if len(problems) > 5 else ''))
 
 
+def check_index(root, data):
+    """The generated status table must be what tools/build_index.py renders from this data."""
+    from build_index import INDEX, render_index  # here, not at the top: build_index imports this module
+    path = root / INDEX
+    require(path.is_file() and path.read_text() == render_index(data, root),
+            f'{INDEX} is out of date with data/progress.json and the records; run python3 tools/build_index.py')
+
+
 def load(staged=False):
     if not staged:
         data = validate(json.loads((ROOT / 'data/progress.json').read_text()),
@@ -391,6 +540,7 @@ def load(staged=False):
         names = subprocess.check_output(['git', 'ls-files', '--cached', '--others', '--exclude-standard', '-z',
                                          '--', 'reconstruction'], cwd=ROOT).decode('utf-8').split('\0')
         lint(ROOT, sorted({n for n in names if n and (ROOT / n).is_file()}))
+        check_index(ROOT, data)
         return data
     # Match records, source and recipe are checked as staged too, so the index gets its own tree.
     with tempfile.TemporaryDirectory() as tmp:
@@ -399,6 +549,7 @@ def load(staged=False):
         data = validate(json.loads((root / 'data/progress.json').read_text()),
                         json.loads((root / 'builds/target.json').read_text()), root)
         lint(root)
+        check_index(root, data)
         return data
 
 
