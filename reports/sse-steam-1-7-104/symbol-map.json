@@ -2,30 +2,137 @@
   "schema": 1,
   "build_id": "sse-steam-1-7-104",
   "symbols": {
-    "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z": {
-      "rva": 7581072,
-      "size": 84
+    "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z": {
+      "rva": 1460400,
+      "size": null
+    },
+    "?CreateRefHandle@@YAXAEAU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z": {
+      "rva": 1566272,
+      "size": null
+    },
+    "?GetArmorFinalRating@@YAMPEAVInventoryEntryData@@MM@Z": {
+      "rva": 2266592,
+      "size": null
+    },
+    "?MakeInventoryChanges@Actor@@QEAAPEAVInventoryChanges@@XZ": {
+      "rva": 2274016,
+      "size": null
+    },
+    "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z": {
+      "rva": 2363216,
+      "size": 54
+    },
+    "?GetArmorKind@@YAHPEAVTESObjectARMO@@@Z": {
+      "rva": 2616816,
+      "size": null
+    },
+    "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z": {
+      "rva": 3047360,
+      "size": 156
+    },
+    "?HandleEntryPoint@@YAXIPEAVActor@@PEAVTESObjectARMO@@PEAM@Z": {
+      "rva": 3723248,
+      "size": null
     },
     "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z": {
       "rva": 7580928,
       "size": 95
     },
-    "?Visit@ArmorRatingVisitorBase@@UEAA?AW4ForEachResult@BSContainer@@PEAVInventoryEntryData@@@Z": {
+    "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z": {
+      "rva": 7581072,
+      "size": 84
+    },
+    "?Visit@ArmorRatingVisitorBase@@UEAAIPEAVInventoryEntryData@@@Z": {
       "rva": 7581184,
       "size": 172
+    },
+    "?SetGlobalTimeMultiplier@BSTimer@@QEAAXM_N@Z": {
+      "rva": 13515120,
+      "size": 76
+    },
+    "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z": {
+      "rva": 15583744,
+      "size": null
+    },
+    "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z": {
+      "rva": 15698176,
+      "size": 53
+    },
+    "?QGlobalTimeMultiplier@BSTimer@@2MA": {
+      "rva": 34392776,
+      "size": null
+    },
+    "?QGlobalTimeMultiplierTarget@BSTimer@@2MA": {
+      "rva": 34392780,
+      "size": null
+    },
+    "?kNullHandle@@3IA": {
+      "rva": 35251548,
+      "size": null
     }
   },
   "folds": [],
   "_provenance": {
     "database": "Address Library 1.7.104.0 versionlib-1-7-104-0.bin sha256 8aab3dd251d135b849bd983f86a4a205c920fa3e81f8e30c0e63ccfef9423842",
-    "names": "CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT); mangled forms are the reconstruction's chosen declarations",
+    "names": "CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT); mangled forms are the reconstruction's chosen declarations; entries without a community name are reference targets observed in the pinned image and say so",
     "entries": [
       {
-        "name": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z",
-        "ae_id": 40297,
-        "rva": "0x73ad90",
+        "name": "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z",
+        "ae_id": 11702,
+        "rva": "0x1648b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?CreateRefHandle@@YAXAEAU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z",
+        "ae_id": 12326,
+        "rva": "0x17e640",
+        "size_from": null,
+        "community_name": "Offset::CreateRefHandle"
+      },
+      {
+        "name": "?GetArmorFinalRating@@YAMPEAVInventoryEntryData@@MM@Z",
+        "ae_id": 16017,
+        "rva": "0x2295e0",
+        "size_from": null,
+        "community_name": "GetArmorFinalRating"
+      },
+      {
+        "name": "?MakeInventoryChanges@Actor@@QEAAPEAVInventoryChanges@@XZ",
+        "ae_id": 16040,
+        "rva": "0x22b2e0",
+        "size_from": null,
+        "community_name": "TESObjectREFR::MakeInventoryChanges"
+      },
+      {
+        "name": "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z",
+        "ae_id": 16212,
+        "rva": "0x240f50",
         "size_from": ".pdata",
-        "community_name": "ArmorRatingVisitor::HaveNotVisitedArmor"
+        "community_name": "BSPointerHandleManagerInterface::GetHandle"
+      },
+      {
+        "name": "?GetArmorKind@@YAHPEAVTESObjectARMO@@@Z",
+        "ae_id": 17797,
+        "rva": "0x27edf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z",
+        "ae_id": 19691,
+        "rva": "0x2e7fc0",
+        "size_from": ".pdata",
+        "community_name": "Actor::HasOutfitItems"
+      },
+      {
+        "name": "?HandleEntryPoint@@YAXIPEAVActor@@PEAVTESObjectARMO@@PEAM@Z",
+        "ae_id": 23526,
+        "rva": "0x38cff0",
+        "size_from": null,
+        "community_name": "ENTRY_POINTS::HandleEntryPoint"
       },
       {
         "name": "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z",
@@ -35,11 +142,61 @@
         "community_name": "ArmorRatingVisitor::VisitArmor"
       },
       {
-        "name": "?Visit@ArmorRatingVisitorBase@@UEAA?AW4ForEachResult@BSContainer@@PEAVInventoryEntryData@@@Z",
+        "name": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z",
+        "ae_id": 40297,
+        "rva": "0x73ad90",
+        "size_from": ".pdata",
+        "community_name": "ArmorRatingVisitor::HaveNotVisitedArmor"
+      },
+      {
+        "name": "?Visit@ArmorRatingVisitorBase@@UEAAIPEAVInventoryEntryData@@@Z",
         "ae_id": 40299,
         "rva": "0x73ae00",
         "size_from": ".pdata",
         "community_name": "ArmorRatingVisitorBase::Visit"
+      },
+      {
+        "name": "?SetGlobalTimeMultiplier@BSTimer@@QEAAXM_N@Z",
+        "ae_id": 68245,
+        "rva": "0xce3970",
+        "size_from": "analysis body",
+        "community_name": "BSTimer::SetGlobalTimeMultiplier"
+      },
+      {
+        "name": "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "ae_id": 70190,
+        "rva": "0xedca00",
+        "size_from": null,
+        "community_name": "NiObject::ProcessClone"
+      },
+      {
+        "name": "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z",
+        "ae_id": 70826,
+        "rva": "0xef8900",
+        "size_from": ".pdata",
+        "community_name": "NiTimeController::ProcessClone"
+      },
+      {
+        "name": "?QGlobalTimeMultiplier@BSTimer@@2MA",
+        "ae_id": 388442,
+        "rva": "0x20ccac8",
+        "size_from": null,
+        "community_name": "BSTimer::QGlobalTimeMultiplier"
+      },
+      {
+        "name": "?QGlobalTimeMultiplierTarget@BSTimer@@2MA",
+        "ae_id": 388443,
+        "rva": "0x20ccacc",
+        "size_from": null,
+        "community_name": "BSTimer::QGlobalTimeMultiplierTarget"
+      },
+      {
+        "name": "?kNullHandle@@3IA",
+        "ae_id": 400312,
+        "rva": "0x219e55c",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       }
     ]
   }
