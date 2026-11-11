@@ -1,0 +1,30 @@
+name: Research task or finding
+description: A focused research task with target identity and evidence
+body:
+  - type: markdown
+    attributes:
+      value: Do not attach game files, dumps, disassembly, proprietary source, saves or secrets. Read LEGAL.md first.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question and acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: target
+    attributes:
+      label: Target build, image hash and source revisions (or explicitly unknown)
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Method, sanitized evidence and uncertainties
+    validations:
+      required: true
+  - type: textarea
+    id: exposure
+    attributes:
+      label: Human operator, AI assistance, sources and source exposure
+    validations:
+      required: true

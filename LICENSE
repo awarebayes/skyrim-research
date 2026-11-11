@@ -1,0 +1,16 @@
+Licensing scope
+
+No license is granted to game code, reconstructed game implementations, research notes,
+behavioral specifications, or third-party material by this file. Rights are reserved to their
+respective holders. Viewing or forking on GitHub does not provide a general reuse license.
+No assertion is made that the maintainer owns third-party rights.
+
+Exception for original infrastructure only:
+The original project-authored files in tools/, tests/, site/, .github/, and the original
+.gitignore and .gitattributes are licensed under licenses/MIT.txt. This exception does not
+extend to game-derived content, third-party code or dependencies placed in those paths.
+All future third-party additions require an explicit license and attribution record.
+
+Documentation and research material have no general license grant at bootstrap. A broader
+license can be considered later after provenance and contributor rights are established.
+Nothing here grants rights in Skyrim, middleware, trademarks, executable files or game assets.

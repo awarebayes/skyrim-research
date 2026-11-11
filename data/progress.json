@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-11T18:17:04Z",
+  "phase": "Bootstrap",
+  "target_build_id": null,
+  "scope": {
+    "functions": null,
+    "bytes": null,
+    "notes": "Inventory and exclusions have not been established. No completion percentage is meaningful yet."
+  },
+  "functions": [],
+  "work_items": [
+    {
+      "id": "pin-target",
+      "title": "Pin one legally obtained Skyrim executable",
+      "status": "planned",
+      "owner": "awarebayes",
+      "acceptance": "Record store, actual version, x86-64 architecture, SHA-256 and scope notes; no game bytes.",
+      "issue_url": "https://github.com/awarebayes/skyrim-research/issues/1"
+    },
+    {
+      "id": "reproduce-import",
+      "title": "Reproduce Ghidra types and address import",
+      "status": "planned",
+      "owner": "awarebayes",
+      "acceptance": "Record tool/archive revisions and validate representative types and address mappings on the selected build.",
+      "issue_url": "https://github.com/awarebayes/skyrim-research/issues/2"
+    },
+    {
+      "id": "compiler-worker",
+      "title": "Prove a Windows compiler worker",
+      "status": "planned",
+      "owner": "awarebayes",
+      "acceptance": "Compile a synthetic fixture, identify Skyrim compiler candidates, and record exact tools and VM compatibility.",
+      "issue_url": "https://github.com/awarebayes/skyrim-research/issues/3"
+    },
+    {
+      "id": "boat-worker",
+      "title": "Validate Boat as an x64 build worker",
+      "status": "planned",
+      "owner": "awarebayes",
+      "acceptance": "Synthetic exact-MSVC compile under Wine, recorded toolchain, cost limit and cleanup; no proprietary uploads without separate authorization.",
+      "issue_url": "https://github.com/awarebayes/skyrim-research/issues/4"
+    },
+    {
+      "id": "matching-gate",
+      "title": "Implement and review the matching gate",
+      "status": "planned",
+      "owner": "awarebayes",
+      "acceptance": "Use synthetic negative fixtures for bytes, relocations, calls, data references and exception coverage; reproduce locally before enabling matches.",
+      "issue_url": "https://github.com/awarebayes/skyrim-research/issues/5"
+    },
+    {
+      "id": "first-function",
+      "title": "Recover and verify the first small function",
+      "status": "planned",
+      "owner": "awarebayes",
+      "acceptance": "Publish reviewed provenance and sanitized reproducible evidence after the matching gate is implemented.",
+      "issue_url": "https://github.com/awarebayes/skyrim-research/issues/6"
+    },
+    {
+      "id": "movement-contract",
+      "title": "Investigate movement-type selection",
+      "status": "planned",
+      "owner": "awarebayes",
+      "acceptance": "Separate observed behavior from inference, and produce a reviewed behavior specification with synthetic cases.",
+      "issue_url": "https://github.com/awarebayes/skyrim-research/issues/7"
+    }
+  ],
+  "milestones": [
+    {
+      "date": "2026-11-11",
+      "title": "Research repository scaffolded",
+      "detail": "Agent guidance, publication policies, research templates and a versioned progress report created. No target or match claims."
+    }
+  ]
+}

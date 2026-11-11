@@ -1,0 +1,94 @@
+# Skyrim Research
+
+Independent research into **The Elder Scrolls V: Skyrim Special Edition**, maintained by
+[@awarebayes](https://github.com/awarebayes). The goal is to document engine behavior and
+explore reproducible, function-by-function source reconstruction, with evidence useful to
+independent engine implementations such as [Mudcrab](https://github.com/Mudcrab-Team/mudcrab).
+
+**Status: bootstrap. No executable build has been pinned, no functions have been accepted as
+byte matches, and no playable replacement is provided.** The compiler and matching pipeline
+remain research tasks. Infrastructure CI does not verify Skyrim behavior or machine-code matches.
+
+[Progress report](https://awarebayes.github.io/skyrim-research/) ·
+[Work queue](https://github.com/awarebayes/skyrim-research/issues) ·
+[Contribution guide](CONTRIBUTING.md) · [Agent instructions](AGENTS.md)
+
+## Start here
+
+Requires Git and Python 3.11+ for the repository tools; no game is needed for these checks.
+
+```sh
+git clone https://github.com/awarebayes/skyrim-research.git
+cd skyrim-research
+python3 tools/check.py
+python3 -m unittest discover -s tests -v
+python3 tools/build_site.py
+```
+
+Open `dist/index.html` to view the generated report. The site is rebuilt on pushes to `main`.
+See [macOS setup](docs/setup-macos.md) before installing analysis tools or creating a VM.
+[Boat worker feasibility](docs/boat-build-worker.md) covers a possible remote x64 build host.
+Store all private inputs, compiler installations, databases and raw results in ignored `.local/`.
+Never place a game install inside the public source tree.
+
+## Research approach
+
+1. Pin one legally obtained executable by version, store, architecture and SHA-256.
+2. Import community types and address mappings with exact revisions and provenance.
+3. Select a small function and investigate compiler/toolchain candidates.
+4. Reconstruct, compile and compare locally. Record failures as well as successes.
+5. Publish reviewed metadata and behavioral findings; accept matches only with reproducible evidence.
+
+A matching function is not proof that its inferred name or explanation is correct. Structure
+size agreement is not independent verification of every field offset. Neither is a substitute
+for controlled runtime experiments. Read [verification](docs/verification.md).
+
+## Repository map
+
+- `data/`: reviewed progress and work queue; the report's source of truth.
+- `builds/`: public target manifests containing metadata and hashes, never executable bytes.
+- `findings/`: provenance-bearing research notes, including uncertainty and negative results.
+- `specs/`: implementation-independent behavior specifications; separately reviewed for exposure.
+- `reconstruction/`: reserved for reviewed source reconstruction; currently no game functions.
+- `reports/`: sanitized verification records; no raw compiler output or binary attachments.
+- `tools/`, `tests/`, `site/`: original infrastructure, publication guard and progress website.
+- `.local/`: private, ignored inputs and generated research artifacts.
+
+## Related work and inspiration
+
+- [FNV reconstruction](https://github.com/momusdigital/fnv_decomp): function-level matching workflow.
+- [FNV executable tools](https://github.com/momusdigital/fnv_decomp_exe): separation of reconstruction
+  from local executable building. We do not currently implement either executable building or matching.
+- [FNV progress report](https://www.fnvdecomp.com/) and [Fallout 3 report](https://f3decomp.com/):
+  evidence-based progress reporting and clear scope.
+- [Skyrim RE Toolkit](https://github.com/ByteBard97/skyrim-re-toolkit): community type archives,
+  symbol tooling and runtime probes.
+- [CommonLibSSE-NG](https://github.com/CharmedBaryon/CommonLibSSE-NG): community engine declarations.
+
+These are references, not vendored dependencies or endorsements. No source or website assets
+from these projects have been copied. Their licenses and provenance must be assessed separately;
+in particular the two FNV repositories grant no license. See [SOURCES.md](SOURCES.md).
+
+## Legal and publication policy
+
+This is independent fan research for understanding, interoperability and preservation. It is
+not affiliated with, endorsed by or sponsored by Bethesda, ZeniMax, Microsoft or their affiliates.
+The Elder Scrolls, Skyrim and associated marks belong to their respective owners and are used
+only to identify the software studied. Other third-party marks belong to their owners.
+
+**Supply your own legally obtained game. No game executables, game assets, raw machine code,
+disassembly listings, memory dumps, saves, proprietary SDKs or debug-symbol files may be committed,
+uploaded to issues, published in Actions artifacts or distributed in releases.** Do not submit leaked,
+confidential or unlawfully obtained material, or material copied without permission. This project
+provides no copy-protection removal tools or instructions.
+
+Public availability is not permission to copy. Original infrastructure has a narrowly scoped MIT
+license; other material has no general license grant. See [LICENSE](LICENSE), [LEGAL.md](LEGAL.md)
+and [PROVENANCE.md](PROVENANCE.md). These policies do not determine the legal status of reverse
+engineering in your jurisdiction. Contributors must comply with applicable law and agreements.
+
+A separate research repo does not establish clean-room independence for Mudcrab. Implementation
+teams must manage access and source exposure deliberately; see [the boundary policy](docs/clean-room.md).
+
+Rights holders can contact the maintainer through [GitHub](https://github.com/awarebayes).
+Please identify the material and your concern; do not attach proprietary material publicly.
