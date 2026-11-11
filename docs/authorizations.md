@@ -20,3 +20,5 @@ PL CommonLibSSE for naming and publishing id/offset pairs approved
 Reconstructed source will be published in this repository, similar to the FNV decompilation project (maintainer decision, stated to the orchestrator 2026-11-11 and recorded here by it).
 The maintainer does not review individual functions; acceptance follows the automated rule in docs/verification.md (maintainer decision, 2026-11-11).
 Names and declarations from the GPL-3.0 CommonLibSSE fork (powerof3) may be used as a naming source, including in published reconstruction sources, labelled with their origin (maintainer decision, stated to the orchestrator 2026-11-12 and recorded here by it).
+Files carrying declarations derived from the GPL-3.0 CommonLibSSE fork state GPL-3.0 explicitly in their header (maintainer decision, 2026-11-12, recorded by the orchestrator).
+meh321's Address Library database and its name lists may be used: the maintainer reports that the author agreed on Discord (maintainer statement, 2026-11-12, recorded by the orchestrator; no written licence file exists, so cite it as "used with the author's permission as reported by the maintainer").
