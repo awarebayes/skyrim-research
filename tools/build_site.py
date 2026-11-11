@@ -5,6 +5,7 @@ import json
 from string import Template
 import subprocess
 from check import ROOT, load
+import cost_ledger
 
 
 def plural(n, word, many=None):
@@ -29,7 +30,36 @@ def phase_summary(data, counts, tasks):
     return ' '.join(parts)
 
 
-def render(data, revision):
+def millions(n):
+    return f'{n / 1e6:,.1f}M' if n >= 1e5 else f'{n:,}'
+
+
+def cost_section(data, costs):
+    """Cost totals derived from the validated ledger; nothing is shown that the ledger lacks."""
+    if not costs or not costs.get('records'):
+        return '<p class="scope"><span>Cost so far</span> No cost ledger recorded yet.</p>'
+    s =cost_ledger.summary(cost_ledger.validate(costs, data), data)
+    cells = [('Input tokens, incl. cache', millions(s['input_all']), f'{s["input_all"]:,} fresh, cache write and cache read'),
+             ('Output tokens', millions(s['output']), f'{s["output"]:,} across all recorded model runs'),
+             ('Boat compute', f'{s["boat_hours"]:.2f} h', 'Verifier machine time, partly estimated')]
+    note = ''
+    if s['average']:
+        avg = s['average']
+        note = (f'Average direct cost per accepted function ({s["accepted"]}): {avg["input"]:,.0f} input tokens '
+                f'incl. cache, {avg["output"]:,.0f} output tokens, {avg["boat_seconds"]:,.0f} s Boat; shared '
+                'tooling and review overhead excluded. ')
+    who = 'subagents and the orchestrator session' if s['orchestrator'] else 'subagents only; orchestrator tokens are not captured'
+    note += (f'Figures cover {who}. Splits between functions and shared overhead are partly estimates; '
+             'human time is not tracked.')
+    if s['incomplete']:
+        note += f' {plural(s["incomplete"], "run")} still in progress when recorded.'
+    metrics = ''.join(f'<div><p>{escape(a)}</p><strong>{escape(b)}</strong><small>{escape(c)}</small></div>'
+                      for a, b, c in cells)
+    return (f'<section class="metrics" id="costs" aria-label="Cost so far">{metrics}</section>'
+            f'<p class="scope"><span>Cost so far</span> {escape(note)}</p>')
+
+
+def render(data, revision, costs=None):
     counts = Counter(fn['status'] for fn in data['functions'])
     pipeline = ''.join(f'<li><span>{label}</span><strong>{counts[state]:,}</strong></li>' for state, label in
                        [('mapped', 'Mapped'), ('analyzed', 'Analyzed'), ('reconstructed', 'Reconstructed'), ('matched', 'Byte matched')])
@@ -54,6 +84,7 @@ def render(data, revision):
     scope_note = ('Scope remains unknown; no completion percentage' if data['scope']['functions'] is None
                   else f'{data["scope"]["functions"]:,} functions in measured scope')
     return Template((ROOT / 'site/index.html').read_text()).substitute(
+        costs=cost_section(data, costs),
         phase=escape(data['phase']), phase_blurb=escape(phase_blurb), updated=escape(data['updated_at']), revision=escape(revision),
         target=escape(data['target_build_id'] or 'Not pinned'), inventory=len(data['functions']),
         matched=matched, matched_note=escape(matched_note), matched_bytes_note=escape(matched_bytes_note),
@@ -72,7 +103,9 @@ def main():
         revision = 'uncommitted bootstrap'
     output = ROOT / 'dist'
     output.mkdir(exist_ok=True)
-    (output / 'index.html').write_text(render(data, revision))
+    ledger = ROOT / 'data/costs.json'
+    costs = json.loads(ledger.read_text()) if ledger.exists() else None
+    (output / 'index.html').write_text(render(data, revision, costs))
     (output / 'style.css').write_text((ROOT / 'site/style.css').read_text())
     (output / 'progress.json').write_text(json.dumps(data, indent=2) + '\n')
     (output / '.nojekyll').touch()
