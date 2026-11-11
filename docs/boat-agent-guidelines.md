@@ -43,6 +43,15 @@ tools/verifier/boat_run.sh <task-id> <local-dir> '<command>'   # runs in ~/tasks
 tools/verifier/boat_down.sh       # refuses while tasks are marked running; stops; prints compute
 ```
 
+Per-function work uses `tools/verifier/attempt <task-dir>` (standing machine, left running until
+its deadline; `attempt --stop` stops it) and `tools/verifier/confirm <task-dir>` (forks the
+standing machine as rule 2 allows, deletes the fork at the end). They follow these rules
+themselves; a Drafter needs only [drafter-card.md](drafter-card.md). Both keep the target image
+at `~/private/<build id>/SkyrimSE.exe` on the machine (maintainer-allowed; outside every task
+directory, so task cleanup keeps it) and use `~/tasks/<task-id>` and `~/tasks/<task-id>-confirm`.
+`confirm` forks a running standing machine without stopping it: inputs are uploaded fresh and
+the fork checks toolchain and image hashes itself, so a snapshot up to a minute old is harmless.
+
 `boat_run.sh` uploads `<local-dir>` to `~/tasks/<task-id>/in`, empties `out/`, runs the command
 under bash with `IN`, `OUT`, `SR` (`~/sr`, repository tools) and `MSVC` (`~/msvc`) set, copies
 `out/` back to `.local/boat-results/<task-id>/` and exits with the command's code (124 on
@@ -116,7 +125,8 @@ or use `large`/`xlarge`. If a limit blocks the task (`429 limit_reached`, `rate_
 3. `boat usage <id> --json` seconds for each machine touched.
 4. No billing command ran; wallet unchanged.
 5. Results fetched to `.local/`; nothing game-derived left in `~/tasks/<task-id>` unless the brief
-   says to keep it (`rm -rf ~/tasks/<task-id>` before stopping otherwise).
+   says to keep it (`rm -rf ~/tasks/<task-id>` before stopping otherwise). The target image in
+   `~/private/<build id>/` on the standing machine stays: the maintainer allows it there.
 
 ## Troubleshooting
 

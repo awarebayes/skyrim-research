@@ -11,6 +11,7 @@ import tempfile
 
 from compare import COMPARATOR_VERSION, CONTRACT_VERSION, REPORT_SCHEMA, comparator_source_sha256, sanitized
 from source_digest import DIGEST_METHOD, INCLUDE_ROOTS, include_closure, recipe_flag_problem, tu_digest
+from lint_reconstruction import lint_tree
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED = set('.exe .dll .pdb .obj .o .lib .a .so .dylib .dmp .mdmp .bin .bsa .ba2 .esm .esp .esl .nif .dds .pex .hkx .ess .skse .gdt .gpr .idb .i64 .zip .7z .iso .vhdx .qcow2 .png .jpg .jpeg .pdf'.split())
@@ -319,16 +320,30 @@ def validate(data, target, root=None):
     return data
 
 
+def lint(root, names=None):
+    """The mechanical source rules of tools/lint_reconstruction.py, as a validation failure."""
+    problems = lint_tree(root, names)
+    require(not problems, 'Reconstruction lint: ' + '; '.join(problems[:5])
+            + (f' (and {len(problems) - 5} more)' if len(problems) > 5 else ''))
+
+
 def load(staged=False):
     if not staged:
-        return validate(json.loads((ROOT / 'data/progress.json').read_text()),
+        data = validate(json.loads((ROOT / 'data/progress.json').read_text()),
                         json.loads((ROOT / 'builds/target.json').read_text()))
+        # Tracked and not-yet-added files alike, so a Drafter's new source is linted before staging.
+        names = subprocess.check_output(['git', 'ls-files', '--cached', '--others', '--exclude-standard', '-z',
+                                         '--', 'reconstruction'], cwd=ROOT).decode('utf-8').split('\0')
+        lint(ROOT, sorted({n for n in names if n and (ROOT / n).is_file()}))
+        return data
     # Match records, source and recipe are checked as staged too, so the index gets its own tree.
     with tempfile.TemporaryDirectory() as tmp:
         subprocess.check_call(['git', 'checkout-index', '--all', f'--prefix={tmp}/'], cwd=ROOT)
         root = Path(tmp)
-        return validate(json.loads((root / 'data/progress.json').read_text()),
+        data = validate(json.loads((root / 'data/progress.json').read_text()),
                         json.loads((root / 'builds/target.json').read_text()), root)
+        lint(root)
+        return data
 
 
 def inspect_payload(name, payload, mode='100644'):

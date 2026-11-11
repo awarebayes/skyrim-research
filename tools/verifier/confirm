@@ -1,0 +1,274 @@
+#!/usr/bin/env python3
+"""Acceptance evidence for a passing unit in one command: two Boat compile hosts, three compare hosts.
+
+    tools/verifier/confirm <task-dir> [--replace] [--stop]
+
+Run from a clean checkout of the integrated tree (committed source; the record must bind
+integrated source). Every function in task.json must already be an inventory entry and the
+symbol map must be the repository's (`reports/<build id>/...`).
+
+1. Forks the standing verifier (`sr-<task-id>-confirm`, no account secrets, monitoring off). A
+   stopped standing machine is forked as it is, then resumed. A running one is forked while
+   running: its snapshot may be up to a minute old, which is harmless here because every input
+   is uploaded fresh and checked by hash on the fork, and the fork checks the toolchain against
+   pinned.sha256 and the image against builds/target.json itself.
+2. On both machines, in parallel, from an empty task directory: compile once with the recipe and
+   compare every function (tools/verifier/unit_build.py, same checks as `attempt`).
+3. Compares both objects again on this Mac against the local image.
+4. Writes reports/<build id>/0x<rva>.json for each function with tools/verifier/match_record.py
+   (four runs: two compile hosts, three compare hosts), then runs tools/check.py.
+5. Removes the task files from both machines and deletes the fork, also on failure. The standing
+   machine keeps running until its deadline unless --stop is given.
+
+An existing record is replaced only with --replace. Writing a record is not acceptance; the
+Reviewer and tools/accept_function.py steps of docs/verification.md follow.
+"""
+import argparse
+import json
+import os
+from pathlib import Path
+import shlex
+import subprocess
+import sys
+import threading
+import time
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import boatctl  # noqa: E402
+import pipeline  # noqa: E402
+from pipeline import REPO, PipelineError  # noqa: E402
+
+STANDING_LABEL = 'boat-standing-verifier'
+FORK_LABEL = 'boat-fork-of-standing-verifier'
+MAC_LABEL = 'macos-arm64-local'
+FORK_TTL = 1800
+SHORT = {STANDING_LABEL: 'standing', FORK_LABEL: 'fork', f'{MAC_LABEL}<-{STANDING_LABEL}': 'mac(standing-obj)',
+         f'{MAC_LABEL}<-{FORK_LABEL}': 'mac(fork-obj)'}
+
+
+def notes(task, recipe):
+    return [
+        'Comparator reports are embedded verbatim. Their acceptance field is the comparator\'s own and stays '
+        'not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized '
+        'Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.',
+        'Host independence: the fork is a copy of the standing verifier machine\'s disk, so it shares that '
+        'toolchain install and Ubuntu image; each Boat host checked its compiler binaries against pinned.sha256 '
+        'and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.',
+        'Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed '
+        'before the compile, INCLUDE then set by the msvc-wine wrapper to toolchain and SDK directories only; '
+        '/showIncludes added to the recipe flags, and the repository files the compiler opened equalled the '
+        'include closure. /showIncludes changes no object section except the object-path record in .debug$S.',
+        'Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S '
+        '(each host compiles to its own path) and the .chks64 checksum of that section.',
+        'A byte match shows that this source and recipe produce the checked code. It does not verify the '
+        'community name, and it does not show that the original source looked like this.',
+    ] + task['record_notes']
+
+
+def reproduction(task, fn, closure, recipe):
+    flags = ' '.join(recipe['flags'])
+    unit = ' '.join(closure)
+    return (f'From the repository root, with cl {recipe["compiler"]["version"].split(" ")[0]} x64 whose binaries match '
+            f'tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it): '
+            f'cl {flags} /Fo<work>/candidate.obj {task["compiled"]} ; '
+            f'python3 -I tools/verifier/tu_task.py --function-id {task["build_id"]}-0x{fn["rva"]:x} '
+            f"--symbol '{fn['symbol']}' --compiled {task['compiled']} --unit {unit} --recipe {task['recipe']} "
+            f'--symbols {task["symbols_repo"]} --object <work>/candidate.obj --out <work> ; '
+            f'python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object '
+            f'<work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> '
+            f'--report <work>/report.json')
+
+
+def preflight(task, closure, replace):
+    if task['symbols_repo'] is None:
+        raise PipelineError('confirm needs the repository symbol map (task.json "symbols": "reports/<build id>/...")')
+    dirty = pipeline.git_dirty(closure + [task['recipe'], task['symbols_repo']])
+    if dirty:
+        raise PipelineError('uncommitted changes in the unit, recipe or map (records bind integrated source): '
+                            + ', '.join(dirty))
+    progress = json.loads((REPO / 'data/progress.json').read_text())
+    entries = {f['id']: f for f in progress['functions']}
+    for fn in task['functions']:
+        fid = f'{task["build_id"]}-0x{fn["rva"]:x}'
+        entry = entries.get(fid)
+        if entry is None or entry['rva'] != fn['rva'] or entry['size'] != fn['size']:
+            raise PipelineError(f'{fid} with size {fn["size"]} is not an inventory entry; add it before confirming')
+        out = REPO / 'reports' / task['build_id'] / f'0x{fn["rva"]:x}.json'
+        if out.exists() and not replace:
+            raise PipelineError(f'{out.relative_to(REPO)} exists; pass --replace to rewrite it from new runs')
+
+
+def mac_compare(task, fn, host_dir, dest):
+    """Compare a Boat host's object on this Mac with this checkout's comparator and the local image."""
+    config = pipeline.load_config(task['dir'])
+    image = config.get('image')
+    if not image or not Path(image).is_file():
+        raise PipelineError('no local image configured (.local/verifier/config.json "image")')
+    fdir = host_dir / f'0x{fn["rva"]:x}'
+    remote_task = json.loads((fdir / 'task-file.json').read_text())['task']
+    dest.mkdir(parents=True, exist_ok=True)
+    task_file = {'verify_task_schema': 1, 'task': remote_task,
+                 'recipe': os.path.relpath(REPO / task['recipe'], dest),
+                 'symbols': os.path.relpath(REPO / task['symbols_repo'], dest),
+                 'manifest': os.path.relpath(REPO / 'builds/target.json', dest)}
+    (dest / 'task-file.json').write_text(json.dumps(task_file, indent=2) + '\n')
+    diagnostics = REPO / '.local/verifier/diagnostics' / f'confirm-{task["task_id"]}-{host_dir.name}-0x{fn["rva"]:x}.json'
+    proc = subprocess.run([sys.executable, str(REPO / 'tools/verifier/verify_function.py'),
+                           '--task-file', str(dest / 'task-file.json'), '--object', str(host_dir / 'candidate.obj'),
+                           '--build-record', str(fdir / 'build-record.json'), '--image', image,
+                           '--report', str(dest / 'report.json'), '--diagnostics', str(diagnostics)],
+                          capture_output=True, text=True)
+    (dest / 'summary.txt').write_text(proc.stdout + proc.stderr)
+    return proc.returncode, dest / 'report.json'
+
+
+def result_of(report_path):
+    try:
+        r = json.loads(Path(report_path).read_text())
+        return r.get('result'), r.get('reason')
+    except (OSError, ValueError):
+        return 'error', 'no-report'
+
+
+def confirm(task_dir, replace, stop_after):
+    started = time.monotonic()
+    task = pipeline.load_task(task_dir)
+    handle = pipeline.lock(task['dir'])  # noqa: F841 (held until exit)
+    files, closure = pipeline.unit_manifest(task)
+    preflight(task, closure, replace)
+    recipe = json.loads((REPO / task['recipe']).read_text())
+    config = pipeline.load_config(task['dir'])
+    out_root = task['dir'] / 'confirm'
+    stage = task['dir'] / '.confirm-stage'
+    remote_dir = f'{boatctl.REMOTE_HOME}/tasks/{task["task_id"]}-confirm'
+    before = boatctl.compute_used()
+    lines = []
+    failed = True
+
+    standing, state = boatctl.lookup()
+    if standing is None:
+        raise PipelineError(f'no machine named {boatctl.STANDING}')
+    others = [s for s in json.loads(boatctl.cli('list', '--all', '--json').stdout)['sandboxes']
+              if s['state'] in boatctl.RUNNING and s['id'] != standing]
+    if others:
+        raise PipelineError('another extra machine is running (' + ', '.join(s['id'] for s in others)
+                            + '); at most one extra machine at a time')
+    if state == 'stopping':
+        state = pipeline.wait_state(standing, {'stopped'})
+    fork_name = f'sr-{task["task_id"]}-confirm'
+    fork = None
+    hosts = {}
+    try:
+        t0 = time.monotonic()
+        fork = boatctl.fork(standing, fork_name, FORK_TTL)
+        fork_seconds = time.monotonic() - t0
+        how = 'forked while stopped' if state == 'stopped' else 'forked while running'
+        if state not in boatctl.RUNNING:
+            pipeline.ensure_standing()
+        hosts = {STANDING_LABEL: pipeline.Host(standing, STANDING_LABEL, remote_dir, task,
+                                               local_image=config.get('image')),
+                 FORK_LABEL: pipeline.Host(fork, FORK_LABEL, remote_dir, task, local_image=config.get('image'))}
+        outcome = {}
+
+        def work(label, host):
+            try:
+                code, _ = host.run(files, stage / label, fresh=True)
+                outcome[label] = (code, host.fetch(out_root / label))
+            except Exception as exc:  # reported below; the fork is deleted either way
+                outcome[label] = (None, exc)
+
+        threads = [threading.Thread(target=work, args=item) for item in hosts.items()]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        for label, (code, value) in outcome.items():
+            if code is None:
+                raise PipelineError(f'{label}: {value}')
+            if code not in (0, 1):
+                raise PipelineError(f'{label}: the unit did not build or was refused (exit {code}); '
+                                    f'run tools/verifier/attempt first, details in {value}')
+        runs = {fn['rva']: [] for fn in task['functions']}
+        table = {fn['rva']: {} for fn in task['functions']}
+        for label in (STANDING_LABEL, FORK_LABEL):
+            host_dir = outcome[label][1]
+            for fn in task['functions']:
+                remote_report = host_dir / f'0x{fn["rva"]:x}' / 'report.json'
+                table[fn['rva']][label] = result_of(remote_report)
+                runs[fn['rva']].append((label, label, remote_report))
+                _, mac_report = mac_compare(task, fn, host_dir, out_root / 'mac' / label / f'0x{fn["rva"]:x}')
+                table[fn['rva']][f'{MAC_LABEL}<-{label}'] = result_of(mac_report)
+                runs[fn['rva']].append((label, MAC_LABEL, mac_report))
+        lines.append(f'confirm {task["task_id"]}: fork {how} ({fork_seconds:.0f} s), '
+                     f'compiled on 2 Boat hosts, compared on 3 hosts')
+        failed = False
+        for fn in task['functions']:
+            row = table[fn['rva']]
+            ok = all(v[0] == 'pass' for v in row.values())
+            failed |= not ok
+            shown = ' '.join(f'{SHORT[k]}={v[0]}' + ('' if v[0] == 'pass' else f':{v[1]}') for k, v in row.items())
+            lines.append(f'  0x{fn["rva"]:x} {"REPRODUCED" if ok else "NOT REPRODUCED"}  {shown}')
+        if failed:
+            lines.append('  no record written: every run must pass; a pass that fails to reproduce is escalated')
+        else:
+            for fn in task['functions']:
+                fid = f'{task["build_id"]}-0x{fn["rva"]:x}'
+                out = f'reports/{task["build_id"]}/0x{fn["rva"]:x}.json'
+                cmd = [sys.executable, str(HERE / 'match_record.py'), '--function-id', fid, '--unit', *closure,
+                       '--compiled', task['compiled'], '--recipe', task['recipe'], '--symbols', task['symbols_repo'],
+                       '--reproduction', reproduction(task, fn, closure, recipe), '--out', out]
+                for compiled_on, compared_on, report in runs[fn['rva']]:
+                    cmd += ['--run', compiled_on, compared_on, str(report)]
+                for note in notes(task, recipe):
+                    cmd += ['--note', note]
+                proc = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True)
+                lines.append(f'  record {out}: ' + ('written' if proc.returncode == 0
+                                                     else 'REFUSED ' + (proc.stderr or proc.stdout).strip()[-200:]))
+                failed |= proc.returncode != 0
+            check = subprocess.run([sys.executable, str(REPO / 'tools/check.py')], cwd=REPO, capture_output=True, text=True)
+            lines.append('  check.py: ' + (check.stdout or check.stderr).strip().splitlines()[-1][:160])
+            failed |= check.returncode != 0
+    finally:
+        for label, host in hosts.items():
+            try:
+                boatctl.execute(host.machine, f'rm -rf {shlex.quote(remote_dir)}', 60)
+            except boatctl.BoatError:
+                lines.append(f'  warning: could not remove {remote_dir} on {label}')
+        if fork is not None:
+            fork_usage = None
+            try:
+                boatctl.stop(fork)
+                pipeline.wait_state(fork, {'stopped'}, 300)
+                fork_usage = boatctl.usage_seconds(fork)
+            finally:
+                boatctl.delete(fork)
+            lines.append(f'  fork {fork_name} deleted after {fork_usage} s billed')
+        if stop_after:
+            boatctl.stop(standing)
+            pipeline.wait_state(standing, {'stopped'}, 300)
+            lines.append(f'  {boatctl.STANDING} stopped')
+        else:
+            lines.append(f'  {boatctl.STANDING} left running until its deadline (tools/verifier/attempt --stop)')
+        after = boatctl.compute_used()
+        lines.append(f'  private: {out_root}/  time {time.monotonic() - started:.0f} s; compute '
+                     f'{before["trialComputeUsedSeconds"]} -> {after["trialComputeUsedSeconds"]} s (counter may lag)')
+        print('\n'.join(lines))
+    return 1 if failed else 0
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument('task_dir')
+    p.add_argument('--replace', action='store_true', help='rewrite existing match records from the new runs')
+    p.add_argument('--stop', action='store_true', help='stop the standing machine at the end')
+    a = p.parse_args()
+    try:
+        return confirm(a.task_dir, a.replace, a.stop)
+    except (PipelineError, boatctl.BoatError) as exc:
+        print(f'confirm: {exc}', file=sys.stderr)
+        return 2
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

@@ -10,8 +10,35 @@ a compiled reconstruction against the pinned image you supply (private, under th
 The recipe establishes a build worker. It does not establish that this is the compiler the
 target was built with.
 
+## Per-function commands
+
+```sh
+tools/verifier/attempt .local/tasks/<task-id>          # one attempt: compile the unit, compare each function
+tools/verifier/attempt --stop [.local/tasks/<task-id>] # stop the standing machine
+tools/verifier/confirm .local/tasks/<task-id>          # acceptance evidence: fork, 2 compile hosts, 3 compare hosts, records
+```
+
+`<task-id>/task.json` (private) names the build id, compiled file, recipe, symbol map and the
+functions (RVA, size, symbol); the format is in `pipeline.py`. Sources come from the checkout the
+command runs in. `attempt` resumes or reuses the standing machine (extending its deadline when
+under 15 minutes remain), uploads only changed files, and fetches reports, the object, the
+compile log and private diagnostics to `<task-id>/attempts/<NNN>/`, with a local side-by-side
+disassembly per function (`llvm-objdump`; G2 material, never printed). `confirm` needs committed
+source, inventory entries and the repository symbol map; it refuses to overwrite a record
+without `--replace`. Both keep the target image on each machine at `~/private/<build id>/`
+(uploaded once, checked by hash once per boot) and print only sanitized lines through
+`boat exec`. Private settings live in `.local/verifier/config.json`:
+`{"image": "<local SkyrimSE.exe>", "objdump": "<llvm-objdump>"}`.
+
 ## Files
 
+- `attempt`, `confirm`: the commands above; `pipeline.py` holds their shared logic, `boatctl.py`
+  the Boat CLI calls, `disasm.py` the local side-by-side disassembly.
+- `unit_build.py`: runs on the verifier host. Checks the synced copy against the spec's hashes,
+  the toolchain against `pinned.sha256` and the image against `builds/target.json` (once per
+  boot), compiles with the build-path checks of `docs/verification.md` (cleared `INCLUDE`/`CL`/
+  `_CL_`, `/showIncludes` equal to the include closure), then runs `verify_function.py` per
+  function.
 - `setup_boat_machine.sh`: installs Wine and msitools from the Ubuntu archive, checks out
   msvc-wine at a pinned commit, downloads a pinned Visual Studio installer manifest (checked by
   SHA-256), downloads and unpacks the toolset and Windows SDK from Microsoft's servers, then

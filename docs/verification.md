@@ -164,13 +164,21 @@ Match record, recomputed from the tree:
   digest definition (`tu-sha256-v1`) is unchanged. The digest of that unit equals the record's, and every report
   names that digest and the compiled file's path. `tools/verifier/tu_task.py` applies the same
   closure rule, so a verifier task cannot be built from an incomplete unit.
-  Follow-up, not implemented: when a verifier builds a task, cross-check the derived closure
-  against the compiler's own `/showIncludes` output for that compile (repository files only),
-  and refuse the task on any difference.
-  Follow-up, not implemented: the verifier's `INCLUDE` environment variable also takes part in
-  include search (as do `CL` and `_CL_`, which add flags). Pin `INCLUDE` to the toolchain and SDK
-  directories and leave `CL`/`_CL_` unset in the build scripts, or record all three in the build
-  record, so the toolchain-header assumption above is checked rather than assumed.
+  Build-path checks on the verifier host (`tools/verifier/unit_build.py`, used by
+  `tools/verifier/attempt` and `tools/verifier/confirm`): the compile runs with `INCLUDE`, `LIB`,
+  `LIBPATH`, `CL`, `_CL_` and `EXTERNAL_INCLUDE` removed from the environment; the msvc-wine
+  wrapper then sets `INCLUDE` to toolchain and SDK directories, and the build fails if any entry
+  lies outside the toolchain root. The value, the cleared names and the added flag are recorded
+  in the private build record (`environment`). The compile adds `/showIncludes` to the recipe
+  flags (measured: it changes no object section except the object-path record in `.debug$S`);
+  every file the compiler opened must be under the toolchain root or a repository file, and the
+  repository files must equal the include closure exactly, or the build is refused. A closure
+  entry the compiler never opened (an include in a comment or dead `#if` branch) is a difference
+  too; `tools/lint_reconstruction.py` refuses such includes earlier.
+  These checks run on the verifier, not in `tools/check.py`: CI has no compiler. The match record
+  states them in a note; the gate does not verify that note.
+  Follow-up, not implemented: the manual reproduction path (`tu_task.py` plus a hand-run `cl`)
+  does not apply these checks; a third party reproducing by hand should clear the same variables.
 - **Target.** Every report's image hash equals `builds/target.json`. Its build id, RVA and size
   equal the inventory entry's, and the pinned symbol map places the symbol at that range.
 - **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match
@@ -208,6 +216,14 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
 match record's source digest) before writing the Reviewer record, then re-runs the validator and
 changes nothing if it fails. The validator cannot see the private review, so the record's hash is
 what ties it to the file kept under `.local/reviews/`.
+
+Source lint: `tools/check.py` also runs `tools/lint_reconstruction.py` on every file under
+`reconstruction/` (tracked or new; the index tree with `--staged`). It checks the mechanical part
+of the Reviewer's list: no inline assembly, `__emit`, raw byte arrays or `\x` byte strings,
+pragma operators, codegen-only `#pragma` or `__declspec`; the header comment fields of
+`reconstruction/README.md`; the one-class-per-pair layout; and include style (quoted repository
+headers, no include in a block comment or conditional block). Passing the lint does not replace
+the Reviewer; it only spares the Reviewer those checks. Tests: `tests/test_lint_reconstruction.py`.
 
 The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,
 stale or inconsistent, and `tests/test_accept_function.py` covers the acceptance tool. They use

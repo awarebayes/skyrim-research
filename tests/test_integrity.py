@@ -48,6 +48,23 @@ class IntegrityTests(unittest.TestCase):
         self.assertIn('<strong>1</strong><small>Each: comparator pass on 2+ hosts and a Reviewer approve', page)
         self.assertNotIn('%', page.split('Scope note')[0].split('metrics')[-1])
 
+    def test_phase_blurb_follows_the_data(self):
+        page = render(self.data, 'synthetic-revision')
+        self.assertNotIn('Target selection and the matching toolchain come next', page)
+        self.pin()
+        self.data['work_items'] = [dict(id='a', title='Planned thing', status='planned', owner='o', acceptance='x',
+                                        issue_url=None),
+                                   dict(id='b', title='Active thing', status='active', owner='o', acceptance='x',
+                                        issue_url=None)]
+        page = render(self.data, 'synthetic-revision')
+        self.assertIn('Target synthetic-test is pinned. 1 function inventoried, 0 accepted byte matches. '
+                      '2 open work items; in progress: Active thing.', page)
+        for item in self.data['work_items']:
+            item['status'] = 'done'
+        self.assertIn('All 2 work items done', render(self.data, 'synthetic-revision'))
+        self.data['target_build_id'] = None
+        self.assertIn('No target build is pinned yet', render(self.data, 'synthetic-revision'))
+
     def test_fake_scope_rejected(self):
         self.data['scope'].update(functions=100, bytes=1000)
         with self.assertRaisesRegex(ValueError, 'inventory'):
