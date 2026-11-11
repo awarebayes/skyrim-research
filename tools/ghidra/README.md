@@ -50,9 +50,21 @@ random sample. A run of 8 functions took 8.6 s (1.1 s per function); 2,000 funct
   unwind form, verdict, references table, unnamed targets).
 - `pack.json`: the same, machine-readable (`pack_schema` 1).
 - `listing.txt`, `decompiled.c`: Ghidra instruction listing with reference targets, decompiler output.
-- `class-excerpt.h`: the owning class body from the community header; `source-excerpt.cpp`: the
-  community line that ties the name to the Address Library id; `reference-decls.h`: declarations of
-  the referenced members (or the community wrapper around a free function's id).
+- `class-excerpt.h`: the owning class body from the community header, trimmed when over 4 KB to
+  its declaration head, access specifiers, virtuals, the method itself and the members whose
+  offset comments match an observed displacement; `source-excerpt.cpp`: the community line that
+  ties the name to the Address Library id; `reference-decls.h`: declarations of the referenced
+  members (or the community wrapper around a free function's id).
+- `vtables.txt`: for the owning class and each RTTI base (read from the image's complete object
+  locator), the slot table from the community `VTABLE_<Class>` id: slot, byte offset, target RVA,
+  Address Library name and the virtual the community header declares for that slot.
+- `signature-types.h`: trimmed community declarations of the types named in the function's
+  declaration (MIT sources only).
+- README sections "Observed memory operands" (non-stack displacements, base register, width,
+  instruction offset) and "Calling and return convention" (`this` in RCX, parameter registers,
+  the MSVC x64 rule for returning a class by value through a hidden pointer).
+- `python3 tools/ghidra/export_pack.py refresh <pack dir>...` rebuilds these aids for existing
+  packs without running Ghidra.
 
 ### Comparator v1 verdict
 

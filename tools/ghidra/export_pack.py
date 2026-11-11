@@ -3,6 +3,7 @@
 Usage (repository root; see tools/ghidra/README.md):
 
     python3 tools/ghidra/export_pack.py packs <list file>     # packs + task dirs
+    python3 tools/ghidra/export_pack.py refresh .local/packs/<build id>/<rva> ...  # aids only, no Ghidra
     python3 tools/ghidra/export_pack.py survey --sample 2000 --seed 1
     python3 tools/ghidra/export_pack.py bind --task .local/tasks/<id> [--object <candidate.obj>]  # attempt does this itself
 
@@ -526,6 +527,254 @@ def classify(img, addrlib, communities, rva, gmeta, grefs):
 
 
 # ---------------------------------------------------------------------------------------------
+# Drafter aids: virtual tables, observed field offsets, trimmed types, calling convention.
+
+def image_base(img):
+    lfanew = struct.unpack_from('<I', img.blob, 60)[0]
+    return struct.unpack_from('<Q', img.blob, lfanew + 24 + 24)[0]
+
+
+def vtable_index(comms):
+    """{class name: AE id of its primary vtable} from the community VTABLE_<Class>[0] ids."""
+    out = {}
+    for c in comms:
+        for ae, rows in c.by_ae.items():
+            for r in rows:
+                m = re.fullmatch(r'(?:RE::)?VTABLE_(?:__)?([A-Za-z_]\w*)\[0\]', r['name'])
+                if r['kind'] == 'vtable' and m:
+                    out.setdefault(m.group(1), ae)
+    return out
+
+
+def rtti_bases(img, vtable_rva):
+    """Class names of the RTTI hierarchy behind a vtable, most derived first, or []."""
+    try:
+        base = image_base(img)
+        (col_va,) = struct.unpack('<Q', img.read(vtable_rva - 8, 8))
+        sig, _, _, _, chd, _ = struct.unpack('<6I', img.read(col_va - base, 24))
+        if sig != 1:
+            return []
+        _, _, count, bca = struct.unpack('<4I', img.read(chd, 16))
+        names = []
+        for i in range(min(count, 32)):
+            (bcd,) = struct.unpack('<I', img.read(bca + 4 * i, 4))
+            (td,) = struct.unpack('<I', img.read(bcd, 4))
+            raw = img.read(td + 16, 256).split(b'\0', 1)[0].decode('ascii', 'replace')
+            m = re.fullmatch(r'\.\?A[VU](.+)@@', raw)
+            # Nested classes are spelled Outer__Inner in NG's VTABLE_ ids; anonymous namespaces are dropped.
+            parts = [x for x in m.group(1).split('@') if x and not x.startswith('?')] if m else [raw]
+            names.append('__'.join(reversed(parts)))
+        return names
+    except Exception:  # a reading aid: a malformed or absent RTTI chain just yields no table
+        return []
+
+
+def vtable_slots(img, addrlib, comms, vtable_rva, limit=400):
+    """[(slot, rva, community name)] until the first entry that is not a code address."""
+    base, out = image_base(img), []
+    for i in range(limit):
+        try:
+            (va,) = struct.unpack('<Q', img.read(vtable_rva + 8 * i, 8))
+        except Exception:
+            break
+        rva = va - base
+        sec = img.section(rva) if 0 < rva < img.size_of_image else None
+        if not sec or not sec.flags & 0x20000000:
+            break
+        names = []
+        for c in comms:
+            names += [short_name(n['name']) for n in c.names(addrlib['by_rva'].get(rva, []))
+                      if n['kind'] not in ('vtable', 'rtti', 'nirtti')]
+        out.append((i, rva, names[0] if names else None))
+    return out
+
+
+def declared_slots(comms, cls):
+    """{slot: virtual declaration} from the community header's `// NN` slot comments for one class."""
+    for c in comms:
+        if 'GPL' in c.licence:
+            continue
+        ex = c.class_excerpt(cls, limit=2000)
+        if not ex:
+            continue
+        out, depth = {}, 0
+        for line in ex['text'].splitlines():
+            code, _, comment = line.partition('//')
+            # Only the class's own body: nested types declare their own slots.
+            if depth == 1 and 'virtual' in code:
+                m = re.match(r'\s*([0-9A-Fa-f]{2,3})\b', comment)
+                if m:
+                    out[int(m.group(1), 16)] = ' '.join(code.split())
+            depth += code.count('{') - code.count('}')
+        return out
+    return {}
+
+
+def vtable_text(img, addrlib, comms, cls):
+    """Slot tables of the owning class and its RTTI bases, as text for the pack."""
+    index = vtable_index(comms)
+    if cls not in index:
+        return None
+    by_id = {i: rva for rva, ids in addrlib['by_rva'].items() for i in ids}
+    own = by_id.get(index[cls])
+    if own is None:
+        return None
+    lines = ['// Virtual tables from the pinned image: slot, byte offset, target RVA, Address Library name,',
+             '// and the virtual that the community header declares for that slot (its `// NN` comment).',
+             f'// Classes: {cls} and its RTTI bases; a slot first appears in the most basic class listing it.']
+    for name in rtti_bases(img, own) or [cls]:
+        rva = by_id.get(index.get(name)) if name in index else None
+        if rva is None:
+            lines.append(f'\n// {name}: no community vtable id')
+            continue
+        slots = vtable_slots(img, addrlib, comms, rva)
+        declared = declared_slots(comms, name.split('__')[-1])
+        lines.append(f'\n// {name}: vtable at 0x{rva:x}, {len(slots)} slots')
+        for i, target, cname in slots:
+            lines.append(f'  {i:3d}  +0x{8 * i:03x}  0x{target:x}  {cname or "-"}'
+                         + (f'  | {declared[i]}' if i in declared else ''))
+    return '\n'.join(lines) + '\n'
+
+
+MEM_OPERAND = re.compile(r'(byte|word|dword|qword|xmmword) ptr \[([A-Z0-9]+)(?: \+ (0x[0-9a-f]+))?\]')
+
+
+def observed_offsets(listing):
+    """[(displacement, base register, width, instruction offset)] of non-stack memory operands."""
+    out = []
+    for line in listing.splitlines():
+        m = re.match(r'\s*\+0x([0-9a-f]+)\s+(.*)', line)
+        if not m:
+            continue
+        for width, reg, disp in MEM_OPERAND.findall(m.group(2).split('[CALL')[0]):
+            if reg in ('RSP', 'RBP', 'RIP') or reg.startswith('0X'):
+                continue
+            out.append((int(disp, 16) if disp else 0, reg, width, int(m.group(1), 16)))
+    return out
+
+
+def trim_excerpt(text, offsets, keep_names, full_limit=4000, context=1):
+    """The class excerpt cut to its declaration head, virtuals, named members and touched offsets."""
+    if len(text) <= full_limit:
+        return text, False
+    lines = text.splitlines()
+    keep = set(range(0, min(len(lines), 25)))
+    for n, line in enumerate(lines):
+        code, _, comment = line.partition('//')
+        m = re.search(r'\b([0-9A-Fa-f]{2,4})\b', comment)
+        hit = m and int(m.group(1), 16) in offsets and not code.strip().startswith(('virtual', 'public', 'private'))
+        if 'virtual' in code or re.match(r'\s*(public|private|protected):', code) or hit \
+                or any(re.search(r'\b' + re.escape(k) + r'\b', code) for k in keep_names):
+            keep.update(range(max(0, n - context), min(len(lines), n + context + 1)) if hit else {n})
+    out, skipped = [], 0
+    for n, line in enumerate(lines):
+        if n in keep:
+            if skipped:
+                out.append(f'\t// ... {skipped} lines omitted')
+                skipped = 0
+            out.append(line)
+        else:
+            skipped += 1
+    if skipped:
+        out.append(f'\t// ... {skipped} lines omitted')
+    return '\n'.join(out), True
+
+
+TYPE_WORD = re.compile(r'\b([A-Z][A-Za-z0-9_]+)\b')
+FLOAT_TYPES = {'float', 'double'}
+
+
+def declaration_of(excerpt_text, method):
+    for line in (excerpt_text or '').splitlines():
+        code = line.split('//', 1)[0]
+        if re.search(r'\b' + re.escape(method) + r'\s*\(', code):
+            return code.strip()
+    return None
+
+
+def convention_notes(decl, owning_class):
+    """Calling and return convention facts for MSVC x64 from a community declaration line."""
+    if not decl:
+        return ['- No declaration found in the community excerpt; derive the signature from the listing.']
+    static = bool(re.search(r'\bstatic\b', decl)) or not owning_class
+    head, _, rest = decl.partition('(')
+    params = [p.strip() for p in rest.rsplit(')', 1)[0].split(',') if p.strip() and p.strip() != 'void']
+    ret = re.sub(r'\b(static|virtual|inline|constexpr|explicit|\[\[nodiscard\]\])\b', '', head).strip()
+    ret = ' '.join(ret.split()[:-1])
+    notes = [f'- Community declaration: `{decl}`.']
+    regs_i, regs_f = ['RCX', 'RDX', 'R8', 'R9'], ['XMM0', 'XMM1', 'XMM2', 'XMM3']
+    slot = 0
+    if not static:
+        notes.append('- Member function: `this` arrives in RCX.')
+        slot = 1
+    hidden = bool(ret) and ret not in ('void', 'bool') and '*' not in ret and '&' not in ret \
+        and TYPE_WORD.search(ret) and not re.fullmatch(r'(const\s+)?(std::)?u?int\d+_t|float|double|char|int|unsigned.*', ret)
+    if hidden:
+        reg = 'RDX' if not static else 'RCX'
+        notes.append(f'- Returns `{ret}` by value. MSVC x64 returns a class in RAX only if it is 1, 2, 4 or 8 bytes '
+                     'and has no user-declared constructor, destructor or copy assignment, no base class, no '
+                     'virtuals and no private or protected data; otherwise the caller passes the result address in '
+                     f'{reg} and the function returns it in RAX. If the listing copies {reg} to RAX before `RET`, the '
+                     'type is returned through that hidden pointer: give it a user-declared constructor (or copy '
+                     'constructor) and build the result in one named local.')
+        slot += 1
+    for i, p in enumerate(params):
+        pos = slot + i
+        if pos >= 4:
+            notes.append(f'- Parameter {i + 1} `{p}` is passed on the stack.')
+            continue
+        is_float = p.split()[0] in FLOAT_TYPES and '*' not in p and '&' not in p
+        notes.append(f'- Parameter {i + 1} `{p}` arrives in {(regs_f if is_float else regs_i)[pos]}.')
+    if ret in FLOAT_TYPES:
+        notes.append('- Returns a float in XMM0.')
+    return notes
+
+
+def drafter_aids(pack_dir, img, addrlib, comms, ident, listing_text, excerpt):
+    """Write vtables.txt, signature-types.h and the convention/offset notes; returns README lines and files."""
+    files, lines = {}, []
+    cls = ident.get('owning_class') if ident else None
+    method = short_name(ident['community_name']).split('::')[-1] if ident and ident.get('community_name') else None
+    if cls:
+        vt = vtable_text(img, addrlib, comms, cls)
+        if vt:
+            (pack_dir / 'vtables.txt').write_text(vt)
+            files['vtables'] = 'vtables.txt'
+    offsets = observed_offsets(listing_text or '')
+    lines += ['', '## Observed memory operands (non-stack)', '']
+    if offsets:
+        lines.append('| displacement | base register | width | at |')
+        lines.append('|---|---|---|---|')
+        for disp, reg, width, at in offsets[:40]:
+            lines.append(f'| 0x{disp:x} | {reg} | {width} | +0x{at:x} |')
+        lines.append('')
+        lines.append('Registers are as at that instruction; at entry RCX is `this` for a member function. Match '
+                     'these displacements to the member offsets in the class excerpt.')
+    else:
+        lines.append('None.')
+    decl = declaration_of(excerpt['text'] if excerpt else '', method) if method else None
+    lines += ['', '## Calling and return convention', ''] + convention_notes(decl, cls)
+    if decl:
+        wanted = sorted({w for w in TYPE_WORD.findall(decl) if w not in (cls, method)})
+        parts = []
+        for name in wanted[:6]:
+            for c in comms:
+                if 'GPL' in c.licence:
+                    continue
+                ex = c.class_excerpt(name, limit=120)
+                if ex:
+                    body, _ = trim_excerpt(ex['text'], {d for d, *_ in offsets}, [], full_limit=1500)
+                    parts.append(f'// {ex["origin"]}: {ex["path"]}:{ex["line"]}\n{body}\n')
+                    break
+        if parts:
+            (pack_dir / 'signature-types.h').write_text('\n'.join(parts))
+            files['signature_types'] = 'signature-types.h'
+    lines += ['', 'Virtual slots: `' + files.get('vtables', 'none (no community vtable id)') + '`; types in the '
+              'signature: `' + files.get('signature_types', 'none') + '`.', '']
+    return files, lines
+
+
+# ---------------------------------------------------------------------------------------------
 # Packs and tasks.
 
 def load_config(path):
@@ -559,7 +808,7 @@ def community_identity(comms, ae_ids):
     return None, None
 
 
-def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing):
+def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing, img):
     pack_dir.mkdir(parents=True, exist_ok=True)
     rva = fact['rva']
     ae_ids = addrlib['by_rva'].get(rva, [])
@@ -590,10 +839,14 @@ def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing):
             files[name] = name
     if decls:
         files['reference_decls'] = name
+    listing = (pack_dir / 'listing.txt').read_text() if (pack_dir / 'listing.txt').is_file() else ''
     if excerpt:
         name = 'class-excerpt.GPL-local-only.h' if gpl else 'class-excerpt.h'
-        (pack_dir / name).write_text(f'// {excerpt["origin"]}: {excerpt["path"]}:{excerpt["line"]}\n'
-                                     + excerpt['text'] + '\n')
+        method = short_name(ident['name']).split('::')[-1]
+        text, trimmed = trim_excerpt(excerpt['text'], {d for d, *_ in observed_offsets(listing)}, [method])
+        (pack_dir / name).write_text(f'// {excerpt["origin"]}: {excerpt["path"]}:{excerpt["line"]}'
+                                     + (' (trimmed to the declaration head, virtuals, this method and the members at '
+                                        'observed offsets)' if trimmed else '') + '\n' + text + '\n')
         files['class_excerpt'] = name
     if source:
         name = 'source-excerpt.GPL-local-only.cpp' if 'GPL' in source['origin'] else 'source-excerpt.cpp'
@@ -622,8 +875,10 @@ def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing):
         'fp_arith': fact.get('ghidra', {}).get('fp_arith'),
         'cond_branches': fact.get('ghidra', {}).get('cond_branches'),
         'files': files, 'timing_seconds': timing}
+    aid_files, aid_lines = drafter_aids(pack_dir, img, addrlib, comms, pack['identity'], listing, excerpt)
+    files.update(aid_files)
     (pack_dir / 'pack.json').write_text(json.dumps(pack, indent=2, default=hex) + '\n')
-    (pack_dir / 'README.md').write_text(render_pack_readme(pack))
+    (pack_dir / 'README.md').write_text(render_pack_readme(pack) + '\n'.join(aid_lines))
     return pack
 
 
@@ -834,7 +1089,7 @@ def cmd_packs(args):
     for rva, task_id, unit in rows:
         fact = classify(img, addrlib, comms, rva, gmeta.get(rva), grefs.get(rva, []))
         pack = write_pack(REPO / '.local/packs' / target['build_id'] / hex(rva), fact, target, addrlib, comms,
-                          run / 'ghidra', {'ghidra_share': round(t_ghidra / len(rows), 2)})
+                          run / 'ghidra', {'ghidra_share': round(t_ghidra / len(rows), 2)}, img)
         packs[rva] = pack
         by_task.setdefault(task_id, []).append((pack, unit))
         print(f'{hex(rva)} {pack["size"]} B {pack["verdict"]} {",".join(pack["reasons"])} '
@@ -859,6 +1114,39 @@ def cmd_packs(args):
               'python_s': round(t_py, 2), 'total_s': round(total, 1), 's_per_function': round(total / len(rows), 2)}
     (run / 'timing.json').write_text(json.dumps(timing, indent=2) + '\n')
     print(json.dumps(timing))
+
+
+def cmd_refresh(args):
+    """Rewrite the Drafter aids, trimmed excerpt and README of existing packs from pack.json (no Ghidra run)."""
+    cfg = load_config(args.config)
+    target, img, addrlib, comms = setup(cfg)
+    for d in args.pack:
+        pack_dir = Path(d)
+        pack = json.loads((pack_dir / 'pack.json').read_text())
+        if pack['image_sha256'] != target['image_sha256']:
+            raise SystemExit(f'{pack_dir}: pack is for another image')
+        ident = pack['identity']
+        for key in ('instructions', 'cond_branches', 'indirect_calls', 'fp_arith'):
+            pack.setdefault(key, None)  # packs from earlier exporter versions lack some counts
+        listing = (pack_dir / 'listing.txt').read_text() if (pack_dir / 'listing.txt').is_file() else ''
+        excerpt = None
+        if ident.get('owning_class'):
+            for c in comms:
+                excerpt = c.class_excerpt(ident['owning_class'])
+                if excerpt:
+                    break
+        name = pack['files'].get('class_excerpt')
+        if excerpt and name:
+            method = (ident.get('community_name') or '').split('::')[-1]
+            text, trimmed = trim_excerpt(excerpt['text'], {o for o, *_ in observed_offsets(listing)}, [method])
+            (pack_dir / name).write_text(f'// {excerpt["origin"]}: {excerpt["path"]}:{excerpt["line"]}'
+                                         + (' (trimmed to the declaration head, virtuals, this method and the members '
+                                            'at observed offsets)' if trimmed else '') + '\n' + text + '\n')
+        files, lines = drafter_aids(pack_dir, img, addrlib, comms, ident, listing, excerpt)
+        pack['files'].update(files)
+        (pack_dir / 'pack.json').write_text(json.dumps(pack, indent=2, default=hex) + '\n')
+        (pack_dir / 'README.md').write_text(render_pack_readme(pack) + '\n'.join(lines))
+        print(f'{pack_dir}: ' + ', '.join(sorted(files)) or 'no aids')
 
 
 def named_rvas(img, addrlib, comms):
@@ -934,6 +1222,8 @@ def main():
     s.add_argument('--sample', type=int, default=2000)
     s.add_argument('--seed', type=int, default=1)
     s.add_argument('--named', action='store_true', help='Every community-named function instead of a sample')
+    r = sub.add_parser('refresh', help='Rebuild Drafter aids of existing packs without running Ghidra')
+    r.add_argument('pack', nargs='+')
     b = sub.add_parser('bind')
     b.add_argument('--task', required=True)
     b.add_argument('--object', default=None, help='Default: the newest attempts/<NNN>/candidate.obj')
@@ -942,6 +1232,8 @@ def main():
         cmd_packs(args)
     elif args.cmd == 'survey':
         cmd_survey(args)
+    elif args.cmd == 'refresh':
+        cmd_refresh(args)
     else:
         sys.exit(bind(args.task, args.object))
 
