@@ -10,7 +10,7 @@ import sys
 import tempfile
 
 from compare import COMPARATOR_VERSION, CONTRACT_VERSION, REPORT_SCHEMA, comparator_source_sha256, sanitized
-from source_digest import DIGEST_METHOD, include_closure, tu_digest
+from source_digest import DIGEST_METHOD, INCLUDE_ROOTS, include_closure, recipe_flag_problem, tu_digest
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED = set('.exe .dll .pdb .obj .o .lib .a .so .dylib .dmp .mdmp .bin .bsa .ba2 .esm .esp .esl .nif .dds .pex .hkx .ess .skse .gdt .gpr .idb .i64 .zip .7z .iso .vhdx .qcow2 .png .jpg .jpeg .pdf'.split())
@@ -125,9 +125,11 @@ def validate_match(fn, target, root=None):
             'Match record: recipe does not pin a compiler hash and version')
     flags = recipe.get('flags')
     require(isinstance(flags, list) and flags and all(text(f) for f in flags), 'Match record: recipe has no flags')
-    # A forced include adds a header to the unit without any #include directive the closure can see.
-    require(not any(f[:1] in '/-' and f[1:3].upper() == 'FI' for f in flags),
-            'Match record: recipe uses a forced include (/FI), which the translation unit cannot bind')
+    # Include-path and forced-include flags would let the compiler read headers the closure does not
+    # model; the allowed roots are the closure's own INCLUDE_ROOTS, so the two cannot drift.
+    problem = recipe_flag_problem(flags)
+    require(problem is None, f'Match record: recipe flags: {problem}; only /I {" or /I ".join(INCLUDE_ROOTS)} '
+            'may name an include path')
 
     pin = record.get('toolchain_pin') or {}
     require(pin.get('path') == TOOLCHAIN_PIN, f'Match record: toolchain_pin must be {TOOLCHAIN_PIN}')

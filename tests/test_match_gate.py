@@ -575,12 +575,74 @@ class MatchGateTests(GateFixture, unittest.TestCase):
         self.unlisted_extra('#include "syntheticextra.h"\n')
         self.assertGateRejects('cannot be resolved inside the repository')
 
-    def test_forced_include_in_recipe_rejected(self):
-        self.recipe_bytes = fx.recipe(flags=('/O2', '/Gy', '/FISyntheticExtra.h'))
+    def use_recipe(self, *extra):
+        self.recipe_bytes = fx.recipe(flags=('/O2', '/Gy') + extra)
         self.write(RECIPE, self.recipe_bytes)
         self.record = self.make_record()
         self.save_record()
-        self.assertGateRejects('forced include')
+
+    def test_forced_include_in_recipe_rejected(self):
+        self.use_recipe('/FISyntheticExtra.h')
+        self.assertGateRejects('include behaviour flag /FI')
+
+    def test_recipe_include_path_other_rejected(self):
+        self.use_recipe('/I', 'other')
+        self.assertGateRejects('include path flag /I other')
+
+    def test_recipe_dash_include_path_other_rejected(self):
+        self.use_recipe('-Iother')
+        self.assertGateRejects('include path flag -Iother')
+
+    def test_recipe_ignore_standard_paths_rejected(self):
+        self.use_recipe('/X')
+        self.assertGateRejects('include behaviour flag /X')
+
+    def test_recipe_external_include_rejected(self):
+        self.use_recipe('/external:I', 'x')
+        self.assertGateRejects('include path flag /external:I')
+
+    def test_recipe_response_file_rejected(self):
+        self.use_recipe('@rsp')
+        self.assertGateRejects('response file @rsp')
+
+    def test_recipe_include_root_accepted(self):
+        self.use_recipe('/I', 'reconstruction')
+        self.check()
+
+    # Angle includes: repository headers found through an include root are bound like quoted ones.
+
+    def test_angle_include_of_repo_header_unlisted_rejected(self):
+        self.unlisted_extra('#include <synthetic/SyntheticExtra.h>\n')
+        self.assertGateRejects('omits files .* includes: ' + EXTRA)
+
+    def test_angle_include_of_repo_header_listed_accepted(self):
+        self.unlisted_extra('#include <synthetic/SyntheticExtra.h>\n')
+        self.rebind([CPP, HDR, EXTRA])
+        self.check()
+
+    def test_angle_included_repo_header_edited_rejected(self):
+        self.unlisted_extra('#include <synthetic/SyntheticExtra.h>\n')
+        self.rebind([CPP, HDR, EXTRA])
+        self.write(EXTRA, 'long SyntheticExtra;\n')
+        self.assertGateRejects('source digest is stale')
+
+    def test_angle_include_of_toolchain_header_ignored(self):
+        self.unlisted_extra('#include <SyntheticToolchainOnly.h>\n#include <cstdint>\n')
+        self.check()
+
+    def test_angle_include_does_not_search_includer_directory(self):
+        # SyntheticExtra.h sits beside the .cpp but not under an include root: MSVC's angle search
+        # would not find it there, so it is a toolchain name, not a repository file.
+        self.unlisted_extra('#include <SyntheticExtra.h>\n')
+        self.check()
+
+    def test_angle_include_other_case_rejected(self):
+        self.unlisted_extra('#include <Synthetic/SyntheticExtra.h>\n')
+        self.assertGateRejects('not admissible')
+
+    def test_angle_include_leaving_roots_rejected(self):
+        self.unlisted_extra('#include <../tools/x.h>\n')
+        self.assertGateRejects('leaves the include roots')
 
     # Reviewer approval: a sanitized record bound to this function and this source.
 
@@ -708,12 +770,31 @@ class TuTaskUnitTests(GateFixture, unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('not exactly #include "path"', result.stderr)
 
+    def test_recipe_with_other_include_path_refused(self):
+        self.recipe_bytes = fx.recipe(flags=('/O2', '/Gy', '/Iother'))
+        self.write(RECIPE, self.recipe_bytes)
+        result = self.run_task([CPP, HDR])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('include path flag /Iother', result.stderr)
+
     def test_block_comment_include_counted(self):
         self.write(EXTRA, 'int SyntheticExtra;\n')
         self.write(CPP, '/*\n#include "SyntheticExtra.h"\n*/\n' + (self.root / CPP).read_text())
         result = self.run_task([CPP, HDR])
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(f"missing: ['{EXTRA}']", result.stderr)
+
+
+class RecipeFlagTests(unittest.TestCase):
+    def test_allowed_and_refused_flags(self):
+        from source_digest import recipe_flag_problem
+        for flags in (['/O2'], ['/I', 'reconstruction'], ['/Ireconstruction'], ['/I reconstruction'],
+                      ['-Ireconstruction'], ['/DX=1', '/UY', '-DZ']):
+            self.assertIsNone(recipe_flag_problem(flags), flags)
+        for flags in (['/I', 'other'], ['-I', 'other'], ['/I'], ['/X'], ['-X'], ['/external:I', 'x'],
+                      ['/external:W4'], ['/imsvc', 'x'], ['@rsp'], ['/FIx.h'], ['-FIx.h'], ['/FUx.dll'],
+                      ['/AIdir'], ['/Yustdafx.h'], ['/Ireconstruction/synthetic'], ['file.cpp']):
+            self.assertIsNotNone(recipe_flag_problem(flags), flags)
 
 
 class IntegratedRecordTests(unittest.TestCase):

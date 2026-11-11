@@ -22,7 +22,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from source_digest import include_closure, tu_digest  # noqa: E402
+from source_digest import include_closure, recipe_flag_problem, tu_digest  # noqa: E402
 
 
 def sha256(path):
@@ -67,6 +67,9 @@ def main():
     fn = fns[0]
     revision = tu_digest(repo, a.unit)
     recipe = repo / a.recipe
+    problem = recipe_flag_problem(json.loads(recipe.read_text()).get('flags'))
+    if problem is not None:
+        raise SystemExit(f'recipe flags: {problem}; the include closure cannot model it')
     task = {'task_id': a.task_id or a.function_id, 'build_id': fn['build_id'],
             'target_image_sha256': target['image_sha256'],
             'rva': fn['rva'] if a.rva is None else a.rva, 'size': fn['size'] if a.size is None else a.size,

@@ -141,7 +141,13 @@ Match record, recomputed from the tree:
   produce directives and the other spellings of `#` and of names are refused. So every real
   quoted include is on a line holding both `#` and `include`, which is either counted or
   refused. The argument is written out above `quoted_includes` in `tools/source_digest.py`.
-  A recipe forced include (`/FI`) is refused too.
+  Recipe flags may name no include path or include behaviour other than `/I reconstruction`
+  (also written `/Ireconstruction` or `-I`): `/I` or `-I` with any other directory, `/X`,
+  `/FI`, `/FU`, `/AI`, `/Y*` (precompiled headers), `/external:*`, `/imsvc` and response files
+  `@file` are refused, as is any argument that is not a flag. `/D` and `/U` are fine. The
+  allowed directories are `INCLUDE_ROOTS` in `tools/source_digest.py`, the same constant the
+  closure resolves against, so the check and the closure cannot drift (`recipe_flag_problem`,
+  used by `tools/check.py` and `tools/verifier/tu_task.py`).
 
   A quoted include resolves against the including file's directory, then the directories of the
   files that included it (innermost first, as MSVC searches), then the include root
@@ -149,15 +155,22 @@ Match record, recomputed from the tree:
   resolve to exactly one regular file whose real path stays inside the repository and outside
   `.local/` and `.git/`, with no symlink in any path component, and spelled exactly as on disk
   with no sibling differing only in case (Windows hosts look names up case-insensitively);
-  otherwise it fails closed as unresolvable or ambiguous. Angle-bracket includes are toolchain
-  and SDK headers, not repository files: they are bound by the pinned toolchain hash, not by the
-  source digest. Directives inside `#if 0` are still counted, which can only over-include. The
+  otherwise it fails closed as unresolvable or ambiguous. An angle-bracket include is resolved
+  against the include root only (as MSVC searches `/I` directories, not the includer's): if it
+  reaches a repository file it joins the closure exactly like a quoted include; if the name
+  matches a repository path only case-insensitively or through a symlink, or contains `..`, it is
+  refused; otherwise it is a toolchain or SDK header, bound by the pinned toolchain hash, not by
+  the source digest. Directives inside `#if 0` are still counted, which can only over-include. The
   digest definition (`tu-sha256-v1`) is unchanged. The digest of that unit equals the record's, and every report
   names that digest and the compiled file's path. `tools/verifier/tu_task.py` applies the same
   closure rule, so a verifier task cannot be built from an incomplete unit.
   Follow-up, not implemented: when a verifier builds a task, cross-check the derived closure
   against the compiler's own `/showIncludes` output for that compile (repository files only),
   and refuse the task on any difference.
+  Follow-up, not implemented: the verifier's `INCLUDE` environment variable also takes part in
+  include search (as do `CL` and `_CL_`, which add flags). Pin `INCLUDE` to the toolchain and SDK
+  directories and leave `CL`/`_CL_` unset in the build scripts, or record all three in the build
+  record, so the toolchain-header assumption above is checked rather than assumed.
 - **Target.** Every report's image hash equals `builds/target.json`. Its build id, RVA and size
   equal the inventory entry's, and the pinned symbol map places the symbol at that range.
 - **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match

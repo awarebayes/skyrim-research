@@ -11,7 +11,9 @@ Which repository files form the unit is not the caller's choice: `include_closur
 the compiled file's quoted `#include "..."` directives, transitively, and the gate and the
 verifier task both require the listed unit to equal that closure. Angle-bracket includes name
 toolchain and SDK headers: they are not repository files and are bound by the pinned toolchain
-hash (tools/verifier/pinned.sha256), not by this digest.
+hash (tools/verifier/pinned.sha256), not by this digest, unless they resolve against
+INCLUDE_ROOTS (the only `/I` directories a recipe may name, see `recipe_flag_problem`), in which
+case they are repository files and join the closure like quoted ones.
 
 The scan fails closed by construction and keeps no lexical state (see the comment above
 `quoted_includes` and docs/verification.md, "Match gate"): after strict UTF-8 decoding, one BOM
@@ -89,14 +91,13 @@ def logical_lines(blob, name):
 # tricks between `#` and the name, null directives and unknown directives. Lines that are only
 # inside comments or strings may be counted or refused too: that over-includes, never under.
 def quoted_includes(blob, name):
-    """The quoted include targets of one file, in order; raises on any line it cannot classify."""
+    """The include targets of one file as (`"` or `<`, path), in order; raises on any unclassifiable line."""
     targets = []
     for number, line in enumerate(logical_lines(blob, name), 1):
         where = f'{name}:{number}'
         strict = STRICT_INCLUDE.fullmatch(line)
         if strict is not None:
-            if strict.group(1) is not None:
-                targets.append(strict.group(1))
+            targets.append(('"', strict.group(1)) if strict.group(1) is not None else ('<', strict.group(2)))
             continue
         if '#' in line and any(word in line for word in INCLUDE_WORDS):
             _refuse(where, 'a line with # and include/import is not exactly #include "path" or #include <path> '
@@ -139,6 +140,54 @@ def _repo_file(root, rel):
     return norm if os.path.isfile(real) else None
 
 
+def _present_loosely(root, rel):
+    """Whether something exists at `rel` under root when names are compared case-insensitively."""
+    current = os.path.realpath(root)
+    for part in os.path.normpath(rel).replace(os.sep, '/').split('/'):
+        try:
+            entries = os.listdir(current)
+        except OSError:
+            return False
+        match = [e for e in entries if e.casefold() == part.casefold()]
+        if not match:
+            return False
+        current = os.path.join(current, match[0])
+    return True
+
+
+def recipe_flag_problem(flags):
+    """Why a recipe's compile flags would let the compiler find headers the closure does not model, or None.
+
+    The closure models exactly the include roots in INCLUDE_ROOTS, so the only include-path flag
+    allowed is `/I <root>` (or `-I`) for one of them. Every other flag that adds search paths,
+    forces includes, changes include lookup or reads more flags from a file is refused.
+    """
+    if not isinstance(flags, list):
+        return 'flags are not a list'
+    allowed = set(INCLUDE_ROOTS)
+    i = 0
+    while i < len(flags):
+        flag = flags[i]
+        if not isinstance(flag, str) or not flag.strip():
+            return 'empty flag'
+        if flag[:1] == '@':
+            return f'response file {flag}'
+        if flag[:1] not in '/-':
+            return f'argument {flag!r} is not a flag'
+        body = flag[1:]
+        if body in {'I', 'external:I'} or body[:1].upper() == 'I':
+            value = body[1:].strip() if body[:1] == 'I' and len(body) > 1 else None
+            if body == 'I' and i + 1 < len(flags):
+                value, i = flags[i + 1], i + 1
+            if body[:1] != 'I' or value not in allowed:
+                return f'include path flag {flag}' + (f' {value}' if body == 'I' and value is not None else '')
+        elif (body[:1].upper() in {'X', 'Y'} or body[:2].upper() in {'FI', 'FU', 'AI'}
+              or body.lower().startswith(('external', 'imsvc'))):
+            return f'include behaviour flag {flag}'
+        i += 1
+    return None
+
+
 def include_closure(root, compiled):
     """Every repository file of the translation unit of `compiled`, sorted; see the module doc."""
     root = Path(root)
@@ -157,16 +206,27 @@ def include_closure(root, compiled):
         if key in visited:
             continue
         visited.add(key)
-        for target in quoted_includes((root / name).read_bytes(), name):
+        for kind, target in quoted_includes((root / name).read_bytes(), name):
+            shown = f'"{target}"' if kind == '"' else f'<{target}>'
+            # Angle includes search only the /I roots (then the toolchain), never the includer's directory.
+            bases = (dirs if kind == '"' else []) + [PurePosixPath(r) for r in INCLUDE_ROOTS]
+            if kind == '<' and (PurePosixPath(target).is_absolute() or '..' in PurePosixPath(target).parts):
+                raise ValueError(f'{name}: #include {shown} leaves the include roots')
             found = []
             if not PurePosixPath(target).is_absolute():
-                for base in dirs + [PurePosixPath(r) for r in INCLUDE_ROOTS]:
+                for base in bases:
                     hit = _repo_file(root, (base / target).as_posix())
                     if hit is not None and hit not in found:
                         found.append(hit)
+                    elif hit is None and kind == '<' and _present_loosely(root, (base / target).as_posix()):
+                        # A Windows host could still open it (other case, symlink), so it is not a
+                        # toolchain header; the closure cannot bind it either.
+                        raise ValueError(f'{name}: #include {shown} names a repository path that is not admissible')
+            if kind == '<' and not found:
+                continue  # toolchain or SDK header, bound by the toolchain pin
             if len(found) != 1:
                 what = 'cannot be resolved inside the repository' if not found else f'is ambiguous ({", ".join(found)})'
-                raise ValueError(f'{name}: #include "{target}" {what}')
+                raise ValueError(f'{name}: #include {shown} {what}')
             seen.add(found[0])
             if found[0] != name and found[0] not in chain:
                 stack.append((found[0], chain + (name,)))
