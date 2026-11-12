@@ -29,6 +29,7 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import align  # noqa: E402
 import bind  # noqa: E402
 import boatctl  # noqa: E402
 import disasm  # noqa: E402
@@ -136,6 +137,9 @@ def attempt(task_dir):
             line, result = pipeline.function_line(fn, fdir, dest / 'candidate.obj')
             rows.append('  ' + line)
             outcome.append(result)
+            if result == 'fail':  # aligned diagnostics (align.py): distance and classes under the function's line
+                rows[-1] += ''.join(f'\n      {s}' for s in align.attempt_summary(
+                    fdir, objdump, config.get('image'), dest / 'candidate.obj', fn, task['symbols_local']))
             sbs, why = disasm.write_side_by_side(fdir / 'side-by-side.txt', objdump, config.get('image'),
                                                  dest / 'candidate.obj', fn['symbol'], fn['rva'], fn['size'])
             if sbs is None and why and not any('side-by-side' in r for r in rows):

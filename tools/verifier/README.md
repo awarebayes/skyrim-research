@@ -41,6 +41,14 @@ repository symbol map, and refuses to overwrite a record without `--replace`. Bo
 - `attempt`, `confirm`: the commands above; `pipeline.py` holds their shared logic, `boatctl.py`
   the Boat CLI calls, `disasm.py` the local side-by-side disassembly, `bind.py` the binding of
   decorated names to target RVAs (rules and hint format in its docstring).
+- `align.py`: aligned diagnostics for a failing function. It normalises both listings (registers
+  as widths, references as RVAs, branches as labels), aligns them, names each difference in a
+  fixed vocabulary that maps onto `docs/matching-cookbook.md`, and gives one distance with
+  prologue, body and reference components (formula in its docstring; 0 only for identical bytes).
+  `attempt` prints its summary (no bytes, no instruction text) under each failing function and
+  writes `align.txt` (private aligned listing) and `align.json` (for a search tool) next to the
+  side-by-side. Run it on stored attempts with `tools/verifier/align.py --attempt <dir>`. A
+  reading aid and a score, never evidence of a match.
 - `unit_build.py`: runs on the verifier host. Checks the synced copy against the spec's hashes,
   the toolchain against `pinned.sha256` and the image against `builds/target.json` (once per
   boot), compiles with the build-path checks of `docs/verification.md` (cleared `INCLUDE`/`CL`/
