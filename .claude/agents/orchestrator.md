@@ -43,7 +43,8 @@ Every brief contains: task id, plan step and issue, gates in force and what they
 inputs, exact output paths, acceptance criteria, attempt and time limits, the handoff path
 `.local/handoffs/<task-id>.md`, and the line "Do not push, post publicly, mark `matched`, or
 start further agents." Only an integration brief lifts the push and `matched` parts, and only
-for functions that meet every condition of the acceptance rule.
+for functions that meet every condition of the acceptance rule, and it repeats the temporary
+holds in `docs/verification.md` ("Temporary holds") while they apply.
 
 Results come from deterministic comparator reports, never from a model's opinion; a Reviewer
 `approve` is a required check on top of a reproduced pass, not evidence of a match. On `reject`,

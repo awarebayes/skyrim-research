@@ -479,6 +479,20 @@ it is not evidence, and `prior_review` is ignored by the acceptance tool. When t
 unchanged and the earlier rejects were naming-only, the new review is mostly a reclassification;
 when the unit changed with no verified base, the Reviewer reads the whole unit.
 
+### Temporary holds
+
+Two operational holds apply on top of the rule above. They are temporary: each lifts when its
+condition is met, and the tools already enforce the rule itself.
+
+- Until the maintainer confirms the label-only scope (the `docs/authorizations.md` Note), use
+  `--label-only` only for units whose `git diff` since the approved digest is confined to label
+  and comment lines, checked by the integrating Engineer and stated per unit in the handoff. Any
+  other change takes a delta or full review. Why: the tool re-accepts any change that keeps the
+  code-section hash, which is wider than the scope the maintainer recorded.
+- Until the extract path refuses stray review blocks in a transcript, accept reviews only from
+  files saved under `.local/reviews/`, never with `--review -` (stdin) or a path outside the
+  repository. Why: text cut from a transcript can carry a block that was never the final verdict.
+
 ## Acceptance tool, source lint and tests
 
 `tools/accept_function.py` checks the private review file (its block for the function says
