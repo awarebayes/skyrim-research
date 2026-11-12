@@ -108,7 +108,10 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
 
     def test_generator_record_family_plan_roundtrip(self):
         from types import SimpleNamespace
-        import stamp
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("family_stamp", ROOT / "tools/stamp.py")
+        stamp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(stamp)
         from verifier import match_record
         template = ROOT / 'tools/stamp_template_v2.py'
         self.write('tools/stamp_template_v2.py', template.read_text())
