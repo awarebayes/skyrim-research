@@ -666,7 +666,12 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
             continue
         esc = [(r, b.get('escalation_category')) for r, b in blocks.items() if b.get('verdict') == 'escalate']
         for rva, cat in esc:
-            if cat in BLOCKING_ESCALATIONS:
+            if cat in BLOCKING_ESCALATIONS and reviewer_class(g['reviewer_model']) != 'opus':
+                # docs/verification.md: an Opus Reviewer confirms a non-Opus escalation before the maintainer sees it.
+                stops.append(('stop', f'Reviewer ({g["reviewer_model"]}) escalated {rva} in {name} ({cat}): hold group {name} '
+                              'and hand it to the planning orchestrator for an Opus confirmation review; the maintainer '
+                              'gets it only if Opus also escalates'))
+            elif cat in BLOCKING_ESCALATIONS:
                 stops.append(('stop', f'ESCALATE to the maintainer: Reviewer escalated {rva} in {name} ({cat}); hold group {name}'))
         if any(c in BLOCKING_ESCALATIONS for _, c in esc):
             continue

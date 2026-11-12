@@ -72,8 +72,9 @@ A function is accepted only when ALL of these hold:
      recomputes it from the index, so a closure file that is not staged fails the commit.
    - What the tools cannot see is left to the Reviewer's blocking grounds below: a helper
      introduced only for matching, or a justification comment that is not a programmer's reason.
-3. **Reviewer approval.** A Reviewer subagent (`.claude/agents/reviewer.md`, Opus class) started
-   with fresh context, which did not draft or triage that function, returns `approve` for it,
+3. **Reviewer approval.** A Reviewer (`docs/reviewer-runbook.md`; in Claude Code the
+   `.claude/agents/reviewer.md` subagent) of an admitted class, started with fresh context, which
+   did not draft or triage that function, returns `approve` for it,
    for the current source or, under "Label-only re-acceptance" below, for an earlier source whose
    compiled code section is identical. The Reviewer is a necessary sanity and provenance check,
    not match evidence: it can only veto or approve, cannot substitute for item 1, and cannot edit
@@ -106,6 +107,18 @@ A function is accepted only when ALL of these hold:
    leftover declarations that compile to nothing, header and comment wording, and missing notes.
    The Reviewer lists these as `naming_findings` for the function and still approves if no blocking ground holds.
    They are published (next item), so they hold no code, bytes, disassembly or private paths.
+
+   **Admitted Reviewer classes.** Function reviews use the Sonnet class by default (Claude
+   Sonnet); the Terra class as the Reviewer (OpenAI Terra through the maintainer's Codex
+   subscription) is admitted for the `claude-low` profile, within the exposure recorded in
+   `docs/authorizations.md`. Each class was admitted on a blind calibration against Opus reviews
+   of the same functions at the same source revision (`tools/review_compare.py`), with no missed
+   reject. The Opus class is always admitted and is required for: the sampling safeguard's second
+   Reviewer pass; confirming an `escalate` from a non-Opus Reviewer before it reaches the
+   maintainer (a non-Opus `reject` needs no confirmation: it only sends the function back); and
+   every review of a comparator, validator or acceptance-rule change. A new Reviewer model or
+   class counts as a new Reviewer version for the sampling safeguard. `tools/flow.py` refuses a
+   Reviewer class this paragraph does not admit.
 
    Verdicts are `approve`, `reject` (on a blocking ground, back to the Drafter or Engineer with
    reasons) or `escalate` (with a category: `provenance`, `legal`, `systemic` or `other`). The
@@ -152,10 +165,11 @@ Label fixes themselves do not need one: see "Label-only re-acceptance".
 
 **Sampling safeguard.** At least 5% of accepted functions, chosen at random by the orchestrator,
 plus the first 20 accepted functions under every new recipe or compiler, every new Drafter prompt
-version, every new Reviewer prompt version (`.claude/agents/reviewer.md`) and every new version of
+version, every new Reviewer prompt version (`.claude/agents/reviewer.md`, `docs/reviewer-runbook.md`)
+or Reviewer model, and every new version of
 the acceptance rule (this section and `tools/accept_function.py`), and the first 20 label-only
 re-acceptances under each acceptance-rule version, get a second independent Reviewer pass (fresh context, a different
-Reviewer run) and a from-scratch comparator re-run on a clean checkout. Any disagreement, with
+Reviewer run, Opus class) and a from-scratch comparator re-run on a clean checkout. Any disagreement, with
 either Reviewer or with the earlier comparator result, pauses acceptance for that batch and is
 escalated to the maintainer.
 

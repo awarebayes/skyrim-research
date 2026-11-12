@@ -254,6 +254,17 @@ class FlowTests(unittest.TestCase):
         with self.assertRaisesRegex(flow.FlowError, 'blocking escalation'):
             flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
 
+    def test_non_opus_escalation_goes_to_an_opus_confirmation_first(self):
+        (self.root / 'docs/verification.md').write_text('the Sonnet class by default\n')
+        flow.log_event(self.fdir, 'session-start')
+        g = flow.load_group(self.fdir, flow.review_group(self.root, self.fdir, max_size=3, reviewer_model='sonnet')[0])
+        blocks = [(r, s, self.repo.digest(r), 'escalate' if r == 0x2000 else 'approve',
+                   'provenance' if r == 0x2000 else 'none') for r, s, _ in FUNCS]
+        self.repo.save_review(g['task_id'], blocks)
+        stops = [t for k, t in self.actions() if k == 'stop']
+        self.assertTrue(any('Opus confirmation' in t for t in stops), stops)
+        self.assertFalse(any(t.startswith('ESCALATE to the maintainer') for t in stops))
+
     def test_malformed_review_asks_for_a_new_reviewer_never_an_edit(self):
         g = self.grouped()
         path = self.repo.save_review(g['task_id'], [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS])
