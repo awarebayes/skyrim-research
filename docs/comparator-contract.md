@@ -360,6 +360,13 @@ section hash (below), recipe hash,
 compiler hash, version and flags, coverage counts, `result` (`pass` or `fail`), a stable `reason`
 code and a short `detail`. It always has `acceptance: not-evaluated`.
 
+From 0.5.0 it also has `symbol_map_sha256`, the SHA-256 of the symbol map file exactly as the
+comparator read it (absent only when a caller passes an already parsed map, which the command line
+never does), and `coverage.funclet_ranges`, the `[target RVA, length]` of every compared funclet
+in comparison order: addresses and lengths only, no bytes. The match gate requires every run's
+map hash to equal the record's pin, and uses the funclet ranges to carry a record across map
+additions that lie outside them (`docs/verification.md`, "Symbol map").
+
 `candidate.code_section_sha256` (`code-section-sha256-v1`) identifies the compared code
 independently of the object file around it, so it is identical across clean compiles of the same
 source and recipe, unlike `object_sha256`. It is SHA-256 over a fixed prefix, the number of
@@ -403,7 +410,7 @@ under `.local/`. Exit status is 0 for `pass`, 1 for `fail`, 2 for unreadable inp
 | comparator | contract | change |
 |---|---|---|
 | 0.4.0 | 2 | EH data, funclets, chained unwind, jump tables |
-| 0.5.0 | 2 | thread-local variables: `SECREL` in code against thread-local map entries, `_tls_index` from the TLS directory, the `thread-local` map entry kind |
+| 0.5.0 | 2 | thread-local variables: `SECREL` in code against thread-local map entries, `_tls_index` from the TLS directory, the `thread-local` map entry kind; reports add `symbol_map_sha256` and `coverage.funclet_ranges` |
 
 0.5.0 widens what can pass and also turns some 0.4.0 passes into fails. A candidate without a
 `SECREL` relocation, compared with a map whose entries carry no `kind` key and which has no
@@ -416,7 +423,8 @@ entry in an image without a TLS directory, or one disagreeing with the directory
 `_tls_index` used to resolve through the map and now resolves through the TLS directory. No
 accepted function's map names `_tls_index` or gives an entry a `kind` (the repository symbol map
 has neither), so no accepted result depends on these changes. The reason codes of 0.4.0 and
-`candidate.code_section_sha256` are unchanged; `relocations_by_type` may now count `SECREL`.
+`candidate.code_section_sha256` are unchanged; `relocations_by_type` may now count `SECREL`, and
+reports gain the two fields described under "Report".
 
 That is a statement about results, not about records. The match gate binds every report to the
 current comparator version and source hash (`docs/verification.md`, "Comparator"), so a version

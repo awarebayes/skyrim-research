@@ -34,7 +34,8 @@ DEFAULT_DIAGNOSTICS = PRIVATE_ROOT / 'verifier' / 'diagnostics'
 TASK_SCHEMA = 1
 HEX_RUN = re.compile(r'[0-9a-fA-F]{16,}')
 HASH_KEYS = {'image_sha256', 'expected_image_sha256', 'object_sha256', 'code_section_sha256', 'recipe_sha256',
-             'compiler_binary_sha256', 'source_sha256', 'source_revision'}
+             'compiler_binary_sha256', 'source_sha256', 'source_revision',
+             'symbol_map_sha256'}
 
 # One line of next-step guidance per reason code, so a reconstruction loop can act on the
 # result without seeing bytes. Codes not listed fall back to the comparator's own detail.

@@ -243,6 +243,10 @@ def check_match(fn, target, root=None):
     entry = (symbol_map.get('symbols') or {}).get(next(iter(symbols)))
     require(isinstance(entry, dict) and entry.get('rva') == fn['rva'] and entry.get('size') == fn['size'],
             'Match record: symbol map does not place the function at the inventory range')
+    # The pin says which map version the runs used; only the comparator's own hash of the bytes it
+    # read shows that they did.
+    require(all(run['report'].get('symbol_map_sha256') == map_ref.get('sha256') for run in runs),
+            'Match record: a report did not read the pinned symbol map (symbol_map_sha256 differs from the pin)')
     require(len(compiled_on) >= MIN_HOSTS and len(compared_on) >= MIN_HOSTS,
             f'Match record: runs must come from at least {MIN_HOSTS} compile hosts and {MIN_HOSTS} compare hosts')
     # Host names are self-reported. Without /Brepro, two clean compiles do not yield the same object

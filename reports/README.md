@@ -37,6 +37,7 @@ Written by `tools/verifier/match_record.py`, which refuses to write a record tha
   quoted-include closure (`docs/verification.md`, "Match gate"); angle-bracket includes are
   toolchain headers bound by the toolchain pin.
 - `recipe`, `toolchain_pin` (`tools/verifier/pinned.sha256`), `symbol_map`: path and SHA-256 of each.
+  Every run's report must give the same map SHA-256 in `symbol_map_sha256`.
 - `reproduction`: the commands the compile hosts ran, with the cleared environment and the added
   `/showIncludes`, then the commands to rebuild the comparator task and re-run the comparison.
 - `build`: per compile host, the flags actually passed to `cl` (recipe flags plus `added_flags`),

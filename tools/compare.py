@@ -26,7 +26,7 @@ IDENT = re.compile(r'[a-z0-9][a-z0-9-]*')
 # Hex runs this long in a non-hash field would most likely be leaked bytes, so they are refused.
 HEX_RUN = re.compile(r'[0-9a-fA-F]{16,}')
 HASH_KEYS = {'image_sha256', 'expected_image_sha256', 'object_sha256', 'code_section_sha256', 'recipe_sha256',
-             'compiler_binary_sha256', 'source_sha256', 'source_revision'}
+             'compiler_binary_sha256', 'source_sha256', 'source_revision', 'symbol_map_sha256'}
 
 # Displacement relocations: field is a signed 32-bit offset from the end of the instruction,
 # which ends `k` bytes after the 4-byte field (an immediate operand follows for k > 0).
@@ -654,6 +654,9 @@ class Function:
             self.compare_unwind(sec)
             self.compare_code(sec, target, 'funclet_bytes_exact', 'funclet_bytes_by_reference')
             self.check_funclet_end(sec, start + len(sec.data))
+            # Target addresses only: a later map addition is shown unrelated to this pass by these
+            # ranges (tools/symbol_map.py carry_forward_problem), which the report would not carry otherwise.
+            self.coverage['funclet_ranges'].append([start, len(sec.data)])
 
     def check_funclet_end(self, sec, end):
         """A funclet's length comes from the candidate section, so the target must show a boundary there.
@@ -779,12 +782,16 @@ def write_diagnostics(path, private_root, report, raw):
 
 def compare(task, manifest, recipe_bytes, build_record, object_bytes, image_bytes, symbol_map,
             diagnostics=None, private_root=ROOT / '.local'):
-    """Return a sanitized report dict. Never raises for comparison failures; they become `fail`."""
+    """Return a sanitized report dict. Never raises for comparison failures; they become `fail`.
+
+    `symbol_map` is the map file's bytes, whose SHA-256 the report records, or an already parsed
+    map, for which the report records no hash and so cannot back a match record.
+    """
     coverage = {'code_bytes_total': None, 'code_bytes_exact': 0, 'code_bytes_by_reference': 0,
                 'relocations_by_type': {}, 'self_rva_fields': 0, 'unwind_entries': 0, 'unwind_chained_entries': 0,
                 'unwind_bytes_exact': 0, 'unwind': 'not-checked', 'aliases_declared': [],
                 'funclet_sections': 0, 'funclet_bytes_total': 0, 'funclet_bytes_exact': 0,
-                'funclet_bytes_by_reference': 0,
+                'funclet_bytes_by_reference': 0, 'funclet_ranges': [],
                 'eh': {'handlers': {}, 'structures': {}, 'ref_fields': 0, 'int_fields': 0, 'bytes': 0,
                        'type_names_compared': 0}}
     report = {'report_schema': REPORT_SCHEMA, 'contract_version': CONTRACT_VERSION,
@@ -792,7 +799,15 @@ def compare(task, manifest, recipe_bytes, build_record, object_bytes, image_byte
               'acceptance': 'not-evaluated', 'result': 'fail', 'reason': None, 'detail': None}
     raw = {}
     obj = sec = function = None
+    if isinstance(symbol_map, (bytes, bytearray)):
+        # Hashed as read, so a match record can show its runs used the map version it pins.
+        report['symbol_map_sha256'] = sha256(symbol_map)
     try:
+        if isinstance(symbol_map, (bytes, bytearray)):
+            try:
+                symbol_map = json.loads(symbol_map)
+            except (UnicodeDecodeError, json.JSONDecodeError):
+                raise Reject('invalid-symbol-map', 'symbol map is not JSON') from None
         check_task(task)
         report.update(task_id=task['task_id'],
                       function={'build_id': task['build_id'], 'rva': task['rva'], 'size': task['size'],
@@ -865,7 +880,7 @@ def main():
     try:
         report = compare(load_json(args.task), load_json(args.manifest), args.recipe.read_bytes(),
                          load_json(args.build_record), args.object.read_bytes(), args.image.read_bytes(),
-                         load_json(args.symbols), diagnostics=args.diagnostics)
+                         args.symbols.read_bytes(), diagnostics=args.diagnostics)
     except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         print(f'FAIL: cannot read inputs: {exc}', file=sys.stderr)
         return 2

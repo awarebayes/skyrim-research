@@ -1,4 +1,5 @@
 """Comparator contract v2: positive cases and a rejection test for each failure it must catch."""
+import hashlib
 import json
 from pathlib import Path
 import struct
@@ -31,6 +32,20 @@ class ComparatorTests(unittest.TestCase):
         image = fx.pe_image()
         text = image[0x400 + 0x10:0x400 + 0x10 + len(fx.CODE)]
         self.assertEqual(struct.unpack_from('<i', text, 7)[0], -0x1B)
+
+    def test_map_bytes_are_hashed_into_the_report(self):
+        args = fx.inputs()
+        blob = json.dumps(args['symbol_map']).encode()
+        report = compare(**dict(args, symbol_map=blob))
+        self.assertEqual(report['result'], 'pass', report['detail'])
+        self.assertEqual(report['symbol_map_sha256'], hashlib.sha256(blob).hexdigest())
+        # A parsed map leaves no hash, so such a report cannot back a match record.
+        self.assertNotIn('symbol_map_sha256', compare(**args))
+
+    def test_map_bytes_not_json_rejected_with_hash(self):
+        report = compare(**dict(fx.inputs(), symbol_map=b'{not json'))
+        self.assertRejected(report, 'invalid-symbol-map')
+        self.assertEqual(report['symbol_map_sha256'], hashlib.sha256(b'{not json').hexdigest())
 
     def test_positive_case_passes_with_full_coverage(self):
         report = run()
@@ -285,6 +300,22 @@ class ExceptionDataTests(unittest.TestCase):
                                                    'handler_type': 2, 'ip_to_state': 4})
         self.assertEqual(cov['eh']['type_names_compared'], 1)
         self.assertEqual(report['contract_version'], 2)
+
+    def test_funclet_ranges_are_reported(self):
+        report = self.catch()
+        self.assertEqual(report['result'], 'pass', report['detail'])
+        [(start, length)] = report['coverage']['funclet_ranges']
+        self.assertEqual(length, len(fx.FUNCLET_CODE))
+        fn = report['function']
+        self.assertTrue(start >= fn['rva'] + fn['size'] or start + length <= fn['rva'])
+        # A map entry inside that range is what the comparator rejects, so the range is the one recorded.
+        args = fx.catch_inputs()
+        args['symbol_map']['symbols']['Inside'] = {'rva': start + 1, 'size': None}
+        bad = compare(**args)
+        self.assertRejected(bad, 'overlapping-function', 'overlaps a funclet')
+
+    def test_no_funclet_ranges_without_funclets(self):
+        self.assertEqual(self.chain()['coverage']['funclet_ranges'], [])
 
     def test_chained_unwind_passes_over_whole_section(self):
         report = self.chain()

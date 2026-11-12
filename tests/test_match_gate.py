@@ -91,7 +91,7 @@ class GateFixture:
         revision = source_revision or tu_digest(self.root, [CPP, HDR])
         args['task'].update(source_revision=revision, source_path=source_path)
         args['build_record'].update(source_revision=revision, source_path=source_path)
-        args['symbol_map'] = json.loads((self.root / MAP).read_text())
+        args['symbol_map'] = (self.root / MAP).read_bytes()
         return json.loads(json.dumps(compare(**args)))
 
     def make_record(self, runs=None):
@@ -256,6 +256,24 @@ class MatchGateTests(GateFixture, unittest.TestCase):
         self.record['symbol_map']['sha256'] = sha256((self.root / MAP).read_bytes())
         self.save_record()
         self.assertGateRejects('does not place the function')
+
+    def test_report_from_another_map_rejected(self):
+        self.record['runs'][1]['report']['symbol_map_sha256'] = '0' * 64
+        self.save_record()
+        self.assertGateRejects('did not read the pinned symbol map')
+
+    def test_report_without_map_hash_rejected(self):
+        for run in self.record['runs']:
+            del run['report']['symbol_map_sha256']
+        self.save_record()
+        self.assertGateRejects('did not read the pinned symbol map')
+
+    def test_repinned_record_with_old_reports_rejected(self):
+        # A valid-looking pin on the current map does not stand for runs that read the earlier one.
+        self.write(MAP, (self.root / MAP).read_text().replace('{', '{ ', 1))
+        self.record['symbol_map']['sha256'] = sha256((self.root / MAP).read_bytes())
+        self.save_record()
+        self.assertGateRejects('did not read the pinned symbol map')
 
     def test_stale_symbol_map_rejected(self):
         self.write(MAP, (self.root / MAP).read_text() + ' ')

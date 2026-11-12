@@ -21,8 +21,8 @@ to a superseded or unknown version is stale.
 A pass also depended on what the old map did *not* contain: the comparator rejects a map entry
 that aliases or overlaps the function, a funclet, an `__ImageBase` other than 0, and treats EH
 handler names specially. `carry_forward_problem` refuses to carry a record across additions that
-could have changed its result, including any addition at all for a function with funclets,
-whose target ranges the record does not carry.
+could have changed its result, including an addition at or in a funclet range the reports
+give (and any addition at all for a function with funclets whose reports give no ranges).
 
 Usage (paths relative to the repository root):
 
@@ -222,8 +222,9 @@ def carry_forward_problem(state, names, rva, size, reports):
 
     The comparator reads the whole map, not only the names it resolves (docs/comparator-contract.md,
     "Aliases, folds and overlaps"): an added entry at or inside the function range, an
-    `__ImageBase` entry, an EH handler name for a function with handler data, or any entry at all
-    for a function with funclets (whose ranges the record does not carry) might turn it into a fail.
+    `__ImageBase` entry, an EH handler name for a function with handler data, an entry at or inside
+    a funclet range the reports give, or any entry at all for a function with funclets whose reports
+    give no consistent ranges, might turn it into a fail.
     """
     added = {n: e for n, e in state.current['symbols'].items() if n not in names}
     if not added:
@@ -235,10 +236,35 @@ def carry_forward_problem(state, names, rva, size, reports):
             return f'added entry {name} lies at or in the function range'
     coverage = [(r.get('coverage') or {}) for r in reports]
     if any(c.get('funclet_sections') for c in coverage):
-        return 'the function has funclets, whose ranges the record does not carry, so no addition can be shown unrelated'
+        ranges = funclet_ranges(coverage)
+        if ranges is None:
+            return 'the function has funclets whose ranges its reports do not give consistently, so no addition can be shown unrelated'
+        for name, entry in added.items():
+            for start, length in ranges:
+                if overlaps(entry['rva'], entry.get('size'), start, start + length):
+                    return f'added entry {name} lies at or in a funclet range'
     if set(added) & set(EH_HANDLERS) and any((c.get('eh') or {}).get('handlers') for c in coverage):
         return 'an EH handler name was added and the function has handler data'
     return None
+
+
+def funclet_ranges(coverage):
+    """The [start, length] target ranges of the compared funclets all reports agree on, or None.
+
+    The comparator rejects a map entry overlapping a funclet it binds; the ranges must account for
+    every funclet byte it compared, so a report listing fewer funclets than it compared gives None.
+    """
+    lists = [c.get('funclet_ranges') for c in coverage]
+    first = lists[0]
+    if not isinstance(first, list) or any(other != first for other in lists[1:]):
+        return None
+    if not all(isinstance(r, list) and len(r) == 2 and all(type(v) is int and v >= 0 for v in r) and r[1] > 0
+               for r in first):
+        return None
+    if any(len(first) != c.get('funclet_sections') or sum(r[1] for r in first) != c.get('funclet_bytes_total')
+           for c in coverage):
+        return None
+    return [tuple(r) for r in first]
 
 
 def record_problem(state, record):

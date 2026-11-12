@@ -205,8 +205,11 @@ Match record, recomputed from the tree:
   exists because a pass also depended on what the map lacked (`docs/comparator-contract.md`,
   "Aliases, folds and overlaps"): the record is stale if an added entry lies at or in the
   function range, `__ImageBase` was added, an EH handler name was added and the function has
-  handler data, or anything was added and the function has funclets (the record does not carry
-  funclet ranges; follow-up: have the comparator report them). Changing or removing an entry
+  handler data, or an added entry lies at or in a funclet range the runs' reports give
+  (`coverage.funclet_ranges`; reports of a function with funclets that give no consistent ranges
+  covering every compared funclet byte carry across no addition). Every run's report must name
+  the pinned map in `symbol_map_sha256`, the comparator's hash of the bytes it read, so the pin
+  cannot be moved without new runs. Changing or removing an entry
   therefore makes exactly the records pinned to versions holding it stale. The map is written
   only by `tools/symbol_map.py add` (bind uses it too): additions only, refusing changes,
   removals, entries sharing an address or range with an existing one and anything that would

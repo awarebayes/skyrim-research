@@ -292,8 +292,12 @@ class ImportTests(SymbolMapFixture, unittest.TestCase):
         shutil.copytree(self.root, branch, dirs_exist_ok=True)
         self.add({'OnBranch': {'rva': FAR + 0x40, 'size': None}}, root=branch)
         branch_sha = sha256((branch / MAP).read_bytes())
+        # The record is confirmed on the branch: its runs read the branch map.
+        main_root, self.root = self.root, branch
+        self.record = self.make_record()
+        self.root = main_root
+        self.assertEqual(self.record['symbol_map']['sha256'], branch_sha)
         self.add({'OnMain': {'rva': FAR, 'size': None}})
-        self.record['symbol_map']['sha256'] = branch_sha
         self.save_record()
         self.assertGateRejects('not in the symbol map history')
         incoming = json.loads((branch / MAP).read_text())
@@ -301,6 +305,53 @@ class ImportTests(SymbolMapFixture, unittest.TestCase):
                                   other_history=json.loads((branch / HISTORY).read_text()))
         self.assertEqual(summary['imported'], 1)
         self.check()
+
+
+class FuncletCarryForwardTests(unittest.TestCase):
+    """carry_forward_problem for a function with funclets, from the ranges its reports give."""
+    RVA, SIZE, FUNCLET = 0x1000, 0x40, (0x2000, 0x20)
+
+    def state(self, added):
+        symbols = {'Fn': {'rva': self.RVA, 'size': self.SIZE}, **added}
+        return sm.MapState({'symbols': symbols}, 'x' * 64, {}, set())
+
+    def reports(self, ranges=None, n=3, sections=1, total=0x20):
+        cov = {'funclet_sections': sections, 'funclet_bytes_total': total}
+        if ranges is not None:
+            cov['funclet_ranges'] = ranges
+        return [{'coverage': copy.deepcopy(cov)} for _ in range(n)]
+
+    def problem(self, added, reports):
+        return sm.carry_forward_problem(self.state(added), {'Fn'}, self.RVA, self.SIZE, reports)
+
+    def test_addition_away_from_funclet_carries(self):
+        self.assertIsNone(self.problem({'Far': {'rva': FAR, 'size': 8}}, self.reports([list(self.FUNCLET)])))
+
+    def test_addition_in_funclet_range_refused(self):
+        for entry in ({'rva': 0x2010, 'size': None}, {'rva': 0x1ff0, 'size': 0x20}, {'rva': 0x2000, 'size': None}):
+            self.assertIn('funclet range', self.problem({'In': entry}, self.reports([list(self.FUNCLET)])))
+
+    def test_addition_just_after_funclet_carries(self):
+        self.assertIsNone(self.problem({'After': {'rva': 0x2020, 'size': 4}}, self.reports([list(self.FUNCLET)])))
+
+    def test_reports_without_ranges_refused(self):
+        self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}}, self.reports(None)))
+
+    def test_disagreeing_ranges_refused(self):
+        reports = self.reports([list(self.FUNCLET)])
+        reports[2]['coverage']['funclet_ranges'] = [[0x3000, 0x20]]
+        self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}}, reports))
+
+    def test_ranges_short_of_compared_funclets_refused(self):
+        # Two funclets compared but one range listed, or ranges not covering every funclet byte.
+        self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}},
+                                                  self.reports([list(self.FUNCLET)], sections=2)))
+        self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}},
+                                                  self.reports([list(self.FUNCLET)], total=0x30)))
+
+    def test_malformed_range_refused(self):
+        for bad in ([[0x2000]], [[0x2000, 0]], [['0x2000', 0x20]], [[-1, 0x20]], 'x'):
+            self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}}, self.reports(bad)))
 
 
 class CommandTests(SymbolMapFixture, unittest.TestCase):
