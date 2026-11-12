@@ -7,6 +7,8 @@ are preliminary evidence only; they do not confer match status.
 """
 import re
 import json
+import hashlib
+import inspect
 from pathlib import Path
 import sys
 
@@ -15,7 +17,10 @@ from source_digest import include_closure, tu_digest
 
 
 IDENT = re.compile(r'[A-Za-z_][A-Za-z_0-9]*\Z')
-GENERATOR_VERSION = '1'
+GENERATOR_VERSION = '2'
+BUILD = 'sse-steam-1-7-104'
+RECIPE = 'reconstruction/recipes/msvc-19.16.27054-o2.json'
+EVIDENCE = 'findings/generator-leaves-selection.md'
 
 
 class UnsafeCandidate(ValueError):
@@ -28,10 +33,24 @@ def task_digest(worktree, task_dir):
     return tu_digest(worktree, paths)
 
 
+def input_digest(worktree, task_dir):
+    """Bind the task identity, symbol map, recipe, image pin and toolchain pin for resume."""
+    root, directory = Path(worktree), Path(task_dir)
+    task = json.loads((directory / 'task.json').read_text())
+    symbols = Path(task['symbols'])
+    symbols = root / symbols if task['symbols'].startswith('reports/') else directory / symbols
+    blobs = [(directory / 'task.json').read_bytes(), symbols.read_bytes()]
+    blobs += [(root / path).read_bytes() for path in
+              (task['recipe'], 'builds/target.json', 'tools/verifier/pinned.sha256')]
+    return hashlib.sha256(b''.join(len(b).to_bytes(8, 'big') + b for b in blobs)).hexdigest()
+
+
 def check_resume(records, worktree):
     for record in records:
         if not record.get('source_digest') or record['source_digest'] != task_digest(worktree, record['task']):
             raise ValueError('resume record missing source digest or source changed; use a new output directory')
+        if record.get('input_digest') and record['input_digest'] != input_digest(worktree, record['task']):
+            raise ValueError('resume inputs changed; use a new output directory')
 
 
 def validate_identity(owner, method, *, existing_classes, names, name_rva, rva):
@@ -93,7 +112,7 @@ def emit_leaf(owner, method, *, family, width, value, virtual, name_label):
     pad = value - (8 if virtual else 0)
     if family != 'constant' and (value % width or pad > 0x100000):
         raise UnsafeCandidate('invalid-offset')
-    label = f'// GENERATED({family}@{GENERATOR_VERSION}); {name_label}'
+    label = f'// {method}: {name_label}'
     if name_label == 'GUESS(low)':
         label += '; method name inferred from vtable owner and slot'
     h = ['#pragma once', '#include <cstdint>', label]
@@ -109,9 +128,65 @@ def emit_leaf(owner, method, *, family, width, value, virtual, name_label):
     h.extend('}' for _ in parts[:-1])
     expression = (f'0x{value:x}' if family == 'constant' else
                   ('&member' if family == 'member-address' else 'member'))
-    cpp = ['#include "unit.h"', label, f'{result_type} {owner}::{method}() const', '{',
+    cpp = [f'#include "{parts[-1]}.h"', label, f'{result_type} {owner}::{method}() const', '{',
            f'    return {expression};', '}']
     return '\n'.join(h) + '\n', '\n'.join(cpp) + '\n'
+
+
+def publication_header(owner, method, *, rva, size, origin, name_label, class_label, notice=''):
+    """Common leading comment for both files; no licence grant for reconstruction."""
+    lines = [f'// {owner}::{method}, build {BUILD}, RVA 0x{rva:x}, {size} bytes.',
+             '// Labels: v2', '// Source exposure: mixed (local binary analysis and public names).',
+             f'// Evidence: {EVIDENCE}', f'// Recipe: {RECIPE}',
+             '// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).',
+             '// Origin: ' + json.dumps(origin, sort_keys=True, separators=(',', ':')),
+             '// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.',
+             '// Adapted bodies: none. Body synthesized from the bounded leaf template.',
+             '// A comparator pass verifies code under the recipe, not names or original source form.',
+             '// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.',
+             f'// {owner}: {class_label}', f'// {method}: {name_label}',
+             '// member, padding: GUESS(low); storage names invented for the measured member offset']
+    if name_label == 'GUESS(low)':
+        lines += ['// Method name is a guess built from the vtable owner and slot, not a public symbol.']
+    if notice:
+        lines += ['// Public naming source notice:'] + ['// ' + s if s else '//' for s in notice.splitlines()]
+    return '\n'.join(lines) + '\n'
+
+
+def template_digest(family):
+    text = '\n'.join((GENERATOR_VERSION, family, inspect.getsource(emit_leaf),
+                      inspect.getsource(publication_header)))
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+def resolve_area(owner, classes, unit_areas):
+    """Use an evidenced unit or the nearest primary base under the documented area rule."""
+    from ghidra.export_pack import area_for
+    if unit_areas.get(owner):
+        return unit_areas[owner], 'owner-unit', owner
+    if area_for(owner):
+        return area_for(owner), 'prefix', owner
+    seen = {owner}
+    parent = classes.get(owner, {}).get('parent')
+    while parent and parent not in seen:
+        seen.add(parent)
+        if unit_areas.get(parent):
+            return unit_areas[parent], 'base-unit', parent
+        if area_for(parent):
+            return area_for(parent), 'base-prefix', parent
+        parent = classes.get(parent, {}).get('parent')
+    return None, 'no-area-rule', None
+
+
+def write_new(path, content):
+    """Repeat identical generation safely, refusing a different existing file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        if path.is_symlink() or path.read_text() != content:
+            raise ValueError('generated source already exists with different contents')
+    else:
+        with path.open('x') as f:
+            f.write(content)
 
 
 def decode_leaf(data):
@@ -149,6 +224,9 @@ def generate(args):
     shapes = {f['shape'] for f in families if f['rank'] in ranks}
     solved = {int(str(f['rva']), 0) for f in json.loads(Path(cfg['progress']).read_text())['functions'] if f.get('status') == 'matched'}
     data = Path(cfg['image']).read_bytes()
+    target = json.loads((wt / 'builds/target.json').read_text())
+    if target.get('build_id') != BUILD or hashlib.sha256(data).hexdigest() != target.get('image_sha256'):
+        raise ValueError('generator image differs from pinned target')
     pe = struct.unpack_from('<I', data, 0x3c)[0]
     sections = []
     for i in range(struct.unpack_from('<H', data, pe + 6)[0]):
@@ -157,17 +235,31 @@ def generate(args):
         sections.append((va, min(vs, rs), ro))
     inventory = {}
     names = collections.defaultdict(set)
-    for line in Path(cfg['functions']).open():
+    for line in Path(cfg['functions']).read_text().splitlines():
         d = json.loads(line); inventory[d['rva']] = d
         for n in d['names']:
             names[n['name']].add(d['rva'])
     existing = {p.stem for p in (wt / 'reconstruction').rglob('*.h')}
     # Include the shared checkout's active work without modifying it.
     existing |= {p.stem for p in (Path(cfg['main']) / 'reconstruction').rglob('*.h')}
+    classes = {c['class']: c for c in map(json.loads, Path(cfg.get('classes',
+               str(Path(cfg['main']) / '.local/analysis/classes.jsonl'))).read_text().splitlines())}
+    unit_areas = {}
+    for root in (wt, Path(cfg['main'])):
+        for path in (root / 'reconstruction').glob('*/*.h'):
+            area = path.parent.name
+            if path.stem in unit_areas and unit_areas[path.stem] != area:
+                raise ValueError('class has conflicting existing unit areas')
+            unit_areas[path.stem] = area
     out.mkdir(parents=True, exist_ok=True)
+    for pin in (RECIPE, 'builds/target.json', 'tools/verifier/pinned.sha256'):
+        write_new(out / pin, (wt / pin).read_text())
     index = out / (args.family + '.jsonl')
     prior = [json.loads(x) for x in index.read_text().splitlines()] if args.resume and index.exists() else []
     check_resume(prior, wt)
+    for entry in prior:
+        if entry['source_digest'] != task_digest(out, entry['task']):
+            raise ValueError('staged source changed; use a new output directory')
     if index.exists() and not args.resume:
         raise ValueError('index exists; use --resume or a new output directory')
     selected = {x['rva'] for x in prior}
@@ -176,7 +268,8 @@ def generate(args):
         if other != index:
             seen.update(json.loads(line)['owner'] for line in other.read_text().splitlines())
     counts = collections.Counter()
-    rows = csv.DictReader(Path(cfg['census']).open(), delimiter='\t')
+    areas = collections.Counter()
+    rows = csv.DictReader(Path(cfg['census']).read_text().splitlines(), delimiter='\t')
     emitted = 0
     for row in rows:
         if row['shape'] not in shapes or not row['tier']:
@@ -204,8 +297,13 @@ def generate(args):
             cls, method, label = owner, 'Slot' + str(owner_info['slot']), 'GUESS(low)'
         else:
             counts['undecodable'] += 1; continue
+        if not re.fullmatch(r'[A-Z][A-Za-z0-9_]*', cls):
+            counts['unsupported-class-layout'] += 1; continue
         if cls in existing or cls in seen:
             counts['existing-unit'] += 1; continue
+        area, area_how, area_owner = resolve_area(cls, classes, unit_areas)
+        if not area:
+            counts['no-area-rule'] += 1; continue
         code = next((data[ro + r - va:ro + r - va + 16] for va, size, ro in sections if va <= r < va + size), b'')
         decoded = decode_leaf(code)
         if not decoded or decoded[0] != ('constant' if args.family == 'const-return' else 'member'):
@@ -216,13 +314,32 @@ def generate(args):
                                virtual=bool(owner_info), name_label=label)
         except UnsafeCandidate:
             counts['undecodable'] += 1; continue
-        unit = f'P35_{r:x}'
-        source_dir = wt / 'reconstruction/generated' / unit
-        source_dir.mkdir(parents=True, exist_ok=True)
-        for path, content in ((source_dir / 'unit.h', h), (source_dir / 'unit.cpp', cpp)):
-            if path.exists() and path.read_text() != content:
-                raise ValueError('generated source already exists with different contents')
-            path.write_text(content)
+        unit = f'stamp-{r:x}'
+        name_source = (dict(kind='public', source=name['source'],
+                           repository=('meh321/AddressLibraryDatabase' if name['source'] == 'meh321'
+                                       else 'CharmedBaryon/CommonLibSSE-NG'),
+                           revision=('0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91' if name['source'] == 'meh321'
+                                     else 'b93280e832f263dbef44e44cbe2936622a02f91a'),
+                           confidence='medium')
+                       if name else dict(kind='guess', confidence='low',
+                                         owner=owner, slot=owner_info['slot'],
+                                         rationale='vtable owner and slot; method spelling invented'))
+        origin = dict(generator_family=args.family, generator_version=GENERATOR_VERSION,
+                      template_digest=template_digest(args.family), name_source=name_source)
+        notice = ''
+        if 'CommonLibSSE-NG@' in label:
+            import subprocess
+            from unit_skeleton import COMMUNITY_SOURCES
+            clone, revision, _ = COMMUNITY_SOURCES['CharmedBaryon/CommonLibSSE-NG']
+            notice = subprocess.check_output(['git', '-C', str(Path(cfg['main']) / clone),
+                                             'show', f'{revision}:LICENSE'], text=True)
+        prefix = publication_header(cls, method, rva=r, size=int(row['size']), origin=origin,
+                                    name_label=label,
+                                    class_label='EXE_RTTI' if cls == owner else label, notice=notice)
+        compiled = f'reconstruction/{area}/{cls}.cpp'
+        for root in (out, wt):
+            write_new(root / compiled, prefix + cpp)
+            write_new((root / compiled).with_suffix('.h'), prefix + h)
         task_dir = out / 'tasks' / unit
         task_dir.mkdir(parents=True, exist_ok=True)
         mangling = {1: "E", 4: "I", 8: "PEAX"}[width]
@@ -231,20 +348,27 @@ def generate(args):
                   function_id=f'sse-steam-1-7-104-{hex(r)}', community_name=f'{cls}::{method}',
                   name_origin='GUESS' if label == 'GUESS(low)' else 'COMMUNITY', verdict='generated', pack=None)
         task = dict(task_id=unit.lower().replace('_', '-'), build_id='sse-steam-1-7-104',
-                    compiled=f'reconstruction/generated/{unit}/unit.cpp',
-                    recipe='reconstruction/recipes/msvc-19.16.27054-o2.json', symbols='symbols.json',
+                    compiled=compiled,
+                    recipe=RECIPE, symbols='symbols.json',
                     functions=[fn], max_attempts=2,
                     export=dict(generator='tools/stamp.py', task_schema=1, unit_already_records=[]))
         (task_dir / 'task.json').write_text(json.dumps(task, indent=2))
         (task_dir / 'symbols.json').write_text(json.dumps(dict(schema=1, build_id=task['build_id'],
                                                      symbols={symbol: dict(rva=r, size=fn['size'])}), indent=2))
         with index.open('a') as f:
-            f.write(json.dumps(dict(rva=r, owner=cls, task=str(task_dir), family=args.family,
+            f.write(json.dumps(dict(rva=r, size=fn['size'], build_id=BUILD, name=fn['community_name'],
+                                    owner=cls, task=str(task_dir), family=args.family, compiled=compiled,
+                                    name_source=name_source, origin=origin,
+                                    area=dict(area=area, how=area_how, owner=area_owner),
+                                    parameters=dict(family=kind, width=width, value=value, virtual=bool(owner_info)),
+                                    input_digest=input_digest(wt, task_dir),
                                     source_digest=task_digest(wt, task_dir))) + '\n')
-        seen.add(cls); emitted += 1
+        seen.add(cls); emitted += 1; areas[area_how] += 1
         if args.limit and emitted >= args.limit:
             break
-    print(json.dumps(dict(emitted=emitted, skipped=counts)))
+    summary = dict(emitted=emitted, skipped=counts, areas=areas)
+    (out / (args.family + '.summary.json')).write_text(json.dumps(summary, indent=2) + '\n')
+    print(json.dumps(summary))
 
 
 def install(args):
@@ -288,6 +412,16 @@ def install(args):
             raise ValueError('source digest mismatch')
         if result.get('family') != args.family or result.get('rva') != entry.get('rva'):
             raise ValueError('result identity mismatch')
+        if 'build_id' in entry:
+            functions = task.get('functions') or []
+            if (task.get('build_id') != entry['build_id'] or len(functions) != 1 or
+                    int(str(functions[0]['rva']), 0) != entry['rva'] or
+                    functions[0]['size'] != entry['size'] or task['compiled'] != entry['compiled']):
+                raise ValueError('task identity mismatch')
+            if not entry.get('input_digest') or result.get('input_digest') != entry['input_digest']:
+                raise ValueError('result input digest mismatch')
+            if input_digest(staging, task_dir) != entry['input_digest']:
+                raise ValueError('staged input digest mismatch')
         for path in (Path(str(rel)), Path(str(rel)).with_suffix('.h')):
             source = staging / path
             if source.is_symlink() or not source.resolve().is_relative_to(staging) or not source.is_file():
@@ -337,15 +471,28 @@ def attempt_all(args):
                                         hosts={raw['attempt']: host}, confirm=[])))
     env = dict(os.environ, SR_RUNNERS_CONFIG=str(snapshot))
     tasks = [json.loads(line) for p in sorted(out.glob('*-return.jsonl')) for line in p.read_text().splitlines()]
+    if any(not task.get('input_digest') for task in tasks):
+        raise ValueError('index missing input digest; use a new output directory')
     check_resume(tasks, wt)
+    for task in tasks:
+        if task['source_digest'] != task_digest(out, task['task']):
+            raise ValueError('staged source changed; use a new output directory')
     log = out / 'results.jsonl'
     records = list(map(json.loads, log.read_text().splitlines())) if args.resume and log.exists() else []
+    if any(not record.get('input_digest') for record in records):
+        raise ValueError('resume result missing input digest; use a new output directory')
     check_resume(records, wt)
+    runner_digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    if any(record.get('runner_digest') != runner_digest for record in records):
+        raise ValueError('resume runner configuration changed; use a new output directory')
+    if len({x['task'] for x in records}) != len(records):
+        raise ValueError('duplicate resume result')
     done = {x['task'] for x in records}
     if log.exists() and not args.resume:
         raise ValueError('result log exists; use --resume')
     def run(task):
         digest = task_digest(wt, task['task'])
+        inputs = input_digest(wt, task['task'])
         t = time.monotonic()
         proc = subprocess.run([str(wt / 'tools/verifier/attempt'), task['task']], cwd=wt, env=env,
                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -354,9 +501,10 @@ def attempt_all(args):
         result = m.group(1).lower() if m else 'error'
         reason = m.group(2) if m else ('compile-failed' if 'COMPILE FAILED' in text else 'infrastructure')
         Path(task['task'], 'output.txt').write_text(text)
-        if task_digest(wt, task['task']) != digest:
-            result, reason = 'error', 'source-changed-during-attempt'
-        return dict(task=task['task'], rva=task['rva'], family=task['family'], source_digest=digest, result=result,
+        if task_digest(wt, task['task']) != digest or input_digest(wt, task['task']) != inputs:
+            result, reason = 'error', 'inputs-changed-during-attempt'
+        return dict(task=task['task'], rva=task['rva'], family=task['family'], source_digest=digest,
+                    input_digest=inputs, runner_digest=runner_digest, result=result,
                     reason=reason, exit=proc.returncode, seconds=round(time.monotonic()-t, 2))
     pending = [t for t in tasks if t['task'] not in done]
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool, log.open('a') as f:

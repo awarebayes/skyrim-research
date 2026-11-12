@@ -50,7 +50,7 @@ TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
 import accept_function as af  # noqa: E402
 import profiles  # noqa: E402
-from source_digest import tu_digest  # noqa: E402
+from source_digest import include_closure, tu_digest  # noqa: E402
 import work_queue as wq  # noqa: E402
 
 ROOT = TOOLS.parent
@@ -791,13 +791,99 @@ Do not push, post publicly, mark `matched`, or start further agents.
     return paths
 
 
-def brief_confirm(root, fdir):
-    states = function_states(root, fdir, online=False)
+def generator_confirm_units(root, manifests, tasks):
+    """Preflight a generated selection and copy its tasks for ordinary two-host confirmation.
+
+    Manifests describe a selection, never a review or acceptance. Original local-attempt tasks
+    remain unchanged, so changing their symbol-map path cannot invalidate their resume binding.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('generator_stamp', TOOLS / 'stamp.py')
+    stamp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(stamp)
+    from lint_reconstruction import SOURCE
+    root, tasks = Path(root).resolve(), Path(tasks).resolve()
+    inv = {(f['build_id'], f['rva'], f['size']): f for f in inventory(root)['functions']}
+    target = json.loads((root / 'builds/target.json').read_text())
+    pending, seen, compiled = [], set(), set()
+    for manifest in manifests:
+        path = root / manifest
+        group = json.loads(path.read_text())
+        refuse(group.get('schema') == 1 and group.get('kind') == 'generator-selection',
+               'not a generator selection manifest')
+        refuse(group.get('build_id') == target['build_id'], 'generator group build mismatch')
+        refuse(group.get('image_sha256') == target['image_sha256'], 'generator group image mismatch')
+        refuse(group.get('members'), 'empty generator group')
+        refuse(group.get('generator_family') in ('const-return', 'member-return') and
+               isinstance(group.get('generator_version'), str) and group['generator_version'] and
+               re.fullmatch(r'[0-9a-f]{64}', group.get('template_digest', '')),
+               'invalid generator origin')
+        symbols_rel = group['symbols']
+        symbols_path = Path(symbols_rel)
+        refuse(not symbols_path.is_absolute() and '..' not in symbols_path.parts and
+               symbols_path.parts[:2] == ('reports', target['build_id']), 'invalid group symbol map path')
+        smap = json.loads((root / symbols_rel).read_text())
+        refuse(smap.get('build_id') == target['build_id'], 'generator symbol map build mismatch')
+        for member in group['members']:
+            refuse(SOURCE.fullmatch(member['compiled']) and member['compiled'].endswith('.cpp'),
+                   'invalid generator unit path')
+            key = (group['build_id'], member['rva'], member['size'])
+            refuse(key not in seen and member['compiled'] not in compiled, 'duplicate generator member or unit')
+            seen.add(key); compiled.add(member['compiled'])
+            refuse(key in inv, 'generator member is not an inventory entry with the same size')
+            refuse(inv[key]['name'] == member['name'], 'generator member name differs from inventory')
+            refuse(re.fullmatch(r'[a-z0-9][a-z0-9.-]*', member['task_id']), 'invalid generator task id')
+            task_dir = tasks / member['task_id']
+            refuse(task_dir.resolve().is_relative_to(tasks), 'generator task escapes task root')
+            task = json.loads((task_dir / 'task.json').read_text())
+            fn = (task.get('functions') or [{}])[0]
+            refuse(task.get('task_id') == member['task_id'] and
+                   task.get('build_id') == key[0] and len(task.get('functions') or []) == 1 and
+                   int(str(fn.get('rva')), 0) == key[1] and fn.get('size') == key[2] and
+                   task.get('compiled') == member['compiled'] and task.get('recipe') == group['recipe'],
+                   'generator task identity or recipe mismatch')
+            refuse(smap.get('symbols', {}).get(fn.get('symbol')) == dict(rva=key[1], size=key[2]),
+                   'generator symbol target mismatch')
+            digest = tu_digest(root, include_closure(root, member['compiled']))
+            refuse(digest == member['source_digest'], 'generator source digest mismatch')
+            origins = re.findall(r'^// Origin: (.+)$', (root / member['compiled']).read_text(), re.M)
+            refuse(len(origins) == 1, 'generator source needs one origin record')
+            origin = json.loads(origins[0])
+            refuse(all(origin.get(k) == group[k] for k in
+                       ('generator_family', 'generator_version', 'template_digest')) and
+                   origin.get('name_source') == member['name_source'], 'generator origin differs from manifest')
+            refuse(stamp.input_digest(root, task_dir) == member['input_digest'], 'generator input digest mismatch')
+            task['symbols'] = symbols_rel
+            task['record_notes'] = ['Generator selection only; ordinary per-function confirmation and review required.']
+            pending.append((task, member))
+    # No writes until the whole selection has passed preflight.
+    writes = []
+    for task, member in pending:
+        dest = root / '.local/flow/generator-confirm' / member['task_id']
+        text = json.dumps(task, indent=2) + '\n'
+        if (dest / 'task.json').exists():
+            refuse((dest / 'task.json').read_text() == text, 'confirmation task already exists with different content')
+        writes.append((dest, text, member))
     units = {}
-    for rva, s in states.items():
-        if s['state'] == 'drafted-pass' and s.get('unit'):
-            units.setdefault(s['unit'], []).append(rva)
-    stale = sorted(r for r, s in states.items() if s['state'] == 'confirm-stale')
+    for dest, text, member in writes:
+        stamp.write_new(dest / 'task.json', text)
+        units[str(dest)] = [hexrva(member['rva'])]
+    return units
+
+
+def brief_confirm(root, fdir, manifests=None, tasks=None):
+    states = function_states(root, fdir, online=False)
+    if manifests:
+        refuse(tasks is not None, '--tasks is required with --manifests')
+        units = generator_confirm_units(root, manifests, tasks)
+        stale = []
+    else:
+        refuse(tasks is None, '--tasks requires --manifests')
+        units = {}
+        for rva, s in states.items():
+            if s['state'] == 'drafted-pass' and s.get('unit'):
+                units.setdefault(s['unit'], []).append(rva)
+        stale = sorted(r for r, s in states.items() if s['state'] == 'confirm-stale')
     stamp = dt.datetime.now(dt.timezone.utc).strftime('%Y%m%d%H%M')
     lst = Path(root) / '.local/flow' / f'confirm-{stamp}.txt'
     lst.parent.mkdir(parents=True, exist_ok=True)
@@ -824,6 +910,7 @@ Return a table: unit, functions reproduced, functions not reproduced, reason. Fu
 Do not push, post publicly, mark `matched`, or start further agents.
 """
     path = Path(root) / BRIEFS / f'confirm-{stamp}.md'
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
     log_event(fdir, 'confirm-brief', units=sorted(units), stale=stale)
     return path.relative_to(root).as_posix()
@@ -1167,6 +1254,8 @@ def main(argv=None):
     s.add_argument('--count', type=int, default=1)
     s.add_argument('--group')
     s.add_argument('--units', nargs='+')
+    s.add_argument('--manifests', nargs='+', help='generator selection manifests (confirm only)')
+    s.add_argument('--tasks', type=Path, help='original generated task directory (confirm only)')
     s.add_argument('--held', action='store_true', help='functions held by a reject or escalate in an earlier review')
     s = sub.add_parser('baseline')
     s.add_argument('component', choices=('recipe', 'compiler', 'drafter_prompt', 'reviewer_prompt', 'reviewer_model',
@@ -1232,7 +1321,7 @@ def main(argv=None):
                 for path in brief_drafter(root, fdir, a.profile, a.count):
                     print(path)
             elif a.kind == 'confirm':
-                print(brief_confirm(root, fdir))
+                print(brief_confirm(root, fdir, a.manifests, a.tasks))
             elif a.kind == 'triage':
                 refuse(a.group or a.units or a.held, 'brief triage needs --group, --units or --held')
                 print(brief_triage(root, fdir, a.group, a.units, a.held))

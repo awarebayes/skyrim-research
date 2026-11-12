@@ -505,3 +505,137 @@ class Cli(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class GeneratorConfirmTests(unittest.TestCase):
+    """Selection preflight produces normal confirm tasks; it never runs a host."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.repo = Repo(Path(self.tmp.name))
+        self.root = self.repo.root
+        r = self.root
+        (r / 'builds').mkdir()
+        (r / 'builds/target.json').write_text(json.dumps(dict(build_id=BUILD, image_sha256='a' * 64)))
+        (r / 'tools/verifier').mkdir()
+        (r / 'tools/verifier/pinned.sha256').write_text('synthetic toolchain')
+        (r / 'reconstruction/recipes').mkdir()
+        recipe = 'reconstruction/recipes/synthetic.json'
+        (r / recipe).write_text('{}')
+        self.tasks = r / '.local/generated/tasks'
+        self.tdir = self.tasks / 'stamp-1000'
+        self.tdir.mkdir(parents=True)
+        symbols = dict(schema=1, build_id=BUILD, symbols={'?A@Foo': dict(rva=0x1000, size=16)})
+        (self.tdir / 'symbols.json').write_text(json.dumps(symbols))
+        public_map = f'reports/{BUILD}/generator.symbol-map.json'
+        (r / public_map).write_text(json.dumps(symbols))
+        self.task = dict(task_id='stamp-1000', build_id=BUILD, compiled='reconstruction/x/Foo.cpp',
+                         recipe=recipe, symbols='symbols.json',
+                         functions=[dict(rva='0x1000', size=16, symbol='?A@Foo')])
+        self.task_path = self.tdir / 'task.json'
+        self.task_path.write_text(json.dumps(self.task))
+        self.origin = dict(generator_family='const-return', generator_version='2', template_digest='b' * 64,
+                           name_source=dict(kind='guess', confidence='low'))
+        self.source = r / 'reconstruction/x/Foo.cpp'
+        self.source.write_text('// Origin: ' + json.dumps(self.origin) + '\nint a;\n')
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('generator_stamp', ROOT / 'tools/stamp.py')
+        stamp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(stamp)
+        member = dict(task_id='stamp-1000', rva=0x1000, size=16, name='Foo::A',
+                      compiled=self.task['compiled'], source_digest=tu_digest(r, [self.task['compiled']]),
+                      input_digest=stamp.input_digest(r, self.tdir), name_source=self.origin['name_source'])
+        self.group = dict(schema=1, kind='generator-selection', build_id=BUILD, image_sha256='a' * 64,
+                          recipe=recipe, symbols=public_map, members=[member],
+                          **{k: v for k, v in self.origin.items() if k != 'name_source'})
+        self.manifest = r / 'group.json'
+        self.save()
+
+    def save(self):
+        self.manifest.write_text(json.dumps(self.group))
+
+    def prepare(self):
+        return flow.generator_confirm_units(self.root, ['group.json'], self.tasks)
+
+    def test_group_prepares_independent_public_map_tasks_and_brief(self):
+        original = self.task_path.read_bytes()
+        units = self.prepare()
+        self.assertEqual(len(units), 1)
+        copied = json.loads((Path(next(iter(units))) / 'task.json').read_text())
+        self.assertEqual(copied['symbols'], self.group['symbols'])
+        self.assertEqual(self.task_path.read_bytes(), original)
+        self.assertEqual(self.prepare(), units)
+        brief = flow.brief_confirm(self.root, self.repo.fdir, ['group.json'], self.tasks)
+        self.assertIn('tools/verifier/confirm --list', (self.root / brief).read_text())
+        lists = list((self.root / '.local/flow').glob('confirm-*.txt'))
+        self.assertEqual(len(lists), 1)
+        self.assertEqual(len(lists[0].read_text().splitlines()), 1)
+
+    def test_wrong_build_size_target_and_duplicate_refused_before_writes(self):
+        import copy
+        original = copy.deepcopy(self.group)
+        mutations = [('build_id', 'another-build'), ('image_sha256', 'c' * 64)]
+        for key, value in mutations:
+            self.group = dict(original, **{key: value})
+            self.save()
+            with self.assertRaises(flow.FlowError):
+                self.prepare()
+        self.group = copy.deepcopy(original)
+        self.group['members'][0]['size'] += 1
+        self.save()
+        with self.assertRaisesRegex(flow.FlowError, 'inventory entry'):
+            self.prepare()
+        self.group = copy.deepcopy(original)
+        self.group['members'].append(self.group['members'][0])
+        self.save()
+        with self.assertRaisesRegex(flow.FlowError, 'duplicate generator'):
+            self.prepare()
+        self.assertFalse((self.root / '.local/flow/generator-confirm').exists())
+
+    def test_stale_source_and_task_refused(self):
+        self.source.write_text(self.source.read_text() + '// changed fixture\n')
+        with self.assertRaisesRegex(flow.FlowError, 'source digest mismatch'):
+            self.prepare()
+        self.group['members'][0]['source_digest'] = tu_digest(self.root, [self.task['compiled']])
+        self.save()
+        self.task['functions'][0]['rva'] = '0x1001'
+        self.task_path.write_text(json.dumps(self.task))
+        with self.assertRaisesRegex(flow.FlowError, 'identity or recipe mismatch'):
+            self.prepare()
+
+    def test_wrong_family_and_name_origin_refused(self):
+        self.group['generator_family'] = 'member-return'
+        self.save()
+        with self.assertRaisesRegex(flow.FlowError, 'origin differs'):
+            self.prepare()
+        self.group['generator_family'] = 'const-return'
+        self.group['members'][0]['name_source'] = dict(kind='public')
+        self.save()
+        with self.assertRaisesRegex(flow.FlowError, 'origin differs'):
+            self.prepare()
+
+    def test_wrong_symbol_and_changed_binding_refused(self):
+        symbols = self.root / self.group['symbols']
+        smap = json.loads(symbols.read_text())
+        smap['symbols']['?A@Foo']['rva'] += 1
+        symbols.write_text(json.dumps(smap))
+        with self.assertRaisesRegex(flow.FlowError, 'symbol target mismatch'):
+            self.prepare()
+        smap['symbols']['?A@Foo']['rva'] -= 1
+        symbols.write_text(json.dumps(smap))
+        self.task['max_attempts'] = 99
+        self.task_path.write_text(json.dumps(self.task))
+        with self.assertRaisesRegex(flow.FlowError, 'input digest mismatch'):
+            self.prepare()
+
+    def test_task_traversal_and_public_map_traversal_refused(self):
+        self.group['members'][0]['task_id'] = '../stamp-1000'
+        self.save()
+        with self.assertRaisesRegex(flow.FlowError, 'task id'):
+            self.prepare()
+        self.group['members'][0]['task_id'] = 'stamp-1000'
+        self.group['symbols'] = 'reports/../private.json'
+        self.save()
+        with self.assertRaisesRegex(flow.FlowError, 'symbol map path'):
+            self.prepare()
