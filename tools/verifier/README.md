@@ -44,8 +44,8 @@ python3 tools/verifier/runners.py status                    # each host: toolcha
 python3 tools/verifier/reproduce_records.py --host <name>   # recompile every recorded unit there; equal/different
 ```
 
-A runner confirm writes records only with `--out` until `docs/verification.md` admits these
-hosts (`confirm_runners.RUNNER_RECORDS_ALLOWED`); `confirm --boat` keeps the Boat session path.
+A runner confirm writes records under the "Runner hosts" condition of `docs/verification.md`;
+`confirm --boat` keeps the Boat session path.
 
 A session (`session`, `vsession.py`) brings up the standing machine A and the separately
 installed B once per work period, at most one start each, and checks their toolchain and image

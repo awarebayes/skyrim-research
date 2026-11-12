@@ -8,8 +8,8 @@
 
 When .local/verifier/runners.json lists `confirm` hosts, confirm runs on them instead of Boat
 (confirm_runners.py: the maintainer's Mac under Wine and Windows PC natively; every unit compiled
-on each, compared on each and cross-compared on this Mac). Until docs/verification.md admits
-those hosts, a runner confirm writes only with --out. --boat keeps the Boat session path.
+on each, compared on each and cross-compared on this Mac; docs/verification.md, "Runner hosts").
+--boat keeps the Boat session path.
 
 Session mode (confirm_session.py) needs a verifier session (tools/verifier/session up): it
 compiles on machines A and B, compares on A, B and this Mac, starts no machine, and labels the

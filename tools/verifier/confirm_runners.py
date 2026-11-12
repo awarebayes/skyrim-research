@@ -7,9 +7,8 @@ image; this Mac (the `local` host) also compares every other host's object again
 So a record has runs from at least two compile hosts and two compare hosts, as tools/check.py
 requires, and each host is named by its host id, with its OS, loader and compiler hashes in a note.
 
-Writing into reports/ waits for the acceptance-rule change that admits these hosts
-(RUNNER_RECORDS_ALLOWED, set by that change after its Reviewer pass). Until then a runner
-confirm needs --out, which writes records under DIR/<build id>/ for inspection only.
+docs/verification.md ("Runner hosts") admits these records as acceptance evidence
+(RUNNER_RECORDS_ALLOWED); --out still writes them under DIR/<build id>/ for inspection.
 Record assembly, the build block and the Mac comparison are tools/verifier/confirm's own
 functions, passed in as `base`.
 """
@@ -26,8 +25,8 @@ import pipeline
 import runners
 from pipeline import REPO, PipelineError
 
-# Set by the docs/verification.md change that names runner hosts as acceptance evidence.
-RUNNER_RECORDS_ALLOWED = False
+# docs/verification.md, "Runner hosts", admits records from these hosts.
+RUNNER_RECORDS_ALLOWED = True
 
 
 def independence_note(hosts, facts):
