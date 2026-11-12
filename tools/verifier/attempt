@@ -168,7 +168,10 @@ def attempt(task_dir):
     # Binding runs on every compile, not only when a reason code says a name is missing: a function
     # bound to the wrong one of several definitions (a plain destructor for a deleting one) fails
     # with a code difference, and a hint added afterwards would otherwise never be read.
-    if code in (0, 1) and not (dest / 'error.json').is_file() and (dest / 'candidate.obj').is_file():
+    internal = any('internal_selector' in fn for fn in task['functions'])
+    if internal:
+        bind_lines.append('  internal identities: automatic name binding disabled; use explicit scoped map keys')
+    if not internal and code in (0, 1) and not (dest / 'error.json').is_file() and (dest / 'candidate.obj').is_file():
         try:
             report = bind.bind(task_dir, dest / 'candidate.obj', config.get('image'), config.get('objdump'))
         except (OSError, ValueError) as exc:
@@ -216,9 +219,11 @@ def attempt(task_dir):
             line, result = pipeline.function_line(fn, fdir, dest / 'candidate.obj')
             rows.append('  ' + line)
             outcome.append(result)
-            if result == 'fail':  # aligned diagnostics (align.py): distance and classes under the function's line
+            if result == 'fail' and 'internal_selector' not in fn:  # aligned diagnostics (align.py): distance and classes under the function's line
                 rows[-1] += ''.join(f'\n      {s}' for s in align.attempt_summary(
                     fdir, objdump, config.get('image'), dest / 'candidate.obj', fn, task['symbols_local']))
+            if 'internal_selector' in fn:
+                continue  # Name-only disassembly helpers cannot select TU-bound internal symbols.
             sbs, why = disasm.write_side_by_side(fdir / 'side-by-side.txt', objdump, config.get('image'),
                                                  dest / 'candidate.obj', fn['symbol'], fn['rva'], fn['size'])
             if sbs is None and why and not any('side-by-side' in r for r in rows):

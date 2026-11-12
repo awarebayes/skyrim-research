@@ -106,8 +106,10 @@ def reproduction(task, fn, closure, recipe):
 
 def compare_steps(task, fn, unit):
     """The steps after the compile: task file from the object, then the comparator."""
+    selector = (' --internal-selector ' + shlex.quote(json.dumps(fn['internal_selector'], sort_keys=True))
+                if 'internal_selector' in fn else '')
     return (f'python3 -I tools/verifier/tu_task.py --function-id {task["build_id"]}-0x{fn["rva"]:x} '
-            f"--symbol '{fn['symbol']}' --compiled {task['compiled']} --unit {unit} --recipe {task['recipe']} "
+            f"--symbol '{fn['symbol']}'{selector} --compiled {task['compiled']} --unit {unit} --recipe {task['recipe']} "
             f'--symbols {task["symbols_repo"]} --object <work>/candidate.obj --out <work> ; '
             f'python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object '
             f'<work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> '
@@ -190,7 +192,7 @@ def mac_compare(task, fn, host_dir, dest):
     if dest.exists():
         shutil.rmtree(dest)
     dest.mkdir(parents=True, exist_ok=True)
-    task_file = {'verify_task_schema': 1, 'task': remote_task,
+    task_file = {'verify_task_schema': 2 if 'internal_identity' in remote_task else 1, 'task': remote_task,
                  'recipe': os.path.relpath(REPO / task['recipe'], dest),
                  'symbols': os.path.relpath(REPO / task['symbols_repo'], dest),
                  'manifest': os.path.relpath(REPO / 'builds/target.json', dest)}

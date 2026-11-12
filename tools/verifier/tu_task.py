@@ -33,6 +33,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--function-id', required=True)
     p.add_argument('--symbol', required=True)
+    p.add_argument('--internal-selector', type=json.loads, help='Contract v3 selector as JSON')
     p.add_argument('--compiled', required=True, help='Repository-relative path of the compiled .cpp')
     p.add_argument('--unit', nargs='+', required=True, help='Every repository file of the translation unit')
     p.add_argument('--recipe', required=True)
@@ -75,9 +76,14 @@ def main():
             'rva': fn['rva'] if a.rva is None else a.rva, 'size': fn['size'] if a.size is None else a.size,
             'symbol': a.symbol, 'source_revision': revision, 'source_path': a.compiled,
             'recipe_sha256': sha256(recipe)}
+    if a.internal_selector is not None:
+        from compare_internal import make_identity
+        task['task_schema'] = 2
+        task['internal_identity'] = make_identity(a.object.read_bytes(), a.symbol, a.internal_selector,
+                                                 revision, a.compiled)
     out = a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
-    spec = {'verify_task_schema': 1, 'task': task,
+    spec = {'verify_task_schema': 2 if a.internal_selector is not None else 1, 'task': task,
             'recipe': os.path.relpath(recipe, out),
             'symbols': os.path.relpath(a.symbols.resolve(), out),
             'manifest': os.path.relpath(repo / 'builds/target.json', out)}

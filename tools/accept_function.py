@@ -518,6 +518,8 @@ def prepare(root, data, target, index, title, header, block, blob, when):
     fn = data['functions'][index]
     refuse(fn.get('report') is not None, f'{fn["id"]} names no match record (report)')
     record = validate_match(dict(fn, status='matched'), target, root)
+    refuse(record.get('match_record_schema') != 3,
+           'Internal prototype cannot be accepted until the contract and rule have separate approval')
     refuse(block.get('verdict') == 'approve', f'review says verdict {block.get("verdict")!r}, not \'approve\'')
     refuse(block.get('escalation_category') == 'none',
            f'review escalation_category is {block.get("escalation_category")!r}, not none')
@@ -828,6 +830,8 @@ def label_only(root, select=None, when=None):
         refuse(state != STALE_UNIT, f'{fn["id"]}: unit changed since its match record; re-confirm first')
         refuse(state == STALE_REVIEW, f'{fn["id"]}: its Reviewer record already binds the current record')
         record = validate_match(fn, target, root)
+        refuse(record.get('match_record_schema') != 3,
+               'Internal prototype cannot be accepted until the contract and rule have separate approval')
         current = record_code_section(record)
         refuse(current is not None, f'{fn["id"]}: the match record carries no code-section hash; a review is needed')
         previous = _json_or_none(root / review_record_path(fn))
@@ -877,6 +881,8 @@ def refresh_named(root, select=None, when=None):
         elif fn['status'] != 'matched' or fn['id'] in stale_before:
             continue
         record = validate_match(fn, target, root)
+        refuse(record.get('match_record_schema') != 3,
+               'Internal prototype cannot be accepted until the contract and rule have separate approval')
         review = validate_review(fn, record, root)
         naming = review.get('naming_findings') if review['review_record_schema'] >= 3 else None
         set_named(new['functions'], index, named_value(root, record, naming))

@@ -94,10 +94,13 @@ def load_task_file(path):
         spec = json.loads(path.read_text())
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise TaskFileError(f'cannot read task description: {exc}') from None
-    if not isinstance(spec, dict) or spec.get('verify_task_schema') != TASK_SCHEMA:
+    if not isinstance(spec, dict) or spec.get('verify_task_schema') not in (TASK_SCHEMA, 2):
         raise TaskFileError(f'task description needs verify_task_schema {TASK_SCHEMA}')
     if not isinstance(spec.get('task'), dict):
         raise TaskFileError('task description needs a "task" object')
+    internal = 'internal_identity' in spec['task']
+    if (spec['verify_task_schema'] == 2) != internal:
+        raise TaskFileError('internal identities need verify_task_schema 2; external tasks need schema 1')
     base = path.resolve().parent
 
     def ref(key, required=True):
@@ -203,7 +206,8 @@ def run(task_file, obj, build_record, image, report_path, diagnostics=None, pyth
     flat_task.parent.mkdir(parents=True, exist_ok=True)
     flat_task.write_text(json.dumps(task, indent=2, sort_keys=True) + '\n')
     # Not isolated mode: compare.py imports pecoff from its own directory.
-    cmd = [python, str(COMPARE), '--task', str(flat_task), '--manifest', str(manifest),
+    comparator = COMPARE.with_name('compare_internal.py') if 'internal_identity' in task else COMPARE
+    cmd = [python, str(comparator), '--task', str(flat_task), '--manifest', str(manifest),
            '--recipe', str(recipe), '--build-record', str(build_record), '--object', str(obj),
            '--image', str(image), '--symbols', str(symbols), '--report', str(report_path),
            '--diagnostics', str(diagnostics)]

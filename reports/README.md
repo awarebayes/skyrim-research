@@ -75,6 +75,15 @@ unwind coverage. The comparator's `acceptance: not-evaluated` stays as written.
 A change to `tools/compare.py` or `tools/pecoff.py` makes every record stale until its runs are
 repeated. This is deliberate: a record vouches only for the comparator that produced it.
 
+## Prototype internal match records (`match_record_schema` 3)
+
+The opt-in [internal comparator prototype](../docs/comparator-internal-prototype.md) uses
+contract 3/report schema 2 and TU-bound internal identities. Schema-3 consistency checks retain
+the existing host/source/build gates and additionally check that identity across runs. Existing
+schema-2 records continue to use the unchanged contract-2 engine. Internal records require the
+exact map hash; map carry-forward is refused. Prototype records cannot support `matched` or any
+acceptance mode until separate machinery and rule approval.
+
 ## Reviewer record (`review_record_schema` 1, 2, 3 or 4)
 
 The public trace of the Reviewer step of the acceptance rule in `docs/verification.md`. Schema 1

@@ -43,8 +43,8 @@ try:
 except ImportError:
     cost_hooks = None
 
-TOOL_FILES = ('tools/compare.py', 'tools/pecoff.py', 'tools/source_digest.py', 'tools/verifier/verify_function.py',
-              'tools/verifier/unit_build.py', 'tools/verifier/pinned.sha256', 'builds/target.json')
+TOOL_FILES = ('tools/compare_internal.py', 'tools/compare.py', 'tools/pecoff.py', 'tools/source_digest.py',
+              'tools/verifier/verify_function.py', 'tools/verifier/unit_build.py', 'tools/verifier/pinned.sha256', 'builds/target.json')
 TASK_ID = re.compile(r'[a-z0-9][a-z0-9.-]{0,55}')
 PRIVATE_SYMBOLS = 'task/symbols.json'
 DEFAULT_TTL = int(os.environ.get('SR_VERIFIER_TTL', '3600'))
@@ -169,11 +169,22 @@ def load_task(task_dir, repo=REPO):
             except (ValueError, KeyError, TypeError) as exc:
                 raise PipelineError(f'task.json: {exc}') from exc
             entry['family_metadata'] = metadata
+        if 'internal_selector' in fn:
+            from compare_internal import check_selector
+            from pecoff import Reject
+            try:
+                check_selector(fn['internal_selector'])
+            except Reject as exc:
+                raise PipelineError(exc.detail) from None
+            entry['internal_selector'] = fn['internal_selector']
         functions.append(entry)
     if not functions:
         raise PipelineError('task.json: functions must list at least one function')
     if len({f['rva'] for f in functions}) != len(functions):
         raise PipelineError('task.json: a function is listed twice')
+    internal = any('internal_selector' in fn for fn in functions)
+    if raw.get('task_schema', 1) != (2 if internal else 1):
+        raise PipelineError('task.json: internal selectors need task_schema 2; external tasks need schema 1')
     notes = raw.get('record_notes') or []
     if not isinstance(notes, list) or not all(isinstance(n, str) and n.strip() for n in notes):
         raise PipelineError('task.json: record_notes must be a list of strings')
@@ -241,10 +252,12 @@ def compiler_include_problem(task, repo=REPO):
 
 
 def unit_spec(task, files, host):
-    return {'unit_spec_schema': 1, 'task_id': task['task_id'], 'host': host, 'build_id': task['build_id'],
+    schema = 2 if any('internal_selector' in f for f in task['functions']) else 1
+    return {'unit_spec_schema': schema, 'task_id': task['task_id'], 'host': host, 'build_id': task['build_id'],
             'compiled': task['compiled'], 'recipe': task['recipe'],
             'symbols': task['symbols_repo'] or PRIVATE_SYMBOLS,
-            'functions': [{'rva': f['rva'], 'size': f['size'], 'symbol': f['symbol']} for f in task['functions']],
+            'functions': [{k: f[k] for k in ('rva', 'size', 'symbol', 'internal_selector') if k in f}
+                          for f in task['functions']],
             'files': {name: sha256_file(path) for name, path in sorted(files.items())}}
 
 
@@ -413,13 +426,17 @@ def ensure_standing(ttl=DEFAULT_TTL, log=print):
     raise PipelineError(f'{boatctl.STANDING} is in state {state}')
 
 
-def candidate_size(obj, symbol):
+def candidate_size(obj, symbol, internal_selector=None):
     """Length of the candidate function's own section, or None (read locally with tools/pecoff.py)."""
     try:
         from pecoff import CoffObject
         co = CoffObject(Path(obj).read_bytes())
         for sym in co.symbols.values():
             if sym.name == symbol and sym.section > 0:
+                if internal_selector is not None:
+                    from compare_internal import selector
+                    if selector(co, sym) != internal_selector:
+                        continue
                 return len(co.section(sym.section).data or b'')
     except Exception:  # a reading aid only; the comparator's report is what counts
         return None
@@ -434,7 +451,7 @@ def function_line(fn, fdir, obj):
     result, reason = report.get('result', 'error'), report.get('reason') or report.get('verify_function')
     detail = report.get('detail') or ''
     m = re.search(r'at \+0x([0-9a-f]+)', detail)
-    size = candidate_size(obj, fn['symbol'])
+    size = candidate_size(obj, fn['symbol'], fn.get('internal_selector'))
     parts = [f'0x{fn["rva"]:x} {str(result).upper():<4} {reason}']
     if m:
         parts.append(f'first mismatch +0x{m.group(1)}')

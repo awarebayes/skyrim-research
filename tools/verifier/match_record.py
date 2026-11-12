@@ -35,7 +35,8 @@ def build(args, root=ROOT):
         runs.append({'compiled_on': compiled_on, 'compared_on': compared_on,
                      'report': json.loads(Path(report).read_text())})
     record = {
-        'match_record_schema': MATCH_RECORD_SCHEMA,
+        'match_record_schema': (3 if any('internal_identity' in (r['report'].get('function') or {})
+                                         for r in runs) else MATCH_RECORD_SCHEMA),
         'function_id': args.function_id,
         'source': {'translation_unit': sorted(args.unit), 'compiled': args.compiled,
                    'digest_method': DIGEST_METHOD, 'digest': tu_digest(root, args.unit)},

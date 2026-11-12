@@ -15,6 +15,8 @@ from source_digest import DIGEST_METHOD, INCLUDE_ROOTS, include_closure, recipe_
 from lint_reconstruction import lint_tree
 import cost_ledger
 import symbol_map as symbol_maps
+import compare_internal
+import compare as legacy_comparator
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED = set('.exe .dll .pdb .obj .o .lib .a .so .dylib .dmp .mdmp .bin .bsa .ba2 .esm .esp .esl .nif .dds .pex .hkx .ess .skse .gdt .gpr .idb .i64 .zip .7z .iso .vhdx .qcow2 .png .jpg .jpeg .pdf'.split())
@@ -174,7 +176,7 @@ def check_match(fn, target, root=None):
         record = json.loads((root / record_path).read_text())
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError(f'Match record: {record_path} is not JSON ({exc})') from None
-    require(isinstance(record, dict) and record.get('match_record_schema') == MATCH_RECORD_SCHEMA,
+    require(isinstance(record, dict) and record.get('match_record_schema') in (MATCH_RECORD_SCHEMA, 3),
             'Match record: unknown match_record_schema')
     require(record.get('function_id') == fn['id'], 'Match record: function_id is not this inventory entry')
 
@@ -233,9 +235,14 @@ def check_match(fn, target, root=None):
 
     runs = record.get('runs')
     require(isinstance(runs, list) and len(runs) >= MIN_HOSTS, f'Match record: needs at least {MIN_HOSTS} runs')
+    internal = record['match_record_schema'] == 3
+    engine = compare_internal if internal else legacy_comparator
+    require(not internal or map_ref.get('sha256') == map_state.current_sha,
+            'Match record: internal prototype requires the exact current symbol map')
+    identities = set()
     compiled_on, compared_on, symbols = set(), set(), set()
     object_hosts = {}
-    current_comparator = comparator_source_sha256()
+    current_comparator = engine.comparator_source_sha256()
     for run in runs:
         require(isinstance(run, dict) and text(run.get('compiled_on')) and text(run.get('compared_on')),
                 'Match record: each run names the host that compiled and the host that compared')
@@ -244,10 +251,10 @@ def check_match(fn, target, root=None):
         report = run.get('report')
         require(isinstance(report, dict), 'Match record: run without a comparator report')
         sanitized(without_code_section(report))
-        require(report.get('report_schema') == REPORT_SCHEMA and report.get('contract_version') == CONTRACT_VERSION,
+        require(report.get('report_schema') == engine.REPORT_SCHEMA and report.get('contract_version') == engine.CONTRACT_VERSION,
                 'Match record: report schema or contract version differs from this comparator')
         comparator = report.get('comparator') or {}
-        require(comparator.get('version') == COMPARATOR_VERSION
+        require(comparator.get('version') == engine.COMPARATOR_VERSION
                 and comparator.get('source_sha256') == current_comparator,
                 'Match record: report comes from a different comparator version; re-run it')
         require(report.get('acceptance') == 'not-evaluated', 'Match record: report was edited (acceptance)')
@@ -257,7 +264,21 @@ def check_match(fn, target, root=None):
         require(ident.get('build_id') == target['build_id'] == fn['build_id']
                 and ident.get('rva') == fn['rva'] and ident.get('size') == fn['size'] and text(ident.get('symbol')),
                 'Match record: report function identity differs from the inventory entry')
-        symbols.add(ident['symbol'])
+        if internal:
+            try:
+                compare_internal.check_internal_identity({
+                    'task_schema': 2, 'symbol': ident['symbol'], 'internal_identity': ident.get('internal_identity'),
+                    'source_revision': digest, 'source_path': compiled})
+            except compare_internal.Reject as exc:
+                raise ValueError(f'Match record: invalid internal identity: {exc.detail}') from None
+            identity = ident['internal_identity']
+            require(identity['object_sha256'] == (report.get('candidate') or {}).get('object_sha256'),
+                    'Match record: internal identity names another object')
+            identities.add(json.dumps({k: v for k, v in identity.items() if k != 'object_sha256'}, sort_keys=True))
+            symbols.add(identity['map_key'])
+        else:
+            require('internal_identity' not in ident, 'Match record: internal identity needs schema 3')
+            symbols.add(ident['symbol'])
         src = report.get('source') or {}
         require(src.get('source_revision') == digest and src.get('path') == compiled,
                 'Match record: report was produced from other source than the integrated file')
@@ -277,6 +298,7 @@ def check_match(fn, target, root=None):
                 and cov['code_bytes_exact'] + cov['code_bytes_by_reference'] == fn['size']
                 and cov.get('unwind') in {'covered', 'none-in-range'},
                 'Match record: report coverage is incomplete')
+    require(not internal or len(identities) == 1, 'Match record: runs compared different internal identities')
     require(len(symbols) == 1, 'Match record: runs compared different symbols')
     if pinned_names is not None:
         problem = symbol_maps.carry_forward_problem(map_state, pinned_names, fn['rva'], fn['size'],
@@ -376,6 +398,8 @@ def validate_review(fn, record, root=None):
     digest means an approval cannot be carried over to other source or another function; any source
     change makes it stale together with the match record.
     """
+    require(record.get('match_record_schema') != 3,
+            'Internal prototype cannot be accepted until the contract and rule have separate approval')
     root = ROOT if root is None else root
     name = review_record_path(fn)
     require((root / name).is_file(), f'Review record: {name} is missing; matched needs a Reviewer approve')

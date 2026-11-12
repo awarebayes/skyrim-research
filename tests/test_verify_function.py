@@ -87,7 +87,7 @@ class VerifyFunctionTests(unittest.TestCase):
             if isinstance(value, str):
                 self.assertNotIn(value, text)
         self.assert_no_bytes(text)
-        self.assertIn(str(self.private / 'diagnostics.json'), text)
+        self.assertIn(str((self.private / 'diagnostics.json').resolve()), text)
 
     def test_wrong_image_rejected(self):
         paths = self.write_inputs()

@@ -324,11 +324,17 @@ def host_facts(loader, compiler_hashes, toolchain_check=None):
     return facts
 
 
-def make_task(spec, fn, digest, recipe_sha):
-    return {'task_id': fn.get('task_id') or f'{spec["build_id"]}-0x{fn["rva"]:x}', 'build_id': spec['build_id'],
+def make_task(spec, fn, digest, recipe_sha, object_bytes=None):
+    task = {'task_id': fn.get('task_id') or f'{spec["build_id"]}-0x{fn["rva"]:x}', 'build_id': spec['build_id'],
             'target_image_sha256': spec['image_sha256'], 'rva': fn['rva'], 'size': fn['size'],
             'symbol': fn['symbol'], 'source_revision': digest, 'source_path': spec['compiled'],
             'recipe_sha256': recipe_sha}
+    if 'internal_selector' in fn:
+        from compare_internal import make_identity
+        task['task_schema'] = 2
+        task['internal_identity'] = make_identity(object_bytes, fn['symbol'], fn['internal_selector'],
+                                                 digest, spec['compiled'])
+    return task
 
 
 def mismatch_offset(detail):
@@ -347,8 +353,11 @@ def run(args):
         clock = now
 
     spec = json.loads(Path(args.spec).read_text())
-    if spec.get('unit_spec_schema') != SPEC_SCHEMA:
+    if spec.get('unit_spec_schema') not in (SPEC_SCHEMA, 2):
         raise UnitError(4, 'invalid-spec', f'unit spec needs unit_spec_schema {SPEC_SCHEMA}')
+    internal = any('internal_selector' in fn for fn in spec.get('functions', []))
+    if (spec['unit_spec_schema'] == 2) != internal:
+        raise UnitError(4, 'invalid-spec', 'internal selectors need unit_spec_schema 2; external tasks need schema 1')
     repo, work, msvc = Path(args.repo).resolve(), Path(args.work).resolve(), Path(args.msvc).resolve()
     if work.exists():
         shutil.rmtree(work)
@@ -428,8 +437,8 @@ def run(args):
     for fn in spec['functions']:
         d = work / f'0x{fn["rva"]:x}'
         d.mkdir()
-        task = make_task(spec, fn, digest, recipe_sha)
-        task_file = {'verify_task_schema': 1, 'task': task,
+        task = make_task(spec, fn, digest, recipe_sha, obj.read_bytes() if 'internal_selector' in fn else None)
+        task_file = {'verify_task_schema': 2 if 'internal_identity' in task else 1, 'task': task,
                      'recipe': os.path.relpath(recipe_path, d),
                      'symbols': os.path.relpath(repo / spec['symbols'], d),
                      'manifest': os.path.relpath(repo / 'builds/target.json', d)}

@@ -260,6 +260,11 @@ and cannot be carried forward by `--label-only`.
 
 ## Match gate
 
+Schema note: the [internal-function prototype](comparator-internal-prototype.md) adds schema-3
+record consistency checks and versioned internal tasks/reports. It cannot support `matched`:
+the public acceptance path refuses those records pending separate machinery and rule approval.
+Schema-2 records and their contract-2 comparator pins remain unchanged.
+
 This is how `tools/check.py` enforces items 1 to 3 of tier 1 of the acceptance rule on the committed tree.
 An inventory entry may name a match record in `report` (`reports/README.md`) before it is
 accepted; that record is checked whenever it is named, so a record awaiting review cannot go
