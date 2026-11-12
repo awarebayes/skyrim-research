@@ -211,11 +211,16 @@ Match record, recomputed from the tree:
   read to be harmless), an EH handler name was added and the function has handler data, or an
   added entry lies at or in a funclet range the runs' reports give (`coverage.funclet_ranges`;
   reports of a function with funclets whose ranges are not identical across runs, integer-counted,
-  covering every compared funclet byte, ascending and disjoint from each other and the function
-  carry across no addition). Names a pass referenced need no rule: the comparator fails a reference
-  to a name its map lacks (`unresolved-symbol`), so a pass referenced none of the added names. A
-  test in `tests/test_symbol_map.py` fails if the comparator comes to name a symbol or entry kind
-  without a rule here, or if its map-reading lines change without a re-audit. Every run's report must name
+  covering every compared funclet byte, and disjoint from each other and the function, in any
+  order, carry across no addition). Names a pass referenced need no rule: the comparator fails a reference
+  to a name its map lacks (`unresolved-symbol`), so a pass referenced none of the added names. Tests
+  in `tests/test_symbol_map.py` fail if the comparator comes to name a symbol-like string literal
+  or an entry kind without a rule here, if a function other than the audited ones in
+  `docs/comparator-contract.md` ("Symbol map dependences") refers to map data by its names in
+  `compare.py`, or if the comment- and docstring-free syntax tree of an audited function changes
+  (with the `compare.py` functions, `Function` methods and module constants they use). They do
+  not see a change in `pecoff.py` or a map read under another name, and passing them is not an
+  audit; a failure calls for one. Every run's report must name
   the pinned map in `symbol_map_sha256`, the comparator's hash of the bytes it read, so the pin
   cannot be moved without new runs. Changing or removing an entry
   therefore makes exactly the records pinned to versions holding it stale. The map is written

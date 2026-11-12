@@ -63,6 +63,7 @@ VERSION_FIELDS = {'sha256', 'base', 'added', 'superseded'}
 PRESENCE_NAMES = frozenset({IMAGE_BASE, TLS_INDEX}) | frozenset(EH_HANDLERS)
 ENTRY_KINDS = frozenset({THREAD_LOCAL})
 THREAD_LOCAL_KEYS = ['kind', 'tls_offset', 'size']
+RVA_KEYS = ['rva', 'size']
 
 
 def is_thread_local(entry):
@@ -122,12 +123,14 @@ def check_map(smap, what='symbol map'):
         load_symbol_map({'build_id': smap['build_id']}, smap)
     except Reject as exc:
         raise ValueError(f'{what}: {exc.reason}: {exc.detail}') from None
-    # One spelling per thread-local entry, so the same entry cannot appear in two byte forms (the
-    # comparator ignores extra keys and key order, a version rebuild does not).
+    # One spelling per entry, so the same entry cannot appear in two byte forms (the comparator
+    # ignores extra keys and key order, a version rebuild does not).
     for name, entry in smap['symbols'].items():
         if is_thread_local(entry):
             require(list(entry) == THREAD_LOCAL_KEYS,
                     f'{what}: thread-local entry {name} must have exactly the keys kind, tls_offset, size, in that order')
+        else:
+            require(list(entry) == RVA_KEYS, f'{what}: entry {name} must have exactly the keys rva, size, in that order')
     entries = provenance_entries(smap)
     if entries is not None:
         names = [e.get('name') if isinstance(e, dict) else None for e in entries]
@@ -297,9 +300,10 @@ def funclet_ranges(coverage, rva, size):
 
     The comparator rejects a map entry overlapping a funclet it binds; the ranges must account for
     every funclet byte it compared, so a report listing fewer funclets than it compared gives None.
-    Ranges must be ascending, disjoint from each other and from the function `[rva, rva + size)`,
-    which every consistent pass shows (the comparator refuses overlapping funclets); anything else
-    is not trusted to describe what was compared.
+    Ranges must be disjoint from each other and from the function `[rva, rva + size)`, which every
+    consistent pass shows (the comparator refuses overlapping funclets); anything else is not
+    trusted to describe what was compared. The comparator lists them in binding order, not address
+    order, so they are sorted for the disjointness check, after the runs are compared as listed.
     """
     lists = [c.get('funclet_ranges') for c in coverage]
     first = lists[0]
@@ -312,12 +316,13 @@ def funclet_ranges(coverage, rva, size):
            or len(first) != c['funclet_sections'] or sum(r[1] for r in first) != c['funclet_bytes_total']
            for c in coverage):
         return None
-    if any(a[0] + a[1] > b[0] for a, b in zip(first, first[1:])):
+    ordered = sorted(first)
+    if any(a[0] + a[1] > b[0] for a, b in zip(ordered, ordered[1:])):
         return None
     if any(overlaps(start, length, rva, rva + size) or overlaps(rva, size, start, start + length)
-           for start, length in first):
+           for start, length in ordered):
         return None
-    return [tuple(r) for r in first]
+    return [tuple(r) for r in ordered]
 
 
 def record_problem(state, record):
@@ -364,13 +369,13 @@ def _insert_sorted(order, rva_of, name):
 
 
 def incoming_entry(name, entry):
-    """An incoming entry in its canonical form: `{rva, size}` as given, or a thread-local entry
-    rewritten as kind, tls_offset, size (`size` required, null or positive)."""
+    """An incoming entry in its canonical form: `{rva, size}` (a missing size written as null), or a
+    thread-local entry rewritten as kind, tls_offset, size (`size` required, null or positive)."""
     require(isinstance(entry, dict), f'incoming entry {name} must be an object')
     if 'kind' not in entry:
-        require(set(entry) <= {'rva', 'size'} and type(entry.get('rva')) is int,
+        require(set(entry) <= set(RVA_KEYS) and type(entry.get('rva')) is int,
                 f'incoming entry {name} must be {{rva, size}} or {{kind: "thread-local", tls_offset, size}}')
-        return entry
+        return {'rva': entry['rva'], 'size': entry.get('size')}
     size = entry.get('size')
     require(set(entry) == set(THREAD_LOCAL_KEYS) and entry['kind'] == THREAD_LOCAL
             and type(entry['tls_offset']) is int and entry['tls_offset'] >= 0
