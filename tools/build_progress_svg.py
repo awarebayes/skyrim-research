@@ -17,7 +17,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / 'docs/progress.svg'
-W, H = 1000, 640
+W, BASE_H = 1000, 640
 FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
 BG, TEXT, MUTED = '#0d1117', '#e6edf3', '#8b949e'
 GREEN, AMBER, GREY, TRACK = '#2ea043', '#d29922', '#6e7681', '#6e7681'
@@ -79,23 +79,31 @@ def load(root):
     return progress, scope, costs
 
 
-def area_of(fn, root):
-    """Reconstruction area of an accepted function, read from its match record."""
+def unit_of(fn, root):
+    """(area, class) of an accepted function's unit, read from its match record."""
     try:
         record = json.loads((root / fn['report']).read_text())
         parts = record['source']['compiled'].split('/')
-        return parts[1] if parts[0] == 'reconstruction' and len(parts) > 2 else 'unknown'
+        if parts[0] == 'reconstruction' and len(parts) > 2:
+            return parts[1], parts[-1].rsplit('.', 1)[0]
     except (KeyError, OSError, ValueError):
-        return 'unknown'
+        pass
+    return 'unknown', None
+
+
+def area_of(fn, root):
+    """Reconstruction area of an accepted function, read from its match record."""
+    return unit_of(fn, root)[0]
 
 
 def stats(progress, root):
     fns = progress['functions']
     counts = Counter(fn['status'] for fn in fns)
     matched = [fn for fn in fns if fn['status'] == 'matched']
-    areas = Counter(area_of(fn, root) for fn in matched)
+    units = [unit_of(fn, root) for fn in matched]
+    areas = Counter(a for a, _ in units)
     return dict(counts=counts, matched=len(matched), matched_bytes=sum(fn['size'] for fn in matched),
-                tracked=len(fns), areas=areas)
+                tracked=len(fns), areas=areas, classes=Counter(c for _, c in units if c))
 
 
 def defs():
@@ -163,6 +171,61 @@ def census_treemap(scope, x, y, w, h):
                          f'{thousands(b["functions"])} fns, {compact(b["bytes"])} B', 'url(#cd)') for b in blocks)
 
 
+AREA_PANEL_H = 430
+
+
+def area_panel(scope, stats_, x, y, w, h):
+    """Nested treemap: one block per area (area = bytes), inside it one labelled block per large
+    class plus one for the remaining classes. Marks show accepted functions of a class's unit."""
+    areas = scope['areas']
+    # Functions with no known class are stated in the heading rather than drawn: at their true
+    # share they would leave the class blocks too small to label.
+    blocks = sorted((b for b in areas['blocks'] if b['bytes'] > 0 and b['id'] != 'unattributed'),
+                    key=lambda b: (-b['bytes'], b['id']))
+    un = next((b for b in areas['blocks'] if b['id'] == 'unattributed'), {'functions': 0, 'bytes': 0})
+    pop = areas['population']
+    shown = sum(b['functions'] for b in blocks)
+    out = [f'<text x="{x}" y="{fmt(y - 26)}" class="st">Ordinary code by area and class: {thousands(shown)} of '
+           f'{thousands(pop["functions"])} functions have a known class</text>',
+           f'<text x="{x}" y="{fmt(y - 10)}" class="hs">Area = bytes (measured). Class from the image RTTI vftables or an '
+           f'approved id name; not drawn: {thousands(un["functions"])} functions ({compact(un["bytes"])} B) with no class '
+           f'known. {thousands(areas["classes_passing_checks"]["value"])} of '
+           f'{thousands(areas["classes_with_primary_vftable"]["value"])} vftable classes pass the community checks.</text>']
+    layout = squarify([(b['id'], b['bytes']) for b in blocks], x, y, w, h)
+    for b in blocks:
+        bx, by, bw, bh = layout[b['id']]
+        fill = 'url(#hx)' if b['treatment'] == 'out_of_scope' else ('url(#hs)' if b['id'] == 'unattributed' else 'url(#cg)')
+        out.append(f'<rect x="{fmt(bx)}" y="{fmt(by)}" width="{fmt(bw)}" height="{fmt(bh)}" fill="#161b22" '
+                   f'stroke="{BG}" stroke-width="2"/>')
+        head = 15 if bh > 40 and bw > 60 else 0
+        if head:
+            out.append(f'<clipPath id="ah-{b["id"]}"><rect x="{fmt(bx)}" y="{fmt(by)}" width="{fmt(bw)}" height="{head}"/>'
+                       f'</clipPath><text x="{fmt(bx + 4)}" y="{fmt(by + 11)}" class="bs" clip-path="url(#ah-{b["id"]})">'
+                       f'{escape(b["label"])} · {thousands(b["functions"])} fns · {compact(b["bytes"])} B</text>')
+        items = [(c['name'], c) for c in b['classes'] if c['bytes'] > 0]
+        if b.get('other_classes') and b['other_classes']['bytes'] > 0:
+            oc = b['other_classes']
+            items.append((f'{thousands(oc["classes"])} other classes', oc))
+        if not items:
+            est = b.get('adjacent_estimate')
+            items = [('no class known', b)]
+            if est:
+                items = [('no class known', {'functions': b['functions'] - est['functions'],
+                                             'bytes': b['bytes'] - est['bytes']}),
+                         ('between two methods of one class (est.)', est)]
+        items = [(k, v) for k, v in items if v['bytes'] > 0]
+        inner = (bx + 1, by + head + 1, bw - 2, bh - head - 2)
+        if inner[2] <= 2 or inner[3] <= 2 or not items:
+            continue
+        sub = squarify([(str(i), v['bytes']) for i, (_, v) in enumerate(items)], *inner)
+        for i, (name, v) in enumerate(items):
+            done = stats_['classes'].get(name, 0) if v.get('functions') else 0
+            mark = [('cn', done / v['functions'])] if done else None
+            out.append(block(f'a-{b["id"]}-{i}', sub[str(i)], name,
+                             f'{thousands(v["functions"])} fns, {compact(v["bytes"])} B', fill, mark))
+    return ''.join(out)
+
+
 def pct(part, whole):
     return f'{100 * part / whole:.3f}%' if part else '0%'
 
@@ -201,6 +264,8 @@ def render(root=ROOT):
     den = scope['denominators']['functions_excluding_funclets_and_thunks']
     census = scope['structure_census']['primary_unwind_entries']
     build = progress['target_build_id']
+    panel = AREA_PANEL_H if scope.get('areas') else 0
+    H = BASE_H + panel
     LX, LW, RX, RW = 8, 585, 605, 387
     TY, TH = 76, 270
 
@@ -270,6 +335,8 @@ def render(root=ROOT):
     else:
         parts.append(f'<text x="{RX}" y="{sy}" class="st">Cost so far</text><text x="{RX}" y="{sy + 20}" class="rl">No cost ledger recorded.</text>')
 
+    if panel:
+        parts.append(area_panel(scope, st, LX, BASE_H + 20, W - 2 * LX, panel - 75))
     skipped_text = ', '.join(c['label'] + ' ' + thousands(c['functions']) for c in skipped)
     notes = ['Marks show the share of a block from the top; progress under 2 px is drawn 2 px tall.',
              f'est. = estimated by a heuristic; measured = counted on the pinned image. Not drawn (too small): {skipped_text} functions.']

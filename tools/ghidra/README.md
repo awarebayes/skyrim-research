@@ -51,6 +51,34 @@ the flagged ones; `drop` always drops them; `keep` (default) only notes them in 
 `<Class>_fpfast` unit is not offered: the source lint ties a unit's file name to the class it declares.
 `--class-material` also writes the class directories below and points each pack README at its class.
 
+### Whole-image tables, class skeletons, fan-in plan
+
+```sh
+python3 tools/ghidra/build_function_table.py [--write-scope data/scope.json] [--rerun-ghidra] [--rerun-disasm]
+python3 tools/ghidra/class_skeleton.py <Class> [--out <file>]
+python3 tools/ghidra/export_pack.py plan --order fanin --label <name> [--classes 20] [--total 150] [--eh 20]
+```
+
+`build_function_table.py` runs `ExportPack.java @all refs` once (about 35 s) and one `llvm-objdump`
+pass (16 s), both cached under `.local/analysis/cache/`, then writes in about 10 s the private
+`.local/analysis/functions.jsonl` (per Ghidra entry: kind by POGO group and name, v2 verdict from
+`classify`, owner class and how it is known, names tagged `ng-id`, `po3-id`, `ng-slot`, `po3-slot`,
+`meh321`, EH handler and state count, callers, callees, L1/L2 keys), `classes.jsonl` (per primary
+vftable: chain, slot targets, size from the deleting destructor, checks C1 to C4, RTTI name and base
+chain per community source, slot names from passing classes or meh321) and `callsites.json`. Timings
+go to `table-meta.json`. The config key `meh321_names` names meh321's rename list; `objdump` the
+disassembler. `--write-scope` adds the sanitized area and class breakdown to `data/scope.json`.
+
+`class_skeleton.py` turns a class row into a header: base chain as stand-ins, every slot in order
+(checked names or `Unk_NN`, overrides under the base's name), size as `OBSERVED` comment, padding and
+`static_assert`, a `Labels: v2` line per name and a GPL-3.0 statement when a po3 name is used. The
+exporter writes it as `skeleton.h` into each class directory. With the tables present, packs also gain
+"Observed signature evidence" (P5: argument registers, stack slots and result use over all direct call
+sites of the function and of each callee) and "Object lifetimes" (P6: unwind-map states, the funclet and
+destructor of each, the code offsets in each state). `plan --order fanin` reads the tables instead of
+the survey: see `findings/fourth-batch-selection.md` for the criteria; it writes `list.txt`,
+`plan.json` and `inventory-rows.json` (rows ready for `data/progress.json`).
+
 ### plan: class units from the survey
 
 `plan` reads the latest `survey --named` output (no Ghidra run) and keeps a function when its v1

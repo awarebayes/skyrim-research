@@ -1,4 +1,5 @@
 """The progress picture is deterministic, matches the tracked data and never shows an unnamed percentage."""
+from html import escape
 import json
 from pathlib import Path
 import re
@@ -52,6 +53,16 @@ class ProgressSvgTests(unittest.TestCase):
         for t in with_pct:
             self.assertIn('(measured', t)
         self.assertIsNone(self.progress['scope']['functions'])
+
+    def test_area_panel_labels_classes(self):
+        areas = self.scope.get('areas')
+        if not areas:
+            self.skipTest('scope has no area breakdown')
+        self.assertIn('Ordinary code by area and class', self.svg)
+        drawn = [c['name'] for b in areas['blocks'] for c in b['classes']]
+        self.assertGreaterEqual(sum(1 for n in drawn if f'>{escape(n)}</text>' in self.svg), 20)
+        total = sum(b['functions'] for b in areas['blocks'])
+        self.assertEqual(total, areas['population']['functions'])
 
     def test_estimates_are_labelled(self):
         for c in self.scope['categories']:

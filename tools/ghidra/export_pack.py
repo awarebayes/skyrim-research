@@ -16,6 +16,7 @@ under .local/ only; the tool itself contains no game data.
 """
 import argparse
 import bisect
+from collections import Counter, defaultdict
 import hashlib
 import json
 import os
@@ -555,22 +556,44 @@ def run_ghidra(cfg, selector, out_dir, mode, log):
     return time.monotonic() - t0
 
 
+def load_meta(out_dir):
+    meta = {}
+    with open(Path(out_dir) / 'meta.tsv') as fh:
+        for line in fh:
+            rva, found, name, nsyms, ranges, ninstr, computed, ctargets, thunk, fp, cond, icalls = \
+                line.rstrip('\n').split('\t')
+            meta[int(rva, 16)] = {
+                'found': found == '1', 'ghidra_name': name,
+                'ranges': [] if ranges == '-' else [tuple(int(x, 16) for x in r.split('-')) for r in ranges.split(',')],
+                'n_instr': int(ninstr), 'computed_jumps': int(computed), 'computed_targets': int(ctargets),
+                'thunk': thunk == '1', 'fp_arith': int(fp), 'cond_branches': int(cond),
+                'indirect_calls': int(icalls)}
+    return meta
+
+
+def iter_refs(out_dir):
+    """(function rva, [reference]) groups in file order; ExportPack writes one function's rows together,
+    so a whole-image run never needs every reference in memory at once."""
+    cur, group = None, []
+    with open(Path(out_dir) / 'refs.tsv') as fh:
+        for line in fh:
+            rva, off, rtype, target, mnem, opi, names, tentry = line.rstrip('\n').split('\t')
+            rva = int(rva, 16)
+            if rva != cur:
+                if cur is not None:
+                    yield cur, group
+                cur, group = rva, []
+            group.append({'offset': int(off), 'ref_type': rtype, 'target': int(target, 16), 'mnemonic': mnem,
+                          'operand': int(opi), 'ghidra_names': names, 'target_entry': int(tentry)})
+    if cur is not None:
+        yield cur, group
+
+
 def load_ghidra(out_dir):
-    meta, refs = {}, {}
-    for line in (Path(out_dir) / 'meta.tsv').read_text().splitlines():
-        rva, found, name, nsyms, ranges, ninstr, computed, ctargets, thunk, fp, cond, icalls = line.split('\t')
-        meta[int(rva, 16)] = {
-            'found': found == '1', 'ghidra_name': name,
-            'ranges': [] if ranges == '-' else [tuple(int(x, 16) for x in r.split('-')) for r in ranges.split(',')],
-            'n_instr': int(ninstr), 'computed_jumps': int(computed), 'computed_targets': int(ctargets),
-            'thunk': thunk == '1', 'fp_arith': int(fp), 'cond_branches': int(cond),
-            'indirect_calls': int(icalls)}
-    for line in (Path(out_dir) / 'refs.tsv').read_text().splitlines():
-        rva, off, rtype, target, mnem, opi, names, tentry = line.split('\t')
-        refs.setdefault(int(rva, 16), []).append({
-            'offset': int(off), 'ref_type': rtype, 'target': int(target, 16), 'mnemonic': mnem,
-            'operand': int(opi), 'ghidra_names': names, 'target_entry': int(tentry)})
-    return meta, refs
+    refs = {}
+    for rva, group in iter_refs(out_dir):
+        refs.setdefault(rva, []).extend(group)
+    return load_meta(out_dir), refs
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1067,6 +1090,157 @@ def drafter_aids(pack_dir, img, addrlib, comms, ident, listing_text, excerpt, bu
 
 
 # ---------------------------------------------------------------------------------------------
+# Aids from the whole-image tables of build_function_table.py (optional: absent tables just mean
+# the sections are left out): call-site census (P5), EH object lifetimes (P6), class skeletons.
+
+ANALYSIS = REPO / '.local/analysis'
+_analysis = {}
+
+
+def analysis_tables(root=None):
+    """(functions by rva, call-site census by callee rva, classes by name, table meta) or None."""
+    root = Path(root or ANALYSIS)
+    key = str(root)
+    if key not in _analysis:
+        if not (root / 'functions.jsonl').is_file():
+            _analysis[key] = None
+        else:
+            fns = {}
+            with open(root / 'functions.jsonl') as fh:
+                for line in fh:
+                    r = json.loads(line)
+                    fns[r['rva']] = r
+            census = json.loads((root / 'callsites.json').read_text()) if (root / 'callsites.json').is_file() else {}
+            classes = {}
+            if (root / 'classes.jsonl').is_file():
+                with open(root / 'classes.jsonl') as fh:
+                    for line in fh:
+                        c = json.loads(line)
+                        classes[c['class']] = c
+            meta = json.loads((root / 'table-meta.json').read_text()) if (root / 'table-meta.json').is_file() else {}
+            _analysis[key] = (fns, {int(k): v for k, v in census.items()}, classes, meta)
+    return _analysis[key]
+
+
+def best_name(row):
+    """One display name for a table row: checked slot names first, then id names that do not
+    contradict the image's vftables, with the source tag."""
+    if not row:
+        return None
+    order = {'ng-slot': 0, 'ng-id': 1, 'po3-slot': 2, 'po3-id': 3, 'meh321': 4}
+    names = [n for n in row.get('names', []) if n.get('agrees_with_vtable') is not False and n['how'] != 'placeholder']
+    names.sort(key=lambda n: order.get(n['source'], 9))
+    return f'{names[0]["name"]} [{names[0]["source"]}]' if names else None
+
+
+def census_summary(c):
+    """`N sites; arity a:n ...; slot widths; result` from one census entry."""
+    if not c:
+        return None
+    arity = ', '.join(f'{k}:{v}' for k, v in sorted(c['arity'].items(), key=lambda kv: int(kv[0])))
+    slots = []
+    for k, widths in sorted(c['slots'].items(), key=lambda kv: int(kv[0])):
+        top = sorted(widths.items(), key=lambda kv: -kv[1])
+        slots.append(f'{k}=' + '/'.join(f'{w}x{n}' for w, n in top[:3]))
+    res = ', '.join(f'{k} {v}' for k, v in sorted(c['result'].items(), key=lambda kv: -kv[1]))
+    return f'{c["sites"]} sites from {c["callers"]} callers; highest argument slot set + 1: {arity}; ' \
+           f'slots set: {" ".join(slots) or "none"}; result: {res}'
+
+
+def signature_evidence(rva, refs, root=None):
+    """README lines and pack.json data for P5: what callers of this function and of its callees
+    set up before the call."""
+    t = analysis_tables(root)
+    if not t:
+        return [], None
+    fns, census, _, _ = t
+    own = census.get(rva)
+    lines = ['', '## Observed signature evidence (call-site census)', '',
+             'Per direct call site, the argument registers (RCX/RDX/R8/R9 or XMM0-3 by position) and stack slots',
+             '(`[rsp+0x20+8k]`, slot 4+k) written since the last branch or call, and how RAX/XMM0 is used after',
+             'the call. Widths: i1..i8 integer bytes, p8 an address (lea), f4/f8 float/double, x16 vector. A value',
+             'passed through unchanged is not seen, so counts are lower bounds. Evidence, not a declaration.', '',
+             f'- This function as a callee: {census_summary(own) or "no direct call sites"}.']
+    data = {'self': own, 'callees': {}}
+    seen = set()
+    rows = []
+    for r in refs or []:
+        if r.get('kind') != 'call' or r['target_rva'] in seen:
+            continue
+        seen.add(r['target_rva'])
+        c = census.get(r['target_rva'])
+        if not c:
+            continue
+        data['callees'][hex(r['target_rva'])] = c
+        rows.append(f'| 0x{r["target_rva"]:x} | {best_name(fns.get(r["target_rva"])) or "-"} | {census_summary(c)} |')
+    if rows:
+        lines += ['', '| callee | name [source] | census over all its call sites in the image |', '|---|---|---|'] + rows
+    return lines, data
+
+
+def lifetime_outline(img, rva, root=None):
+    """README lines and data for P6: the unwind-map states of a C++ EH function, the destructor
+    each state's funclet calls, and the code offsets that run in each state."""
+    entry = img.pdata_at.get(rva)
+    if not entry:
+        return [], None
+    import build_function_table as bft
+    try:
+        flags, length = unwind_header(img.read(entry[1], 4), 'unwind info')
+        if not flags & (UNW_FLAG_EHANDLER | UNW_FLAG_UHANDLER):
+            return [], None
+        (h_rva,) = struct.unpack('<I', img.read(entry[1] + length, 4))
+        name = handler_name(img, h_rva, {'by_rva': {}}, [])
+        o = bft.eh_outline(img, rva, entry[1], name or getattr(img, 'handler_names', {}).get(h_rva))
+    except (Reject, struct.error, ValueError):
+        return [], None
+    if not o or not o.get('states'):
+        return [], None
+    t = analysis_tables(root)
+    fns = t[0] if t else {}
+    ranges = {}
+    ips = sorted(o['ip_to_state'])
+    for i, (ip, st) in enumerate(ips):
+        end = ips[i + 1][0] if i + 1 < len(ips) else None
+        ranges.setdefault(st, []).append((ip - rva, (end - rva) if end else None))
+    lines = ['', '## Object lifetimes (C++ EH unwind map)', '',
+             f'{len(o["states"])} states, {len(o["try_blocks"])} try blocks. A state is entered after an object with a '
+             'destructor (or a `new` awaiting its constructor) is complete; its funclet destroys it on unwind, then',
+             'unwinding continues at `to`. Offsets are from the function start; a funclet outside the parent says',
+             'which destructor (and so which type) the state owns. Declare one destructible local or temporary per state.',
+             '', '| state | to | funclet | destructor it calls | code offsets in this state |', '|---|---|---|---|---|']
+    data = []
+    for s in o['states']:
+        fn = fns.get(s['action']) if s['action'] else None
+        calls = []
+        for callee in (fn or {}).get('callees', []) + (fn or {}).get('tail_callees', []):
+            calls.append(f'0x{callee:x} {best_name(fns.get(callee)) or ""}'.strip())
+        offs = ', '.join(f'+0x{a:x}..' + (f'+0x{b:x}' if b is not None and b >= 0 else 'end')
+                         for a, b in ranges.get(s['state'], []) if a >= 0)
+        lines.append(f'| {s["state"]} | {s["to_state"]} | {hex(s["action"]) if s["action"] else "-"} | '
+                     f'{"; ".join(calls) or "-"} | {offs or "-"} |')
+        data.append({'state': s['state'], 'to_state': s['to_state'], 'funclet': s['action'], 'calls': calls,
+                     'offsets': ranges.get(s['state'], [])})
+    for i, tb in enumerate(o['try_blocks']):
+        lines.append(f'\nTry block {i}: states {tb["try_low"]}..{tb["try_high"]}, catch up to {tb["catch_high"]}, '
+                     f'{len(tb["catches"])} handler(s).')
+    return lines, {'states': data, 'try_blocks': o['try_blocks']}
+
+
+def class_skeleton_text(cls, comms, root=None):
+    t = analysis_tables(root)
+    if not t or not t[2]:
+        return None
+    import class_skeleton
+    cfg = {'ng_revision': comms[0].revision, 'po3_revision': comms[1].revision if len(comms) > 1 else None,
+           'meh321_revision': (t[3].get('inputs') or {}).get('meh321_names') or '0' * 12}
+    try:
+        return class_skeleton.render(t[2], cls, cfg, t[3].get('build_id') or 'sse-steam-1-7-104')
+    except SystemExit:
+        return None
+
+
+# ---------------------------------------------------------------------------------------------
 # Packs and tasks.
 
 def load_config(path):
@@ -1107,6 +1281,8 @@ def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing, img):
     rva = fact['rva']
     ae_ids = addrlib['by_rva'].get(rva, [])
     ident, comm = community_identity(comms, ae_ids)
+    if ident is None:
+        ident = table_identity(rva)
     excerpt = source = None
     if ident:
         cls = owning_class(ident['name'])
@@ -1116,7 +1292,7 @@ def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing, img):
                 excerpt = c.class_excerpt(cls)
                 if excerpt:
                     break
-        source = comm.source_excerpt(ident['source'])
+        source = comm.source_excerpt(ident['source']) if comm else None
         if source and excerpt and source['path'] == excerpt['path'] and comm.describe() == excerpt['origin'] \
                 and excerpt['line'] <= source['line'] <= excerpt['line'] + excerpt['text'].count('\n'):
             source = None
@@ -1175,9 +1351,42 @@ def write_pack(pack_dir, fact, target, addrlib, comms, gdir, timing, img):
     aid_files, aid_lines = drafter_aids(pack_dir, img, addrlib, comms, pack['identity'], listing, excerpt,
                                        target['build_id'])
     files.update(aid_files)
+    aid_lines += table_aids(pack, img)
     (pack_dir / 'pack.json').write_text(json.dumps(pack, indent=2, default=hex) + '\n')
     (pack_dir / 'README.md').write_text(render_pack_readme(pack) + '\n'.join(aid_lines))
     return pack
+
+
+def table_identity(rva, root=None):
+    """A community-style identity from the function table when no NG/po3 id names the function:
+    a checked vftable slot name or a meh321 id name, with the owner the image's vftables give."""
+    t = analysis_tables(root)
+    row = t[0].get(rva) if t else None
+    if not row:
+        return None
+    order = {'ng-slot': 0, 'po3-slot': 1, 'meh321': 2}
+    names = sorted((n for n in row.get('names', []) if n['source'] in order and n['how'] != 'placeholder'
+                    and n.get('agrees_with_vtable') is not False), key=lambda n: order[n['source']])
+    if not names:
+        return None
+    n = names[0]
+    origin = {'ng-slot': 'CommonLibSSE-NG (MIT) slot comment', 'po3-slot': 'powerof3/CommonLibSSE (GPL-3.0) slot comment',
+              'meh321': 'meh321 Address Library names (permission)'}[n['source']]
+    owner = (row.get('owner') or {}).get('class')
+    name = n['name']
+    if owner and n['source'].endswith('-slot'):
+        name = owner.split('::')[-1] + '::' + name.split('::')[-1]
+    return {'name': name, 'kind': 'func', 'how': n['how'], 'source': f'function table ({n["source"]})',
+            'origin': origin, 'se_id': None, 'table_source': n['source']}
+
+
+def table_aids(pack, img):
+    """P5 and P6 sections for one pack; also stored in pack.json."""
+    sig_lines, sig = signature_evidence(pack['rva'], pack.get('references', []))
+    life_lines, life = lifetime_outline(img, pack['rva'])
+    pack['observed_signature'] = sig
+    pack['object_lifetimes'] = life
+    return sig_lines + life_lines + ([''] if sig_lines or life_lines else [])
 
 
 def render_pack_readme(p):
@@ -1440,6 +1649,9 @@ def class_material(cls, packs, listings, img, addrlib, comms):
                 break
     if parts:
         files['signature-types.h'] = '\n'.join(parts)
+    skeleton = class_skeleton_text(cls, comms)
+    if skeleton:
+        files['skeleton.h'] = skeleton
     refs = [r for p in packs for r in p.get('references', [])]
     for r in refs:
         for cn in r.get('community_names', [])[:1]:
@@ -1506,7 +1718,9 @@ def write_class_material(task_dirs, target, img, addrlib, comms):
                  'offsets.md': 'displacements observed across all selected functions, with the member at each',
                  'vtables.txt': 'slot tables of the class and its RTTI bases',
                  'signature-types.h': 'trimmed declarations of the types in the selected methods\' signatures',
-                 'reference-decls.h': 'declarations of everything the selected functions call or read'}
+                 'reference-decls.h': 'declarations of everything the selected functions call or read',
+                 'skeleton.h': 'header skeleton from tools/ghidra/class_skeleton.py: base chain, every virtual slot '
+                               'in order with checked names or Unk_NN, verified size; start the unit header from it'}
         for name in sorted(files):
             base = name.replace('.GPL-local-only', '')
             lines.append(f'- `{name}`: {notes.get(base, "")}'
@@ -1855,6 +2069,243 @@ def cmd_plan(args):
 
 
 # ---------------------------------------------------------------------------------------------
+# plan --order fanin: whole-image ordering from build_function_table.py.
+
+OUT_OF_SCOPE_AREAS = {'havok', 'scaleform', 'std', 'bnet'}
+SIZE_BUCKETS = ((32, '<=32'), (64, '33-64'), (128, '65-128'), (256, '129-256'), (512, '257-512'), (None, '>512'))
+NAME_ORDER = {'ng-slot': 0, 'ng-id': 1, 'po3-slot': 2, 'po3-id': 3, 'meh321': 4}
+
+
+def size_bucket(n):
+    for hi, label in SIZE_BUCKETS:
+        if hi is None or n <= hi:
+            return label
+
+
+def usable_names(row):
+    """Names a plan may use: checked slot names, and id names that are not placeholders and do not
+    contradict the image's vftables. Sorted NG first (MIT), then po3, then meh321."""
+    out = [n for n in row.get('names', []) if n['how'] != 'placeholder' and n.get('agrees_with_vtable') is not False
+           and re.fullmatch(r'[A-Za-z_~][\w:~]*', n['name'] or '')]
+    return sorted(out, key=lambda n: NAME_ORDER.get(n['source'], 9))
+
+
+def v2_ready(row):
+    """Supported by comparator v2, or cautioned only for things a Drafter handles: a padded leaf
+    without .pdata, or funclets whose references bind by position."""
+    v = row.get('v2') or {}
+    if v.get('verdict') == 'supported':
+        return True
+    if v.get('verdict') != 'caution':
+        return False
+    benign = ('no-pdata', 'funclet code references are not listed')
+    return all(c.startswith(benign) for c in v.get('cautions', []))
+
+
+def table_eligibility(row, classes, claimed, max_bytes=None):
+    """None when the function may be planned, else the first reason it may not."""
+    if row['kind'] != 'ordinary':
+        return 'not an ordinary function (' + row['kind'] + ')'
+    if not v2_ready(row):
+        return 'not supported by comparator v2'
+    if row['rva'] in claimed:
+        return 'already in the inventory'
+    if not usable_names(row):
+        return 'no usable name from an approved source'
+    owner = row.get('owner') or {}
+    cls = owner.get('class')
+    if not cls or owner.get('how') == 'rtti-adjacent':
+        return 'no owning class'
+    c = classes.get(cls)
+    if c is None:
+        return 'class has no primary vftable to check'
+    if not c.get('passes'):
+        return 'class fails the per-class checks'
+    if c['area'] in OUT_OF_SCOPE_AREAS:
+        return 'middleware or std area'
+    if '<' in cls or '::' in cls:
+        return 'template or nested class (no unit name rule)'
+    if area_for(cls) is None:
+        return 'no area rule for the class (reconstruction/README.md rule 3)'
+    if area_for(cls) == 'actors' and c['area'] in ('netimmerse', 'bsengine'):
+        # `*Process` would file a library class (NiCullingProcess) under actors; ask before using it.
+        return 'area rules disagree (library prefix and *Process)'
+    if max_bytes and (row['size'] or 0) > max_bytes:
+        return f'over {max_bytes} bytes'
+    return None
+
+
+def inventory_row(row, target, evidence, owner_name='awarebayes'):
+    n = usable_names(row)[0]
+    src = {'ng-slot': 'CharmedBaryon/CommonLibSSE-NG commit {ng} (MIT), virtual slot comment of the class header, '
+                      'joined through the image RTTI vftable slot {slot}',
+           'po3-slot': 'powerof3/CommonLibSSE commit {po3} (GPL-3.0), virtual slot comment of the class header, '
+                       'joined through the image RTTI vftable slot {slot}',
+           'ng-id': 'CharmedBaryon/CommonLibSSE-NG commit {ng} (MIT), joined through Address Library id {ae}',
+           'po3-id': 'powerof3/CommonLibSSE commit {po3} (GPL-3.0), joined through Address Library id {ae}',
+           'meh321': 'meh321 Address Library name list (used with the author\'s permission as reported by the '
+                     'maintainer), Address Library id {ae}'}[n['source']]
+    owner = row.get('owner') or {}
+    name = n['name']
+    if n['source'].endswith('-slot') and owner.get('class'):
+        name = owner['class'] + '::' + name.split('::')[-1]
+    return {'id': f'{target["build_id"]}-{hex(row["rva"])}', 'build_id': target['build_id'], 'rva': row['rva'],
+            'size': row['size'], 'status': 'mapped', 'name': name, 'name_origin': 'COMMUNITY',
+            'name_source': 'Community name, not verified: ' + src.format(
+                ng=target.get('ng_revision', ''), po3=target.get('po3_revision', ''), slot=owner.get('slot'),
+                ae=n.get('ae_id')) + f'. RVA {hex(row["rva"])}; size from the comparator v2 extent.',
+            'owner': owner_name, 'evidence': evidence}
+
+
+def plan_from_table(rows, classes, claimed, opts):
+    """Order and pick a batch: classes that pass the checks, functions by fan-in then size, one
+    function per L1 cluster, a quota of C++ EH functions with few states."""
+    elig, rejected = [], Counter()
+    for r in rows:
+        why = table_eligibility(r, classes, claimed)
+        if why:
+            rejected[why] += 1
+        else:
+            elig.append(r)
+    stats = {'eligible_any_size': len(elig),
+             'eligible_by_size': dict(Counter(size_bucket(r['size'] or 0) for r in elig)),
+             'eligible_by_first_name_source': dict(Counter(usable_names(r)[0]['source'] for r in elig)),
+             'eligible_named_by_source': {s: sum(1 for r in elig if any(n['source'] == s for n in usable_names(r)))
+                                          for s in NAME_ORDER},
+             'eligible_with_cxx_eh': sum(1 for r in elig if r['eh'].get('handler_kind') == 'c++'),
+             'eligible_classes': len({r['owner']['class'] for r in elig}),
+             'rejections': dict(rejected.most_common())}
+    small = [r for r in elig if (r['size'] or 0) <= opts['max_function_bytes']]
+
+    def is_eh(r):
+        return r['eh'].get('handler_kind') == 'c++' and r['eh'].get('states') and \
+            r['eh']['states'] <= opts['max_eh_states'] and not r['eh'].get('try_blocks')
+
+    by_class = defaultdict(list)
+    for r in small:
+        by_class[r['owner']['class']].append(r)
+
+    def fn_key(r):
+        return (-min(r['callers'], 50), r['size'] or 0, r['rva'])
+
+    def class_score(c, fs):
+        return (sum(min(f['callers'], 50) for f in fs) + 5 * len(fs), -sum(f['size'] or 0 for f in fs))
+
+    # A class with an accepted unit is extended only on request: editing it re-opens its records.
+    skip = set(opts.get('existing_units', ())) - {opts.get('extend')}
+    for c in skip & set(by_class):
+        stats.setdefault('skipped_existing_unit', []).append(c)
+    by_class = {c: fs for c, fs in by_class.items() if c not in skip}
+    cands = [(class_score(c, fs), c) for c, fs in by_class.items() if len(fs) >= opts['min_functions']]
+    cands.sort(key=lambda x: (tuple(-v for v in x[0]), x[1]))
+    chosen, per_area = [], Counter()
+    for _, c in cands:
+        area = classes[c]['area']
+        if per_area[area] >= opts['max_classes_per_area']:
+            continue
+        chosen.append(c)
+        per_area[area] += 1
+        if len(chosen) >= opts['classes']:
+            break
+    picked, clusters = {}, set()
+    non_eh_quota = opts['total'] - opts['eh']
+    per_class = max(1, -(-non_eh_quota // max(1, len(chosen))))
+    for c in chosen:
+        got = []
+        # C++ EH functions come only through the quota below, and only with few states.
+        for r in sorted((f for f in by_class[c] if f['eh'].get('handler_kind') != 'c++'), key=fn_key):
+            if r['l1'] in clusters:
+                continue
+            got.append(r)
+            clusters.add(r['l1'])
+            if len(got) >= per_class:
+                break
+        picked[c] = got
+    while sum(len(v) for v in picked.values()) > non_eh_quota:
+        c = max(picked, key=lambda k: (len(picked[k]), k))
+        clusters.discard(picked[c].pop()['l1'])
+    eh_pool = sorted((f for c in chosen for f in by_class[c] if is_eh(f) and f['l1'] not in clusters),
+                     key=lambda r: (r['eh']['states'], fn_key(r)))
+    extra_classes = []
+    if len(eh_pool) < opts['eh']:
+        others = sorted((f for c, fs in by_class.items() if c not in chosen for f in fs if is_eh(f)),
+                        key=lambda r: (r['eh']['states'], fn_key(r)))
+        eh_pool += others
+    n_eh = 0
+    for r in eh_pool:
+        if n_eh >= opts['eh']:
+            break
+        if r['l1'] in clusters:
+            continue
+        c = r['owner']['class']
+        if c not in picked:
+            picked[c] = []
+            extra_classes.append(c)
+        picked[c].append(r)
+        clusters.add(r['l1'])
+        n_eh += 1
+    stats['eh_picked'] = n_eh
+    stats['eh_pool_in_chosen_classes'] = sum(1 for c in chosen for f in by_class[c] if is_eh(f))
+    return chosen + extra_classes, picked, stats
+
+
+def cmd_plan_table(args):
+    cfg = load_config(args.config)
+    target = json.loads((REPO / 'builds/target.json').read_text())
+    t0 = time.monotonic()
+    t = analysis_tables(args.table)
+    if not t:
+        raise SystemExit(f'no function table under {args.table or ANALYSIS}; run tools/ghidra/build_function_table.py')
+    fns, _, classes, meta = t
+    progress = json.loads((REPO / 'data/progress.json').read_text())
+    claimed = {fn['rva'] for fn in progress['functions'] if fn['build_id'] == target['build_id']}
+    opts = {'classes': args.classes, 'total': args.total or 150, 'eh': args.eh, 'max_eh_states': args.max_eh_states,
+            'min_functions': args.min_functions, 'max_function_bytes': args.max_function_bytes,
+            'max_classes_per_area': args.max_classes_per_area, 'extend': args.extend,
+            'existing_units': sorted(p.stem for p in (REPO / 'reconstruction').glob('*/*.cpp'))}
+    order, picked, stats = plan_from_table(list(fns.values()), classes, claimed, opts)
+    target = dict(target, ng_revision=cfg['ng_revision'], po3_revision=cfg.get('po3_revision', ''))
+    out_dir = REPO / '.local/packs/_plan' / args.label
+    out_dir.mkdir(parents=True, exist_ok=True)
+    evidence = args.evidence
+    lines = ['# build id         rva        task id                         unit',
+             f'# generated by export_pack.py plan --order fanin ({args.label}); review before running packs']
+    inventory, chosen = [], []
+    for c in order:
+        fs = sorted(picked.get(c, []), key=lambda r: (r['size'] or 0, r['rva']))
+        if not fs:
+            continue
+        unit = f'reconstruction/{area_for(c)}/{c}.cpp'
+        existing = sorted((REPO / 'reconstruction').glob(f'*/{c}.cpp'))
+        if existing:
+            unit = existing[0].relative_to(REPO).as_posix()
+        for r in fs:
+            lines.append(f'{target["build_id"]}  0x{r["rva"]:x}  {(args.task_prefix + c).lower()}  {unit}')
+            inventory.append(inventory_row(r, target, evidence))
+        cl = classes[c]
+        chosen.append({'class': c, 'area': cl['area'], 'unit': unit, 'size': cl.get('size'),
+                       'checks_passed_by': cl['passes'], 'vftable_slots': len(cl['slots']),
+                       'functions': [{'rva': hex(r['rva']), 'size': r['size'], 'callers': r['callers'],
+                                      'name': usable_names(r)[0]['name'], 'name_source': usable_names(r)[0]['source'],
+                                      'eh_states': r['eh'].get('states'), 'verdict': r['v2']['verdict'],
+                                      'cluster_size': r.get('cluster_size')} for r in fs]})
+    (out_dir / 'list.txt').write_text('\n'.join(lines) + '\n')
+    (out_dir / 'inventory-rows.json').write_text(json.dumps(inventory, indent=2) + '\n')
+    plan = {'build_id': target['build_id'], 'order': 'fanin', 'table': meta.get('inputs'), 'criteria': opts,
+            'chosen': chosen, 'stats': stats, 'functions': len(inventory),
+            'eh_functions': sum(1 for c in chosen for f in c['functions'] if f['eh_states']),
+            'bytes': sum(f['size'] or 0 for c in chosen for f in c['functions']),
+            'python_s': round(time.monotonic() - t0, 1)}
+    (out_dir / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
+    for c in chosen:
+        print(f'{c["class"]:32s} {c["area"]:10s} {len(c["functions"])} fns '
+              + ' '.join(f'{f["size"]}{"e" if f["eh_states"] else ""}' for f in c['functions']))
+    print(json.dumps({k: v for k, v in stats.items() if k != 'rejections'}))
+    print(f'{len(inventory)} functions in {len(chosen)} classes; wrote {out_dir.relative_to(REPO)}/list.txt, '
+          'plan.json, inventory-rows.json')
+
+
+# ---------------------------------------------------------------------------------------------
 # bind: the shared implementation is tools/verifier/bind.py, which attempt runs on every compile.
 
 def bind(task_dir, obj_path=None):
@@ -1989,6 +2440,7 @@ def refresh_pack(pack_dir, target, img, addrlib, comms):
                                         'at observed offsets)' if trimmed else '') + '\n' + text + '\n')
     files, lines = drafter_aids(pack_dir, img, addrlib, comms, ident, listing, excerpt, target['build_id'])
     pack['files'].update(files)
+    lines += table_aids(pack, img)
     (pack_dir / 'pack.json').write_text(json.dumps(pack, indent=2, default=hex) + '\n')
     (pack_dir / 'README.md').write_text(render_pack_readme(pack) + '\n'.join(lines))
     return pack, files
@@ -2109,6 +2561,15 @@ def main():
     pl.add_argument('--task-prefix', default='batch-')
     pl.add_argument('--reuse-evidence', action='append',
                     help='Inventory entries citing this findings/ file stay selectable (reproduce a recorded plan)')
+    pl.add_argument('--order', choices=('survey', 'fanin'), default='survey',
+                    help='fanin: plan from the whole-image table of build_function_table.py, high fan-in small '
+                         'functions of classes that pass the per-class checks first')
+    pl.add_argument('--table', default=None, help='Default: .local/analysis')
+    pl.add_argument('--eh', type=int, default=20, help='fanin: C++ EH functions with few states to mix in')
+    pl.add_argument('--max-eh-states', type=int, default=3)
+    pl.add_argument('--max-classes-per-area', type=int, default=8)
+    pl.add_argument('--evidence', default='findings/fourth-batch-selection.md',
+                    help='fanin: findings file the inventory rows cite')
     s = sub.add_parser('survey')
     s.add_argument('--sample', type=int, default=2000)
     s.add_argument('--seed', type=int, default=1)
@@ -2127,7 +2588,7 @@ def main():
     elif args.cmd == 'refresh':
         cmd_refresh(args)
     elif args.cmd == 'plan':
-        cmd_plan(args)
+        cmd_plan_table(args) if args.order == 'fanin' else cmd_plan(args)
     else:
         sys.exit(bind(args.task, args.object))
 
