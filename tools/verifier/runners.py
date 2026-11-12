@@ -508,6 +508,8 @@ class BatchHost:
         ids = [task['task_id'] for task, _ in units]
         if len(set(ids)) != len(ids):
             raise RunnerError(f'{self.label}: a unit is listed twice in one batch')
+        if any(tid.endswith('.agent.json') for tid in ids):
+            raise RunnerError(f'{self.label}: a unit id ends in .agent.json')
         name = f'batch-{uuid.uuid4().hex[:12]}'
         stage = Path(stage_root)
         stage.mkdir(parents=True, exist_ok=True)

@@ -171,7 +171,9 @@ def input_key(task, files, hosts, out, tree_state):
     comparator, host scripts, pins, manifest), the record-assembly tools and the validator, the
     base commit with the uncommitted inputs and the comparator source hash, the hosts and the
     output directory."""
-    blob = {'task': {k: task.get(k) for k in ('task_id', 'build_id', 'compiled', 'recipe', 'symbols_repo',
+    image = pipeline.load_config(task['dir']).get('image') if any(h['backend'] == 'local' for h in hosts) else None
+    blob = {'mac_compare_image': _sha256(image) if image else None,
+            'task': {k: task.get(k) for k in ('task_id', 'build_id', 'compiled', 'recipe', 'symbols_repo',
                                               'functions', 'record_notes')},
             'files': {name: _sha256(path) for name, path in sorted(files.items())},
             'tools': {name: _sha256(REPO / name) for name in RUNNER_TOOLS},
@@ -182,8 +184,8 @@ def input_key(task, files, hosts, out, tree_state):
 
 
 class Journal:
-    """One JSON line per unit whose records were written, appended and flushed as each unit
-    finishes, so a stopped run leaves a trail --resume can use. Kept under .local/verifier/."""
+    """One JSON line per scheduled unit and another when its records are written, flushed as each unit
+    starts and finishes, so a stopped run leaves a trail --resume can use. Kept under .local/verifier/."""
 
     def __init__(self, out):
         name = 'reports' if out is None else 'out-' + hashlib.sha256(str(out).encode()).hexdigest()[:16]
@@ -358,7 +360,7 @@ def _run(base, prepared, hosts, replace, out, log, log_path, resume, probe_fn, s
             + (', '.join(t['task_id'] for t in skipped) or 'none'))
     by_id = {task['task_id']: (task, files, closure, key) for task, files, closure, key in pending}
     labels = [h['host_id'] for h in hosts]
-    results, done, lock = {}, [], threading.Lock()
+    results, done, futures, lock = {}, [], {}, threading.Lock()
     finisher = ThreadPoolExecutor(max_workers=4)
     unit_started = time.monotonic()
 
@@ -384,11 +386,13 @@ def _run(base, prepared, hosts, replace, out, log, log_path, resume, probe_fn, s
             results.setdefault(tid, {})[label] = value
             complete = len(results[tid]) == len(labels)
         if complete:
-            finisher.submit(finish, tid)
+            futures[tid] = finisher.submit(finish, tid)
 
     handles = [pipeline.lock(task['dir']) for task, _, _, _ in pending]
     stage_root = runners.starts.state_dir() / 'confirm-stage' / uuid.uuid4().hex[:12]
     try:
+        for task, _, _, _ in pending:
+            journal.add({'task_id': task['task_id'], 'records': {}})
         units = [(task, files) for task, files, _, _ in pending]
         threads = [threading.Thread(target=run_host, args=(h, units, stage_root, deliver, log)) for h in hosts]
         for t in threads:
@@ -402,8 +406,13 @@ def _run(base, prepared, hosts, replace, out, log, log_path, resume, probe_fn, s
         shutil.rmtree(stage_root, ignore_errors=True)
     table, any_failed = [], False
     finished = {task['task_id'] for task, _, _ in done}
+    for tid, future in futures.items():
+        exc = future.exception()
+        if exc is not None:
+            log(f'{tid}: FAILED (finisher {type(exc).__name__}: {exc})')
+            any_failed = True
     for tid in by_id:
-        if tid not in finished:
+        if tid not in finished and tid not in futures:
             log(f'{tid}: FAILED (not every host returned a result)')
             any_failed = True
     for task, rows, failed in done:

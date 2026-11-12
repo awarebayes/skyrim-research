@@ -26,6 +26,7 @@ import runners  # noqa: E402
 import unit_build as ub  # noqa: E402
 import confirm_runners  # noqa: E402
 import pipeline  # noqa: E402
+import source_digest  # noqa: E402
 from test_unit_build import FAKE_CL, sha  # noqa: E402
 
 
@@ -246,6 +247,7 @@ class ConfirmRunnersRun(unittest.TestCase):
             mock.patch.object(confirm_runners.confirm_session, 'write_records', side_effect=self.write_records),
             mock.patch.object(confirm_runners.runners, 'AgentHost', FakeAgentHost),
             mock.patch.object(confirm_runners.pipeline, 'lock', return_value=mock.Mock()),
+            mock.patch.object(confirm_runners.pipeline, 'load_config', return_value={}),
             mock.patch.object(confirm_runners.subprocess, 'run',
                               return_value=subprocess.CompletedProcess([], 0, 'check: PASS\n', '')),
         ]
@@ -353,8 +355,9 @@ class ConfirmRunnersRun(unittest.TestCase):
         self.assertIn('unit-a (reconstruction/x/A.cpp): records written', logs[0].read_text())
         journal = list((state / 'confirm-journal').iterdir())
         entries = [json.loads(line) for line in journal[0].read_text().splitlines()]
-        self.assertEqual([e['task_id'] for e in entries], ['unit-a'])
-        self.assertEqual(entries[0]['compiler_sha256'], {'mac-wine': {'cl.exe': 'aa'}, 'winpc-native': {'cl.exe': 'aa'}})
+        self.assertEqual([e['task_id'] for e in entries], ['unit-a', 'unit-a'])
+        self.assertEqual(entries[0]['records'], {})
+        self.assertEqual(entries[1]['compiler_sha256'], {'mac-wine': {'cl.exe': 'aa'}, 'winpc-native': {'cl.exe': 'aa'}})
 
     def test_resume_skips_a_unit_complete_for_the_same_inputs_and_toolchains(self):
         self.first_run()
@@ -401,14 +404,44 @@ class ConfirmRunnersRun(unittest.TestCase):
         self.assertIn('--replace', str(cm.exception))
         self.assertEqual(self.written, [])
 
-    def test_host_refusal_writes_no_record_and_no_journal_entry(self):
+    def test_host_refusal_writes_no_record_and_leaves_tombstone(self):
         with mock.patch.object(FakeAgentHost, 'run', return_value=(44, '')):
             code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out')
         self.assertEqual(code, 1)
         self.assertEqual(self.written, [])
         self.assertTrue(any('exit 44' in line for line in lines), lines)
-        self.assertFalse((self.tmp / 'state' / 'confirm-journal').exists()
-                         and any(p.read_text() for p in (self.tmp / 'state' / 'confirm-journal').iterdir()))
+        entry = confirm_runners.Journal(self.tmp / 'out').entries()['unit-a']
+        self.assertEqual(entry['records'], {})
+
+    def test_failed_replacement_invalidates_previous_success(self):
+        self.first_run()
+        with mock.patch.object(FakeAgentHost, 'run', return_value=(44, '')):
+            code, _ = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', replace=True)
+        self.assertEqual(code, 1)
+        FakeAgentHost.made = []
+        code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', replace=True, resume=True,
+                                       probe_fn=self.probe_with())
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(FakeAgentHost.made), 2)
+        self.assertEqual(len(self.written), 1)
+
+    def test_finisher_exception_reports_its_cause(self):
+        with mock.patch.object(self.base, 'build_block', side_effect=OSError('missing build input')):
+            code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out')
+        self.assertEqual(code, 1)
+        self.assertTrue(any('finisher OSError: missing build input' in line for line in lines), lines)
+        self.assertFalse(any('not every host returned' in line for line in lines), lines)
+
+    def test_resume_reruns_when_mac_comparison_image_changes(self):
+        image = self.tmp / 'image'
+        image.write_bytes(b'first')
+        with mock.patch.object(pipeline, 'load_config', return_value={'image': str(image)}):
+            self.first_run()
+            image.write_bytes(b'second')
+            code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', replace=True, resume=True,
+                                           probe_fn=self.probe_with())
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(self.written), 1)
 
     def test_batched_host_gives_the_same_runs_and_facts_check(self):
         batches = []
@@ -635,26 +668,61 @@ class AgentEndToEnd(unittest.TestCase):
                       wineprefix=None, max_parallel=2), backend='ssh', python=[sys.executable])
         transport = StubSsh(h)
         worker = runners.BatchHost(h, transport=transport, fresh_prep=True)
-        units = [(dict(self.task, task_id=tid), self.files) for tid in ids]
+        alternative = self.tmp / 'other.cpp'
+        alternative.write_text('#include "Synth.h"\n// distinct unit\n')
+        units = [(dict(self.task, task_id=tid), dict(self.files, **({'reconstruction/synth/Synth.cpp': alternative}
+                  if i else {}))) for i, tid in enumerate(ids)]
         results = worker.run(units, self.tmp / 'stage', {tid: self.tmp / 'dest' / tid for tid in ids})
         return results, transport
 
     def test_batch_runs_each_unit_with_its_own_fresh_check(self):
         results, transport = self.batch()
         self.assertEqual(sorted(results), ['unit-a', 'unit-b'])
+        digests = {}
         for tid, (code, dest, facts) in results.items():
             self.assertEqual(code, 0, tid)
+            source = self.files['reconstruction/synth/Synth.cpp'] if tid == 'unit-a' else self.tmp / 'other.cpp'
+            names = ['reconstruction/synth/Synth.cpp', 'reconstruction/synth/Synth.h']
+            import hashlib
+            digests[tid] = hashlib.sha256(''.join(f'{sha(source if n.endswith(".cpp") else self.files[n])}  {n}\n'
+                                                    for n in sorted(names)).encode()).hexdigest()
+            result = json.loads((dest / 'result.json').read_text())
+            self.assertEqual(result['source_revision'], digests[tid])
             report = json.loads((dest / f'0x{self.rva:x}' / 'report.json').read_text())
             self.assertEqual(report['result'], 'pass')
+            self.assertEqual(report['source']['source_revision'], digests[tid])
             self.assertEqual(facts['toolchain_check'], 'checked')
             self.assertEqual(facts['compiler_sha256'], {'cl.exe': sha(self.msvc / 'bin/x64/cl.exe')})
             self.assertTrue((dest / 'candidate.obj').is_file())
+        self.assertNotEqual(digests['unit-a'], digests['unit-b'])
         # One agent command for the batch and one clean; nothing but plain tokens, no source.
         self.assertEqual([c[c.index('-I') + 2] for c in transport.commands], ['batch', 'clean'])
         for c in transport.commands:
             self.assertNotIn(self.MARKER, ' '.join(c))
         self.assertEqual([p.name for p in (self.tmp / 'work').iterdir() if p.name != '.prep'], [])
         self.assertEqual(list((self.tmp / 'stage').iterdir()), [])
+
+    def test_batch_missing_one_agent_result_affects_only_that_unit(self):
+        unpack = runners.unpack
+
+        def omit_one(archive, dest):
+            unpack(archive, dest)
+            (Path(dest) / 'unit-b.agent.json').unlink()
+
+        with mock.patch.object(runners, 'unpack', side_effect=omit_one):
+            results, _ = self.batch()
+        self.assertIsInstance(results['unit-b'], runners.RunnerError)
+        code, dest, _ = results['unit-a']
+        self.assertEqual(code, 0)
+        report = json.loads((dest / f'0x{self.rva:x}' / 'report.json').read_text())
+        self.assertEqual(report['result'], 'pass')
+        expected = source_digest.tu_digest(self.tmp / 'src', ['reconstruction/synth/Synth.cpp',
+                                                              'reconstruction/synth/Synth.h'])
+        self.assertEqual(report['source']['source_revision'], expected)
+
+    def test_batch_rejects_agent_json_suffix(self):
+        with self.assertRaisesRegex(runners.RunnerError, 'ends in'):
+            self.batch(('unit-a', 'unit-a.agent.json'))
 
     def test_batch_refuses_a_changed_toolchain_per_unit(self):
         (self.msvc / 'bin/x64/cl.exe').write_bytes(b'another compiler')

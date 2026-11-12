@@ -47,6 +47,7 @@ import json
 import os
 from pathlib import Path
 import shlex
+import shutil
 import subprocess
 import sys
 import threading
@@ -186,6 +187,8 @@ def mac_compare(task, fn, host_dir, dest):
         raise PipelineError('no local image configured (.local/verifier/config.json "image")')
     fdir = host_dir / f'0x{fn["rva"]:x}'
     remote_task = json.loads((fdir / 'task-file.json').read_text())['task']
+    if dest.exists():
+        shutil.rmtree(dest)
     dest.mkdir(parents=True, exist_ok=True)
     task_file = {'verify_task_schema': 1, 'task': remote_task,
                  'recipe': os.path.relpath(REPO / task['recipe'], dest),

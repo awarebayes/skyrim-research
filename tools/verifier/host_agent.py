@@ -164,7 +164,7 @@ def cmd_batch(a):
     except (OSError, ValueError):
         raise AgentRefusal('no unit list') from None
     if (not isinstance(units, list) or not units or len(set(units)) != len(units)
-            or not all(isinstance(u, str) and UNIT_NAME.fullmatch(u) for u in units)):
+            or not all(isinstance(u, str) and UNIT_NAME.fullmatch(u) and not u.endswith('.agent.json') for u in units)):
         raise AgentRefusal('bad unit list')
     marker = run / '.running'
     marker.write_text('running\n')

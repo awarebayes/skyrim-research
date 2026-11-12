@@ -59,15 +59,17 @@ fetch and one clean per batch, two batches in flight so one transfers while the 
 Archives are xz-compressed. Every unit is still a fresh copy checked against its own spec, with
 its own toolchain and image hash measured in that run (`fresh_prep`; the check costs well under
 a second). As soon as all hosts have a unit, it is cross-compared, its records are written and
-its lines go to the console and to `.local/verifier/confirm-logs/<UTC>-<id>.log`; a unit whose
-records were written gets a line in `.local/verifier/confirm-journal/` (one file per output:
-`reports` or the `--out` directory). `confirm --resume` (with `--replace` for the units it must
-redo) first probes every host's toolchain afresh, then skips a unit only when its journal entry
-has the same input key (every shipped file, the record tools and validator, the base commit and
-uncommitted inputs, the comparator source hash, the hosts and the output), the same compiler
-hashes on every host as just measured, and records still unchanged on disk; anything else runs
-again. A run into `reports/` needs no prior `--out` pass: records are validated before they are
-written, `check.py` runs at the end, and `git diff` shows every change before it is committed.
+its lines go to the console and to `.local/verifier/confirm-logs/<UTC>-<id>.log`. Each scheduled
+unit gets a tombstone in `.local/verifier/confirm-journal/` and each successful unit gets a new
+entry (one journal per output: `reports` or the `--out` directory). `confirm --resume` (with
+`--replace` for units it must redo) first probes every host's toolchain afresh, then skips a unit
+only when its journal entry has the same input key (every shipped file, the record tools and
+validator, the base commit and uncommitted inputs, the comparator source hash, the Mac comparison
+image, the hosts and the output), the same compiler hashes on every host as just measured, and
+records still unchanged on disk; anything else runs again. A new commit changes the key, so units
+run again after a commit. A run into `reports/` needs no prior `--out` pass: records are validated
+before they are written, `check.py` runs at the end, and `git diff` shows every change before it
+is committed.
 
 A session (`session`, `vsession.py`) brings up the standing machine A and the separately
 installed B once per work period, at most one start each, and checks their toolchain and image
