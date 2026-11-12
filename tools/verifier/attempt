@@ -3,6 +3,10 @@
 
     tools/verifier/attempt <task-dir>            # .local/tasks/<task-id>/ with task.json
     tools/verifier/attempt --clean <task-dir>    # remove this task's files on the machine (never stops it)
+    tools/verifier/attempt <group-dir>           # a multi-unit task (group.json): print each unit's state
+
+A multi-unit ("small") task is a directory with group.json and one ordinary task directory per
+unit below it; each unit is attempted, budgeted and reported on its own.
 
 Run from the checkout whose reconstruction/ sources you are trying. When a verifier session is
 up (tools/verifier/session) it uses machine A and never starts or stops a machine; without a
@@ -166,6 +170,26 @@ def attempt(task_dir):
     return {0: 0, 1: 1, 3: 3, 4: 4}.get(code, 2)
 
 
+def group_status(group_dir):
+    """Lines describing a multi-unit task directory (group.json): each unit's counted attempts and
+    last result. A group is never compiled as a whole; each unit is attempted on its own."""
+    group = json.loads((group_dir / 'group.json').read_text())
+    lines = [f'group {group["group_id"]}: {len(group["units"])} units, {group["functions"]} functions; '
+             f'attempt each unit: tools/verifier/attempt <this dir>/<unit dir>']
+    for u in group['units']:
+        udir = group_dir / u['dir']
+        used = counted_attempts(udir / 'attempts.jsonl')
+        last = 'not attempted'
+        runs = sorted(p for p in (udir / 'attempts').glob('[0-9][0-9][0-9]') if p.is_dir()) \
+            if (udir / 'attempts').is_dir() else []
+        if runs and (runs[-1] / 'attempt.txt').is_file():
+            head = (runs[-1] / 'attempt.txt').read_text().splitlines()[:1]
+            last = head[0].split(': ', 1)[-1] if head else 'no summary'
+        lines.append(f'  {u["dir"]}: {u["compiled"]}; {len(u["functions"])} functions; counted {used}/'
+                     f'{u["max_attempts"]}; last: {last}')
+    return lines
+
+
 def label_warnings(closure):
     """tools/check_labels.py findings for the unit's sources, printed as warnings after the results.
 
@@ -223,6 +247,10 @@ def main():
             return clean(a.task_dir)
         if not a.task_dir:
             p.error('a task directory is required')
+        group_dir = pipeline.resolve_task_dir(a.task_dir)
+        if not (group_dir / 'task.json').is_file() and (group_dir / 'group.json').is_file():
+            print('\n'.join(group_status(group_dir)))
+            return 2
         return attempt(a.task_dir)
     except (PipelineError, boatctl.BoatError) as exc:
         print(f'attempt: {exc}', file=sys.stderr)
