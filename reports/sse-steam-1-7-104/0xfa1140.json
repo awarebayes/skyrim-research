@@ -13,7 +13,7 @@
       "_CL_"
     ],
     "hosts": {
-      "boat-verifier-a": {
+      "mac-wine": {
         "command_flags": [
           "/nologo",
           "/c",
@@ -26,14 +26,14 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "04e3ee72fb485c4bac16c4a1957e9cfd26a85928fb840d5a9374fc27f192a2ba",
+        "object_sha256": "c10de82e69cd581042e4fb6b4c28baa1c2845c5db0dd623ac510b9ce84b30b1d",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiPSysModifier.cpp",
           "reconstruction/netimmerse/NiPSysModifier.h"
         ]
       },
-      "boat-verifier-b": {
+      "winpc-native": {
         "command_flags": [
           "/nologo",
           "/c",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "7b7511101b24dff4aedd35a3d26b120686bde7c72e3b61de0d2ca9084dd8d488",
+        "object_sha256": "c008ea0f8598f071a766aa30afc090ead6a41e9e58f58bca96c8ff029792f3ad",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiPSysModifier.cpp",
@@ -59,31 +59,32 @@
   "match_record_schema": 2,
   "notes": [
     "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.",
-    "independence: separate-machine. The two Boat compile hosts are separately installed machines: each was created from scratch and ran tools/verifier/setup_boat_machine.sh itself (neither is a disk fork of the other), so the pair also checks the toolchain install; both use the same pinned recipe, Ubuntu image and cloud provider. Each host checked its compiler binaries against pinned.sha256 and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.",
-    "Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed before the compile, INCLUDE then set by the msvc-wine wrapper to toolchain and SDK directories only; /showIncludes added after the recipe flags, and the repository files the compiler opened equalled the include closure. Each host's flags, cleared variables, object hash and opened files are in the build block, as that host reported them; the gate checks that block for presence and consistency with the runs, not for truth.",
+    "independence: separate-machine, different-loader. The compile hosts are the maintainer's own machines, each with its own install of the pinned toolchain, reached by tools/verifier/runners.py: mac-wine (machine maintainer-mac; macos arm64; the pinned compiler run under Wine; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099); winpc-native (machine maintainer-winpc; windows amd64; the pinned compiler run natively; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099). Each host hashed its compiler binaries during this confirm run and checked them against pinned.sha256, checked its own copy of the image against builds/target.json before compiling, and compared its own object; the local host also compared the other hosts' objects. Host facts are self-reported by tools/verifier/unit_build.py.",
+    "Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed before the compile, INCLUDE then set to toolchain and SDK directories only (by the msvc-wine wrapper under Wine, by tools/verifier/unit_build.py from the same directory list natively); /showIncludes added after the recipe flags, and the repository files the compiler opened equalled the include closure. Each host's flags, cleared variables, object hash and opened files are in the build block, as that host reported them; the gate checks that block for presence and consistency with the runs, not for truth.",
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
-    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this."
+    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
+    "Source state: committed tree at base commit 3c8b4cd00e07ac735a3c41e18a8c5c2e186b8360. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; that commit holds all of them."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
     "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
   },
-  "reproduction": "From the repository root, with cl 19.16.27054 x64 under msvc-wine whose binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): env -u CL -u EXTERNAL_INCLUDE -u INCLUDE -u LIB -u LIBPATH -u _CL_ <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/netimmerse/NiPSysModifier.cpp (the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the repository files /showIncludes lists to equal --unit below) ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0xfa1140 --symbol '?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z' --compiled reconstruction/netimmerse/NiPSysModifier.cpp --unit reconstruction/netimmerse/NiPSysModifier.cpp reconstruction/netimmerse/NiPSysModifier.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/symbol-map.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/netimmerse/NiPSysModifier.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/netimmerse/NiPSysModifier.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0xfa1140 --symbol '?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z' --compiled reconstruction/netimmerse/NiPSysModifier.cpp --unit reconstruction/netimmerse/NiPSysModifier.cpp reconstruction/netimmerse/NiPSysModifier.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/symbol-map.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
   "runs": [
     {
-      "compared_on": "boat-verifier-a",
-      "compiled_on": "boat-verifier-a",
+      "compared_on": "mac-wine",
+      "compiled_on": "mac-wine",
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
           "code_section_sha256": "28ddf38b29b7519fd10291202e1a3303b901d5d8a02080396c11513512b59cd4",
           "code_sections": 1,
-          "object_sha256": "04e3ee72fb485c4bac16c4a1957e9cfd26a85928fb840d5a9374fc27f192a2ba"
+          "object_sha256": "c10de82e69cd581042e4fb6b4c28baa1c2845c5db0dd623ac510b9ce84b30b1d"
         },
         "comparator": {
-          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
-          "version": "0.5.0"
+          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+          "version": "0.6.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -102,6 +103,7 @@
           "funclet_bytes_by_reference": 0,
           "funclet_bytes_exact": 0,
           "funclet_bytes_total": 0,
+          "funclet_end_evidence": {},
           "funclet_ranges": [],
           "funclet_sections": 0,
           "relocations_by_type": {
@@ -143,7 +145,7 @@
           "path": "reconstruction/netimmerse/NiPSysModifier.cpp",
           "source_revision": "fbb93a519e0e43f9cfedcece6bc62fad1a70719e2f1120dec2f8fb1caecfb6c1"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -152,18 +154,18 @@
       }
     },
     {
-      "compared_on": "macos-arm64-local",
-      "compiled_on": "boat-verifier-a",
+      "compared_on": "winpc-native",
+      "compiled_on": "winpc-native",
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
           "code_section_sha256": "28ddf38b29b7519fd10291202e1a3303b901d5d8a02080396c11513512b59cd4",
           "code_sections": 1,
-          "object_sha256": "04e3ee72fb485c4bac16c4a1957e9cfd26a85928fb840d5a9374fc27f192a2ba"
+          "object_sha256": "c008ea0f8598f071a766aa30afc090ead6a41e9e58f58bca96c8ff029792f3ad"
         },
         "comparator": {
-          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
-          "version": "0.5.0"
+          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+          "version": "0.6.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -182,6 +184,7 @@
           "funclet_bytes_by_reference": 0,
           "funclet_bytes_exact": 0,
           "funclet_bytes_total": 0,
+          "funclet_end_evidence": {},
           "funclet_ranges": [],
           "funclet_sections": 0,
           "relocations_by_type": {
@@ -223,7 +226,7 @@
           "path": "reconstruction/netimmerse/NiPSysModifier.cpp",
           "source_revision": "fbb93a519e0e43f9cfedcece6bc62fad1a70719e2f1120dec2f8fb1caecfb6c1"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -232,18 +235,18 @@
       }
     },
     {
-      "compared_on": "boat-verifier-b",
-      "compiled_on": "boat-verifier-b",
+      "compared_on": "mac-wine",
+      "compiled_on": "winpc-native",
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
           "code_section_sha256": "28ddf38b29b7519fd10291202e1a3303b901d5d8a02080396c11513512b59cd4",
           "code_sections": 1,
-          "object_sha256": "7b7511101b24dff4aedd35a3d26b120686bde7c72e3b61de0d2ca9084dd8d488"
+          "object_sha256": "c008ea0f8598f071a766aa30afc090ead6a41e9e58f58bca96c8ff029792f3ad"
         },
         "comparator": {
-          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
-          "version": "0.5.0"
+          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+          "version": "0.6.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -262,6 +265,7 @@
           "funclet_bytes_by_reference": 0,
           "funclet_bytes_exact": 0,
           "funclet_bytes_total": 0,
+          "funclet_end_evidence": {},
           "funclet_ranges": [],
           "funclet_sections": 0,
           "relocations_by_type": {
@@ -303,87 +307,7 @@
           "path": "reconstruction/netimmerse/NiPSysModifier.cpp",
           "source_revision": "fbb93a519e0e43f9cfedcece6bc62fad1a70719e2f1120dec2f8fb1caecfb6c1"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
-        "target": {
-          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
-          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
-        },
-        "task_id": "sse-steam-1-7-104-0xfa1140"
-      }
-    },
-    {
-      "compared_on": "macos-arm64-local",
-      "compiled_on": "boat-verifier-b",
-      "report": {
-        "acceptance": "not-evaluated",
-        "candidate": {
-          "code_section_sha256": "28ddf38b29b7519fd10291202e1a3303b901d5d8a02080396c11513512b59cd4",
-          "code_sections": 1,
-          "object_sha256": "7b7511101b24dff4aedd35a3d26b120686bde7c72e3b61de0d2ca9084dd8d488"
-        },
-        "comparator": {
-          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
-          "version": "0.5.0"
-        },
-        "contract_version": 2,
-        "coverage": {
-          "aliases_declared": [],
-          "code_bytes_by_reference": 4,
-          "code_bytes_exact": 74,
-          "code_bytes_total": 78,
-          "eh": {
-            "bytes": 12,
-            "handlers": {},
-            "int_fields": 0,
-            "ref_fields": 0,
-            "structures": {},
-            "type_names_compared": 0
-          },
-          "funclet_bytes_by_reference": 0,
-          "funclet_bytes_exact": 0,
-          "funclet_bytes_total": 0,
-          "funclet_ranges": [],
-          "funclet_sections": 0,
-          "relocations_by_type": {
-            "REL32": 1
-          },
-          "self_rva_fields": 0,
-          "unwind": "covered",
-          "unwind_bytes_exact": 12,
-          "unwind_chained_entries": 0,
-          "unwind_entries": 1
-        },
-        "detail": "all contract v2 checks passed",
-        "function": {
-          "build_id": "sse-steam-1-7-104",
-          "rva": 16388416,
-          "size": 78,
-          "symbol": "?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z"
-        },
-        "reason": "all-checks-passed",
-        "recipe": {
-          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
-          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
-          "flags": [
-            "/nologo",
-            "/c",
-            "/O2",
-            "/MD",
-            "/GS-",
-            "/EHsc",
-            "/GR",
-            "/fp:precise",
-            "/Gy"
-          ],
-          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
-        },
-        "report_schema": 1,
-        "result": "pass",
-        "source": {
-          "path": "reconstruction/netimmerse/NiPSysModifier.cpp",
-          "source_revision": "fbb93a519e0e43f9cfedcece6bc62fad1a70719e2f1120dec2f8fb1caecfb6c1"
-        },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -403,7 +327,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
+    "sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",
