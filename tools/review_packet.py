@@ -9,7 +9,9 @@ Per unit: the files, the digest the match records bind against the digest comput
 and compiler, and the record notes once. Per function: identity, name and origin, record, hosts,
 coverage, code-section hash, the current Reviewer record and the review it needs. Per unit it also
 lists the community declaration of every COMMUNITY-labelled name, read from the local pinned
-checkouts (tools/check_labels.py; omitted with --no-community or when no checkout is present). For a function
+checkouts (tools/check_labels.py), and the bodies tools/check_origin.py finds close to a same-named
+community or FNV body, with one similarity line per function (both omitted with --no-community or
+when no checkout is present). For a function
 whose Reviewer record binds an earlier digest (a delta review candidate), it also prints the unit
 diff since the commit where that approved digest was current, and whether the compared code
 section is unchanged between the approved record and the current one.
@@ -141,6 +143,32 @@ def community_view(root, unit):
     except Exception as exc:  # noqa: BLE001 - the excerpts are a reading aid; the packet still prints
         return [f'community excerpts: not available ({type(exc).__name__}: {exc})']
     return ['community excerpts (name: repo path:line: declaration):'] + [f'  {line}' for line in lines]
+
+
+_CLONES = []
+
+
+def origin_view(root, unit):
+    """(hits or None, lines): bodies of the unit close to a same-named community or FNV body
+    (tools/check_origin.py), the list the Reviewer's provenance check starts from."""
+    try:
+        import check_origin
+        if not _CLONES:
+            _CLONES.append(check_origin.open_clones(root))
+        clones, missing = _CLONES[0]
+        hits = check_origin.check_unit([root / name for name in unit], clones, root=root)
+    except Exception as exc:  # noqa: BLE001 - a reading aid; the packet still prints
+        return None, [f'body origin: not available ({type(exc).__name__}: {exc})']
+    pins = ', '.join(f'{c.repo}@{(c.head or "?")[:7]}' for c in clones) or 'no local clone'
+    out = [f'body origin (tools/check_origin.py, threshold {check_origin.DEFAULT_THRESHOLD:.2f}, {pins}'
+           + (f'; not compared: {", ".join(missing)}' if missing else '') + '):']
+    out += [f'  {check_origin.describe(h)}' for h in hits if not h['trivial']]
+    same = sorted({h['function'] for h in hits if h['trivial']})
+    if same:
+        out.append(f'  trivial, same as community or sibling ({len(same)}): {", ".join(same)}')
+    if not hits:
+        out.append('  none at or above the threshold')
+    return hits, out
 
 
 # Fields only the two-tier format has; a block without them is refused by tools/accept_function.py.
@@ -283,14 +311,20 @@ def unit_view(root, compiled, fns, notes, community=True, extras=None):
         for r in records.values():
             seen += [n for n in r.get('notes') or [] if n not in seen]
         out += ['notes:'] + [f'  {i}. {n}' for i, n in enumerate(seen, 1)]
+    hits = None
     if community:
         out += community_view(root, unit)
+        hits, lines = origin_view(root, unit)
+        out += lines
     shown = set()
     extras = extras or {}
     prior = extras.get('prior')
     for fn in fns:
         record = records[fn['id']]
         out += function_view(root, fn, record, shown)
+        if hits is not None:
+            import check_origin
+            out.append(check_origin.function_lines(fn['name'], hits))
         if extras.get('analysis') is not None:
             out += sibling_view(fn, extras['analysis'])
         entries = (prior or {}).get((fn['build_id'], fn['rva']))

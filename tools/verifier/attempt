@@ -16,7 +16,8 @@ hint, a plain destructor bound where the target is a deleting one) it compares a
 invocation. A hint at a compared function's RVA that ends up unused is printed as a WARNING. A run in which nothing
 could be compared because of binding does not count against max_attempts. It prints one line per function with the reason code, first mismatch offset and
 candidate/target sizes, what was bound or is still missing, and where to read the side-by-side
-disassembly, then the findings of tools/check_labels.py on the unit's sources as warnings. The
+disassembly, then the findings of tools/check_labels.py on the unit's sources as warnings and the
+bodies tools/check_origin.py finds close to a same-named community or FNV body. The
 machine stops itself at its deadline; an Engineer ends a session with `tools/verifier/session
 down` (attempt never stops a machine; --stop is retired).
 
@@ -149,6 +150,7 @@ def attempt(task_dir):
             lines.append(f'  ... {len(rows) - 10} more lines in {dest / "attempt.txt"}')
     lines += bind_lines
     lines += label_warnings(closure)
+    lines += origin_lines(closure)
     rel = dest.relative_to(Path.cwd()) if dest.is_relative_to(Path.cwd()) else dest
     lines.append(f'private: {rel}/ (0x<rva>/side-by-side.txt, compile.log; read locally, never paste)')
     lines.append(f'machine: {boatctl.STANDING} {how}; it stops itself at its deadline')
@@ -181,6 +183,26 @@ def label_warnings(closure):
     if not findings:
         return ['  label check: no findings']
     return [f'  label warning: {f}' for f in findings]
+
+
+def origin_lines(closure):
+    """tools/check_origin.py hits for the unit's sources: bodies close to a same-named community or
+    FNV body. Advisory like the label check; an adapted body must be declared in the unit header
+    (docs/drafter-card.md), which the Reviewer checks starting from this list."""
+    try:
+        sys.path.insert(0, str(pipeline.REPO / 'tools'))
+        import check_origin
+        clones, _missing = check_origin.open_clones(pipeline.REPO)
+        hits = check_origin.check_unit([pipeline.REPO / name for name in closure], clones, root=pipeline.REPO)
+    except Exception as exc:  # noqa: BLE001 - a broken optional check must not hide the comparison
+        return [f'  origin check: not run ({type(exc).__name__}: {exc})']
+    if not hits:
+        return ['  origin check: no body at or above the similarity threshold']
+    out = [f'  origin: {check_origin.describe(h)}' for h in hits]
+    if any(not h['trivial'] and not h['fork_of'] and not h['declared'] for h in hits):
+        out.append('  origin advice: name each adapted body, its upstream file, revision and licence in the '
+                   'unit header (FNV: a Sibling source line); docs/drafter-card.md')
+    return out
 
 
 def _revision(dest):
