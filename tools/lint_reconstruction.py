@@ -22,16 +22,18 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
 - justified constructs: `__forceinline`, `noinline`, `[[msvc::...]]` attributes and codegen
   intrinsics (`INTRINSICS`) only with a `//` comment of three or more words on the same or
   previous line;
-- licence: a file with a `COMMUNITY(..., GPL...)` label (or LGPL, AGPL) names GPL in its
-  leading comment;
+- licence: a file with a `COMMUNITY(..., GPL...)` label (or LGPL, AGPL, any case) names GPL in
+  its leading comment, and a label for a repository in `COMMUNITY_LICENCES` states that
+  repository's licence word; in every file, labelled v2 or not;
 - name-origin labels: in a file whose leading comment says `Labels: v2`, every label is on a
   `// <names>: <LABEL> [<LABEL>...][; note]` line, LABEL being `COMMUNITY(<owner>/<repo>@<rev>,
   <licence>)`, `SIBLING(<owner>/<repo>@<rev>, <licence>)` (only a sibling decompilation listed in
-  `SIBLING_SOURCES`, at its pin, with its licence word), `GUESS`, `GUESS(low|medium|high)`,
-  `EXE_RTTI`, `STANDIN` or `OBSERVED`;
+  `SIBLING_SOURCES`, at its pin, with its licence word; this citation rule applies in every
+  file), `GUESS`, `GUESS(low|medium|high)`, `EXE_RTTI`, `STANDIN` or `OBSERVED`;
 - sibling bodies: a `Sibling source: <owner>/<repo>@<rev> <path>[:<line>]` line, required by the
   Reviewer when a unit reuses a body or a substantial part of one, sits in the leading comment and
-  cites an allowed sibling at its pin (tools/check_labels.py checks the path in the clone);
+  cites an allowed sibling at its pin with a path free of `..` components (tools/check_labels.py
+  checks the path in the clone);
 - header comment fields: the leading comment block names the pinned build id and a `Source
   exposure:` category from PROVENANCE.md; a .cpp also gives `RVA 0x...`, `<n> bytes`,
   `Evidence:` with an existing findings/ or reports/ path, `Drafted by` and `Recipe:` with an
@@ -226,6 +228,9 @@ def sibling_header_problems(name, header):
         if not m:
             problems.append(f'{name}: write "Sibling source: <owner>/<repo>@<rev> <src/ or include/ path>[:<line>]"')
             continue
+        if '..' in PurePosixPath(m.group(3)).parts:
+            # check_labels.py opens this path in the clone; `..` would let it read outside it.
+            problems.append(f'{name}: a Sibling source path may not contain ".." components')
         problems += sibling_problems(name, m.group(1), m.group(2))
     return problems
 
@@ -253,25 +258,52 @@ def label_problems(name, text, header, ext):
         if not ORIGIN_LABEL.search(m.group('labels')):
             problems.append(f'{name}:{number}: STANDIN also needs the origin of the name (COMMUNITY(...), SIBLING(...), '
                             'GUESS, EXE_RTTI or OBSERVED)')
-        for repo, rev, licence in SIBLING_LABEL.findall(m.group('labels')):
-            problems += sibling_problems(f'{name}:{number}', repo, rev, licence)
         labelled += 1
     if ext == 'h' and not labelled:
         problems.append(f'{name}: a "Labels: v2" header needs at least one "// <names>: <LABEL>" line')
     return problems
 
 
-GPL_LABEL = re.compile(r'COMMUNITY\([^)]*,\s*(?:A|L)?GPL')
+GPL_LABEL = re.compile(r'COMMUNITY\([^)]*,\s*(?:A|L)?GPL', re.I)
+# The licence word each known community repository's labels carry (docs/drafter-card.md and
+# docs/authorizations.md): a label stating another licence for one of these misstates provenance.
+# A repository not listed here is not refused by this rule; the Reviewer judges its licence word.
+COMMUNITY_LICENCES = {
+    'CharmedBaryon/CommonLibSSE-NG': 'MIT',
+    'powerof3/CommonLibSSE': 'GPL-3.0',
+    'meh321/AddressLibraryDatabase': 'permission',
+}
+COMMUNITY_LABEL = re.compile(r'COMMUNITY\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@[0-9a-f]{7,40},\s*([^)\s]+)\s*\)')
 
 
 def licence_problems(name, text, header):
     """A file with a GPL-licensed COMMUNITY label states GPL in its header (docs/authorizations.md);
-    the wording of the statement is the Reviewer's to judge, its presence is checked here."""
+    the wording of the statement is the Reviewer's to judge, its presence is checked here. A label
+    for a known community repository carries that repository's licence word, spelled as listed.
+    Both apply to every file, labelled v2 or not, since a label anywhere is a provenance claim."""
+    problems = []
     hit = GPL_LABEL.search(text)
-    if hit and 'GPL' not in header:
-        return [f'{name}:{line_of(text, hit.start())}: a GPL-licensed COMMUNITY label needs the file\'s '
-                'leading comment to state the GPL licence']
-    return []
+    if hit and not re.search(r'GPL', header, re.I):
+        problems.append(f'{name}:{line_of(text, hit.start())}: a GPL-licensed COMMUNITY label needs the file\'s '
+                        'leading comment to state the GPL licence')
+    for m in COMMUNITY_LABEL.finditer(text):
+        repo, licence = m.groups()
+        expected = COMMUNITY_LICENCES.get(repo)
+        if expected is not None and licence != expected:
+            problems.append(f'{name}:{line_of(text, m.start())}: {repo} is licensed "{expected}"; '
+                            f'the label states "{licence}"')
+    return problems
+
+
+def sibling_label_problems(name, text):
+    """Every SIBLING(...) label in the file cites an allowed sibling at its pin with its licence
+    word, whether or not the file declares `Labels: v2` (the v2 grammar check adds nothing here)."""
+    problems = []
+    for m in SIBLING_LABEL.finditer(text):
+        problems += sibling_problems(f'{name}:{line_of(text, m.start())}', *m.groups())
+    if len(re.findall(r'SIBLING\(', text)) != len(SIBLING_LABEL.findall(text)):
+        problems.append(f'{name}: a SIBLING( label is not "SIBLING(<owner>/<repo>@<rev>, <licence>)"')
+    return problems
 
 
 def leading_comment(text):
@@ -362,6 +394,7 @@ def lint_file(root, name, target_build):
         problems.append(f'{name}: header comment must name the build id {target_build}')
     problems += label_problems(name, spliced, header, ext)
     problems += licence_problems(name, spliced, header)
+    problems += sibling_label_problems(name, spliced)
     problems += sibling_header_problems(name, header)
     if 'Sibling source:' in spliced and spliced.count('Sibling source:') != header.count('Sibling source:'):
         problems.append(f'{name}: "Sibling source:" lines belong in the leading comment')

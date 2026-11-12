@@ -450,7 +450,10 @@ class LintTests(unittest.TestCase):
         body = 'struct Thing {\n    // Get: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)\n    int Get();\n};\n'
         self.assertTrue(any('state the GPL licence' in p for p in self.lint(self.HEAD + body)))
         self.assertEqual(self.lint(self.HEAD + '// This file is GPL-3.0 (powerof3 names).\n' + body), [])
-        self.assertEqual(self.lint(self.HEAD + body.replace('GPL-3.0', 'MIT')), [])
+        # A known repository's label must carry its own licence word (test_review_parser covers more);
+        # an unlisted repository's MIT label has no GPL obligation.
+        self.assertTrue(any('licensed "GPL-3.0"' in p for p in self.lint(self.HEAD + body.replace('GPL-3.0', 'MIT'))))
+        self.assertEqual(self.lint(self.HEAD + body.replace('GPL-3.0', 'MIT').replace('powerof3', 'someone')), [])
 
 
 class FindingFilterTests(unittest.TestCase):

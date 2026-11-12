@@ -169,7 +169,11 @@ reasons: <short prose; no code, bytes or disassembly>
 ```
 
 Omit the two delta-only lines in a full review, and `prior_review` unless the packet gave one. A list field with items is written as the key
-alone followed by one `  - <item>` line per item. The integrating Engineer accepts the `approve`
+alone followed by one `  - <item>` line per item (a wrapped item continues on lines indented
+deeper than its dash); an empty list is the literal `none`. Put nothing else in a function block:
+no prose, sub-headings or extra keys after `reasons` (which may wrap on indented lines), no key
+twice. The tool refuses the whole review if any function block or the header strays from this
+format. Free commentary goes in a separate `## ` section whose heading is not a build id. The integrating Engineer accepts the `approve`
 blocks with `python3 tools/accept_function.py --all-approved --review <saved review or ->`
 (or one function with `--build-id <build id> --rva <RVA hex> --review ... --verdict approve`),
 which refuses unless each block says `approve`, `escalation_category: none`,

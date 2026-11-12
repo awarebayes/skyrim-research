@@ -131,7 +131,8 @@ orchestrator does not start a phase until the previous one's finish condition fr
 - **Review**: each function with a reproduced pass goes to a fresh Reviewer (never its Drafter
   or triaging Engineer), singly or in a batch. `reject` returns it to the draft loop with reasons;
   `escalate` follows `docs/verification.md`. The sampling safeguard there (at least 5% random,
-  plus the first 20 per new recipe, compiler or Drafter prompt version) gets a second Reviewer and a
+  plus the first 20 per new recipe, compiler, Drafter or Reviewer prompt version or acceptance-rule
+  version, and the first label-only re-acceptances) gets a second Reviewer and a
   from-scratch comparator re-run; a disagreement pauses that batch and escalates.
 - **Verifier fleet**: machines cloned from the phase 2 snapshot, all at the same comparator commit
   and recipe. Every pass is re-run on a different machine before it is reported. Machines carry

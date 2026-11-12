@@ -64,8 +64,12 @@ SIBLING = re.compile(r'SIBLING\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40
 NAME = re.compile(r'~?[A-Za-z_]\w*(?:::~?[A-Za-z_]\w*)*')
 IDENT = re.compile(r'[A-Za-z_]\w*')
 COMMENTS = re.compile(r'//[^\n]*|/\*.*?\*/|"(?:[^"\\\n]|\\.)*"|\'(?:[^\'\\\n]|\\.)*\'', re.S)
+# The text between a scope's name and its `{` (base clause) may not hold another class-key: in
+# `template <..., template <...> class Allocator> class Table {` the template-template parameter
+# `class Allocator` would otherwise take the body of `Table` as its own.
 SCOPE = re.compile(r'\b(class|struct|union|namespace|enum(?:\s+class|\s+struct)?)\s+'
-                   r'(?:alignas\s*\([^)]*\)\s*|__declspec\s*\((?:[^()]|\([^()]*\))*\)\s*|\[\[[^\]]*\]\]\s*)*([A-Za-z_]\w*)\b([^;{}()]*)\{')
+                   r'(?:alignas\s*\([^)]*\)\s*|__declspec\s*\((?:[^()]|\([^()]*\))*\)\s*|\[\[[^\]]*\]\]\s*)*([A-Za-z_]\w*)\b'
+                   r'((?:(?!\b(?:class|struct|union)\b)[^;{}()])*)\{')
 BASE = re.compile(r'\b(?:public|protected|private)\s+(?:virtual\s+)?((?:\w+::)*\w+)')
 # An identifier followed by one of these is being declared (member, method, parameter, enumerator).
 DECLARED = re.compile(r'(?<![\w:.>~])([A-Za-z_]\w*)\s*(?=[;,\[{(=)}]|:(?!:))')
@@ -429,7 +433,12 @@ class Checker:
                 if key not in self.reported:
                     self.reported.add(key)
                     out.append(f'{rel}: checkout of {repo} is at {head or "an unknown revision"}, the unit cites {rev}')
-            target = root / path
+            target = (root / path).resolve()
+            # The lint refuses `..`; a symlink in the clone could still lead out, so the resolved
+            # path must stay inside the clone before anything is read.
+            if '..' in Path(path).parts or not target.is_relative_to(root.resolve()):
+                out.append(f'{rel}: Sibling source {path} leads outside the {repo} clone; not read')
+                continue
             if not target.is_file():
                 out.append(f'{rel}: Sibling source {path} does not exist in {repo}')
             elif line and int(line) > len(target.read_text(errors='replace').splitlines()):

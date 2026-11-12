@@ -1,6 +1,7 @@
 """Validate metadata and common publication mistakes; never compares Skyrim bytes."""
 import argparse
 from datetime import datetime
+import functools
 import hashlib
 import json
 from pathlib import Path
@@ -54,6 +55,13 @@ REVIEW_NAMING_FIELDS = {'naming_findings'}
 REVIEW_SCHEMA_FIELDS = {1: REVIEW_FIELDS, 2: REVIEW_FIELDS | REVIEW_DELTA_FIELDS,
                         3: REVIEW_FIELDS | REVIEW_DELTA_FIELDS | REVIEW_NAMING_FIELDS}
 REVIEW_RECORD_SCHEMA = 3
+# Records below REVIEW_RECORD_SCHEMA predate the four-check review format, so check.py accepts one
+# only if it is one of the records that existed when that format took effect (commit e51d00a): this
+# file lists their paths and the SHA-256 of their canonical JSON (legacy_review_digest). A list
+# kept outside the records is used rather than a date bound, because `review_date` is a field of
+# the record itself and a hand-written record can carry any date; to pass, a forged legacy record
+# would also need an edit to this tracked tool file, which a diff shows.
+LEGACY_REVIEW_RECORDS = Path(__file__).resolve().parent / 'legacy_review_records.json'
 REVIEW_KINDS = {'full', 'delta'}
 LABEL_ONLY = 'label-only'
 REVIEW_KINDS_BY_SCHEMA = {2: REVIEW_KINDS, 3: REVIEW_KINDS | {LABEL_ONLY}}
@@ -67,6 +75,16 @@ NAMING_FINDING_BANNED = (
     (re.compile(r'\.local\b|/Users/|/home/|(?<![A-Za-z])[A-Za-z]:[\\/]'), 'a private or absolute path'),
     (re.compile(r'[0-9A-Fa-f]{16}'), 'a run of 16 or more hex digits'),
     (re.compile(r'(?<![0-9A-Za-z])[0-9A-Fa-f]{2}(?: [0-9A-Fa-f]{2}){3}(?![0-9A-Za-z])'), 'hex byte pairs'),
+    # A single offset such as 0x20 is ordinary naming prose; three or more in a row are a byte run.
+    (re.compile(r'(?<![0-9A-Za-z])0[xX][0-9A-Fa-f]{1,2}(?:\s*[ ,;]\s*0[xX][0-9A-Fa-f]{1,2}){2}(?![0-9A-Za-z])'),
+     '0x-prefixed byte runs'),
+    (re.compile(r'(?<![0-9A-Za-z])[0-9A-Fa-f]{2}(?:\s*[,;:]\s*[0-9A-Fa-f]{2}){3}(?![0-9A-Za-z])'),
+     'separated hex byte pairs'),
+    (re.compile(r'\\[xX][0-9A-Fa-f]{2}(?:\s*\\[xX][0-9A-Fa-f]{2})'), 'escaped bytes'),
+    (re.compile(r'(?<![0-9A-Za-z])~[/\\]'), 'a private or absolute path'),
+    (re.compile(r'\[\s*(?:[re]?(?:ax|bx|cx|dx|si|di|bp|sp|ip)|r(?:[89]|1[0-5])[dwb]?|[xy]mm\d+)\b', re.I),
+     'a bracketed register operand (disassembly)'),
+    (re.compile(r'\b(?:byte|[dq]?word|[xyz]mmword|tbyte)\s+ptr\b|\bptr\s*\[', re.I), 'a ptr operand (disassembly)'),
 )
 # Per-function hash of the candidate's compared code sections, written by the comparator into each
 # report's `candidate` block (docs/comparator-contract.md, "Report"). Records made before comparator
@@ -386,7 +404,30 @@ def validate_review(fn, record, root=None):
     require(valid_date, 'Review record: invalid review_date')
     if review['review_record_schema'] >= 2:
         check_review_kind(review, record)
+    # Last, so a malformed legacy record is reported for what is wrong with it.
+    require(review['review_record_schema'] >= REVIEW_RECORD_SCHEMA or legacy_review_allowed(name, review),
+            f'Review record: {name} is schema {review["review_record_schema"]}, which is accepted only for '
+            f'the unchanged records listed in tools/{LEGACY_REVIEW_RECORDS.name}; re-review it')
     return review
+
+
+def legacy_review_digest(review):
+    """SHA-256 of a Reviewer record's canonical JSON (sorted keys, no whitespace)."""
+    return hashlib.sha256(json.dumps(review, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+@functools.lru_cache(maxsize=None)
+def _legacy_review_records():
+    try:
+        listed = json.loads(LEGACY_REVIEW_RECORDS.read_text())['records']
+    except (OSError, ValueError, KeyError, TypeError):
+        return frozenset()
+    return frozenset((path, digest) for path, digest in listed.items())
+
+
+def legacy_review_allowed(name, review):
+    """Whether a below-current-schema record is one of the listed pre-format records, unchanged."""
+    return (name, legacy_review_digest(review)) in _legacy_review_records()
 
 
 def naming_finding_problem(item):

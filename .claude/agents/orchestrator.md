@@ -50,8 +50,9 @@ Results come from deterministic comparator reports, never from a model's opinion
 send the function back to the Drafter or an Engineer with the reasons. On `escalate`, send
 `other` to an Engineer and then a fresh Reviewer; escalate `provenance`, `legal` and `systemic`
 to the maintainer and hold that function. Pick the sampling set (at least 5% of accepted
-functions at random, plus the first 20 under every new recipe or compiler and every new Drafter
-prompt version) for a second Reviewer and a from-scratch comparator re-run; on any disagreement,
+functions at random, plus the first 20 under every new recipe or compiler, every new Drafter or
+Reviewer prompt version, every new acceptance-rule version, and the first 20 label-only
+re-acceptances under each rule version) for a second Reviewer and a from-scratch comparator re-run; on any disagreement,
 pause that batch and escalate. Treat worker summaries as claims to check against their handoffs,
 reviews and reports. Track machine-hours and worker runs against the spend cap and stop
 dispatching when it is reached.

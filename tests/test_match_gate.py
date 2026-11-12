@@ -17,6 +17,7 @@ import unittest
 
 TOOLS = Path(__file__).resolve().parents[1] / 'tools'
 sys.path.insert(0, str(TOOLS))
+import check
 from check import BUILD_ADDED_FLAGS, BUILD_CLEARED_ENV, MATCH_RECORD_SCHEMA, validate, validate_match
 from compare import compare
 from source_digest import tu_digest
@@ -50,6 +51,11 @@ class GateFixture:
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
+        # The fixture's hand-built schema 1 and 2 records stand in for the listed pre-format
+        # records (tools/legacy_review_records.json); test_review_parser checks that list itself.
+        original = check.legacy_review_allowed
+        check.legacy_review_allowed = lambda name, review: name.startswith('reports/synthetic-fixture/')
+        self.addCleanup(setattr, check, 'legacy_review_allowed', original)
         self.write(CPP, '#include "SyntheticSum.h"\nint SyntheticSum(int* p) { return SyntheticAddOne(*p); }\n')
         self.write(HDR, 'int SyntheticAddOne(int);\n')
         self.recipe_bytes = fx.recipe()

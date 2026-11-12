@@ -57,10 +57,12 @@ A function is accepted only when ALL of these hold:
      codegen-only pragmas or `__declspec`; header fields present; include style. `__forceinline`,
      `noinline`, `[[msvc::...]]` attributes and codegen intrinsics (`INTRINSICS` there) each
      carry a justification comment on the same or the previous line. A file holding a
-     `COMMUNITY(..., GPL...)` label (or LGPL, AGPL) names GPL in its leading comment, as
-     `docs/authorizations.md` requires. A `SIBLING(...)` label or `Sibling source:` line names
-     only an allowed sibling at its pin with its licence word, and a `Sibling source:` line sits
-     in the leading comment; `tools/check_labels.py` (private clone) checks the cited path and
+     `COMMUNITY(..., GPL...)` label (or LGPL, AGPL, in any case) names GPL in its leading
+     comment, as `docs/authorizations.md` requires, and a label for a known community repository
+     states that repository's licence (`COMMUNITY_LICENCES` in the lint). A `SIBLING(...)` label,
+     in any file, or a `Sibling source:` line names only an allowed sibling at its pin with its
+     licence word, and a `Sibling source:` line sits in the leading comment with no `..` in its
+     path; `tools/check_labels.py` (private clone) checks the cited path and
      line. Whether a body was reused at all is not machine-checked; that is the Reviewer's.
    - The unit compiles from tracked files only: the match record's translation unit is the
      include closure of repository files, and `tools/check.py --staged` (the pre-commit check)
@@ -146,8 +148,10 @@ Open naming findings are closed by a Reviewer: a later full or delta review that
 Label fixes themselves do not need one: see "Label-only re-acceptance".
 
 **Sampling safeguard.** At least 5% of accepted functions, chosen at random by the orchestrator,
-plus the first 20 accepted functions under every new recipe or compiler and under every new
-Drafter prompt version, get a second independent Reviewer pass (fresh context, a different
+plus the first 20 accepted functions under every new recipe or compiler, every new Drafter prompt
+version, every new Reviewer prompt version (`.claude/agents/reviewer.md`) and every new version of
+the acceptance rule (this section and `tools/accept_function.py`), and the first 20 label-only
+re-acceptances under each acceptance-rule version, get a second independent Reviewer pass (fresh context, a different
 Reviewer run) and a from-scratch comparator re-run on a clean checkout. Any disagreement, with
 either Reviewer or with the earlier comparator result, pauses acceptance for that batch and is
 escalated to the maintainer.
@@ -334,6 +338,11 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
   `previous_source_digest`, `previous_review_sha256`, `previous_code_section_sha256` and
   `code_section_sha256` (schema 2), plus `naming_findings` (schema 3, written by
   `tools/accept_function.py`), so the only free text published is the naming findings;
+- a record below schema 3 is accepted only if its path and the SHA-256 of its canonical JSON are
+  listed in `tools/legacy_review_records.json`, generated from the 58 records that existed at
+  commit `e51d00a` when the four-check review format took effect. A list outside the records is
+  used rather than a date bound because `review_date` sits in the record itself, so a hand-written
+  record could carry any date; an edited or new legacy record needs an edit to that tracked file;
 - schema 2 and 3: a `full` review has no previous fields and its `code_section_sha256` equals the
   match record's (or both are absent); a `delta` review names a previous digest other than its
   own, a previous review hash, and a previous code-section hash equal to its own and to the
@@ -342,8 +351,10 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
   code-section hashes are present;
 - schema 3: `naming_findings` is a list of at most 20 single-line strings of at most 300
   printable ASCII characters, none holding a brace, a backtick fence, a private path (`.local`,
-  `/Users/`, `/home/`, a drive letter), a run of 16 or more hex digits or four or more
-  space-separated hex byte pairs; a `full` or `delta` record has a list, a `label-only` record a
+  `/Users/`, `/home/`, `~/`, a drive letter), a run of 16 or more hex digits, four or more
+  space-, comma-, semicolon- or colon-separated hex byte pairs, three or more `0x`-prefixed
+  bytes, two or more `\x`-escaped bytes, a bracketed register operand or a `ptr` operand; a `full` or `delta`
+  record has a list, a `label-only` record a
   list or `null` (carried from a record that predates the field). The filter is mechanical; the
   Reviewer writing them is responsible for the rest of their hygiene;
 - the function identity equals the inventory entry's, and the source digest equals the match
@@ -395,10 +406,15 @@ approved record lacks it needs a full re-review.
 ### Label-only re-acceptance
 
 Step 2 needs no Reviewer when the function's compared code did not change: then the code a
-Reviewer approved is the code the new runs compared, and what changed (labels, comments, names of
-members, other functions of the unit) is naming-tier material. `python3 tools/accept_function.py
---label-only [--functions ...] [--units ...]` re-accepts such an entry. Diff confinement is not
-proven and not needed: the evidence is the code-section hash, which covers every code byte, every
+Reviewer approved is the code the new runs compared. `python3 tools/accept_function.py
+--label-only [--functions ...] [--units ...]` re-accepts such an entry. Its scope is wider than
+"a label change": it re-accepts **any** change to the unit that leaves the function's code-section
+hash the same on both compile hosts. That includes comments and labels, renames that do not change
+the name of a relocation target, data definitions and stand-in bodies, the text of other functions
+of the unit, functions added to the unit, and the function's own text rewritten into a form that
+compiles to the same code. Other functions of the unit are outside this function's claim (each has
+its own acceptance); they are not naming material of this one. Diff confinement is not
+proven and not needed for the match claim: the evidence is the code-section hash, which covers every code byte, every
 relocation's offset and type and its target symbol's name, so renaming a callee or a referenced
 global changes it and needs a review. For each selected entry the tool requires, and refuses the
 whole run otherwise:
@@ -432,7 +448,10 @@ history and the sampling safeguard. What this gives up: a Reviewer no longer rea
 that leaves the function's compiled code identical, so a rewrite of the function's own text into
 something a Reviewer would reject (pasted decompiler output that compiles to the same code) is
 not re-checked until the next full review or the sampling safeguard, which samples label-only
-acceptances like any other.
+acceptances like any other. Nor is any other unit text on this path: comments, labels, other
+functions' bodies and added code are published without a Reviewer reading them, until a later
+review of some function of that unit. This is not a new publication channel, since unaccepted
+drafts are committed unreviewed too, but no Reviewer has vouched for that text.
 
 ### Re-review with an earlier review as context
 
@@ -469,6 +488,12 @@ also refreshes `updated_at` and `reconstruction/INDEX.md` and prints the files t
 An `approve` block must also give `report_binding: agree`, `pass` for the four blocking checks
 (`plausible_source`, `provenance`, `claim_scope`, `publication_hygiene`), `blocking_findings:
 none` and a `naming_findings` field (`none` or a list), or it is refused as inconsistent.
+The block parser fails closed: in the header and in every block whose heading names a build of
+the inventory (accepted or not), it refuses unknown keys, a key or check given twice, a line that
+is not a field, a check sub-line, a `  - ` item or an indented continuation (of an item or of
+`reasons`), a list field with any value other than the literal `none` or with an empty value and
+no items, and a block missing any of its fields through `reasons`. So a finding written without
+its dash, or a second `checks:` section, refuses the review instead of being dropped.
 `--functions` (inventory ids or `0x<rva>`) and `--units` (compiled file, or `<area>/<Class>`)
 restrict `--all-approved`, `--label-only` and `--refresh-named` to a subset; a selected function
 without an `approve` block is refused. Entries outside the selection that were already stale
@@ -479,9 +504,11 @@ Source lint: `tools/check.py` also runs `tools/lint_reconstruction.py` on every 
 of the Reviewer's list: no inline assembly, `__emit`, raw byte arrays or `\x` byte strings,
 universal character names (`\u`, `\U`) anywhere, pragma operators, codegen-only `#pragma` or
 `__declspec`; a justification comment beside `__forceinline`, `noinline`, `[[msvc::...]]` and
-codegen intrinsics; GPL named in the leading comment of a file with a GPL-licensed `COMMUNITY`
-label; the name-origin label grammar in files that declare `Labels: v2`, with `SIBLING(...)`
-labels and `Sibling source:` lines limited to an allowed sibling at its pin; the header comment fields of
+codegen intrinsics; GPL (any case) named in the leading comment of a file with a GPL-licensed
+`COMMUNITY` label, and the listed licence word on any label for a known community repository
+(`COMMUNITY_LICENCES`); the name-origin label grammar in files that declare `Labels: v2`;
+`SIBLING(...)` labels in every file and `Sibling source:` lines limited to an allowed sibling at
+its pin, the latter with no `..` path component; the header comment fields of
 `reconstruction/README.md`; the one-class-per-pair layout; and include style (quoted repository
 headers, no include in a block comment or conditional block). Passing the lint does not replace
 the Reviewer; it only spares the Reviewer those checks. Tests: `tests/test_lint_reconstruction.py`.
@@ -492,7 +519,10 @@ covers stale acceptances, delta reviews, batch acceptance and the generated inde
 `tests/test_two_tier.py` covers the blocking grounds, naming findings, tier 2, subset selection
 and label-only re-acceptance, and `tests/test_merged_rules.py` probes the two-tier rule together
 with the sibling source (lint, label check against a synthetic clone, sibling-label naming
-findings, undeclared reuse blocking) and the packet's re-review options. They use
+findings, undeclared reuse blocking) and the packet's re-review options,
+`tests/test_review_parser.py` covers the fail-closed review parser, the naming-findings filter
+and the legacy-record list, and `tests/test_lint_hardening.py` the licence table, sibling
+citations in every file, `..` paths and the label check's template parsing. They use
 reports that the comparator produced from synthetic fixtures. The comparator itself is tested
 in `tests/test_compare.py` against its contract (`docs/comparator-contract.md`).
 
@@ -503,7 +533,10 @@ therefore cannot show that a comparison against the game took place, that it ran
 named, or that a Reviewer read the source. Those rest on the runs and the review being real. The
 safeguards for that are the sampling safeguard above (a second independent Reviewer pass and a
 from-scratch comparator re-run for a sample of accepted functions) and git history as the audit
-trail, not the validator.
+trail, not the validator. Likewise no tool can tell a naming finding from a misfiled blocking
+ground: an `approve` that lists, say, "the body is pasted decompiler output" under
+`naming_findings` passes every mechanical check and is accepted. Only the sampling safeguard's
+second Reviewer pass can catch that misclassification.
 
 Public CI cannot prove a match without private game inputs. It should check report/source
 consistency, not represent that check as an independent comparison to Skyrim. Once an authorized

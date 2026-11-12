@@ -89,8 +89,12 @@ Schema 1 records are full reviews. Schema 2 adds exactly:
 
 `tools/accept_function.py` writes schema 3, which adds `naming_findings`: the Reviewer's
 non-blocking findings on names, labels and wording (tier 2, `docs/verification.md`), a list of
-short single-line strings held to a mechanical filter (no braces, code fences, private paths,
-long hex runs or byte lists), empty when none are open. Schema 3 also allows `review_kind:
+short single-line strings of printable ASCII held to a mechanical filter, empty when none are
+open. The filter (`naming_finding_problem` in `tools/check.py`) refuses braces, code fences,
+`.local`, home-directory, `~/` and drive-letter paths, runs of 16 or more hex digits, four or more
+space-, comma-, semicolon- or colon-separated hex byte pairs, three or more `0x`-prefixed bytes,
+two or more `\x`-escaped bytes, bracketed register operands and `ptr` operands. It is a pattern list, not a
+proof: other encodings of code or bytes are caught only by the Reviewer, who must not write them. Schema 3 also allows `review_kind:
 label-only`, written with no Reviewer pass when a re-confirmed record's code-section hash equals
 the approved one ("Label-only re-acceptance"): it carries the earlier approval's reviewer model,
 task id, review hash, date and naming findings (`null` if that approval predates the field), and
