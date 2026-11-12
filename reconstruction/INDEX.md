@@ -484,10 +484,10 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BGSMusicSilenceTrack::GetDurationImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x325bc0` / 6 | - | - | mapped | - | - |
 | - | `BSIMusicTrack::TestCanPlay` (COMMUNITY) | `sse-steam-1-7-104` / `0x326f40` / 3 | - | - | mapped | - | - |
 | - | `BGSMusicTrackFormWrapper::InitItemImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x327430` / 58 | - | - | mapped | - | - |
-| `forms/BGSMusicType` | `BGSMusicType::DoPause` (COMMUNITY) | `sse-steam-1-7-104` / `0x327e40` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x327e40.json` | mapped, record awaiting review | - | - |
+| `forms/BGSMusicType` | `BGSMusicType::DoPause` (COMMUNITY) | `sse-steam-1-7-104` / `0x327e40` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x327e40.json` | matched | full | open |
 | - | `BGSMusicType::GetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x328550` / 19 | - | - | mapped | - | - |
-| `forms/BGSMusicType` | `BGSMusicType::SetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x328570` / 20 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x328570.json` | mapped, record awaiting review | - | - |
-| `forms/BGSMusicType` | `BGSMusicType::dtor` (COMMUNITY) | `sse-steam-1-7-104` / `0x328688` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x328688.json` | mapped, record awaiting review | - | - |
+| `forms/BGSMusicType` | `BGSMusicType::SetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x328570` / 20 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x328570.json` | matched | full | open |
+| `forms/BGSMusicType` | `BGSMusicType::dtor` (COMMUNITY) | `sse-steam-1-7-104` / `0x328688` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x328688.json` | matched | full | open |
 | - | `BGSReverbParameters::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x328bf0` / 22 | - | - | mapped | - | - |
 | - | `BGSReverbParameters::DoGetRoomLevel` (COMMUNITY) | `sse-steam-1-7-104` / `0x328e60` / 8 | - | - | mapped | - | - |
 | - | `BGSReverbParameters::DoGetRoomHFLevel` (COMMUNITY) | `sse-steam-1-7-104` / `0x328e70` / 8 | - | - | mapped | - | - |
@@ -530,7 +530,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `forms/BGSDefaultObjectManager` | `BGSDefaultObjectManager::GetRightHandEquip` (COMMUNITY) | `sse-steam-1-7-104` / `0x38fa40` / 10 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x38fa40.json` | matched | full | open |
 | `forms/BGSDefaultObjectManager` | `BGSDefaultObjectManager::GetVoiceEquip` (COMMUNITY) | `sse-steam-1-7-104` / `0x38fa60` / 10 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x38fa60.json` | matched | full | open |
 | - | `BGSHeadPart::GetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x391020` / 22 | - | - | mapped | - | - |
-| `forms/BGSHeadPart` | `BGSHeadPart::SetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x391210` / 23 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x391210.json` | mapped, record awaiting review | - | - |
+| `forms/BGSHeadPart` | `BGSHeadPart::SetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x391210` / 23 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x391210.json` | matched | full | open |
 | - | `BGSIdleMarker::GetIgnoredBySandbox` (COMMUNITY) | `sse-steam-1-7-104` / `0x391b80` / 10 | - | - | mapped | - | - |
 | - | `BGSPerkEntry::GetID` (COMMUNITY) | `sse-steam-1-7-104` / `0x395b20` / 6 | - | - | mapped | - | - |
 | - | `BGSPerk::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x396b40` / 20 | - | - | mapped | - | - |
