@@ -279,6 +279,11 @@ class SkeletonTests(Base):
         self.assertIn('GPL-3.0', h)
         self.assertIn(f'RVA 0x{fn["rva"]:x}', cpp)
 
+    def test_unit_files_are_written_with_lf(self):
+        path = self.tmp / 'u.cpp'
+        contrib.write_source(path, 'a\nb\n')
+        self.assertEqual(path.read_bytes(), b'a\nb\n')
+
     def test_candidates_prefer_new_units_and_small_sizes(self):
         rows = contrib.candidates(ROOT, contrib.inventory(ROOT))
         startable = [r for r in rows if r['startable']]
