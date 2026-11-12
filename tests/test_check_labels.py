@@ -171,12 +171,46 @@ public:
         self.assertEqual(len(findings), 1)
         self.assertIn('no local checkout of Example/Lib', findings[0])
 
+    def track_findings(self):
+        git(self.root, 'init', '-q')
+        git(self.root, 'add', 'findings')
+
     def test_evidence_must_mention_every_compared_rva(self):
+        self.track_findings()
         cpp = ('// RVA 0x1000, 12 bytes (A). RVA 0x3000, 8 bytes (B). The callee at RVA 0x9999 is named below.\n'
                '// Evidence: findings/sel.md.\n#include "Widget.h"\n')
         findings = self.run_on(f'// Widget: {self.label()}\n', cpp)
         self.assertEqual(len(findings), 1)
-        self.assertIn('does not mention 0x3000', findings[0])
+        self.assertIn('nor 0x3000', findings[0])
+
+    def test_evidence_naming_the_unit_class_or_task_is_enough(self):
+        (self.root / 'findings/batch.md').write_text('| Widget | area | 2 |\nTask batch9-gadget\n')
+        self.track_findings()
+        defines = '#include "Widget.h"\nint Widget::IsReady() const\n{\n    return 1;\n}\n'
+        cpp = '// RVA 0x5000, 12 bytes (IsReady).\n// Evidence: findings/batch.md.\n' + defines
+        self.assertEqual(self.run_on(f'// Widget: {self.label()}\n', cpp), [])
+        task = ('// RVA 0x5000, 12 bytes (Run).\n// Task: batch9-gadget\n// Evidence: findings/batch.md.\n'
+                '#include "Widget.h"\nvoid Gadget::Run()\n{\n}\n')
+        self.assertEqual(self.run_on(f'// Widget: {self.label()}\n', task), [])
+        # A class named only in a comment, or a longer name containing it, does not count.
+        other = ('// RVA 0x5000, 12 bytes (Run). Gadget::Run is like Widget::Run.\n// Evidence: findings/batch.md.\n'
+                 '#include "Widget.h"\nvoid Gadget::Run()\n{\n}\n')
+        (self.root / 'findings/batch.md').write_text('| WidgetGadget | area | 2 |\n')
+        git(self.root, 'add', 'findings')
+        findings = self.run_on(f'// Widget: {self.label()}\n', other)
+        self.assertEqual(len(findings), 1)
+        self.assertIn('names neither the unit (Gadget)', findings[0])
+
+    def test_evidence_file_must_exist_and_be_tracked(self):
+        (self.root / 'findings/loose.md').write_text('| Widget |\n')
+        self.track_findings()
+        (self.root / 'findings/late.md').write_text('| Widget |\n')
+        defines = '#include "Widget.h"\nint Widget::IsReady() const\n{\n    return 1;\n}\n'
+        cpp = ('// RVA 0x5000, 12 bytes (IsReady).\n// Evidence: findings/late.md, findings/gone.md.\n' + defines)
+        findings = self.run_on(f'// Widget: {self.label()}\n', cpp)
+        self.assertIn('Evidence file findings/gone.md does not exist', findings[0])
+        self.assertIn('Evidence file findings/late.md is not tracked by git', findings[1])
+        self.assertEqual(len(findings), 2)
 
     def test_review_excerpts_quote_the_community_declaration(self):
         h = self.root / 'reconstruction/area/Widget.h'

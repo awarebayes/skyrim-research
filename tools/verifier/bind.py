@@ -33,13 +33,20 @@ entry at the same RVA would be an undeclared alias).
 References (relocations that leave a compared function). Each needs a map entry giving the RVA
 the game encodes; in order:
 
-1. an entry already in `symbols.json`;
-2. a hint naming the symbol (decorated, or qualified as above);
+1. a hint naming the symbol (decorated, or qualified as above); it replaces a different entry
+   already in `symbols.json`, which is reported;
+2. an entry already in `symbols.json`;
 3. by position: the target's own relocated field at the same offset, decoded from the local
    image, when that RVA is one of the pack's listed references of this function (so a
    misaligned candidate cannot bind a wrong address: the decoded value must be a known target);
 4. the one pack reference whose community name equals the symbol's qualified name, or failing
    that its member name.
+
+The same applies to references made from the function's funclets (catch and unwind code the
+comparator compares with it, found through its .pdata, unwind info and FuncInfo). For an unwind
+funclet the pack's `object_lifetimes` adds the destructor calls of its state: by position at the
+state's funclet RVA when the decoded value is one of them, by community name, or, when the state
+lists exactly one call and the funclet leaves exactly one name unbound, that call.
 
 Anything left is listed with the file to edit. The comparator still checks every binding: a
 wrong RVA fails with relocation-target-mismatch, it cannot pass.
@@ -182,6 +189,109 @@ def outgoing(obj, section):
         if target.section != section:
             out.append((rel, target))
     return out
+
+
+EH_DATA_SECTIONS = ('.pdata', '.xdata', '.rdata', '.data$r')
+
+
+def funclets(obj, section, defined_sections):
+    """{code section: state or None} of the funclets a function's exception data reaches.
+
+    Starts at the function's own .pdata entries (only the entry whose begin address is in the
+    function, so a shared .pdata does not pull in other functions), follows the unwind info, the
+    C++ FuncInfo and its maps through data sections, and collects every code section reached that
+    is not the function itself and does not define another function. This is the set the
+    comparator compares as funclet code, so a reference made only from a funclet is bound too.
+    The state is the unwind-map index of an unwind (destructor) funclet when the FH3 map is
+    readable, which ties it to the pack's object-lifetime state of the same index.
+    """
+    group, found = [section], {}
+    seen_data = set()
+    while group:
+        code = group.pop()
+        queue = []
+        for sec in obj.sections:
+            if not sec.name.startswith('.pdata'):
+                continue
+            starts = {r.offset for r in sec.relocs if obj.symbols[r.symbol].section == code and r.offset % 12 == 0}
+            queue += [obj.symbols[r.symbol].section for r in sec.relocs if r.offset - 8 in starts]
+        while queue:
+            index = queue.pop()
+            if index <= 0 or index in seen_data or index == section or index in found:
+                continue
+            sec = obj.section(index)
+            if sec.flags & SCN_CNT_CODE:
+                if index not in defined_sections:
+                    found[index] = None
+                    group.append(index)
+                continue
+            if not sec.name.startswith(EH_DATA_SECTIONS):
+                continue
+            seen_data.add(index)
+            queue += [obj.symbols[r.symbol].section for r in sec.relocs]
+    for state, target in unwind_actions(obj, section):
+        if target.section in found:
+            found[target.section] = (state, target.value)
+    return found
+
+
+def unwind_actions(obj, section):
+    """[(state, funclet symbol)] from the FH3 `$cppxdata$` FuncInfo of the function in `section`."""
+    out = []
+    for sym in obj.symbols.values():
+        if not sym.name.startswith('$cppxdata$') or sym.section <= 0:
+            continue
+        info = obj.section(sym.section)
+        rels = {r.offset: obj.symbols[r.symbol] for r in info.relocs}
+        if info.data is None or not _reaches(obj, sym, section):
+            continue
+        try:
+            max_state = struct.unpack_from('<I', info.data, sym.value + 4)[0]
+        except struct.error:
+            continue
+        umap = rels.get(sym.value + 8)
+        if umap is None or umap.section <= 0 or max_state > 4096:
+            continue
+        msec = obj.section(umap.section)
+        mrels = {r.offset: obj.symbols[r.symbol] for r in msec.relocs}
+        for i in range(max_state):
+            action = mrels.get(umap.value + 8 * i + 4)
+            if action is not None and action.section > 0:
+                out.append((i, action))
+    return out
+
+
+def _reaches(obj, cppxdata, section):
+    """Whether the FuncInfo `cppxdata` belongs to the function in `section` (its IP map starts there)."""
+    info = obj.section(cppxdata.section)
+    rels = {r.offset: obj.symbols[r.symbol] for r in info.relocs}
+    ipmap = rels.get(cppxdata.value + 24)
+    if ipmap is None or ipmap.section <= 0:
+        return False
+    return any(obj.symbols[r.symbol].section == section for r in obj.section(ipmap.section).relocs)
+
+
+def lifetime_calls(repo, fn):
+    """{state: [(rva, community qualified name or None)]} of a pack's object-lifetime destructor calls."""
+    if not fn.get('pack'):
+        return {}, {}
+    path = Path(repo) / fn['pack'] / 'pack.json'
+    if not path.is_file():
+        return {}, {}
+    life = json.loads(path.read_text()).get('object_lifetimes') or {}
+    calls, places = {}, {}
+    for st in life.get('states') or []:
+        entries = []
+        for text in st.get('calls') or []:
+            head, _, rest = str(text).partition(' ')
+            try:
+                entries.append((parse_rva(head), community_qualified(rest.strip()) if rest.strip() else None))
+            except ValueError:
+                continue
+        calls[st.get('state')] = entries
+        if st.get('funclet'):
+            places[st.get('state')] = parse_rva(st['funclet'])
+    return calls, places
 
 
 def by_position(image, fn_rva, rel):
@@ -474,37 +584,79 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
         report['ignored_hints'].append({'hint': h, 'rva': hex(r), 'reason': reason})
     compared = {fn['symbol']: fn for fn in task['functions'] if fn['symbol'] in defined}
     own = set(compared)
+    defined_sections = set(defined.values())
     for name, fn in compared.items():
         fn_rva = parse_rva(fn['rva'])
         refs = pack_references(repo, fn)
         known = {r for r, _ in refs}
-        for rel, target in outgoing(obj, defined[name]):
-            ref = target.name
-            if ref in symbols or ref in own:
-                continue
-            how, value = None, hint_for(ref)
-            if value is not None:
-                how = 'hint'
-            if value is None:
-                pos = by_position(image, fn_rva, rel)
-                if pos is not None and pos in known:
-                    how, value = 'position', pos
-            if value is None:
-                q = names(ref)
-                for key in (q, member(q)):
-                    if not key:
-                        continue
-                    hits = {r for r, cns in refs for c in cns if (c == key if key == q else member(c) == key)}
-                    if len(hits) == 1:
-                        how, value = ('community name' if key == q else 'member name'), hits.pop()
-                        break
-            if value is None:
-                if ref not in report['unbound_references']:
-                    report['unbound_references'].append(ref)
-                continue
-            symbols[ref] = {'rva': value, 'size': None}
-            report['references'].append({'symbol': ref, 'rva': hex(value), 'how': how})
-            report['changed'] = True
+        calls, places = lifetime_calls(repo, fn)
+        life_known = {r for entries in calls.values() for r, _ in entries}
+        life_refs = [(r, [n]) for entries in calls.values() for r, n in entries if n]
+        extra = funclets(obj, defined[name], defined_sections)
+        # (section, target RVA of its start or None, lifetime state or None, is a funclet)
+        parts = [(defined[name], fn_rva, None, False)]
+        for index, where in sorted(extra.items()):
+            state = where[0] if where else None
+            base = places[state] - where[1] if where and state in places else None
+            parts.append((index, base, state, True))
+        group = {p[0] for p in parts}
+        for index, base, state, is_funclet in parts:
+            pending = []
+            for rel, target in outgoing(obj, index):
+                ref = target.name
+                if target.section in group or ref in own:
+                    continue
+                hinted = hint_for(ref)
+                if ref in symbols and hinted is not None and symbols[ref].get('rva') != hinted:
+                    # An entry bound earlier by position from a misaligned candidate can name another
+                    # listed target; the Drafter's hint is the later, explicit statement.
+                    report['references'].append({'symbol': ref, 'rva': hex(hinted), 'how': 'hint, replaced '
+                                                 + hex(symbols[ref]['rva'])})
+                    symbols[ref] = {'rva': hinted, 'size': None}
+                    report['changed'] = True
+                if ref not in symbols:
+                    pending.append((rel, target))
+            for rel, target in pending:
+                ref = target.name
+                if ref in symbols:  # bound earlier in this loop
+                    continue
+                how, value = None, hint_for(ref)
+                if value is not None:
+                    how = 'hint'
+                accept = known | life_known if is_funclet else known
+                contradicted = False
+                if value is None and base is not None:
+                    pos = by_position(image, base, rel)
+                    if pos is not None and pos in accept:
+                        how, value = ('object lifetime position' if pos in life_known and pos not in known
+                                      else 'position'), pos
+                    contradicted = pos is not None and pos not in accept
+                if value is None:
+                    q = names(ref)
+                    pool = refs + life_refs if is_funclet else refs
+                    for key in (q, member(q)):
+                        if not key:
+                            continue
+                        hits = {r for r, cns in pool for c in cns if (c == key if key == q else member(c) == key)}
+                        if len(hits) == 1:
+                            how, value = ('community name' if key == q else 'member name'), hits.pop()
+                            break
+                if value is None and is_funclet and state is not None and not contradicted:
+                    # An unwind funclet destroys what its state owns: when the pack lists exactly one
+                    # destructor call for that state and the funclet leaves exactly one name unbound,
+                    # that is the call. The comparator still checks the encoded address.
+                    targets = {r for r, _ in calls.get(state, [])}
+                    names_left = {t.name for _, t in pending if t.name not in symbols and hint_for(t.name) is None}
+                    if len(targets) == 1 and names_left == {ref}:
+                        how, value = 'object lifetime', targets.pop()
+                if value is None:
+                    if ref not in report['unbound_references']:
+                        report['unbound_references'].append(ref)
+                    continue
+                symbols[ref] = {'rva': value, 'size': None}
+                report['references'].append({'symbol': ref, 'rva': hex(value), 'how': how,
+                                             **({'from': 'funclet'} if is_funclet else {})})
+                report['changed'] = True
     if report['changed']:
         (task_dir / 'task.json').write_text(json.dumps(task, indent=2) + '\n')
         smap_path.write_text(json.dumps(smap, indent=2) + '\n')

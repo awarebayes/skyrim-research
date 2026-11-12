@@ -93,6 +93,44 @@ Symptom: the target's inlined lookup leaves the caller's local untouched on a mi
 candidate returning the value (or a default) stores on both paths. Fix: write the lookup as
 `bool Find(key, T& out)` that assigns `out` only when found and returns whether it did.
 
+**16. A flag bit tested as load, `shr`, `test al,1`: a by-value bit-index helper.** (high)
+Symptom: the target reads a flag word into a register, shifts it right by the bit number and
+tests the low byte (`mov eax,[rcx+0x10]; shr eax,3; test al,1`); the candidate has
+`test byte ptr [mem],imm`, `test dword ptr [mem],imm` or `bt`. Cause: MSVC folds every mask, bit-field
+or direct `(flags >> n) & 1` spelling of the member into a memory test; the shift survives only
+when the word and the bit number reach the test through an inlined call. Fix, first thing to try:
+
+```cpp
+// TestBit: GUESS(low); a flag-word bit test by bit index, taking the word by value.
+inline bool TestBit(std::uint32_t a_flags, std::uint32_t a_bit)
+{
+    return ((a_flags >> a_bit) & 1) != 0;
+}
+... if (TestBit(formFlags, 3)) ...
+```
+
+For a bit-field struct, pass the whole word (`*reinterpret_cast<const std::uint32_t*>(&flags)` in
+a small accessor). A bit-0 test the target does as `movzx eax, byte ptr [mem]; and al,1` is the
+same helper on the low byte. The label is `GUESS(low)`: the helper's name and the engine's real
+accessor are unknown. Its probable origin is a flag accessor that takes a bit index (the shape
+says index and shift, not mask), not the community wrappers: `stl::enumeration::any()` and
+`REX::EnumSet::any()` test `(_impl & mask) != 0`, the expression that folds (not tried as a
+by-value copy). Closed Character::SetCrimeFaction 0x67eab0, TESObjectCELL::GetLocation 0x2bb180
+and NiNode::OnVisible 0xee2cc0; it also fixed the flag tests of NiNode::UpdateDownwardPass
+0xee24d0 and TESNPC::ClearData 0x3bbf50, which still differ elsewhere (rules 19, 20).
+
+**17. `static_assert` needs a message.** (high)
+The recipe compiles as C++14 (no `/std:c++17`), so `static_assert(sizeof(X) == 0x10);` is a
+compile error. Write `static_assert(sizeof(X) == 0x10, "size");`.
+
+**18. A deleting destructor that calls the plain one: declare `~X();` and do not define it.**
+(medium)
+Symptom: the target's `??_G` calls the plain destructor; the candidate's `??_G` inlines a vptr
+store and the base destructor calls instead. Cause: defining `~X()` in the unit lets the compiler
+inline it into `??_G`. Fix: declare the destructor out of line without a definition and bind
+`??1X@@...` to the target's callee with a bind hint; the `??_G` is still emitted beside the vftable
+(rule 14). Closed Character's destructor 0x73abc0.
+
 ## Unsolved patterns
 
 **12. A pure callee-saved register swap with the same instructions.** (low)
@@ -115,6 +153,19 @@ it with the same LTCG experiment plus a variant with a destructor-bearing iterat
 list helper. Probably explains RemoveFavorite 0x237a20, and any target with the -2 store but no
 handler.
 
+**19. A struct copy whose last store moves one slot earlier.** (low)
+Symptom: copying a bound (three floats then a float radius), the target loads the radius early
+and stores it last; the candidate stores it one store earlier than the source order, whether the
+radius is cached in a local or stored before the last centre component. A direct
+`radius = other.radius` and a `center = other.center` struct copy change more (an 8-byte `movsd`).
+Not closed: NiNode::UpdateDownwardPass 0xee24d0 (code-byte-mismatch, two stores swapped).
+
+**20. A pointer loop that the compiler turns into a counted loop.** (low)
+Symptom: the target walks an array with `it != end` (two callee-saved registers, no trip count);
+the candidate computes a trip count with `lea`/`shr`/`cmova` and needs two more callee-saved
+registers, so the prologue differs. A raw pointer loop and a range-for over `begin()`/`end()` both
+give the counted form. Not closed: TESNPC::ClearData 0x3bbf50.
+
 ## Method and permuter recommendations
 
 - Compile many variants per attempt: temporary `LabNN` members with candidate bodies in the same
@@ -124,7 +175,8 @@ handler.
 - Generate variants as AST rewrites from the rules above, not random token edits: reload or cache
   a member (1), flip a two-way check (2), duplicate or merge a helper call (3, 4), add the live
   argument (5), change the switch width (6), extract a value or a bool decision into a helper
-  (7, 8), drop an initialiser (9), add class operator new/delete (10).
+  (7, 8), drop an initialiser (9), add class operator new/delete (10), route a flag test through
+  a by-value bit-index helper (16).
 - Score the prologue and unwind info apart from the body. A register-only diff with identical
   mnemonics (12) or a -2 UnwindHelp store with no handler (13) should stop the search and go to
   triage: no source permutation tried here changes them.

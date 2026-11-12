@@ -77,16 +77,26 @@ RVA the pack does not list. `decorated name changed` means a declaration change 
 - Before you finish, run `python3 tools/check_labels.py reconstruction/<area>/<Class>.h
   reconstruction/<area>/<Class>.cpp` (also printed by `attempt` as `label warning:` lines). It
   checks every `COMMUNITY` name and enumerator value against the pinned checkout, flags `GUESS`
-  names the checkout declares in that class, and checks that your `Evidence:` file mentions every
-  compared RVA. Fix each warning or explain it in your result line.
+  names the checkout declares in that class, and checks that each `Evidence:` file exists, is
+  tracked, and names the unit (its class, a `// Task: <task-id>` header line, or every compared
+  RVA). Fix each warning or explain it in your result line.
+- Before you draft, read `docs/matching-cookbook.md` once. A flag bit the target tests as a load,
+  `shr`, `test al,1` goes through a by-value bit-index helper (rule 16) from the first draft.
 - No decompiler output pasted as source, no code from unlicensed projects (FNV repositories),
   nothing leaked. Unknowns stay unknown (`unk28`), not invented names.
 
-**Budget.** `attempt` refuses past `max_attempts` (exit 5); stop early after three counted attempts
-with no progress on the first mismatch offset. If the only difference is a compiler-mode artefact
-(for example a parity branch `jp` after `ucomiss`, which `/fp:fast` omits), stop and report it as
-the blocker: recipes are not yours to change. **Never** edit tools/, reports/, data/, recipes or
-another unit, mark anything `matched`, commit, push, post, start agents or drive Boat by hand.
+**Budget.** The budget is what `attempt` prints (`counted N/M`); it refuses past it (exit 5).
+Stop work on a function after three counted attempts with no progress on its first mismatch
+offset. If the only difference is a compiler-mode artefact (for example a parity branch `jp`
+after `ucomiss`, which `/fp:fast` omits), stop and report it as the blocker: recipes are not
+yours to change. **Never** edit tools/, reports/, data/, recipes or another unit, mark anything
+`matched`, commit, push, post, start agents or drive Boat by hand.
+
+**When a function is stuck**, take it out of the unit so the rest still passes, but never lose
+it: save the function, and any header lines only it needs, to
+`.local/tasks/<task-id>/near-miss/<rva>.cpp`, starting with two comment lines: the reason code,
+sizes and attempt number of the best try, then the remaining difference in a sentence. Run
+`attempt` once more to show the remaining functions pass, and name the file in your result line.
 
 **At the end** write JSON lines only, one per function and one for the task, to
 `.local/handoffs/<task-id>.jsonl`, and return the same lines:

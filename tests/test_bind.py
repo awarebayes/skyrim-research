@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools' / 'verifier'))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import bind  # noqa: E402
+from compare import compare  # noqa: E402
 import synthetic_pecoff as fx  # noqa: E402
 
 
@@ -61,6 +62,15 @@ class BindTests(unittest.TestCase):
         report, symbols = self.run_bind()
         self.assertEqual(report['unbound_references'], [])
         self.assertEqual(symbols[fx.COUNTER]['rva'], fx.LAYOUT[fx.COUNTER])
+
+    def test_hint_replaces_a_stale_reference_entry(self):
+        # A misaligned earlier attempt can leave another listed target in the map.
+        self.write_task('unbound:x', {fx.COUNTER: {'rva': fx.LAYOUT[fx.BASE], 'size': None}},
+                        hints={fx.COUNTER: hex(fx.LAYOUT[fx.COUNTER])})
+        report, symbols = self.run_bind()
+        self.assertEqual(symbols[fx.COUNTER]['rva'], fx.LAYOUT[fx.COUNTER])
+        how = {r['symbol']: r['how'] for r in report['references']}[fx.COUNTER]
+        self.assertEqual(how, f'hint, replaced {hex(fx.LAYOUT[fx.BASE])}')
 
     def test_renamed_function_is_reported_and_old_entry_dropped(self):
         old = '?SyntheticSum@Synthetic@@QEAAHXZ'
@@ -222,6 +232,106 @@ class DestructorTests(unittest.TestCase):
         self.assertEqual(fn['symbol'], PLAIN)
         self.assertEqual(report['ignored_hints'], [])
         self.assertIn('overrides the pack evidence', report['warnings'][0])
+
+
+DTOR = 'SyntheticDtor'
+DTOR_RVA = fx.LAYOUT[fx.OTHER_CALLEE]
+
+
+class FuncletTests(unittest.TestCase):
+    """References made only from funclets, on the synthetic catch unit (catch$0 and dtor$0)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.task_dir = self.root / 'task'
+        self.task_dir.mkdir()
+        unit = fx.catch_unit()
+        # The unwind funclet calls a destructor nothing else in the unit references.
+        x = next(i for i, sec in enumerate(unit.sections, 1) if sec[0] == '.text$x')
+        unit.sections[x - 1][2] = [(o, DTOR if o == 0x29 else sym, k) for o, sym, k in unit.sections[x - 1][2]]
+        unit.external(DTOR)
+        self.unit = unit
+        self.externals = fx.image_externals(**{DTOR: DTOR_RVA})
+        self.image = unit.link(self.externals)
+        (self.root / 'obj').write_bytes(unit.coff())
+        (self.root / 'image').write_bytes(self.image)
+        self.dtor_rva = fx.section_rva(unit, '?dtor$0@?0??SyntheticCatch@@4HA')
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def setup_task(self, calls, hints=None, funclet=True):
+        pack = self.root / 'packs' / 'c'
+        pack.mkdir(parents=True, exist_ok=True)
+        states = [{'state': 0, 'to_state': -1, 'funclet': self.dtor_rva if funclet else None, 'calls': calls}]
+        (pack / 'pack.json').write_text(json.dumps({
+            'references': [{'target_rva': fx.LAYOUT[fx.CALLEE], 'community_names': []}],
+            'object_lifetimes': {'states': states, 'try_blocks': []}}))
+        rva = fx.section_rva(self.unit, fx.CATCH_FUNCTION)
+        task = {'symbols': 'symbols.json', 'functions': [
+            {'rva': hex(rva), 'size': len(fx.CATCH_CODE), 'symbol': fx.CATCH_FUNCTION,
+             'community_name': 'SyntheticCatch', 'pack': 'packs/c'}]}
+        (self.task_dir / 'task.json').write_text(json.dumps(task))
+        (self.task_dir / 'symbols.json').write_text(json.dumps({'schema': 1, 'symbols': {}}))
+        if hints is not None:
+            (self.task_dir / bind.HINTS).write_text(json.dumps(hints))
+
+    def run_bind(self, image=True):
+        report = bind.bind(self.task_dir, self.root / 'obj', self.root / 'image' if image else None, repo=self.root)
+        return report, json.loads((self.task_dir / 'symbols.json').read_text())['symbols']
+
+    def test_funclets_found_with_unwind_state(self):
+        obj = bind.CoffObject(self.unit.coff())
+        defined = bind.defined_functions(obj)
+        found = bind.funclets(obj, defined[fx.CATCH_FUNCTION], set(defined.values()))
+        x = next(i for i, sec in enumerate(self.unit.sections, 1) if sec[0] == '.text$x')
+        self.assertEqual(found, {x: (0, 0x21)})
+
+    def test_lifetime_callee_bound_by_funclet_position(self):
+        self.setup_task([hex(DTOR_RVA)], hints={fx.BASE: hex(self.externals[fx.BASE])})
+        report, symbols = self.run_bind()
+        self.assertEqual(report['unbound_references'], [])
+        got = {r['symbol']: r for r in report['references']}
+        self.assertEqual((got[DTOR]['how'], got[DTOR]['from']), ('object lifetime position', 'funclet'))
+        self.assertEqual(symbols[DTOR]['rva'], DTOR_RVA)
+        # The catch funclet's global is bound only because funclets are scanned at all.
+        self.assertEqual((got[fx.BASE]['how'], got[fx.BASE]['from']), ('hint', 'funclet'))
+        self.assertEqual(got[fx.CALLEE]['how'], 'position')
+        # The comparator, which compares funclets too, passes with exactly this map.
+        smap = dict(symbols, **{n: {'rva': r, 'size': None} for n, r in fx.HANDLER_THUNKS.items()},
+                    **fx.catch_map(self.unit))
+        args = fx.unit_inputs(self.unit, fx.CATCH_FUNCTION, self.externals, image=self.image)
+        args['symbol_map']['symbols'] = smap
+        result = compare(**args)
+        self.assertEqual(result['result'], 'pass', result.get('detail'))
+        self.assertGreater(result['coverage']['funclet_sections'], 0)
+
+    def test_without_position_single_lifetime_call_binds(self):
+        self.setup_task([hex(DTOR_RVA) + ' Synthetic::~Synthetic'], hints={fx.BASE: '0x3100'}, funclet=False)
+        report, symbols = self.run_bind(image=False)
+        self.assertEqual(symbols[DTOR]['rva'], DTOR_RVA)
+        self.assertEqual({r['symbol']: r['how'] for r in report['references']}[DTOR], 'object lifetime')
+
+    def test_position_contradicting_the_lifetime_call_does_not_bind(self):
+        self.setup_task(['0x1004'], hints={fx.BASE: '0x3100'})
+        report, symbols = self.run_bind()
+        self.assertNotIn(DTOR, symbols)
+        self.assertEqual(report['unbound_references'], [DTOR])
+
+    def test_funclet_only_reference_without_hint_is_listed(self):
+        self.setup_task([hex(DTOR_RVA)])
+        report, symbols = self.run_bind()
+        self.assertIn(fx.BASE, report['unbound_references'])
+        self.assertIn(f'UNBOUND reference {fx.BASE}', '\n'.join(bind.describe(report, self.task_dir)))
+
+    def test_lifetime_name_binds_by_community_name(self):
+        # Two calls in the state, so only the community name can pick one.
+        self.setup_task(['0x1000 RE::Other', hex(DTOR_RVA) + ' RE::SyntheticDtor'], hints={fx.BASE: '0x3100'},
+                        funclet=False)
+        report, symbols = self.run_bind(image=False)
+        self.assertEqual(symbols[DTOR]['rva'], DTOR_RVA)
+        self.assertEqual({r['symbol']: r['how'] for r in report['references']}[DTOR], 'community name')
 
 
 if __name__ == '__main__':

@@ -14,7 +14,8 @@ checkouts are private clones under `.local/`, so CI does not run it. It reports,
 - a name labelled GUESS (without COMMUNITY) that has a class context and exists in a checkout under
   that class (or a base) is reported with a suggestion to use the community label;
 - the checkout must be at the labelled revision (`git rev-parse HEAD` starts with it);
-- a .cpp's `Evidence:` files together must mention every `RVA 0x...` the unit lists.
+- a .cpp's `Evidence:` files must exist, be tracked, and together name the unit: the class whose
+  members it defines, a `Task:` id from its header, or every `RVA 0x...` it lists.
 
 The parsing is lexical (comments and strings stripped, braces matched, identifiers followed by a
 declarator punctuator taken as declared), so the findings are warnings for a person to read, not
@@ -340,17 +341,56 @@ class Checker:
         return findings
 
     def check_evidence(self, rel, text):
+        """The `Evidence:` files exist, are tracked, and between them name the unit.
+
+        A file names the unit when it mentions every compared RVA, or the class whose members the
+        unit defines, or the task id of a `Task:` header line: batch selection findings list
+        classes and tasks, not each function's RVA, and a Drafter cannot edit them.
+        """
         header = text[:4000]
         line = next((ln for ln in header.splitlines() if 'Evidence:' in ln), None)
         rvas = sorted({r.lower() for r in RVA.findall(header)})
         if line is None or not rvas:
             return []
         files = EVIDENCE.findall(line)
-        found = ''.join((self.root / f).read_text().lower() for f in files if (self.root / f).is_file())
-        missing = [r for r in rvas if not re.search(rf'(?<![0-9a-fx]){r}(?![0-9a-f])', found)]
+        out = []
+        absent = [f for f in files if not (self.root / f).is_file()]
+        if absent:
+            out.append(f'{rel}: Evidence file {", ".join(absent)} does not exist')
+        untracked = [f for f in files if f not in absent and not tracked(self.root, f)]
+        if untracked:
+            out.append(f'{rel}: Evidence file {", ".join(untracked)} is not tracked by git')
+        present = [f for f in files if f not in absent]
+        found = ''.join((self.root / f).read_text() for f in present)
+        names = unit_names(text)
+        if any(re.search(rf'(?<![\w-]){re.escape(n)}(?![\w-])', found) for n in names):
+            return out
+        low = found.lower()
+        missing = [r for r in rvas if not re.search(rf'(?<![0-9a-fx]){r}(?![0-9a-f])', low)]
         if missing:
-            return [f'{rel}: Evidence ({", ".join(files) or "no file"}) does not mention {", ".join(missing)}']
-        return []
+            out.append(f'{rel}: Evidence ({", ".join(files) or "no file"}) names neither the unit '
+                       f'({", ".join(sorted(names)) or "no class or task id"}) nor {", ".join(missing)}')
+        return out
+
+
+TASK_LINE = re.compile(r'^//\s*Task:\s*([A-Za-z0-9][\w.-]*)', re.M)
+DEFINITION = re.compile(r'^[^\s/#][^;{}\n]*?\b([A-Za-z_]\w*)::~?[A-Za-z_]\w*\s*\(', re.M)
+
+
+def unit_names(text):
+    """Classes whose members a unit defines (out of line, at file scope) and its `Task:` ids."""
+    names = set(TASK_LINE.findall(text[:4000]))
+    names |= set(DEFINITION.findall(strip(text)))
+    return names
+
+
+def tracked(root, rel):
+    try:
+        done = subprocess.run(['git', '-C', str(root), 'ls-files', '--error-unmatch', '--', rel],
+                              capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return done.returncode == 0
 
 
 def community_excerpts(files, checkouts=None, root=ROOT):
