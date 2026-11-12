@@ -149,21 +149,26 @@ and offset for every function that uses it. Compared from comparator 0.5.0 on (e
 Symptom: every instruction matches except which callee-saved registers hold `this` and a loop
 counter. The comparator reports unwind-info-mismatch at +0x0 with equal sizes. In this recipe,
 about 45 source spellings never move `this` out of rbx. Only spellings that add counter
-references flip it, and those add instructions. Hypothesis: the original was compiled with /GL
-and linked with LTCG (the Rich header lists LTCG C++ objects), or with PGO, which weight blocks
-differently. Settle it with a verifier link step (/GL plus /LTCG into a DLL) on unchanged source.
-Probably explains BSReadWriteLock::LockForRead 0xce3250 and LockForWrite 0xce32d0.
+references flip it, and those add instructions. Whole-program optimization is refuted as the
+cause, and so are the swept flags: `/GL` linked `/LTCG` gives byte-identical code for these
+sources, and no profile data exists ([finding](../findings/whole-program-optimization.md)).
+Cause unknown. Untested hypotheses from that finding: EH state removed after frame layout (a
+`noexcept` or `throw()` helper whose throwing path folds away), or frame layout kept from dead
+code (a parameter or `this` whose address is taken and then optimised out). Seen in
+BSReadWriteLock::LockForRead 0xce3250 and LockForWrite 0xce32d0.
 
 **13. A -2 store to the UnwindHelp stack slot, eager saves of callee-saved registers, and no EH handler.** (low)
 Symptom: the prologue stores the C++ EH UnwindHelp slot and saves rbx/rbp/rsi/rdi before any
 early return, yet the unwind info has flags 0. Because shrink wrapping is off, every register
 differs from a candidate that does not use EH. In lab compiles, a destructor-bearing local around
 a throwing call keeps a handler. Locals whose scope has no throwing call, noexcept or throw()
-helpers, and try/catch all either drop the -2 store or keep a handler. Hypothesis: EH state that
-the compiler removed only after cross-module inlining (LTCG) or after a late optimisation. Settle
-it with the same LTCG experiment plus a variant with a destructor-bearing iterator in the inlined
-list helper. Probably explains RemoveFavorite 0x237a20, and any target with the -2 store but no
-handler.
+helpers, and try/catch all either drop the -2 store or keep a handler; so do the same guards
+under `/GL` and `/LTCG`. Whole-program optimization is not confirmed for RemoveFavorite and
+refuted for the other near-misses measured ([finding](../findings/whole-program-optimization.md));
+cause unknown. The 151 image functions with this shape cluster by address. Untested hypotheses
+from the finding: EH state removed after frame layout (a `noexcept` or `throw()` helper whose
+throwing path folds away), or frame layout kept from dead code (an address taken and then
+optimised out), tried first on one dense run. Seen in RemoveFavorite 0x237a20.
 
 **19. A struct copy whose last store moves one slot earlier.** (low)
 Symptom: copying a bound (three floats then a float radius), the target loads the radius early

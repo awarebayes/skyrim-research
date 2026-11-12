@@ -162,6 +162,11 @@ Returns are diminishing. None of these beats executing what the two earlier docu
 rank first; N1 and N2 are cheap enough to do anyway.
 
 **N1. Settle the whole-program question in one Boat session before building anything.**
+*Outcome:* refuted; cause unknown. `/GL` with `/LTCG` and a flag sweep left every measured
+near-miss unchanged ([finding](../findings/whole-program-optimization.md)), so no link-mode
+verifier is built. The untested hypotheses now are EH state removed after frame layout (a
+`noexcept` or `throw()` helper whose throwing path folds away) and frame layout kept from dead
+code (an address taken and then optimised out). The plan as written follows.
 *Measured:* the POGO record's signature is `LTCG`; its text groups are `.text$mn` (22.1 MB),
 `.text$x` (1.13 MB), `.text$di` (1.06 MB), `.text$yd` (0.57 MB), `.text$mn$00` (32 bytes) and
 `.text` (33 KB). No cold or split group and no profile signature exist, so profile data shaped
