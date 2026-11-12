@@ -65,6 +65,89 @@ class SkeletonError(Exception):
     pass
 
 
+# ------------------------------------------------------------------ inline Ni bases
+#
+# A deleting destructor that stores the NiRefObject vftable and decrements the object counter
+# itself has the whole base chain inlined. The shared NiObject.h declares ~NiRefObject and
+# ~NiObject out of line, so a unit that includes it gets a call to a separate base destructor
+# instead and misses by a few bytes. Such units get local stand-ins with inline destructors, the
+# form of the accepted reconstruction/netimmerse/NiExtraData.h and NiInterpolator.h.
+INLINE_BASE_REFS = ('VTABLE_NiRefObject', 'NiRefObject::TotalObjectCount')
+INLINE_BASE_ROOTS = ('NiRefObject', 'NiObject')
+_NG = 'COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)'
+_NI_SLOTS = [
+    ('const NiRTTI*', 'GetRTTI() const'), ('NiNode*', 'AsNode()'), ('NiSwitchNode*', 'AsSwitchNode()'),
+    ('BSFadeNode*', 'AsFadeNode()'), ('BSMultiBoundNode*', 'AsMultiBoundNode()'), ('BSGeometry*', 'AsGeometry()'),
+    ('NiTriStrips*', 'AsTriStrips()'), ('BSTriShape*', 'AsTriShape()'),
+    ('BSSegmentedTriShape*', 'AsSegmentedTriShape()'), ('BSSubIndexTriShape*', 'AsSubIndexTriShape()'),
+    ('BSDynamicTriShape*', 'AsDynamicTriShape()'), ('NiGeometry*', 'AsNiGeometry()'),
+    ('NiTriBasedGeom*', 'AsNiTriBasedGeom()'), ('NiTriShape*', 'AsNiTriShape()'), ('NiParticles*', 'AsParticlesGeom()'),
+    ('BSLines*', 'AsLinesGeom()'), ('bhkNiCollisionObject*', 'AsBhkNiCollisionObject()'),
+    ('bhkBlendCollisionObject*', 'AsBhkBlendCollisionObject()'),
+    ('bhkAttachmentCollisionObject*', 'AsBhkAttachmentCollisionObject()'), ('bhkRigidBody*', 'AsBhkRigidBody()'),
+    ('bhkLimitedHingeConstraint*', 'AsBhkLimitedHingeConstraint()'),
+    ('NiObject*', 'CreateClone(NiCloningProcess& a_cloning)'), ('void', 'LoadBinary(NiStream& a_stream)'),
+    ('void', 'LinkObject(NiStream& a_stream)'), ('bool', 'RegisterStreamables(NiStream& a_stream)'),
+    ('void', 'SaveBinary(NiStream& a_stream)'), ('bool', 'IsEqual(NiObject* a_object)'),
+    ('void', 'ProcessClone(NiCloningProcess& a_cloning)'), ('void', 'PostLinkObject(NiStream& a_stream)'),
+    ('bool', 'StreamCanSkip()'), ('const NiRTTI*', 'GetStreamableRTTI() const'),
+    ('std::uint32_t', 'GetBlockAllocationSize() const'), ('NiObjectGroup*', 'GetGroup() const'),
+    ('void', 'SetGroup(NiObjectGroup* a_group)'), ('NiControllerManager*', 'AsNiControllerManager()'),
+]
+INLINE_BASE_FORWARD = sorted({ret.rstrip('*').split()[-1] for ret, _ in _NI_SLOTS if ret.endswith('*')}
+                             | {'NiStream', 'NiCloningProcess', 'NiObjectGroup'})
+
+
+def inline_base_blocks():
+    """The NiRefObject and NiObject stand-ins with inline destructors, as header text."""
+    names = [sig.split('(')[0] for _, sig in _NI_SLOTS]
+    slots = [f'    virtual {ret} {sig};  // {i:02X}' for i, (ret, sig) in enumerate(_NI_SLOTS, 2)]
+    return '\n'.join([
+        f'// NiRefObject: STANDIN {_NG}',
+        f'// ~NiRefObject, DeleteThis, _refCount, _pad0C: {_NG}',
+        '// ms_totalObjects: GUESS(low); NG reaches the counter through GetTotalObjectCount()',
+        'class NiRefObject',
+        '{',
+        'public:',
+        '    // Inline because the target inlines it into the compared deleting destructor.',
+        '    virtual ~NiRefObject()',
+        '    {',
+        '        // hot path: the engine drops the shared object counter atomically on every destruction',
+        '        _InterlockedDecrement(&ms_totalObjects);',
+        '    }',
+        '    virtual void DeleteThis();  // 01',
+        '',
+        '    static volatile long ms_totalObjects;',
+        '',
+        '    std::uint32_t _refCount{ 0 };  // 08',
+        '    std::uint32_t _pad0C;          // 0C',
+        '};',
+        'static_assert(sizeof(NiRefObject) == 0x10, "NiRefObject size");',
+        '',
+        f'// NiObject: STANDIN {_NG} EXE_RTTI',
+        '// Slots in NG\'s order, declared without bodies (only the order matters here).',
+        f'// ~NiObject, {", ".join(names)}: {_NG}',
+        'class NiObject : public NiRefObject',
+        '{',
+        'public:',
+        '    // Inline (empty) for the same reason as ~NiRefObject.',
+        '    ~NiObject() override {}  // 00',
+        *slots,
+        '};',
+        'static_assert(sizeof(NiObject) == 0x10, "NiObject size");',
+        ''])
+
+
+def inlines_ni_base(fn):
+    """True when a compared deleting destructor does the NiRefObject cleanup itself (its references
+    include the NiRefObject vftable or the object counter), so no base destructor is called."""
+    kind = (fn.get('destructor') or {}).get('kind') or ''
+    if 'deleting' not in kind:
+        return False
+    refs = readme_section(fn.get('readme') or '', 'References leaving the function')
+    return any(marker in refs for marker in INLINE_BASE_REFS)
+
+
 # ------------------------------------------------------------------ labels
 
 def community_label(name_source):
@@ -333,20 +416,26 @@ def plan(unit, repo=None):
     if not shared:
         shared = {p.stem: '../' + p.relative_to(Path(repo) / 'reconstruction').as_posix()
                   for p in (Path(repo) / 'reconstruction').glob('*/*.h') if p.stem != cls}
+    # The inline form needs the chain to end in NiObject -> NiRefObject, the only roots it writes.
+    inline_base = (chain[-2:] == list(reversed(INLINE_BASE_ROOTS))
+                   and any(inlines_ni_base(f) for f in unit['functions']))
     include, standins = None, []
     for anc in chain:
-        if anc in shared:
+        if anc in shared and not inline_base:
             include = (anc, shared[anc])
             break
         standins.append(anc)
     if include is None:
-        # No ancestor has a header: the whole chain becomes stand-ins up to its root.
-        standins = chain
+        # No ancestor has a header (or the inline form needs every base local): the whole chain
+        # becomes stand-ins up to its root.
+        standins = list(chain)
     standins.reverse()
     included_text = ''
     if include:
         path = (Path(repo) / unit['header']).parent / include[1]
         included_text = _text(path)
+    elif inline_base:
+        included_text = inline_base_blocks() + '\n'.join(f'class {t};' for t in INLINE_BASE_FORWARD)
     class_label = excerpt_label(unit['material'], packs)
     members = []
     for f in unit['functions']:
@@ -359,6 +448,7 @@ def plan(unit, repo=None):
         class_label = class_label or label
     return {'cls': cls, 'task': task, 'chain': chain, 'bases': bases, 'sizes': sizes, 'include': include,
             'included_text': included_text, 'standins': standins, 'class_label': class_label,
+            'inline_base': inline_base,
             'members': members, 'rtti': bool(chain) or cls in sizes}
 
 
@@ -390,7 +480,8 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
     else:
         add(cls, 'GUESS(low)')
     for s in p['standins']:
-        add(s, 'STANDIN EXE_RTTI')
+        if not (p['inline_base'] and s in INLINE_BASE_ROOTS):  # those blocks carry their own labels
+            add(s, 'STANDIN EXE_RTTI')
 
     forward, todo_types, decls, defs, notes = [], [], [], [], []
     has_ctor = any(m['method'] == 'ctor' for m in p['members'])
@@ -426,7 +517,11 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
                 add(f'{cls}::~{cls}', m['label'])
             decls.append(f'virtual ~{cls}();  // compared: 0x{rva:x}' + (f' ({kind})' if kind else ''))
             head = f'{cls}::~{cls}()'
-            if kind and 'deleting' in kind:
+            if kind and 'deleting' in kind and p['inline_base']:
+                where += (f'; compared as the {kind}. The target does the NiRefObject cleanup itself, so keep '
+                          'this empty definition and the constructor: the inline base destructors in the header '
+                          'make the compiler produce the same body')
+            elif kind and 'deleting' in kind:
                 where += (f'; compared as the {kind}. If the target calls a separate destructor, keep only '
                           'the declaration and delete this definition (cookbook rule 18)')
         elif m['parts']:
@@ -440,7 +535,8 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
             for t in by_ref:
                 if '::' in t:
                     todo_types.append((t, 'nested type: declare a stand-in for it or change the type'))
-                elif t != cls and t not in forward and not defined_in(p['included_text'], t):
+                elif (t != cls and t not in forward and not defined_in(p['included_text'], t)
+                      and t not in (INLINE_BASE_FORWARD if p['inline_base'] else ())):
                     forward.append(t)
                     if m['label']:
                         add(t, 'STANDIN ' + m['label'])
@@ -453,6 +549,10 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
             decls.append(f'void {method}();  // compared: 0x{rva:x}; TODO signature: no community declaration, '
                          'read it from the listing')
             head = f'void {cls}::{method}()'
+        if method == 'dtor' and p['inline_base'] and kind and 'deleting' in kind:
+            # Nothing to write: the empty body plus the inline bases is the accepted form.
+            defs.append('\n'.join([*comment_lines(f'Body done: {where}.'), head, '{', '}']))
+            continue
         defs.append('\n'.join([*comment_lines(f'TODO body: {where}.'), head, '{', f'    {BODY_MARKER};', '}']))
 
     # Stand-ins and the class itself, padded to the image sizes so offsets line up from the start.
@@ -462,6 +562,11 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
     # derived class pads from the nearest known size below it.
     running = p['sizes'].get(parent) if parent else 0x8
     for s in p['standins']:
+        if p['inline_base'] and s in INLINE_BASE_ROOTS:
+            if s == INLINE_BASE_ROOTS[-1]:
+                blocks.append(inline_base_blocks())
+            parent, running = s, 0x10
+            continue
         body, assert_line, running = pad_lines(s, running, p['sizes'], pads)
         base = f' : public {parent}' if parent else ''
         inherit = [f'    using {parent}::{parent};'] if ctor_params and parent else []
@@ -489,14 +594,18 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
         *([GPL_NOTE] if gpl else []),
         '// Started from a tools/skeleton.py skeleton: stand-ins carry only what the compared code needs, and',
         '// community names are unverified.',
+        *base_form_lines(p),
         *label_lines,
         '#pragma once',
         '',
+        *(['#include <intrin.h>'] if p['inline_base'] else []),
         '#include <cstdint>',
     ]
     if p['include']:
         header.append(f'#include "{p["include"][1]}"')
     header.append('')
+    if p['inline_base']:
+        header += [f'class {t};' for t in INLINE_BASE_FORWARD] + ['']
     if forward:
         header += [f'class {t};' for t in forward] + ['']
     for t, why in todo_types:
@@ -535,6 +644,18 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
         '',
     ]
     return unit['header'], '\n'.join(header), unit['compiled'], '\n'.join(source)
+
+
+def base_form_lines(p):
+    """Header comment lines saying which base form the skeleton chose, and why."""
+    if p['inline_base']:
+        return comment_lines('Base form: inline stand-ins. The compared deleting destructor does the NiRefObject '
+                             'cleanup itself (it stores that vftable and decrements the object counter), so '
+                             'NiRefObject and NiObject are declared here with inline destructors instead of '
+                             'including the shared NiObject.h, whose out-of-line destructors would add a call.')
+    if p['include']:
+        return comment_lines(f'Base form: shared header {p["include"][1]} for {p["include"][0]}.')
+    return comment_lines('Base form: local stand-ins (no ancestor has a shared header).') if p['standins'] else []
 
 
 def comment_lines(text, width=100):
@@ -717,22 +838,54 @@ def overview(task_dir, cap=SHEET_CAP, repo=None):
     return '\n'.join(lines) + '\n'
 
 
+SHEET_VARIANTS = {False: '.md', True: '.fnv.md'}
+
+
+def sheet_name(rva, page, pages, sibling):
+    """File name of one sheet page: sheet-0x<rva>[-p<N>].md, or .fnv.md for the FNV variant."""
+    stem = f'sheet-0x{rva:x}' if pages == 1 else f'sheet-0x{rva:x}-p{page}'
+    return stem + SHEET_VARIANTS[bool(sibling)]
+
+
+def is_variant(path, sibling):
+    return path.name.endswith('.fnv.md') == bool(sibling)
+
+
 def write_sheets(task_dir, sibling=False, cap=SHEET_CAP, repo=None):
-    """sheet.md (the index) and sheet-<rva>[-p<N>].md for each function, all in the task directory."""
+    """sheet.md (the index) and sheet-<rva>[-p<N>].md for each function, all in the task directory.
+
+    With `sibling` the FNV variant is written instead (sheet.fnv.md, sheet-<rva>.fnv.md: the same
+    pages plus the FNV body of a same-named method). The two variants live side by side because
+    not every model that drafts from one queue is cleared to read FNV text; `sheets.json` records
+    which variants exist so a runbook or a check can tell them apart. Returns the files written."""
     repo = Path(repo or REPO)
     unit = load_unit(task_dir, repo)
     d = Path(task_dir)
     for old in d.glob('sheet*.md'):
-        old.unlink()
-    written = [d / 'sheet.md']
-    (d / 'sheet.md').write_text(overview(task_dir, cap, repo))
+        if is_variant(old, sibling):
+            old.unlink()
+    index = d / ('sheet' + SHEET_VARIANTS[bool(sibling)])
+    written = [index]
+    index.write_text(overview(task_dir, cap, repo))
     for f in unit['functions']:
         rva = int(str(f['rva']), 16) if isinstance(f['rva'], str) else f['rva']
         pages = paginate(function_sheet(unit, f, sibling, repo), cap - FOOTER_ROOM)
         for i, page in enumerate(pages, 1):
-            name = f'sheet-0x{rva:x}.md' if len(pages) == 1 else f'sheet-0x{rva:x}-p{i}.md'
-            nxt = (f'\n(page {i} of {len(pages)}; next: sheet-0x{rva:x}-p{i + 1}.md)\n'
+            name = sheet_name(rva, i, len(pages), sibling)
+            nxt = (f'\n(page {i} of {len(pages)}; next: {sheet_name(rva, i + 1, len(pages), sibling)})\n'
                    if i < len(pages) else (f'\n(page {i} of {len(pages)}, last)\n' if len(pages) > 1 else ''))
             (d / name).write_text(page + nxt)
             written.append(d / name)
+    record = _json(d / 'sheets.json') or {}
+    record.setdefault('variants', {})['fnv' if sibling else 'plain'] = {
+        'sibling_snippets': bool(sibling), 'files': [w.name for w in written]}
+    (d / 'sheets.json').write_text(json.dumps(record, indent=2, sort_keys=True) + '\n')
     return written
+
+
+def write_sheet_variants(task_dir, which=None, cap=SHEET_CAP, repo=None):
+    """Write the variants `which` asks for: None both, False the plain one, True the FNV one."""
+    out = []
+    for sibling in ((False, True) if which is None else (bool(which),)):
+        out += write_sheets(task_dir, sibling, cap, repo)
+    return out

@@ -1,4 +1,4 @@
-# Small-function Drafter card (version `small-1`)
+# Small-function Drafter card (version `small-2`)
 
 For small functions (accessors, initialisers, flag tests, forwarders, empty or deleting destructors).
 This card is all you need; `docs/drafter-card.md` and `docs/matching-cookbook.md` are optional, for hard cases.
@@ -29,7 +29,8 @@ compares its bytes with the game. Everything under `.local/` is private: never p
 3. **Store order follows the target.** Write assignments in the order the listing stores them.
 4. **Deleting destructor** (sheet "Kind: scalar deleting destructor"): keep the skeleton's constructor (it
    makes the compiler emit the compared body). Listing stores the vftable, then calls: `X::~X() {}`. Listing
-   only calls one function, then tests `EDX` bit 0: delete the definition, keep `virtual ~X();`.
+   only calls one function, then tests `EDX` bit 0: delete the definition, keep `virtual ~X();`. A header
+   saying `Base form: inline stand-ins` already has the right destructor: leave it as written.
 5. **Declare, don't define, a function the target calls:** `void Reset();`, no body; attempt binds it.
 6. **Flag test** (`shr eax,3; test al,1`): `inline bool TestBit(std::uint32_t a_flags, std::uint32_t a_bit)
    { return ((a_flags >> a_bit) & 1) != 0; }`, call `TestBit(flags, 3)`, label `// TestBit: GUESS(low)`.
@@ -39,6 +40,8 @@ compares its bytes with the game. Everything under `.local/` is private: never p
 10. **Labels.** A label line is `// <names>: <LABEL>`; LABEL is `COMMUNITY(<owner>/<repo>@<rev>, <licence>)`,
     `GUESS(low)`, `EXE_RTTI`, `OBSERVED`, or `STANDIN` plus one of those. Copy the skeleton's labels;
     add one for every name you add. Never write the label words anywhere else.
+11. **Tail jump** (the listing ends in `JMP <function>`, not `CALL` then `RET`): make that call the last
+    statement, `return Callee(...);` when it returns a value; keep no local alive after it.
 
 Never write `asm`, `##`, `#pragma` (except `once`), byte arrays, `\x` strings. Never edit `task.json`,
 `symbols.json`, tools/ or another unit.
@@ -56,6 +59,11 @@ Never write `asm`, `##`, `#pragma` (except `once`), byte arrays, `\x` strings. N
 | `code-byte-mismatch at +0xNN` | first different byte | read `attempts/<NNN>/0x<rva>/side-by-side.txt` at that offset |
 | `unwind-info-mismatch`, `eh-...` | frame or exception layout | try one change; then save as near-miss |
 | `budget exhausted` | no attempts left | save near-misses, write lines, next unit |
+| `size A/B`, A = B+1 or B+2, last call | yours is `CALL`+`RET`, target `JMP` | rule 11 |
+
+**Deleting destructor is N bytes too long** (`size A/B`, A > B): the target inlines the base destructors and
+yours calls one. The base destructor must be an inline body in a stand-in in your own header (the form of
+`netimmerse/NiExtraData.h`); never edit a shared header. Cannot? save it as near-miss `inline base needed`.
 
 **Stuck** = three counted attempts with no change in the first mismatch, or the budget is spent.
 Then move the function and the header lines only it needs to `<unit dir>/near-miss/<rva>.cpp`, first

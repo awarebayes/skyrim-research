@@ -294,6 +294,81 @@ class Sheets(Fixture):
             self.assertIn('has 1 page', err.getvalue())
 
 
+class InlineNiBase(Fixture):
+    """A deleting destructor that does the NiRefObject cleanup itself gets local inline bases."""
+
+    def setUp(self):
+        super().setUp()
+        packs = self.root / '.local/packs' / BUILD
+        (packs / 'class/FancyWidget/skeleton.h').write_text(
+            'class NiRefObject\n{\n};\nstatic_assert(sizeof(NiRefObject) == 0x10);\n'
+            'class NiObject : public ::NiRefObject\n{\n};\nstatic_assert(sizeof(NiObject) == 0x10);\n'
+            'class FancyWidget : public ::NiObject\n{\n};\nstatic_assert(sizeof(FancyWidget) == 0x18);\n')
+        (self.root / 'reconstruction/netimmerse').mkdir()
+        (self.root / 'reconstruction/netimmerse/NiObject.h').write_text('#pragma once\nclass NiObject {};\n')
+        brief = self.unit / 'BRIEF.md'
+        brief.write_text(brief.read_text().replace(
+            '- `WidgetBase`: `#include "../misc/WidgetBase.h"`', '- `NiObject`: `#include "../netimmerse/NiObject.h"`'))
+        self.dtor_readme = packs / '0x1100/README.md'
+
+    def set_refs(self, rows):
+        self.dtor_readme.write_text('# pack\n\n## References leaving the function\n\n| +off | kind | target |\n'
+                                    '|---|---|---|\n' + ''.join(f'| 0x{i:x} | {r} |\n' for i, r in enumerate(rows))
+                                    + '\n## Calling and return convention\n\n- x\n')
+
+    def test_inline_form_when_the_destructor_stores_the_root_vftable(self):
+        self.set_refs(['address LEA | 0x17 | `VTABLE_NiRefObject[0]`', 'read DEC.LOCK | 0x33 | `NiRefObject::TotalObjectCount`',
+                       'call CALL | 0x15 | Ghidra `thunk`'])
+        _h, h, _c, cpp = self.files()
+        self.assertNotIn('#include "../netimmerse/NiObject.h"', h)
+        self.assertIn('#include <intrin.h>', h)
+        self.assertIn('Base form: inline stand-ins', h)
+        self.assertIn('virtual ~NiRefObject()\n    {', h)
+        self.assertIn('_InterlockedDecrement(&ms_totalObjects);', h)
+        self.assertIn('~NiObject() override {}', h)
+        self.assertIn('class FancyWidget : public NiObject', h)
+        self.assertIn('class NiStream;', h)
+        self.assertEqual(h.count('class NiRefObject\n'), 1)
+        self.assertNotIn('// NiObject: STANDIN EXE_RTTI', h)  # the block's own labels, not a second set
+        self.assertIn('FancyWidget::FancyWidget()\n{\n}', cpp)  # emits the vftable
+        self.assertIn('FancyWidget::~FancyWidget()\n{\n}', cpp)  # nothing left to write
+        self.assertEqual(cpp.count(f'    {us.BODY_MARKER};'), 2)
+        h_rel, cpp_rel = us.write_skeleton(self.unit, repo=self.root)
+        self.assertEqual(lint.lint_tree(self.root, [h_rel, cpp_rel], skeleton_ok=[h_rel, cpp_rel]), [])
+
+    def test_shared_header_when_a_base_destructor_is_called(self):
+        self.set_refs(['call CALL | 0x15 | `NiObject::~NiObject`'])
+        _h, h, _c, _cpp = self.files()
+        self.assertIn('#include "../netimmerse/NiObject.h"', h)
+        self.assertIn('Base form: shared header ../netimmerse/NiObject.h', h)
+        self.assertNotIn('_InterlockedDecrement', h)
+
+
+class SheetVariants(Fixture):
+    def test_both_variants_side_by_side_and_recorded(self):
+        written = us.write_sheet_variants(self.unit, repo=self.root)
+        names = {p.name for p in written}
+        self.assertTrue({'sheet.md', 'sheet-0x1000.md', 'sheet.fnv.md', 'sheet-0x1000.fnv.md'} <= names)
+        self.assertNotIn('return flag;', (self.unit / 'sheet-0x1000.md').read_text())
+        self.assertIn('return flag;', (self.unit / 'sheet-0x1000.fnv.md').read_text())
+        record = json.loads((self.unit / 'sheets.json').read_text())
+        self.assertFalse(record['variants']['plain']['sibling_snippets'])
+        self.assertTrue(record['variants']['fnv']['sibling_snippets'])
+        # Rewriting one variant leaves the other in place.
+        us.write_sheet_variants(self.unit, which=False, repo=self.root)
+        self.assertTrue((self.unit / 'sheet-0x1000.fnv.md').is_file())
+
+    def test_cli_switch(self):
+        with unittest.mock.patch.object(sheet, 'REPO', self.root), unittest.mock.patch.object(us, 'REPO', self.root):
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(sheet.main([str(self.unit), '--write', '--no-sibling']), 0)
+            self.assertFalse((self.unit / 'sheet.fnv.md').exists())
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(sheet.main([str(self.unit), '--function', '0x1000', '--sibling']), 0)
+            self.assertIn('return flag;', out.getvalue())
+
+
 class AttemptMissingSource(unittest.TestCase):
     def setUp(self):
         self.attempt = load_script('attempt')
