@@ -21,7 +21,7 @@ same point as a Drafter's worktree branch.
    `python3 tools/contrib.py intake --base main --head contrib/pr-<n>`; a pull request touching
    anything outside `reconstruction/` stops here), and writes the internal task directory for the
    unit as for any draft (`tools/ghidra/export_pack.py` or by hand).
-3. **Confirmation.** `tools/verifier/confirm` compiles and compares the unit on two project hosts,
+3. **Confirmation.** `tools/verifier/confirm` compiles and compares the unit on two of the project's own verifier hosts,
    exactly as for internal drafts. The contributor's local summary is never evidence; it only says
    what to expect.
 4. **Review.** A fresh Reviewer (who did not triage the pull request) reviews the unit against the

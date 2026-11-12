@@ -1,6 +1,6 @@
 ---
 name: boat-down
-description: End the skyrim-research verifier session on Boat (stop machines A and B), refusing while tasks are still running, then flush the cost ledger and report compute and starts used. Use when the maintainer or orchestrator asks to shut down or stop the Boat verifiers, or to end a work session.
+description: End the skyrim-research verifier session on Boat (stop machines A and B), refusing while tasks are still running, then flush the cost ledger and report compute and starts used. Use when the maintainer or orchestrator asks to shut down or stop the Boat verifiers, or to end a work session. Project-internal; not for external contributors.
 ---
 
 # boat-down

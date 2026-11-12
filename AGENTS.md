@@ -2,8 +2,10 @@
 
 **Helping an external contributor match a function?** Follow
 [docs/contributing-agent.md](docs/contributing-agent.md) for the workflow and skip "Multi-agent
-execution" below and everything about Boat; those are for the project's own agents. "Keep private
-inputs private" and "Be precise about evidence" bind every agent, yours included.
+execution" below, everything about Boat, and these project-internal bullets of "Work safely": the
+macOS-only tooling note, handoffs under `.local/handoffs`, Engineer commits and pushes, and "Watch
+CI"; those are for the project's own agents. "Keep private inputs private" and "Be precise about
+evidence" bind every agent, yours included.
 
 ## First read
 

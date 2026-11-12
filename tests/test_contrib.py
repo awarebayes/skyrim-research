@@ -666,11 +666,34 @@ class FollowUpTests(Base):
     def test_case_folded_include_is_matched_only_to_closure_files(self):
         root = '/Users/A/repo'
         repo_files = []
-        rest = contrib.fold_case_includes(['/users/a/repo/reconstruction/forms/X.h'.lower(),
-                                           'Z:/users/a/repo/reconstruction/forms/../../secret.h',
-                                           '/users/a/elsewhere/X.h'], root, ['reconstruction/forms/X.h'], repo_files)
+        with unittest.mock.patch.object(contrib, 'same_file', return_value=True):
+            rest = contrib.fold_case_includes(['/users/a/repo/reconstruction/forms/X.h'.lower(),
+                                               'Z:/users/a/repo/reconstruction/forms/../../secret.h',
+                                               '/users/a/elsewhere/X.h'], root, ['reconstruction/forms/X.h'],
+                                              repo_files)
         self.assertEqual(repo_files, ['reconstruction/forms/X.h'])
         self.assertEqual(len(rest), 2)
+
+    def test_case_folded_include_must_open_the_closure_file_itself(self):
+        root = self.tmp / 'repo'
+        (root / 'reconstruction/forms').mkdir(parents=True)
+        (root / 'reconstruction/forms/X.h').write_text('// closure file\n')
+        other = self.tmp / 'other'
+        other.mkdir()
+        (other / 'X.h').write_text('// another file\n')
+        exact = str(root / 'reconstruction/forms/X.h')
+        repo_files = []
+        self.assertEqual(contrib.fold_case_includes([exact], root, ['reconstruction/forms/X.h'], repo_files), [])
+        self.assertEqual(repo_files, ['reconstruction/forms/X.h'])
+        # A name that folds to a closure entry but opens nothing, or another file, is still outside.
+        missing = str(root / 'reconstruction/forms/Y.h')
+        repo_files = []
+        self.assertEqual(contrib.fold_case_includes([missing], root, ['reconstruction/forms/y.h'], repo_files),
+                         [missing])
+        self.assertEqual(repo_files, [])
+        with unittest.mock.patch.object(contrib.os.path, 'samefile', return_value=False):
+            self.assertEqual(contrib.fold_case_includes([exact], root, ['reconstruction/forms/X.h'], []), [exact])
+        self.assertFalse(contrib.same_file(exact, other / 'X.h'))
 
     def test_manifest_hash_mismatch_stops_before_any_licence_or_download(self):
         pins = contrib.recipe_constants(ROOT)

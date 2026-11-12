@@ -403,16 +403,13 @@ def require_exe(ctx, target):
 # ------------------------------------------------------------------ toolchain
 
 def recipe_constants(repo):
-    """Pins of the verifier toolchain recipe, read from the script the project's verifiers use so
-    the contributor path cannot drift from it."""
-    text = (Path(repo) / 'tools/verifier/setup_boat_machine.sh').read_text()
-    out = {}
-    for key in ('MSVC_WINE_URL', 'MSVC_WINE_COMMIT', 'VSMAN_URL', 'VSMAN_SHA256', 'SDK_VERSION'):
-        m = re.search(rf'^{key}=(\S+)$', text, re.M)
-        if not m:
-            raise Stop(USAGE, f'tools/verifier/setup_boat_machine.sh lacks {key}')
-        out[key] = m.group(1)
-    return out
+    """Pins of the verifier toolchain recipe, read through the shared accessor so the contributor
+    path cannot drift from the recipe the project's verifiers use."""
+    import recipe_pins
+    try:
+        return recipe_pins.read_pins(repo)
+    except recipe_pins.MissingPin as exc:
+        raise Stop(USAGE, str(exc))
 
 
 def pinned_hashes(repo):
@@ -570,8 +567,9 @@ def fold_case_includes(outside, root, closure, repo_files):
     """Entries of `outside` that are closure files spelled in another case, moved into repo_files.
 
     macOS volumes are usually case-insensitive and Wine there may report an opened header in lower
-    case. Only an exact case-insensitive match to a file of the derived closure is accepted, so a
-    file outside the repository still fails."""
+    case. Only an exact case-insensitive match to a file of the derived closure is accepted, and
+    only when the reported path opens that very file (same device and inode), so a file outside the
+    repository, or a different file whose name merely folds to a closure name, still fails."""
     prefix = str(root).rstrip('/').lower() + '/'
     by_lower = {c.lower(): c for c in closure}
     rest = []
@@ -580,13 +578,21 @@ def fold_case_includes(outside, root, closure, repo_files):
         if len(path) > 2 and path[1] == ':':
             path = path[2:]
         hit = by_lower.get(path.lower()[len(prefix):]) if path.lower().startswith(prefix) else None
-        if hit and '/../' not in path:
+        if hit and '/../' not in path and same_file(path, os.path.join(str(root), hit)):
             if hit not in repo_files:
                 repo_files.append(hit)
         else:
             rest.append(raw)
     repo_files.sort()
     return rest
+
+
+def same_file(a, b):
+    """True when both paths open one existing file; a missing or unreadable path is not a match."""
+    try:
+        return os.path.samefile(a, b)
+    except OSError:
+        return False
 
 
 # ------------------------------------------------------------------ the local pack
@@ -1085,6 +1091,8 @@ def install_mac_wine(ctx):
         try:
             tar.extractall(dest, filter='data')
         except TypeError:  # Python without extraction filters
+            # Unfiltered extraction trusts member paths; that is safe here only because the
+            # archive was checked against its pinned SHA-256 above.
             tar.extractall(dest)
     archive.unlink()
     apply_wine_env(ctx)
@@ -1176,7 +1184,7 @@ def licence_url(vsman):
 
 
 def install_toolchain(ctx, accept):
-    """The verifier recipe (tools/verifier/setup_boat_machine.sh) on this machine: msvc-wine at its
+    """The verifier recipe (see tools/verifier/recipe_pins.py) on this machine: msvc-wine at its
     pinned commit, the pinned VS 2017 15.9 manifest, toolset and SDK from Microsoft's servers, then
     the binaries checked against pinned.sha256. Resumable: finished steps are skipped."""
     pins = recipe_constants(ctx.repo)

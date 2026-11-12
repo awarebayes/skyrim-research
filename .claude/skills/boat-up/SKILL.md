@@ -1,6 +1,6 @@
 ---
 name: boat-up
-description: Start a verifier session on Boat for skyrim-research (machines A and B, sr-verifier-msvc141 and sr-verifier-b) with at most one start per machine, and report hashes, deadlines and the starts budget. Use when the maintainer or orchestrator asks to bring the Boat verifiers up, start a session, or before a batch of attempt/confirm work.
+description: Start a verifier session on Boat for skyrim-research (machines A and B, sr-verifier-msvc141 and sr-verifier-b) with at most one start per machine, and report hashes, deadlines and the starts budget. Use when the maintainer or orchestrator asks to bring the Boat verifiers up, start a session, or before a batch of attempt/confirm work. Project-internal; not for external contributors.
 ---
 
 # boat-up

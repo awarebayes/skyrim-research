@@ -1,6 +1,6 @@
 ---
 name: boat-status
-description: Show the skyrim-research verifier session on Boat - machine states, time left before auto-stop, running task markers, starts used and left, compute this session, and disk-retention warnings. Read-only; starts and stops nothing.
+description: Show the skyrim-research verifier session on Boat - machine states, time left before auto-stop, running task markers, starts used and left, compute this session, and disk-retention warnings. Read-only; starts and stops nothing. Project-internal; not for external contributors.
 ---
 
 # boat-status

@@ -4,14 +4,15 @@ You are a coding agent helping an **external contributor** match one function of
 Edition. This file is all you need. Do not follow the orchestrator, Boat or verifier-session
 instructions elsewhere in this repository (`AGENTS.md` "Multi-agent execution",
 `docs/boat-agent-guidelines.md`, `tools/verifier/attempt|confirm|session`): they are for the
-project's own machines. Never use Boat. Everything below runs on the contributor's computer.
+project's own machines. Never use Boat, the project's internal verifier hosts or its runner tools.
+Everything below runs on the contributor's computer.
 
 Drive one tool, `tools/contrib.py` (Windows: `py tools\contrib.py`), always with `--json`. Each call
 prints one JSON object with `ok`, `exit_code`, `error` and `next` (the one next action). Do what
 `next` says. Exit codes: 0 ok, 1 a check failed, 2 usage, 3 compile failed, 4 unit or include
 problem, 5 input missing, 6 claimed by someone else, 7 a person must decide, 8 offline.
 
-## The two human decisions
+## When to ask the person
 
 Stop and ask the person, quoting what the tool printed, only for these:
 
@@ -98,8 +99,9 @@ lets you start, but nobody else can see the claim until you run `claim` again on
 
 ## What is tested
 
-macOS on Apple silicon ran the whole path with the real compiler: `setup`, the self-test (same
-code-section hash as the project's verifier hosts), `start` and `compare` on an unmatched function.
-Linux and Windows are not yet run (see `CONTRIBUTING.md`, "Status of the platforms"). If a step
+On macOS (Apple silicon) `setup`, the self-test (same code-section hash as the one the project
+recorded), `start` and `compare` on an unmatched function ran with the real pinned compiler.
+`claim` and `submit` against GitHub and the one-command `go` have not been run live. Linux and
+Windows are not yet run (see `CONTRIBUTING.md`, "Status of the platforms"). If a step
 fails, report the `--redact` JSON output (it holds no game data) in an issue rather than working
 around a check.

@@ -48,13 +48,16 @@ re-compiles and re-compares your source on two of its own machines, and a Review
 is plausible source with honest provenance. If both agree, the function is recorded as matched and
 you are credited in the commit. If not, the reasons come back on your pull request.
 
-**Status of the platforms.** **macOS (Apple silicon) works end to end**: on a Mac with Rosetta
-already installed, `setup --yes --accept-microsoft-license` installed Wine and the pinned compiler
-unattended in under 4 minutes (about 3.5 GB on disk, about 0.9 GB downloaded), and the self-test
-compiled an accepted function to the same code-section hash as the project's own two verifier
-hosts. A compare takes about 7 seconds. Linux uses the recipe of the project's own verifiers
-(Ubuntu 24.04 with Wine), but this helper has not been run there; Windows (native compiler, no
-Wine) is untested. Please report what happens on yours.
+**Status of the platforms.** The helper is designed for Windows, macOS and Linux; so far it has
+been exercised on macOS only. On macOS (Apple silicon) `setup`, the self-test, `start` and
+`compare` ran with the real pinned compiler: on a Mac with Rosetta already installed,
+`setup --yes --accept-microsoft-license` installed the pinned compiler unattended in under 4
+minutes, and the self-test compiled an accepted function to the code-section hash recorded by the
+project. That time excludes the Wine download (about 185 MB), which had been fetched earlier; the
+timed run downloaded about 0.9 GB, and the result takes about 3.5 GB on disk. A compare takes about
+7 seconds. `claim` and `submit` against GitHub and the one-command `go` have not been run live.
+Linux and Windows (native compiler, no Wine) have not been run; the project's own verifier hosts
+use a separate recipe, not this helper. Please report what happens on yours.
 
 ### The game executable
 
@@ -64,7 +67,8 @@ another build. Fetching your own purchased copy with your own account through Va
 fine: the Steam app on Windows, or Valve's command-line client SteamCMD (also the route on macOS
 and Linux, where the Steam app cannot install this Windows-only game). `setup --steamcmd` installs
 SteamCMD with your package manager and prints the steps; you type your Steam login into SteamCMD
-yourself. The printed steps install the whole game (about 13 GB download, the route the maintainer
+yourself. SteamCMD itself is your install, from Valve's official download or your package
+manager's package of it; this tool does not hash-check it. The printed steps install the whole game (about 13 GB download, the route the maintainer
 used); since only the executable is needed, they also show a shorter alternative that fetches just
 its depot (about 38 MB), not yet tried by the project. This tool never sees, stores or passes Steam credentials and never
 downloads the game itself; third-party downloaders, cracks and DRM removal are not acceptable
