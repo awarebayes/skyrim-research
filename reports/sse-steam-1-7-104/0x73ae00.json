@@ -13,7 +13,7 @@
       "_CL_"
     ],
     "hosts": {
-      "boat-fork-of-standing-verifier": {
+      "boat-verifier-a": {
         "command_flags": [
           "/nologo",
           "/c",
@@ -26,14 +26,14 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "3f3949be283a5714838d9861c18df20f7f2868c7387468235a270f9001df0695",
+        "object_sha256": "2b365a7875666cd14d13a9c77fa5680528c98afb57370251b9bb390c3c51e3ce",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/ArmorRatingVisitor.cpp",
           "reconstruction/inventory/ArmorRatingVisitor.h"
         ]
       },
-      "boat-standing-verifier": {
+      "boat-verifier-b": {
         "command_flags": [
           "/nologo",
           "/c",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "a54cec77a0abcfb96ece994cefabc2625fbefb8157e4336ec1af48c322f96e8d",
+        "object_sha256": "f09c6d2bfa384e7ba9625ff09fece3d7e0f3634383679518386307b7d4d4afdc",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/ArmorRatingVisitor.cpp",
@@ -59,12 +59,11 @@
   "match_record_schema": 2,
   "notes": [
     "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.",
-    "Host independence: the fork is a copy of the standing verifier machine's disk, so it shares that toolchain install and Ubuntu image; each Boat host checked its compiler binaries against pinned.sha256 and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.",
+    "independence: separate-machine. The two Boat compile hosts are separately installed machines: each was created from scratch and ran tools/verifier/setup_boat_machine.sh itself (neither is a disk fork of the other), so the pair also checks the toolchain install; both use the same pinned recipe, Ubuntu image and cloud provider. Each host checked its compiler binaries against pinned.sha256 and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.",
     "Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed before the compile, INCLUDE then set by the msvc-wine wrapper to toolchain and SDK directories only; /showIncludes added after the recipe flags, and the repository files the compiler opened equalled the include closure. Each host's flags, cleared variables, object hash and opened files are in the build block, as that host reported them; the gate checks that block for presence and consistency with the runs, not for truth.",
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
-    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit baa2d660f5e8f96ed5a9e1565f320a3e6ffc6009, with uncommitted changes to reports/sse-steam-1-7-104/symbol-map.json, tools/compare.py, tools/verifier/confirm, tools/verifier/verify_function.py at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -73,18 +72,18 @@
   "reproduction": "From the repository root, with cl 19.16.27054 x64 under msvc-wine whose binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): env -u CL -u EXTERNAL_INCLUDE -u INCLUDE -u LIB -u LIBPATH -u _CL_ <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/inventory/ArmorRatingVisitor.cpp (the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the repository files /showIncludes lists to equal --unit below) ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x73ae00 --symbol '?Visit@ArmorRatingVisitorBase@@UEAAIPEAVInventoryEntryData@@@Z' --compiled reconstruction/inventory/ArmorRatingVisitor.cpp --unit reconstruction/inventory/ArmorRatingVisitor.cpp reconstruction/inventory/ArmorRatingVisitor.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/symbol-map.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
   "runs": [
     {
-      "compared_on": "boat-standing-verifier",
-      "compiled_on": "boat-standing-verifier",
+      "compared_on": "boat-verifier-a",
+      "compiled_on": "boat-verifier-a",
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
           "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
           "code_sections": 1,
-          "object_sha256": "a54cec77a0abcfb96ece994cefabc2625fbefb8157e4336ec1af48c322f96e8d"
+          "object_sha256": "2b365a7875666cd14d13a9c77fa5680528c98afb57370251b9bb390c3c51e3ce"
         },
         "comparator": {
-          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
-          "version": "0.4.0"
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -103,6 +102,7 @@
           "funclet_bytes_by_reference": 0,
           "funclet_bytes_exact": 0,
           "funclet_bytes_total": 0,
+          "funclet_ranges": [],
           "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
@@ -143,6 +143,7 @@
           "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
           "source_revision": "3e498692d4ec9fcebeaa845e4dc966a1d4c929ccd08ed4e82aa422398eedded2"
         },
+        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -152,17 +153,17 @@
     },
     {
       "compared_on": "macos-arm64-local",
-      "compiled_on": "boat-standing-verifier",
+      "compiled_on": "boat-verifier-a",
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
           "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
           "code_sections": 1,
-          "object_sha256": "a54cec77a0abcfb96ece994cefabc2625fbefb8157e4336ec1af48c322f96e8d"
+          "object_sha256": "2b365a7875666cd14d13a9c77fa5680528c98afb57370251b9bb390c3c51e3ce"
         },
         "comparator": {
-          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
-          "version": "0.4.0"
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -181,6 +182,7 @@
           "funclet_bytes_by_reference": 0,
           "funclet_bytes_exact": 0,
           "funclet_bytes_total": 0,
+          "funclet_ranges": [],
           "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
@@ -221,6 +223,7 @@
           "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
           "source_revision": "3e498692d4ec9fcebeaa845e4dc966a1d4c929ccd08ed4e82aa422398eedded2"
         },
+        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -229,18 +232,18 @@
       }
     },
     {
-      "compared_on": "boat-fork-of-standing-verifier",
-      "compiled_on": "boat-fork-of-standing-verifier",
+      "compared_on": "boat-verifier-b",
+      "compiled_on": "boat-verifier-b",
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
           "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
           "code_sections": 1,
-          "object_sha256": "3f3949be283a5714838d9861c18df20f7f2868c7387468235a270f9001df0695"
+          "object_sha256": "f09c6d2bfa384e7ba9625ff09fece3d7e0f3634383679518386307b7d4d4afdc"
         },
         "comparator": {
-          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
-          "version": "0.4.0"
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -259,6 +262,7 @@
           "funclet_bytes_by_reference": 0,
           "funclet_bytes_exact": 0,
           "funclet_bytes_total": 0,
+          "funclet_ranges": [],
           "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
@@ -299,6 +303,7 @@
           "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
           "source_revision": "3e498692d4ec9fcebeaa845e4dc966a1d4c929ccd08ed4e82aa422398eedded2"
         },
+        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -308,17 +313,17 @@
     },
     {
       "compared_on": "macos-arm64-local",
-      "compiled_on": "boat-fork-of-standing-verifier",
+      "compiled_on": "boat-verifier-b",
       "report": {
         "acceptance": "not-evaluated",
         "candidate": {
           "code_section_sha256": "a6c4fcca432ea7abfac1ce8894e1c69b1307ba56d213f7094179b51b5b4f9d19",
           "code_sections": 1,
-          "object_sha256": "3f3949be283a5714838d9861c18df20f7f2868c7387468235a270f9001df0695"
+          "object_sha256": "f09c6d2bfa384e7ba9625ff09fece3d7e0f3634383679518386307b7d4d4afdc"
         },
         "comparator": {
-          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
-          "version": "0.4.0"
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -337,6 +342,7 @@
           "funclet_bytes_by_reference": 0,
           "funclet_bytes_exact": 0,
           "funclet_bytes_total": 0,
+          "funclet_ranges": [],
           "funclet_sections": 0,
           "relocations_by_type": {
             "REL32": 3
@@ -377,6 +383,7 @@
           "path": "reconstruction/inventory/ArmorRatingVisitor.cpp",
           "source_revision": "3e498692d4ec9fcebeaa845e4dc966a1d4c929ccd08ed4e82aa422398eedded2"
         },
+        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -396,7 +403,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "6a54554c910cb26e4fc1c89d471b133b757ce7b8cc801a6bb03e9fb1c877d84e"
+    "sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",
