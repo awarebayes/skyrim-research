@@ -5,6 +5,8 @@ description: Show the skyrim-research verifier session on Boat - machine states,
 
 # boat-status
 
+Machines A and B were deleted (`docs/authorizations.md`, Notes); the local and ssh runners (`tools/verifier/runners.py`) replace them; `python3 tools/verifier/runners.py status` shows those.
+
 1. From the repository root run `python3 tools/verifier/session status`.
 2. Report its lines: each machine's state and time to auto-stop, `tasks running`, starts used
    and left (day, hour), seconds billed this session, and every `WARNING` line.

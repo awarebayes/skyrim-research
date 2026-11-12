@@ -11269,6 +11269,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-018ee2ebedc8",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectdebris",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 17.906,
+   "boat_wall_seconds": 17.906,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4aa860",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-01c0070a43f2",
    "date": "2026-11-12",
    "role": "verifier",
@@ -11649,6 +11677,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-0433f144b626",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-niaccumulator",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 10.469,
+   "boat_wall_seconds": 10.469,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf1ede0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf1ee00",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-0457e11bb68e",
    "date": "2026-11-12",
    "role": "verifier",
@@ -11834,6 +11894,66 @@
     {
      "target": "sse-steam-1-7-104:0x637ab0",
      "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-052df0f27634",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsmultiboundnode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.367,
+   "boat_wall_seconds": 9.367,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xff2bc0",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-0547654bdfee",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nitribasedgeom",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.841,
+   "boat_wall_seconds": 9.841,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf1f3f0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf1f480",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -12161,6 +12281,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-082d01a6046c",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-niaccumulator",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.679,
+   "boat_wall_seconds": 7.679,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf1ede0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf1ee00",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-084aa2f90627",
    "date": "2026-11-12",
    "role": "verifier",
@@ -12258,6 +12410,34 @@
     {
      "target": "sse-steam-1-7-104:0x2be530",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-08dbb052abff",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsmultiboundshape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.083,
+   "boat_wall_seconds": 12.083,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfe4fb0",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -12829,6 +13009,70 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-0dd4d98ef650",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesfurniture",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.596,
+   "boat_wall_seconds": 9.596,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26e110",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26e130",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26ed80",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-0def363ae85e",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsmultiboundnode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.217,
+   "boat_wall_seconds": 13.217,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xff2bc0",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-0e03f1b7b921",
    "date": "2026-11-12",
    "role": "verifier",
@@ -13174,6 +13418,74 @@
     {
      "target": "sse-steam-1-7-104:0x237a20",
      "share": 0.2
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-11cd63d0dc34",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesfurniture",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 19.018,
+   "boat_wall_seconds": 19.018,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26e110",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26e130",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26ed80",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-11dbe0e89969",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nidirectionallight",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 15.362,
+   "boat_wall_seconds": 15.362,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf046d0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf045c0",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -14565,6 +14877,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-1a3e180f9b54",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectspg",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.782,
+   "boat_wall_seconds": 7.782,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b5800",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4b5250",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-1a79bbb18d0b",
    "date": "2026-11-12",
    "role": "verifier",
@@ -14826,6 +15170,50 @@
     {
      "target": "sse-steam-1-7-104:0x1e5770",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-1da6b320fa28",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-bgstalkingactivator",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.646,
+   "boat_wall_seconds": 12.646,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2676a0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267810",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2671e0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267530",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267460",
+     "share": 0.2
     }
    ],
    "estimated": false,
@@ -15245,6 +15633,34 @@
    "allocations": [
     {
      "target": "sse-steam-1-7-104:0x1e0b10",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-22f5fdd3635f",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bscubemapcamera",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 16.683,
+   "boat_wall_seconds": 16.683,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1559a60",
      "share": 1.0
     }
    ],
@@ -15802,6 +16218,50 @@
     {
      "target": "sse-steam-1-7-104:0x146720",
      "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-2b068ac2085e",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-bgstalkingactivator",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.148,
+   "boat_wall_seconds": 8.148,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2676a0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267810",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2671e0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267530",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267460",
+     "share": 0.2
     }
    ],
    "estimated": false,
@@ -16377,6 +16837,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-2d9fd9a071a8",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nilight",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.569,
+   "boat_wall_seconds": 13.569,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xeed200",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-2dcabc9a4311",
    "date": "2026-11-12",
    "role": "verifier",
@@ -16506,6 +16994,38 @@
     {
      "target": "sse-steam-1-7-104:0x1e5770",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-2f2f850f0802",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesflora",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.218,
+   "boat_wall_seconds": 13.218,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26da90",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26da40",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -16794,6 +17314,42 @@
     {
      "target": "sse-steam-1-7-104:0x3078e0",
      "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-3253bf288af3",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsfadenode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.983,
+   "boat_wall_seconds": 8.983,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x106b550",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e5a20",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7240",
+     "share": 0.3333333333333333
     }
    ],
    "estimated": false,
@@ -17422,6 +17978,34 @@
     {
      "target": "sse-steam-1-7-104:0x29cd00",
      "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-36a2a396886a",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsocclusionplane",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.339,
+   "boat_wall_seconds": 12.339,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfe9bd0",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -18657,6 +19241,42 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-3f69441cf4d6",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsfadenode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 10.245,
+   "boat_wall_seconds": 10.245,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x106b550",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e5a20",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7240",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-3f70f1c08d3b",
    "date": "2026-11-12",
    "role": "verifier",
@@ -19213,6 +19833,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-42f4cfcab6aa",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsorderednode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.794,
+   "boat_wall_seconds": 8.794,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1570700",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-42f52e3d5a20",
    "date": "2026-11-12",
    "role": "verifier",
@@ -19493,6 +20141,42 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-44de88ee4ef0",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesfurniture",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 16.582,
+   "boat_wall_seconds": 16.582,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26e110",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26e130",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26ed80",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-44ea1aa17b8d",
    "date": "2026-11-12",
    "role": "verifier",
@@ -19654,6 +20338,34 @@
     {
      "target": "sse-steam-1-7-104:0xfa11d0",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-452253ee3a7f",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-niparticles",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.09,
+   "boat_wall_seconds": 12.09,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf05220",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -19998,6 +20710,34 @@
     {
      "target": "sse-steam-1-7-104:0x1cd860",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-476c57d2afcf",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bstrishape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 11.336,
+   "boat_wall_seconds": 11.336,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xef2120",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -20377,6 +21117,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-492187caa70d",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bstrishape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 19.728,
+   "boat_wall_seconds": 19.728,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xef2120",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-493f9b509b34",
    "date": "2026-11-12",
    "role": "verifier",
@@ -20526,6 +21294,34 @@
     {
      "target": "sse-steam-1-7-104:0x637ab0",
      "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-4b6de6ef6c35",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-nibooleanextradata",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.878,
+   "boat_wall_seconds": 12.878,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf0ff60",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -22045,6 +22841,50 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-54d399164af9",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesobjectacti",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.643,
+   "boat_wall_seconds": 9.643,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2677d0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x27a690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279750",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279ce0",
+     "share": 0.2
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-5504f52c5f77",
    "date": "2026-11-12",
    "role": "verifier",
@@ -22094,6 +22934,38 @@
     {
      "target": "sse-steam-1-7-104:0xee24d0",
      "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-560327b7c439",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bgsdecalnode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.295,
+   "boat_wall_seconds": 8.295,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2030b0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x203360",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -23349,6 +24221,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-5f03d95c61d9",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectspg",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.105,
+   "boat_wall_seconds": 13.105,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b5800",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4b5250",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-5f49f4ba8e5e",
    "date": "2026-11-12",
    "role": "verifier",
@@ -24469,6 +25373,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-664ec74a338a",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsinvmarker",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.661,
+   "boat_wall_seconds": 13.661,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfff1d0",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-667831092307",
    "date": "2026-11-12",
    "role": "verifier",
@@ -24938,6 +25870,34 @@
     {
      "target": "sse-steam-1-7-104:0x3078e0",
      "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-69859b7ad63f",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsmultiboundnode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 10.871,
+   "boat_wall_seconds": 10.871,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xff2bc0",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -25593,6 +26553,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-6dd316273c27",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsocclusionplane",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.89,
+   "boat_wall_seconds": 7.89,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfe9bd0",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-6de6944de056",
    "date": "2026-11-12",
    "role": "verifier",
@@ -26145,6 +27133,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-71ab131c2420",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsninode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.982,
+   "boat_wall_seconds": 13.982,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1005450",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-71b876c536f4",
    "date": "2026-11-12",
    "role": "verifier",
@@ -26310,6 +27326,38 @@
     {
      "target": "sse-steam-1-7-104:0x2e5a60",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-723ac59ccd15",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-nitexture",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.118,
+   "boat_wall_seconds": 7.118,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf05970",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xef3ea0",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -27885,6 +28933,42 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-7e66292a59a7",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesfurniture",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 14.714,
+   "boat_wall_seconds": 14.714,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26e110",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26e130",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26ed80",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-7e8e65d665e4",
    "date": "2026-11-12",
    "role": "verifier",
@@ -28434,6 +29518,78 @@
     {
      "target": "sse-steam-1-7-104:0x340c00",
      "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-827ff42b5f23",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsocclusionshape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.031,
+   "boat_wall_seconds": 7.031,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfdc610",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-838160252f01",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesobjectacti",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 11.156,
+   "boat_wall_seconds": 11.156,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2677d0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x27a690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279750",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279ce0",
+     "share": 0.2
     }
    ],
    "estimated": false,
@@ -31405,6 +32561,70 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-97845303df1f",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nicamera",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 18.695,
+   "boat_wall_seconds": 18.695,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xef1770",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0xef1950",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0xef1a10",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-97fb32b5c595",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-niparticles",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.106,
+   "boat_wall_seconds": 9.106,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf05220",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-98587a8f56bf",
    "date": "2026-11-12",
    "role": "verifier",
@@ -32493,6 +33713,50 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-9e8ca5f42191",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesobjectacti",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.243,
+   "boat_wall_seconds": 8.243,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2677d0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x27a690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279750",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279ce0",
+     "share": 0.2
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-9eb83d1ddee4",
    "date": "2026-11-12",
    "role": "verifier",
@@ -32545,6 +33809,34 @@
    "allocations": [
     {
      "target": "sse-steam-1-7-104:0x31cac0",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-9f010e77e4f1",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsinstancetrishape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 15.048,
+   "boat_wall_seconds": 15.048,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfe4240",
      "share": 1.0
     }
    ],
@@ -32786,6 +34078,38 @@
     {
      "target": "sse-steam-1-7-104:0x3eb800",
      "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-a16a8fd40b5b",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nidirectionallight",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.925,
+   "boat_wall_seconds": 13.925,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf046d0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf045c0",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -33353,6 +34677,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-a5813e74d7d6",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-niaccumulator",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.98,
+   "boat_wall_seconds": 12.98,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf1ede0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf1ee00",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-a594504ba165",
    "date": "2026-11-12",
    "role": "verifier",
@@ -33841,6 +35197,50 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-a962f6ff9694",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesobjectacti",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 18.264,
+   "boat_wall_seconds": 18.264,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2677d0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x267690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x27a690",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279750",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x279ce0",
+     "share": 0.2
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-a98088a93bd5",
    "date": "2026-11-12",
    "role": "verifier",
@@ -33922,6 +35322,34 @@
     {
      "target": "sse-steam-1-7-104:0xf014c0",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-a9c9f645a044",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsocclusionshape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.792,
+   "boat_wall_seconds": 7.792,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfdc610",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -34282,6 +35710,38 @@
     {
      "target": "sse-steam-1-7-104:0x31b830",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-acfe10db5310",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-niaccumulator",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.15,
+   "boat_wall_seconds": 8.15,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf1ede0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf1ee00",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -35077,6 +36537,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-b2875912e617",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsstripparticlesystem",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.554,
+   "boat_wall_seconds": 13.554,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf9fd70",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-b2f92026aa67",
    "date": "2026-11-12",
    "role": "verifier",
@@ -35374,6 +36862,34 @@
     {
      "target": "sse-steam-1-7-104:0x637ab0",
      "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-b5650caba7ac",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectgeometrydecal",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.212,
+   "boat_wall_seconds": 12.212,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4adc40",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -36913,6 +38429,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-c275e520a5fc",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsinstancetrishape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 14.892,
+   "boat_wall_seconds": 14.892,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfe4240",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-c35955caf612",
    "date": "2026-11-12",
    "role": "verifier",
@@ -37522,6 +39066,34 @@
     {
      "target": "sse-steam-1-7-104:0xedc7e0",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-c7ecbecc6ba3",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsocclusionshape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.571,
+   "boat_wall_seconds": 12.571,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfdc610",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -38889,6 +40461,74 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-d057cd6f9e71",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nitribasedgeom",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.814,
+   "boat_wall_seconds": 13.814,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf1f3f0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf1f480",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-d0f654f8aae4",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsfadenode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 10.06,
+   "boat_wall_seconds": 10.06,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x106b550",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e5a20",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7240",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-d111ce1e5289",
    "date": "2026-11-12",
    "role": "verifier",
@@ -39301,6 +40941,42 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-d3e093456caf",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsfadenode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 17.971,
+   "boat_wall_seconds": 17.971,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x106b550",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e5a20",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7240",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-d41a8d79dcd8",
    "date": "2026-11-12",
    "role": "verifier",
@@ -39421,6 +41097,34 @@
    "allocations": [
     {
      "target": "sse-steam-1-7-104:0x29e710",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-d57e3a48b7f8",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsorderednode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 13.844,
+   "boat_wall_seconds": 13.844,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1570700",
      "share": 1.0
     }
    ],
@@ -39601,6 +41305,34 @@
    "allocations": [
     {
      "target": "sse-steam-1-7-104:0x1cd860",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-d7415a98ed17",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectgeometrydecal",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 14.829,
+   "boat_wall_seconds": 14.829,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4adc40",
      "share": 1.0
     }
    ],
@@ -39866,6 +41598,34 @@
     {
      "target": "sse-steam-1-7-104:0x1de800",
      "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-d8e296966415",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "verifier-session",
+   "stage": "orchestration",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 5787.735,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -40505,6 +42265,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-de731d75078d",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectspg",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.679,
+   "boat_wall_seconds": 12.679,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b5800",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4b5250",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-df1f260b82e8",
    "date": "2026-11-12",
    "role": "verifier",
@@ -40558,6 +42350,66 @@
     {
      "target": "sse-steam-1-7-104:0x3121d0",
      "share": 0.1111111111111111
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-df5d2cfdaf3f",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectspg",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 12.215,
+   "boat_wall_seconds": 12.215,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b5800",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4b5250",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-e0574e7a0662",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsocclusionplane",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 11.489,
+   "boat_wall_seconds": 11.489,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfe9bd0",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -40802,6 +42654,38 @@
     {
      "target": "sse-steam-1-7-104:0x67eab0",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-e29defad94c4",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bgsdecalnode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.737,
+   "boat_wall_seconds": 9.737,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2030b0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x203360",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -41157,6 +43041,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-e513f0c4ae98",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nitribasedgeom",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 15.291,
+   "boat_wall_seconds": 15.291,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf1f3f0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf1f480",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-e518e7e64217",
    "date": "2026-11-12",
    "role": "verifier",
@@ -41441,6 +43357,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-e6fd711e3b68",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesflora",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 10.568,
+   "boat_wall_seconds": 10.568,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26da90",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26da40",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-e6ff6165fa2a",
    "date": "2026-11-12",
    "role": "verifier",
@@ -41526,6 +43474,34 @@
     {
      "target": "sse-steam-1-7-104:0x3dedb0",
      "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-e84ce1cd83d5",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsmultiboundshape",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 11.436,
+   "boat_wall_seconds": 11.436,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfe4fb0",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -41769,6 +43745,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-e9c13b36088d",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectspg",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.253,
+   "boat_wall_seconds": 8.253,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b5800",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4b5250",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-e9c8632eff1e",
    "date": "2026-11-12",
    "role": "verifier",
@@ -42002,6 +44010,66 @@
     {
      "target": "sse-steam-1-7-104:0x14e7390",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-eb30f30d6c0b",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bgsdecalnode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 14.019,
+   "boat_wall_seconds": 14.019,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2030b0",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x203360",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-ec486a5874f8",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nimeshparticlesystem",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 16.565,
+   "boat_wall_seconds": 16.565,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf9eb30",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -42565,6 +44633,62 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-f0c6a649e5e3",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsmultiboundnode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 11.36,
+   "boat_wall_seconds": 11.36,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xff2bc0",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-f0faf6ff38cc",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsbound",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 14.492,
+   "boat_wall_seconds": 14.492,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xff17c0",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-f18a32b528f3",
    "date": "2026-11-12",
    "role": "verifier",
@@ -42706,6 +44830,42 @@
     {
      "target": "sse-steam-1-7-104:0x1ef9c0",
      "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-f2f18c312335",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-bsfadenode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 16.173,
+   "boat_wall_seconds": 16.173,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x106b550",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e5a20",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7240",
+     "share": 0.3333333333333333
     }
    ],
    "estimated": false,
@@ -43218,6 +45378,34 @@
     {
      "target": "sse-steam-1-7-104:0x67eab0",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-f5913afcdeca",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bsterraineffect",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 10.612,
+   "boat_wall_seconds": 10.612,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b7c40",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -44529,6 +46717,42 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-fc55263a601c",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s07-tesobjectacti-tesfurniture",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 15.965,
+   "boat_wall_seconds": 15.965,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26e110",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26e130",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26ed80",
+     "share": 0.3333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-fc773d5dcb9c",
    "date": "2026-11-12",
    "role": "verifier",
@@ -44614,6 +46838,42 @@
     {
      "target": "sse-steam-1-7-104:0x2eee20",
      "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-fcec2e9f1ec5",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s01-niavobject-nicamera",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 11.599,
+   "boat_wall_seconds": 11.599,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xef1770",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0xef1950",
+     "share": 0.3333333333333333
+    },
+    {
+     "target": "sse-steam-1-7-104:0xef1a10",
+     "share": 0.3333333333333333
     }
    ],
    "estimated": false,
@@ -44734,6 +46994,38 @@
     {
      "target": "sse-steam-1-7-104:0x3121d0",
      "share": 0.1111111111111111
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-fe4456c316f7",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch5-s03-niobject-bstempeffectspg",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.833,
+   "boat_wall_seconds": 7.833,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b5800",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4b5250",
+     "share": 0.5
     }
    ],
    "estimated": false,

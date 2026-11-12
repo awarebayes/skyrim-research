@@ -5,6 +5,8 @@ description: End the skyrim-research verifier session on Boat (stop machines A a
 
 # boat-down
 
+Machines A and B were deleted (`docs/authorizations.md`, Notes); the local and ssh runners (`tools/verifier/runners.py`) replace them, so there is nothing to stop.
+
 Only the maintainer, the orchestrator, or an Engineer whose brief says so runs this. Drafters never do.
 Rules: `docs/boat-agent-guidelines.md`.
 

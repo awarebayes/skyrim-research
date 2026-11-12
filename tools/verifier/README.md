@@ -12,6 +12,8 @@ target was built with.
 
 ## Per-function commands
 
+The Boat machines A and B were deleted (`docs/authorizations.md`, Notes); the local and ssh runners (`runners.py`) replace them, so the Boat `session`, `--boat` and `boat_*.sh` paths have no machine to use.
+
 ```sh
 tools/verifier/session up | status | extend | down     # verifier session: machines A and B (Engineers/orchestrator)
 tools/verifier/attempt .local/tasks/<task-id>          # one attempt: compile the unit, compare each function

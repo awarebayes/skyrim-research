@@ -5,6 +5,8 @@ description: Start a verifier session on Boat for skyrim-research (machines A an
 
 # boat-up
 
+Machines A and B were deleted (`docs/authorizations.md`, Notes); the local and ssh runners (`tools/verifier/runners.py`) replace them. Do not run this; tell the user instead.
+
 Only the maintainer, the orchestrator, or an Engineer whose brief says so runs this. Drafters never do.
 Rules: `docs/boat-agent-guidelines.md`. Never run `boat billing` or buy extra starts.
 

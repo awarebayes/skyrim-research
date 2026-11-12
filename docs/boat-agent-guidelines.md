@@ -1,5 +1,7 @@
 # Boat guidelines for agents
 
+> **Retired.** Machines A and B were deleted (`docs/authorizations.md`, Notes); the local and ssh runners (`tools/verifier/runners.py`) replace them. Do not bring Boat up.
+
 Rules for every agent that uses a Boat machine. Background: [boat-build-worker.md](boat-build-worker.md),
 [findings/boat-pilot.md](../findings/boat-pilot.md), [tools/verifier/](../tools/verifier/README.md).
 Measured with Boat CLI 1.0.97 during the free trial. *(docs)* marks statements taken from
