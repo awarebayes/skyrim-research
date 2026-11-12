@@ -346,7 +346,7 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.git('push', '--quiet', 'origin', 'main')
         ran = []
 
-        def run(cmd, tree, step):
+        def run(cmd, tree, step, env=None):
             ran.append(step)
             if step == 'accept_function.py':
                 changed = af.accept_family_batch(tree, self.batch_path, fdir=self.fdir, profile='cheap')
