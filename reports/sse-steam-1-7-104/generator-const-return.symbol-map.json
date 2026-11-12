@@ -1,0 +1,5231 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetAssociatedSkill@AlchemyItem@@UEBAIXZ": {
+      "rva": 1336928,
+      "size": 6
+    },
+    "?IsBoundObject@TESBoundObject@@UEBAEXZ": {
+      "rva": 1337504,
+      "size": 3
+    },
+    "?IsMagicItem@MagicItem@@UEBAEXZ": {
+      "rva": 1337600,
+      "size": 3
+    },
+    "?GetAssociatedSkill@EnchantmentItem@@UEBAIXZ": {
+      "rva": 1369920,
+      "size": 6
+    },
+    "?GetAssociatedSkill@IngredientItem@@UEBAIXZ": {
+      "rva": 1375440,
+      "size": 6
+    },
+    "?GetSpellType@ScrollItem@@UEBAIXZ": {
+      "rva": 1395104,
+      "size": 6
+    },
+    "?GetChunkID@SpellItem@@UEBAIXZ": {
+      "rva": 1395936,
+      "size": 6
+    },
+    "?GetType@ExtraCell3D@@UEBAIXZ": {
+      "rva": 1401232,
+      "size": 6
+    },
+    "?GetType@ExtraHavok@@UEBAIXZ": {
+      "rva": 1401296,
+      "size": 6
+    },
+    "?GetType@ExtraRegionList@@UEBAIXZ": {
+      "rva": 1401312,
+      "size": 6
+    },
+    "?GetType@ExtraEditorID@@UEBAIXZ": {
+      "rva": 1401440,
+      "size": 6
+    },
+    "?GetType@ExtraProcessMiddleLow@@UEBAIXZ": {
+      "rva": 1401456,
+      "size": 6
+    },
+    "?GetType@ExtraCellMusicType@@UEBAIXZ": {
+      "rva": 1401504,
+      "size": 6
+    },
+    "?GetType@ExtraCellAcousticSpace@@UEBAIXZ": {
+      "rva": 1401552,
+      "size": 6
+    },
+    "?GetType@ExtraCellSkyRegion@@UEBAIXZ": {
+      "rva": 1401600,
+      "size": 6
+    },
+    "?GetType@ExtraCellImageSpace@@UEBAIXZ": {
+      "rva": 1401648,
+      "size": 6
+    },
+    "?GetType@ExtraCellWaterType@@UEBAIXZ": {
+      "rva": 1401696,
+      "size": 6
+    },
+    "?GetType@ExtraSeenData@@UEBAIXZ": {
+      "rva": 1401776,
+      "size": 6
+    },
+    "?GetType@ExtraNorthRotation@@UEBAIXZ": {
+      "rva": 1401792,
+      "size": 6
+    },
+    "?GetType@ExtraDetachTime@@UEBAIXZ": {
+      "rva": 1401808,
+      "size": 6
+    },
+    "?GetType@ExtraGIDBuffer@@UEBAIXZ": {
+      "rva": 1401824,
+      "size": 6
+    },
+    "?GetType@ExtraAnimGraphManager@@UEBAIXZ": {
+      "rva": 1574160,
+      "size": 6
+    },
+    "?GetType@ExtraDismemberedLimbs@@UEBAIXZ": {
+      "rva": 1575280,
+      "size": 6
+    },
+    "?GetType@ExtraBiped@@UEBAIXZ": {
+      "rva": 1575344,
+      "size": 6
+    },
+    "?GetType@ExtraLight@@UEBAIXZ": {
+      "rva": 1575536,
+      "size": 6
+    },
+    "?GetType@ExtraMagicLight@@UEBAIXZ": {
+      "rva": 1575552,
+      "size": 6
+    },
+    "?GetType@ExtraFollower@@UEBAIXZ": {
+      "rva": 1575936,
+      "size": 6
+    },
+    "?GetType@ExtraLock@@UEBAIXZ": {
+      "rva": 1576912,
+      "size": 6
+    },
+    "?GetType@ExtraLeveledCreature@@UEBAIXZ": {
+      "rva": 1576976,
+      "size": 6
+    },
+    "?GetType@ExtraFromAlias@@UEBAIXZ": {
+      "rva": 1576992,
+      "size": 6
+    },
+    "?GetType@ExtraOpenCloseActivateRef@@UEBAIXZ": {
+      "rva": 1577008,
+      "size": 6
+    },
+    "?GetType@ExtraTeleport@@UEBAIXZ": {
+      "rva": 1577200,
+      "size": 6
+    },
+    "?GetType@ExtraTeleportName@@UEBAIXZ": {
+      "rva": 1577248,
+      "size": 6
+    },
+    "?GetType@ExtraMapMarker@@UEBAIXZ": {
+      "rva": 1577440,
+      "size": 6
+    },
+    "?GetType@ExtraAction@@UEBAIXZ": {
+      "rva": 1577536,
+      "size": 6
+    },
+    "?GetType@ExtraStartingPosition@@UEBAIXZ": {
+      "rva": 1577744,
+      "size": 6
+    },
+    "?GetType@ExtraContainerChanges@@UEBAIXZ": {
+      "rva": 1577904,
+      "size": 6
+    },
+    "?GetType@ExtraOriginalReference@@UEBAIXZ": {
+      "rva": 1577936,
+      "size": 6
+    },
+    "?GetType@ExtraOwnership@@UEBAIXZ": {
+      "rva": 1578016,
+      "size": 6
+    },
+    "?GetType@ExtraLockList@@UEBAIXZ": {
+      "rva": 1578096,
+      "size": 6
+    },
+    "?GetType@ExtraGlobal@@UEBAIXZ": {
+      "rva": 1578176,
+      "size": 6
+    },
+    "?GetType@ExtraRank@@UEBAIXZ": {
+      "rva": 1578240,
+      "size": 6
+    },
+    "?GetType@ExtraCount@@UEBAIXZ": {
+      "rva": 1578320,
+      "size": 6
+    },
+    "?GetType@ExtraGhost@@UEBAIXZ": {
+      "rva": 1578400,
+      "size": 6
+    },
+    "?GetType@ExtraWorn@@UEBAIXZ": {
+      "rva": 1578416,
+      "size": 6
+    },
+    "?GetType@ExtraShouldWear@@UEBAIXZ": {
+      "rva": 1578496,
+      "size": 6
+    },
+    "?GetType@ExtraWornLeft@@UEBAIXZ": {
+      "rva": 1578512,
+      "size": 6
+    },
+    "?GetType@ExtraCannotWear@@UEBAIXZ": {
+      "rva": 1578528,
+      "size": 6
+    },
+    "?GetType@ExtraHealth@@UEBAIXZ": {
+      "rva": 1578576,
+      "size": 6
+    },
+    "?GetType@ExtraHealthPerc@@UEBAIXZ": {
+      "rva": 1578624,
+      "size": 6
+    },
+    "?GetType@ExtraTimeLeft@@UEBAIXZ": {
+      "rva": 1578672,
+      "size": 6
+    },
+    "?GetType@ExtraCharge@@UEBAIXZ": {
+      "rva": 1578720,
+      "size": 6
+    },
+    "?GetType@ExtraSoul@@UEBAIXZ": {
+      "rva": 1578800,
+      "size": 6
+    },
+    "?GetType@ExtraScale@@UEBAIXZ": {
+      "rva": 1578848,
+      "size": 6
+    },
+    "?GetType@ExtraCachedScale@@UEBAIXZ": {
+      "rva": 1578864,
+      "size": 6
+    },
+    "?GetType@ExtraHotkey@@UEBAIXZ": {
+      "rva": 1578912,
+      "size": 6
+    },
+    "?GetType@ExtraInfoGeneralTopic@@UEBAIXZ": {
+      "rva": 1579216,
+      "size": 6
+    },
+    "?GetType@ExtraPackageStartLocation@@UEBAIXZ": {
+      "rva": 1579360,
+      "size": 6
+    },
+    "?GetType@ExtraReferenceHandle@@UEBAIXZ": {
+      "rva": 1579392,
+      "size": 6
+    },
+    "?GetType@ExtraLocation@@UEBAIXZ": {
+      "rva": 1579456,
+      "size": 6
+    },
+    "?GetType@ExtraPackage@@UEBAIXZ": {
+      "rva": 1579648,
+      "size": 6
+    },
+    "?GetType@ExtraTresPassPackage@@UEBAIXZ": {
+      "rva": 1579760,
+      "size": 6
+    },
+    "?GetType@ExtraPlayerCrimeList@@UEBAIXZ": {
+      "rva": 1580352,
+      "size": 6
+    },
+    "?GetType@ExtraLeveledItem@@UEBAIXZ": {
+      "rva": 1580368,
+      "size": 6
+    },
+    "?GetType@ExtraOutfitItem@@UEBAIXZ": {
+      "rva": 1580384,
+      "size": 6
+    },
+    "?GetType@ExtraPersistentCell@@UEBAIXZ": {
+      "rva": 1580464,
+      "size": 6
+    },
+    "?GetType@ExtraRagDollData@@UEBAIXZ": {
+      "rva": 1580656,
+      "size": 6
+    },
+    "?GetType@ExtraEncounterZone@@UEBAIXZ": {
+      "rva": 1580704,
+      "size": 6
+    },
+    "?GetType@ExtraUsedMarkers@@UEBAIXZ": {
+      "rva": 1581456,
+      "size": 6
+    },
+    "?GetType@ExtraReservedMarkers@@UEBAIXZ": {
+      "rva": 1582592,
+      "size": 6
+    },
+    "?GetType@ExtraRunOncePacks@@UEBAIXZ": {
+      "rva": 1583376,
+      "size": 6
+    },
+    "?GetType@ExtraDistantData@@UEBAIXZ": {
+      "rva": 1583600,
+      "size": 6
+    },
+    "?GetType@ExtraEnableStateParent@@UEBAIXZ": {
+      "rva": 1583648,
+      "size": 6
+    },
+    "?GetType@ExtraEnableStateChildren@@UEBAIXZ": {
+      "rva": 1583840,
+      "size": 6
+    },
+    "?GetType@ExtraAttachRef@@UEBAIXZ": {
+      "rva": 1583872,
+      "size": 6
+    },
+    "?GetType@ExtraAttachRefChildren@@UEBAIXZ": {
+      "rva": 1583888,
+      "size": 6
+    },
+    "?GetType@ExtraRandomTeleportMarker@@UEBAIXZ": {
+      "rva": 1583936,
+      "size": 6
+    },
+    "?GetType@ExtraAshPileRef@@UEBAIXZ": {
+      "rva": 1583952,
+      "size": 6
+    },
+    "?GetType@ExtraLocationRefType@@UEBAIXZ": {
+      "rva": 1584000,
+      "size": 6
+    },
+    "?GetType@ExtraLeveledItemBase@@UEBAIXZ": {
+      "rva": 1584048,
+      "size": 6
+    },
+    "?GetType@ExtraLinkedRef@@UEBAIXZ": {
+      "rva": 1584288,
+      "size": 6
+    },
+    "?GetType@ExtraLinkedRefChildren@@UEBAIXZ": {
+      "rva": 1584304,
+      "size": 6
+    },
+    "?GetType@ExtraActivateRef@@UEBAIXZ": {
+      "rva": 1585680,
+      "size": 6
+    },
+    "?GetType@ExtraActivateRefChildren@@UEBAIXZ": {
+      "rva": 1585776,
+      "size": 6
+    },
+    "?GetType@ExtraReflectedRefs@@UEBAIXZ": {
+      "rva": 1586752,
+      "size": 6
+    },
+    "?GetType@ExtraReflectorRefs@@UEBAIXZ": {
+      "rva": 1588160,
+      "size": 6
+    },
+    "?GetType@ExtraWaterLightRefs@@UEBAIXZ": {
+      "rva": 1589728,
+      "size": 6
+    },
+    "?GetType@ExtraLitWaterRefs@@UEBAIXZ": {
+      "rva": 1591872,
+      "size": 6
+    },
+    "?GetType@ExtraLevCreaModifier@@UEBAIXZ": {
+      "rva": 1592048,
+      "size": 6
+    },
+    "?GetType@ExtraPoison@@UEBAIXZ": {
+      "rva": 1592400,
+      "size": 6
+    },
+    "?GetType@ExtraEnchantment@@UEBAIXZ": {
+      "rva": 1592464,
+      "size": 6
+    },
+    "?GetType@ExtraLastFinishedSequence@@UEBAIXZ": {
+      "rva": 1592528,
+      "size": 6
+    },
+    "?GetType@ExtraSpawnContainer@@UEBAIXZ": {
+      "rva": 1592560,
+      "size": 6
+    },
+    "?GetType@ExtraEmittanceSource@@UEBAIXZ": {
+      "rva": 1592608,
+      "size": 6
+    },
+    "?GetType@ExtraMultiBoundRef@@UEBAIXZ": {
+      "rva": 1592656,
+      "size": 6
+    },
+    "?GetType@ExtraMultiBound@@UEBAIXZ": {
+      "rva": 1592672,
+      "size": 6
+    },
+    "?GetType@ExtraResourcesPreload@@UEBAIXZ": {
+      "rva": 1592880,
+      "size": 6
+    },
+    "?GetType@ExtraPortal@@UEBAIXZ": {
+      "rva": 1592928,
+      "size": 6
+    },
+    "?GetType@ExtraRoom@@UEBAIXZ": {
+      "rva": 1592944,
+      "size": 6
+    },
+    "?GetType@ExtraOcclusionShape@@UEBAIXZ": {
+      "rva": 1592992,
+      "size": 6
+    },
+    "?GetType@ExtraItemDropper@@UEBAIXZ": {
+      "rva": 1593008,
+      "size": 6
+    },
+    "?GetType@ExtraDroppedItemList@@UEBAIXZ": {
+      "rva": 1593200,
+      "size": 6
+    },
+    "?GetType@ExtraSavedAnimation@@UEBAIXZ": {
+      "rva": 1593456,
+      "size": 6
+    },
+    "?GetType@ExtraSavedHavokData@@UEBAIXZ": {
+      "rva": 1593712,
+      "size": 6
+    },
+    "?GetType@ExtraFriendHits@@UEBAIXZ": {
+      "rva": 1594288,
+      "size": 6
+    },
+    "?GetType@ExtraHeadingTarget@@UEBAIXZ": {
+      "rva": 1594304,
+      "size": 6
+    },
+    "?GetType@ExtraRefractionProperty@@UEBAIXZ": {
+      "rva": 1594320,
+      "size": 6
+    },
+    "?GetType@ExtraStartingWorldOrCell@@UEBAIXZ": {
+      "rva": 1594336,
+      "size": 6
+    },
+    "?GetType@ExtraEditorRef3DData@@UEBAIXZ": {
+      "rva": 1594656,
+      "size": 6
+    },
+    "?GetType@ExtraEditorRefMoveData@@UEBAIXZ": {
+      "rva": 1594784,
+      "size": 6
+    },
+    "?GetType@ExtraHasNoRumors@@UEBAIXZ": {
+      "rva": 1594800,
+      "size": 6
+    },
+    "?GetType@ExtraSound@@UEBAIXZ": {
+      "rva": 1594816,
+      "size": 6
+    },
+    "?GetType@ExtraCreatureAwakeSound@@UEBAIXZ": {
+      "rva": 1594832,
+      "size": 6
+    },
+    "?GetType@ExtraCreatureMovementSound@@UEBAIXZ": {
+      "rva": 1594848,
+      "size": 6
+    },
+    "?GetType@ExtraWeaponIdleSound@@UEBAIXZ": {
+      "rva": 1594864,
+      "size": 6
+    },
+    "?GetType@ExtraWeaponAttackSound@@UEBAIXZ": {
+      "rva": 1594880,
+      "size": 6
+    },
+    "?GetType@ExtraActivateLoopSound@@UEBAIXZ": {
+      "rva": 1594896,
+      "size": 6
+    },
+    "?GetType@ExtraCanTalkToPlayer@@UEBAIXZ": {
+      "rva": 1594912,
+      "size": 6
+    },
+    "?GetType@ExtraObjectHealth@@UEBAIXZ": {
+      "rva": 1594928,
+      "size": 6
+    },
+    "?GetType@ExtraTerminalState@@UEBAIXZ": {
+      "rva": 1594944,
+      "size": 6
+    },
+    "?GetType@ExtraNavMeshPortal@@UEBAIXZ": {
+      "rva": 1594960,
+      "size": 6
+    },
+    "?GetType@ExtraModelSwap@@UEBAIXZ": {
+      "rva": 1594976,
+      "size": 6
+    },
+    "?GetType@ExtraRadius@@UEBAIXZ": {
+      "rva": 1595024,
+      "size": 6
+    },
+    "?GetType@ExtraFactionChanges@@UEBAIXZ": {
+      "rva": 1597376,
+      "size": 6
+    },
+    "?GetType@ExtraActorCause@@UEBAIXZ": {
+      "rva": 1597392,
+      "size": 6
+    },
+    "?GetType@ExtraAmmo@@UEBAIXZ": {
+      "rva": 1597440,
+      "size": 6
+    },
+    "?GetType@ExtraCombatStyle@@UEBAIXZ": {
+      "rva": 1597488,
+      "size": 6
+    },
+    "?GetType@ExtraPrimitive@@UEBAIXZ": {
+      "rva": 1597536,
+      "size": 6
+    },
+    "?GetType@ExtraAnimNoteReceiver@@UEBAIXZ": {
+      "rva": 1597616,
+      "size": 6
+    },
+    "?GetType@ExtraPatrolRefData@@UEBAIXZ": {
+      "rva": 1597872,
+      "size": 6
+    },
+    "?GetType@ExtraPatrolRefInUseData@@UEBAIXZ": {
+      "rva": 1598224,
+      "size": 6
+    },
+    "?GetType@ExtraOcclusionPlaneRefData@@UEBAIXZ": {
+      "rva": 1598400,
+      "size": 6
+    },
+    "?GetType@ExtraPortalRefData@@UEBAIXZ": {
+      "rva": 1598576,
+      "size": 6
+    },
+    "?GetType@ExtraRoomRefData@@UEBAIXZ": {
+      "rva": 1598928,
+      "size": 6
+    },
+    "?GetType@ExtraPackageData@@UEBAIXZ": {
+      "rva": 1599008,
+      "size": 6
+    },
+    "?GetType@ExtraCollisionData@@UEBAIXZ": {
+      "rva": 1599136,
+      "size": 6
+    },
+    "?GetType@ExtraGuardedRefData@@UEBAIXZ": {
+      "rva": 1600368,
+      "size": 6
+    },
+    "?GetType@ExtraSayTopicInfoOnceADay@@UEBAIXZ": {
+      "rva": 1601056,
+      "size": 6
+    },
+    "?GetType@ExtraSayToTopicInfo@@UEBAIXZ": {
+      "rva": 1601456,
+      "size": 6
+    },
+    "?GetType@ExtraIgnoredBySandbox@@UEBAIXZ": {
+      "rva": 1601472,
+      "size": 6
+    },
+    "?GetType@ExtraFollowerSwimBreadcrumbs@@UEBAIXZ": {
+      "rva": 1602448,
+      "size": 6
+    },
+    "?GetType@ExtraAliasInstanceArray@@UEBAIXZ": {
+      "rva": 1608304,
+      "size": 6
+    },
+    "?GetType@ExtraPromotedRef@@UEBAIXZ": {
+      "rva": 1610144,
+      "size": 6
+    },
+    "?GetType@ExtraLargeRefOwnerCells@@UEBAIXZ": {
+      "rva": 1610160,
+      "size": 6
+    },
+    "?GetType@ExtraAnimationSequencer@@UEBAIXZ": {
+      "rva": 1610448,
+      "size": 6
+    },
+    "?GetType@ExtraLightData@@UEBAIXZ": {
+      "rva": 1610512,
+      "size": 6
+    },
+    "?GetType@ExtraSceneData@@UEBAIXZ": {
+      "rva": 1610560,
+      "size": 6
+    },
+    "?GetType@ExtraBadPosition@@UEBAIXZ": {
+      "rva": 1610576,
+      "size": 6
+    },
+    "?GetType@ExtraHeadTrackingWeight@@UEBAIXZ": {
+      "rva": 1610624,
+      "size": 6
+    },
+    "?GetType@ExtraFavorCost@@UEBAIXZ": {
+      "rva": 1610672,
+      "size": 6
+    },
+    "?GetType@ExtraMissingLinkedRefIDs@@UEBAIXZ": {
+      "rva": 1611040,
+      "size": 6
+    },
+    "?GetType@ExtraMissingRefIDs@@UEBAIXZ": {
+      "rva": 1611392,
+      "size": 6
+    },
+    "?GetType@ExtraTextDisplayData@@UEBAIXZ": {
+      "rva": 1613456,
+      "size": 6
+    },
+    "?GetType@ExtraAttachedArrows3D@@UEBAIXZ": {
+      "rva": 1618208,
+      "size": 6
+    },
+    "?GetType@ExtraAlphaCutoff@@UEBAIXZ": {
+      "rva": 1618256,
+      "size": 6
+    },
+    "?GetType@ExtraHorse@@UEBAIXZ": {
+      "rva": 1618288,
+      "size": 6
+    },
+    "?GetType@ExtraForcedTarget@@UEBAIXZ": {
+      "rva": 1618320,
+      "size": 6
+    },
+    "?GetType@ExtraForcedLandingMarker@@UEBAIXZ": {
+      "rva": 1618352,
+      "size": 6
+    },
+    "?GetType@ExtraUniqueID@@UEBAIXZ": {
+      "rva": 1618416,
+      "size": 6
+    },
+    "?GetType@ExtraFlags@@UEBAIXZ": {
+      "rva": 1618512,
+      "size": 6
+    },
+    "?GetType@ExtraRefrPath@@UEBAIXZ": {
+      "rva": 1622192,
+      "size": 6
+    },
+    "?GetType@ExtraDecalGroup@@UEBAIXZ": {
+      "rva": 1622464,
+      "size": 6
+    },
+    "?GetType@ExtraCellWaterEnvMap@@UEBAIXZ": {
+      "rva": 1622512,
+      "size": 6
+    },
+    "?GetType@ExtraCellGrassData@@UEBAIXZ": {
+      "rva": 1622640,
+      "size": 6
+    },
+    "?GetType@ExtraInteraction@@UEBAIXZ": {
+      "rva": 1622928,
+      "size": 6
+    },
+    "?GetType@ExtraWaterData@@UEBAIXZ": {
+      "rva": 1623232,
+      "size": 6
+    },
+    "?GetType@ExtraWaterCurrentZoneData@@UEBAIXZ": {
+      "rva": 1623328,
+      "size": 6
+    },
+    "?GetType@ExtraGroupConstraint@@UEBAIXZ": {
+      "rva": 1625024,
+      "size": 6
+    },
+    "?GetType@ExtraScriptedAnimDependence@@UEBAIXZ": {
+      "rva": 1626672,
+      "size": 6
+    },
+    "?GetType@ExtraRaceData@@UEBAIXZ": {
+      "rva": 1626768,
+      "size": 6
+    },
+    "?GetType@ExtraMagicCaster@@UEBAIXZ": {
+      "rva": 1626784,
+      "size": 6
+    },
+    "?GetType@MultiBoundMarkerData@@UEBAIXZ": {
+      "rva": 1644352,
+      "size": 6
+    },
+    "?IsLoaded@TESRegionDataGrass@@UEBAEXZ": {
+      "rva": 2426272,
+      "size": 3
+    },
+    "?GetType@TESRegionDataMap@@UEBAIXZ": {
+      "rva": 2432608,
+      "size": 6
+    },
+    "?IsLoaded@TESRegionDataObjects@@UEBAEXZ": {
+      "rva": 2435840,
+      "size": 3
+    },
+    "?GetType@TESRegionDataSound@@UEBAIXZ": {
+      "rva": 2437904,
+      "size": 6
+    },
+    "?Slot1@TESRegionGrassObject@@UEBAIXZ": {
+      "rva": 2442608,
+      "size": 6
+    },
+    "?GetFormType@TESObjectREFRFactory@@UEBAIXZ": {
+      "rva": 3003248,
+      "size": 6
+    },
+    "?TargetIsRequiredType@TESObjectREFRSync__REFRSyncController@@UEBAEXZ": {
+      "rva": 3169696,
+      "size": 3
+    },
+    "?TestCanPlay@BSIMusicTrack@@UEBAEXZ": {
+      "rva": 3305280,
+      "size": 3
+    },
+    "?DoGetSupportedInputChannels@BGSSoundOutput@@UEBAIXZ": {
+      "rva": 3323408,
+      "size": 6
+    },
+    "?GetType@BGSEntryPointFunctionDataBooleanGraphVariable@@UEBAIXZ": {
+      "rva": 3731088,
+      "size": 6
+    },
+    "?GetType@BGSEntryPointFunctionDataLeveledList@@UEBAIXZ": {
+      "rva": 3731104,
+      "size": 6
+    },
+    "?GetType@BGSEntryPointFunctionDataOneValue@@UEBAIXZ": {
+      "rva": 3731120,
+      "size": 6
+    },
+    "?GetType@BGSEntryPointFunctionDataSpellItem@@UEBAIXZ": {
+      "rva": 3731136,
+      "size": 6
+    },
+    "?GetType@BGSEntryPointFunctionDataText@@UEBAIXZ": {
+      "rva": 3731152,
+      "size": 6
+    },
+    "?GetType@BGSEntryPointFunctionDataTwoValue@@UEBAIXZ": {
+      "rva": 3731168,
+      "size": 6
+    },
+    "?GetID@BGSPerkEntry@@UEBAIXZ": {
+      "rva": 3758880,
+      "size": 6
+    },
+    "?GetType@BGSAbilityPerkEntry@@UEBAIXZ": {
+      "rva": 3769536,
+      "size": 6
+    },
+    "?GetType@BGSEntryPointPerkEntry@@UEBAIXZ": {
+      "rva": 3769552,
+      "size": 6
+    },
+    "?GetVersion@TempLoadGameBuffer@@UEBAEXZ": {
+      "rva": 4300192,
+      "size": 3
+    },
+    "?Unk_0D@BSFaceGenKeyframeExclusive@@UEBAEXZ": {
+      "rva": 4400384,
+      "size": 3
+    },
+    "?Unk_0C@BSFaceGenKeyframeMultiple@@UEBAEXZ": {
+      "rva": 4400416,
+      "size": 3
+    },
+    "?Slot16@BGSAIWorldLocation@@UEBAEXZ": {
+      "rva": 4487872,
+      "size": 3
+    },
+    "?Slot13@BGSAIWorldLocationInteriorCell@@UEBAEXZ": {
+      "rva": 4494288,
+      "size": 3
+    },
+    "?Unk_05@BGSPackageDataBool@@UEBAEXZ": {
+      "rva": 4512096,
+      "size": 3
+    },
+    "?Slot6@BGSPackageDataRefOLD@@UEBAIXZ": {
+      "rva": 4512992,
+      "size": 6
+    },
+    "?Slot5@BGSPackageDataLocationWrapper@@UEBAEXZ": {
+      "rva": 4514560,
+      "size": 3
+    },
+    "?Slot6@BGSPackageDataRef@@UEBAIXZ": {
+      "rva": 4537328,
+      "size": 6
+    },
+    "?Unk_0F@BGSProcedureTreeSimultaneous@@UEBAEXZ": {
+      "rva": 4560080,
+      "size": 3
+    },
+    "?Unk_0A@BGSProcedureTreeBranch@@UEBAEXZ": {
+      "rva": 4569120,
+      "size": 3
+    },
+    "?Slot32@BGSProcedureBase@@UEBAEXZ": {
+      "rva": 4574992,
+      "size": 3
+    },
+    "?Slot17@BGSProcedureAcquire@@UEBAIXZ": {
+      "rva": 4577232,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureActivate@@UEBAIXZ": {
+      "rva": 4583184,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureDialogue@@UEBAIXZ": {
+      "rva": 4594672,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureDialogueActivate@@UEBAIXZ": {
+      "rva": 4597744,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureEat@@UEBAIXZ": {
+      "rva": 4605504,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureEscort@@UEBAIXZ": {
+      "rva": 4609216,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureFind@@UEBAIXZ": {
+      "rva": 4620992,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureFlee@@UEBAIXZ": {
+      "rva": 4626128,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureFlightGrab@@UEBAIXZ": {
+      "rva": 4642064,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureFollow@@UEBAIXZ": {
+      "rva": 4647424,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureFollowTo@@UEBAIXZ": {
+      "rva": 4649248,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureForceGreet@@UEBAIXZ": {
+      "rva": 4664400,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureGuard@@UEBAIXZ": {
+      "rva": 4666208,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureHoldPosition@@UEBAIXZ": {
+      "rva": 4669600,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureHover@@UEBAIXZ": {
+      "rva": 4671520,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureKeepAnEyeOn@@UEBAIXZ": {
+      "rva": 4676976,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureLock@@UEBAIXZ": {
+      "rva": 4680176,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureUnlock@@UEBAIXZ": {
+      "rva": 4680880,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureOrbit@@UEBAIXZ": {
+      "rva": 4684992,
+      "size": 6
+    },
+    "?Slot17@BGSProcedurePatrol@@UEBAIXZ": {
+      "rva": 4690608,
+      "size": 6
+    },
+    "?Slot17@BGSProcedurePursue@@UEBAIXZ": {
+      "rva": 4705392,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureSandbox@@UEBAIXZ": {
+      "rva": 4707920,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureSay@@UEBAIXZ": {
+      "rva": 4730784,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureShout@@UEBAIXZ": {
+      "rva": 4732912,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureSit@@UEBAIXZ": {
+      "rva": 4741568,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureSleep@@UEBAIXZ": {
+      "rva": 4743536,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureTravel@@UEBAIXZ": {
+      "rva": 4751264,
+      "size": 6
+    },
+    "?Unk_0F@BGSProcedureTreeProcedure@@UEBAEXZ": {
+      "rva": 4772016,
+      "size": 3
+    },
+    "?Slot17@BGSProcedureUseIdleMarker@@UEBAIXZ": {
+      "rva": 4773104,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureUseMagic@@UEBAIXZ": {
+      "rva": 4779488,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureUseWeapon@@UEBAIXZ": {
+      "rva": 4789136,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureWait@@UEBAIXZ": {
+      "rva": 4801776,
+      "size": 6
+    },
+    "?Slot17@BGSProcedureWander@@UEBAIXZ": {
+      "rva": 4803216,
+      "size": 6
+    },
+    "?IsPackageOwner@TESPackage@@UEBAEXZ": {
+      "rva": 4843744,
+      "size": 3
+    },
+    "?Compare@TESPackageData@@UEBAEXZ": {
+      "rva": 4844624,
+      "size": 3
+    },
+    "?GetType@BSTempEffectWeaponBlood@@UEBAIXZ": {
+      "rva": 4940144,
+      "size": 6
+    },
+    "?Slot5@BGSQueuedObjectDowngrade@@UEBAIXZ": {
+      "rva": 5359376,
+      "size": 6
+    },
+    "?Slot5@BGSQueuedObjectInitialLoad@@UEBAIXZ": {
+      "rva": 5359392,
+      "size": 6
+    },
+    "?Slot5@BGSQueuedObjectUpgrade@@UEBAIXZ": {
+      "rva": 5359408,
+      "size": 6
+    },
+    "?Slot5@BGSQueuedTerrainDowngrade@@UEBAIXZ": {
+      "rva": 5359424,
+      "size": 6
+    },
+    "?Slot5@BGSQueuedTerrainInitialLoad@@UEBAIXZ": {
+      "rva": 5359440,
+      "size": 6
+    },
+    "?GetType@ModelReferenceEffect@@UEBAIXZ": {
+      "rva": 6129936,
+      "size": 6
+    },
+    "?GetType@NonActorMagicTarget@@UEBAIXZ": {
+      "rva": 6134016,
+      "size": 6
+    },
+    "?GetAttached@ReferenceEffect@@UEBAEXZ": {
+      "rva": 6143024,
+      "size": 3
+    },
+    "?GetStackable@ShaderReferenceEffect@@UEBAEXZ": {
+      "rva": 6160080,
+      "size": 3
+    },
+    "?GetType@SummonPlacementEffect@@UEBAIXZ": {
+      "rva": 6181712,
+      "size": 6
+    },
+    "?GetFileSize@SaveStorageWrapper@@UEBAIXZ": {
+      "rva": 6530240,
+      "size": 6
+    },
+    "?GetFileSize@LoadStorageWrapper@@UEBAIXZ": {
+      "rva": 6530608,
+      "size": 6
+    },
+    "?Slot8@PlayerCharacter@@UEBAEXZ": {
+      "rva": 7717552,
+      "size": 3
+    },
+    "?Slot195@ArrowProjectile@@UEBAEXZ": {
+      "rva": 8249296,
+      "size": 3
+    },
+    "?Slot167@BarrierProjectile@@UEBAEXZ": {
+      "rva": 8256912,
+      "size": 3
+    },
+    "?Slot165@BeamProjectile@@UEBAEXZ": {
+      "rva": 8257200,
+      "size": 3
+    },
+    "?Slot194@ConeProjectile@@UEBAEXZ": {
+      "rva": 8263808,
+      "size": 3
+    },
+    "?Slot164@FlameProjectile@@UEBAEXZ": {
+      "rva": 8299104,
+      "size": 3
+    },
+    "?IsGrenadeProjectile@GrenadeProjectile@@UEBAEXZ": {
+      "rva": 8305440,
+      "size": 3
+    },
+    "?Slot162@MissileProjectile@@UEBAEXZ": {
+      "rva": 8331584,
+      "size": 3
+    },
+    "?Slot184@Projectile@@UEBAEXZ": {
+      "rva": 8381792,
+      "size": 3
+    },
+    "?Slot6@CombatAimController@@UEBAEXZ": {
+      "rva": 8430128,
+      "size": 3
+    },
+    "?GetType@CombatInventoryItemMelee@@UEBAIXZ": {
+      "rva": 8573504,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemRanged@@UEBAIXZ": {
+      "rva": 8574784,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemShield@@UEBAIXZ": {
+      "rva": 8576176,
+      "size": 6
+    },
+    "?GetCategory@CombatInventoryItemOneHandedBlock@@UEBAIXZ": {
+      "rva": 8577312,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemTorch@@UEBAIXZ": {
+      "rva": 8577840,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemMagic@@UEBAIXZ": {
+      "rva": 8579120,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemShout@@UEBAIXZ": {
+      "rva": 8580992,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemStaff@@UEBAIXZ": {
+      "rva": 8581440,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemPotion@@UEBAIXZ": {
+      "rva": 8581488,
+      "size": 6
+    },
+    "?GetType@CombatInventoryItemScroll@@UEBAIXZ": {
+      "rva": 8581520,
+      "size": 6
+    },
+    "?GetCategory@CombatMagicCasterRestore@@UEBAIXZ": {
+      "rva": 8604832,
+      "size": 6
+    },
+    "?GetCategory@CombatMagicCasterDisarm@@UEBAIXZ": {
+      "rva": 8609088,
+      "size": 6
+    },
+    "?GetCategory@CombatMagicCasterLight@@UEBAIXZ": {
+      "rva": 8611648,
+      "size": 6
+    },
+    "?Slot7@CombatPathingRequest@@UEBAEXZ": {
+      "rva": 9326144,
+      "size": 3
+    },
+    "?Unk_18@BGSGamebryoSequenceGenerator@@UEBAEXZ": {
+      "rva": 12254096,
+      "size": 3
+    },
+    "?Unk_18@BSOffsetAnimationGenerator@@UEBAEXZ": {
+      "rva": 12275024,
+      "size": 3
+    },
+    "?Unk_0A@BSDistTriggerModifier@@UEBAEXZ": {
+      "rva": 12282944,
+      "size": 3
+    },
+    "?Unk_0A@BSInterpValueModifier@@UEBAEXZ": {
+      "rva": 12288688,
+      "size": 3
+    },
+    "?Unk_0A@BSIsActiveModifier@@UEBAEXZ": {
+      "rva": 12289568,
+      "size": 3
+    },
+    "?Unk_0A@BSPassByTargetTriggerModifier@@UEBAEXZ": {
+      "rva": 12301184,
+      "size": 3
+    },
+    "?Unk_0A@BSTweenerModifier@@UEBAEXZ": {
+      "rva": 12304560,
+      "size": 3
+    },
+    "?Unk_08@BSNullImplGameSound@@UEBAEXZ": {
+      "rva": 13462176,
+      "size": 3
+    },
+    "?Slot2@BSWin32GamerProfile@@UEBAEXZ": {
+      "rva": 13610432,
+      "size": 3
+    },
+    "?IsEnabled@BSInputDevice@@UEBAEXZ": {
+      "rva": 13615472,
+      "size": 3
+    },
+    "?VerifyAddress@BSNiAllocator@@UEBAEXZ": {
+      "rva": 15395088,
+      "size": 3
+    },
+    "?VerifyAddress@NiStandardAllocator@@UEBAEXZ": {
+      "rva": 15400240,
+      "size": 3
+    },
+    "?ReadFile@BSCounterStorage@@UEBAIXZ": {
+      "rva": 15472864,
+      "size": 6
+    },
+    "?Slot3@BSSearchPath@@UEBAEXZ": {
+      "rva": 15482528,
+      "size": 3
+    },
+    "?SetupGeometry@NiShadeProperty@@UEBAEXZ": {
+      "rva": 15789808,
+      "size": 3
+    },
+    "?Slot3@NiBoundingVolume@@UEBAIXZ": {
+      "rva": 15959328,
+      "size": 6
+    },
+    "?Slot3@NiBoxBV@@UEBAIXZ": {
+      "rva": 15959344,
+      "size": 6
+    },
+    "?Slot3@NiCapsuleBV@@UEBAIXZ": {
+      "rva": 15965360,
+      "size": 6
+    },
+    "?Slot3@NiHalfSpaceBV@@UEBAIXZ": {
+      "rva": 15973712,
+      "size": 6
+    },
+    "?Slot3@NiUnionBV@@UEBAIXZ": {
+      "rva": 15983712,
+      "size": 6
+    },
+    "?Slot1@NiOBBLeaf@@UEBAEXZ": {
+      "rva": 16002464,
+      "size": 3
+    },
+    "?GetInterpolatorCount@NiSingleInterpController@@UEBAIXZ": {
+      "rva": 16134080,
+      "size": 6
+    },
+    "?IsTransformValueSupported@NiTransformInterpolator@@UEBAEXZ": {
+      "rva": 16136816,
+      "size": 3
+    },
+    "?IsTransformValueSupported@NiPathInterpolator@@UEBAEXZ": {
+      "rva": 16143392,
+      "size": 3
+    },
+    "?IsTransformValueSupported@NiBlendTransformInterpolator@@UEBAEXZ": {
+      "rva": 16154240,
+      "size": 3
+    },
+    "?IsFloatValueSupported@NiBlendFloatInterpolator@@UEBAEXZ": {
+      "rva": 16157648,
+      "size": 3
+    },
+    "?IsTransformController@NiTransformController@@UEBAEXZ": {
+      "rva": 16161328,
+      "size": 3
+    },
+    "?IsTransformValueSupported@NiBlendAccumTransformInterpolator@@UEBAEXZ": {
+      "rva": 16167456,
+      "size": 3
+    },
+    "?IsBoolValueSupported@NiBlendBoolInterpolator@@UEBAEXZ": {
+      "rva": 16199136,
+      "size": 3
+    },
+    "?IsColorAValueSupported@NiBlendColorInterpolator@@UEBAEXZ": {
+      "rva": 16201200,
+      "size": 3
+    },
+    "?IsPoint3ValueSupported@NiBlendPoint3Interpolator@@UEBAEXZ": {
+      "rva": 16203904,
+      "size": 3
+    },
+    "?IsQuaternionValueSupported@NiBlendQuaternionInterpolator@@UEBAEXZ": {
+      "rva": 16206144,
+      "size": 3
+    },
+    "?IsBoolValueSupported@NiBoolInterpolator@@UEBAEXZ": {
+      "rva": 16210928,
+      "size": 3
+    },
+    "?IsColorAValueSupported@NiBSplineColorInterpolator@@UEBAEXZ": {
+      "rva": 16220912,
+      "size": 3
+    },
+    "?Slot62@NiBSplineCompColorInterpolator@@UEBAEXZ": {
+      "rva": 16222816,
+      "size": 3
+    },
+    "?Slot62@NiBSplineCompFloatInterpolator@@UEBAEXZ": {
+      "rva": 16224464,
+      "size": 3
+    },
+    "?Slot62@NiBSplineCompPoint3Interpolator@@UEBAEXZ": {
+      "rva": 16226176,
+      "size": 3
+    },
+    "?Slot62@NiBSplineCompTransformInterpolator@@UEBAEXZ": {
+      "rva": 16228752,
+      "size": 3
+    },
+    "?IsFloatValueSupported@NiBSplineFloatInterpolator@@UEBAEXZ": {
+      "rva": 16230384,
+      "size": 3
+    },
+    "?IsPoint3ValueSupported@NiBSplinePoint3Interpolator@@UEBAEXZ": {
+      "rva": 16232272,
+      "size": 3
+    },
+    "?IsTransformValueSupported@NiBSplineTransformInterpolator@@UEBAEXZ": {
+      "rva": 16235280,
+      "size": 3
+    },
+    "?IsTransformController@NiLookAtController@@UEBAEXZ": {
+      "rva": 16252016,
+      "size": 3
+    },
+    "?IsTransformValueSupported@NiLookAtInterpolator@@UEBAEXZ": {
+      "rva": 16256160,
+      "size": 3
+    },
+    "?IsTransformController@NiPathController@@UEBAEXZ": {
+      "rva": 16271248,
+      "size": 3
+    },
+    "?IsPoint3ValueSupported@NiPoint3Interpolator@@UEBAEXZ": {
+      "rva": 16272928,
+      "size": 3
+    },
+    "?IsQuaternionValueSupported@NiQuaternionInterpolator@@UEBAEXZ": {
+      "rva": 16275792,
+      "size": 3
+    },
+    "?IsTransformController@NiRollController@@UEBAEXZ": {
+      "rva": 16278896,
+      "size": 3
+    },
+    "?GetKeyChannelCount@BSTreadTransfInterpolator@@UEBAIXZ": {
+      "rva": 16306240,
+      "size": 6
+    },
+    "?GetInterpolatorCount@NiPSysEmitterCtlr@@UEBAIXZ": {
+      "rva": 16365408,
+      "size": 6
+    },
+    "?Update@NiPSysSpawnModifier@@UEBAEXZ": {
+      "rva": 16488464,
+      "size": 3
+    },
+    "?RegisterStreamables@BSMultiBoundRoom@@UEBAEXZ": {
+      "rva": 16571200,
+      "size": 3
+    },
+    "?GetType@BSMultiBoundAABB@@UEBAIXZ": {
+      "rva": 16575136,
+      "size": 6
+    },
+    "?GetType@BSMultiBoundSphere@@UEBAIXZ": {
+      "rva": 16667840,
+      "size": 6
+    },
+    "?Slot38@BSOcclusionBox@@UEBAEXZ": {
+      "rva": 16679184,
+      "size": 3
+    },
+    "?GetInterpolatorCount@BSProceduralLightningController@@UEBAIXZ": {
+      "rva": 16766912,
+      "size": 6
+    },
+    "?RegisterStreamables@BSReference@@UEBAEXZ": {
+      "rva": 16777584,
+      "size": 3
+    },
+    "?GetType@BSMultiBoundCapsule@@UEBAIXZ": {
+      "rva": 16787264,
+      "size": 6
+    },
+    "?QShader@BSLightingShaderProperty@@UEBAIXZ": {
+      "rva": 22122800,
+      "size": 6
+    },
+    "?QShader@BSGrassShaderProperty@@UEBAIXZ": {
+      "rva": 22141344,
+      "size": 6
+    },
+    "?GetFeature@BSLightingShaderMaterialEnvmap@@UEBAIXZ": {
+      "rva": 22171664,
+      "size": 6
+    },
+    "?GetFeature@BSLightingShaderMaterialEye@@UEBAIXZ": {
+      "rva": 22173536,
+      "size": 6
+    },
+    "?GetFeature@BSLightingShaderMaterialParallax@@UEBAIXZ": {
+      "rva": 22176096,
+      "size": 6
+    },
+    "?GetFeature@BSLightingShaderMaterialMultiLayerParallax@@UEBAIXZ": {
+      "rva": 22186176,
+      "size": 6
+    },
+    "?QShader@BSEffectShaderProperty@@UEBAIXZ": {
+      "rva": 22190896,
+      "size": 6
+    },
+    "?QShader@BSWaterShaderProperty@@UEBAIXZ": {
+      "rva": 22202096,
+      "size": 6
+    },
+    "?QShader@BSParticleShaderProperty@@UEBAIXZ": {
+      "rva": 22228112,
+      "size": 6
+    },
+    "?GetType@BSWaterShaderMaterial@@UEBAIXZ": {
+      "rva": 22392624,
+      "size": 6
+    },
+    "?Unk_03@BSShadowLight@@UEBAEXZ": {
+      "rva": 22404048,
+      "size": 3
+    },
+    "?good@NiMemStream@@UEBAEXZ": {
+      "rva": 22456880,
+      "size": 3
+    },
+    "?good@UnitTest_BSStreamParserStream@@UEBAEXZ": {
+      "rva": 22487408,
+      "size": 3
+    },
+    "?Slot1@UnitTest_BSStreamParserData@@UEBAEXZ": {
+      "rva": 22487584,
+      "size": 3
+    },
+    "?Slot4@BSShadowFrustumLight@@UEBAEXZ": {
+      "rva": 22577008,
+      "size": 3
+    },
+    "?Slot8@BSSystemUtility@@UEBAEXZ": {
+      "rva": 22649136,
+      "size": 3
+    },
+    "?Slot4@BSStreamSystemUtility@@UEBAEXZ": {
+      "rva": 22667152,
+      "size": 3
+    }
+  },
+  "_provenance": {
+    "method": "Generated declaration bindings for selection; names remain unverified.",
+    "entries": [
+      {
+        "name": "?GetAssociatedSkill@AlchemyItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsBoundObject@TESBoundObject@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsMagicItem@MagicItem@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetAssociatedSkill@EnchantmentItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetAssociatedSkill@IngredientItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetSpellType@ScrollItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetChunkID@SpellItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCell3D@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHavok@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRegionList@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEditorID@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraProcessMiddleLow@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCellMusicType@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCellAcousticSpace@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCellSkyRegion@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCellImageSpace@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCellWaterType@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSeenData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraNorthRotation@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraDetachTime@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraGIDBuffer@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAnimGraphManager@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraDismemberedLimbs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraBiped@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLight@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraMagicLight@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraFollower@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLock@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLeveledCreature@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraFromAlias@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraOpenCloseActivateRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraTeleport@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraTeleportName@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraMapMarker@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAction@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraStartingPosition@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraContainerChanges@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraOriginalReference@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraOwnership@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLockList@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraGlobal@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRank@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCount@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraGhost@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraWorn@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraShouldWear@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraWornLeft@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCannotWear@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHealth@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHealthPerc@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraTimeLeft@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCharge@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSoul@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraScale@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCachedScale@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHotkey@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraInfoGeneralTopic@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPackageStartLocation@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraReferenceHandle@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLocation@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPackage@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraTresPassPackage@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPlayerCrimeList@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLeveledItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraOutfitItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPersistentCell@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRagDollData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEncounterZone@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraUsedMarkers@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraReservedMarkers@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRunOncePacks@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraDistantData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEnableStateParent@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEnableStateChildren@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAttachRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAttachRefChildren@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRandomTeleportMarker@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAshPileRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLocationRefType@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLeveledItemBase@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLinkedRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLinkedRefChildren@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraActivateRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraActivateRefChildren@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraReflectedRefs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraReflectorRefs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraWaterLightRefs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLitWaterRefs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLevCreaModifier@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPoison@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEnchantment@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLastFinishedSequence@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSpawnContainer@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEmittanceSource@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraMultiBoundRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraMultiBound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraResourcesPreload@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPortal@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRoom@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraOcclusionShape@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraItemDropper@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraDroppedItemList@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSavedAnimation@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSavedHavokData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraFriendHits@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHeadingTarget@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRefractionProperty@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraStartingWorldOrCell@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEditorRef3DData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraEditorRefMoveData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHasNoRumors@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCreatureAwakeSound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCreatureMovementSound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraWeaponIdleSound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraWeaponAttackSound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraActivateLoopSound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCanTalkToPlayer@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraObjectHealth@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraTerminalState@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraNavMeshPortal@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraModelSwap@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRadius@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraFactionChanges@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraActorCause@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAmmo@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCombatStyle@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPrimitive@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAnimNoteReceiver@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPatrolRefData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPatrolRefInUseData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraOcclusionPlaneRefData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPortalRefData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRoomRefData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPackageData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCollisionData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraGuardedRefData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSayTopicInfoOnceADay@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSayToTopicInfo@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraIgnoredBySandbox@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraFollowerSwimBreadcrumbs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAliasInstanceArray@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraPromotedRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLargeRefOwnerCells@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAnimationSequencer@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraLightData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraSceneData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraBadPosition@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHeadTrackingWeight@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraFavorCost@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraMissingLinkedRefIDs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraMissingRefIDs@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraTextDisplayData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAttachedArrows3D@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraAlphaCutoff@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraHorse@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraForcedTarget@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraForcedLandingMarker@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraUniqueID@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraFlags@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRefrPath@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraDecalGroup@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCellWaterEnvMap@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraCellGrassData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraInteraction@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraWaterData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraWaterCurrentZoneData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraGroupConstraint@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraScriptedAnimDependence@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraRaceData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@ExtraMagicCaster@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@MultiBoundMarkerData@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsLoaded@TESRegionDataGrass@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@TESRegionDataMap@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsLoaded@TESRegionDataObjects@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@TESRegionDataSound@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot1@TESRegionGrassObject@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "TESRegionGrassObject",
+          "slot": 1,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetFormType@TESObjectREFRFactory@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?TargetIsRequiredType@TESObjectREFRSync__REFRSyncController@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?TestCanPlay@BSIMusicTrack@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?DoGetSupportedInputChannels@BGSSoundOutput@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSEntryPointFunctionDataBooleanGraphVariable@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSEntryPointFunctionDataLeveledList@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSEntryPointFunctionDataOneValue@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSEntryPointFunctionDataSpellItem@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSEntryPointFunctionDataText@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSEntryPointFunctionDataTwoValue@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetID@BGSPerkEntry@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSAbilityPerkEntry@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BGSEntryPointPerkEntry@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetVersion@TempLoadGameBuffer@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0D@BSFaceGenKeyframeExclusive@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0C@BSFaceGenKeyframeMultiple@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot16@BGSAIWorldLocation@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSAIWorldLocation",
+          "slot": 16,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot13@BGSAIWorldLocationInteriorCell@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSAIWorldLocationInteriorCell",
+          "slot": 13,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Unk_05@BGSPackageDataBool@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot6@BGSPackageDataRefOLD@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSPackageDataRefOLD",
+          "slot": 6,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot5@BGSPackageDataLocationWrapper@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSPackageDataLocationWrapper",
+          "slot": 5,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot6@BGSPackageDataRef@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSPackageDataRef",
+          "slot": 6,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Unk_0F@BGSProcedureTreeSimultaneous@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@BGSProcedureTreeBranch@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot32@BGSProcedureBase@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureBase",
+          "slot": 32,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureAcquire@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureAcquire",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureActivate@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureActivate",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureDialogue@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureDialogue",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureDialogueActivate@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureDialogueActivate",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureEat@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureEat",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureEscort@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureEscort",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureFind@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureFind",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureFlee@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureFlee",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureFlightGrab@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureFlightGrab",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureFollow@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureFollow",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureFollowTo@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureFollowTo",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureForceGreet@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureForceGreet",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureGuard@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureGuard",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureHoldPosition@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureHoldPosition",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureHover@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureHover",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureKeepAnEyeOn@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureKeepAnEyeOn",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureLock@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureLock",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureUnlock@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureUnlock",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureOrbit@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureOrbit",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedurePatrol@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedurePatrol",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedurePursue@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedurePursue",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureSandbox@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureSandbox",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureSay@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureSay",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureShout@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureShout",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureSit@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureSit",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureSleep@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureSleep",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureTravel@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureTravel",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Unk_0F@BGSProcedureTreeProcedure@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureUseIdleMarker@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureUseIdleMarker",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureUseMagic@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureUseMagic",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureUseWeapon@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureUseWeapon",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureWait@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureWait",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot17@BGSProcedureWander@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureWander",
+          "slot": 17,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?IsPackageOwner@TESPackage@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Compare@TESPackageData@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BSTempEffectWeaponBlood@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot5@BGSQueuedObjectDowngrade@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSQueuedObjectDowngrade",
+          "slot": 5,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot5@BGSQueuedObjectInitialLoad@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSQueuedObjectInitialLoad",
+          "slot": 5,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot5@BGSQueuedObjectUpgrade@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSQueuedObjectUpgrade",
+          "slot": 5,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot5@BGSQueuedTerrainDowngrade@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSQueuedTerrainDowngrade",
+          "slot": 5,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot5@BGSQueuedTerrainInitialLoad@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSQueuedTerrainInitialLoad",
+          "slot": 5,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetType@ModelReferenceEffect@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@NonActorMagicTarget@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetAttached@ReferenceEffect@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetStackable@ShaderReferenceEffect@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@SummonPlacementEffect@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetFileSize@SaveStorageWrapper@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetFileSize@LoadStorageWrapper@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot8@PlayerCharacter@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "PlayerCharacter",
+          "slot": 8,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot195@ArrowProjectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "ArrowProjectile",
+          "slot": 195,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot167@BarrierProjectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BarrierProjectile",
+          "slot": 167,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot165@BeamProjectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BeamProjectile",
+          "slot": 165,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot194@ConeProjectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "ConeProjectile",
+          "slot": 194,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot164@FlameProjectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "FlameProjectile",
+          "slot": 164,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?IsGrenadeProjectile@GrenadeProjectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot162@MissileProjectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "MissileProjectile",
+          "slot": 162,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot184@Projectile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "Projectile",
+          "slot": 184,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot6@CombatAimController@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "CombatAimController",
+          "slot": 6,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemMelee@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemRanged@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemShield@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetCategory@CombatInventoryItemOneHandedBlock@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemTorch@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemMagic@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemShout@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemStaff@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemPotion@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@CombatInventoryItemScroll@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetCategory@CombatMagicCasterRestore@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetCategory@CombatMagicCasterDisarm@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetCategory@CombatMagicCasterLight@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot7@CombatPathingRequest@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "CombatPathingRequest",
+          "slot": 7,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Unk_18@BGSGamebryoSequenceGenerator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_18@BSOffsetAnimationGenerator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@BSDistTriggerModifier@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@BSInterpValueModifier@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@BSIsActiveModifier@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@BSPassByTargetTriggerModifier@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@BSTweenerModifier@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_08@BSNullImplGameSound@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot2@BSWin32GamerProfile@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSWin32GamerProfile",
+          "slot": 2,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?IsEnabled@BSInputDevice@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?VerifyAddress@BSNiAllocator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?VerifyAddress@NiStandardAllocator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?ReadFile@BSCounterStorage@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot3@BSSearchPath@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSSearchPath",
+          "slot": 3,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?SetupGeometry@NiShadeProperty@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot3@NiBoundingVolume@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiBoundingVolume",
+          "slot": 3,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot3@NiBoxBV@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiBoxBV",
+          "slot": 3,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot3@NiCapsuleBV@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiCapsuleBV",
+          "slot": 3,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot3@NiHalfSpaceBV@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiHalfSpaceBV",
+          "slot": 3,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot3@NiUnionBV@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiUnionBV",
+          "slot": 3,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot1@NiOBBLeaf@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiOBBLeaf",
+          "slot": 1,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetInterpolatorCount@NiSingleInterpController@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformValueSupported@NiTransformInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformValueSupported@NiPathInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformValueSupported@NiBlendTransformInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsFloatValueSupported@NiBlendFloatInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformController@NiTransformController@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformValueSupported@NiBlendAccumTransformInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsBoolValueSupported@NiBlendBoolInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsColorAValueSupported@NiBlendColorInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsPoint3ValueSupported@NiBlendPoint3Interpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsQuaternionValueSupported@NiBlendQuaternionInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsBoolValueSupported@NiBoolInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsColorAValueSupported@NiBSplineColorInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot62@NiBSplineCompColorInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiBSplineCompColorInterpolator",
+          "slot": 62,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot62@NiBSplineCompFloatInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiBSplineCompFloatInterpolator",
+          "slot": 62,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot62@NiBSplineCompPoint3Interpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiBSplineCompPoint3Interpolator",
+          "slot": 62,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot62@NiBSplineCompTransformInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiBSplineCompTransformInterpolator",
+          "slot": 62,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?IsFloatValueSupported@NiBSplineFloatInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsPoint3ValueSupported@NiBSplinePoint3Interpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformValueSupported@NiBSplineTransformInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformController@NiLookAtController@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformValueSupported@NiLookAtInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformController@NiPathController@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsPoint3ValueSupported@NiPoint3Interpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsQuaternionValueSupported@NiQuaternionInterpolator@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?IsTransformController@NiRollController@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetKeyChannelCount@BSTreadTransfInterpolator@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetInterpolatorCount@NiPSysEmitterCtlr@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Update@NiPSysSpawnModifier@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?RegisterStreamables@BSMultiBoundRoom@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BSMultiBoundAABB@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BSMultiBoundSphere@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot38@BSOcclusionBox@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSOcclusionBox",
+          "slot": 38,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetInterpolatorCount@BSProceduralLightningController@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?RegisterStreamables@BSReference@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BSMultiBoundCapsule@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?QShader@BSLightingShaderProperty@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?QShader@BSGrassShaderProperty@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialEnvmap@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialEye@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialParallax@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialMultiLayerParallax@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?QShader@BSEffectShaderProperty@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?QShader@BSWaterShaderProperty@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?QShader@BSParticleShaderProperty@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetType@BSWaterShaderMaterial@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_03@BSShadowLight@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?good@NiMemStream@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?good@UnitTest_BSStreamParserStream@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot1@UnitTest_BSStreamParserData@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "UnitTest_BSStreamParserData",
+          "slot": 1,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot4@BSShadowFrustumLight@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSShadowFrustumLight",
+          "slot": 4,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot8@BSSystemUtility@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSSystemUtility",
+          "slot": 8,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot4@BSStreamSystemUtility@@UEBAEXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSStreamSystemUtility",
+          "slot": 4,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      }
+    ]
+  }
+}

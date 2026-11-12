@@ -1,0 +1,401 @@
+{
+  "schema": 1,
+  "kind": "generator-selection",
+  "build_id": "sse-steam-1-7-104",
+  "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+  "generator_family": "member-return",
+  "generator_version": "2",
+  "template_digest": "1254832e5ca7cdca7f6330a2018dde32919625f6149744dd0138e59a943106d8",
+  "recipe": "reconstruction/recipes/msvc-19.16.27054-o2.json",
+  "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+  "compiler_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+  "local_comparator_version": "0.6.0",
+  "local_comparator_source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+  "symbols": "reports/sse-steam-1-7-104/generator-member-return.symbol-map.json",
+  "members": [
+    {
+      "task_id": "stamp-146780",
+      "rva": 1337216,
+      "size": 5,
+      "name": "TESModel::GetModel",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/forms/TESModel.cpp",
+      "source_digest": "92e31f0dfdb26f654f99333d47f2c2561a3a76e846a10e9b730634d428408e3f",
+      "input_digest": "77b2ed086d7ae884c0ab939d678cb4370c17995cb1086bea2264a7319cec02cb"
+    },
+    {
+      "task_id": "stamp-14c8c0",
+      "rva": 1362112,
+      "size": 5,
+      "name": "BGSMenuDisplayObject::GetMenuDisplayObject",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/forms/BGSMenuDisplayObject.cpp",
+      "source_digest": "54c1649fcfc7c83d6a9567f33787e3702a18230216032480cc8faa085871a852",
+      "input_digest": "d02785f8f71d54e3c0e4279bf0d5cd24178995e4fd530a01e021c3ed63ca4ec0"
+    },
+    {
+      "task_id": "stamp-1e85a0",
+      "rva": 2000288,
+      "size": 4,
+      "name": "TESHealthForm::Slot4",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "TESHealthForm",
+        "slot": 4,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/forms/TESHealthForm.cpp",
+      "source_digest": "134dbb5b301f1d4e1334cb14c6f49716040854e84db53587ce6ffe517fef1731",
+      "input_digest": "5d660d22ec6f6c77ab36429d3d4922e274e055531afb9971e878c69ad477b84d"
+    },
+    {
+      "task_id": "stamp-258700",
+      "rva": 2459392,
+      "size": 5,
+      "name": "TESRegionObject::Slot2",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "TESRegionObject",
+        "slot": 2,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/forms/TESRegionObject.cpp",
+      "source_digest": "787be03b9de38b558f74075c12edefc37cc8d5d81d42b9d5e77152f883b7d26d",
+      "input_digest": "ab22542a977c660b8ac5981ec8dbc32f762dd57f4c65e6972f0539e0abcf67e5"
+    },
+    {
+      "task_id": "stamp-320390",
+      "rva": 3277712,
+      "size": 4,
+      "name": "BGSListForm::GetCount",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/forms/BGSListForm.cpp",
+      "source_digest": "9d9fe26e1fb17f14f850fd90835e72b72681eb63760e00823fb852c87938b290",
+      "input_digest": "1f7d3a0d3ce54c6af1fbcb68e23b543b5aacafb50c01532b0c0fcb1fd39660a5"
+    },
+    {
+      "task_id": "stamp-448e30",
+      "rva": 4492848,
+      "size": 5,
+      "name": "BGSAIWorldLocationPointRadius::Slot8",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "BGSAIWorldLocationPointRadius",
+        "slot": 8,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/forms/BGSAIWorldLocationPointRadius.cpp",
+      "source_digest": "7550989415c24c418012ca072124222e6635c0079f936f90fb392a1dfb3077b4",
+      "input_digest": "f09bc80c4c4dae24abc5a673b17d79b49007d29a1571eb535e8c340042a37730"
+    },
+    {
+      "task_id": "stamp-45acd0",
+      "rva": 4566224,
+      "size": 5,
+      "name": "BGSProcedureHoldPositionExecState::Slot4",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "BGSProcedureHoldPositionExecState",
+        "slot": 4,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/forms/BGSProcedureHoldPositionExecState.cpp",
+      "source_digest": "7fea0336829429a57d934ab6f00a4df8511787f98bb4fe6cb42a58dde7f72571",
+      "input_digest": "5de0e95e83966d3c1668d8830670a6c6a786dc323109e7965f060bfb6fb41703"
+    },
+    {
+      "task_id": "stamp-45af30",
+      "rva": 4566832,
+      "size": 4,
+      "name": "BGSProcedureTreeSequenceExecState::Slot9",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "BGSProcedureTreeSequenceExecState",
+        "slot": 9,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/forms/BGSProcedureTreeSequenceExecState.cpp",
+      "source_digest": "cbd190845204ae07ea4746cd5518c6129bfd6bade783cef58476b63f7e319804",
+      "input_digest": "fcd3995334db9debad7f6f1b03d7ab0489b385d2044c460106254cd1e37b0a58"
+    },
+    {
+      "task_id": "stamp-45af40",
+      "rva": 4566848,
+      "size": 4,
+      "name": "BGSProcedureTreeStackedExecState::Slot9",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "BGSProcedureTreeStackedExecState",
+        "slot": 9,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/forms/BGSProcedureTreeStackedExecState.cpp",
+      "source_digest": "dd7f329a2490dffa2f4d20297d6566980e65ad0de3a9c74cd08bdbc2df50eda7",
+      "input_digest": "ca2d4e5e9eb0832145143431519b292bba53d096f1ec14e41e6b456abdf1f682"
+    },
+    {
+      "task_id": "stamp-4e0ed0",
+      "rva": 5115600,
+      "size": 4,
+      "name": "PathingDoor::Slot2",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "PathingDoor",
+        "slot": 2,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/bsengine/PathingDoor.cpp",
+      "source_digest": "74e3dc559a0d2ce359177e5de7d13a0ecb4e2f28ccb7155251bbcabaeea3d7a3",
+      "input_digest": "d9c134f08f59f3244d9b84ad578547fbe65abd8ceb7e5d252d2b6e7b2628f890"
+    },
+    {
+      "task_id": "stamp-556990",
+      "rva": 5597584,
+      "size": 8,
+      "name": "SimpleAnimationGraphManagerLoadingTask::Slot19",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "SimpleAnimationGraphManagerLoadingTask",
+        "slot": 19,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/bsengine/SimpleAnimationGraphManagerLoadingTask.cpp",
+      "source_digest": "781c7cc58290f6efe15fcfaf1a3c06df468607dee2617faeddda2a19ff5f34f9",
+      "input_digest": "34e91cc3a5e4c114942b3b73f8e1430d95e0ef66c1feeba25a5dcfc67309580f"
+    },
+    {
+      "task_id": "stamp-5c0850",
+      "rva": 6031440,
+      "size": 7,
+      "name": "ActorMagicCaster::GetCastingSource",
+      "name_source": {
+        "kind": "public",
+        "source": "ng-slot",
+        "repository": "CharmedBaryon/CommonLibSSE-NG",
+        "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/magic/ActorMagicCaster.cpp",
+      "source_digest": "5138ca98a506eef58fa18f8c92c34d76b02a910e211039f3cadd64ea2f0f90db",
+      "input_digest": "ba3492fa07a125b002ec7e1c0458e72289481cb49f752b56849c6f7842b70939"
+    },
+    {
+      "task_id": "stamp-6398f0",
+      "rva": 6527216,
+      "size": 5,
+      "name": "BGSSaveFormBuffer::GetForm",
+      "name_source": {
+        "kind": "public",
+        "source": "ng-slot",
+        "repository": "CharmedBaryon/CommonLibSSE-NG",
+        "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/forms/BGSSaveFormBuffer.cpp",
+      "source_digest": "5efc737e2624b2ab39afd47575c51e8433fee9417c1c562586caf4653c44e2d9",
+      "input_digest": "8bf4377365e43365d00a72c469a27929c498671416162921558eece7cc2b5c4b"
+    },
+    {
+      "task_id": "stamp-6eb4a0",
+      "rva": 7255200,
+      "size": 8,
+      "name": "ActorProcess::GetEquippedLeftHand",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/actors/ActorProcess.cpp",
+      "source_digest": "f17f2170e57b01b9415b31a1ec1a1ed14e73898e1919569854777f5cbd118bd2",
+      "input_digest": "334111a69be32c820c80b1cd285ad35808d77a0bd92e14316fa867dca49cd8e2"
+    },
+    {
+      "task_id": "stamp-7e5a60",
+      "rva": 8280672,
+      "size": 8,
+      "name": "Explosion::GetActorCause",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/forms/Explosion.cpp",
+      "source_digest": "721bc841a57a7a837767c1aa41d1670347e13fb6cb150a4d2c6cdf4df4dbd42b",
+      "input_digest": "fd8e55cc35dfc2cf919fcb25e1fc7a5ee55362920f6d2e8672cbf680e4a8c013"
+    },
+    {
+      "task_id": "stamp-eb9780",
+      "rva": 15439744,
+      "size": 7,
+      "name": "ArchiveFile::Unk_0A",
+      "name_source": {
+        "kind": "public",
+        "source": "ng-slot",
+        "repository": "CharmedBaryon/CommonLibSSE-NG",
+        "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/bsengine/ArchiveFile.cpp",
+      "source_digest": "9ac5d31a0875063c213d733384de7ecc89f8389c9d5a1e8ec00d251d7ece163e",
+      "input_digest": "0a8dd91fdadf543d0077f90879c41a5dd2933fe74c862562764d48b6813bb48c"
+    },
+    {
+      "task_id": "stamp-eb9ee0",
+      "rva": 15441632,
+      "size": 7,
+      "name": "CompressedArchiveFile::Unk_0A",
+      "name_source": {
+        "kind": "public",
+        "source": "ng-slot",
+        "repository": "CharmedBaryon/CommonLibSSE-NG",
+        "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/bsengine/CompressedArchiveFile.cpp",
+      "source_digest": "9f3489de70cf8270079f8787c0686249ed38b744626c8cb4ecb3ac9f4b291ade",
+      "input_digest": "6197b3ca6a918b82db723634d9d86059f1986f4db53870ad55d1417ea0169c30"
+    },
+    {
+      "task_id": "stamp-ec1710",
+      "rva": 15472400,
+      "size": 4,
+      "name": "BSMemStorage::GetFileSize",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/bsengine/BSMemStorage.cpp",
+      "source_digest": "11d93945e8ab2a8ecb42a819462a6fc5ad5565d733de9117b5f189bcbdcfc9b3",
+      "input_digest": "417bb77f75843732df9d92f21b831ac87f5a1bbb83e8de4919956a2e1b600617"
+    },
+    {
+      "task_id": "stamp-f00b20",
+      "rva": 15731488,
+      "size": 5,
+      "name": "NiDefaultAVObjectPalette::Slot41",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "NiDefaultAVObjectPalette",
+        "slot": 41,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/netimmerse/NiDefaultAVObjectPalette.cpp",
+      "source_digest": "6ce6e5f7d0b75f81e8ad5ab105d5c04419c7d2caa336ac37981e5a91ca575f01",
+      "input_digest": "14ad22ca2c895e81bdb5a956d4b69b83ec2f454ea5bb049329413c62ce0675f4"
+    },
+    {
+      "task_id": "stamp-f971f0",
+      "rva": 16347632,
+      "size": 5,
+      "name": "NiExtraDataController::GetCtlrID",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/netimmerse/NiExtraDataController.cpp",
+      "source_digest": "c7fd7385e50f4e77b6a1dc31122eb447bab517596d982fcf36acc3952e952833",
+      "input_digest": "559cf4ccc00f694521a9e3e7d571569e519366fbb29de5717a2a703aebd33385"
+    },
+    {
+      "task_id": "stamp-fa0b60",
+      "rva": 16386912,
+      "size": 5,
+      "name": "NiPSysModifierCtlr::GetCtlrID",
+      "name_source": {
+        "kind": "public",
+        "source": "meh321",
+        "repository": "meh321/AddressLibraryDatabase",
+        "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+        "confidence": "medium"
+      },
+      "compiled": "reconstruction/netimmerse/NiPSysModifierCtlr.cpp",
+      "source_digest": "5c8e26f3ead0700cbbd1c66cb8e98ed659c5be220fa1dd8243e4afb7e4beb98b",
+      "input_digest": "c5ed92f154cbab8abd5d6f47cafa61b220acdafcb6eae28101fb4f4cc3d5764f"
+    },
+    {
+      "task_id": "stamp-1535640",
+      "rva": 22238784,
+      "size": 8,
+      "name": "BSParticleShaderObjectEmitter::Slot2",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "BSParticleShaderObjectEmitter",
+        "slot": 2,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/bsengine/BSParticleShaderObjectEmitter.cpp",
+      "source_digest": "158e3794ab490c23eccaec971695c9cdf4de2bda81f191f1dfa6bf6994305dca",
+      "input_digest": "71fa634ea330f5e66b8acd0bc8e7e1db36a49bc51b978590648ef06f53da1173"
+    },
+    {
+      "task_id": "stamp-1535970",
+      "rva": 22239600,
+      "size": 7,
+      "name": "BSParticleShaderGeometryEmitter::Slot5",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "BSParticleShaderGeometryEmitter",
+        "slot": 5,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/bsengine/BSParticleShaderGeometryEmitter.cpp",
+      "source_digest": "629ebc9959580894fbb001c2b07e9ea1173da40b04bd0581a3964f4d145e77d6",
+      "input_digest": "c8340d2d345b646761bf55dcb3f3fe70b2ec9146ce6478bdf74bdaa9f37dc969"
+    },
+    {
+      "task_id": "stamp-15362a0",
+      "rva": 22241952,
+      "size": 8,
+      "name": "BSParticleShaderRayEmitter::Slot6",
+      "name_source": {
+        "kind": "guess",
+        "confidence": "low",
+        "owner": "BSParticleShaderRayEmitter",
+        "slot": 6,
+        "rationale": "vtable owner and slot; method spelling invented"
+      },
+      "compiled": "reconstruction/bsengine/BSParticleShaderRayEmitter.cpp",
+      "source_digest": "a52a1b7985b655c3974f6936f0612c1e55b8635ce2d3f6000e3744f836cb2629",
+      "input_digest": "cc3f48696080a49ad07de055639ef8eeb7e944f23f2624d1f579230d22c42472"
+    }
+  ]
+}

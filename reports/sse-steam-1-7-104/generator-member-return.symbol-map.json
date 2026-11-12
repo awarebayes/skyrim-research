@@ -1,0 +1,371 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetModel@TESModel@@UEBAPEAXXZ": {
+      "rva": 1337216,
+      "size": 5
+    },
+    "?GetMenuDisplayObject@BGSMenuDisplayObject@@UEBAPEAXXZ": {
+      "rva": 1362112,
+      "size": 5
+    },
+    "?Slot4@TESHealthForm@@UEBAIXZ": {
+      "rva": 2000288,
+      "size": 4
+    },
+    "?Slot2@TESRegionObject@@UEBAPEAXXZ": {
+      "rva": 2459392,
+      "size": 5
+    },
+    "?GetCount@BGSListForm@@UEBAIXZ": {
+      "rva": 3277712,
+      "size": 4
+    },
+    "?Slot8@BGSAIWorldLocationPointRadius@@UEBAPEAXXZ": {
+      "rva": 4492848,
+      "size": 5
+    },
+    "?Slot4@BGSProcedureHoldPositionExecState@@UEBAPEAXXZ": {
+      "rva": 4566224,
+      "size": 5
+    },
+    "?Slot9@BGSProcedureTreeSequenceExecState@@UEBAIXZ": {
+      "rva": 4566832,
+      "size": 4
+    },
+    "?Slot9@BGSProcedureTreeStackedExecState@@UEBAIXZ": {
+      "rva": 4566848,
+      "size": 4
+    },
+    "?Slot2@PathingDoor@@UEBAIXZ": {
+      "rva": 5115600,
+      "size": 4
+    },
+    "?Slot19@SimpleAnimationGraphManagerLoadingTask@@UEBAPEAXXZ": {
+      "rva": 5597584,
+      "size": 8
+    },
+    "?GetCastingSource@ActorMagicCaster@@UEBAIXZ": {
+      "rva": 6031440,
+      "size": 7
+    },
+    "?GetForm@BGSSaveFormBuffer@@UEBAPEAXXZ": {
+      "rva": 6527216,
+      "size": 5
+    },
+    "?GetEquippedLeftHand@ActorProcess@@UEBAPEAXXZ": {
+      "rva": 7255200,
+      "size": 8
+    },
+    "?GetActorCause@Explosion@@UEBAPEAXXZ": {
+      "rva": 8280672,
+      "size": 8
+    },
+    "?Unk_0A@ArchiveFile@@UEBAIXZ": {
+      "rva": 15439744,
+      "size": 7
+    },
+    "?Unk_0A@CompressedArchiveFile@@UEBAIXZ": {
+      "rva": 15441632,
+      "size": 7
+    },
+    "?GetFileSize@BSMemStorage@@UEBAIXZ": {
+      "rva": 15472400,
+      "size": 4
+    },
+    "?Slot41@NiDefaultAVObjectPalette@@UEBAPEAXXZ": {
+      "rva": 15731488,
+      "size": 5
+    },
+    "?GetCtlrID@NiExtraDataController@@UEBAPEAXXZ": {
+      "rva": 16347632,
+      "size": 5
+    },
+    "?GetCtlrID@NiPSysModifierCtlr@@UEBAPEAXXZ": {
+      "rva": 16386912,
+      "size": 5
+    },
+    "?Slot2@BSParticleShaderObjectEmitter@@UEBAPEAXXZ": {
+      "rva": 22238784,
+      "size": 8
+    },
+    "?Slot5@BSParticleShaderGeometryEmitter@@UEBAIXZ": {
+      "rva": 22239600,
+      "size": 7
+    },
+    "?Slot6@BSParticleShaderRayEmitter@@UEBAPEAXXZ": {
+      "rva": 22241952,
+      "size": 8
+    }
+  },
+  "_provenance": {
+    "method": "Generated declaration bindings for selection; names remain unverified.",
+    "entries": [
+      {
+        "name": "?GetModel@TESModel@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetMenuDisplayObject@BGSMenuDisplayObject@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot4@TESHealthForm@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "TESHealthForm",
+          "slot": 4,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot2@TESRegionObject@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "TESRegionObject",
+          "slot": 2,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetCount@BGSListForm@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot8@BGSAIWorldLocationPointRadius@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSAIWorldLocationPointRadius",
+          "slot": 8,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot4@BGSProcedureHoldPositionExecState@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureHoldPositionExecState",
+          "slot": 4,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot9@BGSProcedureTreeSequenceExecState@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureTreeSequenceExecState",
+          "slot": 9,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot9@BGSProcedureTreeStackedExecState@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BGSProcedureTreeStackedExecState",
+          "slot": 9,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot2@PathingDoor@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "PathingDoor",
+          "slot": 2,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot19@SimpleAnimationGraphManagerLoadingTask@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "SimpleAnimationGraphManagerLoadingTask",
+          "slot": 19,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetCastingSource@ActorMagicCaster@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetForm@BGSSaveFormBuffer@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetEquippedLeftHand@ActorProcess@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetActorCause@Explosion@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@ArchiveFile@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Unk_0A@CompressedArchiveFile@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "ng-slot",
+          "repository": "CharmedBaryon/CommonLibSSE-NG",
+          "revision": "b93280e832f263dbef44e44cbe2936622a02f91a",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetFileSize@BSMemStorage@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot41@NiDefaultAVObjectPalette@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "NiDefaultAVObjectPalette",
+          "slot": 41,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?GetCtlrID@NiExtraDataController@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?GetCtlrID@NiPSysModifierCtlr@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "public",
+          "source": "meh321",
+          "repository": "meh321/AddressLibraryDatabase",
+          "revision": "0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91",
+          "confidence": "medium"
+        }
+      },
+      {
+        "name": "?Slot2@BSParticleShaderObjectEmitter@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSParticleShaderObjectEmitter",
+          "slot": 2,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot5@BSParticleShaderGeometryEmitter@@UEBAIXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSParticleShaderGeometryEmitter",
+          "slot": 5,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      },
+      {
+        "name": "?Slot6@BSParticleShaderRayEmitter@@UEBAPEAXXZ",
+        "origin": "generated declaration",
+        "name_source": {
+          "kind": "guess",
+          "confidence": "low",
+          "owner": "BSParticleShaderRayEmitter",
+          "slot": 6,
+          "rationale": "vtable owner and slot; method spelling invented"
+        }
+      }
+    ]
+  }
+}
