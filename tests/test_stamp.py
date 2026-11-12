@@ -51,3 +51,26 @@ class StampSafetyTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class GeneratorDecodeTests(unittest.TestCase):
+    def test_leaf_decoder_and_reject(self):
+        self.assertEqual(stamp.decode_leaf(bytes.fromhex('b878563412c3')), ('constant', 4, 0x12345678))
+        self.assertEqual(stamp.decode_leaf(bytes.fromhex('488b4108c3')), ('member', 8, 8))
+        self.assertEqual(stamp.decode_leaf(bytes.fromhex('8b8178563412c3')), ('member', 4, 0x12345678))
+        self.assertIsNone(stamp.decode_leaf(bytes.fromhex('b87856341290')))
+        self.assertIsNone(stamp.decode_leaf(b''))
+
+    def test_negative_displacement_rejected(self):
+        kind, width, offset = stamp.decode_leaf(bytes.fromhex('8b41fcc3'))
+        with self.assertRaises(stamp.UnsafeCandidate):
+            stamp.emit_leaf('Example', 'Read', family=kind, width=width, value=offset,
+                            virtual=True, name_label='GUESS(low)')
+
+    def test_runner_refuses_remote_and_boat(self):
+        config = {'attempt': 'selected', 'hosts': {'selected': {'backend': 'local', 'loader': 'wine', 'host_id': 'mac-wine'}}}
+        self.assertEqual(stamp.require_local_wine(config)['backend'], 'local')
+        for backend in ('ssh', 'boat'):
+            config['hosts']['selected']['backend'] = backend
+            with self.assertRaises(ValueError):
+                stamp.require_local_wine(config)

@@ -1,7 +1,9 @@
 """Conservative primitives for script-produced reconstruction candidates.
 
-This module does not submit candidates or confer match status.  Callers must supply
-independently established identities and reference bindings and run the verifier.
+The generate and attempt commands use a private JSON config with paths named main,
+worktree, census, families, functions, progress, image and runners. Output and the
+separate checkout must be inside the main checkout private directory. Local passes
+are preliminary evidence only; they do not confer match status.
 """
 import re
 
@@ -92,3 +94,211 @@ def emit_leaf(owner, method, *, family, width, value, virtual, name_label):
     cpp = ['#include "unit.h"', label, f'{result_type} {owner}::{method}() const', '{',
            f'    return {expression};', '}']
     return '\n'.join(h) + '\n', '\n'.join(cpp) + '\n'
+
+
+def decode_leaf(data):
+    """Decode only the leaf forms selected by the census shape."""
+    import struct
+    if len(data) >= 6 and data[0] == 0xb8 and data[5] == 0xc3:
+        return 'constant', 4, struct.unpack_from('<I', data, 1)[0]
+    if len(data) >= 3 and data[0] == 0xb0 and data[2] == 0xc3:
+        return 'constant', 1, data[1]
+    for prefix, width, disp in ((b'\x48\x8b\x41', 8, 1), (b'\x8b\x41', 4, 1),
+                                (b'\x0f\xb6\x41', 1, 1), (b'\x48\x8b\x81', 8, 4),
+                                (b'\x8b\x81', 4, 4)):
+        end = len(prefix) + disp
+        if len(data) > end and data.startswith(prefix) and data[end] == 0xc3:
+            return 'member', width, int.from_bytes(data[len(prefix):end], 'little', signed=True)
+    return None
+
+
+def generate(args):
+    import collections
+    import csv
+    import json
+    import struct
+    from pathlib import Path
+    cfg = json.loads(Path(args.config).read_text())
+    out = Path(args.out).resolve()
+    wt = Path(cfg['worktree']).resolve()
+    private = (Path(cfg['main']) / '.local').resolve()
+    if not out.is_relative_to(private) or not wt.is_relative_to(private):
+        raise ValueError('output and worktree must be inside the main checkout private directory')
+    if not (wt / '.local').is_dir() or not (wt / 'tools/verifier/attempt').is_file():
+        raise ValueError('private worktree with linked .local required')
+    ranks = [11, 22] if args.family == 'const-return' else [18, 56]
+    families = json.loads(Path(cfg['families']).read_text())
+    shapes = {f['shape'] for f in families if f['rank'] in ranks}
+    solved = {int(str(f['rva']), 0) for f in json.loads(Path(cfg['progress']).read_text())['functions'] if f.get('status') == 'matched'}
+    data = Path(cfg['image']).read_bytes()
+    pe = struct.unpack_from('<I', data, 0x3c)[0]
+    sections = []
+    for i in range(struct.unpack_from('<H', data, pe + 6)[0]):
+        off = pe + 24 + struct.unpack_from('<H', data, pe + 20)[0] + 40 * i
+        vs, va, rs, ro = struct.unpack_from('<IIII', data, off + 8)
+        sections.append((va, min(vs, rs), ro))
+    inventory = {}
+    names = collections.defaultdict(set)
+    for line in Path(cfg['functions']).open():
+        d = json.loads(line); inventory[d['rva']] = d
+        for n in d['names']:
+            names[n['name']].add(d['rva'])
+    existing = {p.stem for p in (wt / 'reconstruction').rglob('*.h')}
+    # Include the shared checkout's active work without modifying it.
+    existing |= {p.stem for p in (Path(cfg['main']) / 'reconstruction').rglob('*.h')}
+    out.mkdir(parents=True, exist_ok=True)
+    index = out / (args.family + '.jsonl')
+    prior = [json.loads(x) for x in index.read_text().splitlines()] if args.resume and index.exists() else []
+    if index.exists() and not args.resume:
+        raise ValueError('index exists; use --resume or a new output directory')
+    selected = {x['rva'] for x in prior}
+    seen = {x['owner'] for x in prior}
+    for other in out.glob('*-return.jsonl'):
+        if other != index:
+            seen.update(json.loads(line)['owner'] for line in other.read_text().splitlines())
+    counts = collections.Counter()
+    rows = csv.DictReader(Path(cfg['census']).open(), delimiter='\t')
+    emitted = 0
+    for row in rows:
+        if row['shape'] not in shapes or not row['tier']:
+            continue
+        r = int(row['rva'], 16)
+        if r in solved or r in selected:
+            continue
+        d = inventory.get(r)
+        if not d:
+            counts['undecodable'] += 1; continue
+        owner_info = d.get('owner') or {}
+        owner = owner_info.get('class', '')
+        if '<' in owner or '>' in owner:
+            counts['template-owned'] += 1; continue
+        name = next((n for n in d['names'] if n.get('how') != 'placeholder' and
+                     re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]*::[A-Za-z_][A-Za-z_0-9]*', n['name'])
+                     and n.get('source') in ('meh321', 'ng-id', 'ng-slot')), None)
+        if name:
+            cls, method = name['name'].split('::')
+            if names[name['name']] != {r}:
+                counts['name-clash'] += 1; continue
+            label = ('COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)' if name['source'] == 'meh321'
+                     else 'COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)')
+        elif IDENT.fullmatch(owner) and isinstance(owner_info.get('slot'), int):
+            cls, method, label = owner, 'Slot' + str(owner_info['slot']), 'GUESS(low)'
+        else:
+            counts['undecodable'] += 1; continue
+        if cls in existing or cls in seen:
+            counts['existing-unit'] += 1; continue
+        code = next((data[ro + r - va:ro + r - va + 16] for va, size, ro in sections if va <= r < va + size), b'')
+        decoded = decode_leaf(code)
+        if not decoded or decoded[0] != ('constant' if args.family == 'const-return' else 'member'):
+            counts['undecodable'] += 1; continue
+        kind, width, value = decoded
+        try:
+            h, cpp = emit_leaf(cls, method, family=kind, width=width, value=value,
+                               virtual=bool(owner_info), name_label=label)
+        except UnsafeCandidate:
+            counts['undecodable'] += 1; continue
+        unit = f'P35_{r:x}'
+        source_dir = wt / 'reconstruction/generated' / unit
+        source_dir.mkdir(parents=True, exist_ok=True)
+        for path, content in ((source_dir / 'unit.h', h), (source_dir / 'unit.cpp', cpp)):
+            if path.exists() and path.read_text() != content:
+                raise ValueError('generated source already exists with different contents')
+            path.write_text(content)
+        task_dir = out / 'tasks' / unit
+        task_dir.mkdir(parents=True, exist_ok=True)
+        mangling = {1: "E", 4: "I", 8: "PEAX"}[width]
+        symbol = f'?{method}@{cls}@@{"U" if owner_info else "Q"}EBA{mangling}XZ'
+        fn = dict(rva=hex(r), size=int(row['size']), symbol=symbol,
+                  function_id=f'sse-steam-1-7-104-{hex(r)}', community_name=f'{cls}::{method}',
+                  name_origin='GUESS' if label == 'GUESS(low)' else 'COMMUNITY', verdict='generated', pack=None)
+        task = dict(task_id=unit.lower().replace('_', '-'), build_id='sse-steam-1-7-104',
+                    compiled=f'reconstruction/generated/{unit}/unit.cpp',
+                    recipe='reconstruction/recipes/msvc-19.16.27054-o2.json', symbols='symbols.json',
+                    functions=[fn], max_attempts=2,
+                    export=dict(generator='tools/stamp.py', task_schema=1, unit_already_records=[]))
+        (task_dir / 'task.json').write_text(json.dumps(task, indent=2))
+        (task_dir / 'symbols.json').write_text(json.dumps(dict(schema=1, build_id=task['build_id'],
+                                                     symbols={symbol: dict(rva=r, size=fn['size'])}), indent=2))
+        with index.open('a') as f:
+            f.write(json.dumps(dict(rva=r, owner=cls, task=str(task_dir), family=args.family)) + '\n')
+        seen.add(cls); emitted += 1
+        if args.limit and emitted >= args.limit:
+            break
+    print(json.dumps(dict(emitted=emitted, skipped=counts)))
+
+
+def require_local_wine(raw):
+    host = raw['hosts'][raw['attempt']]
+    if (host.get('backend'), host.get('loader'), host.get('host_id')) != ('local', 'wine', 'mac-wine'):
+        raise ValueError('attempt runner must be local mac-wine')
+    return host
+
+
+def attempt_all(args):
+    import concurrent.futures
+    import json
+    import os
+    import subprocess
+    import time
+    from pathlib import Path
+    cfg = json.loads(Path(args.config).read_text())
+    runner_path = Path(cfg['runners'])
+    raw = json.loads(runner_path.read_text())
+    host = require_local_wine(raw)
+    out = Path(args.out).resolve(); wt = Path(cfg['worktree']).resolve()
+    private = (Path(cfg['main']) / '.local').resolve()
+    if not out.is_relative_to(private) or not wt.is_relative_to(private):
+        raise ValueError('output and worktree must be inside the main checkout private directory')
+    # Freeze the checked configuration so each child uses exactly this local host.
+    snapshot = out / 'runner.json'
+    snapshot.write_text(json.dumps(dict(runners_schema=raw['runners_schema'], attempt=raw['attempt'],
+                                        hosts={raw['attempt']: host}, confirm=[])))
+    env = dict(os.environ, SR_RUNNERS_CONFIG=str(snapshot))
+    tasks = [json.loads(line) for p in sorted(out.glob('*-return.jsonl')) for line in p.read_text().splitlines()]
+    log = out / 'results.jsonl'
+    done = {x['task'] for x in map(json.loads, log.read_text().splitlines())} if args.resume and log.exists() else set()
+    if log.exists() and not args.resume:
+        raise ValueError('result log exists; use --resume')
+    def run(task):
+        t = time.monotonic()
+        proc = subprocess.run([str(wt / 'tools/verifier/attempt'), task['task']], cwd=wt, env=env,
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        text = proc.stdout
+        m = re.search(r'\b(PASS|FAIL) ([a-z0-9-]+)', text)
+        result = m.group(1).lower() if m else 'error'
+        reason = m.group(2) if m else ('compile-failed' if 'COMPILE FAILED' in text else 'infrastructure')
+        Path(task['task'], 'output.txt').write_text(text)
+        return dict(task=task['task'], rva=task['rva'], family=task['family'], result=result,
+                    reason=reason, exit=proc.returncode, seconds=round(time.monotonic()-t, 2))
+    pending = [t for t in tasks if t['task'] not in done]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool, log.open('a') as f:
+        for result in pool.map(run, pending):
+            f.write(json.dumps(result) + '\n'); f.flush()
+            print(json.dumps(result), flush=True)
+
+
+def main():
+    import argparse
+    p = argparse.ArgumentParser()
+    sub = p.add_subparsers(dest='command', required=True)
+    for command in ('generate', 'attempt'):
+        q = sub.add_parser(command)
+        q.add_argument('--out', required=True)
+        q.add_argument('--config', default='.local/stamp/config.json')
+        q.add_argument('--resume', action='store_true')
+        if command == 'generate':
+            q.add_argument('--family', choices=('const-return', 'member-return'), required=True)
+            q.add_argument('--limit', type=int)
+        else:
+            q.add_argument('--jobs', type=int, default=1)
+    args = p.parse_args()
+    if (getattr(args, 'limit', None) is not None and args.limit < 1) or getattr(args, 'jobs', 1) < 1:
+        p.error('limit and jobs must be positive')
+    try:
+        (generate if args.command == 'generate' else attempt_all)(args)
+    except (ValueError, OSError, KeyError) as exc:
+        p.exit(2, f'stamp: {exc}\n')
+
+
+if __name__ == '__main__':
+    main()
