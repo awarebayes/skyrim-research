@@ -1,4 +1,5 @@
 """tools/verifier/bind.py on the original synthetic object and image (no game data, no demangler needed)."""
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -332,6 +333,43 @@ class FuncletTests(unittest.TestCase):
         report, symbols = self.run_bind(image=False)
         self.assertEqual(symbols[DTOR]['rva'], DTOR_RVA)
         self.assertEqual({r['symbol']: r['how'] for r in report['references']}[DTOR], 'community name')
+
+
+class PublicMapBindTests(BindTests):
+    """A task naming the repository map: bind adds through tools/symbol_map.py, never by hand."""
+    MAP = 'reports/synthetic-fixture/symbol-map.json'
+
+    def write_task(self, symbol, symbols, hints=None):
+        super().write_task(symbol, symbols, hints)
+        task = json.loads((self.task_dir / 'task.json').read_text())
+        task['symbols'] = self.MAP
+        (self.task_dir / 'task.json').write_text(json.dumps(task))
+        path = self.root / self.MAP
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({'schema': 1, 'build_id': 'synthetic-fixture', 'symbols': symbols,
+                                    'folds': []}, indent=2) + '\n')
+
+    def run_bind(self):
+        report = bind.bind(self.task_dir, self.root / 'obj', self.root / 'image', repo=self.root)
+        return report, json.loads((self.root / self.MAP).read_text())['symbols']
+
+    def test_additions_go_through_the_history(self):
+        self.run_bind()
+        history = json.loads((self.root / 'reports/synthetic-fixture/symbol-map.history.json').read_text())
+        self.assertEqual(len(history['versions']), 2)
+        self.assertIn(fx.FUNCTION, history['versions'][1]['added'])
+
+    def test_rename_that_would_stale_a_record_is_refused(self):
+        old = '?SyntheticSum@Synthetic@@QEAAHXZ'
+        self.write_task(old, {old: {'rva': fx.LAYOUT[fx.FUNCTION], 'size': len(fx.CODE)}})
+        blob = (self.root / self.MAP).read_bytes()
+        record = {'symbol_map': {'path': self.MAP, 'sha256': hashlib.sha256(blob).hexdigest()},
+                  'runs': [{'report': {'function': {'rva': fx.LAYOUT[fx.FUNCTION], 'size': len(fx.CODE)},
+                                       'coverage': {}}}]}
+        (self.root / 'reports/synthetic-fixture/0x1010.json').write_text(json.dumps(record))
+        with self.assertRaisesRegex(ValueError, 'stale'):
+            self.run_bind()
+        self.assertEqual((self.root / self.MAP).read_bytes(), blob)
 
 
 if __name__ == '__main__':

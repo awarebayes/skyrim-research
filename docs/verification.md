@@ -190,10 +190,30 @@ Match record, recomputed from the tree:
   Follow-up, not implemented: the manual reproduction path (`tu_task.py` plus a hand-run `cl`)
   does not apply these checks; a third party reproducing by hand should clear the same variables.
 - **Target.** Every report's image hash equals `builds/target.json`. Its build id, RVA and size
-  equal the inventory entry's, and the pinned symbol map places the symbol at that range.
-- **Recipe and compiler.** The recipe, `tools/verifier/pinned.sha256` and the symbol map match
-  their recorded hashes. The recipe's compiler is the pinned `cl.exe`, and every report names
-  that recipe's hash, compiler and flags.
+  equal the inventory entry's, and the current symbol map places the symbol at that range.
+- **Recipe and compiler.** The recipe and `tools/verifier/pinned.sha256` match their recorded
+  hashes. The recipe's compiler is the pinned `cl.exe`, and every report names that recipe's
+  hash, compiler and flags.
+- **Symbol map.** The record pins the SHA-256 of the map version its runs used. It binds if that
+  is the current map, or if it is an earlier version all of whose entries are present and
+  identical now and nothing added since could have changed the result. The first part is proven
+  from content, not from history claims: `symbol-map.history.json` beside the map lists versions
+  as name sets, and the gate rebuilds each version from the current map (same order, entries,
+  fold groups and provenance entries, canonical JSON) and requires the rebuild to hash to the
+  version's SHA-256; a version that does not rebuild fails the check unless the history marks it
+  `superseded`, and a record pinned to a superseded or unlisted version is stale. The second part
+  exists because a pass also depended on what the map lacked (`docs/comparator-contract.md`,
+  "Aliases, folds and overlaps"): the record is stale if an added entry lies at or in the
+  function range, `__ImageBase` was added, an EH handler name was added and the function has
+  handler data, or anything was added and the function has funclets (the record does not carry
+  funclet ranges; follow-up: have the comparator report them). Changing or removing an entry
+  therefore makes exactly the records pinned to versions holding it stale. The map is written
+  only by `tools/symbol_map.py add` (bind uses it too): additions only, refusing changes,
+  removals, entries sharing an address or range with an existing one and anything that would
+  make a valid record stale, unless `--allow-change` is given, which applies them, supersedes the
+  affected versions and lists the records made stale. The map must be canonical JSON and may not
+  repeat a key. `--history` imports a worktree branch's versions that still rebuild after the
+  merge, so records confirmed on the branch survive integration.
 - **Comparator.** Every report comes from the current comparator version and source hash and
   names the current contract version (`docs/comparator-contract.md`, version 2). A change to
   `tools/compare.py` or `tools/pecoff.py` therefore makes every record stale.

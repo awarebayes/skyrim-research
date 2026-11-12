@@ -114,6 +114,13 @@ Who produces the symbol map, and from which evidence (community address librarie
 analysis), is a provenance question for the task, not something the comparator can check. A
 wrong map produces `relocation-target-mismatch`, never a silent pass.
 
+The comparator reads the whole map: the names it resolves, and also the absence of entries at or
+inside the function and funclet ranges, `__ImageBase` and the EH handler names. A result
+therefore depends on more than the resolved entries, which is why the matching gate
+(`docs/verification.md`, "Symbol map") carries a record across map additions only when none of
+them could have touched those checks, and never across a change to an entry the pinned version
+held. The repository map is changed only with `tools/symbol_map.py`.
+
 ## Aliases, folds and overlaps
 
 - A map entry other than the task symbol at the same RVA is an alias. It is accepted only when

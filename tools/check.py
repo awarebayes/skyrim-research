@@ -13,6 +13,7 @@ from compare import COMPARATOR_VERSION, CONTRACT_VERSION, REPORT_SCHEMA, compara
 from source_digest import DIGEST_METHOD, INCLUDE_ROOTS, include_closure, recipe_flag_problem, tu_digest
 from lint_reconstruction import lint_tree
 import cost_ledger
+import symbol_map as symbol_maps
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED = set('.exe .dll .pdb .obj .o .lib .a .so .dylib .dmp .mdmp .bin .bsa .ba2 .esm .esp .esl .nif .dds .pex .hkx .ess .skse .gdt .gpr .idb .i64 .zip .7z .iso .vhdx .qcow2 .png .jpg .jpeg .pdf'.split())
@@ -170,11 +171,21 @@ def check_match(fn, target, root=None):
             'Match record: recipe compiler is not the pinned cl.exe')
     require(text(record.get('reproduction')), 'Match record: missing reproduction command')
 
-    # The map decides placement, alias and overlap checks, so the one the runs used is pinned too.
+    # The map decides resolution, placement, alias and overlap checks, so the version the runs used
+    # is pinned. A record pinned to an earlier version stays valid only if that version's entries
+    # are all present and unchanged (proven by rebuilding it from the current map, see
+    # tools/symbol_map.py) and nothing added since could have changed the result; that last part
+    # needs the reports, so it is checked after the runs below.
     map_ref = record.get('symbol_map') or {}
     map_path = public_path(map_ref.get('path'), {'reports'}, 'symbol map', root)
-    require(map_ref.get('sha256') == file_sha256(root, map_path), 'Match record: symbol map hash is stale')
-    symbol_map = json.loads((root / map_path).read_text())
+    map_state = symbol_maps.load_state(root, map_path)
+    pinned_names = None
+    if map_ref.get('sha256') != map_state.current_sha:
+        try:
+            pinned_names = map_state.names_for(map_ref.get('sha256'))
+        except ValueError as exc:
+            raise ValueError(f'Match record: {exc}') from None
+    symbol_map = map_state.current
     require(symbol_map.get('schema') == 1 and symbol_map.get('build_id') == target['build_id'],
             'Match record: symbol map is for another build')
 
@@ -225,6 +236,10 @@ def check_match(fn, target, root=None):
                 and cov.get('unwind') in {'covered', 'none-in-range'},
                 'Match record: report coverage is incomplete')
     require(len(symbols) == 1, 'Match record: runs compared different symbols')
+    if pinned_names is not None:
+        problem = symbol_maps.carry_forward_problem(map_state, pinned_names, fn['rva'], fn['size'],
+                                                    [run['report'] for run in runs])
+        require(problem is None, f'Match record: symbol map hash is stale: {problem}')
     entry = (symbol_map.get('symbols') or {}).get(next(iter(symbols)))
     require(isinstance(entry, dict) and entry.get('rva') == fn['rva'] and entry.get('size') == fn['size'],
             'Match record: symbol map does not place the function at the inventory range')
@@ -503,6 +518,12 @@ def validate(data, target, root=None, stale_ok=False):
         # A leftover approval would read as acceptance of an entry the inventory does not accept.
         require(name in matched, f'Review record: {name} belongs to no matched inventory entry')
     require(stale_ok or not stale, '; '.join(stale))
+    # A history is checked even when no record leans on it, so a forged or broken one fails early.
+    for path in sorted(reports.glob('*/*.history.json')) if reports.is_dir() else []:
+        name = path.relative_to(reports.parent).as_posix()
+        map_name = name[:-len('.history.json')] + '.json'
+        require((reports.parent / map_name).is_file(), f'{name}: no symbol map {map_name} beside it')
+        symbol_maps.load_state(reports.parent, map_name)
     seen = set()
     for item in data['work_items']:
         require(isinstance(item['id'], str) and re.fullmatch(r'[a-z0-9][a-z0-9-]*', item['id'])
