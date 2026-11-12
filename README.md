@@ -5,9 +5,10 @@ Independent research into **The Elder Scrolls V: Skyrim Special Edition**, maint
 explore reproducible, function-by-function source reconstruction, with evidence useful to
 independent engine implementations such as [Mudcrab](https://github.com/Mudcrab-Team/mudcrab).
 
-**Status: bootstrap. No executable build has been pinned, no functions have been accepted as
-byte matches, and no playable replacement is provided.** The compiler and matching pipeline
-remain research tasks. Infrastructure CI does not verify Skyrim behavior or machine-code matches.
+**Status:** what is matched and in progress is shown by the [Progress](#progress) graphic below,
+per function in [reconstruction/INDEX.md](reconstruction/INDEX.md) and on the
+[report site](https://awarebayes.github.io/skyrim-research/); no playable replacement is provided,
+and infrastructure CI does not verify Skyrim behavior or machine-code matches.
 
 [Step-by-step execution plan](docs/plan.md) ·
 [Progress report](https://awarebayes.github.io/skyrim-research/) ·
