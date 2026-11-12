@@ -6,7 +6,9 @@ Reported upstream achievements have not been independently reproduced here.
 
 - [momusdigital/fnv_decomp](https://github.com/momusdigital/fnv_decomp), reviewed at
   `91e1b6e8d8bb0f9a33e8cf88e77268757449e0a6`: reconstruction and comparison workflow.
-  Its LICENSE grants no license; do not copy its implementation or tools.
+  Its LICENSE grants no license. By maintainer decision its names, declarations and code may be
+  reused in reconstructions, labelled `SIBLING(...)` (`docs/authorizations.md`, Notes); its tools
+  are not copied.
 - [momusdigital/fnv_decomp_exe](https://github.com/momusdigital/fnv_decomp_exe), reviewed at
   `d11951cb936c38252cefbc99eb69d777bf5decd2`: separate local executable-building project.
   Its LICENSE grants no license. Linked as a reference only; Skyrim building is not implemented.

@@ -58,11 +58,15 @@ accept individual functions or batches. A function is accepted only when ALL of 
      with a one-line justification comment on the same or the previous line (lint-enforced);
      the Reviewer judges whether the justification is a plausible reason a programmer had, not
      a way to force bytes, and rejects otherwise;
-   - names and types are labelled by origin (community source and revision, or `GUESS`), and
-     unknowns are preserved rather than filled plausibly;
-   - provenance: no decompiler output pasted as source, no code from unlicensed projects (such
-     as the FNV repositories), no leaked or proprietary material; the source header states
-     provenance and source exposure;
+   - names and types are labelled by origin (community source and revision, `SIBLING` for the
+     FNV decompilation, or `GUESS`), and unknowns are preserved rather than filled plausibly;
+   - provenance: no decompiler output pasted as source, no code from unlicensed projects other
+     than the FNV decompilation `momusdigital/fnv_decomp@91e1b6e8`, which the maintainer allowed
+     (`docs/authorizations.md`, Notes), no leaked or proprietary material; the source header
+     states provenance and source exposure. Material from FNV is allowed only when declared:
+     names and declarations carry `SIBLING(...)` labels, and a unit that reuses a body or a
+     substantial part of one says so in a `Sibling source: <repo>@<rev> <path>[:<line>]` header
+     line; undeclared reuse is a `reject`. FNV material is never evidence for the match claim;
    - the report belongs to this source, recipe and target (hashes agree), and the claim is only
      what was checked: a byte match of the checked code, not the correctness of an inferred name
      and not behaviour;
@@ -364,8 +368,8 @@ untrusted PR code on a self-hosted machine that has private game inputs or accou
 ## Behavior and names
 
 Behavior claims require controlled original-game observations, test conditions and alternative
-explanations. Header declarations, AI comments and similar FNV code can suggest hypotheses but
-cannot establish Skyrim behavior. Separate measured observations from inferred algorithms.
+explanations. Header declarations, AI comments and similar FNV code (usable as source by the
+maintainer's decision) can suggest hypotheses but cannot establish Skyrim behavior. Separate measured observations from inferred algorithms.
 
 ## Progress and history
 

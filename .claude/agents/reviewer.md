@@ -61,15 +61,23 @@ always gets a full review, in the same review document.
    `[[msvc::...]]` attributes and codegen intrinsics carry a one-line justification (the lint
    checks it is there); reject one whose only plausible reason is forcing bytes.
 2. **Names and types.** Each is labelled by origin (`COMMUNITY` with source and immutable
-   revision, `EXE_RTTI`, `OBSERVED`, or `GUESS` with confidence); unknowns are preserved rather
-   than filled plausibly. In a file with `Labels: v2` the lint has checked the label syntax
-   (`// <names>: COMMUNITY(<owner>/<repo>@<rev>, <licence>) | GUESS | EXE_RTTI | STANDIN | OBSERVED`);
-   you check that each label is true: a community name is `COMMUNITY`, not `GUESS`.
+   revision, `SIBLING` for the FNV decompilation, `EXE_RTTI`, `OBSERVED`, or `GUESS` with
+   confidence); unknowns are preserved rather than filled plausibly. In a file with `Labels: v2`
+   the lint has checked the label syntax (`// <names>: COMMUNITY(<owner>/<repo>@<rev>, <licence>) |
+   SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence) | GUESS | EXE_RTTI | STANDIN | OBSERVED`);
+   you check that each label is true: a community name is `COMMUNITY`, a name taken from FNV is
+   `SIBLING`, and neither is `GUESS` (`tools/check_labels.py` flags GUESS names that either has in
+   that class).
 3. **Provenance.** No decompiler output pasted as source (tells: `undefined8`, `param_1`,
    `local_28`, `FUN_`/`DAT_` names, decompiler casts; with G2, compare structure against the
-   decompiler output itself), no code from unlicensed projects such as
-   the FNV repositories, no leaked or proprietary material. The source header states provenance
-   and source exposure.
+   decompiler output itself), no code from unlicensed projects other than the FNV decompilation
+   `momusdigital/fnv_decomp@91e1b6e8` (allowed by maintainer decision, `docs/authorizations.md`,
+   Notes), no leaked or proprietary material. The source header states provenance and source
+   exposure. FNV material must be declared: open the FNV function the pack or
+   `.local/analysis/fnv_index.jsonl` lists for each reviewed function (by our RVA in `ours`) and
+   compare; if the body or a substantial part of it is reused, the unit needs a `Sibling source:
+   <repo>@<rev> <path>[:<line>]` header line, and names taken from it need `SIBLING` labels.
+   Undeclared reuse is a `reject`. FNV material is never evidence for the match claim.
 4. **Report binding and claim scope.** The report's source revision (the translation-unit digest
    you computed with `tools/source_digest.py`), recipe, compiler hash and target image hash agree
    with the files you hashed and with `builds/target.json`; the second-host reproduction is

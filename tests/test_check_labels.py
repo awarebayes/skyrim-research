@@ -1,5 +1,6 @@
 """tools/check_labels.py on original synthetic units and a synthetic community checkout."""
 from importlib.machinery import SourceFileLoader
+import json
 import importlib.util
 from pathlib import Path
 import subprocess
@@ -238,6 +239,66 @@ public:
         self.assertIn('Widget::actorState1: Example/Lib include/EX/Widget.h:', lines[0])
         self.assertIn('State1 actorState1;', lines[0])
         self.assertIn('int baseValue;', lines[1])
+
+    def sibling(self):
+        """A synthetic sibling decompilation: one class header and a build list naming one
+        out-of-line method the header does not declare."""
+        fnv = Path(self.tmp.name) / 'fnv'
+        if fnv.is_dir():
+            return {'momusdigital/fnv_decomp': str(fnv)}, git(fnv, 'rev-parse', 'HEAD')[:8]
+        (fnv / 'include').mkdir(parents=True)
+        (fnv / 'build').mkdir()
+        (fnv / 'src/core').mkdir(parents=True)
+        (fnv / 'include/Widget.h').write_text('class Widget : public Base\n{\npublic:\n    virtual void Tick();\n'
+                                              '    int GetCount() const;\n    int count;\n};\n')
+        (fnv / 'src/core/widget.cpp').write_text('#include "Widget.h"\n\nvoid Widget::Tick()\n{\n}\n')
+        (fnv / 'build/units.json').write_text(json.dumps({'units': [{'source': 'src/core/widget.cpp', 'flags': ['/O2'],
+            'functions': [{'symbol': '?Tick@Widget@@UAEXXZ', 'address': '0x1', 'size': 3},
+                          {'symbol': '?Rebuild@Widget@@QAEXXZ', 'address': '0x2', 'size': 9}]}]}))
+        git(fnv, 'init', '-q')
+        git(fnv, 'add', '.')
+        git(fnv, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'fixture')
+        return {'momusdigital/fnv_decomp': str(fnv)}, git(fnv, 'rev-parse', 'HEAD')[:8]
+
+    def run_sibling(self, header, cpp=None):
+        siblings, rev = self.sibling()
+        h = self.root / 'reconstruction/area/Widget.h'
+        h.write_text('// Labels: v2\n' + header.replace('REV', rev))
+        files = [h]
+        if cpp is not None:
+            c = self.root / 'reconstruction/area/Widget.cpp'
+            c.write_text(cpp.replace('REV', rev))
+            files.append(c)
+        return check_labels.check(files, self.checkouts, root=self.root, siblings=siblings)
+
+    def test_sibling_names_checked_against_headers_and_build_list(self):
+        label = 'SIBLING(momusdigital/fnv_decomp@REV, no-licence)'
+        self.assertEqual(self.run_sibling(f'// Widget::Tick Widget::GetCount Widget::count Widget::Rebuild: {label}\n'), [])
+        findings = self.run_sibling(f'// Widget::Flush: {label}\n')
+        self.assertEqual(len(findings), 1)
+        self.assertIn('Widget::Flush is labelled SIBLING(momusdigital/fnv_decomp)', findings[0])
+
+    def test_guess_name_the_sibling_has_suggests_sibling(self):
+        findings = self.run_sibling('class Widget {\npublic:\n    // Rebuild: GUESS\n    void Rebuild();\n};\n')
+        self.assertEqual(len(findings), 1)
+        self.assertIn('label it SIBLING', findings[0])
+
+    def test_sibling_source_line_must_exist_in_the_clone(self):
+        header = '// Widget::Tick: SIBLING(momusdigital/fnv_decomp@REV, no-licence)\n'
+        ok = '// Sibling source: momusdigital/fnv_decomp@REV src/core/widget.cpp:3\nint x;\n'
+        self.assertEqual(self.run_sibling(header, ok), [])
+        findings = self.run_sibling(header, ok.replace('widget.cpp:3', 'gadget.cpp'))
+        self.assertTrue(any('src/core/gadget.cpp does not exist' in f for f in findings), findings)
+        findings = self.run_sibling(header, ok.replace(':3', ':300'))
+        self.assertTrue(any('past the end of the file' in f for f in findings), findings)
+
+    def test_missing_sibling_clone_is_reported(self):
+        h = self.root / 'reconstruction/area/Widget.h'
+        h.write_text('// Labels: v2\n// Widget::Tick: SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence)\n')
+        findings = check_labels.check([h], self.checkouts, root=self.root,
+                                      siblings={'momusdigital/fnv_decomp': str(self.root / 'absent')})
+        self.assertEqual(len(findings), 1)
+        self.assertIn('its SIBLING labels were not verified', findings[0])
 
     def test_files_without_v2_labels_are_skipped(self):
         h = self.root / 'reconstruction/area/Old.h'

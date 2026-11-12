@@ -1381,12 +1381,94 @@ def table_identity(rva, root=None):
 
 
 def table_aids(pack, img):
-    """P5 and P6 sections for one pack; also stored in pack.json."""
+    """P5 and P6 sections for one pack, and the sibling-source pointers; also stored in pack.json."""
     sig_lines, sig = signature_evidence(pack['rva'], pack.get('references', []))
     life_lines, life = lifetime_outline(img, pack['rva'])
     pack['observed_signature'] = sig
     pack['object_lifetimes'] = life
-    return sig_lines + life_lines + ([''] if sig_lines or life_lines else [])
+    sib_lines = sibling_lines((pack.get('identity') or {}).get('owning_class'), [pack['rva']])
+    return sig_lines + life_lines + sib_lines + ([''] if sig_lines or life_lines or sib_lines else [])
+
+
+# ---------------------------------------------------------------------------------------------
+# Sibling source: pointers into the FNV decompilation (maintainer decision, docs/authorizations.md)
+# from the private index of tools/build_fnv_index.py. Only paths, lines and signature lines go into
+# a pack; the Drafter opens the file itself, so a pack does not carry whole sibling bodies.
+
+FNV_INDEX = 'fnv_index.jsonl'
+SIBLING_REPO = 'momusdigital/fnv_decomp'
+ACCESSOR_BYTES = 48
+_sibling = {}
+
+
+def sibling_index(root=None):
+    """{'by_rva', 'by_class', 'revision'} from <analysis>/fnv_index.jsonl, or None when it is absent."""
+    root = Path(root or ANALYSIS)
+    key = str(root)
+    if key not in _sibling:
+        path = root / FNV_INDEX
+        if not path.is_file():
+            _sibling[key] = None
+        else:
+            by_rva, by_class = {}, {}
+            with open(path) as fh:
+                for line in fh:
+                    r = json.loads(line)
+                    if r.get('class'):
+                        by_class.setdefault(r['class'], []).append(r)
+                    for o in r.get('ours', []):
+                        # A positional join whose names disagree is more likely a shifted vtable than
+                        # a renamed method (about a quarter of named slot pairs agree), so it is dropped.
+                        if o['how'] == 'slot' and o.get('same_name') is False:
+                            continue
+                        by_rva.setdefault(o['rva'], []).append((r, o))
+            meta = path.with_suffix('.meta.json')
+            rev = json.loads(meta.read_text()).get('revision') if meta.is_file() else None
+            _sibling[key] = {'by_rva': by_rva, 'by_class': by_class, 'revision': rev}
+    return _sibling[key]
+
+
+def _sibling_ref(r):
+    where = f'{r["source"]}:{r["line"]}' if r.get('line') else f'{r["source"]} (no line found)'
+    opt = r.get('opt') or 'flags unknown'
+    sig = f': `{r["signature"]}`' if r.get('signature') else ''
+    return f'`{where}` ({opt}, {r["size"]} bytes){sig}'
+
+
+def sibling_lines(cls, rvas, root=None, limit=12):
+    """README lines naming the FNV file and line of each function's same-named (or same-slot)
+    method and of the class's small named methods; [] without an index or any match."""
+    index = sibling_index(root)
+    if not index:
+        return []
+    out, listed = [], set()
+    for rva in rvas:
+        for r, o in index['by_rva'].get(rva, []):
+            how = 'same name' if o['how'] == 'name' else f'same slot {o["slot"]} (positional guess; our slot is unnamed)'
+            out.append(f'- `0x{rva:x}`: `{r["class"]}::{r["method"]}` {_sibling_ref(r)}; {how}.')
+            listed.add(r['symbol'])
+    small = sorted((r for r in index['by_class'].get(cls or '', []) if not r.get('placeholder') and r.get('line')
+                    and r['size'] <= ACCESSOR_BYTES and r['symbol'] not in listed),
+                   key=lambda r: (r['method'], r['address']))
+    accessors = []
+    for r in small:
+        if not accessors or accessors[-1]['method'] != r['method']:
+            accessors.append(r)
+    if not out and not accessors:
+        return []
+    rev = (index.get('revision') or '')[:8] or 'unknown revision'
+    lines = ['', f'## Sibling source ({SIBLING_REPO}@{rev}, private clone `.local/sources/fnv_decomp`)', '',
+             'Caution: Fallout: New Vegas 1.4.0.525 is a 32-bit build of an older engine version, and most of its '
+             'game units are unoptimised (`/Od`); read it for shape and names, never for offsets, layouts or slots. '
+             f'Label what you take `SIBLING({SIBLING_REPO}@{rev}, no-licence)`; a reused body also needs a '
+             '`Sibling source:` header line.', '']
+    lines += out or ['- No same-named method for the functions here.']
+    if accessors:
+        lines += ['', f'Small named methods of `{cls}` there (at most {ACCESSOR_BYTES} bytes; accessors and helpers):']
+        lines += [f'- `{r["method"]}` {_sibling_ref(r)}' for r in accessors[:limit]]
+        if len(accessors) > limit:
+            lines.append(f'- and {len(accessors) - limit} more (`.local/analysis/{FNV_INDEX}`, class `{cls}`).')
+    return lines
 
 
 def render_pack_readme(p):
@@ -1738,6 +1820,7 @@ def write_class_material(task_dirs, target, img, addrlib, comms):
             lines += ['  ' + n for n in convention_notes(declaration_of(excerpt_text, method), cls)]
         lines += ['', 'Other classes these functions use (declare minimal stand-ins, labelled with their source): '
                   + (', '.join(f'`{c}`' for c in sorted(facts['referenced_classes'])) or 'none') + '.', '']
+        lines += sibling_lines(cls, [p['rva'] for p in packs]) + ['']
         (d / 'README.md').write_text('\n'.join(lines))
         (d / 'class.json').write_text(json.dumps({
             'class': cls, 'build_id': target['build_id'], 'units': sorted(units[cls]),

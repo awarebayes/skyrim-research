@@ -12,7 +12,10 @@ Cargo/build/cache instructions here or modify its checkout as part of a research
 - Use `.local/` for legally obtained executables, toolchains, databases, raw decompiler output,
   traces, saves and generated objects. Never force-add ignored paths.
 - No game files, binary bytes, disassembly, dumps, proprietary symbols/SDKs, leaked code or
-  unlicensed copied code in commits, PRs, issues, logs, releases or CI artifacts.
+  unlicensed copied code in commits, PRs, issues, logs, releases or CI artifacts. One maintainer
+  exception: names, declarations and code from the FNV decompilation `momusdigital/fnv_decomp@91e1b6e8`
+  may be reused in reconstructions, labelled `SIBLING(...)`, although its LICENSE grants none
+  (`docs/authorizations.md`, Notes; `LEGAL.md`). It is never evidence about the Skyrim binary.
 - Do not upload game-derived material to an AI/cloud service without explicit owner authorization
   and assessment of the service terms. Permission to research locally is not permission to upload.
 - Analyze your own legally obtained inputs. Do not download game binaries or unofficial PDBs,

@@ -180,8 +180,10 @@ no model effort; none of them shortens the large functions, where only technique
 
 ## 4. Excluded
 
-- **meh321's rename file** (no licence), **skse64** (no grant), **FNV and Fallout 3 decompilation
-  code** (no grant): nothing from them in tracked files or briefs; study of method only.
+- **meh321's rename file** (no licence), **skse64** (no grant), **Fallout 3 decompilation**
+  (no source published): nothing from them in tracked files or briefs; study of method only. The
+  **FNV decompilation** is no longer excluded: the maintainer allowed its names, declarations and
+  code in reconstructions, labelled `SIBLING(...)` (`docs/authorizations.md`, Notes).
 - **alandtse/CommonLibSSE-NG, the VR address library's names, nif.xml**: not approved (the
   approval names powerof3 only); not a naming source until section 6 is answered.
 - **Leaked source, unofficial PDBs, proprietary SDKs, middleware source**: never acquired, used
