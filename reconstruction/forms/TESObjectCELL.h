@@ -4,7 +4,10 @@
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT)
 // and the meh321/AddressLibraryDatabase 0379cb6 name list (used with the author's permission as
-// reported by the maintainer); no community code is copied. Every class other than TESObjectCELL is a minimal stand-in that declares only
+// reported by the maintainer).
+// Adapted bodies: none declared; tools/check_origin.py reports none above its threshold (0.75)
+// at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
+// Every class other than TESObjectCELL is a minimal stand-in that declares only
 // the members and virtual slots the compared code needs; the layouts of the stand-ins are not
 // claimed to match the game. Unk_NN placeholders only keep the compared virtual slots at the
 // vtable offsets the image encodes (slot NN is the byte offset NN * 8). Cell members without a

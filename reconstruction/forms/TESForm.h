@@ -4,7 +4,11 @@
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Names and member offsets follow CharmedBaryon/CommonLibSSE-NG
 // b93280e832f263dbef44e44cbe2936622a02f91a (MIT) and meh321/AddressLibraryDatabase 0379cb6
-// (used with the author's permission as reported by the maintainer); no community code is copied. Every class other than TESForm and
+// (used with the author's permission as reported by the maintainer).
+// Adapted bodies: none declared; tools/check_origin.py reports none above its threshold (0.75)
+// at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
+// TESForm::ClearData's empty body necessarily coincides with the FNV decompilation's.
+// Every class other than TESForm and
 // BaseFormComponent is a minimal stand-in that declares only the members and virtual slots the
 // compared code needs; the layouts of the stand-ins are not claimed to match the game.
 // BaseFormComponent, TESForm, TESForm::ClearData, ::SaveGame, ::LoadGame, ::CopyComponent, ::GetGoldValue: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)

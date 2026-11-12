@@ -3,8 +3,38 @@
 // Labels: v2
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT);
-// every declaration is a minimal stand-in and no NG code is copied. Offsets are this build's,
-// which for the Actor runtime data are NG's SE offsets plus 8.
+// every declaration is a minimal stand-in. Offsets are this build's, which for the Actor runtime
+// data are NG's SE offsets plus 8.
+// Adapted code: the inline body of ActorState::IsUnconscious is NG b93280e
+// include/RE/A/ActorState.h's, used under its MIT licence. GetAttackState, GetKnockState and
+// GetLifeState return one member each and necessarily coincide with NG's inline accessors.
+// Bodies adapted from community sources are listed above; tools/check_origin.py reports none
+// other above its threshold (0.75) at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f
+// and momusdigital/fnv_decomp 91e1b6e8. NG's licence notice, from its LICENSE at
+// b93280e, is kept as it requires:
+//
+//   MIT License
+//
+//   Copyright (c) 2018 Ryan-rsm-McKenzie
+//
+//   Permission is hereby granted, free of charge, to any person obtaining a copy
+//   of this software and associated documentation files (the "Software"), to deal
+//   in the Software without restriction, including without limitation the rights
+//   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//   copies of the Software, and to permit persons to whom the Software is
+//   furnished to do so, subject to the following conditions:
+//
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
+//
+//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//   SOFTWARE.
+//
 // Actor: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only the bases, members and virtual slots the functions use
 // TESObjectREFR MagicTarget ActorValueOwner: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); base subobjects at 0x00, 0xa0, 0xb8, sized only
 // ActorState: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); base subobject at 0xc0; its own vftable pointer is modelled as a word

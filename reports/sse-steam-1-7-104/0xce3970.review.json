@@ -1,15 +1,21 @@
 {
   "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "cd6dd912ec7904629743bbae497b4dddb95d97b3aa82464457f2bb8c96512c11",
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0xce3970",
+  "naming_findings": null,
+  "previous_code_section_sha256": "cd6dd912ec7904629743bbae497b4dddb95d97b3aa82464457f2bb8c96512c11",
+  "previous_review_sha256": "7405700d1735899a3c9ecbe9358c28f250abd25e59a5fc70c42d3db5fcf876ec",
+  "previous_source_digest": "4866dbd5b4b4bb4b7890b6834effd92a0486098ab66963ab5ee4b69da337d3ad",
   "review_date": "2026-11-11",
-  "review_record_schema": 1,
+  "review_kind": "label-only",
+  "review_record_schema": 3,
   "review_sha256": "7405700d1735899a3c9ecbe9358c28f250abd25e59a5fc70c42d3db5fcf876ec",
   "review_task_id": "review-batch-2",
   "reviewer_model": "claude-opus-5-5",
   "rva": 13515120,
   "size": 76,
-  "source_digest": "4866dbd5b4b4bb4b7890b6834effd92a0486098ab66963ab5ee4b69da337d3ad",
+  "source_digest": "e64c870a84286cc782f68c327947dd36b149d9d512143d8980013b20c42c9787",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

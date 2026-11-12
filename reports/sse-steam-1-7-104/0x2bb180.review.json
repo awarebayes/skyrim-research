@@ -9,18 +9,18 @@
     "the encounter-zone stand-in types its owner as a plain form where NG declares a faction",
     "the TestBit comment explains the helper by code generation rather than only by its programmer-level origin"
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
+  "previous_code_section_sha256": "2a33489fd7d28427602b7edc99f4bac6e5105d9f21a94e315cc30d5415a9954c",
+  "previous_review_sha256": "7a330b647191cdc56b3a39a7eaaaa782e1a3a128b770d975c08a9616b10b46f1",
+  "previous_source_digest": "f583e69f174d0966577b3cecbdacb679e8e493544039971846659ddfa0195adc",
   "review_date": "2026-11-12",
-  "review_kind": "full",
+  "review_kind": "label-only",
   "review_record_schema": 3,
   "review_sha256": "7a330b647191cdc56b3a39a7eaaaa782e1a3a128b770d975c08a9616b10b46f1",
   "review_task_id": "review-p15-rereview-3",
   "reviewer_model": "claude-opus-5-5",
   "rva": 2863488,
   "size": 320,
-  "source_digest": "f583e69f174d0966577b3cecbdacb679e8e493544039971846659ddfa0195adc",
+  "source_digest": "45f5a35c1987349dda4dcf73938a853112b2073b2eeb2ca0e91f116c8599ad27",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

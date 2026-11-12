@@ -4,14 +4,20 @@
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e (MIT) include/RE/N/NiObject.h,
 // include/RE/N/NiRefObject.h, include/RE/N/NiCloningProcess.h and powerof3/CommonLibSSE 654e55f
-// (GPL-3.0) include/RE/N/NiObject.h for Clone; this file therefore carries the GPL-3.0 notice of
-// that source for the name Clone only.
+// (GPL-3.0) include/RE/N/NiObject.h for Clone; because of that one name this file states GPL-3.0
+// as its licence. It does not reproduce the GPL-3.0 text.
 // Adapted code: the inline bodies of AsNode through AsBhkLimitedHingeConstraint (slots 03 to
 // 16, each returning nullptr) are taken from CharmedBaryon/CommonLibSSE-NG b93280e
-// include/RE/N/NiObject.h under its MIT licence. The NiRefObject constructor follows the logic
-// of NG src/RE/N/NiRefObject.cpp, written here with a compiler intrinsic and a counter named by
-// guess. No other community code is copied. NG's licence notice, from its LICENSE at b93280e,
-// is kept as it requires:
+// include/RE/N/NiObject.h under its MIT licence. The body of NiObject::IsEqual in NiObject.cpp
+// is adapted from NG b93280e src/RE/N/NiObject.cpp under the same licence, with NiRTTI's name
+// read through its member instead of NG's GetName(). The NiRefObject constructor follows the
+// logic of NG src/RE/N/NiRefObject.cpp, written here with a compiler intrinsic and a counter
+// named by guess. CreateClone, StreamCanSkip and GetGroup are single-statement bodies (return
+// this, false, nullptr) that necessarily coincide with NG's inline declarations.
+// Bodies adapted from community sources are listed above; tools/check_origin.py reports none
+// other above its threshold (0.75) at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f
+// and momusdigital/fnv_decomp 91e1b6e8. NG's licence notice, from its LICENSE at b93280e, is
+// kept as it requires:
 //
 //   MIT License
 //

@@ -8,9 +8,14 @@
 // Adapted code: the NiBinaryStream ReadFn and WriteFn aliases and the read, write and put
 // template bodies are adapted from NG b93280e include/RE/N/NiBinaryStream.h and
 // src/RE/N/NiBinaryStream.cpp under its MIT licence: put is NG's body; read and write fold in
-// NG's binary_read and binary_write and return true instead of comparing the byte count. No
-// other NG code is copied. NG's licence notice, from its LICENSE at b93280e, is kept as it
-// requires:
+// NG's binary_read and binary_write and return true instead of comparing the byte count.
+// The bodies of LinkObject, RegisterStreamables and ProcessClone in NiPSysModifier.cpp closely
+// parallel the same methods in momusdigital/fnv_decomp 91e1b6e8 (no licence; used by maintainer
+// decision, docs/authorizations.md); the Sibling source lines there name the files. Bodies
+// adapted from community sources are listed above; tools/check_origin.py reports none other
+// above its threshold (0.75) at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f and
+// momusdigital/fnv_decomp 91e1b6e8. NG's licence notice, from its LICENSE at b93280e, is kept as
+// it requires:
 //
 //   MIT License
 //

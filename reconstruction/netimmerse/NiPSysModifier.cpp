@@ -16,6 +16,13 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone, /Gy required).
 // All seven functions listed above are compared.
 // The stream callees that carry no community name have made-up names, labelled in the header.
+// LinkObject, RegisterStreamables and ProcessClone closely parallel the FNV decompilation's
+// NiPSysModifier methods (tools/check_origin.py similarity 0.92, 0.92 and 0.82): a base call and
+// one stream or clone-map step in the same order, with different callee names. The lines below
+// declare that parallel, found by tools/check_origin.py after drafting; they do not record a copy.
+// Sibling source: momusdigital/fnv_decomp@91e1b6e8 src/gamebryo2.2/corelibs/niparticle/nipsysmodifier.cpp:53
+// Sibling source: momusdigital/fnv_decomp@91e1b6e8 src/gamebryo2.2/corelibs/niparticle/nipsysmodifier.cpp:86
+// Sibling source: momusdigital/fnv_decomp@91e1b6e8 src/gamebryo2.2/corelibs/niparticle/nipsysmodifier.cpp:42
 #include "NiPSysModifier.h"
 
 void NiPSysModifier::SetSystemPointer(NiParticleSystem* a_target)

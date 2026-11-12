@@ -2,7 +2,10 @@
 //
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT):
-// include/RE/B/BSPointerHandle.h. No NG code is copied; these are minimal stand-ins.
+// include/RE/B/BSPointerHandle.h; these are minimal stand-ins.
+// Adapted bodies: none declared; tools/check_origin.py reports none above its threshold (0.75)
+// at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
+// The BSPointerHandle constructor's one-statement body necessarily coincides with NG's.
 //   BSPointerHandleManagerInterface, GetHandle, BSPointerHandle   COMMUNITY (unverified)
 //   CreateRefHandle   COMMUNITY (NG include/RE/Offsets.h, a free function id); parameter types GUESS
 //   kNullHandle       GUESS: a 32-bit global in .data, no community name; the value stored when the
