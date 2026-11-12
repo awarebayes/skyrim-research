@@ -195,22 +195,32 @@ class Journal:
     def entries(self):
         found = {}
         try:
-            text = self.path.read_text()
+            data = self.path.read_bytes()
         except OSError:
             return found
-        for line in text.splitlines():
+        for line in data.splitlines(keepends=True):
             try:
+                if not line.endswith(b'\n'):
+                    raise ValueError('unterminated journal entry')
                 entry = json.loads(line)
+                if not isinstance(entry, dict) or not isinstance(entry.get('task_id'), str):
+                    raise ValueError('invalid journal entry')
                 found[entry['task_id']] = entry
             except (ValueError, KeyError, TypeError):
-                continue
+                # Corruption may hide an invalidation for any unit; discard all earlier successes.
+                found.clear()
         return found
 
     def add(self, entry):
         with self.lock:
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.path, 'a') as f:
-                f.write(json.dumps(entry, sort_keys=True) + '\n')
+            with open(self.path, 'a+b') as f:
+                if f.tell():
+                    f.seek(-1, os.SEEK_END)
+                    if f.read(1) != b'\n':
+                        # Keep the torn entry invalid, even if its JSON happened to be complete.
+                        f.write(b'\0\n')
+                f.write((json.dumps(entry, sort_keys=True) + '\n').encode())
                 f.flush()
                 os.fsync(f.fileno())
 

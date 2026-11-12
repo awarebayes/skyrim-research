@@ -425,6 +425,34 @@ class ConfirmRunnersRun(unittest.TestCase):
         self.assertEqual(len(FakeAgentHost.made), 2)
         self.assertEqual(len(self.written), 1)
 
+    def test_corrupt_or_unterminated_journal_entry_discards_earlier_successes(self):
+        self.first_run()
+        journal = confirm_runners.Journal(self.tmp / 'out')
+        good = journal.path.read_bytes()
+        for tail in (b'{"task_id": "unit', b'not json\n', b'\xff\n', b'null\n',
+                     b'{"task_id": []}\n', good.splitlines()[-1]):
+            with self.subTest(tail=tail):
+                journal.path.write_bytes(good + tail)
+                self.assertEqual(journal.entries(), {})
+                journal.add({'task_id': 'unit-b', 'records': {}})
+                self.assertEqual(journal.entries(), {'unit-b': {'task_id': 'unit-b', 'records': {}}})
+
+    def test_torn_scheduling_append_cannot_hide_failed_replacement(self):
+        self.first_run()
+        journal = confirm_runners.Journal(self.tmp / 'out')
+        with journal.path.open('ab') as f:
+            f.write(b'{"records": {}, "task_id": "unit')
+        with mock.patch.object(FakeAgentHost, 'run', return_value=(44, '')):
+            code, _ = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', replace=True)
+        self.assertEqual(code, 1)
+        self.assertEqual(journal.entries()['unit-a']['records'], {})
+        FakeAgentHost.made = []
+        code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', replace=True, resume=True,
+                                       probe_fn=self.probe_with())
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(FakeAgentHost.made), 2)
+        self.assertEqual(len(self.written), 1)
+
     def test_finisher_exception_reports_its_cause(self):
         with mock.patch.object(self.base, 'build_block', side_effect=OSError('missing build input')):
             code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out')
