@@ -52,6 +52,10 @@ Cargo/build/cache instructions here or modify its checkout as part of a research
   and `python3 tools/build_site.py`. Review all staged text for provenance and secrets. The
   integrating Engineer, or the orchestrator when run with a shell, then commits and pushes; there
   is no per-commit maintainer review.
+- Watch CI. Whoever pushes checks the CI result of the pushed commit with
+  `python3 tools/ci_status.py --commit <full sha> --wait 600` before reporting the work as done, and
+  records the result in the handoff. A red `main` is fixed, or its cause reported to the maintainer,
+  before any further push of unrelated work. Green CI proves publication hygiene only, never a match.
 - PRs describe evidence and limitations. Do not claim CI proves legality or gameplay parity.
 - Protect the research/implementation boundary. Do not port reconstructed functions into Mudcrab
   or declare a specification clean-room-safe just because it is prose or lives in another repo.
