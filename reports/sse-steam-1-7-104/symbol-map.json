@@ -66,10 +66,6 @@
       "rva": 1789312,
       "size": null
     },
-    "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z": {
-      "rva": 1848960,
-      "size": null
-    },
     "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z": {
       "rva": 1848960,
       "size": null
@@ -190,7 +186,7 @@
       "rva": 2266592,
       "size": null
     },
-    "?FindInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z": {
+    "?GetInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z": {
       "rva": 2273984,
       "size": null
     },
@@ -262,13 +258,13 @@
       "rva": 2616816,
       "size": null
     },
-    "?GetLevelFromData@BGSEncounterZone@@QEBAGXZ": {
+    "?GetLevel@BGSEncounterZone@@QEBAGXZ": {
       "rva": 2685408,
       "size": null
     },
     "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ": {
       "rva": 2863488,
-      "size": null
+      "size": 320
     },
     "?GetCoordinates@TESObjectCELL@@QEAAXAEAH0@Z": {
       "rva": 2868832,
@@ -354,7 +350,7 @@
       "rva": 3205328,
       "size": 129
     },
-    "?LookupLocation@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z": {
+    "?GetLocationFromPosition@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z": {
       "rva": 3215344,
       "size": null
     },
@@ -385,10 +381,6 @@
     "?IsFemale@TESNPC@@QEAAHXZ": {
       "rva": 3866288,
       "size": 20
-    },
-    "?GetHeightScale@TESNPC@@QEBAMXZ": {
-      "rva": 3958208,
-      "size": null
     },
     "?GetScale@TESNPC@@QEAAMXZ": {
       "rva": 3958208,
@@ -910,11 +902,11 @@
       "rva": 34058672,
       "size": null
     },
-    "?gCalcLevelCounterReset@@3GA": {
+    "?iCalcLevelAdjustDown@@3GA": {
       "rva": 34061512,
       "size": null
     },
-    "?gCalcLevelCounterMax@@3HA": {
+    "?iCalcLevelAdjustUp@@3HA": {
       "rva": 34061536,
       "size": null
     },
@@ -1015,14 +1007,6 @@
     [
       "?GetLevel@Actor@@QEBAGXZ",
       "?GetLevel@PlayerCharacter@@QEAAGXZ"
-    ],
-    [
-      "?GetHeightScale@TESNPC@@QEBAMXZ",
-      "?GetScale@TESNPC@@QEAAMXZ"
-    ],
-    [
-      "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z",
-      "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z"
     ]
   ],
   "_provenance": {
@@ -1055,8 +1039,8 @@
         "ae_id": 11696,
         "rva": "0x164630",
         "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "community_name": "ExtraDataList::IsWorn",
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the parameter types are the reconstruction's"
       },
       {
         "name": "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z",
@@ -1145,20 +1129,12 @@
         "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
-        "name": "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z",
-        "ae_id": 13783,
-        "rva": "0x1c3680",
-        "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
-      },
-      {
         "name": "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
         "ae_id": 13783,
         "rva": "0x1c3680",
         "size_from": null,
         "community_name": "TESDataHandler::IsTemporaryFormID",
-        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the TESObjectREFR unit calls the same address as IsMovableFormID, so both names are one fold group"
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the TESForm and TESObjectREFR units both call it by this name"
       },
       {
         "name": "??1BSLightingShaderMaterialLockGuard@@QEAA@XZ",
@@ -1262,7 +1238,7 @@
         "rva": "0x1d21c0",
         "size_from": null,
         "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "note": "Address Library id 14121, which meh321 AddressLibraryDatabase 0379cb6 names TESBoundObject::GetBipedObjectForm; the decorated name (a free function) is the reconstruction's GUESS"
       },
       {
         "name": "?GetLevel@TESActorBaseData@@QEBAGXZ",
@@ -1372,12 +1348,12 @@
         "community_name": "GetArmorFinalRating"
       },
       {
-        "name": "?FindInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z",
+        "name": "?GetInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z",
         "ae_id": 16039,
         "rva": "0x22b2c0",
         "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "community_name": "TESObjectREFR::GetInventoryChanges",
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the parameter and return types are the reconstruction's"
       },
       {
         "name": "?MakeInventoryChanges@TESObjectREFR@@QEAAPEAVInventoryChanges@@XZ",
@@ -1500,21 +1476,21 @@
         "rva": "0x27edf0",
         "size_from": null,
         "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "note": "Address Library id 17797, which meh321 AddressLibraryDatabase 0379cb6 names TESObjectARMO::GetSkill; the decorated name is the reconstruction's GUESS"
       },
       {
-        "name": "?GetLevelFromData@BGSEncounterZone@@QEBAGXZ",
+        "name": "?GetLevel@BGSEncounterZone@@QEBAGXZ",
         "ae_id": 18198,
         "rva": "0x28f9e0",
         "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "community_name": "BGSEncounterZone::GetLevel",
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the parameter and return types are the reconstruction's"
       },
       {
         "name": "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ",
         "ae_id": 18905,
         "rva": "0x2bb180",
-        "size_from": null,
+        "size_from": "inventory",
         "community_name": "TESObjectCELL::GetLocation"
       },
       {
@@ -1666,12 +1642,12 @@
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
-        "name": "?LookupLocation@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z",
+        "name": "?GetLocationFromPosition@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z",
         "ae_id": 20539,
         "rva": "0x310ff0",
         "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "community_name": "TESWorldSpace::GetLocationFromPosition",
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the parameter and return types are the reconstruction's"
       },
       {
         "name": "?GetOffsetData@TESWorldSpace@@QEBAPEAUOffsetData@@XZ",
@@ -1723,14 +1699,6 @@
         "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
-        "name": "?GetHeightScale@TESNPC@@QEBAMXZ",
-        "ae_id": 24763,
-        "rva": "0x3c65c0",
-        "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
-      },
-      {
         "name": "?GetScale@TESNPC@@QEAAMXZ",
         "rva": "0x3c65c0",
         "size_from": "task",
@@ -1764,7 +1732,7 @@
         "rva": "0x405d70",
         "size_from": null,
         "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "note": "Address Library id 26030, which meh321 AddressLibraryDatabase 0379cb6 names NiAVObject::GetCollisionObject; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "?GetSoundLevelValue@AIFormulas@@YAHW4SOUND_LEVEL@@@Z",
@@ -2525,8 +2493,8 @@
         "ae_id": 109694,
         "rva": "0x15a97f8",
         "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "community_name": "memset",
+        "note": "Address Library id 109694, the C runtime memset (meh321 AddressLibraryDatabase 0379cb6 lists it by that name)"
       },
       {
         "name": "__imp_FormatMessageA",
@@ -2665,20 +2633,20 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
-        "name": "?gCalcLevelCounterReset@@3GA",
+        "name": "?iCalcLevelAdjustDown@@3GA",
         "ae_id": 360555,
         "rva": "0x207bcc8",
         "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "community_name": "iCalcLevelAdjustDown",
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the declared type is the reconstruction's"
       },
       {
-        "name": "?gCalcLevelCounterMax@@3HA",
+        "name": "?iCalcLevelAdjustUp@@3HA",
         "ae_id": 360558,
         "rva": "0x207bce0",
         "size_from": null,
-        "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "community_name": "iCalcLevelAdjustUp",
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the declared type is the reconstruction's"
       },
       {
         "name": "?g_overlayCapacity@@3IA",
@@ -2778,7 +2746,7 @@
         "rva": "0x219e55c",
         "size_from": null,
         "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "note": "Address Library id 400312, which meh321 AddressLibraryDatabase 0379cb6 names gNullHandle; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "?gExteriorbhkWorld@@3PEAPEAVbhkWorld@@EA",
@@ -2793,7 +2761,7 @@
         "rva": "0x31a5728",
         "size_from": null,
         "community_name": null,
-        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+        "note": "Address Library id 400884, which meh321 AddressLibraryDatabase 0379cb6 names gNoZoneZone; the decorated name is the reconstruction's GUESS, kept because accepted units bind it"
       },
       {
         "name": "?gCalcLevelCounter@@3GA",

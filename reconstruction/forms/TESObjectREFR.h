@@ -3,13 +3,15 @@
 // Labels: v2
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT)
-// and powerof3/CommonLibSSE 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0); no community
-// code is copied. Every class other than TESObjectREFR is a minimal stand-in that declares only
+// and powerof3/CommonLibSSE 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0), and callee
+// names from meh321/AddressLibraryDatabase 0379cb6 (used with the author's permission as reported
+// by the maintainer); no community code is copied. Because it uses powerof3 names, this header is
+// GPL-3.0. Every class other than TESObjectREFR is a minimal stand-in that declares only
 // the members and virtual slots the compared code needs, so the layouts of the stand-ins are not
 // claimed to match the game. Unk_NN placeholders only keep the compared virtual slots at the
 // vtable offsets the image encodes (slot NN is the byte offset NN * 8).
-// TESObjectREFR, GetScale, GetCurrentLocation, GetCalcLevel, GetTransform: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-// Callees without a community name are bound to the RVA the image encodes, and every such name
+// TESObjectREFR, GetScale, GetCurrentLocation, GetCalcLevel, GetTransform, CanBeMoved, HasQuestObject, GetBaseObject: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// Callees are bound to the RVA the image encodes; where no community source names one, its name
 // is only a guess about what the callee does.
 #pragma once
 
@@ -18,8 +20,14 @@
 class BGSLocation;
 class TESObjectREFR;
 
-// FormType FormType::NPC FormType::ActorCharacter: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only the values used here.
+// FormType FormType::Container FormType::Static FormType::StaticCollection FormType::Tree FormType::Flora FormType::Furniture FormType::NPC FormType::ActorCharacter: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only the values used here.
 enum class FormType : std::uint8_t {
+    Container        = 0x1C,
+    Static           = 0x22,
+    StaticCollection = 0x23,
+    Tree             = 0x26,
+    Flora            = 0x27,
+    Furniture        = 0x28,
     NPC            = 0x2B,
     ActorCharacter = 0x3E,
 };
@@ -118,21 +126,89 @@ public:
 // TESBoundObject: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the object a
 // reference points at.
 class TESBoundObject : public TESForm {
+public:
+    virtual void Unk_3B();
+    virtual void Unk_3C();
+    virtual void Unk_3D();
+    virtual void Unk_3E();
+    virtual void Unk_3F();
+    virtual void Unk_40();
+    virtual void Unk_41();
+    // IsMarker: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG declares it on TESObject at slot 0x42.
+    virtual bool IsMarker();
+};
+
+// TESBoundAnimObject, TESActorBaseData, TESContainer, TESObjectCONT: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only
+// the base-class order and sizes that put TESContainer at 0x30 in a container and 0x88 in an NPC.
+class TESBoundAnimObject : public TESBoundObject {
+public:
+    std::uint8_t unk20[0x10];  // 20
+};
+
+class TESActorBaseData {
+public:
+    virtual ~TESActorBaseData();
+    std::uint8_t unk08[0x50];  // 08
+};
+
+class TESContainer {
+public:
+    virtual ~TESContainer();
+};
+
+class TESObjectCONT :
+    public TESBoundAnimObject,  // 00
+    public TESContainer         // 30
+{
 };
 
 // TESNPC: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-class TESNPC : public TESBoundObject {
+class TESNPC :
+    public TESBoundAnimObject,  // 00
+    public TESActorBaseData,    // 30
+    public TESContainer         // 88
+{
 public:
-    // GetHeightScale: GUESS(low); the callee at RVA 0x3c65c0 returns a float that scales an NPC
-    // reference.
-    float GetHeightScale() const;
+    // TESNPC::GetScale: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); the callee at RVA 0x3c65c0 (id 24763), declared as the TESNPC unit declares it
+    float GetScale();
+};
+
+// GetContainer: GUESS(medium); the container component of a container or NPC base object, as
+// both functions that test for one inline it.
+inline TESContainer* GetContainer(TESBoundObject* a_object)
+{
+    switch (a_object->formType) {
+    case FormType::Container:
+        return static_cast<TESObjectCONT*>(static_cast<TESBoundAnimObject*>(a_object));
+    case FormType::NPC:
+        return static_cast<TESNPC*>(static_cast<TESBoundAnimObject*>(a_object));
+    default:
+        return nullptr;
+    }
+}
+
+// TESDataHandler: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// TESDataHandler::singleton: GUESS; global pointer at RVA 0x219ded8, which NG reads through TESDataHandler::GetSingleton (RE::Offset::TESDataHandler::Singleton).
+// TESDataHandler::IsTemporaryFormID: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); the callee at RVA 0x1c3680 (id 13783), declared as the TESForm unit declares it
+class TESDataHandler {
+public:
+    static TESDataHandler* singleton;
+
+    bool IsTemporaryFormID(std::uint32_t a_formID);
+};
+
+// InventoryChanges: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// InventoryChanges::HasQuestItem: GUESS(medium); the callee at RVA 0x234c20 answers for the whole inventory.
+class InventoryChanges {
+public:
+    bool HasQuestItem();
 };
 
 // TESWorldSpace: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 class TESWorldSpace {
 public:
-    // LookupLocation: GUESS(low); the callee at RVA 0x310ff0 maps a position to a location.
-    BGSLocation* LookupLocation(const NiPoint3& a_pos) const;
+    // TESWorldSpace::GetLocationFromPosition: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); the callee at RVA 0x310ff0 (id 20539); parameter and return types as the call uses them
+    BGSLocation* GetLocationFromPosition(const NiPoint3& a_pos) const;
 };
 
 // TESObjectCELL: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
@@ -161,8 +237,8 @@ public:
     std::uint8_t  unk00[0x44];
     std::uint16_t unk44;  // 44
 
-    // GetLevelFromData: GUESS(low); the callee at RVA 0x28f9e0 yields a level for the zone.
-    std::uint16_t GetLevelFromData() const;
+    // BGSEncounterZone::GetLevel: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); the callee at RVA 0x28f9e0 (id 18198)
+    std::uint16_t GetLevel() const;
 };
 
 // BSHandleRefObject, IAnimationGraphManagerHolder: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); bases of TESObjectREFR, only their sizes matter here.
@@ -313,6 +389,16 @@ public:
     BGSLocation*  GetCurrentLocation() const;
     std::uint16_t GetCalcLevel(bool a_adjustLevel) const;
     void          GetTransform(NiTransform& a_transform) const;
+    bool          CanBeMoved();
+    bool          HasQuestObject() const;
+
+    TESBoundObject* GetBaseObject() const { return data.objectReference; }
+
+    // TESObjectREFR::GetInventoryChanges: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission) OBSERVED; the callee at RVA 0x22b2c0 (id 16039). NG
+    // declares its own GetInventoryChanges without this parameter: HasQuestObject leaves the base
+    // object's form type in the second argument register, and the allocation only matches when it
+    // is passed, so it is declared as a parameter.
+    InventoryChanges* GetInventoryChanges(FormType a_baseType) const;
 
     // GetEncounterZone: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); RVA 0x300ab0.
     BGSEncounterZone* GetEncounterZone() const;

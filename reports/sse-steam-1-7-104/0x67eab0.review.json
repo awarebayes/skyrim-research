@@ -1,0 +1,27 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "4741a84edfb9f255f5282df58be3cbbbe0027e6f21d993e37a646e79cc791414",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x67eab0",
+  "naming_findings": [
+    "the faction and actor-base flag tests use bare bit indices; the community enumerators (track-crime, unique) appear only in comments",
+    "the actor-base flag word carries the community member name but is labelled GUESS",
+    "the actorData member of the TESNPC stand-in has no origin label",
+    "the base-object pointer member is a GUESS placeholder where NG names the reference's data object reference",
+    "the TestBit comment gives a code-generation reason for the by-value word rather than only the programmer-level origin"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "7a330b647191cdc56b3a39a7eaaaa782e1a3a128b770d975c08a9616b10b46f1",
+  "review_task_id": "review-p15-rereview-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 6810288,
+  "size": 234,
+  "source_digest": "f1350179283e019a50ceb69a08998bfaebc78b7631072ef65dfeeb8bff34b444",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

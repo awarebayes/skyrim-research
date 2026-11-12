@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "060208d36585c483fc68afacb190d67716bd332b309083b76b84be9647657dc3",
+        "object_sha256": "85ec0f8790fa70478d0ddedcecb1a7203ac59a041c411df9e85c20cbd9b252c4",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSTimer.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "48234951cec8da297116bf3a0d0cd2329a58415d457593c5859de27fbbd1867e",
+        "object_sha256": "6534bbbe6b0904724d79e0bbdf107faa1e30b1a9738d2ff1a27902a43440a084",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSTimer.cpp",
@@ -80,7 +80,7 @@
         "candidate": {
           "code_section_sha256": "cd6dd912ec7904629743bbae497b4dddb95d97b3aa82464457f2bb8c96512c11",
           "code_sections": 1,
-          "object_sha256": "060208d36585c483fc68afacb190d67716bd332b309083b76b84be9647657dc3"
+          "object_sha256": "85ec0f8790fa70478d0ddedcecb1a7203ac59a041c411df9e85c20cbd9b252c4"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -144,7 +144,7 @@
           "path": "reconstruction/bsengine/BSTimer.cpp",
           "source_revision": "4866dbd5b4b4bb4b7890b6834effd92a0486098ab66963ab5ee4b69da337d3ad"
         },
-        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -160,7 +160,7 @@
         "candidate": {
           "code_section_sha256": "cd6dd912ec7904629743bbae497b4dddb95d97b3aa82464457f2bb8c96512c11",
           "code_sections": 1,
-          "object_sha256": "060208d36585c483fc68afacb190d67716bd332b309083b76b84be9647657dc3"
+          "object_sha256": "85ec0f8790fa70478d0ddedcecb1a7203ac59a041c411df9e85c20cbd9b252c4"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -224,7 +224,7 @@
           "path": "reconstruction/bsengine/BSTimer.cpp",
           "source_revision": "4866dbd5b4b4bb4b7890b6834effd92a0486098ab66963ab5ee4b69da337d3ad"
         },
-        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -240,7 +240,7 @@
         "candidate": {
           "code_section_sha256": "cd6dd912ec7904629743bbae497b4dddb95d97b3aa82464457f2bb8c96512c11",
           "code_sections": 1,
-          "object_sha256": "48234951cec8da297116bf3a0d0cd2329a58415d457593c5859de27fbbd1867e"
+          "object_sha256": "6534bbbe6b0904724d79e0bbdf107faa1e30b1a9738d2ff1a27902a43440a084"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -304,7 +304,7 @@
           "path": "reconstruction/bsengine/BSTimer.cpp",
           "source_revision": "4866dbd5b4b4bb4b7890b6834effd92a0486098ab66963ab5ee4b69da337d3ad"
         },
-        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -320,7 +320,7 @@
         "candidate": {
           "code_section_sha256": "cd6dd912ec7904629743bbae497b4dddb95d97b3aa82464457f2bb8c96512c11",
           "code_sections": 1,
-          "object_sha256": "48234951cec8da297116bf3a0d0cd2329a58415d457593c5859de27fbbd1867e"
+          "object_sha256": "6534bbbe6b0904724d79e0bbdf107faa1e30b1a9738d2ff1a27902a43440a084"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -384,7 +384,7 @@
           "path": "reconstruction/bsengine/BSTimer.cpp",
           "source_revision": "4866dbd5b4b4bb4b7890b6834effd92a0486098ab66963ab5ee4b69da337d3ad"
         },
-        "symbol_map_sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -404,7 +404,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "c5bc5fe5b3c44de72a1e0acff860047a49bb73d349462606f7095b4bc2f1622c"
+    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

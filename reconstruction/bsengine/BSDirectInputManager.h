@@ -10,7 +10,7 @@
 // BSDirectInputManager: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // CreateDeviceWithGUID GetDeviceState GetDeviceData ReleaseDevice diInterface: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // GUID DIDEVICEOBJECTDATA IDirectInput8A IDirectInputDevice8A: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-// CreateDevice Acquire Unacquire Poll Release QueryInterface AddRef: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG declares them in REX/W32/DINPUT.h
+// CreateDevice Acquire Unacquire Poll Release QueryInterface AddRef: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG declares CreateDevice, Acquire, Unacquire and Poll in REX/W32/DINPUT.h and Release, QueryInterface and AddRef in REX/W32/COM.h
 // unk3 unk4 unk5 unk6 unk11 unk12 unk13 unk14 unk15 unk16 unk17 unk18 unk19 unk20 unk21 unk22 unk23 unk24: GUESS; slot fillers
 
 #pragma once

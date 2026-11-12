@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "50d90a70b5174ee4b0186c4db9af45527fb0378f7c1a05b5a15089eb0ba980b2",
+        "object_sha256": "f5bb445d57e7cff4136d2114e113d9c9f6ff59c41066227e3a00c0f5b19ffa64",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/InventoryChanges.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "c817bb4159d70b06643e3dfb93f9fc744b40c88cd5ec79f27d2d0743b6197d8c",
+        "object_sha256": "aa13a7bd9e53a9ec44bef101987d49720049828f40549d0ebb3211da0818f220",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/InventoryChanges.cpp",
@@ -79,7 +79,7 @@
         "candidate": {
           "code_section_sha256": "e3d9d306097febfb6820743f19f1516d812ff08b7be09430028306498d318f6b",
           "code_sections": 1,
-          "object_sha256": "50d90a70b5174ee4b0186c4db9af45527fb0378f7c1a05b5a15089eb0ba980b2"
+          "object_sha256": "f5bb445d57e7cff4136d2114e113d9c9f6ff59c41066227e3a00c0f5b19ffa64"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -139,9 +139,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/inventory/InventoryChanges.cpp",
-          "source_revision": "d77d201dc7240f3f9f9b3cf32e43668645142f1d55add079a74fd7feb00d9d70"
+          "source_revision": "46206903bfe62fec85c50ca3c77a21a289c8775460695f8f7f23d86d2e9f89e1"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -157,7 +157,7 @@
         "candidate": {
           "code_section_sha256": "e3d9d306097febfb6820743f19f1516d812ff08b7be09430028306498d318f6b",
           "code_sections": 1,
-          "object_sha256": "50d90a70b5174ee4b0186c4db9af45527fb0378f7c1a05b5a15089eb0ba980b2"
+          "object_sha256": "f5bb445d57e7cff4136d2114e113d9c9f6ff59c41066227e3a00c0f5b19ffa64"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -217,9 +217,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/inventory/InventoryChanges.cpp",
-          "source_revision": "d77d201dc7240f3f9f9b3cf32e43668645142f1d55add079a74fd7feb00d9d70"
+          "source_revision": "46206903bfe62fec85c50ca3c77a21a289c8775460695f8f7f23d86d2e9f89e1"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -235,7 +235,7 @@
         "candidate": {
           "code_section_sha256": "e3d9d306097febfb6820743f19f1516d812ff08b7be09430028306498d318f6b",
           "code_sections": 1,
-          "object_sha256": "c817bb4159d70b06643e3dfb93f9fc744b40c88cd5ec79f27d2d0743b6197d8c"
+          "object_sha256": "aa13a7bd9e53a9ec44bef101987d49720049828f40549d0ebb3211da0818f220"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -295,9 +295,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/inventory/InventoryChanges.cpp",
-          "source_revision": "d77d201dc7240f3f9f9b3cf32e43668645142f1d55add079a74fd7feb00d9d70"
+          "source_revision": "46206903bfe62fec85c50ca3c77a21a289c8775460695f8f7f23d86d2e9f89e1"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -313,7 +313,7 @@
         "candidate": {
           "code_section_sha256": "e3d9d306097febfb6820743f19f1516d812ff08b7be09430028306498d318f6b",
           "code_sections": 1,
-          "object_sha256": "c817bb4159d70b06643e3dfb93f9fc744b40c88cd5ec79f27d2d0743b6197d8c"
+          "object_sha256": "aa13a7bd9e53a9ec44bef101987d49720049828f40549d0ebb3211da0818f220"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -373,9 +373,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/inventory/InventoryChanges.cpp",
-          "source_revision": "d77d201dc7240f3f9f9b3cf32e43668645142f1d55add079a74fd7feb00d9d70"
+          "source_revision": "46206903bfe62fec85c50ca3c77a21a289c8775460695f8f7f23d86d2e9f89e1"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -386,7 +386,7 @@
   ],
   "source": {
     "compiled": "reconstruction/inventory/InventoryChanges.cpp",
-    "digest": "d77d201dc7240f3f9f9b3cf32e43668645142f1d55add079a74fd7feb00d9d70",
+    "digest": "46206903bfe62fec85c50ca3c77a21a289c8775460695f8f7f23d86d2e9f89e1",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/inventory/InventoryChanges.cpp",
@@ -395,7 +395,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687"
+    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

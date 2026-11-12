@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "f6fcede3fc871836c0c3c9b51c50b67591e41b48b50516e3a6e32e76ac256e28",
+        "object_sha256": "a9e9cc41332d8b21a8470d96d48c7c49f1c03a96de8dde5b0e0812093bc0aa2e",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSReadWriteLock.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "a2c88ed5c15d35c3936dd0573f7c694dd80a6a9e2a8bf47ba4af193bf92fd451",
+        "object_sha256": "e546ecafb75bdd45d5a1ae31b7ffacac1f9dcc4472b31e8f84d8a983313c2547",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSReadWriteLock.cpp",
@@ -79,7 +79,7 @@
         "candidate": {
           "code_section_sha256": "00b65376a769730e6a975e68a08b5b491572a9fb8ac771f7647ee6083f19e637",
           "code_sections": 1,
-          "object_sha256": "f6fcede3fc871836c0c3c9b51c50b67591e41b48b50516e3a6e32e76ac256e28"
+          "object_sha256": "a9e9cc41332d8b21a8470d96d48c7c49f1c03a96de8dde5b0e0812093bc0aa2e"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -141,7 +141,7 @@
           "path": "reconstruction/bsengine/BSReadWriteLock.cpp",
           "source_revision": "45903931a3b9748aa14d74aa02bb2fbfa142f261bc87e57cad359382515af4aa"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -157,7 +157,7 @@
         "candidate": {
           "code_section_sha256": "00b65376a769730e6a975e68a08b5b491572a9fb8ac771f7647ee6083f19e637",
           "code_sections": 1,
-          "object_sha256": "f6fcede3fc871836c0c3c9b51c50b67591e41b48b50516e3a6e32e76ac256e28"
+          "object_sha256": "a9e9cc41332d8b21a8470d96d48c7c49f1c03a96de8dde5b0e0812093bc0aa2e"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -219,7 +219,7 @@
           "path": "reconstruction/bsengine/BSReadWriteLock.cpp",
           "source_revision": "45903931a3b9748aa14d74aa02bb2fbfa142f261bc87e57cad359382515af4aa"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -235,7 +235,7 @@
         "candidate": {
           "code_section_sha256": "00b65376a769730e6a975e68a08b5b491572a9fb8ac771f7647ee6083f19e637",
           "code_sections": 1,
-          "object_sha256": "a2c88ed5c15d35c3936dd0573f7c694dd80a6a9e2a8bf47ba4af193bf92fd451"
+          "object_sha256": "e546ecafb75bdd45d5a1ae31b7ffacac1f9dcc4472b31e8f84d8a983313c2547"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -297,7 +297,7 @@
           "path": "reconstruction/bsengine/BSReadWriteLock.cpp",
           "source_revision": "45903931a3b9748aa14d74aa02bb2fbfa142f261bc87e57cad359382515af4aa"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -313,7 +313,7 @@
         "candidate": {
           "code_section_sha256": "00b65376a769730e6a975e68a08b5b491572a9fb8ac771f7647ee6083f19e637",
           "code_sections": 1,
-          "object_sha256": "a2c88ed5c15d35c3936dd0573f7c694dd80a6a9e2a8bf47ba4af193bf92fd451"
+          "object_sha256": "e546ecafb75bdd45d5a1ae31b7ffacac1f9dcc4472b31e8f84d8a983313c2547"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -375,7 +375,7 @@
           "path": "reconstruction/bsengine/BSReadWriteLock.cpp",
           "source_revision": "45903931a3b9748aa14d74aa02bb2fbfa142f261bc87e57cad359382515af4aa"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -395,7 +395,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687"
+    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

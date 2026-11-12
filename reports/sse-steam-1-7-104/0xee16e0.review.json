@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "18034411dc1ee890381e069c8c384c68f91e51a5844f5d34f421abe343d7979c",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xee16e0",
+  "naming_findings": [
+    "the NiBinaryStream write and binary_write helper bodies in the header follow NG's MIT implementations; say so in the header, which now credits NG for names only",
+    "_writeFn, oStr and _absoluteCurrentPos are labelled, but _pad0C and _readFn in the same stand-in are not"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "c39c901b0fffe964e1821bc94c57a509c391425c9f0275333e0a73a10cc797b2",
+  "review_task_id": "review-p15-rereview-2",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 15603424,
+  "size": 189,
+  "source_digest": "53632c676993c28448970f9582cd24ba4226370811a9b060faddc9f6af043198",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

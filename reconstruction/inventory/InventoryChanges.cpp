@@ -51,6 +51,8 @@ void InventoryChanges::VisitInventory(IItemChangeVisitor& visitor)
     } while (result == 1);
 }
 
+// FormType::Light, FormType::Weapon, FormType::Ammo: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); their values 0x1F, 0x29 and 0x2A, held as the local constants below
+// kLight, kWeapon, kAmmo: GUESS(high); local spellings of those three form types
 namespace {
     constexpr std::uint32_t kLight  = 0x1F;
     constexpr std::uint32_t kWeapon = 0x29;

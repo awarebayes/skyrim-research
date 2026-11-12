@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "4e3ca12c67a53745382ee81ffd4327a59e87f3bf3e4c93e6b74d870579f19a9e",
+        "object_sha256": "2f96e8420a8babf3877215ba8ac6fe9d339109c3539978a98570f98dc7a6cdb5",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSDirectInputManager.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "e9538ca2eb92ab62922b7bec62f31a16ab847ad7d49f3118cc983977fc567603",
+        "object_sha256": "df072769a477b807785142698b74e5355efbd3fea90fbc81c8c4959263444843",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSDirectInputManager.cpp",
@@ -79,7 +79,7 @@
         "candidate": {
           "code_section_sha256": "dca26a58c82d47aae1f8f5f10e9536e43514a4876fee5c15d83b9b4832a206a4",
           "code_sections": 1,
-          "object_sha256": "4e3ca12c67a53745382ee81ffd4327a59e87f3bf3e4c93e6b74d870579f19a9e"
+          "object_sha256": "2f96e8420a8babf3877215ba8ac6fe9d339109c3539978a98570f98dc7a6cdb5"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -139,9 +139,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSDirectInputManager.cpp",
-          "source_revision": "3be28946e9f0ec1721c2eb61d95a4123898868a00214ed722218e62fa6a44d00"
+          "source_revision": "163d72bccc95863bec2e1f6e4211ae47b5fe2884e7770dc64e5d1664b14020e2"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -157,7 +157,7 @@
         "candidate": {
           "code_section_sha256": "dca26a58c82d47aae1f8f5f10e9536e43514a4876fee5c15d83b9b4832a206a4",
           "code_sections": 1,
-          "object_sha256": "4e3ca12c67a53745382ee81ffd4327a59e87f3bf3e4c93e6b74d870579f19a9e"
+          "object_sha256": "2f96e8420a8babf3877215ba8ac6fe9d339109c3539978a98570f98dc7a6cdb5"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -217,9 +217,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSDirectInputManager.cpp",
-          "source_revision": "3be28946e9f0ec1721c2eb61d95a4123898868a00214ed722218e62fa6a44d00"
+          "source_revision": "163d72bccc95863bec2e1f6e4211ae47b5fe2884e7770dc64e5d1664b14020e2"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -235,7 +235,7 @@
         "candidate": {
           "code_section_sha256": "dca26a58c82d47aae1f8f5f10e9536e43514a4876fee5c15d83b9b4832a206a4",
           "code_sections": 1,
-          "object_sha256": "e9538ca2eb92ab62922b7bec62f31a16ab847ad7d49f3118cc983977fc567603"
+          "object_sha256": "df072769a477b807785142698b74e5355efbd3fea90fbc81c8c4959263444843"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -295,9 +295,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSDirectInputManager.cpp",
-          "source_revision": "3be28946e9f0ec1721c2eb61d95a4123898868a00214ed722218e62fa6a44d00"
+          "source_revision": "163d72bccc95863bec2e1f6e4211ae47b5fe2884e7770dc64e5d1664b14020e2"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -313,7 +313,7 @@
         "candidate": {
           "code_section_sha256": "dca26a58c82d47aae1f8f5f10e9536e43514a4876fee5c15d83b9b4832a206a4",
           "code_sections": 1,
-          "object_sha256": "e9538ca2eb92ab62922b7bec62f31a16ab847ad7d49f3118cc983977fc567603"
+          "object_sha256": "df072769a477b807785142698b74e5355efbd3fea90fbc81c8c4959263444843"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -373,9 +373,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSDirectInputManager.cpp",
-          "source_revision": "3be28946e9f0ec1721c2eb61d95a4123898868a00214ed722218e62fa6a44d00"
+          "source_revision": "163d72bccc95863bec2e1f6e4211ae47b5fe2884e7770dc64e5d1664b14020e2"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -386,7 +386,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSDirectInputManager.cpp",
-    "digest": "3be28946e9f0ec1721c2eb61d95a4123898868a00214ed722218e62fa6a44d00",
+    "digest": "163d72bccc95863bec2e1f6e4211ae47b5fe2884e7770dc64e5d1664b14020e2",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSDirectInputManager.cpp",
@@ -395,7 +395,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687"
+    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

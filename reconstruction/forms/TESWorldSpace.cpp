@@ -7,7 +7,7 @@
 // Evidence: findings/fourth-batch-selection.md.
 // Source exposure: mixed. Drafted by claude-sonnet-5-5 from local instruction listings of the
 // pinned image, with the class layout from the header beside this file. Names are from
-// CharmedBaryon/CommonLibSSE-NG b93280e (MIT). A byte match shows that this source and recipe produce the checked code; it
+// CharmedBaryon/CommonLibSSE-NG b93280e (MIT), and GetCellByPosition's from meh321/AddressLibraryDatabase 0379cb6. A byte match shows that this source and recipe produce the checked code; it
 // does not verify the community method names or that the original source looked like this.
 // The plain destructor and the base constructors are declared, not defined, in this unit.
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The functions above are compared.

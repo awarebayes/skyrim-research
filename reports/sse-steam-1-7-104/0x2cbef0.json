@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "f933f78ae6d3b828acbaa4b5891ea0c65f7f803a0ee115c9831ef1c1958b884f",
+        "object_sha256": "a2c2796829a64a9fc8b867863dc10644719843619eb33509aa06e707813100ba",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/TESObjectCELL.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "408b1785de21abe940895679764b535121266c0f45dfcfb4c77b380b02355d17",
+        "object_sha256": "6a17a624154dde1d7b7d85d79d472cf740acfa8797e9f70a075b68383ef228bf",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/TESObjectCELL.cpp",
@@ -79,7 +79,7 @@
         "candidate": {
           "code_section_sha256": "16b9e123eab14d7e2973104645741f65608fb77a89de73bbfb809a0e9b2a0d70",
           "code_sections": 1,
-          "object_sha256": "f933f78ae6d3b828acbaa4b5891ea0c65f7f803a0ee115c9831ef1c1958b884f"
+          "object_sha256": "a2c2796829a64a9fc8b867863dc10644719843619eb33509aa06e707813100ba"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -141,9 +141,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectCELL.cpp",
-          "source_revision": "3596d37ff7f956bfeb2ebe0fb0515e1c42a49b0613b04ccabf25380c89c63a3a"
+          "source_revision": "f583e69f174d0966577b3cecbdacb679e8e493544039971846659ddfa0195adc"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -159,7 +159,7 @@
         "candidate": {
           "code_section_sha256": "16b9e123eab14d7e2973104645741f65608fb77a89de73bbfb809a0e9b2a0d70",
           "code_sections": 1,
-          "object_sha256": "f933f78ae6d3b828acbaa4b5891ea0c65f7f803a0ee115c9831ef1c1958b884f"
+          "object_sha256": "a2c2796829a64a9fc8b867863dc10644719843619eb33509aa06e707813100ba"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -221,9 +221,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectCELL.cpp",
-          "source_revision": "3596d37ff7f956bfeb2ebe0fb0515e1c42a49b0613b04ccabf25380c89c63a3a"
+          "source_revision": "f583e69f174d0966577b3cecbdacb679e8e493544039971846659ddfa0195adc"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -239,7 +239,7 @@
         "candidate": {
           "code_section_sha256": "16b9e123eab14d7e2973104645741f65608fb77a89de73bbfb809a0e9b2a0d70",
           "code_sections": 1,
-          "object_sha256": "408b1785de21abe940895679764b535121266c0f45dfcfb4c77b380b02355d17"
+          "object_sha256": "6a17a624154dde1d7b7d85d79d472cf740acfa8797e9f70a075b68383ef228bf"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -301,9 +301,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectCELL.cpp",
-          "source_revision": "3596d37ff7f956bfeb2ebe0fb0515e1c42a49b0613b04ccabf25380c89c63a3a"
+          "source_revision": "f583e69f174d0966577b3cecbdacb679e8e493544039971846659ddfa0195adc"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -319,7 +319,7 @@
         "candidate": {
           "code_section_sha256": "16b9e123eab14d7e2973104645741f65608fb77a89de73bbfb809a0e9b2a0d70",
           "code_sections": 1,
-          "object_sha256": "408b1785de21abe940895679764b535121266c0f45dfcfb4c77b380b02355d17"
+          "object_sha256": "6a17a624154dde1d7b7d85d79d472cf740acfa8797e9f70a075b68383ef228bf"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -381,9 +381,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectCELL.cpp",
-          "source_revision": "3596d37ff7f956bfeb2ebe0fb0515e1c42a49b0613b04ccabf25380c89c63a3a"
+          "source_revision": "f583e69f174d0966577b3cecbdacb679e8e493544039971846659ddfa0195adc"
         },
-        "symbol_map_sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687",
+        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -394,7 +394,7 @@
   ],
   "source": {
     "compiled": "reconstruction/forms/TESObjectCELL.cpp",
-    "digest": "3596d37ff7f956bfeb2ebe0fb0515e1c42a49b0613b04ccabf25380c89c63a3a",
+    "digest": "f583e69f174d0966577b3cecbdacb679e8e493544039971846659ddfa0195adc",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/forms/TESObjectCELL.cpp",
@@ -403,7 +403,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "0c3a8f3aaf97b0bb24575ed31106722f9d55edf4e0f764ab23bd230fcc352687"
+    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

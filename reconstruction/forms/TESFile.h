@@ -9,6 +9,8 @@
 // TESFile::threadSafeParent, ::file, ::fileName, ::path, ::currentform, ::currentchunkID: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // TESFile::actualChunkSize, ::filesize, ::fileOffset, ::formoffset, ::chunkoffset: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // TESFile::decompressedFormBuffer, ::decompressedFormBufferSize, ::lastError: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// TESFile::pad004, ::threadSafeFileMap, ::unk020, ::unk028, ::lockedFile, ::currRefOffset, ::pad4AC: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG declares unk020 as a 64-bit word (its upper half is unk024 here) and lockedFile as BSFile*
+// TESFile::pad02A: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG splits the bytes 0x2A to 0x2F into pad02A and pad02C, merged here into one array
 // TESFile::unk018, ::unk029: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); 0x29 is
 // read as the flag that selects unk018 over file, 0x18 as a handle whose word at 0x24 is a position
 // FORM, NiFile, Main: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only the
