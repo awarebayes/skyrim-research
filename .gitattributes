@@ -4,3 +4,9 @@
 *.json text eol=lf
 *.md text eol=lf
 *.yml text eol=lf
+# Source digests (tools/source_digest.py) hash the bytes on disk. With text=auto, Git for Windows
+# checks text out with CRLF, which gives every unit a different digest from the committed records.
+*.cpp text eol=lf
+*.h text eol=lf
+# cmd.exe can mis-handle labels and goto in batch files with bare LF line endings.
+*.cmd text eol=crlf

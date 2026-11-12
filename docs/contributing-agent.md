@@ -7,8 +7,8 @@ instructions elsewhere in this repository (`AGENTS.md` "Multi-agent execution",
 project's own machines. Never use Boat, the project's internal verifier hosts or its runner tools.
 Everything below runs on the contributor's computer.
 
-Drive one tool, `tools/contrib.py` (Windows: `py tools\contrib.py`), always with `--json`. Each call
-prints one JSON object with `ok`, `exit_code`, `error` and `next` (the one next action). Do what
+Drive one tool, `tools/contrib.py` (Windows: `.\sr.cmd`, which finds Python 3.11+ or unpacks a
+pinned private copy), always with `--json`. Each call prints one JSON object with `ok`, `exit_code`, `error` and `next` (the one next action). Do what
 `next` says. Exit codes: 0 ok, 1 a check failed, 2 usage, 3 compile failed, 4 unit or include
 problem, 5 input missing, 6 claimed by someone else, 7 a person must decide, 8 offline.
 

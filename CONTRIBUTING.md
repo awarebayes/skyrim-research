@@ -15,7 +15,7 @@ installed for you.
 ```sh
 git clone https://github.com/awarebayes/skyrim-research.git
 cd skyrim-research
-python3 tools/contrib.py go            # Windows: py tools\contrib.py go
+python3 tools/contrib.py go            # Windows (cmd or PowerShell): .\sr.cmd go
 ```
 
 `go` checks your machine, installs what is missing (Wine on macOS and Linux, LLVM, the pinned
@@ -48,16 +48,18 @@ re-compiles and re-compares your source on two of its own machines, and a Review
 is plausible source with honest provenance. If both agree, the function is recorded as matched and
 you are credited in the commit. If not, the reasons come back on your pull request.
 
-**Status of the platforms.** The helper is designed for Windows, macOS and Linux; so far it has
-been exercised on macOS only. On macOS (Apple silicon) `setup`, the self-test, `start` and
-`compare` ran with the real pinned compiler: on a Mac with Rosetta already installed,
-`setup --yes --accept-microsoft-license` installed the pinned compiler unattended in under 4
-minutes, and the self-test compiled an accepted function to the code-section hash recorded by the
-project. That time excludes the Wine download (about 185 MB), which had been fetched earlier; the
-timed run downloaded about 0.9 GB, and the result takes about 3.5 GB on disk. A compare takes about
-7 seconds. `claim` and `submit` against GitHub and the one-command `go` have not been run live.
-Linux and Windows (native compiler, no Wine) have not been run; the project's own verifier hosts
-use a separate recipe, not this helper. Please report what happens on yours.
+**Status of the platforms.** The helper is designed for Windows, macOS and Linux. On macOS (Apple
+silicon) `setup`, the self-test, `start` and `compare` ran with the real pinned compiler: on a Mac
+with Rosetta already installed, `setup --yes --accept-microsoft-license` installed the pinned
+compiler unattended in under 4 minutes, and the self-test compiled an accepted function to the
+code-section hash recorded by the project. That time excludes the Wine download (about 185 MB),
+which had been fetched earlier; the timed run downloaded about 0.9 GB, and the result takes about
+3.5 GB on disk. A compare takes about 7 seconds. On one Windows 11 x64 PC (native compiler, no
+Wine), `.\sr.cmd` doctor, setup with the compiler already unpacked, its self-test and a practice
+compare passed, and the native compiler gave the project's code-section hashes for every accepted
+function (`docs/windows-verifier-host.md`); the compiler download through `setup` and the winget
+package installs were not run there. `claim` and `submit` against GitHub and the one-command `go`
+have not been run live, and Linux has not been run. Please report what happens on yours.
 
 ### The game executable
 
