@@ -95,6 +95,7 @@ blocks; list what you find as `naming_findings` and still approve.
    header with its upstream file, revision and licence (NG: MIT with NG's notice kept in the file;
    powerof3: GPL-3.0; FNV: a `Sibling source:` line), and a header claim about what is not copied
    must be true. `trivial` bodies need no statement.
+   Admitted Reviewers are authorized to read the FNV source and local index for this comparison (see `docs/authorizations.md`, Notes).
    Open the FNV function the pack or `.local/analysis/fnv_index.jsonl` lists for each reviewed
    function and compare; reuse without a `Sibling source:` line, or a false origin or licence
    statement, is a blocking provenance ground.
