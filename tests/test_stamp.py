@@ -62,6 +62,11 @@ class StampSafetyTests(unittest.TestCase):
             stamp.emit_leaf('Example', 'Read', family='member', width=4, value=9,
                             virtual=True, name_label='GUESS(low)')
 
+    def test_missing_name_label_is_refused(self):
+        with self.assertRaisesRegex(stamp.UnsafeCandidate, 'name-origin'):
+            stamp.emit_leaf('Example', 'Read', family='constant', width=4, value=1,
+                            virtual=False, name_label='')
+
     def test_labels_and_address(self):
         header, source = stamp.emit_leaf('Example', 'Slot2', family='member-address', width=4,
                                          value=12, virtual=True, name_label='GUESS(low)')
@@ -95,3 +100,30 @@ class GeneratorDecodeTests(unittest.TestCase):
             config['hosts']['selected']['backend'] = backend
             with self.assertRaises(ValueError):
                 stamp.require_local_wine(config)
+
+class InstallTests(unittest.TestCase):
+    def test_install_and_refuse_clash_or_stale_digest(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            staging, dest = root / 'stage', root / 'checkout'
+            unit = staging / 'reconstruction' / 'forms'
+            unit.mkdir(parents=True)
+            (dest / 'reconstruction').mkdir(parents=True)
+            (unit / 'Example.h').write_text('#pragma once\n')
+            (unit / 'Example.cpp').write_text('#include "Example.h"\n')
+            task = staging / 'tasks' / 'example'
+            task.mkdir(parents=True)
+            (task / 'task.json').write_text(json.dumps({'compiled': 'reconstruction/forms/Example.cpp'}))
+            digest = stamp.task_digest(staging, task)
+            row = {'task': str(task), 'rva': 1, 'family': 'const-return', 'source_digest': digest}
+            (staging / 'const-return.jsonl').write_text(json.dumps(row) + '\n')
+            (staging / 'results.jsonl').write_text(json.dumps(dict(row, result='pass', exit=0)) + '\n')
+            args = SimpleNamespace(source=str(staging), dest=str(dest), family='const-return')
+            stamp.install(args)
+            self.assertEqual((dest / 'reconstruction/forms/Example.h').read_text(), '#pragma once\n')
+            with self.assertRaisesRegex(ValueError, 'clashes'):
+                stamp.install(args)
+            (unit / 'Example.h').write_text('// changed\n')
+            with self.assertRaisesRegex(ValueError, 'digest mismatch'):
+                stamp.install(args)

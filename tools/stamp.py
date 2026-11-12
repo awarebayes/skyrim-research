@@ -247,6 +247,68 @@ def generate(args):
     print(json.dumps(dict(emitted=emitted, skipped=counts)))
 
 
+def install(args):
+    """Install digest-bound local passes from a staging tree without replacing files."""
+    import os
+    import shutil
+    from pathlib import PurePosixPath
+
+    staging = Path(args.source).resolve()
+    dest = Path(args.dest).resolve()
+    if not (dest / 'reconstruction').is_dir():
+        raise ValueError('destination must be a checkout with reconstruction/')
+    index = [json.loads(line) for line in (staging / (args.family + '.jsonl')).read_text().splitlines()]
+    results = [json.loads(line) for line in (staging / 'results.jsonl').read_text().splitlines()]
+    by_task = {}
+    for result in results:
+        if result['task'] in by_task:
+            raise ValueError('duplicate result for task')
+        by_task[result['task']] = result
+    files = []
+    for entry in index:
+        result = by_task.get(entry['task'])
+        if not result or result.get('result') != 'pass' or result.get('exit') != 0:
+            continue
+        if entry.get('family') != args.family:
+            raise ValueError('index family mismatch')
+        task_dir = Path(entry['task']).resolve()
+        if not task_dir.is_relative_to(staging):
+            raise ValueError('task must be inside staging')
+        task = json.loads((task_dir / 'task.json').read_text())
+        rel = PurePosixPath(task['compiled'])
+        if (len(rel.parts) != 3 or rel.parts[0] != 'reconstruction' or
+                not re.fullmatch(r'[a-z][a-z0-9_]*', rel.parts[1]) or
+                not re.fullmatch(r'[A-Z][A-Za-z0-9_]*\.cpp', rel.parts[2])):
+            raise ValueError('invalid compiled unit path')
+        expected = {str(rel), str(rel.with_suffix('.h'))}
+        if set(include_closure(staging, str(rel))) != expected:
+            raise ValueError('unit must contain exactly its source and header')
+        digest = task_digest(staging, task_dir)
+        if not digest or entry.get('source_digest') != digest or result.get('source_digest') != digest:
+            raise ValueError('source digest mismatch')
+        if result.get('family') != args.family or result.get('rva') != entry.get('rva'):
+            raise ValueError('result identity mismatch')
+        for path in (Path(str(rel)), Path(str(rel)).with_suffix('.h')):
+            source = staging / path
+            if source.is_symlink() or not source.resolve().is_relative_to(staging) or not source.is_file():
+                raise ValueError('invalid staged source')
+            files.append(path)
+    if len(files) != len(set(files)):
+        raise ValueError('duplicate unit path')
+    for path in files:
+        if not (dest / path).resolve().is_relative_to(dest / 'reconstruction'):
+            raise ValueError('destination escapes reconstruction')
+    clashes = [str(path) for path in files if os.path.lexists(dest / path)]
+    if clashes:
+        raise ValueError('destination clashes: ' + ', '.join(clashes))
+    for path in files:
+        target = dest / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with (staging / path).open('rb') as src, target.open('xb') as dst:
+            shutil.copyfileobj(src, dst)
+    print(json.dumps(dict(installed=len(files) // 2)))
+
+
 def require_local_wine(raw):
     host = raw['hosts'][raw['attempt']]
     if (host.get('backend'), host.get('loader'), host.get('host_id')) != ('local', 'wine', 'mac-wine'):
@@ -317,11 +379,15 @@ def main():
             q.add_argument('--limit', type=int)
         else:
             q.add_argument('--jobs', type=int, default=1)
+    q = sub.add_parser('install')
+    q.add_argument('--family', choices=('const-return', 'member-return'), required=True)
+    q.add_argument('--from', dest='source', required=True)
+    q.add_argument('--dest', required=True)
     args = p.parse_args()
     if (getattr(args, 'limit', None) is not None and args.limit < 1) or getattr(args, 'jobs', 1) < 1:
         p.error('limit and jobs must be positive')
     try:
-        (generate if args.command == 'generate' else attempt_all)(args)
+        {'generate': generate, 'attempt': attempt_all, 'install': install}[args.command](args)
     except (ValueError, OSError, KeyError) as exc:
         p.exit(2, f'stamp: {exc}\n')
 
