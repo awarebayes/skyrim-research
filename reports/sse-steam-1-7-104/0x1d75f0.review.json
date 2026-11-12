@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "b1248cf1c0b77ec94745bb7140e450306da0f4bb29c05637276b1d0ebd2054df",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1d75f0",
+  "naming_findings": [
+    "the constructor carries only a COMMUNITY label for NG's Ctor name; a note that the body follows the FNV constructor would make the label read with the Sibling source line"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
+  "review_task_id": "review-p18-wave1-2",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 1930736,
+  "size": 29,
+  "source_digest": "896cc6766a2a978954014684633d86cf4d59dd9c90f923551492adb1221a4bb3",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

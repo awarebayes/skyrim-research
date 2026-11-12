@@ -1,0 +1,25 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "c6d7ed73472f79e9817b11a630c0f6ebdef0e3cc187807d623d14ce017e0ca5c",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x637a90",
+  "naming_findings": [
+    "QueryState is a GUESS while the FNV sibling names this call GetLoadState",
+    "gBGSSaveLoadGame is a GUESS while the FNV sibling names the global g_BGSSaveLoadGame",
+    ".cpp header says the three listed functions are compared, but LoadDataEndian was dropped from comparison"
+  ],
+  "previous_code_section_sha256": "c6d7ed73472f79e9817b11a630c0f6ebdef0e3cc187807d623d14ce017e0ca5c",
+  "previous_review_sha256": "6686fd60e3c0ddd89888d122bebb4f52e017bb995bf3c1c7346a4319def2e608",
+  "previous_source_digest": "2d3ede09b045fd242abffdcd9afa3a436d7d324f895a727b1c398aa59cd19685",
+  "review_date": "2026-11-12",
+  "review_kind": "label-only",
+  "review_record_schema": 3,
+  "review_sha256": "6686fd60e3c0ddd89888d122bebb4f52e017bb995bf3c1c7346a4319def2e608",
+  "review_task_id": "review-p18-wave1-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 6519440,
+  "size": 12,
+  "source_digest": "0c971890557da10f71762108d8f50179974f92817e11175269eb35a75ffd21cb",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

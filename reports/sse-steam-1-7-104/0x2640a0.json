@@ -1,0 +1,407 @@
+{
+  "build": {
+    "added_flags": [
+      "/showIncludes"
+    ],
+    "claim": "Build facts are self-reported by each compile host (tools/verifier/unit_build.py build record). tools/check.py verifies only that they are present and consistent with the runs and the translation unit.",
+    "cleared_environment": [
+      "CL",
+      "EXTERNAL_INCLUDE",
+      "INCLUDE",
+      "LIB",
+      "LIBPATH",
+      "_CL_"
+    ],
+    "hosts": {
+      "boat-verifier-a": {
+        "command_flags": [
+          "/nologo",
+          "/c",
+          "/O2",
+          "/MD",
+          "/GS-",
+          "/EHsc",
+          "/GR",
+          "/fp:precise",
+          "/Gy",
+          "/showIncludes"
+        ],
+        "object_sha256": "0d31e6861ef950df0d0a15e0ac317bce24653403abb39c6e0a5be798d015163e",
+        "opened_equals_closure": true,
+        "repository_files_opened": [
+          "reconstruction/forms/BGSMovableStatic.cpp",
+          "reconstruction/forms/BGSMovableStatic.h",
+          "reconstruction/forms/TESForm.h"
+        ]
+      },
+      "boat-verifier-b": {
+        "command_flags": [
+          "/nologo",
+          "/c",
+          "/O2",
+          "/MD",
+          "/GS-",
+          "/EHsc",
+          "/GR",
+          "/fp:precise",
+          "/Gy",
+          "/showIncludes"
+        ],
+        "object_sha256": "cfd612c6559701aaf565cde2be63915150a4f17a10d5e030631a64bb790bf974",
+        "opened_equals_closure": true,
+        "repository_files_opened": [
+          "reconstruction/forms/BGSMovableStatic.cpp",
+          "reconstruction/forms/BGSMovableStatic.h",
+          "reconstruction/forms/TESForm.h"
+        ]
+      }
+    }
+  },
+  "function_id": "sse-steam-1-7-104-0x2640a0",
+  "match_record_schema": 2,
+  "notes": [
+    "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.",
+    "independence: separate-machine. The two Boat compile hosts are separately installed machines: each was created from scratch and ran tools/verifier/setup_boat_machine.sh itself (neither is a disk fork of the other), so the pair also checks the toolchain install; both use the same pinned recipe, Ubuntu image and cloud provider. Each host checked its compiler binaries against pinned.sha256 and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.",
+    "Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed before the compile, INCLUDE then set by the msvc-wine wrapper to toolchain and SDK directories only; /showIncludes added after the recipe flags, and the repository files the compiler opened equalled the include closure. Each host's flags, cleared variables, object hash and opened files are in the build block, as that host reported them; the gate checks that block for presence and consistency with the runs, not for truth.",
+    "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
+    "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
+    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this."
+  ],
+  "recipe": {
+    "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
+    "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+  },
+  "reproduction": "From the repository root, with cl 19.16.27054 x64 under msvc-wine whose binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): env -u CL -u EXTERNAL_INCLUDE -u INCLUDE -u LIB -u LIBPATH -u _CL_ <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/forms/BGSMovableStatic.cpp (the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the repository files /showIncludes lists to equal --unit below) ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x2640a0 --symbol '?InitializeData@BGSMovableStatic@@UEAAXXZ' --compiled reconstruction/forms/BGSMovableStatic.cpp --unit reconstruction/forms/BGSMovableStatic.cpp reconstruction/forms/BGSMovableStatic.h reconstruction/forms/TESForm.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/symbol-map.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "runs": [
+    {
+      "compared_on": "boat-verifier-a",
+      "compiled_on": "boat-verifier-a",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "code_section_sha256": "e15e1013b08433d5253b176649e1822f2693eaeb093a7e18992f567cbc662cc8",
+          "code_sections": 1,
+          "object_sha256": "0d31e6861ef950df0d0a15e0ac317bce24653403abb39c6e0a5be798d015163e"
+        },
+        "comparator": {
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
+        },
+        "contract_version": 2,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 0,
+          "code_bytes_exact": 12,
+          "code_bytes_total": 12,
+          "eh": {
+            "bytes": 0,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_ranges": [],
+          "funclet_sections": 0,
+          "relocations_by_type": {},
+          "self_rva_fields": 0,
+          "unwind": "none-in-range",
+          "unwind_bytes_exact": 0,
+          "unwind_chained_entries": 0,
+          "unwind_entries": 0
+        },
+        "detail": "all contract v2 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2506912,
+          "size": 12,
+          "symbol": "?InitializeData@BGSMovableStatic@@UEAAXXZ"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/forms/BGSMovableStatic.cpp",
+          "source_revision": "75e28272bc88062ed0e864c3fee12f384de6748190e6fffcc7ea8ebdac32ee9c"
+        },
+        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x2640a0"
+      }
+    },
+    {
+      "compared_on": "macos-arm64-local",
+      "compiled_on": "boat-verifier-a",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "code_section_sha256": "e15e1013b08433d5253b176649e1822f2693eaeb093a7e18992f567cbc662cc8",
+          "code_sections": 1,
+          "object_sha256": "0d31e6861ef950df0d0a15e0ac317bce24653403abb39c6e0a5be798d015163e"
+        },
+        "comparator": {
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
+        },
+        "contract_version": 2,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 0,
+          "code_bytes_exact": 12,
+          "code_bytes_total": 12,
+          "eh": {
+            "bytes": 0,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_ranges": [],
+          "funclet_sections": 0,
+          "relocations_by_type": {},
+          "self_rva_fields": 0,
+          "unwind": "none-in-range",
+          "unwind_bytes_exact": 0,
+          "unwind_chained_entries": 0,
+          "unwind_entries": 0
+        },
+        "detail": "all contract v2 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2506912,
+          "size": 12,
+          "symbol": "?InitializeData@BGSMovableStatic@@UEAAXXZ"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/forms/BGSMovableStatic.cpp",
+          "source_revision": "75e28272bc88062ed0e864c3fee12f384de6748190e6fffcc7ea8ebdac32ee9c"
+        },
+        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x2640a0"
+      }
+    },
+    {
+      "compared_on": "boat-verifier-b",
+      "compiled_on": "boat-verifier-b",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "code_section_sha256": "e15e1013b08433d5253b176649e1822f2693eaeb093a7e18992f567cbc662cc8",
+          "code_sections": 1,
+          "object_sha256": "cfd612c6559701aaf565cde2be63915150a4f17a10d5e030631a64bb790bf974"
+        },
+        "comparator": {
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
+        },
+        "contract_version": 2,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 0,
+          "code_bytes_exact": 12,
+          "code_bytes_total": 12,
+          "eh": {
+            "bytes": 0,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_ranges": [],
+          "funclet_sections": 0,
+          "relocations_by_type": {},
+          "self_rva_fields": 0,
+          "unwind": "none-in-range",
+          "unwind_bytes_exact": 0,
+          "unwind_chained_entries": 0,
+          "unwind_entries": 0
+        },
+        "detail": "all contract v2 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2506912,
+          "size": 12,
+          "symbol": "?InitializeData@BGSMovableStatic@@UEAAXXZ"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/forms/BGSMovableStatic.cpp",
+          "source_revision": "75e28272bc88062ed0e864c3fee12f384de6748190e6fffcc7ea8ebdac32ee9c"
+        },
+        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x2640a0"
+      }
+    },
+    {
+      "compared_on": "macos-arm64-local",
+      "compiled_on": "boat-verifier-b",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "code_section_sha256": "e15e1013b08433d5253b176649e1822f2693eaeb093a7e18992f567cbc662cc8",
+          "code_sections": 1,
+          "object_sha256": "cfd612c6559701aaf565cde2be63915150a4f17a10d5e030631a64bb790bf974"
+        },
+        "comparator": {
+          "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
+          "version": "0.5.0"
+        },
+        "contract_version": 2,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 0,
+          "code_bytes_exact": 12,
+          "code_bytes_total": 12,
+          "eh": {
+            "bytes": 0,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_ranges": [],
+          "funclet_sections": 0,
+          "relocations_by_type": {},
+          "self_rva_fields": 0,
+          "unwind": "none-in-range",
+          "unwind_bytes_exact": 0,
+          "unwind_chained_entries": 0,
+          "unwind_entries": 0
+        },
+        "detail": "all contract v2 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 2506912,
+          "size": 12,
+          "symbol": "?InitializeData@BGSMovableStatic@@UEAAXXZ"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/forms/BGSMovableStatic.cpp",
+          "source_revision": "75e28272bc88062ed0e864c3fee12f384de6748190e6fffcc7ea8ebdac32ee9c"
+        },
+        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x2640a0"
+      }
+    }
+  ],
+  "source": {
+    "compiled": "reconstruction/forms/BGSMovableStatic.cpp",
+    "digest": "75e28272bc88062ed0e864c3fee12f384de6748190e6fffcc7ea8ebdac32ee9c",
+    "digest_method": "tu-sha256-v1",
+    "translation_unit": [
+      "reconstruction/forms/BGSMovableStatic.cpp",
+      "reconstruction/forms/BGSMovableStatic.h",
+      "reconstruction/forms/TESForm.h"
+    ]
+  },
+  "symbol_map": {
+    "path": "reports/sse-steam-1-7-104/symbol-map.json",
+    "sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00"
+  },
+  "toolchain_pin": {
+    "path": "tools/verifier/pinned.sha256",
+    "sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  }
+}

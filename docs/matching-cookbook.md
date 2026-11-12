@@ -167,6 +167,26 @@ encounterZone) { auto* zone = encounterZone; ... }`). The same family as rule 1,
 other side. Fixed TESWorldSpace::GetLocationFromPosition 0x310ff0 in a one-host attempt (not yet
 confirmed on two hosts).
 
+**24. An inlined 3-byte copy: two `memcpy` calls, 2 bytes then 1, from one source pointer.**
+(medium, one observation)
+Symptom: the target copies three bytes out of a buffer as a 16-bit move and a byte move, both
+addressed from one computed source pointer. Three single-byte assignments fold into indexed
+addressing off the buffer base instead. Fix: compute the source pointer once
+(`const std::uint8_t* src = base + position;`) and write `std::memcpy(&out, src, 2);
+std::memcpy(&out.third, src + 2, 1);`. Closed BGSLoadGameBuffer::ReadFormID 0x637ab0 in a one-host
+attempt (not yet confirmed on two hosts).
+
+**25. A `??_E<Class>@@W<n>@...` destructor is an adjustor thunk: give the unit the whole base set.**
+(medium, one observation)
+Symptom: the compared destructor is a few bytes that adjust `this` by a secondary base's offset and
+jump to the deleting destructor; `attempt` reports it `UNBOUND` or binds nothing at that RVA.
+Cause: MSVC emits the thunk only beside the vftable of that secondary base, so the class must have
+every base of the image's multiple inheritance at its offset (stand-ins are enough). Fix: declare
+all bases in the image's vftable order, define a constructor (rule 14) and the destructor (an empty
+body), and bind the thunk's decorated name (`??_E...W...`, from the compiled object) with a hint;
+binding the deleting destructor it jumps to as well helps. Closed BGSMovableStatic 0x264444 in a
+one-host attempt (not yet confirmed on two hosts).
+
 ## Unsolved patterns
 
 **12. A pure callee-saved register swap with the same instructions.** (low)

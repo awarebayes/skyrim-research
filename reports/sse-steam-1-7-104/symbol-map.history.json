@@ -936,6 +936,934 @@
         "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
         "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA"
       ]
+    },
+    {
+      "sha256": "a2898532e005b60612ed6f001c3a51e8b404accc0a626ee19755d5a6e47914d5",
+      "base": 14,
+      "added": [
+        "?ResolveDependencies@NiInterpolator@@UEAA_NPEAVNiAVObjectPalette@@@Z",
+        "?RegisterStreamables@NiInterpolator@@UEAA_NAEAVNiStream@@@Z",
+        "?GetActiveTimeRange@NiInterpolator@@UEBAXAEAM0@Z",
+        "?GetRTTI@NiInterpolator@@UEBAPEBVNiRTTI@@XZ",
+        "?GetSequenceInterpolator@NiInterpolator@@UEAAPEAV1@MM@Z",
+        "??_GNiInterpolator@@UEAAPEAXI@Z",
+        "?NiRTTI_NiInterpolator@@3VNiRTTI@@A",
+        "?Clone@NiInterpolator@@QEAAPEAV1@XZ"
+      ]
+    },
+    {
+      "sha256": "a4904b81de6c72cd652fc35446b7362ac0fa23314927bf173f5a9ae81bc1e71d",
+      "base": 15,
+      "added": [
+        "?LoadBinary@NiExtraData@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiExtraData@@UEAA_NPEAVNiObject@@@Z",
+        "?RegisterStreamables@NiExtraData@@UEAA_NAEAVNiStream@@@Z",
+        "??_GNiExtraData@@UEAAPEAXI@Z",
+        "??_7NiExtraData@@6B@",
+        "??1BSFixedString@@QEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "efbe7b718a90e2cff77f573b81614b0e3726ea3ef967dd5b7c393ac15f7f3b61",
+      "base": 16,
+      "added": [
+        "?Initialize@BSTempEffect@@UEAAXXZ",
+        "?GetType@BSTempEffect@@UEBA?AW4TEMP_EFFECT_TYPE@@XZ",
+        "?Update@BSTempEffect@@UEAA_NM@Z",
+        "??_GBSTempEffect@@UEAAPEAXI@Z",
+        "?LoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z",
+        "??0BSTempEffect@@QEAA@PEAVTESObjectCELL@@M@Z",
+        "?SaveGame@BSTempEffect@@UEAAXPEAVBGSSaveGameBuffer@@@Z",
+        "??_7BSTempEffect@@6B@",
+        "?ms_nextEffectID@BSTempEffect@@2IA"
+      ]
+    },
+    {
+      "sha256": "e100762465e3fb3ff6fef6583ef51cb4b2342391d77633f1a7eb1dda7f93f828",
+      "base": 17,
+      "added": [
+        "?InitializeDataComponent@BGSBlockBashData@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "5b36eb533fbd6ff57e56d7d248c0389bca340f6e70a1ee1febcea1f5615bc9c1",
+      "base": 18,
+      "added": [
+        "?InitializeDataComponent@BGSDestructibleObjectForm@@UEAAXXZ",
+        "?ClearDataComponent@BGSDestructibleObjectForm@@UEAAXXZ",
+        "?Destroy@DestructibleObjectData@@QEAAXI@Z"
+      ]
+    },
+    {
+      "sha256": "b92a0852f8bb5491fac3948ccc6214e466855d3adc247675c6d7ae86516ebe96",
+      "base": 19,
+      "added": [
+        "?GetEquipSlot@BGSEquipType@@UEBAPEAVBGSEquipSlot@@XZ",
+        "?SetEquipSlot@BGSEquipType@@UEAAXPEAVBGSEquipSlot@@@Z"
+      ]
+    },
+    {
+      "sha256": "8cc364a5399bc0e268b7f040ef1100022dec0fa88bfc6d7b89ea99ddd12fd212",
+      "base": 20,
+      "added": [
+        "?InitializeDataComponent@BGSIdleCollection@@UEAAXXZ",
+        "??0BGSIdleCollection@@QEAA@XZ",
+        "??_7BGSIdleCollection@@6B@"
+      ]
+    },
+    {
+      "sha256": "41a4f6e545098b4622f44a9a09098eaa753c55df4cf82a881b7adab243fbf1fe",
+      "base": 21,
+      "added": [
+        "?InitializeDataComponent@BGSOverridePackCollection@@UEAAXXZ",
+        "??_GBGSOverridePackCollection@@UEAAPEAXI@Z",
+        "??_7BaseFormComponent@@6B@"
+      ]
+    },
+    {
+      "sha256": "f63c0f27ba46a3c287fbaf546d7227f8bc02482cc0464b68821aff8c4df5081b",
+      "base": 22,
+      "added": [
+        "?ClearDataComponent@BGSPerkRankArray@@UEAAXXZ",
+        "?FreePerks@BGSPerkRankArray@@QEAAX_N@Z"
+      ]
+    },
+    {
+      "sha256": "2c0c161784ae19afe830e2423e93959ab55e10c578b2101e6185098ab5f52fdc",
+      "base": 23,
+      "added": [
+        "?Unk_07@TESActorBaseData@@UEAA_NXZ",
+        "?GetVoiceType@TESActorBaseData@@UEAAPEAVBGSVoiceType@@XZ",
+        "?GetInvulnerable@TESActorBaseData@@UEBA_NXZ",
+        "?GetIsGhost@TESActorBaseData@@UEBA_NXZ",
+        "?ClearDataComponent@TESActorBaseData@@UEAAXXZ",
+        "?InitializeDataComponent@TESActorBaseData@@UEAAXXZ",
+        "?FreeFactions@@YAXPEAUFactionRankArray@@@Z",
+        "?gDefaultBaseDisposition@@3EA"
+      ]
+    },
+    {
+      "sha256": "c8f39152b5602dd9ee3111ffbef202fd7365d171b7523715ad6375126cde6132",
+      "base": 24,
+      "added": [
+        "?ClearDataComponent@TESAIForm@@UEAAXXZ",
+        "?InitializeDataComponent@TESAIForm@@UEAAXXZ",
+        "?Clear@PackageList@@QEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "f119fdd2e296503f87e60f970203c7a13c6c019988153ab71e62b55318439d90",
+      "base": 25,
+      "added": [
+        "?GetAttackDamage@TESAttackDamageForm@@UEBAGXZ",
+        "?InitializeDataComponent@TESAttackDamageForm@@UEAAXXZ",
+        "??_GTESAttackDamageForm@@UEAAPEAXI@Z"
+      ]
+    },
+    {
+      "sha256": "457acb8f7db83da73be91b87c5abc1c4ad7cef7fcc42c1e52d1b37e8aa4bf42e",
+      "base": 26,
+      "added": [
+        "?GetItemCount@TESContainer@@QEBAHPEAVTESBoundObject@@@Z"
+      ]
+    },
+    {
+      "sha256": "a8092448b73e8a033754a249ead4ae45f85d7ccb6575da652aa668c8a61f770c",
+      "base": 27,
+      "added": [
+        "?InitializeDataComponent@TESDescription@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "a0f3577a204867ca43554912f0d3dc0653eb117d0f08bb3a86cfce442f41f3a2",
+      "base": 28,
+      "added": [
+        "?QChildCount@BGSStoryManagerBranchNode@@UEBAIXZ",
+        "?GetChild@BGSStoryManagerBranchNode@@UEBAPEAVBGSStoryManagerTreeForm@@I@Z",
+        "?InitItemImpl@BGSStoryManagerBranchNode@@UEAAXXZ",
+        "?InitItemImpl@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "?SetFormFlag@BGSStoryManagerBranchNode@@QEAAX_N@Z"
+      ]
+    },
+    {
+      "sha256": "3c9373cfba662083f2c07c5fa692d2b1a4077bea7da7195116f1bfa4e3bce750",
+      "base": 29,
+      "added": [
+        "?InitializeData@BGSStoryManagerEventNode@@UEAAXXZ",
+        "?GetFormEditorID@BGSStoryManagerEventNode@@UEBAPEBDXZ",
+        "?InitializeData@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "?GetName@BGSRegisteredStoryEvent@@QEBAPEBDXZ",
+        "??_C@_0L@MLJIJBEF@?$CINo?5event?$CJ@",
+        "??_C@_0BL@EIDEOLFC@?$CIUninitialized?5event?5node?$CJ@"
+      ],
+      "superseded": true
+    },
+    {
+      "sha256": "28d1045fdc1690b8234267794694ad3889a6f359c12bc9618cc76ed45944a682",
+      "base": null,
+      "added": [
+        "?GetEquipSlot@BGSEquipType@@UEBAPEAVBGSEquipSlot@@XZ",
+        "?SetEquipSlot@BGSEquipType@@UEAAXPEAVBGSEquipSlot@@@Z",
+        "?GetAVEffect@MagicItem@@QEBAPEAVEffectSetting@@XZ",
+        "?CalculateCost@MagicItem@@QEBAMPEAVActor@@@Z",
+        "?GetOwner@ExtraDataList@@QEAAPEAVTESForm@@XZ",
+        "?IsWorn@ExtraDataList@@QEAA_N_N0@Z",
+        "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z",
+        "?GetEncounterZone@ExtraDataList@@QEBAPEAVBGSEncounterZone@@XZ",
+        "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ",
+        "?GetbhkWorld@ExtraDataList@@QEBAPEAVbhkWorld@@XZ",
+        "?AddFactionChanges@ExtraDataList@@QEAAXXZ",
+        "?GetFactionChanges@ExtraDataList@@QEAAPEAVExtraFactionChanges@@XZ",
+        "?RemoveFactionChange@ExtraDataList@@QEAAXPEAVTESFaction@@@Z",
+        "?GetEnchantment@ExtraDataList@@QEAAPEAVEnchantmentItem@@XZ",
+        "?CreateRefHandle@@YAXAEAU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z",
+        "?SetFactionRank@ExtraFactionChanges@@QEAAXPEAVTESFaction@@H@Z",
+        "?CellAtCoordinates@TESWorldSpace@@QEBAPEAVTESObjectCELL@@HH@Z",
+        "?Lock@BSSpinLock@@QEAAXI@Z",
+        "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
+        "??1BSLightingShaderMaterialLockGuard@@QEAA@XZ",
+        "?GetChild@BGSStoryManagerBranchNode@@UEBAPEAVBGSStoryManagerTreeForm@@I@Z",
+        "?QChildCount@BGSStoryManagerBranchNode@@UEBAIXZ",
+        "?QConditions@BGSStoryManagerNodeBase@@UEAAPEAVTESCondition@@XZ",
+        "?OpenTES@TESFile@@QEAA_NW4OpenMode@NiFile@@_N@Z",
+        "?OpenInternal@TESFile@@AEAA_NPEAD0W4OpenMode@NiFile@@_N@Z",
+        "?GetFormType@TESFile@@QEAA?AW4FormType@@XZ",
+        "?Seek@TESFile@@QEAA_NI@Z",
+        "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "?SeekNextSubrecord@TESFile@@QEAA_NXZ",
+        "?IsRecordFileLoaded@TESFile@@QEAA_NXZ",
+        "?Duplicate@TESFile@@QEAAPEAV1@I@Z",
+        "?ReadFormHeader@TESFile@@AEAA_NXZ",
+        "?ReadChunkHeader@TESFile@@AEAA_NXZ",
+        "?DuplicateForThread@TESFile@@AEAAPEAV1@II@Z",
+        "?SeekRaw@TESFile@@AEAAXII@Z",
+        "?GetBipedObjectForm@@YAPEAUBGSBipedObjectForm@@PEAVTESForm@@@Z",
+        "?InitializeDataComponent@BGSBlockBashData@@UEAAXXZ",
+        "?InitializeDataComponent@BGSDestructibleObjectForm@@UEAAXXZ",
+        "?ClearDataComponent@BGSDestructibleObjectForm@@UEAAXXZ",
+        "?Destroy@DestructibleObjectData@@QEAAXI@Z",
+        "??0BGSIdleCollection@@QEAA@XZ",
+        "?InitializeDataComponent@BGSIdleCollection@@UEAAXXZ",
+        "?InitializeDataComponent@BGSOverridePackCollection@@UEAAXXZ",
+        "??_GBGSOverridePackCollection@@UEAAPEAXI@Z",
+        "?ClearDataComponent@BGSPerkRankArray@@UEAAXXZ",
+        "?FreePerks@BGSPerkRankArray@@QEAAX_N@Z",
+        "?InitializeDataComponent@TESActorBaseData@@UEAAXXZ",
+        "?ClearDataComponent@TESActorBaseData@@UEAAXXZ",
+        "?GetLevel@TESActorBaseData@@QEBAGXZ",
+        "?AddFaction@TESActorBaseData@@QEAAXPEAVTESFaction@@C@Z",
+        "?GetInvulnerable@TESActorBaseData@@UEBA_NXZ",
+        "?GetIsGhost@TESActorBaseData@@UEBA_NXZ",
+        "?Unk_07@TESActorBaseData@@UEAA_NXZ",
+        "?GetVoiceType@TESActorBaseData@@UEAAPEAVBGSVoiceType@@XZ",
+        "?InitializeDataComponent@TESAIForm@@UEAAXXZ",
+        "?ClearDataComponent@TESAIForm@@UEAAXXZ",
+        "?InitializeDataComponent@TESAttackDamageForm@@UEAAXXZ",
+        "?GetAttackDamage@TESAttackDamageForm@@UEBAGXZ",
+        "??_GTESAttackDamageForm@@UEAAPEAXI@Z",
+        "?GetItemCount@TESContainer@@QEBAHPEAVTESBoundObject@@@Z",
+        "?InitializeDataComponent@TESDescription@@UEAAXXZ",
+        "?GetEnchantment@TESForm@@QEAAPEAVEnchantmentItem@@PEAVExtraDataList@@@Z",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?LookupByID@TESForm@@SAPEAV1@I@Z",
+        "?GetFile@TESForm@@QEBAPEAVTESFile@@H@Z",
+        "?ConvertFormType@@YA?AW4FormType@@I@Z",
+        "?IsTemporaryFormID@TESForm@@QEBA_NXZ",
+        "?SetFormFlag@BGSStoryManagerBranchNode@@QEAAX_N@Z",
+        "?AddCompileIndex@TESForm@@SAXAEAIPEAVTESFile@@@Z",
+        "??1TESModel@@UEAA@XZ",
+        "?HasShout@TESSpellList@@QEBA_NPEAVTESShout@@@Z",
+        "?GetGoldValue@TESForm@@QEBAHXZ",
+        "?GetArmorFinalRating@@YAMPEAVInventoryEntryData@@MM@Z",
+        "?GetInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z",
+        "?MakeInventoryChanges@TESObjectREFR@@QEAAPEAVInventoryChanges@@XZ",
+        "??1ItemFilter@InventoryUtils@@UEAA@XZ",
+        "?InitOutfitItems@InventoryChanges@@QEAAXPEAVBGSOutfit@@G@Z",
+        "?HasQuestItem@InventoryChanges@@QEAA_NXZ",
+        "?VisitInventory@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z",
+        "?VisitWornItems@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z",
+        "?ForEachOutfitItemGuess@@YAXPEAU?$BSTArray@PEAVTESForm@@@@AEAUOutfitItemCapture@@@Z",
+        "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z",
+        "??_GTESGrass@@UEAAPEAXI@Z",
+        "?GetDensity@TESGrass@@UEBAEXZ",
+        "?GetDistanceFromWaterLevel@TESGrass@@UEBAGXZ",
+        "?GetMaxSlopeDegrees@TESGrass@@UEBAEXZ",
+        "?GetMinSlopeDegrees@TESGrass@@UEBAEXZ",
+        "?GetUnderwaterState@TESGrass@@UEBA?AW4GRASS_WATER_STATE@1@XZ",
+        "?SetUnderwaterState@TESGrass@@UEAAXW4GRASS_WATER_STATE@1@@Z",
+        "??1TESBoundObject@@UEAA@XZ",
+        "?GetArmorKind@@YAHPEAVTESObjectARMO@@@Z",
+        "?GetLevel@BGSEncounterZone@@QEBAGXZ",
+        "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ",
+        "?GetCoordinates@TESObjectCELL@@QEAAXAEAH0@Z",
+        "?GetOwner@TESObjectCELL@@QEAAPEAVTESForm@@XZ",
+        "?GetEncounterZone@TESObjectCELL@@QEBAPEAVBGSEncounterZone@@XZ",
+        "?GetbhkWorld@TESObjectCELL@@QEBAPEAVbhkWorld@@XZ",
+        "?EnterReferenceListLock@TESObjectCELL@@QEAAXXZ",
+        "?ExitReferenceListLock@TESObjectCELL@@QEAAXXZ",
+        "?SetArraySize@@YAXAEAV?$NiTObjectArray@PEAVNiAVObject@@@@I@Z",
+        "?IsPersistent@TESForm@@QEBA_NXZ",
+        "?HasQuestObject@TESObjectREFR@@QEBA_NXZ",
+        "?GetScale@TESObjectREFR@@QEBAMXZ",
+        "?CanBeMoved@TESObjectREFR@@QEAA_NXZ",
+        "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z",
+        "?GetTransform@TESObjectREFR@@QEBAXAEAUNiTransform@@@Z",
+        "?GetCurrentLocation@TESObjectREFR@@QEBAPEAVBGSLocation@@XZ",
+        "?GetEncounterZone@TESObjectREFR@@QEBAPEAVBGSEncounterZone@@XZ",
+        "?GetCalcLevel@TESObjectREFR@@QEBAG_N@Z",
+        "??1TESWorldSpace@@UEAA@XZ",
+        "?GetFormEditorID@TESWorldSpace@@UEBAPEBDXZ",
+        "?FindInFileFast@TESWorldSpace@@UEAA_NPEAVTESFile@@@Z",
+        "?GetLocation@TESWorldSpace@@QEAAPEAVBGSLocation@@XZ",
+        "?GetCellByPosition@TESWorldSpace@@QEBAPEAVTESObjectCELL@@AEBUNiPoint3@@@Z",
+        "?GetLocationFromPosition@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z",
+        "?GetOffsetData@TESWorldSpace@@QEBAPEAUOffsetData@@XZ",
+        "??_GTESWorldSpace@@UEAAPEAXI@Z",
+        "?HandleEntryPoint@@YAXIPEAVActor@@PEAVTESObjectARMO@@PEAM@Z",
+        "??$HandleEntryPoint@PEAVMagicItem@@PEAM@BGSEntryPoint@@SAXW4ENTRY_POINT@ENTRY_POINTS@0@PEAVActor@@PEAVMagicItem@@PEAM@Z",
+        "?GetRelationshipRankIndex@TESNPC@@SAHPEAV1@0@Z",
+        "?GetRelationship@BGSRelationship@@SAPEAV1@PEAVTESNPC@@0@Z",
+        "?IsFemale@TESNPC@@QEAAHXZ",
+        "?GetScale@TESNPC@@QEAAMXZ",
+        "?HasOverlays@TESNPC@@QEAA_NXZ",
+        "?SetObjectVoiceType@TESNPC@@UEAAXPEAVBGSVoiceType@@@Z",
+        "?GetCollisionObject@NiAVObject@@QEBAPEAVbhkCollisionObject@@XZ",
+        "?FindCollisionObject@@YAXPEBVNiAVObject@@AEAPEAVbhkCollisionObject@@@Z",
+        "?GetSoundLevelValue@AIFormulas@@YAHW4SOUND_LEVEL@@@Z",
+        "?Clear@PackageList@@QEAAXXZ",
+        "??0BSTempEffect@@QEAA@PEAVTESObjectCELL@@M@Z",
+        "?Update@BSTempEffect@@UEAA_NM@Z",
+        "?SaveGame@BSTempEffect@@UEAAXPEAVBGSSaveGameBuffer@@@Z",
+        "?LoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z",
+        "??_GBSTempEffect@@UEAAPEAXI@Z",
+        "?GetType@BSTempEffect@@UEBA?AW4TEMP_EFFECT_TYPE@@XZ",
+        "?Initialize@BSTempEffect@@UEAAXXZ",
+        "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ",
+        "?GetName@BGSRegisteredStoryEvent@@QEBAPEBDXZ",
+        "?InitItemImpl@BGSStoryManagerBranchNode@@UEAAXXZ",
+        "?InitializeData@BGSStoryManagerEventNode@@UEAAXXZ",
+        "?GetFormEditorID@BGSStoryManagerEventNode@@UEBAPEBDXZ",
+        "?InitializeData@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "?InitItemImpl@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "?GetCurrentSpellCost@MagicCaster@@QEAAMXZ",
+        "?InterruptCast@MagicCaster@@QEAAX_N@Z",
+        "?FinishCast@MagicCaster@@QEAAXXZ",
+        "?PlayReleaseSound@MagicCaster@@QEAAXPEAVMagicItem@@@Z",
+        "?FindPickTarget@MagicCaster@@QEAAPEAVMagicTarget@@AEAVNiPoint3@@PEAPEAVTESObjectCELL@@AEAVbhkPickData@@@Z",
+        "?ContinueFindPickTarget@MagicCaster@@QEAAPEAVMagicTarget@@_NMAEAVNiPoint3@@PEAPEAVTESObjectCELL@@AEAVbhkPickData@@@Z",
+        "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "??1Character@@UEAA@XZ",
+        "?GetLevel@Actor@@QEBAGXZ",
+        "?GetLevel@PlayerCharacter@@QEAAGXZ",
+        "?SetCrimeFaction@Character@@QEAAXPEAVTESFaction@@@Z",
+        "?IsInRagdollState@Actor@@QEBA_NXZ",
+        "?GetRotationX@Character@@QEBAMXZ",
+        "?Revert@Actor@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?UpdateFactionsA@Actor@@QEAAX_N@Z",
+        "?GetPlayerBaseNPC@@YAPEBXPEAVPlayerCharacter@@@Z",
+        "?ApplySoundEvent@@YAXPEAVActor@@H@Z",
+        "?UpdateFactionsB@Actor@@QEAAXXZ",
+        "?GetMoveDirectionRelativeToFacing@Actor@@QEAAMXZ",
+        "?GetActorValueModifier@Actor@@QEBAMW4ACTOR_VALUE_MODIFIER@@W4ActorValue@@@Z",
+        "?IsAttacking@Actor@@QEBA_NXZ",
+        "?StartDeferredKill@Character@@QEAAXXZ",
+        "?HasShout@Actor@@QEBA_NPEAVTESShout@@@Z",
+        "?GetVoiceRecoveryTime@Actor@@QEAAMXZ",
+        "?GetModifiers@ActorValueStorage@@QEBAPEBUModifiers@@W4ActorValue@@@Z",
+        "?SetActorsDetectionEvent@AIProcess@@QEAAXPEAVActor@@AEBVNiPoint3@@HPEAVTESObjectREFR@@@Z",
+        "?GetVoiceRecoveryTime@AIProcess@@QEBAMXZ",
+        "?GetMoveDirectionRelativeToFacing@AIProcess@@QEAAMXZ",
+        "?StartDeferredKill@AIProcess@@QEAAXXZ",
+        "?GetBiped2@Character@@UEBAAEBV?$BSTSmartPointer@VBipedAnim@@@@XZ",
+        "?Revert@Character@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "??_GCharacter@@UEAAPEAXI@Z",
+        "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z",
+        "?Unk_C4@Character@@UEAAXE@Z",
+        "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z",
+        "?Visit@ArmorRatingVisitorBase@@UEAAIPEAVInventoryEntryData@@@Z",
+        "?Stop@BSSoundHandle@@QEAA_NXZ",
+        "?FreeFactions@@YAXPEAUFactionRankArray@@@Z",
+        "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z",
+        "?UnlockForRead@BSReadWriteLock@@QEAAXXZ",
+        "?UnlockForWrite@BSReadWriteLock@@QEAAXXZ",
+        "?SetGlobalTimeMultiplier@BSTimer@@QEAAXM_N@Z",
+        "?CreateDeviceWithGUID@BSDirectInputManager@@QEAAPEAVIDirectInputDevice8A@@PEAUGUID@@@Z",
+        "?ReleaseDevice@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@@Z",
+        "?GetDeviceState@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@IPEAX@Z",
+        "?GetDeviceData@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@PEAIPEAPEAUDIDEVICEOBJECTDATA@@@Z",
+        "??1BSFixedString@@QEAA@XZ",
+        "?CreateClone@NiObject@@UEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiObject@@UEAA_NPEAV1@@Z",
+        "?Clone@NiInterpolator@@QEAAPEAV1@XZ",
+        "?Clone@NiObject@@QEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?StreamCanSkip@NiObject@@UEAA_NXZ",
+        "?GetGroup@NiObject@@UEBAPEAVNiObjectGroup@@XZ",
+        "??0NiObject@@QEAA@XZ",
+        "?SetEulerAngles@NiMatrix3@@QEAAXMMM@Z",
+        "?LoadBinary@NiAVObject@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiAVObject@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiAVObject@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiAVObject@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiAVObject@@UEAA_NPEAVNiObject@@@Z",
+        "?Cull@NiAVObject@@QEAAXPEAVNiCullingProcess@@H@Z",
+        "?LoadBinary@NiNode@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiNode@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiNode@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiNode@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiNode@@UEAA_NPEAVNiObject@@@Z",
+        "?OnVisible@NiNode@@UEAAXAEAVNiCullingProcess@@H@Z",
+        "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "?SaveFixedString@NiStream@@QEAAXAEBVBSFixedString@@@Z",
+        "?LoadFixedStringLegacy@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "?LoadLinkID@NiStream@@QEAAXXZ",
+        "?SkipLinkIDs@NiStream@@QEAAXXZ",
+        "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ",
+        "?ReadLinkIDCount@NiStream@@QEAAIXZ",
+        "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z",
+        "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z",
+        "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?LoadBinary@NiExtraData@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiExtraData@@UEAA_NAEAVNiStream@@@Z",
+        "?IsEqual@NiExtraData@@UEAA_NPEAVNiObject@@@Z",
+        "??_GNiExtraData@@UEAAPEAXI@Z",
+        "?RegisterStreamables@NiInterpolator@@UEAA_NAEAVNiStream@@@Z",
+        "?GetActiveTimeRange@NiInterpolator@@UEBAXAEAM0@Z",
+        "?GetSequenceInterpolator@NiInterpolator@@UEAAPEAV1@MM@Z",
+        "?ResolveDependencies@NiInterpolator@@UEAA_NPEAVNiAVObjectPalette@@@Z",
+        "??_GNiInterpolator@@UEAAPEAXI@Z",
+        "?GetRTTI@NiInterpolator@@UEBAPEBVNiRTTI@@XZ",
+        "?LoadBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiPSysModifier@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z",
+        "?SetSystemPointer@NiPSysModifier@@UEAAXPEAVNiParticleSystem@@@Z",
+        "?ProcessClone@NiPSysModifier@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?SetCollisionLayer@NiAVObject@@QEAAXW4COL_LAYER@@@Z",
+        "?SetCollisionLayerAndGroup@NiAVObject@@QEAAXW4COL_LAYER@@I@Z",
+        "?ApplyCollisionLayerAndGroup@@YAXPEAVNiAVObject@@AEBUCollisionLayerAndGroup@@@Z",
+        "?ApplyCollisionLayer@@YAXPEAVNiAVObject@@AEBW4COL_LAYER@@@Z",
+        "?UpdateRigidConstraints@NiAVObject@@QEAAX_NEI@Z",
+        "?EnableRigidConstraints@@YAXPEAVNiAVObject@@AEBE@Z",
+        "?DisableRigidConstraints@@YAXPEAVNiAVObject@@AEBE@Z",
+        "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "?GetDefault@BSLightingShaderMaterialBase@@UEAAPEAVBSShaderMaterial@@XZ",
+        "?OnLoadTextureSet@BSLightingShaderMaterialBase@@UEAAX_KPEAVBSTextureSet@@@Z",
+        "?ClearTextures@BSLightingShaderMaterialBase@@UEAAXXZ",
+        "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialBase@@UEAAX_N0000@Z",
+        "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?CopyMembers@BSShaderMaterial@@UEAAXPEAV1@@Z",
+        "??3@YAXPEAX_K@Z",
+        "__RTDynamicCast",
+        "memset",
+        "__imp_FormatMessageA",
+        "__imp_LocalFree",
+        "__imp_GetLastError",
+        "__imp_GetCurrentThreadId",
+        "__imp_Sleep",
+        "??_7BaseFormComponent@@6B@",
+        "??_7BGSIdleCollection@@6B@",
+        "??_7NiRefObject@@6B@",
+        "??_7ItemFilter@InventoryUtils@@6B@",
+        "??_7TESGrass@@6BTESBoundObject@@@",
+        "??_7TESGrass@@6BTESModel@@@",
+        "??_7BSTempEffect@@6B@",
+        "??_C@_0L@MLJIJBEF@?$CINo?5event?$CJ@",
+        "??_C@_0BL@EIDEOLFC@?$CIUninitialized?5event?5node?$CJ@",
+        "?g_seekOrigin@@3IB",
+        "??_7NiObject@@6B@",
+        "??_7NiExtraData@@6B@",
+        "?kEmptyString@@3QBDB",
+        "__real@3c23d70a",
+        "__real@3f800000",
+        "?g_threadSafeFiles@@3_NA",
+        "?gDefaultBaseDisposition@@3EA",
+        "?g_tes4RecordType@@3IA",
+        "?kRecordFormType@@3EA",
+        "?gWeaponSlotMasks@@3QBHB",
+        "?iCalcLevelAdjustDown@@3GA",
+        "?iCalcLevelAdjustUp@@3HA",
+        "?g_overlayCapacity@@3IA",
+        "?g_overlaySentinel@@3PEAUOverlayEntry@@EA",
+        "?g_overlayEntries@@3PEAUOverlayEntry@@EA",
+        "?ms_nextEffectID@BSTempEffect@@2IA",
+        "?QGlobalTimeMultiplier@BSTimer@@2MA",
+        "?QGlobalTimeMultiplierTarget@BSTimer@@2MA",
+        "??_R0?AVTESForm@@@8",
+        "??_R0?AVAlchemyItem@@@8",
+        "??_R0?AVMagicItem@@@8",
+        "??_R0?AVTESEnchantableForm@@@8",
+        "??_R0?AVTESValueForm@@@8",
+        "??_R0?AVBGSEncounterZone@@@8",
+        "??_R0?AVBGSLocation@@@8",
+        "?singleton@TESDataHandler@@2PEAV1@EA",
+        "?kNullHandle@@3IA",
+        "?gExteriorbhkWorld@@3PEAPEAVbhkWorld@@EA",
+        "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA",
+        "?gCalcLevelCounter@@3GA",
+        "?singleton@Main@@2PEAV1@EA",
+        "?singleton@PlayerCharacter@@2PEAV1@EA",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "?NiRTTI_NiInterpolator@@3VNiRTTI@@A",
+        "?g_defaultBackLightingTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA"
+      ]
+    },
+    {
+      "sha256": "d18d54c3da8a0bee0cd0267f5236d9807036a1ba1445535eeaacc176c94eeb47",
+      "base": 31,
+      "added": [
+        "?Revert@BGSStoryManagerQuestNode@@UEAAXPEAVBGSLoadFormBuffer@@@Z"
+      ]
+    },
+    {
+      "sha256": "1a2985074d07a24c4155e6f0089f8e9c579c2fe3bb7566c4df3ab944c7e0abec",
+      "base": 32,
+      "added": [
+        "?GetDangerous@TESWaterForm@@UEBA_NXZ",
+        "??_GTESWaterForm@@UEAAPEAXI@Z",
+        "??1TESWaterForm@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "c4eb0118ee1a3de67c8522988e1dcc89038bf4a5d043058919317cbabdc2bc30",
+      "base": 33,
+      "added": [
+        "??_EBGSMovableStatic@@WBA@EAAPEAXI@Z",
+        "?InitializeData@BGSMovableStatic@@UEAAXXZ",
+        "??_EBGSMovableStatic@@UEAAPEAXI@Z"
+      ]
+    },
+    {
+      "sha256": "da4e31767ca8f24bb2ef35c72e5bd468c2b7b4494012e8f4a25693c23fd01b46",
+      "base": 34,
+      "added": [
+        "?GetCastingType@TESEnchantableForm@@UEBAGXZ",
+        "?InitializeDataComponent@TESEnchantableForm@@UEAAXXZ",
+        "??_GTESEnchantableForm@@UEAAPEAXI@Z"
+      ]
+    },
+    {
+      "sha256": "ba2d8fb0142b537103eab1d8c670e0d02ddbf20f9ff3657f50e78a29e3214645",
+      "base": 35,
+      "added": [
+        "?GetFullName@TESFullName@@UEBAPEBDXZ",
+        "?data@BSFixedString@@QEBAPEBDXZ"
+      ]
+    },
+    {
+      "sha256": "ec2fa733c90408a4ba8ad0c037f8d3f98b0058b8d8bb525e6f938649be07f18f",
+      "base": 36,
+      "added": [
+        "?GetMultCalc@TESLeveledList@@UEAA_NXZ",
+        "?GetUseAll@TESLeveledList@@QEAA_NXZ",
+        "?InitializeDataComponent@TESLeveledList@@UEAAXXZ",
+        "?GetChanceNone@TESLeveledList@@UEAAEXZ"
+      ]
+    },
+    {
+      "sha256": "90d1748dac473fb88184773352c7594da8c54141f2105cd6c50edaa5b13c14ac",
+      "base": 37,
+      "added": [
+        "?InitializeDataComponent@TESModelTextureSwap@@UEAAXXZ",
+        "?InitializeDataComponent@TESModel@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "e68de156dce5917b7afcb53a097c96733e86e4d97cb1babdae44c4842cd6e4d0",
+      "base": 38,
+      "added": [
+        "?InitializeDataComponent@TESProduceForm@@UEAAXXZ",
+        "??_GTESProduceForm@@UEAAPEAXI@Z"
+      ]
+    },
+    {
+      "sha256": "054b4287345bd6e4f4c17df4d12a4e4c62fb6e8dda095b8a19f2be184fce28b2",
+      "base": 39,
+      "added": [
+        "?CopyComponent@TESRaceForm@@UEAAXPEAVBaseFormComponent@@@Z",
+        "??_R0?AVTESRaceForm@@@8",
+        "??_R0?AVBaseFormComponent@@@8"
+      ]
+    },
+    {
+      "sha256": "a7e88a3013622d6843636165ba9290970673014500c0a67a1a375a65b3e11273",
+      "base": 40,
+      "added": [
+        "?InitializeDataComponent@TESReactionForm@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "6245d5afe00b965b8f97111cf9206defa76220e0d84dd76f7206850df3462433",
+      "base": 41,
+      "added": [
+        "?GetMaxAllowedSize@TESTexture1024@@UEAAIXZ"
+      ]
+    },
+    {
+      "sha256": "e88a1467149f4a7211553b3a05210730203e032a4852ebd7b9095d6689362c46",
+      "base": 42,
+      "added": [
+        "?CopyComponent@TESWeightForm@@UEAAXPEAVBaseFormComponent@@@Z",
+        "??_R0?AVTESWeightForm@@@8"
+      ]
+    },
+    {
+      "sha256": "a0907973c5d2d40205960caf4f500e5022024c900aaba4e3d7166f62fd7cd97f",
+      "base": 43,
+      "added": [
+        "?GetVersion@BGSLoadGameBuffer@@UEAAEXZ",
+        "?ReadFormID@BGSLoadGameBuffer@@QEAA_NAEAI@Z",
+        "?gBGSSaveLoadGame@@3PEAVBGSSaveLoadGame@@EA",
+        "?QueryState@BGSSaveLoadGame@@QEAAEXZ",
+        "?GetNumericID@BGSNumericIDIndex@@QEBAIXZ"
+      ]
+    },
+    {
+      "sha256": "1adcb335f0bb3800cb269ccfe6e08cd4f54d90eca5a0274a99980f7554d0e663",
+      "base": 44,
+      "added": [
+        "?QConditions@TESQuest@@UEAAPEAVTESCondition@@XZ",
+        "?FinishLoadGame@TESQuest@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?InitializeData@TESQuest@@UEAAXXZ",
+        "??_GTESQuest@@UEAAPEAXI@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Finish@QueuedPromoteQuestTask@@QEAAXXZ",
+        "??1TESQuest@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+      "base": 45,
+      "added": [
+        "??0NiObjectNET@@QEAA@XZ",
+        "?ProcessClone@NiObjectNET@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?RegisterStreamables@NiObjectNET@@UEAA_NAEAVNiStream@@@Z",
+        "??_7NiObjectNET@@6B@"
+      ]
+    },
+    {
+      "sha256": "c03cebe13f0b7f3f2dab6426741e4ec6082fa58053f341fd479f222a346649ec",
+      "base": 46,
+      "added": [
+        "?ForEachTexture@BSShaderProperty@@UEAAHAEAVForEachVisitor@1@@Z",
+        "?QMaterialAlpha@BSShaderProperty@@UEAAMXZ",
+        "?DoClearRenderPasses@BSShaderProperty@@UEAAXXZ",
+        "?SetFlags@BSShaderProperty@@QEAAXW4EShaderPropertyFlag8@@_N@Z",
+        "?SaveBinary@BSShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "?ClearRenderPass@BSRenderPass@@QEAAXXZ",
+        "?SaveBinary@NiShadeProperty@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary@NiPoint2@@QEAAXPEAVNiStream@@@Z",
+        "?LoadBinary@NiShadeProperty@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@NiPoint2@@QEAAXAEAVNiStream@@@Z"
+      ]
+    },
+    {
+      "sha256": "fa7b4238738416315d3caf8deabcabfb32e8a9c2d4a216f4d33607580483af6e",
+      "base": 47,
+      "added": [
+        "?tell@BSResourceNiBinaryStream@@UEBAIXZ",
+        "?good@BSResourceNiBinaryStream@@UEBA_NXZ",
+        "?set_endian_swap@BSResourceNiBinaryStream@@UEAAX_N@Z",
+        "??_GBSResourceNiBinaryStream@@UEAAPEAXI@Z",
+        "?get_info@BSResourceNiBinaryStream@@UEAAXAEAUBufferInfo@@@Z",
+        "?WriteNoSwap@@YAIPEAVNiBinaryStream@@PEBXIPEAII@Z",
+        "?WriteSwap@@YAIPEAVNiBinaryStream@@PEBXIPEAII@Z",
+        "?ReadNoSwap@@YAIPEAVNiBinaryStream@@PEAXIPEAII@Z",
+        "?ReadSwap@@YAIPEAVNiBinaryStream@@PEAXIPEAII@Z",
+        "??1BSResourceNiBinaryStream@@UEAA@XZ",
+        "?FillInfo@StreamBuffer@@QEAAXPEAUBufferInfo@@PEAI_K@Z"
+      ]
+    },
+    {
+      "sha256": "848acbd6df7bea4fe47f3229d7787f6e3859e69831e2dadd2dad1b6948b2f5c6",
+      "base": 48,
+      "added": [
+        "?InitializeData@TESEffectShader@@UEAAXXZ",
+        "?Initialize@EffectShaderData@@QEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "217e9f7da274c0babb61719452dcc844ab4512324d627f176b61489e87cc7742",
+      "base": 49,
+      "added": [
+        "?InitializeData@TESEyes@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "2f689b00eb4d4785944231030738683379f51abe2b2a547e9da47a1014c05f0d",
+      "base": 50,
+      "added": [
+        "??_GTESIdleForm@@UEAAPEAXI@Z",
+        "??1TESIdleForm@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "d5ff2afed9e3f34dad666623ca1a2ba444241e6aed362a7f7e23892cd374ecec",
+      "base": 51,
+      "added": [
+        "?ClearData@TESLoadScreen@@UEAAXXZ",
+        "?Clear@TESCondition@@QEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "ca9b18f2041a9a35acb3758a823c3be824c8317819e46f0f22324ed346163a1d",
+      "base": 52,
+      "added": [
+        "?CreateDuplicateForm@TESObjectLAND@@UEAAPEAVTESForm@@_NPEAX@Z",
+        "?SetAltered@TESObjectLAND@@UEAAX_N@Z",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "??_R0?AVTESObjectLAND@@@8",
+        "?SetAltered@TESForm@@UEAAX_N@Z"
+      ]
+    },
+    {
+      "sha256": "22d0b336d88811f267b97dc35c0060756a11375b702f13110517968bc7ea131e",
+      "base": 53,
+      "added": [
+        "?GetKnown@TESShout@@UEBA_NXZ"
+      ]
+    },
+    {
+      "sha256": "1852233ec7950b5f053f9b91bc4c839c0edd25c408ffb30a2c0ad107c5bddcd3",
+      "base": 54,
+      "added": [
+        "?IsFormTypeChild@TESTopic@@UEAA_NW4FormType@@@Z"
+      ]
+    },
+    {
+      "sha256": "2510c12aebe65451d8d2d6bed7e4db4e2bf2d8fd53bac3a1435fc9d15d2083c2",
+      "base": 55,
+      "added": [
+        "?LoadGame@TESTopicInfo@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESTopicInfo@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z"
+      ]
+    },
+    {
+      "sha256": "6b6e0092f22cba8ad518b3e4c2ae150df2af52fd47b77ea94dc0761a1fe4ee10",
+      "base": 56,
+      "added": [
+        "?InitializeData@BGSCameraPath@@UEAAXXZ",
+        "??_GBGSCameraPath@@UEAAPEAXI@Z",
+        "??1BGSCameraPath@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "b0aca61da9378f6979e2f34c2c1c5382e6d80269afaf524d28ad4caec1f457b7",
+      "base": 57,
+      "added": [
+        "?InitializeData@BGSCameraShot@@UEAAXXZ",
+        "??_GBGSCameraShot@@UEAAPEAXI@Z",
+        "??1BGSCameraShot@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "357ec695943dbdbb8dfb212caafb7312fd789c4c27c4ee76948fb87f74bfee5c",
+      "base": 58,
+      "added": [
+        "?InitializeData@BGSColorForm@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "737f13fd5e642363edd32fe1c100812ba47104fdb3f8253bbd2997ff1b3d0697",
+      "base": 59,
+      "added": [
+        "?InitializeData@BGSDialogueBranch@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "bc05575a865c1b0622a7092ed28da94f9799a1c37e8e04b301de514ed459dd26",
+      "base": 60,
+      "added": [
+        "?InitializeData@BGSEquipSlot@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "567e887120e8236bf9eec66a54fce63226beaa9cec921da0be4e2d0ee9f734e7",
+      "base": 61,
+      "added": [
+        "??_GBGSFootstep@@UEAAPEAXI@Z",
+        "??1TESForm@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "73d873d10ee1a11693dfc24edcc5753ba6f3281139b70b6c295e3e5060d97cff",
+      "base": 62,
+      "added": [
+        "?InitializeData@BGSImpactData@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "db9b9e6da24c4dde1b4e238d71873823607137f58d7b2247ea5ce1d581025030",
+      "base": 63,
+      "added": [
+        "?GetFormEditorID@BGSKeyword@@UEBAPEBDXZ"
+      ]
+    },
+    {
+      "sha256": "792f534c3f192932cca1821b4767ab743f47f482ceece37080cf223fbee92963",
+      "base": 64,
+      "added": [
+        "?InitializeData@BGSLightingTemplate@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "89ffb5ab702c26fa183050ee3c9e51dbb29ba02dc4ee90726fff058b540f84b7",
+      "base": 65,
+      "added": [
+        "??_EBGSMaterialObject@@WEI@EAAPEAXI@Z",
+        "?EnsureLoaded@BGSMaterialObject@@UEAAXXZ",
+        "??_EBGSMaterialObject@@UEAAPEAXI@Z",
+        "?LoadFileData@BGSMaterialObject@@QEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "c9697ecc6b7f07ee0e9f6e2490add582a1b814714471f5bfb86d1bd56f536929",
+      "base": 66,
+      "added": [
+        "?SetName@NiAVObject@@QEAAXAEBVBSFixedString@@@Z",
+        "?GetCollisionObject@NiAVObject@@QEAAPEAVbhkCollisionObject@@XZ",
+        "?GetBoneFromName@NiAVObject@@SAPEAV1@PEAV1@AEBVBSFixedString@@_N@Z",
+        "?RecalculateWorldTransform@NiAVObject@@QEAAXXZ",
+        "?Copy@BSFixedString@@QEAAXAEBV1@@Z",
+        "?NiRTTI_bhkCollisionObject@@3VNiRTTI@@B",
+        "?HasValue@BSFixedString@@QEBAHXZ",
+        "?kBoneMapName@@3VBSFixedString@@B",
+        "?GetExtraData@NiObjectNET@@QEBAPEAVNiExtraData@@AEBVBSFixedString@@@Z",
+        "?FindBone@@YA_NPEAVNiExtraData@@AEBVBSFixedString@@AEAPEAVNiAVObject@@@Z",
+        "?NiRTTI_BSFlattenedBoneTree@@3VNiRTTI@@B",
+        "?FindFlattenedBone@@YAPEAVNiAVObject@@PEAV1@AEBVBSFixedString@@_N@Z",
+        "??DNiTransform@@QEBA?AV0@AEBV0@@Z",
+        "?IsInvalid@@YA_NPEBVNiTransform@@@Z"
+      ]
+    },
+    {
+      "sha256": "4edfaf2d99f7bfa61fa2308e2f4f4344cea3fb007aebc056abce946d3bebd269",
+      "base": 67,
+      "added": [
+        "?GetLeftHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetRightHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetVoiceEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetEquipSlot@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@I@Z",
+        "??_GBGSDefaultObjectManager@@UEAAPEAXI@Z",
+        "??0BGSDefaultObjectManager@@QEAA@XZ",
+        "?GetDefaultObject@BGSDefaultObjectManager@@SAPEAVTESForm@@I@Z",
+        "??_7BGSDefaultObjectManager@@6B@",
+        "??0TESForm@@QEAA@XZ",
+        "?SetFormID@TESForm@@UEAAXI_N@Z"
+      ]
+    },
+    {
+      "sha256": "44978fb11e7449a501330d53cddcb71e80e46b68ac6cb28a42315573833051a4",
+      "base": 68,
+      "added": [
+        "??_GTESCombatStyle@@UEAAPEAXI@Z",
+        "??_7TESCombatStyle@@6B@"
+      ]
+    },
+    {
+      "sha256": "6ae31416b8a82c8c158d5d90f344f5ed6595b259b1ed77872a975e409bf0ba0f",
+      "base": 69,
+      "added": [
+        "?SetFormEditorID@TESGlobal@@UEAA_NPEBD@Z",
+        "?Set@BSStringT@@QEAA_NPEBDI@Z"
+      ]
+    },
+    {
+      "sha256": "369df56b02ca7a41d502e3321522babd433b30ef1c97346708878fd46ede0dab",
+      "base": 70,
+      "added": [
+        "?SetFormEditorID@TESImageSpaceModifier@@UEAA_NPEBD@Z",
+        "??_GTESImageSpaceModifier@@UEAAPEAXI@Z",
+        "??1TESImageSpaceModifier@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "039b47932e94ab1e68f803e4324f7c41613794855fffd1f3758a8b527dff7e28",
+      "base": 71,
+      "added": [
+        "?GetPlayable@TESRace@@UEBA_NXZ",
+        "?GetBodyPartData@TESRace@@QEAAPEAVBGSBodyPartData@@XZ",
+        "?GetMovementType@TESRace@@QEAAPEAVBGSMovementType@@H@Z",
+        "??_GTESRace@@UEAAPEAXI@Z",
+        "?defaultBodyPartData@@3PEAVBGSBodyPartData@@EA",
+        "?GetDefaultMovementType@BGSDefaultObjectManager@@SAPEAVBGSMovementType@@H@Z",
+        "??1TESRace@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "23d1ec13dc96d711c3207a97e0a1653577d7dd4082b79df05e3d590e7dce7f21",
+      "base": 72,
+      "added": [
+        "?SetFormEditorID@BGSHeadPart@@UEAA_NPEBD@Z",
+        "??4BSFixedString@@QEAAAEAV0@PEBD@Z"
+      ]
+    },
+    {
+      "sha256": "742e07bef7846370e67429ab4deb50db20098ef6812267721590d099d2278266",
+      "base": 73,
+      "added": [
+        "??_GBGSLocation@@UEAAPEAXI@Z",
+        "??1BGSLocation@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "aa2473c7d2a24b0187c99c9c7e5b6fa71a134672a861c51a0702af27ed475194",
+      "base": 74,
+      "added": [
+        "??_EBGSMusicType@@WCA@EAAPEAXI@Z",
+        "?SetFormEditorID@BGSMusicType@@UEAA_NPEBD@Z",
+        "?DoPause@BGSMusicType@@UEAAXXZ",
+        "??_EBGSMusicType@@UEAAPEAXI@Z"
+      ]
+    },
+    {
+      "sha256": "97b35a5910347d9ba71eb985b17df7b149fcd169d7f168a49cf76b535d98deb4",
+      "base": 75,
+      "added": [
+        "?InitializeData@BGSEncounterZone@@UEAAXXZ",
+        "?Revert@BGSEncounterZone@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "??_GBGSEncounterZone@@UEAAPEAXI@Z",
+        "?LoadGame@BGSEncounterZone@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@BGSEncounterZone@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "??_7BGSEncounterZone@@6B@"
+      ]
+    },
+    {
+      "sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
+      "base": 76,
+      "added": [
+        "?GetReferenceName@TESObjectREFR@@QEBAPEBDXZ",
+        "?GetTeleportData@TESObjectREFR@@QEBAPEAUDoorTeleportData@@XZ",
+        "?GetContainer@TESObjectREFR@@QEBAPEAVTESContainer@@XZ",
+        "?GetWorldSpace@TESObjectREFR@@QEBAPEAVTESWorldSpace@@XZ",
+        "?GetDistanceBetweenSquared@TESObjectREFR@@QEBAMPEBV1@_N1@Z",
+        "?GetFormName@TESForm@@QEBAPEBDXZ",
+        "?GetTeleportData@ExtraDataList@@QEBAPEAUDoorTeleportData@@XZ",
+        "__real@7f7fffff",
+        "?SameWorldspace@TESObjectREFR@@QEBA_NPEBV1@_N@Z",
+        "?GetInventoryChanges@ExtraDataList@@QEBAPEAVInventoryChanges@@W4FormType@@@Z"
+      ]
+    },
+    {
+      "sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
+      "base": 77,
+      "added": [
+        "__CxxFrameHandler3"
+      ]
     }
   ]
 }

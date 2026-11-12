@@ -15,13 +15,16 @@ warm). It compiles, binds names, compares, and prints one line per function: PAS
 code, first mismatch offset, candidate/target size. Read locally
 `attempts/<NNN>/0x<rva>/side-by-side.txt` (target vs candidate disassembly; `*` marks rows that
 differ outside relocated fields) and `compile.log`, revise, repeat. Never stop the machine; it
-stops itself at its deadline.
+stops itself at its deadline. One unit per shell command: never chain several `attempt` runs in one
+command or start one in the background (tool timeout of 120 s, and a second run on a unit fails with
+"another attempt is running").
 
 **Names and binding.** Your class and function names may differ from the community names; the
 decorated name is read from your object. `attempt` binds functions and references itself and
 compares again in the same run; a run that compared nothing because of binding does not count
-against the budget. If it prints `UNBOUND ...`, add the name and the RVA from the pack's
-reference table to `.local/tasks/<task-id>/bind-hints.json`, for example
+against the budget, nor do a unit's first three compile failures (later ones count). If it prints
+`UNBOUND ...`, add the name and the RVA from the pack's reference table to
+`.local/tasks/<task-id>/bind-hints.json`, for example
 `{"BSTimer::QGlobalTimeMultiplier": "0x20ccac8", "?GetArmorKind@@YAHPEAVTESObjectARMO@@@Z": "0x27edf0"}`
 (decorated or `Class::member` names). Never edit `symbols.json` or `task.json`, and never give an
 RVA the pack does not list. `decorated name changed` means a declaration change (for example
@@ -30,7 +33,9 @@ A thread-local (the target reads `gs:[0x58]` indexed by `_tls_index`, then adds 
 is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated name>":
 "tls:0x<offset the target adds>"}` (`UNBOUND thread-local` asks for it); `_tls_index` needs no hint.
 
-**Source rules** (`python3 tools/check.py` runs the lint; a Reviewer rejects the rest):
+**Source rules** (`python3 tools/lint_reconstruction.py reconstruction/<area>/<Class>.h
+reconstruction/<area>/<Class>.cpp` runs the lint on your files; do not run `tools/check.py`, which
+also lints other Drafters' unfinished files; a Reviewer rejects the rest):
 - Plausible C++ for what the function does. Not allowed anywhere in a file, comments included:
   inline asm (`asm`, `__asm`, `__asm__`), `__emit`, `__pragma`/`_Pragma`, `##`, digit separators
   (`1'000`), byte arrays or `\x` strings, `\u`/`\U` escapes, `#pragma` other than
@@ -49,9 +54,12 @@ is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated 
 - Other classes the function uses may be declared in your header as minimal stand-ins (only the
   members and virtual slots the code needs). Say in the header comment which declarations are
   stand-ins and where each name comes from. Do not edit another unit to share a class.
-- If the brief lists a shared header for a class you use, include it (`#include "<area>/<Class>.h"`)
-  instead of declaring a stand-in; never edit it. If it lacks a member or slot you need, declare
-  your own stand-in and report `header-gap <Class>` in your result line.
+- If the brief lists a shared header for a class you use, include it with the line the brief gives,
+  `#include "../<area>/<Class>.h"` (the recipes pass no include root, so a path is relative to your
+  file; `"<Class>.h"` also works within the same area, `"<area>/<Class>.h"` never does, and
+  `attempt` refuses it uncounted) instead of declaring a stand-in; never edit it. If it lacks a
+  member or slot you need, declare your own stand-in and report `header-gap <Class>` in your
+  result line.
 - Include lines are exactly `#include "path"` or `#include <system>` with nothing else on the line;
   never `#` and `include` together in a comment or string; no include inside `/* */` or `#if`
   (header guard aside); repository headers quoted. `attempt` refuses a unit whose compiler include
@@ -123,6 +131,8 @@ is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated 
   so declare those yourself.
 - Before you draft, read `docs/matching-cookbook.md` once. A flag bit the target tests as a load,
   `shr`, `test al,1` goes through a by-value bit-index helper (rule 16) from the first draft.
+  `static_assert` always takes a message (rule 17). A 3-byte copy is rule 24; a `??_E...W...`
+  adjustor thunk is rule 25.
 - No decompiler output pasted as source, no code from unlicensed projects other than the FNV
   decompilation (labelled as above), nothing leaked. Unknowns stay unknown (`unk28`), not
   invented names.

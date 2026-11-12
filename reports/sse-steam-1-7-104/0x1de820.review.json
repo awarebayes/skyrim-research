@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "921b2f13a5a996209d92c5598bfbabbd2b083f8d7998b9d6120622e07caaeadf",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1de820",
+  "naming_findings": [
+    "PackageList models the community simple list as two opaque pointers with a GUESS Clear method; the community list type could be named"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
+  "review_task_id": "review-p18-wave1-2",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 1959968,
+  "size": 9,
+  "source_digest": "b80177e3a7e8b6882c75e21d9a26806ca34754681afb8d34e2148fed9e63c274",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

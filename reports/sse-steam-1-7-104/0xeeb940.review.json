@@ -1,0 +1,25 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "d2cefc72f048585480f0ef14b36c899f07d8974d3fe2cf861a926e8b1f655df9",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xeeb940",
+  "naming_findings": [
+    "name and controllers are already default-initialised to null and are assigned again in the body; redundant",
+    "NiStream placeholder slots Unk_01 to Unk_06 are GUESS where NG names Load1 to Save3",
+    "NiTimeController placeholder slots are GUESS where NG names Start to OnPreDisplay"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "6686fd60e3c0ddd89888d122bebb4f52e017bb995bf3c1c7346a4319def2e608",
+  "review_task_id": "review-p18-wave1-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 15644992,
+  "size": 50,
+  "source_digest": "19dbf2c66e5e4f990c14c02ac09bf22afd456c216d53617466f6c5a5a9d9fe9a",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

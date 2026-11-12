@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "1660f26af4672bf104b801f1cd34ef159c850e0eec20277ec50547eb5bd8bdb3",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1524030",
+  "naming_findings": [
+    "the NiColor stream helper names are GUESS(low) bound by RVA; no community name found to replace them",
+    "the Sibling source lines declare a parallel that the history shows is convergent; the header could state that reason"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "232068ff52100375f0c2cadaa5a1d794d1ea127588cdd39be482963f20257f25",
+  "review_task_id": "review-p16-bslsmb",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 22167600,
+  "size": 396,
+  "source_digest": "9670a944a4f99835c20d383076143eafe298bc16a4d82883c81a92bf8467c6bb",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

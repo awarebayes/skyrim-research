@@ -1,0 +1,25 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "5781373f120999b7871bb2aeac97b184738e0e5152c8ea3f7aea0ad7f756b51a",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x5358d0",
+  "naming_findings": [
+    "the helper SetFormFlag is declared as a member of BGSStoryManagerBranchNode, but the header says it is a TESForm helper; it belongs in the shared TESForm header",
+    "SetFormFlag is a low-confidence guessed name for a helper without a community name",
+    "the story-manager base chain, TESCondition and BSTArray are stand-ins duplicated across four unit headers rather than shared"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "1df7a7e73959756ef646f02f00ea0cd549883ca7f5c57e2dc01881f433c26590",
+  "review_task_id": "review-p18-wave1-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 5462224,
+  "size": 29,
+  "source_digest": "6614cc11c8e7d7cd86d882421eba83e9430ede8d9b4af1babc7929ce4e32559f",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

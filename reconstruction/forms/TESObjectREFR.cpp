@@ -7,17 +7,31 @@
 // Source exposure: mixed. Drafted by claude-sonnet-5-5 from local listings of the pinned image
 // with types from the header beside this file.
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone).
-// Compared functions (RVA, size):
+// Functions in this unit (RVA, size); all are compared except Get3D2:
 //   GetScale           RVA 0x2e6f30, 68 bytes
 //   GetCurrentLocation RVA 0x2f3b70, 117 bytes
 //   GetCalcLevel       RVA 0x300b90, 143 bytes
 //   GetTransform       RVA 0x2eee20, 152 bytes
 //   CanBeMoved         RVA 0x2e73a0, 84 bytes
 //   HasQuestObject     RVA 0x2e5a60, 86 bytes
+//   GetReferenceName   RVA 0x2f0b30, 9 bytes
+//   GetTeleportData    RVA 0x301090, 9 bytes
+//   GetContainer       RVA 0x2e8660, 38 bytes
+//   GetWorldSpace      RVA 0x2f3e00, 52 bytes
+//   Get3D2             RVA 0x2ebce0, 55 bytes
+//   GetDistanceBetweenSquared RVA 0x2f41e0, 165 bytes
+// Get3D2 binds two thread-local entries the symbol map does not hold yet, which the map refuses
+// without restaling every record, so it has no match record. GetInventoryChanges (0x22b2c0) is
+// declared but not defined here: a definition in this unit is inlined into HasQuestObject.
 // CanBeMoved and HasQuestObject were finished by claude-opus-5-5 from the Drafter's near-misses.
+// The six functions after them were drafted by claude-sonnet-5-5 (task batch4-tesobjectrefr).
+// Bodies adapted from community sources are listed above; tools/check_origin.py reports none other
+// above its threshold at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
 // A byte match shows this source and recipe produce the checked code; it does not verify the
 // community names or that the original source looked like this.
 #include "TESObjectREFR.h"
+
+#include <limits>
 
 
 // Globals read by GetCalcLevel; the image keeps them at fixed addresses.
@@ -129,4 +143,75 @@ bool TESObjectREFR::HasQuestObject() const
     }
     InventoryChanges* changes = GetInventoryChanges(baseType);
     return changes && changes->HasQuestItem();
+}
+
+// tlsOverrideRef, tlsOverrideNode: GUESS(low); per-thread slots at TLS offsets 0x5f8 and 0x5f0 that
+// Get3D2 consults before the loaded data: a reference and the node to answer with for it.
+extern __declspec(thread) const TESObjectREFR* tlsOverrideRef;
+extern __declspec(thread) NiAVObject*          tlsOverrideNode;
+
+const char* TESObjectREFR::GetReferenceName() const
+{
+    return data.objectReference->GetFormName();
+}
+
+DoorTeleportData* TESObjectREFR::GetTeleportData() const
+{
+    return extraList.GetTeleportData();
+}
+
+TESContainer* TESObjectREFR::GetContainer() const
+{
+    TESBoundObject* base = data.objectReference;
+    if (base) {
+        switch (base->formType) {
+        case FormType::NPC:
+            return static_cast<TESNPC*>(static_cast<TESBoundAnimObject*>(base));
+        case FormType::Container:
+            return static_cast<TESObjectCONT*>(static_cast<TESBoundAnimObject*>(base));
+        default:
+            break;
+        }
+    }
+    return nullptr;
+}
+
+TESWorldSpace* TESObjectREFR::GetWorldSpace() const
+{
+    TESObjectCELL* cell = parentCell;
+    if (!cell) {
+        cell = GetSaveParentCell();
+        if (!cell) {
+            return nullptr;
+        }
+    }
+    if (cell->cellFlags & 1) {
+        return nullptr;
+    }
+    return cell->worldSpace;
+}
+
+NiAVObject* TESObjectREFR::Get3D2() const
+{
+    if (this == tlsOverrideRef) {
+        return tlsOverrideNode;
+    }
+    if (loadedData) {
+        return loadedData->data3D;
+    }
+    return nullptr;
+}
+
+float TESObjectREFR::GetDistanceBetweenSquared(const TESObjectREFR* a_other, bool a_ignoreDisabled, bool a_ignoreWorldspace) const
+{
+    float distance = std::numeric_limits<float>::max();
+    if (a_other && !(TestBit(a_other->formFlags, 11) && !a_ignoreDisabled) && !TestBit(a_other->formFlags, 5)) {
+        if (a_ignoreWorldspace || SameWorldspace(a_other, true)) {
+            const float dx = a_other->data.location.x - data.location.x;
+            const float dy = a_other->data.location.y - data.location.y;
+            const float dz = a_other->data.location.z - data.location.z;
+            distance       = dx * dx + dy * dy + dz * dz;
+        }
+    }
+    return distance;
 }

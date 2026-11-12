@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "b63cdde8044341cb0d35707d65d302270077e4f83190a1c60088889f7f1856e3",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1e1240",
+  "naming_findings": [
+    "unk0C is GUESS where the community header has descriptionText; the label says so"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
+  "review_task_id": "review-p18-wave1-2",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 1970752,
+  "size": 8,
+  "source_digest": "11d6cd3d84ff5557d7fc4e57b5200b3236e5edf652346875673daf765a57729a",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}
