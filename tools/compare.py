@@ -18,7 +18,7 @@ from pecoff import (EH_HANDLERS, EH_LAYOUTS, FUNCINFO_MAGIC, GS_HAS_ALIGNMENT, R
                     PeImage, Reject, eh_size, rel_name, unwind_header)
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPARATOR_VERSION = '0.4.0'
+COMPARATOR_VERSION = '0.5.0'
 CONTRACT_VERSION = 2
 REPORT_SCHEMA = 1
 SHA256 = re.compile(r'[0-9a-f]{64}')
@@ -32,9 +32,14 @@ HASH_KEYS = {'image_sha256', 'expected_image_sha256', 'object_sha256', 'code_sec
 # which ends `k` bytes after the 4-byte field (an immediate operand follows for k > 0).
 REL32_TAIL = {0x04: 0, 0x05: 1, 0x06: 2, 0x07: 3, 0x08: 4, 0x09: 5}
 ADDR32NB = 0x03
-SUPPORTED_RELOCATIONS = set(REL32_TAIL) | {ADDR32NB}
+# Section-relative offset; accepted only against a declared thread-local variable (see the contract).
+SECREL = 0x0B
+SUPPORTED_RELOCATIONS = set(REL32_TAIL) | {ADDR32NB, SECREL}
 # Linker-defined symbol at the start of the image; switch code addresses jump tables from it.
 IMAGE_BASE = '__ImageBase'
+# CRT variable holding the module's TLS slot; the image's TLS directory names its address.
+TLS_INDEX = '_tls_index'
+THREAD_LOCAL = 'thread-local'
 
 
 def sha256(blob):
@@ -118,23 +123,50 @@ def load_symbol_map(task, symbol_map):
          'symbol map schema must be 1')
     need(symbol_map.get('build_id') == task['build_id'], 'symbol-map-build-mismatch',
          'symbol map belongs to another build')
-    entries = symbol_map.get('symbols')
-    need(isinstance(entries, dict), 'invalid-symbol-map', 'symbols must be an object')
-    for name, entry in entries.items():
-        need(isinstance(entry, dict) and is_uint(entry.get('rva')), 'invalid-symbol-map', 'entry needs an rva')
+    raw = symbol_map.get('symbols')
+    need(isinstance(raw, dict), 'invalid-symbol-map', 'symbols must be an object')
+    # Thread-local variables are offsets into the TLS template, not RVAs, so they are kept apart:
+    # placement, alias, fold and overlap checks and every non-SECREL reference see RVA entries only.
+    entries, tls_entries = {}, {}
+    for name, entry in raw.items():
+        need(isinstance(entry, dict), 'invalid-symbol-map', 'entry must be an object')
         need(entry.get('size') is None or (is_uint(entry['size']) and entry['size'] > 0), 'invalid-symbol-map',
              'entry size must be null or positive')
+        kind = entry.get('kind')
+        if kind is None:
+            need(is_uint(entry.get('rva')), 'invalid-symbol-map', 'entry needs an rva')
+            entries[name] = entry
+        else:
+            need(kind == THREAD_LOCAL, 'invalid-symbol-map', f'entry kind {kind!r} is unknown')
+            need('rva' not in entry and is_uint(entry.get('tls_offset')), 'invalid-symbol-map',
+                 'a thread-local entry needs tls_offset and no rva')
+            need(name != TLS_INDEX, 'invalid-symbol-map', '_tls_index is not a thread-local variable')
+            tls_entries[name] = entry
     folds = symbol_map.get('folds', [])
     need(isinstance(folds, list) and all(isinstance(g, list) and len(g) > 1 and all(n in entries for n in g)
                                          for g in folds), 'invalid-symbol-map', 'folds must list known symbols')
     for group in folds:
         need(len({entries[n]['rva'] for n in group}) == 1, 'invalid-symbol-map', 'folded symbols differ in RVA')
-    return entries, [set(g) for g in folds]
+    return entries, [set(g) for g in folds], tls_entries
 
 
-def check_placement(task, entries, folds):
+def check_tls(image, entries, tls_entries):
+    """Validate thread-local entries and any `_tls_index` entry against the image's TLS directory."""
+    if not tls_entries and TLS_INDEX not in entries:
+        return
+    start, end, index = image.tls_template()
+    for name, entry in tls_entries.items():
+        need(entry['tls_offset'] + (entry.get('size') or 1) <= end - start, 'tls-offset-outside-template',
+             f'thread-local entry {name!r} lies outside the TLS template')
+    if TLS_INDEX in entries:
+        need(entries[TLS_INDEX]['rva'] == index, 'tls-index-mismatch',
+             'symbol map places _tls_index somewhere other than the TLS directory names')
+
+
+def check_placement(task, entries, folds, tls_entries=()):
     """Reject symbol maps that alias or overlap the target range in ways not explicitly declared."""
     start, end, symbol = task['rva'], task['rva'] + task['size'], task['symbol']
+    need(symbol not in tls_entries, 'symbol-map-conflict', 'symbol map declares the function thread-local')
     need(entries.get(IMAGE_BASE, {'rva': 0})['rva'] == 0, 'symbol-map-conflict',
          'symbol map places __ImageBase somewhere other than RVA 0')
     if symbol in entries:
@@ -217,8 +249,9 @@ class Function:
     later compared in full, so a binding never stands in for a comparison.
     """
 
-    def __init__(self, obj, func_sec, task, entries, image, coverage):
+    def __init__(self, obj, func_sec, task, entries, image, coverage, tls_entries=None):
         self.obj, self.func_sec, self.task, self.entries, self.image = obj, func_sec, task, entries, image
+        self.tls_entries = tls_entries or {}
         self.coverage, self.eh = coverage, coverage['eh']
         self.bound = {func_sec.index: task['rva']}
         self.code_ranges = [(task['rva'], task['rva'] + task['size'])]
@@ -236,14 +269,46 @@ class Function:
 
     def resolve(self, sym):
         """Target RVA of a candidate symbol (before addend), per "Mapping source symbols"."""
+        if sym.name == TLS_INDEX:
+            # Taken from the TLS directory, not the map, so the index slot cannot be named freely.
+            need(sym.section == SYM_UNDEFINED, 'unsupported-relocation', 'the candidate defines _tls_index itself')
+            return self.image.tls_template()[2]
         if sym.section in self.bound:
             return self.bound[sym.section] + sym.value
         need(sym.section not in (SYM_ABSOLUTE, SYM_DEBUG), 'unsupported-relocation',
              'relocation targets an absolute or debug symbol')
         if sym.name == IMAGE_BASE and sym.section == SYM_UNDEFINED:
             return 0
+        need(sym.name not in self.tls_entries, 'tls-reference-kind',
+             f'a relocation other than SECREL refers to thread-local variable {sym.name!r}')
         need(sym.name in self.entries, 'unresolved-symbol', f'no target RVA for referenced symbol {sym.name!r}')
         return self.entries[sym.name]['rva']
+
+    def secrel_field(self, rel, sym, addend_bytes):
+        """Expected field of a SECREL relocation: the variable's declared TLS-template offset plus addend.
+
+        The offset comes from a thread-local map entry by name, never from the target's own
+        displacement and never from the candidate's placement inside its `.tls$` section.
+        """
+        where = f'SECREL at +0x{rel.offset:x}'
+        need(sym.section not in (SYM_ABSOLUTE, SYM_DEBUG), 'unsupported-relocation',
+             f'{where} targets an absolute or debug symbol')
+        if sym.section != SYM_UNDEFINED:
+            sec = self.obj.section(sym.section)
+            need(sec.name == '.tls' or sec.name.startswith('.tls$'), 'unsupported-relocation',
+                 f'{where} refers to {sym.name!r} in section {sec.name}, which is not thread-local')
+            need(sym.name != sec.name, 'unsupported-relocation', f'{where} refers to a section symbol')
+        need(sym.name not in self.entries, 'unsupported-relocation',
+             f'{where} refers to {sym.name!r}, which the map places as code or data, not thread-local')
+        need(sym.name in self.tls_entries, 'unresolved-symbol', f'no thread-local entry for referenced symbol {sym.name!r}')
+        entry = self.tls_entries[sym.name]
+        start, end, _index = self.image.tls_template()
+        addend = struct.unpack('<I', addend_bytes)[0]
+        size = entry.get('size')
+        value = entry['tls_offset'] + addend
+        need((size is None or addend < size) and value < end - start, 'tls-offset-outside-template',
+             f'{where} addresses {sym.name!r} plus {addend} outside the variable or the TLS template')
+        return struct.pack('<I', value)
 
     def bind(self, index, rva, what):
         sec = self.obj.section(index)
@@ -553,10 +618,15 @@ class Function:
             if rel is None:
                 break
             ref = self.obj.symbols[rel.symbol]
-            want = expected_field(rel, candidate[start:end], self.resolve(ref), base + start)
+            if rel.kind == SECREL:
+                want = self.secrel_field(rel, ref, candidate[start:end])
+            else:
+                want = expected_field(rel, candidate[start:end], self.resolve(ref), base + start)
             if want != target[start:end]:
+                # A SECREL field holds a TLS-template offset, so naming it an RVA would mislead triage.
+                encoded = 'offset' if rel.kind == SECREL else 'RVA'
                 raise Reject('relocation-target-mismatch',
-                             f'{rel_name(rel.kind)} at +0x{start:x} does not encode the RVA of {ref.name!r}',
+                             f'{rel_name(rel.kind)} at +0x{start:x} does not encode the {encoded} of {ref.name!r}',
                              raw={'section': sec.index, 'offset': start, 'expected_field': want.hex(),
                                   'target_field': target[start:end].hex()})
             self.coverage[reference_key] += 4
@@ -735,9 +805,13 @@ def compare(task, manifest, recipe_bytes, build_record, object_bytes, image_byte
         report['recipe'] = {'recipe_sha256': task['recipe_sha256'],
                             'compiler_binary_sha256': recipe['compiler']['binary_sha256'],
                             'compiler_version': recipe['compiler']['version'], 'flags': recipe['flags']}
-        entries, folds = load_symbol_map(task, symbol_map)
-        coverage['aliases_declared'] = check_placement(task, entries, folds)
+        # Every entry is read, not only the names the function resolves: an added entry can alias or
+        # overlap the range or name an EH handler. A match record is carried across map additions
+        # only under tools/symbol_map.py carry_forward_problem, which must track these checks.
+        entries, folds, tls_entries = load_symbol_map(task, symbol_map)
+        coverage['aliases_declared'] = check_placement(task, entries, folds, tls_entries)
         obj, image = CoffObject(object_bytes), PeImage(image_bytes)
+        check_tls(image, entries, tls_entries)
         _, sec = find_function(obj, task['symbol'])
         need(len(sec.data) == task['size'], 'function-size-mismatch',
              f'candidate function is {len(sec.data)} bytes; task range is {task["size"]} bytes')
@@ -745,7 +819,7 @@ def compare(task, manifest, recipe_bytes, build_record, object_bytes, image_byte
         need(target_sec.flags & SCN_MEM_EXECUTE, 'target-not-code', 'target range is not in an executable section')
         coverage['code_bytes_total'] = task['size']
         check_relocation_layout(sec, len(sec.data), 'function')
-        function = Function(obj, sec, task, entries, image, coverage)
+        function = Function(obj, sec, task, entries, image, coverage, tls_entries)
         primary_entries = function.compare_unwind(sec)
         function.compare_code(sec, target, 'code_bytes_exact', 'code_bytes_by_reference')
         function.compare_funclets()

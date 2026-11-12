@@ -372,5 +372,89 @@ class PublicMapBindTests(BindTests):
         self.assertEqual((self.root / self.MAP).read_bytes(), blob)
 
 
+class ThreadLocalBindTests(unittest.TestCase):
+    """A SECREL reference binds only through a `tls:` hint, as a thread-local entry; _tls_index never."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.task_dir = self.root / 'task'
+        self.task_dir.mkdir()
+        unit = fx.tls_unit()
+        (self.root / 'obj').write_bytes(unit.coff())
+        image = unit.link({fx.TLS_INDEX: fx.TLS_INDEX_RVA}, tls=fx.tls_layout())
+        (self.root / 'image').write_bytes(image)
+        rva = unit.default_placement()[1]
+        pack = self.root / 'packs' / 't'
+        pack.mkdir(parents=True)
+        # Even a pack listing the very value the target's SECREL field holds must not bind it as an RVA.
+        refs = [{'target_rva': fx.TLS_OFFSET, 'community_names': [{'name': 'tSyntheticGuard', 'kind': 'data'}]},
+                {'target_rva': fx.TLS_INDEX_RVA, 'community_names': []}]
+        (pack / 'pack.json').write_text(json.dumps({'references': refs}))
+        task = {'symbols': 'symbols.json', 'functions': [
+            {'rva': hex(rva), 'size': len(fx.TLS_CODE), 'symbol': fx.TLS_FUNCTION,
+             'community_name': 'SyntheticTlsRead', 'pack': 'packs/t'}]}
+        (self.task_dir / 'task.json').write_text(json.dumps(task))
+        (self.task_dir / 'symbols.json').write_text(json.dumps(
+            {'schema': 1, 'symbols': {fx.TLS_FUNCTION: {'rva': rva, 'size': len(fx.TLS_CODE)}}}))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def run_bind(self, hints=None):
+        if hints is not None:
+            (self.task_dir / bind.HINTS).write_text(json.dumps(hints))
+        report = bind.bind(self.task_dir, self.root / 'obj', self.root / 'image', repo=self.root)
+        return report, json.loads((self.task_dir / 'symbols.json').read_text())['symbols']
+
+    def test_unhinted_thread_local_stays_unbound(self):
+        report, symbols = self.run_bind()
+        self.assertEqual(report['unbound_thread_locals'], [fx.TLS_VAR])
+        self.assertEqual(report['unbound_references'], [])
+        self.assertNotIn(fx.TLS_VAR, symbols)
+        self.assertNotIn(fx.TLS_INDEX, symbols)
+        self.assertIn('tls:0x<offset>', '\n'.join(bind.describe(report, self.task_dir)))
+
+    def test_tls_hint_writes_thread_local_entry(self):
+        report, symbols = self.run_bind({fx.TLS_VAR: hex(fx.TLS_OFFSET).replace('0x', 'tls:0x')})
+        self.assertEqual(report['unbound_thread_locals'], [])
+        self.assertEqual(symbols[fx.TLS_VAR], {'kind': 'thread-local', 'tls_offset': fx.TLS_OFFSET, 'size': None})
+        self.assertNotIn(fx.TLS_INDEX, symbols)
+        self.assertIn('thread-local hint', '\n'.join(bind.describe(report, self.task_dir)))
+
+    def test_malformed_tls_hint_rejected(self):
+        with self.assertRaises(ValueError):
+            self.run_bind({fx.TLS_VAR: 'tls:seven'})
+
+    def test_unused_tls_hint_is_listed_as_ignored(self):
+        hint = '?tUnused@@3HA'
+        report, symbols = self.run_bind({fx.TLS_VAR: hex(fx.TLS_OFFSET).replace('0x', 'tls:0x'), hint: 'tls:0x40'})
+        self.assertEqual([h['hint'] for h in report['ignored_hints']], [hint])
+        self.assertNotIn(hint, symbols)
+        self.assertIn(f'bind hint {hint} -> tls:0x40 ignored', '\n'.join(bind.describe(report, self.task_dir)))
+
+    def test_used_tls_hint_stays_used_once_bound(self):
+        hints = {fx.TLS_VAR: hex(fx.TLS_OFFSET).replace('0x', 'tls:0x')}
+        self.run_bind(hints)
+        report, _ = self.run_bind(hints)
+        self.assertEqual(report['ignored_hints'], [])
+
+    def test_thread_local_is_not_published_to_the_repository_map(self):
+        name = 'reports/synthetic-fixture/symbol-map.json'
+        task = json.loads((self.task_dir / 'task.json').read_text())
+        task['symbols'] = name
+        (self.task_dir / 'task.json').write_text(json.dumps(task))
+        smap = json.loads((self.task_dir / 'symbols.json').read_text())
+        smap.update(build_id='synthetic-fixture', folds=[])
+        path = self.root / name
+        path.parent.mkdir(parents=True)
+        path.write_text(json.dumps(smap, indent=2) + '\n')
+        blob = path.read_bytes()
+        (self.task_dir / bind.HINTS).write_text(json.dumps({fx.TLS_VAR: hex(fx.TLS_OFFSET).replace('0x', 'tls:0x')}))
+        with self.assertRaisesRegex(ValueError, 'thread-local'):
+            bind.bind(self.task_dir, self.root / 'obj', self.root / 'image', repo=self.root)
+        self.assertEqual(path.read_bytes(), blob)
+
+
 if __name__ == '__main__':
     unittest.main()

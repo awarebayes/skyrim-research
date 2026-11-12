@@ -51,7 +51,7 @@ class ComparatorTests(unittest.TestCase):
         self.assertEqual(report['target']['image_sha256'], args['task']['target_image_sha256'])
         self.assertEqual(report['recipe']['flags'], ['/O2', '/Gy'])
         self.assertEqual(len(report['recipe']['compiler_binary_sha256']), 64)
-        self.assertEqual(report['comparator']['version'], '0.4.0')
+        self.assertEqual(report['comparator']['version'], '0.5.0')
         self.assertEqual(report['contract_version'], 2)
         self.assertEqual(report['function'], {'build_id': 'synthetic-fixture', 'rva': 0x1010,
                                               'size': len(fx.CODE), 'symbol': fx.FUNCTION})
@@ -599,6 +599,183 @@ class ExceptionDataTests(unittest.TestCase):
             text = json.dumps(report).lower()
             self.assertEqual([w for w in windows if w in text], [], report['reason'])
             self.assertNotIn('SyntheticError', json.dumps(report))
+
+
+def tls_entry(offset=fx.TLS_OFFSET, size=4):
+    return {'kind': 'thread-local', 'tls_offset': offset, 'size': size}
+
+
+class ThreadLocalTests(unittest.TestCase):
+    """Thread-local variables: SECREL against declared TLS-template offsets, _tls_index from the image."""
+
+    def assertRejected(self, report, reason, detail=None):
+        self.assertEqual(report['result'], 'fail')
+        self.assertEqual(report['reason'], reason, report['detail'])
+        if detail:
+            self.assertIn(detail, report['detail'])
+
+    def assertPass(self, report):
+        self.assertEqual(report['result'], 'pass', report['detail'])
+        cov = report['coverage']
+        self.assertEqual(cov['code_bytes_exact'] + cov['code_bytes_by_reference'], len(fx.TLS_CODE))
+        self.assertEqual(cov['relocations_by_type'], {'REL32': 1, 'SECREL': 1})
+
+    def linked(self, **tls):
+        return fx.tls_unit().link({fx.TLS_INDEX: fx.TLS_INDEX_RVA}, tls=fx.tls_layout(**tls))
+
+    def test_fixture_links_secrel_as_template_offset(self):
+        image = self.linked()
+        args = fx.tls_inputs(image=image)
+        start = 0x400 + (args['task']['rva'] - 0x1000)
+        self.assertEqual(struct.unpack_from('<I', image, start + 0x10)[0], fx.TLS_OFFSET)
+
+    def test_extern_thread_local_passes(self):
+        self.assertPass(compare(**fx.tls_inputs()))
+
+    def test_variable_defined_in_tls_section_passes(self):
+        self.assertPass(compare(**fx.tls_inputs(unit=fx.tls_unit(var_section='.tls$'))))
+
+    def test_tls_index_map_entry_that_agrees_passes(self):
+        self.assertPass(compare(**fx.tls_inputs(index_entry=True)))
+
+    def test_member_addend_inside_variable_passes(self):
+        unit = fx.tls_unit(addend=4)
+        self.assertPass(compare(**fx.tls_inputs(unit=unit, var_entry=tls_entry(size=8))))
+
+    def test_unsized_entry_passes(self):
+        self.assertPass(compare(**fx.tls_inputs(var_entry=tls_entry(size=None))))
+
+    def test_wrong_offset_rejected(self):
+        report = compare(**fx.tls_inputs(var_entry=tls_entry(offset=fx.TLS_OFFSET + 4)))
+        self.assertRejected(report, 'relocation-target-mismatch', 'SECREL at +0x10')
+        self.assertIn('does not encode the offset of', report['detail'])
+
+    def test_target_reading_another_offset_rejected(self):
+        # The image reads 0x76c while the map declares 0x768: the target's displacement is not trusted.
+        report = compare(**fx.tls_inputs(tls=fx.tls_layout(offset=fx.TLS_OFFSET + 4)))
+        self.assertRejected(report, 'relocation-target-mismatch', 'SECREL')
+
+    def test_offset_outside_template_rejected(self):
+        report = compare(**fx.tls_inputs(var_entry=tls_entry(offset=fx.TLS_TEMPLATE_SIZE)))
+        self.assertRejected(report, 'tls-offset-outside-template')
+        # Starts inside, but its 4 bytes run past the end.
+        report = compare(**fx.tls_inputs(var_entry=tls_entry(offset=fx.TLS_TEMPLATE_SIZE - 2)))
+        self.assertRejected(report, 'tls-offset-outside-template')
+
+    def test_offset_past_shorter_template_rejected(self):
+        # Image and map agree on the field, but the directory's template ends before the variable.
+        tls = fx.tls_layout(offset=0x100, size=0x100)
+        report = compare(**fx.tls_inputs(tls=tls, var_entry=tls_entry(offset=0x100)))
+        self.assertRejected(report, 'tls-offset-outside-template')
+
+    def test_addend_outside_variable_rejected(self):
+        report = compare(**fx.tls_inputs(unit=fx.tls_unit(addend=4)))
+        self.assertRejected(report, 'tls-offset-outside-template', 'plus 4')
+
+    def test_secrel_to_non_tls_section_rejected(self):
+        for name in ('.data', '.rdata$tls', '.tlsx'):
+            with self.subTest(section=name):
+                report = compare(**fx.tls_inputs(unit=fx.tls_unit(var_section=name)))
+                self.assertRejected(report, 'unsupported-relocation', 'not thread-local')
+
+    def test_secrel_to_section_symbol_rejected(self):
+        unit = fx.tls_unit(var_section='.tls$')
+        unit.symbols.append(('.tls$', 0, 2, 0, fx.STORAGE_STATIC))
+        unit.sections[0][2] = [(o, '.tls$', k) if k == fx.SECREL else (o, s, k) for o, s, k in unit.sections[0][2]]
+        args = fx.tls_inputs(unit=unit, image=self.linked())
+        args['symbol_map']['symbols']['.tls$'] = tls_entry()
+        self.assertRejected(compare(**args), 'unsupported-relocation', 'section symbol')
+
+    def test_secrel_to_mapped_rva_rejected(self):
+        report = compare(**fx.tls_inputs(var_entry={'rva': 0x5000 + fx.TLS_OFFSET, 'size': 4}))
+        self.assertRejected(report, 'unsupported-relocation', 'not thread-local')
+
+    def test_missing_map_entry_rejected(self):
+        args = fx.tls_inputs()
+        del args['symbol_map']['symbols'][fx.TLS_VAR]
+        self.assertRejected(compare(**args), 'unresolved-symbol', fx.TLS_VAR)
+
+    def test_tls_index_map_entry_elsewhere_rejected(self):
+        args = fx.tls_inputs(index_entry=True)
+        args['symbol_map']['symbols'][fx.TLS_INDEX]['rva'] = fx.TLS_INDEX_RVA + 8
+        self.assertRejected(compare(**args), 'tls-index-mismatch')
+
+    def test_code_using_another_index_slot_rejected(self):
+        # The directory names 0x3200; the target's code reads 0x3208.
+        report = compare(**fx.tls_inputs(link_index=fx.TLS_INDEX_RVA + 8))
+        self.assertRejected(report, 'relocation-target-mismatch', '_tls_index')
+        # A map entry agreeing with the code but not with the directory does not rescue it.
+        args = fx.tls_inputs(link_index=fx.TLS_INDEX_RVA + 8, index_entry=True)
+        args['symbol_map']['symbols'][fx.TLS_INDEX]['rva'] = fx.TLS_INDEX_RVA + 8
+        self.assertRejected(compare(**args), 'tls-index-mismatch')
+
+    def test_candidate_defining_tls_index_rejected(self):
+        report = compare(**fx.tls_inputs(unit=fx.tls_unit(define_index=True)))
+        self.assertRejected(report, 'unsupported-relocation', '_tls_index')
+
+    def test_image_without_tls_directory_rejected(self):
+        image = self.linked(directory=None)
+        self.assertRejected(compare(**fx.tls_inputs(image=image)), 'tls-directory-missing')
+
+    def test_template_inside_another_section_passes(self):
+        # MSVC can merge the template into .rdata at a non-zero offset; SECREL stays template-relative.
+        self.assertPass(compare(**fx.tls_inputs(tls=fx.tls_layout(start=fx.TLS_SECTION_RVA + 0x10))))
+
+    def test_template_relative_not_section_relative(self):
+        # An image whose fields are offsets from the section start, not the template start, fails.
+        tls = fx.tls_layout(start=fx.TLS_SECTION_RVA + 0x10)
+        image = self.linked(offset=fx.TLS_OFFSET + 0x10, start=fx.TLS_SECTION_RVA + 0x10)
+        self.assertRejected(compare(**fx.tls_inputs(tls=tls, image=image)), 'relocation-target-mismatch', 'SECREL')
+
+    def test_template_past_section_end_rejected(self):
+        tls = fx.tls_layout(size=0x1001)
+        self.assertRejected(compare(**fx.tls_inputs(tls=tls)), 'unsupported-tls-layout')
+
+    def test_short_tls_directory_rejected(self):
+        tls = fx.tls_layout(directory_size=24)
+        self.assertRejected(compare(**fx.tls_inputs(tls=tls)), 'malformed-tls-directory')
+
+    def test_template_bounds_reversed_rejected(self):
+        tls = fx.tls_layout(size=-0x10)
+        self.assertRejected(compare(**fx.tls_inputs(tls=tls)), 'malformed-tls-directory')
+
+    def test_other_relocation_against_thread_local_rejected(self):
+        unit = fx.tls_unit(secrel_kind=fx.REL32)
+        self.assertRejected(compare(**fx.tls_inputs(unit=unit, image=self.linked())), 'tls-reference-kind')
+
+    def test_malformed_thread_local_entries_rejected(self):
+        for entry in ({'kind': 'thread-local', 'tls_offset': fx.TLS_OFFSET, 'rva': 0x5768, 'size': 4},
+                      {'kind': 'thread-local', 'size': 4}, {'kind': 'tls', 'tls_offset': fx.TLS_OFFSET, 'size': 4},
+                      {'tls_offset': fx.TLS_OFFSET, 'size': 4}, tls_entry(size=0)):
+            with self.subTest(entry=entry):
+                self.assertRejected(compare(**fx.tls_inputs(var_entry=entry)), 'invalid-symbol-map')
+        args = fx.tls_inputs()
+        args['symbol_map']['symbols'][fx.TLS_INDEX] = tls_entry(offset=0)
+        self.assertRejected(compare(**args), 'invalid-symbol-map', '_tls_index')
+
+    def test_thread_local_task_symbol_or_fold_rejected(self):
+        args = fx.tls_inputs()
+        args['symbol_map']['symbols'][fx.TLS_FUNCTION] = tls_entry(offset=0)
+        self.assertRejected(compare(**args), 'symbol-map-conflict', 'thread-local')
+        args = fx.tls_inputs(index_entry=True)
+        args['symbol_map']['folds'] = [[fx.TLS_VAR, fx.TLS_INDEX]]
+        self.assertRejected(compare(**args), 'invalid-symbol-map', 'folds')
+
+    def test_bad_thread_local_entry_fails_any_function(self):
+        # Thread-local entries are checked against the image even when the function does not use them.
+        args = fx.inputs()
+        args['symbol_map']['symbols']['?tOther@@3HA'] = tls_entry()
+        self.assertRejected(compare(**args), 'tls-directory-missing')
+
+    def test_maps_without_thread_local_entries_need_no_tls_directory(self):
+        self.assertEqual(compare(**fx.inputs())['result'], 'pass')
+
+    def test_tls_reports_contain_no_bytes(self):
+        reports = [compare(**fx.tls_inputs()), compare(**fx.tls_inputs(var_entry=tls_entry(offset=fx.TLS_OFFSET + 4)))]
+        windows = {fx.TLS_CODE[i:i + 4].hex() for i in range(len(fx.TLS_CODE) - 3)} - {'00000000'}
+        for report in reports:
+            text = json.dumps(report).lower()
+            self.assertEqual([w for w in windows if w in text], [], report['reason'])
 
 
 if __name__ == '__main__':

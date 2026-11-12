@@ -242,8 +242,12 @@ class Unit:
             cursor[key] += (len(data) + 15) // 16 * 16
         return placement
 
-    def link(self, externals, placement=None, drop_pdata=(), extra_pdata=(), patches=None):
-        """Return a PE32+ image: sections placed, relocations applied, .pdata gathered and sorted."""
+    def link(self, externals, placement=None, drop_pdata=(), extra_pdata=(), patches=None, tls=None):
+        """Return a PE32+ image: sections placed, relocations applied, .pdata gathered and sorted.
+
+        `tls` adds a `.tls` image section and a TLS directory (see `tls_layout`); SECREL fields get
+        the variable's offset in that template, as the MSVC linker writes them.
+        """
         placement = placement or self.default_placement()
 
         def address(symbol):
@@ -272,9 +276,11 @@ class Unit:
                 continue
             at = placement[number]
             for off, sym, kind in rels:
-                addend = struct.unpack_from('<i' if kind != ADDR32NB else '<I', data, off)[0]
+                addend = struct.unpack_from('<i' if kind not in (ADDR32NB, SECREL) else '<I', data, off)[0]
                 if kind == ADDR32NB:
                     struct.pack_into('<I', out, off, address(sym) + addend)
+                elif kind == SECREL:
+                    struct.pack_into('<I', out, off, tls['offsets'][sym] + addend)
                 else:
                     tail = {REL32: 0, REL32_1: 1}[kind]
                     struct.pack_into('<i', out, off, address(sym) + addend - (at + off + 4 + tail))
@@ -282,13 +288,26 @@ class Unit:
             memory[image_name][at - bases[image_name]:at - bases[image_name] + len(out)] = out
         pdata = sorted(pdata + list(extra_pdata))
         memory['.pdata'][0:12 * len(pdata)] = b''.join(dwords(*e) for e in pdata)
+        sections = list(IMAGE_SECTIONS)
+        tls_dir = None
+        if tls:
+            sections.append(('.tls', tls['section_rva'], 0xC0000040))
+            memory['.tls'] = bytearray(tls['section_size'])
+            bases['.tls'] = tls['section_rva']
+        if tls and tls['directory'] is not None:
+            base = 0x140000000
+            directory = struct.pack('<QQQQII', base + tls['start'], base + tls['end'], base + tls['index'], 0, 0, 0)
+            at = tls['directory'] - bases['.rdata']
+            memory['.rdata'][at:at + len(directory)] = directory
+            tls_dir = (tls['directory'], tls.get('directory_size', len(directory)))
         for rva, blob in (patches or {}).items():
-            image_name = next(n for n, base, _f in IMAGE_SECTIONS if base <= rva < base + SECTION_SPAN)
+            image_name = next(n for n, base, _f in sections if base <= rva < base + SECTION_SPAN)
             memory[image_name][rva - bases[image_name]:rva - bases[image_name] + len(blob)] = blob
-        return assemble_pe([(n, rva, bytes(memory[n]), f) for n, rva, f in IMAGE_SECTIONS], (0x4000, 12 * len(pdata)))
+        return assemble_pe([(n, rva, bytes(memory[n]), f) for n, rva, f in sections], (0x4000, 12 * len(pdata)),
+                           tls_dir)
 
 
-def assemble_pe(sections, exception_dir):
+def assemble_pe(sections, exception_dir, tls_dir=None):
     blob = bytearray(0x400 + SECTION_SPAN * len(sections))
     blob[0:2] = b'MZ'
     struct.pack_into('<I', blob, 60, 0x40)
@@ -302,6 +321,8 @@ def assemble_pe(sections, exception_dir):
     struct.pack_into('<H', blob, opt + 68, 3)
     struct.pack_into('<I', blob, opt + 108, 16)
     struct.pack_into('<II', blob, opt + 112 + 8 * 3, *exception_dir)
+    if tls_dir:
+        struct.pack_into('<II', blob, opt + 112 + 8 * 9, *tls_dir)
     for i, (name, rva, content, flags) in enumerate(sections):
         raw_ptr = 0x400 + SECTION_SPAN * i
         struct.pack_into('<8sIIIIIIHHI', blob, opt + 0xF0 + 40 * i, name.encode(), len(content), rva, len(content),
@@ -577,3 +598,66 @@ def switch_unit():
     for i, label in enumerate(('$LN2', '$LN3', '$LN4')):
         u.reloc(f, SWITCH_TABLE + 4 * i, label, ADDR32NB)
     return u
+
+
+# --- Thread-local variable: _tls_index, the TLS array at gs:[0x58], a SECREL displacement ------
+
+TLS_FUNCTION = 'SyntheticTlsRead'
+TLS_VAR = '?tSyntheticGuard@@3HA'
+TLS_INDEX = '_tls_index'
+TLS_CODE = bytes.fromhex(
+    '8b0500000000'          # +0x00 mov  eax, [rip+_tls_index]      (REL32 at +0x02)
+    '65488b0c2558000000'    # +0x06 mov  rcx, gs:[0x58]             (TLS array)
+    'ba00000000'            # +0x0f mov  edx, tSyntheticGuard        (SECREL at +0x10)
+    '488b04c1'              # +0x14 mov  rax, [rcx+rax*8]
+    '8b0402'                # +0x18 mov  eax, [rdx+rax]
+    'c3')                   # +0x1b ret
+TLS_OFFSET = 0x768
+TLS_INDEX_RVA = 0x3200
+TLS_SECTION_RVA = 0x5000
+TLS_TEMPLATE_SIZE = 0x800
+TLS_DIRECTORY_RVA = 0x2F00
+SCN_TLS = 0xC0300040
+
+
+def tls_unit(var_section=None, addend=0, secrel_kind=SECREL, define_index=False):
+    """`var_section` defines the variable in a candidate section of that name (otherwise extern)."""
+    u = Unit()
+    f = u.section('.text$mn', TLS_CODE, SCN_TEXT)
+    u.define(TLS_FUNCTION, f, storage=STORAGE_EXTERNAL, function=True)
+    if define_index:
+        d = u.section('.data', dwords(0), 0xC0300040)
+        u.define(TLS_INDEX, d, storage=STORAGE_EXTERNAL)
+    else:
+        u.external(TLS_INDEX)
+    if var_section:
+        v = u.section(var_section, dwords(0, 0), SCN_TLS)
+        u.define(TLS_VAR, v, storage=STORAGE_EXTERNAL)
+    else:
+        u.external(TLS_VAR)
+    u.reloc(f, 0x02, TLS_INDEX, REL32)
+    struct.pack_into('<I', u.sections[f - 1][1], 0x10, addend)
+    u.reloc(f, 0x10, TLS_VAR, secrel_kind)
+    return u
+
+
+def tls_layout(offset=TLS_OFFSET, index=TLS_INDEX_RVA, start=TLS_SECTION_RVA, size=TLS_TEMPLATE_SIZE, **extra):
+    layout = {'offsets': {TLS_VAR: offset}, 'index': index, 'start': start, 'end': start + size,
+              'section_rva': TLS_SECTION_RVA, 'section_size': 0x1000, 'directory': TLS_DIRECTORY_RVA}
+    layout.update(extra)
+    return layout
+
+
+def tls_inputs(unit=None, tls=None, image=None, var_entry=None, index_entry=False, link_index=TLS_INDEX_RVA):
+    """Inputs for TLS_FUNCTION; the map declares the variable thread-local and, if asked, _tls_index.
+
+    `link_index` is the slot the code's REL32 is linked against; `tls` the directory the image shows.
+    """
+    unit = unit or tls_unit()
+    tls = tls or tls_layout()
+    args = unit_inputs(unit, TLS_FUNCTION, {TLS_INDEX: link_index}, image=image, tls=tls)
+    symbols = {TLS_VAR: var_entry or {'kind': 'thread-local', 'tls_offset': TLS_OFFSET, 'size': 4}}
+    if index_entry:
+        symbols[TLS_INDEX] = {'rva': TLS_INDEX_RVA, 'size': 8}
+    args['symbol_map']['symbols'] = symbols
+    return args

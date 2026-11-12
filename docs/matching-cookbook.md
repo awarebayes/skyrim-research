@@ -131,6 +131,18 @@ inline it into `??_G`. Fix: declare the destructor out of line without a definit
 `??1X@@...` to the target's callee with a bind hint; the `??_G` is still emitted beside the vftable
 (rule 14). Closed Character's destructor 0x73abc0.
 
+**21. A read through `gs:[0x58]` indexed by `_tls_index` is a `__declspec(thread)` variable.**
+(medium)
+Symptom: the target loads `_tls_index`, reads the TLS array at `gs:[0x58]`, indexes it and adds a
+small constant, the variable's offset in the TLS template; an ordinary global gives a `REL32`
+where the target has that constant, and an intrinsic `__readgsqword` read changes the frame and
+registers. Fix: declare `extern __declspec(thread) T name;` (a thread-safe function-local static
+reads the CRT's `_Init_thread_epoch` the same way) and bind it with the hint
+`{"<decorated name>": "tls:0x<offset>"}`; `_tls_index` needs no hint. Give each variable one name
+and offset for every function that uses it. Compared from comparator 0.5.0 on (earlier:
+`unsupported-relocation` SECREL); measured on synthetic code only. Seen in TESForm 0x1e6930 and
+0x1e5b30, not yet closed.
+
 ## Unsolved patterns
 
 **12. A pure callee-saved register swap with the same instructions.** (low)

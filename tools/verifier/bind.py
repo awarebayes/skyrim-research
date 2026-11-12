@@ -58,6 +58,13 @@ match record in the checkout valid (a draft renaming its own function); otherwis
 and the change needs `tools/symbol_map.py add --allow-change`. A private `symbols.json` is edited
 in place as before.
 
+Thread-local variables (references by a SECREL relocation) are never bound by position or name:
+only a hint `"<name>": "tls:0x<offset>"` binds one, as a `thread-local` map entry with that
+TLS-template offset (docs/comparator-contract.md, "Thread-local variables"). `_tls_index` needs
+no entry; the comparator takes it from the image's TLS directory. A `tls:` hint that no compared
+SECREL reference uses is listed under ignored hints. Thread-local entries go into private maps
+only: tools/symbol_map.py accepts RVA entries, so bind refuses to publish one to the repository map.
+
 `bind-hints.json` (private, optional), keys are decorated names (`?...`) or qualified names as
 the Drafter wrote them (`BSTimer::QGlobalTimeMultiplier`, `GetArmorKind`), values are RVAs:
 
@@ -89,6 +96,10 @@ HINTS = 'bind-hints.json'
 BINDING_REASONS = {'function-symbol-missing', 'unresolved-symbol'}
 REL32_TAIL = {0x04: 0, 0x05: 1, 0x06: 2, 0x07: 3, 0x08: 4, 0x09: 5}
 ADDR32NB = 0x03
+SECREL = 0x0B
+TLS_HINT = re.compile(r'tls:(0x[0-9a-fA-F]+|[0-9]+)')
+# Resolved by the comparator from the image's TLS directory, so it never gets a map entry.
+DIRECTORY_SYMBOLS = {'_tls_index'}
 UNDNAME = ('llvm-undname', '/opt/homebrew/opt/llvm/bin/llvm-undname', '/usr/local/opt/llvm/bin/llvm-undname')
 
 
@@ -453,14 +464,32 @@ def annotate_destructors(task, repo=REPO):
     return changed
 
 
-def load_hints(task_dir):
+def _raw_hints(task_dir):
     path = Path(task_dir) / HINTS
     if not path.is_file():
         return {}
     raw = json.loads(path.read_text())
     if not isinstance(raw, dict):
         raise ValueError(f'{path}: must be a JSON object of name -> RVA')
-    return {str(k): parse_rva(v) for k, v in raw.items() if not str(k).startswith('_')}
+    return {str(k): v for k, v in raw.items() if not str(k).startswith('_')}
+
+
+def load_hints(task_dir):
+    """name -> RVA hints; `tls:` values are thread-local offsets and are read by load_tls_hints."""
+    return {k: parse_rva(v) for k, v in _raw_hints(task_dir).items()
+            if not (isinstance(v, str) and v.startswith('tls:'))}
+
+
+def load_tls_hints(task_dir):
+    """name -> TLS-template offset from hints of the form "tls:0x<offset>"."""
+    out = {}
+    for k, v in _raw_hints(task_dir).items():
+        if isinstance(v, str) and v.startswith('tls:'):
+            m = TLS_HINT.fullmatch(v)
+            if not m:
+                raise ValueError(f'not a thread-local offset: {v!r}')
+            out[k] = int(m.group(1), 0)
+    return out
 
 
 def pack_references(repo, fn):
@@ -492,10 +521,13 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
     obj = CoffObject(Path(obj_path).read_bytes())
     image = PeImage(Path(image_path).read_bytes()) if image_path and Path(image_path).is_file() else None
     hints = load_hints(task_dir)
+    tls_hints = load_tls_hints(task_dir)
+    tls_used = set()
     names = Names(find_undname(objdump))
     defined = defined_functions(obj)
-    names.load(list(defined) + [s.name for s in obj.symbols.values()] + list(hints))
+    names.load(list(defined) + [s.name for s in obj.symbols.values()] + list(hints) + list(tls_hints))
     report = {'functions': [], 'references': [], 'unbound_functions': [], 'unbound_references': [],
+              'unbound_thread_locals': [],
               'renamed': [], 'ignored_hints': [], 'destructor_choices': [], 'warnings': [], 'changed': False}
     if annotate_destructors(task, repo):
         report['changed'] = True
@@ -615,7 +647,27 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
             pending = []
             for rel, target in outgoing(obj, index):
                 ref = target.name
-                if target.section in group or ref in own:
+                if target.section in group or ref in own or ref in DIRECTORY_SYMBOLS:
+                    continue
+                if rel.kind == SECREL:
+                    # A TLS offset is not an RVA: neither the pack's references nor the target's field
+                    # name it, so only an explicit hint binds it.
+                    q = names(ref)
+                    key = ref if ref in tls_hints else q if q in tls_hints else None
+                    if key is not None:
+                        tls_used.add(key)
+                    if ref in symbols:
+                        continue
+                    if key is None:
+                        if ref not in report['unbound_thread_locals']:
+                            report['unbound_thread_locals'].append(ref)
+                        continue
+                    symbols[ref] = {'kind': 'thread-local', 'tls_offset': tls_hints[key], 'size': None}
+                    found[ref] = ('thread-local hint', None)
+                    report['references'].append({'symbol': ref, 'tls_offset': hex(tls_hints[key]),
+                                                 'how': 'thread-local hint',
+                                                 **({'from': 'funclet'} if is_funclet else {})})
+                    report['changed'] = True
                     continue
                 hinted = hint_for(ref)
                 if ref in symbols and hinted is not None and symbols[ref].get('rva') != hinted:
@@ -670,6 +722,10 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
                 report['references'].append({'symbol': ref, 'rva': hex(value), 'how': how,
                                              **({'from': 'funclet'} if is_funclet else {})})
                 report['changed'] = True
+    for key, offset in tls_hints.items():
+        if key not in tls_used:
+            report['ignored_hints'].append({'hint': key, 'rva': f'tls:{hex(offset)}',
+                                            'reason': 'no SECREL reference of a compared function or funclet has that name'})
     if report['changed']:
         if public:
             publish(Path(repo), map_name, smap, before, found)
@@ -683,6 +739,10 @@ def publish(repo, map_name, smap, before, found):
     """Apply bind's edits to the repository map through tools/symbol_map.py (see the module doc)."""
     after = smap['symbols']
     touched = {n: e for n, e in after.items() if before.get(n) != e}
+    tls = sorted(n for n, e in touched.items() if 'rva' not in e)
+    if tls:
+        raise ValueError(f'thread-local entries ({", ".join(tls)}) are not added to the repository map; '
+                         'give the task a private symbols.json')
     incoming = {'schema': 1, 'build_id': smap.get('build_id'), 'symbols': touched,
                 '_provenance': {'entries': [
                     {'name': n, 'rva': hex(e['rva']), 'size_from': 'task' if e.get('size') else None,
@@ -699,7 +759,7 @@ def describe(report, task_dir):
     bound = [f for f in report['functions'] if f['how'] != 'kept'] + report['references']
     if bound:
         lines.append('  bound: ' + '; '.join(
-            f'{b.get("rva")} {"<-" if "symbol" in b else ""} {b["symbol"][:60]} ({b["how"]})' for b in bound[:6])
+            f'{b.get("rva") or "tls+" + b.get("tls_offset", "?")} {"<-" if "symbol" in b else ""} {b["symbol"][:60]} ({b["how"]})' for b in bound[:6])
             + (f' ... {len(bound) - 6} more' if len(bound) > 6 else ''))
     for r in report['renamed']:
         lines.append(f'  decorated name changed for {r["rva"]}: {r["old"]} -> {r["new"]}')
@@ -725,6 +785,9 @@ def describe(report, task_dir):
             lines.append('    defined in object: ' + ', '.join(f['defined_in_object'][:6]))
     for name in report['unbound_references']:
         lines.append(f'  UNBOUND reference {name}: add {{"{name}": "0x<rva from the pack table>"}} to {hints}')
+    for name in report.get('unbound_thread_locals', []):
+        lines.append(f'  UNBOUND thread-local {name}: add {{"{name}": "tls:0x<offset>"}} to {hints}; the offset is '
+                     'the displacement the target adds to the TLS block, the same for every function using it')
     return lines
 
 
@@ -748,7 +811,8 @@ def main(argv=None):
         config = json.loads(cfg.read_text())
     report = bind(task_dir, obj, a.image or config.get('image'), config.get('objdump'))
     print('\n'.join(describe(report, task_dir)) or '  nothing to bind')
-    return 1 if report['unbound_functions'] or report['unbound_references'] or report['ignored_hints'] else 0
+    return 1 if (report['unbound_functions'] or report['unbound_references'] or report['unbound_thread_locals']
+                 or report['ignored_hints']) else 0
 
 
 if __name__ == '__main__':

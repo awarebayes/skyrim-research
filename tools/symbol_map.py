@@ -98,6 +98,10 @@ def check_map(smap, what='symbol map'):
         load_symbol_map({'build_id': smap['build_id']}, smap)
     except Reject as exc:
         raise ValueError(f'{what}: {exc.reason}: {exc.detail}') from None
+    # The overlap, ordering and carry-forward rules here compare RVAs; a thread-local entry holds a
+    # TLS-template offset instead, so it stays in private task maps until those rules cover it.
+    tls = sorted(n for n, e in smap['symbols'].items() if 'kind' in e)
+    require(not tls, f'{what}: thread-local entries ({", ".join(tls)}) are not supported in a repository map')
     entries = provenance_entries(smap)
     if entries is not None:
         names = [e.get('name') if isinstance(e, dict) else None for e in entries]

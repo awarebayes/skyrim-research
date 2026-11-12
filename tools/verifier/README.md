@@ -87,6 +87,11 @@ repository symbol map, and refuses to overwrite a record without `--replace`. Bo
   data in an image with the comparator's layouts and prints counts only: handlers by kind, how
   many decode completely, reasons for the rest, and with `--sample` the survey sample's supported
   share before and after contract v2.
+- `build_tls.sh <msvc-dir> <new-output-dir>`: compiles `synthetic/tls_cases.cpp` (linked into
+  `tls.dll` with a map) and the perturbed `synthetic/tls_variant.cpp` (compiled only).
+- `tls_compare.py <build-dir>`: the comparator's thread-local rules on that build: every `tls_`
+  function passes with a map whose TLS-template names are `thread-local` entries; the variant
+  object and altered maps or images fail. Metadata output only.
 - `synthetic/`: original test sources. No third-party code.
 - `verify_function.py`: runs `tools/compare.py` for one candidate function from a task
   description file and prints a sanitized summary.

@@ -24,6 +24,9 @@ reference table to `.local/tasks/<task-id>/bind-hints.json`, for example
 (decorated or `Class::member` names). Never edit `symbols.json` or `task.json`, and never give an
 RVA the pack does not list. `decorated name changed` means a declaration change (for example
 `struct` vs `class`, `const`, a parameter type) renamed a function; check that it was intended.
+A thread-local (the target reads `gs:[0x58]` indexed by `_tls_index`, then adds a constant offset)
+is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated name>":
+"tls:0x<offset the target adds>"}` (`UNBOUND thread-local` asks for it); `_tls_index` needs no hint.
 
 **Source rules** (`python3 tools/check.py` runs the lint; a Reviewer rejects the rest):
 - Plausible C++ for what the function does. Not allowed anywhere in a file, comments included:

@@ -1,12 +1,15 @@
 # Comparator contract, version 2
 
 Status: **draft for maintainer review.** Implemented by `tools/compare.py` (comparator version
-0.4.0) with parsing in `tools/pecoff.py`, exercised by original synthetic fixtures generated
+0.5.0) with parsing in `tools/pecoff.py`, exercised by original synthetic fixtures generated
 in `tests/synthetic_pecoff.py` and by real MSVC output of original synthetic sources
 (`tools/verifier/synthetic/eh_cases.cpp`, `eh_gs.cpp`), and run against the pinned image for
 the accepted functions. Version 2 adds exception and termination handlers with their data and
 funclets, chained unwind info and several `.pdata` entries per function, and makes jump tables
-explicit; everything version 1 compared is compared the same way. A `pass` result is evidence under
+explicit; everything version 1 compared is compared the same way. Comparator 0.5.0 adds
+thread-local variables (`SECREL` against a declared TLS-template offset, `_tls_index` from the
+TLS directory) within contract version 2; see "Thread-local variables" and "Versions and earlier
+results". A `pass` result is evidence under
 [verification](verification.md); it is not acceptance and never sets a function to `matched`.
 A `matched` status needs a match record and a Reviewer `approve` record that `tools/check.py`
 accepts (`docs/verification.md`, "Acceptance rule" and "Match gate").
@@ -23,7 +26,7 @@ All inputs are local files. Each one is checked against the task before bytes ar
 | build record | written when the candidate was compiled: `source_revision`, `source_path`, `recipe_sha256`, `object_sha256` | equal to the task, and `object_sha256` equals the candidate object's hash (`stale-source-revision`, `source-path-mismatch`, `stale-recipe`, `object-provenance-mismatch`) |
 | candidate object | x86-64 COFF object produced by the recipe | parsed per "Supported formats" |
 | target image | PE32+ x86-64 image | SHA-256 equals the pinned hash (`image-hash-mismatch`) |
-| symbol map | `{schema: 1, build_id, symbols: {name: {rva, size or null}}, folds: [[name, ...]]}` | same `build_id` as the task (`symbol-map-build-mismatch`) |
+| symbol map | `{schema: 1, build_id, symbols: {name: entry}, folds: [[name, ...]]}`; an entry is `{rva, size or null}` (code or data) or `{kind: "thread-local", tls_offset, size or null}` | same `build_id` as the task (`symbol-map-build-mismatch`); entry shape (`invalid-symbol-map`); thread-local entries against the image's TLS directory ("Thread-local variables") |
 
 The comparator records the compiler hash, version and flags as given. It does not verify that
 the compiler binary has that hash, that the source revision produces the object, or that the
@@ -77,10 +80,13 @@ Supported relocation types:
 | `REL32` | `S + A - (P + 4)` as signed 32-bit |
 | `REL32_1` .. `REL32_5` | `S + A - (P + 4 + k)`, for an instruction with `k` immediate bytes after the field |
 | `ADDR32NB` | `S + A` as unsigned 32-bit (RVA) |
+| `SECREL` | `T + A` as unsigned 32-bit, in code only, against a thread-local variable (below) |
 
-`S` is the symbol's target RVA, `A` the inline addend, `P` the field's target RVA. Tests exercise
-`REL32`, `REL32_1` (code), `ADDR32NB` (`.pdata`, EH data, jump tables); `REL32_2`..`REL32_5`
-share the `REL32_1` code path but have no dedicated fixture.
+`S` is the symbol's target RVA, `A` the inline addend, `P` the field's target RVA, `T` the
+variable's declared offset in the image's TLS template. Tests exercise `REL32`, `REL32_1` (code),
+`ADDR32NB` (`.pdata`, EH data, jump tables) and `SECREL` (code); `REL32_2`..`REL32_5` share the
+`REL32_1` code path but have no dedicated fixture. `SECREL` is accepted only in the function's
+and funclets' code; in `.pdata`, unwind info or EH data it stays `unsupported-relocation`.
 
 ### Jump tables
 
@@ -95,6 +101,87 @@ RVA is `symbol-map-conflict`. The report counts `ADDR32NB` fields whose symbol l
 function's own section as `self_rva_fields`. Tables placed outside the section (not seen from
 MSVC 19.16) would reference another section and need the map, like any data.
 
+### Thread-local variables
+
+MSVC x64 reads a `__declspec(thread)` variable (and the thread-safe-statics epoch
+`_Init_thread_epoch`, which is one) as: load `_tls_index` (`REL32`), read the TLS array at
+`gs:[0x58]` (plain bytes), index it, then address the variable at a 32-bit displacement relocated
+with `SECREL`. For a symbol in the TLS template the MSVC 19.16 linker writes that field as the
+symbol's offset from the template start, which is its offset in every thread's TLS block
+(measured on `tools/verifier/synthetic/tls_cases.cpp`: the linker merged the template into
+`.rdata` at a non-zero section offset, and every field equalled the symbol's map address minus
+`StartAddressOfRawData`, not minus the section start). The instruction bytes around the field
+are compared exactly, so the access pattern is the candidate's; only the two references need
+rules.
+
+Image side. The TLS directory (data directory 9, `IMAGE_TLS_DIRECTORY64`) is read only when the
+map has a thread-local entry or a `_tls_index` entry, or the candidate references `_tls_index`
+or uses `SECREL`; a missing directory then is `tls-directory-missing`. It must be at least 40
+bytes and readable; `StartAddressOfRawData`, `EndAddressOfRawData` and `AddressOfIndex` are
+virtual addresses and become RVAs by subtracting the image base; start must not exceed end and
+the template start and the index slot must lie in a section (`malformed-tls-directory`). The
+template `[start, end)` must end inside the section it starts in (`unsupported-tls-layout`).
+`SizeOfZeroFill`, the callbacks and the characteristics are not used: an offset in the zero-fill
+area is rejected like any offset outside `[0, end - start)`.
+
+Map side. A thread-local variable has an entry of its own kind, never an RVA:
+
+```json
+"?tGuard@@3HA": {"kind": "thread-local", "tls_offset": 1896, "size": 4}
+```
+
+`tls_offset` is the offset from the template start, `size` the variable's size or null. Such an
+entry must not carry `rva`; any other `kind` is `invalid-symbol-map`. Every thread-local entry
+is checked against the template before code is compared: `tls_offset + max(size, 1)` must not
+exceed the template size (`tls-offset-outside-template`). Thread-local entries take no part in
+placement, alias, fold or overlap checks, which concern RVAs; a fold or the task symbol naming one
+is `invalid-symbol-map` or `symbol-map-conflict`.
+
+Code side, for each `SECREL` field:
+
+- the referenced symbol is resolved **by name** through a thread-local map entry only. A symbol
+  missing from the map is `unresolved-symbol`; one whose entry is an RVA entry is
+  `unsupported-relocation` (`SECREL` to something that is not thread-local);
+- the candidate symbol must be undefined (an `extern __declspec(thread)` declaration) or defined
+  in a candidate section named `.tls` or `.tls$...`; a symbol in any other section, a section
+  symbol, or an absolute or debug symbol is `unsupported-relocation`. The candidate's own offset
+  in its `.tls$` section is never used: placement comes from the map, as for any data;
+- the inline addend `A` is read as unsigned 32-bit; with a sized entry it must be less than
+  `size`, and in every case `T + A` must lie inside the template (`tls-offset-outside-template`);
+- the target field must equal `T + A` exactly (`relocation-target-mismatch`). The comparator
+  never derives `T` from the target's displacement.
+
+Any other relocation type against a thread-local entry is `tls-reference-kind`. `_tls_index`,
+when undefined in the candidate, resolves to `AddressOfIndex` minus the image base and needs no
+map entry; a map entry for it must give that RVA (`tls-index-mismatch`), and a map that declares
+it thread-local is `invalid-symbol-map`. A candidate that defines `_tls_index` itself is
+`unsupported-relocation` on any reference to it.
+
+What this establishes: the function reads and writes the same TLS-template offsets, through the
+same index slot, as the target, and the candidate names each offset with the variable the map
+declares there. What it does not: the template's initial contents (as for `.rdata`, addresses
+only), the candidate's `.tls$` bytes, the size of the template, TLS callbacks or dynamic
+initializers of `thread_local` objects (ordinary functions, compared only if the inventory gives
+them a range), and whether two map names share one offset (not checked, as for data RVAs).
+
+Where the offset comes from. A thread-local entry, like a data RVA bound by position, is read
+from the target's own code (the constant it adds to the TLS block), so for one function it is
+not independent evidence of identity; what the comparison adds is that one map entry serves every
+function using that name, so all of them must agree on it. Drafters do not edit the map: a bind
+hint `"<decorated name>": "tls:0x<offset>"` makes `tools/verifier/bind.py` write the entry
+(`bind.py` never binds a `SECREL` reference by position or community name), and integration
+copies it to the repository map like any other entry.
+
+Measured proof (`tools/verifier/build_tls.sh`, `tools/verifier/tls_compare.py`, pinned compiler
+and linker on the standing verifier machine, compared there and on macOS with identical
+summaries): a plain read, a two-variable update, a struct member, a thread-safe static
+(`_Init_thread_epoch`) and a catch funclet reading a thread-local all pass; the perturbed
+`tls_variant.cpp` (same functions reading another variable or member) and altered maps and images
+(wrong offset, offset outside the template, missing entry, entry given as an RVA, `_tls_index`
+entry or directory slot moved, no TLS directory) all fail with the reasons above. The pinned
+target image has the same layout as the synthetic DLL: one TLS directory, its template inside
+`.rdata` but not at its start, no zero-fill.
+
 ## Mapping source symbols to target RVAs
 
 An object file has no final placement, so placement comes from outside it:
@@ -103,7 +190,9 @@ An object file has no final placement, so placement comes from outside it:
 - A symbol in a section **bound** by the exception data (funclet code, handler data; see below)
   resolves to that section's bound RVA plus the symbol offset. Binding happens only through a
   compared field and every bound section is compared in full, so no placement is taken on trust.
-- `__ImageBase` resolves to 0 (see "Jump tables").
+- `__ImageBase` resolves to 0 (see "Jump tables"); an undefined `_tls_index` resolves to the
+  image's TLS index slot, and a `SECREL` symbol to its thread-local entry's offset (see
+  "Thread-local variables").
 - Every other symbol, defined elsewhere in the object or undefined, is looked up **by name** in
   the symbol map for the task's build. A missing name is `unresolved-symbol`; there is no
   fallback and no guess.
@@ -293,8 +382,8 @@ under `.local/`. Exit status is 0 for `pass`, 1 for `fail`, 2 for unreadable inp
 
 ## Explicitly unsupported in version 2
 
-- `ADDR64`, `ADDR32`, `SECTION`, `SECREL`, `SECREL7`, `TOKEN`, `SREL32`, `PAIR`, `SSPAN32` and
-  `ABSOLUTE` relocations. `ADDR64` in particular would also need the image's base relocations to be
+- `ADDR64`, `ADDR32`, `SECTION`, `SECREL7`, `TOKEN`, `SREL32`, `PAIR`, `SSPAN32` and
+  `ABSOLUTE` relocations, and `SECREL` anywhere but against a thread-local variable in code. `ADDR64` in particular would also need the image's base relocations to be
   checked, which is not implemented.
 - Unwind info version 2; `__CxxFrameHandler4` and its compressed data; `FuncInfo` magic other
   than `0x19930522`; any other language-specific handler.
@@ -308,6 +397,33 @@ under `.local/`. Exit status is 0 for `pass`, 1 for `fail`, 2 for unreadable inp
 - Data placed in the code range by a layout other than the jump tables above.
 - Checking that `.rdata` data referenced by the function has the same contents. Only addresses
   are checked, not the bytes stored there.
+
+## Versions and earlier results
+
+| comparator | contract | change |
+|---|---|---|
+| 0.4.0 | 2 | EH data, funclets, chained unwind, jump tables |
+| 0.5.0 | 2 | thread-local variables: `SECREL` in code against thread-local map entries, `_tls_index` from the TLS directory, the `thread-local` map entry kind |
+
+0.5.0 widens what can pass and also turns some 0.4.0 passes into fails. A candidate without a
+`SECREL` relocation, compared with a map whose entries carry no `kind` key and which has no
+`_tls_index` entry, takes exactly the 0.4.0 path, so every 0.4.0 `pass` and every 0.4.0 `fail`
+other than `unsupported-relocation` for `SECREL` (and `invalid-symbol-map` for an entry without
+`rva`) is the result 0.5.0 gives. Outside that set results can change in both directions: an
+RVA entry with an extra `kind` key (0.4.0 ignored it) is now `invalid-symbol-map`; a `_tls_index`
+entry in an image without a TLS directory, or one disagreeing with the directory, now fails
+(`tls-directory-missing`, `malformed-tls-directory` or `tls-index-mismatch`); and an undefined
+`_tls_index` used to resolve through the map and now resolves through the TLS directory. No
+accepted function's map names `_tls_index` or gives an entry a `kind` (the repository symbol map
+has neither), so no accepted result depends on these changes. The reason codes of 0.4.0 and
+`candidate.code_section_sha256` are unchanged; `relocations_by_type` may now count `SECREL`.
+
+That is a statement about results, not about records. The match gate binds every report to the
+current comparator version and source hash (`docs/verification.md`, "Comparator"), so a version
+change still makes every match record stale until it is regenerated by real runs, as was done
+for 0.4.0. Reviewer records bind the unit digest and the code-section hash, neither of which a
+comparator change alters, so regenerated records with the same digest keep their approvals and
+need no re-review, full or delta.
 
 ## Where verification.md is silent or ambiguous
 

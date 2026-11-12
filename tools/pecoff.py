@@ -32,7 +32,9 @@ UNW_FLAG_UHANDLER = 0x2
 UNW_FLAG_CHAININFO = 0x4
 
 EXCEPTION_DIRECTORY = 3
+TLS_DIRECTORY = 9
 RUNTIME_FUNCTION_SIZE = 12
+TLS_DIRECTORY64_SIZE = 40
 
 
 class Reject(Exception):
@@ -197,6 +199,10 @@ class PeImage:
         self.exception_dir = (0, 0)
         if ndirs > EXCEPTION_DIRECTORY:
             self.exception_dir = unpack('<II', blob, opt + 112 + 8 * EXCEPTION_DIRECTORY, 'exception directory')
+        self.tls_dir = (0, 0)
+        if ndirs > TLS_DIRECTORY:
+            self.tls_dir = unpack('<II', blob, opt + 112 + 8 * TLS_DIRECTORY, 'TLS directory')
+        self._tls = None
         self.sections = read_sections(blob, opt + optsize, nsec, None, 'image')
         for sec in self.sections:
             if sec.raw_size:
@@ -218,6 +224,39 @@ class PeImage:
             # The tail of a section beyond its raw data is loader zero-fill, not file content.
             raise Reject('target-range-truncated', f'{what} extends past the raw data of section {sec.name}')
         return sec, take(self.blob, sec.raw_ptr + start, size, what)
+
+    def tls_template(self):
+        """(start RVA, end RVA, index-slot RVA) of the TLS template, validated as the contract states.
+
+        The MSVC linker writes a SECREL against a thread-local symbol as its offset from the
+        template start, also when it merges the template into another section at a non-zero
+        offset (measured), so offsets are taken from the template start. The template must lie
+        in one section, as a linked template does.
+        """
+        if self._tls is not None:
+            return self._tls
+        rva, size = self.tls_dir
+        if not rva:
+            raise Reject('tls-directory-missing', 'the image has no TLS directory')
+        if size < TLS_DIRECTORY64_SIZE:
+            raise Reject('malformed-tls-directory', 'TLS directory is shorter than IMAGE_TLS_DIRECTORY64')
+        try:
+            _, raw = self.read(rva, TLS_DIRECTORY64_SIZE, 'TLS directory')
+        except Reject as exc:
+            raise Reject('malformed-tls-directory', f'TLS directory is not readable ({exc.reason})') from None
+        start_va, end_va, index_va = struct.unpack_from('<QQQ', raw, 0)
+        start, end, index = start_va - self.image_base, end_va - self.image_base, index_va - self.image_base
+        if not (0 <= start <= end and index >= 0):
+            raise Reject('malformed-tls-directory', 'TLS template bounds or index slot lie outside the image')
+        try:
+            self.section_for(index)
+            sec = self.section_for(start)
+        except Reject:
+            raise Reject('malformed-tls-directory', 'TLS template or index slot is not inside a section') from None
+        if end > sec.vaddr + max(sec.vsize, sec.raw_size):
+            raise Reject('unsupported-tls-layout', f'TLS template runs past the end of section {sec.name}')
+        self._tls = (start, end, index)
+        return self._tls
 
     def runtime_functions(self):
         rva, size = self.exception_dir

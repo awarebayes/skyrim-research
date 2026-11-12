@@ -75,6 +75,14 @@ class AdditionTests(SymbolMapFixture, unittest.TestCase):
             self.add({'Unrelated': {'rva': FAR, 'size': None}})
 
 
+    def test_thread_local_entry_is_refused(self):
+        with self.assertRaisesRegex(ValueError, 'must be {rva, size}'):
+            self.add({'tVar': {'kind': 'thread-local', 'tls_offset': 8, 'size': None}})
+        smap = self.current_map()
+        smap['symbols']['tVar'] = {'kind': 'thread-local', 'tls_offset': 8, 'size': None}
+        with self.assertRaisesRegex(ValueError, 'thread-local entries'):
+            sm.check_map(smap)
+
 class ChangeTests(SymbolMapFixture, unittest.TestCase):
     def test_changed_entry_is_refused_without_flag(self):
         with self.assertRaisesRegex(ValueError, f'changes existing entries: {fx.CALLEE}'):
