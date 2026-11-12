@@ -1,0 +1,25 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "7d741756868ce86b03b3bad7a25893b86765ad75d577bf20c6664295cc6b184c",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1900a0",
+  "naming_findings": [
+    "Two unrelated engine functions share the name GetCollisionObject, distinguished only by const; NG's name belongs to the const one, so the non-const one should get a distinct name, labelled GUESS.",
+    "The noinline attribute on this function has no caller left in the unit and compiles to nothing; it is a leftover that should be removed.",
+    "The noinline comment states the reason as a fact about the engine, but it is the Drafter's inference from one observed caller."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
+  "review_task_id": "review-p19-wave2-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 1638560,
+  "size": 94,
+  "source_digest": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

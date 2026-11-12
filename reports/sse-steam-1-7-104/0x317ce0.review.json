@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "54787877d9ecbbf874d06a8e09f28bc9083b9cbd315556dfca775c23e4de82c7",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x317ce0",
+  "naming_findings": [
+    "The empty constructor is a stand-in to emit the vftable, and its comment says so"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "dc6a6d68f10d170a5c2bfc59810786ce106f417713d44dd884a6f19ec09386bd",
+  "review_task_id": "review-p19-wave2-4",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3243232,
+  "size": 52,
+  "source_digest": "147ef718d610b180bc66c1f4291147b1381be5bff85c685f1896af773dd7555d",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

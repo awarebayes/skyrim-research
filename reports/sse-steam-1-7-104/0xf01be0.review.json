@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "6e5829a71f3883205520ecc99d3a796ad6ff59e5935ccf81824df15488327c9f",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xf01be0",
+  "naming_findings": [
+    "The record names the destructor, while the compared symbol is the scalar deleting destructor; the cpp header says so, and the label wording is otherwise fine."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
+  "review_task_id": "review-p19-wave2-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 15735776,
+  "size": 52,
+  "source_digest": "1bfa009c0bd9492da41cc7abe02bf77a97d7f420c425f6bc38056cc7b40c4eef",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

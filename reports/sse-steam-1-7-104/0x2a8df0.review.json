@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "93f20a54f324d7eebccd3e132544b38a7a002e8acfeedc0711f9ef8aa0fbc509",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x2a8df0",
+  "naming_findings": [
+    "the empty constructor is a stand-in only to emit the vftable; not the game's constructor"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "5f6a8f312a955828828398ecdf8dce9a1c49194b8716ffc8c210fca9672dd7ae",
+  "review_task_id": "review-p19-wave2-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 2788848,
+  "size": 52,
+  "source_digest": "60e10c91ff416d07075cfaad05f1e95d50a2b3e40fd02c3e399cb8ba9beb525c",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

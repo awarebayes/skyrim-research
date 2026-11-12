@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "12fc56f8962eaa309320f7072c8c1654c3bc5bae1312eb0582215d5fd3fbbb36",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xeeac80",
+  "naming_findings": [
+    "SetName also exists in FNV's NiAVObject header but is not labelled SIBLING; the name is labelled from the Address Library only.",
+    "The NiAVObject header carries a NiAVObject.h finding from check_labels, reported in the integration handoff; it is still open."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
+  "review_task_id": "review-p19-wave2-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 15641728,
+  "size": 9,
+  "source_digest": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

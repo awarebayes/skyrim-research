@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "6a3318fba3f09b9ab2c612070ec0e26dec1dd6d3aa3e3836466de6d26b510e2b",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x14e7fb0",
+  "naming_findings": [
+    "RenderPassArray is modelled as a single head pointer with no label line."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
+  "review_task_id": "review-p19-wave2-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 21921712,
+  "size": 66,
+  "source_digest": "24a620e545a7d00cb2ac0b2cec0352f0b2ff209570b952307dac3afecb97a0fc",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

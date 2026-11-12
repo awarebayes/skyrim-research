@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "c5a548861b97bfab09ee7fbe32df2e1c728423ef7394a16220010259bf6b137d",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x31cac0",
+  "naming_findings": [
+    "The header label list names BGSFootstep::~BGSFootstep, which the class does not declare explicitly",
+    "The empty constructor is a stand-in to emit the vftable, and its comment says so"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "dc6a6d68f10d170a5c2bfc59810786ce106f417713d44dd884a6f19ec09386bd",
+  "review_task_id": "review-p19-wave2-4",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3263168,
+  "size": 64,
+  "source_digest": "e81dca2b115aa857c600900b2d906b397471f32ee7b2c014f6bef83b930796b0",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

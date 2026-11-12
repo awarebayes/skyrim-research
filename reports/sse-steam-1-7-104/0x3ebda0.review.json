@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "760c5a5d376bbdc26f892f881ee6cc9996ab5963b730c873a30984c55d45c743",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x3ebda0",
+  "naming_findings": [
+    "the playable flag is a bare bit index although the community header names the race flag enumeration",
+    "TestBit is a GUESS helper repeated in several units; a shared header would be cleaner"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "5f6a8f312a955828828398ecdf8dce9a1c49194b8716ffc8c210fca9672dd7ae",
+  "review_task_id": "review-p19-wave2-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 4111776,
+  "size": 10,
+  "source_digest": "67234f197b9dea782b2170fa9354def8a494275c7fbc0a2f3534c5e37e55f9d9",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

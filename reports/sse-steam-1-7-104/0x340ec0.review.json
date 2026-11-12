@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "e48243a36dc8280eded8870db7b395713a80e8243c0f14e7f5c62a9089f03931",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x340ec0",
+  "naming_findings": [
+    "TESCondition Clear is a GUESS name for the condition-list clear routine; a community name may exist",
+    "unk30 stands for loadingText, which the community header names"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "5f6a8f312a955828828398ecdf8dce9a1c49194b8716ffc8c210fca9672dd7ae",
+  "review_task_id": "review-p19-wave2-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3411648,
+  "size": 51,
+  "source_digest": "56eebd281a1ff78947db4410e67d1dbfdf2e31d3334cf020addc393de4adaf56",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

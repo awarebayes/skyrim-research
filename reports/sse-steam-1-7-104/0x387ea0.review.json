@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "2f67121d1e265591fac449c15962f799daa2c3a91f598a41686d665a9d501e0a",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x387ea0",
+  "naming_findings": [
+    "the known flag is a bare bit index on the form flags; a community flag name may exist"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "5f6a8f312a955828828398ecdf8dce9a1c49194b8716ffc8c210fca9672dd7ae",
+  "review_task_id": "review-p19-wave2-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3702432,
+  "size": 35,
+  "source_digest": "fd5e5da5e3af7b2bfaa61f4cbd2e72469ca84429572f0b45df6fc2efbeb35d60",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

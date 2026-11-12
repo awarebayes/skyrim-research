@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "2ffd227e7d8e8b320f9f9997e72de41e87b55a21f59e37ea5857d82e95763dac",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x31b530",
+  "naming_findings": [
+    "Color is modelled as one word with a GUESS member name, where NG has RGBA bytes"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "dc6a6d68f10d170a5c2bfc59810786ce106f417713d44dd884a6f19ec09386bd",
+  "review_task_id": "review-p19-wave2-4",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3257648,
+  "size": 7,
+  "source_digest": "27623cb249ba9f8d2a00e54ceee7c8bfea861de5a5f95fd49d1021a7fd2ecce1",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

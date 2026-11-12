@@ -1,0 +1,25 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "00703ea60019b2142adb9225e157891489172a44079486b7b4e4671b3a2c0849",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xeec1a0",
+  "naming_findings": [
+    "kFlagBit9 is a GUESS although NG names that bit; it should use NG's flag name, labelled COMMUNITY.",
+    "The comment on the TestBit helper cites a project cookbook rule instead of a programmer reason.",
+    "IsInvalid is a GUESS for an unnamed callee; acceptable."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
+  "review_task_id": "review-p19-wave2-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 15647136,
+  "size": 346,
+  "source_digest": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

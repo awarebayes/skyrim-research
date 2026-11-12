@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "d4a81bdbfef4bda0e091bfdbf0d4a8af0525a44a86400f9e053427e18deedbc5",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x38f480",
+  "naming_findings": [
+    "The label for parentSlots names a member that the code spells parentSlotsStorage",
+    "The pad3C member is not labelled"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "dc6a6d68f10d170a5c2bfc59810786ce106f417713d44dd884a6f19ec09386bd",
+  "review_task_id": "review-p19-wave2-4",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3732608,
+  "size": 8,
+  "source_digest": "8297c2a66126419de3678838a74365ffa376de1cc797026662fe659d4078d9a6",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

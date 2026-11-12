@@ -1,0 +1,26 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "d249f4d01413d8a4b343bbe68fe28cc3c5e4eb478e88338135ab2f6e29485426",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xf01650",
+  "naming_findings": [
+    "The header labels SetEndianSwap, a name the unit no longer uses because the slot is written under NG's set_endian_swap.",
+    "The WrittenCount stand-in appears only in an unused slot signature and compiles to nothing; it is a leftover declaration.",
+    "The cpp header says adapted bodies are listed above, but none are listed; the wording should say none.",
+    "The cpp header comment lists SetEndianSwap where the code defines set_endian_swap."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
+  "review_task_id": "review-p19-wave2-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 15734352,
+  "size": 4,
+  "source_digest": "1bfa009c0bd9492da41cc7abe02bf77a97d7f420c425f6bc38056cc7b40c4eef",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

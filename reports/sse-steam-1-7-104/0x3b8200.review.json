@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "eb4541e87a6a60dbc461c73402d619ed2bbf404d385fcf21fb59fb3720156925",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x3b8200",
+  "naming_findings": [
+    "the empty constructor is a stand-in only to emit the vftable; not the game's constructor",
+    "unk20 opaque block stands for all members"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "5f6a8f312a955828828398ecdf8dce9a1c49194b8716ffc8c210fca9672dd7ae",
+  "review_task_id": "review-p19-wave2-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3899904,
+  "size": 52,
+  "source_digest": "6734dcf10076ad16c14af8ff931b4412daa9a318e50ec53bbacf7b9249d06cd7",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

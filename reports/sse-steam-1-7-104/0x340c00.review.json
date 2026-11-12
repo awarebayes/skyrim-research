@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "209f77f13454e129f1692d7e0b9b7dee75ea6047e0a1a50f14fd89635ab7b1ee",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x340c00",
+  "naming_findings": [
+    "BSStringT stand-in is duplicated in two unit headers rather than shared; the two cannot be included together",
+    "Set is the sibling name where the community header calls the routine set_cstr"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "5f6a8f312a955828828398ecdf8dce9a1c49194b8716ffc8c210fca9672dd7ae",
+  "review_task_id": "review-p19-wave2-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 3410944,
+  "size": 23,
+  "source_digest": "9fea2bb36a85883df51e3ec58b4f157ea76c07514de3e093b31ce180099c6c41",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}
