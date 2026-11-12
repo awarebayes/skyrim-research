@@ -18,7 +18,7 @@ from pecoff import (EH_HANDLERS, EH_LAYOUTS, FUNCINFO_MAGIC, GS_HAS_ALIGNMENT, R
                     PeImage, Reject, eh_size, rel_name, unwind_header)
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPARATOR_VERSION = '0.2.0'
+COMPARATOR_VERSION = '0.4.0'
 CONTRACT_VERSION = 2
 REPORT_SCHEMA = 1
 SHA256 = re.compile(r'[0-9a-f]{64}')
@@ -181,6 +181,9 @@ def code_section_sha256(obj, sections):
     sections outside the list do not enter it, so recompiling or reordering the object leaves it
     unchanged while any code byte or reference target changes it.
     """
+    names = {}
+    for sym in obj.symbols.values():
+        names[sym.name] = names.get(sym.name, 0) + 1
     digest = hashlib.sha256(b'code-section-sha256-v1\0')
     digest.update(struct.pack('<I', len(sections)))
     for sec in sections:
@@ -189,8 +192,16 @@ def code_section_sha256(obj, sections):
         relocs = sorted(sec.relocs, key=lambda r: r.offset)
         digest.update(struct.pack('<I', len(relocs)))
         for rel in relocs:
-            target = obj.symbols[rel.symbol].name.encode()
+            sym = obj.symbols[rel.symbol]
+            target = sym.name.encode()
             digest.update(struct.pack('<IHI', rel.offset, rel.kind, len(target)) + target)
+            if names[sym.name] > 1 and sym.section > 0:
+                # A name several symbols share (section symbols such as `.rdata`, repeated statics)
+                # does not say which one is meant, so the target section's content identifies it.
+                # Unique names add nothing here, which keeps earlier values of this hash valid.
+                where = obj.section(sym.section)
+                digest.update(b'@' + struct.pack('<II', sym.value, len(where.data or b''))
+                              + hashlib.sha256(where.data or b'').digest())
     return digest.hexdigest()
 
 
@@ -213,6 +224,9 @@ class Function:
         self.code_ranges = [(task['rva'], task['rva'] + task['size'])]
         self.code_queue = []
         self.funclet_order = []
+        self.compared_unwind = set()
+        self.compared_funcinfo = set()
+        self._pdata_starts = None
         self.claimed = {}
         self.consumed = {}
         self.visited = set()
@@ -300,13 +314,18 @@ class Function:
         if index in self.consumed:
             self.consumed[index].add(offset)
         sym = self.obj.symbols[rel.symbol]
-        local = sym.section > 0 and (sym.section in self.bound or sym.storage != STORAGE_EXTERNAL)
-        if expect == 'external' or not local:
+        if expect == 'external':
             want = self.resolve(sym) + value
             if want != target:
                 raise Reject(reason, f'{what} does not encode the RVA of {sym.name!r}',
                              raw={'field': what, 'expected': want, 'target': target})
             return None
+        # Every other EH reference must land in a section of this object that is (or becomes)
+        # bound and is then compared in full. Resolving it through the map instead would accept
+        # whatever sits at the mapped address without comparing it.
+        local = sym.section > 0 and (sym.section in self.bound or sym.storage != STORAGE_EXTERNAL)
+        need(local, 'eh-reference-not-local',
+             f'{what} refers to {sym.name!r}, which is not a section of this object compared with the function')
         sec = self.obj.section(sym.section)
         is_code = bool(sec.flags & SCN_CNT_CODE)
         need(is_code == (expect == 'code'), 'eh-reference-kind',
@@ -408,6 +427,7 @@ class Function:
         if key in self.visited:
             return
         self.visited.add(key)
+        self.compared_unwind.add(rva)
         data = self.obj.section(index).data
         flags, length = unwind_header(data[offset:offset + 4], f'candidate {what}')
         need(offset + length <= len(data), 'truncated-input', f'candidate {what} is truncated')
@@ -448,6 +468,7 @@ class Function:
                 self.claim(index, at, 4, f'{what} FuncInfo reference')
                 place = self.ref_field(index, at, t_at, f'{what} FuncInfo', 'data')
                 need(place is not None, 'eh-funcinfo-unsupported', f'{what} has a null FuncInfo')
+                self.compared_funcinfo.add(self.bound[place[0]] + place[1])
                 self.structure('funcinfo', place[0], place[1], self.bound[place[0]] + place[1], 'FuncInfo')
                 step = 4
             elif part == 'scope_table':
@@ -562,6 +583,69 @@ class Function:
             self.coverage['funclet_bytes_total'] += len(sec.data)
             self.compare_unwind(sec)
             self.compare_code(sec, target, 'funclet_bytes_exact', 'funclet_bytes_by_reference')
+            self.check_funclet_end(sec, start + len(sec.data))
+
+    def check_funclet_end(self, sec, end):
+        """A funclet's length comes from the candidate section, so the target must show a boundary there.
+
+        Only target-side evidence counts: a target .pdata entry or another compared code range starts
+        at `end`, or the bytes from `end` to the next 16-byte boundary (at least one byte) are int3
+        padding. Candidate-side facts do not: an EH reference of the candidate can point one past its
+        own truncated section, and a symbol-map entry placed at the cut names nothing the target
+        shows. Anything else could be the rest of a funclet the candidate truncated, so it is rejected.
+        """
+        known = self.pdata_starts() | {a for a, _ in self.code_ranges}
+        if end in known:
+            return
+        pad = (-end) % 16 or 1
+        try:
+            following = self.image.read(end, pad, 'bytes after a funclet')[1]
+        except Reject:
+            following = b''
+        need(following and all(b == 0xCC for b in following), 'eh-funclet-extent',
+             f'the target continues after funclet section #{sec.index} without padding or a known start')
+
+    def pdata_starts(self):
+        if self._pdata_starts is None:
+            self._pdata_starts = {b for b, _e, _u in self.image.runtime_functions()}
+        return self._pdata_starts
+
+    def check_target_closure(self):
+        """No target .pdata entry outside the compared code may belong to this function.
+
+        A chained entry whose chain reaches an unwind info compared here, or a handler entry whose
+        C++ handler data names a FuncInfo compared here, is part of this function that the
+        candidate does not have (for example a candidate cut at a chained-entry boundary).
+        """
+        funcinfo_handlers = {self.entries[name]['rva'] for name, layout in EH_HANDLERS.items()
+                             if layout[0] == 'funcinfo' and name in self.entries}
+        for begin, _end, unwind in self.image.runtime_functions():
+            if any(a <= begin < b for a, b in self.code_ranges):
+                continue
+            current = unwind
+            for _depth in range(64):
+                try:
+                    head = self.image.read(current, 4, 'target unwind info')[1]
+                except Reject:
+                    break
+                flags, count = head[0] >> 3, head[2]
+                length = 4 + 2 * (count + (count & 1))
+                try:
+                    if flags & UNW_FLAG_CHAININFO:
+                        parent = self.target_u32(current + length + 8, 'target chained entry')
+                        need(parent not in self.compared_unwind, 'unwind-chain-outside',
+                             'a target .pdata entry outside the compared code chains to this function')
+                        current = parent
+                        continue
+                    if flags & (UNW_FLAG_EHANDLER | UNW_FLAG_UHANDLER) and \
+                            self.target_u32(current + length, 'target handler') in funcinfo_handlers:
+                        need(self.target_u32(current + length + 4, 'target handler data') not in self.compared_funcinfo,
+                             'eh-funclet-outside',
+                             'a target .pdata entry outside the compared code uses this function\'s FuncInfo')
+                except Reject as exc:
+                    if exc.reason in ('unwind-chain-outside', 'eh-funclet-outside'):
+                        raise
+                break
 
     def check_complete(self):
         """Every bound data section must be fully claimed and its relocations all consumed."""
@@ -666,6 +750,7 @@ def compare(task, manifest, recipe_bytes, build_record, object_bytes, image_byte
         function.compare_code(sec, target, 'code_bytes_exact', 'code_bytes_by_reference')
         function.compare_funclets()
         function.check_complete()
+        function.check_target_closure()
         coverage['unwind'] = 'covered' if primary_entries else 'none-in-range'
         need(coverage['code_bytes_exact'] + coverage['code_bytes_by_reference'] == task['size'], 'coverage-gap',
              'not every function byte was compared')

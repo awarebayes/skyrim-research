@@ -6,7 +6,9 @@
 
 Per unit: the files, the digest the match records bind against the digest computed now, recipe
 and compiler, and the record notes once. Per function: identity, name and origin, record, hosts,
-coverage, code-section hash, the current Reviewer record and the review it needs. For a function
+coverage, code-section hash, the current Reviewer record and the review it needs. Per unit it also
+lists the community declaration of every COMMUNITY-labelled name, read from the local pinned
+checkouts (tools/check_labels.py; omitted with --no-community or when no checkout is present). For a function
 whose Reviewer record binds an earlier digest (a delta review candidate), it also prints the unit
 diff since the commit where that approved digest was current, and whether the compared code
 section is unchanged between the approved record and the current one.
@@ -107,7 +109,18 @@ def select(data, root, ids, stale, everything):
     return picked
 
 
-def unit_view(root, compiled, fns, notes):
+def community_view(root, unit):
+    """The community declaration of each COMMUNITY-labelled name in the unit, from the local
+    pinned checkouts (tools/check_labels.py), so a Reviewer need not open the checkout."""
+    try:
+        import check_labels
+        lines = check_labels.community_excerpts([root / name for name in unit], root=root)
+    except Exception as exc:  # noqa: BLE001 - the excerpts are a reading aid; the packet still prints
+        return [f'community excerpts: not available ({type(exc).__name__}: {exc})']
+    return ['community excerpts (name: repo path:line: declaration):'] + [f'  {line}' for line in lines]
+
+
+def unit_view(root, compiled, fns, notes, community=True):
     out = []
     records = {fn['id']: record_of(root, fn) for fn in fns}
     first = next(iter(records.values()))
@@ -130,6 +143,8 @@ def unit_view(root, compiled, fns, notes):
         for r in records.values():
             seen += [n for n in r.get('notes') or [] if n not in seen]
         out += ['notes:'] + [f'  {i}. {n}' for i, n in enumerate(seen, 1)]
+    if community:
+        out += community_view(root, unit)
     shown = set()
     for fn in fns:
         out += function_view(root, fn, records[fn['id']], shown)
@@ -201,6 +216,8 @@ def main(argv=None):
     p.add_argument('--stale', action='store_true', help='Add every matched entry whose acceptance is stale')
     p.add_argument('--all', action='store_true', help='Every entry that names a match record')
     p.add_argument('--no-notes', action='store_true', help='Omit the record notes')
+    p.add_argument('--no-community', action='store_true',
+                   help='Omit the community declarations of COMMUNITY-labelled names')
     p.add_argument('--root', type=Path, default=ROOT, help=argparse.SUPPRESS)
     args = p.parse_args(argv)
     root = args.root
@@ -218,7 +235,7 @@ def main(argv=None):
     if without:
         out.append(f'skipped (no readable match record): {", ".join(without)}')
     for compiled, fns in sorted(units.items()):
-        out += [''] + unit_view(root, compiled, fns, not args.no_notes)
+        out += [''] + unit_view(root, compiled, fns, not args.no_notes, not args.no_community)
     print('\n'.join(out))
     return 0
 

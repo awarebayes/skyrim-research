@@ -51,7 +51,7 @@ class ComparatorTests(unittest.TestCase):
         self.assertEqual(report['target']['image_sha256'], args['task']['target_image_sha256'])
         self.assertEqual(report['recipe']['flags'], ['/O2', '/Gy'])
         self.assertEqual(len(report['recipe']['compiler_binary_sha256']), 64)
-        self.assertEqual(report['comparator']['version'], '0.2.0')
+        self.assertEqual(report['comparator']['version'], '0.4.0')
         self.assertEqual(report['contract_version'], 2)
         self.assertEqual(report['function'], {'build_id': 'synthetic-fixture', 'rva': 0x1010,
                                               'size': len(fx.CODE), 'symbol': fx.FUNCTION})
@@ -455,6 +455,92 @@ class ExceptionDataTests(unittest.TestCase):
         args = fx.unit_inputs(fx.switch_unit(), fx.SWITCH_FUNCTION, fx.image_externals(),
                               extra_map={'__ImageBase': {'rva': 0x1000, 'size': None}})
         self.assertRejected(compare(**args), 'symbol-map-conflict', '__ImageBase')
+
+    # -- review probes against 0.2.0 -----------------------------------------------------------
+
+    def test_es_type_list_against_external_symbol_rejected(self):
+        # Mapped and linked consistently: only the rule that data references bind locally catches it.
+        unit = fx.catch_unit(external_es_types='gSyntheticElsewhere')
+        externals = fx.image_externals(gSyntheticElsewhere=0x3200)
+        args = fx.unit_inputs(unit, fx.CATCH_FUNCTION, externals, extra_map=fx.catch_map(unit))
+        self.assertRejected(compare(**args), 'eh-reference-not-local', 'es_type_list')
+
+    def test_unwind_action_against_external_symbol_rejected(self):
+        unit = fx.catch_unit(external_action='SyntheticOtherDtor')
+        externals = fx.image_externals(SyntheticOtherDtor=fx.OTHER_THUNK)
+        args = fx.unit_inputs(unit, fx.CATCH_FUNCTION, externals, extra_map=fx.catch_map(unit))
+        self.assertRejected(compare(**args), 'eh-reference-not-local', 'unwind_map[0].action')
+
+    def test_candidate_cut_at_chained_boundary_rejected(self):
+        # The target function has three entries; the candidate stops after the first chained one.
+        image = fx.chain_unit().link(fx.image_externals())
+        report = self.chain(fx.chain_unit(entries=2), image)
+        self.assertRejected(report, 'unwind-chain-outside')
+
+    def test_funclet_entry_outside_compared_code_rejected(self):
+        unit = fx.catch_unit()
+        funclet_unwind = fx.section_rva(unit, '$unwind$?catch$0@?0??SyntheticCatch@@4HA')
+        extra = ((0x1F00, 0x1F10, funclet_unwind),)
+        self.assertRejected(self.catch(unit, extra_pdata=extra), 'eh-funclet-outside')
+
+    def test_truncated_funclet_without_pdata_rejected(self):
+        # Drop the unwind funclet's final jmp from the candidate; the target keeps it.
+        image = fx.catch_unit().link(fx.image_externals())
+        unit = fx.catch_unit()
+        unit.sections[1][1] = bytearray(fx.FUNCLET_CODE[:0x28])
+        unit.sections[1][2] = [r for r in unit.sections[1][2] if r[0] != 0x29]
+        self.assertRejected(self.catch_image(image, unit), 'eh-funclet-extent')
+
+    def truncated_dtor(self, **unit_args):
+        """The unwind funclet dtor$0 cut 7 bytes in, before its final jmp; the target keeps it."""
+        unit = fx.catch_unit(**unit_args)
+        unit.sections[1][1] = bytearray(fx.FUNCLET_CODE[:0x28])
+        unit.sections[1][2] = [r for r in unit.sections[1][2] if r[0] != 0x29]
+        return unit
+
+    # -- review probes against 0.3.0 -----------------------------------------------------------
+
+    def test_truncated_funclet_excused_by_own_ip_entry_rejected(self):
+        # Target and candidate both have an IP-to-state entry at dtor$0+7; in the candidate that
+        # address is one past its own section, which must not count as a boundary the target shows.
+        image = fx.catch_unit(last_ip_in_dtor=7).link(fx.image_externals())
+        unit = self.truncated_dtor(last_ip_in_dtor=7)
+        self.assertRejected(self.catch_image(image, unit), 'eh-funclet-extent')
+
+    def test_truncated_funclet_excused_by_map_entry_rejected(self):
+        # A map entry placed at the cut names nothing the target shows there.
+        image = fx.catch_unit().link(fx.image_externals())
+        unit = self.truncated_dtor()
+        cut = fx.section_rva(fx.catch_unit(), '?dtor$0@?0??SyntheticCatch@@4HA') + 7
+        self.assertRejected(self.catch_image(image, unit, extra_map={'SyntheticAtCut': {'rva': cut, 'size': None}}),
+                            'eh-funclet-extent')
+
+    def test_ip_entry_inside_funclet_passes_when_whole(self):
+        # The same IP-to-state entry with the whole funclet in the candidate is a valid layout.
+        image = fx.catch_unit(last_ip_in_dtor=7).link(fx.image_externals())
+        self.assertEqual(self.catch_image(image, fx.catch_unit(last_ip_in_dtor=7))['result'], 'pass')
+
+    def test_funclet_end_inside_padding_passes(self):
+        # The catch_unit funclet section ends mid-line; the linker's int3 fill is a boundary.
+        self.assertEqual(self.catch()['result'], 'pass')
+
+    def test_code_section_hash_tells_same_named_targets_apart(self):
+        from compare import code_section_sha256
+        from pecoff import CoffObject
+
+        def variant(first, second):
+            u = fx.Unit()
+            f = u.section('.text$mn', bytes.fromhex('8b0500000000c3'), fx.SCN_TEXT)
+            u.define('SyntheticLoad', f, storage=fx.STORAGE_EXTERNAL, function=True)
+            sections = {'A': u.section('.rdata', b'A' * 8, fx.SCN_XDATA), 'B': u.section('.rdata', b'B' * 8, fx.SCN_XDATA)}
+            u.define('.rdata', sections[first])
+            u.define('.rdata', sections[second])     # the relocation below names the last one
+            u.reloc(f, 2, '.rdata', fx.REL32)
+            obj = CoffObject(u.coff())
+            return code_section_sha256(obj, [obj.section(f)])
+
+        self.assertEqual(variant('A', 'B'), variant('A', 'B'))
+        self.assertNotEqual(variant('A', 'B'), variant('B', 'A'))
 
     # -- code section hash --------------------------------------------------------------------
 

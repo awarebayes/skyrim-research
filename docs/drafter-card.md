@@ -61,6 +61,24 @@ RVA the pack does not list. `decorated name changed` means a declaration change 
   `GUESS` or `GUESS(low|medium|high)`, `EXE_RTTI`, `OBSERVED`, and `STANDIN` together with the
   name's origin (`// TESObjectARMO: STANDIN COMMUNITY(...)`). A community name is `COMMUNITY`,
   never `GUESS`; `GUESS` is only for names you made up. Do not write the label words anywhere else.
+- **Search before you label.** The pinned community checkouts are local clones:
+  `.local/sources/CommonLibSSE-NG` (CharmedBaryon/CommonLibSSE-NG at `b93280e`, MIT) and
+  `.local/sources/CommonLibSSE-po3` (powerof3/CommonLibSSE at `654e55f`, GPL-3.0; a file using
+  its names states GPL-3.0 in its header). Before giving any class, member, method, enum or
+  enumerator a name, search them (`grep -rn '<name or offset>' .local/sources/CommonLibSSE-NG/include`)
+  for the class and the member at that place (offset, virtual slot, bit range, value; NG's
+  offsets are SE ones, so check how this build differs). If the community has a name there, use
+  that exact spelling, its enumerator values and its accessor style (for example NG's
+  `GetKnockState()` or `IsSneaking()` returning `static_cast<bool>(bitfield)`) and label it
+  `COMMUNITY`; a base class modelled as a member is `STANDIN` plus the origin of its name. Only
+  where the community has nothing do you invent a name and label it `GUESS`. When your
+  declaration has to differ from the community one (a return type, a field width), keep the
+  community name and say why in the note, for example `COMMUNITY(...) OBSERVED; NG declares double`.
+- Before you finish, run `python3 tools/check_labels.py reconstruction/<area>/<Class>.h
+  reconstruction/<area>/<Class>.cpp` (also printed by `attempt` as `label warning:` lines). It
+  checks every `COMMUNITY` name and enumerator value against the pinned checkout, flags `GUESS`
+  names the checkout declares in that class, and checks that your `Evidence:` file mentions every
+  compared RVA. Fix each warning or explain it in your result line.
 - No decompiler output pasted as source, no code from unlicensed projects (FNV repositories),
   nothing leaked. Unknowns stay unknown (`unk28`), not invented names.
 

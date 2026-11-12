@@ -253,6 +253,8 @@ class Unit:
             return placement[section] + value if section > 0 else externals[name]
 
         memory = {name: bytearray(SECTION_SPAN) for name, _rva, _f in IMAGE_SECTIONS}
+        # Like the MSVC linker, fill the gaps between code sections with int3.
+        memory['.text'] = bytearray(b'\xcc' * SECTION_SPAN)
         bases = {name: rva for name, rva, _f in IMAGE_SECTIONS}
         for name, rva in HANDLER_THUNKS.items():
             memory['.text'][rva - 0x1000:rva - 0x1000 + 6] = b'\xff\x25\0\0\0\0'
@@ -358,7 +360,10 @@ TYPE_DESCRIPTOR = bytes(16) + b'.?AUSyntheticError@@\0'
 
 
 def catch_unit(handler='__CxxFrameHandler3', magic=0x19930522, handler_map_tail=b'', unrelocated_action=False,
-               action_to_data=False):
+               action_to_data=False, external_es_types=None, external_action=None, last_ip_in_dtor=None):
+    """`external_es_types`/`external_action` name an external symbol that the ES type list or the
+    first unwind action is relocated against instead of a section of this object. `last_ip_in_dtor`
+    moves the last IP-to-state entry to that offset inside the unwind funclet dtor$0."""
     u = Unit()
     f = u.section('.text$mn', CATCH_CODE, SCN_TEXT)
     x = u.section('.text$x', FUNCLET_CODE, SCN_TEXT)
@@ -390,12 +395,17 @@ def catch_unit(handler='__CxxFrameHandler3', magic=0x19930522, handler_map_tail=
     u.reloc(funcinfo, 0x08, '$stateUnwindMap$SyntheticCatch', ADDR32NB)
     u.reloc(funcinfo, 0x10, '$tryMap$SyntheticCatch', ADDR32NB)
     u.reloc(funcinfo, 0x18, '$ip2state$SyntheticCatch', ADDR32NB)
-    u.reloc(unwind_map, 0x04, '$tryMap$SyntheticCatch' if action_to_data else dtor0, ADDR32NB)
+    if external_action:
+        u.external(external_action)
+    u.reloc(unwind_map, 0x04, external_action or ('$tryMap$SyntheticCatch' if action_to_data else dtor0), ADDR32NB)
+    if external_es_types:
+        u.reloc(funcinfo, 0x20, u.external(external_es_types), ADDR32NB)
     u.reloc(try_map, 0x10, '$handlerMap$0$SyntheticCatch', ADDR32NB)
     u.reloc(handler_map, 0x04, CATCH_TYPE, ADDR32NB)
     u.reloc(handler_map, 0x0C, catch0, ADDR32NB)
     u.reloc(handler_map, 0x20, catch0, ADDR32NB)
-    for i, (sym, addend) in enumerate(((CATCH_FUNCTION, 0), (CATCH_FUNCTION, 4), (CATCH_FUNCTION, 9), (catch0, 0))):
+    last = (catch0, 0) if last_ip_in_dtor is None else (dtor0, last_ip_in_dtor)
+    for i, (sym, addend) in enumerate(((CATCH_FUNCTION, 0), (CATCH_FUNCTION, 4), (CATCH_FUNCTION, 9), last)):
         struct.pack_into('<I', u.sections[ip_map - 1][1], 8 * i, addend)
         u.reloc(ip_map, 8 * i, sym, ADDR32NB)
     for code_sec, label, unwind, size in ((f, '$LN5', CATCH_UNWIND, len(CATCH_CODE)), (x, catch0, FUNCLET_UNWIND, 0x21)):
@@ -451,9 +461,10 @@ CHAIN_SAVE = bytes.fromhex('21050100' '05340600')                  # chained; sa
 CHAIN_EMPTY = bytes.fromhex('21000000')                            # chained, no codes
 
 
-def chain_unit(second_parent='primary'):
+def chain_unit(second_parent='primary', entries=3):
+    """`entries` < 3 builds a candidate cut at a chained-entry boundary (code and .pdata both)."""
     u = Unit()
-    f = u.section('.text$mn', CHAIN_CODE, SCN_TEXT)
+    f = u.section('.text$mn', CHAIN_CODE[:(0x08, 0x20, 0x30)[entries - 1]], SCN_TEXT)
     u.define(CHAIN_FUNCTION, f, storage=STORAGE_EXTERNAL, function=True)
     u.define('$LN9', f, 0, STORAGE_LABEL)
     u.external(CALLEE)
@@ -462,7 +473,7 @@ def chain_unit(second_parent='primary'):
              ('$chain$0$SyntheticChain', CHAIN_SAVE, ('$unwind$SyntheticChain', 0x00, 0x08), (0x08, 0x20)),
              ('$chain$1$SyntheticChain', CHAIN_EMPTY, ('$unwind$SyntheticChain', 0x00, 0x08) if second_parent == 'primary'
               else ('$chain$0$SyntheticChain', 0x08, 0x20), (0x20, 0x30)))
-    for name, codes, parent, (begin, end) in infos:
+    for name, codes, parent, (begin, end) in infos[:entries]:
         blob = codes + (dwords(parent[1], parent[2], 0) if parent else b'')
         xd = u.section('.xdata', blob, SCN_XDATA)
         u.define(name, xd)

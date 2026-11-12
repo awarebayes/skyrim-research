@@ -35,7 +35,7 @@ one task per class.
 | unit | recipe | functions / bytes | RVA (AE id) size `method` name-kind unwind references |
 |---|---|---|---|
 | `forms/TESObjectREFR` | msvc-19.16.27054-o2 | 6 / 650 | `0x2e6f30` (19664) 68 `GetScale` e v1/3 1C 1R 1U; `0x2e73a0` (19670) 84 `CanBeMoved` e v1/2 1C 1R 1U; `0x2e5a60` (19627) 86 `HasQuestObject` e v1/1 2C 2U; `0x2f3b70` (19812) 117 `GetCurrentLocation` e v1/2 3C 1R 2U; `0x300b90` (20205) 143 `GetCalcLevel` e v1/2 3C 5R 2W 7U; `0x2eee20` (19753) 152 `GetTransform` e v1/6 2C 1R 2U |
-| `inventory/InventoryChanges` | msvc-19.16.27054-o2 | 5 / 810 | `0x22b710` (16047) 11 `GetItemCount` e leaf 2A; `0x233f90` (16072) 44 `InitOutfitItems` e v1/1 1C 1U; `0x2372c0` (16095) 58 `VisitInventory` e v1/4 -; `0x237300` (16096) 262 `VisitWornItems` e v1/10 2C 2A 4U; `0x237a20` (16099) 435 `RemoveFavorite` e v1/12 7C 6U |
+| `inventory/InventoryChanges` | msvc-19.16.27054-o2 | 5 / 810 | `0x22b710` (16047) 11 `GetItemCount` (contradicted, see below) e leaf 2A; `0x233f90` (16072) 44 `InitOutfitItems` e v1/1 1C 1U; `0x2372c0` (16095) 58 `VisitInventory` e v1/4 -; `0x237300` (16096) 262 `VisitWornItems` e v1/10 2C 2A 4U; `0x237a20` (16099) 435 `RemoveFavorite` e v1/12 7C 6U |
 | `netimmerse/NiAVObject` | msvc-19.16.27054-o2 | 4 / 127 | `0x1053280` (77998) 23 `SetCollisionLayer` e v1/1 1C 1U; `0x10532a0` (77999) 28 `SetCollisionLayerAndGroup` e v1/1 1C 1U; `0x405a50` (26022) 33 `GetCollisionObject` e v1/1 1C 1U; `0x105a360` (78103) 43 `UpdateRigidConstraints` e v1/1 2C 2U |
 | `bsengine/BSReadWriteLock` | msvc-19.16.27054-o2 | 4 / 269 | `0xce3510` (68239) 5 `UnlockForRead` d leaf -; `0xce3520` (68240) 26 `UnlockForWrite` d leaf -; `0xce3250` (68233) 112 `LockForRead` d v1/4 2R 2I; `0xce32d0` (68234) 126 `LockForWrite` d v1/8 2R 2I |
 | `bsengine/BSDirectInputManager` | msvc-19.16.27054-o2 | 4 / 324 | `0xcfaeb0` (68676) 37 `ReleaseDevice` e v1/2 -; `0xcfae70` (68675) 48 `CreateDeviceWithGUID` e v1/1 -; `0xcfaee0` (68677) 113 `GetDeviceState` e v1/6 1C 1U; `0xcfaf60` (68678) 126 `GetDeviceData` e v1/6 - |
@@ -48,6 +48,11 @@ unwind `leaf` = no `.pdata` (size from analysis, int3 padding follows), `v1/n` =
 references C call, J tail jump, R read, W write, A address, I import, U target without a community name
 (any name a Drafter gives it is a GUESS), F float equality without a parity branch. `actors/Actor` extends
 the unit of the accepted `0x2e7fc0`, which every attempt re-checks. In total 40 functions, 3,888 bytes.
+
+Correction to the table: the enclosing-name heuristic gave `0x22b710` the NG name
+`InventoryChanges::GetItemCount`, but the 11-byte leaf only stores a vftable pointer and returns,
+which a count cannot be. The inventory now names it `InventoryUtils::ItemFilter::~ItemFilter` as a
+GUESS (an out-of-line base destructor); the community name is recorded as contradicted.
 No function in range has a DIR64 relocation, a jump table, an exception handler or more than one
 `.pdata` entry.
 

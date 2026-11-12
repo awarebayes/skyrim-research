@@ -1,7 +1,7 @@
 # Comparator contract, version 2
 
 Status: **draft for maintainer review.** Implemented by `tools/compare.py` (comparator version
-0.2.0) with parsing in `tools/pecoff.py`, exercised by original synthetic fixtures generated
+0.4.0) with parsing in `tools/pecoff.py`, exercised by original synthetic fixtures generated
 in `tests/synthetic_pecoff.py` and by real MSVC output of original synthetic sources
 (`tools/verifier/synthetic/eh_cases.cpp`, `eh_gs.cpp`), and run against the pinned image for
 the accepted functions. Version 2 adds exception and termination handlers with their data and
@@ -198,8 +198,13 @@ the target side from the image at the bound RVA:
     A section can be bound once; a second reference must agree (`eh-reference-mismatch`).
     Structure fields must bind data sections and code fields code sections
     (`eh-reference-kind`);
-  - against anything else (type descriptors, external symbols): resolved through the map
-    like code references; a mismatch is `eh-reference-mismatch`.
+  - only the language handler and catch type descriptors are resolved through the map (by
+    name, like code references; a mismatch is `eh-handler-mismatch` or `eh-reference-mismatch`).
+    Every other reference field (structure arrays, the ES type list, unwind actions, catch
+    handlers, IP-to-state addresses, scope begin/end/handler/target, chained begin/end and parent)
+    must be relocated against a section of this object that is or becomes bound, and so is
+    compared in full. One relocated against an external or undefined symbol is
+    `eh-reference-not-local`: whatever the map names there would never be compared.
 - **Unrelocated reference fields** must be 0 on both sides (null pointer or `catch (...)`); a
   non-zero unrelocated reference is `eh-unrelocated-reference`.
 - **Type descriptors** of catch handlers: when the candidate object defines the descriptor, its
@@ -217,6 +222,22 @@ Completeness, so nothing is skipped:
   must not overlap the function or another funclet (`eh-funclet-overlap`) or a sized map entry
   (`overlapping-function`), and is compared exactly like the function: every byte exactly or as a
   resolved relocation, its `.pdata` entries as above, their unwind info and handler data as here.
+- A funclet's length comes from its candidate section. Funclets with `.pdata` are bounded by
+  their entries; one without (MSVC emits unwind funclets without `.pdata`) has no target-side
+  length. So the target must show a boundary right after every bound funclet section: a target
+  `.pdata` entry, the function or another compared funclet starts there, or the bytes from there
+  to the next 16-byte boundary (at least one byte) are `int3` padding, which the MSVC linker puts
+  between code sections. Otherwise `eh-funclet-extent`. Candidate-side facts are not boundaries:
+  a symbol-map entry at that address names nothing the target shows, and an EH code reference of
+  the candidate may point one past its own truncated section (an IP-to-state entry at the cut). Limitation: a candidate cut exactly before `int3` bytes that are part of
+  the target funclet's code, or before an unknown function placed without padding, is not told
+  apart; the first passes wrongly (no such funclet seen), the second fails closed.
+- No target `.pdata` entry outside the compared code may belong to the function: a chained
+  entry whose chain reaches, directly or through other chained entries, an unwind info compared
+  here is `unwind-chain-outside` (a candidate cut at a chained-entry boundary), and an entry
+  whose `__CxxFrameHandler3`/`__GSHandlerCheck_EH` data names a `FuncInfo` compared here is
+  `eh-funclet-outside`. The whole exception directory is scanned for this. A map entry starting
+  exactly at the function's end is an adjacent function, not an overlap.
 - The report counts funclet sections and bytes (`funclet_bytes_exact` plus
   `funclet_bytes_by_reference` must equal `funclet_bytes_total`, otherwise `coverage-gap`),
   structures by kind, reference and integer fields, and compared type names.
@@ -248,7 +269,11 @@ independently of the object file around it, so it is identical across clean comp
 source and recipe, unlike `object_sha256`. It is SHA-256 over a fixed prefix, the number of
 sections, then per section in order: name length and section length, name, section bytes, the
 relocation count, and each relocation sorted by offset as offset, type and the target symbol's
-**name** (never its symbol-table index). The sections are the function section first, then the
+**name** (never its symbol-table index). When several symbols of the object share the target's
+name (section symbols such as `.rdata`, repeated statics), the name does not say which is meant,
+so the symbol's offset, its section's length and the SHA-256 of that section's bytes follow the
+name; this adds nothing for unique names, so values computed before this rule (comparator
+0.2.0) are unchanged for objects without such references. The sections are the function section first, then the
 funclet sections in the order the exception data bound them (unwind walk of the function's
 `.pdata` entries in address order, structures field by field). `candidate.code_sections` gives
 their number. The object time stamp, symbol-table order and every other section stay out of it;

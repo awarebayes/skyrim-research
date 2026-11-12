@@ -3,9 +3,12 @@
 
     tools/verifier/confirm <task-dir> [--replace] [--stop]
 
-Run from a clean checkout of the integrated tree (committed source; the record must bind
-integrated source). Every function in task.json must already be an inventory entry and the
-symbol map must be the repository's (`reports/<build id>/...`).
+Runs on the checkout's working tree. A record binds the unit's tu-sha256-v1 digest and the recipe
+and symbol-map hashes, never a commit, so a unit may be confirmed before it is committed: that is
+how a change to an accepted unit, its re-confirmation and its re-review land in one commit. The
+record's notes say honestly which state it came from (base commit, and the files that were
+uncommitted). Every function in task.json must already be an inventory entry and the symbol map
+must be the repository's (`reports/<build id>/...`).
 
 1. Forks the standing verifier (`sr-<task-id>-confirm`, no account secrets, monitoring off). A
    stopped standing machine is forked as it is, then resumed. A running one is forked while
@@ -115,13 +118,33 @@ def build_block(task, host_dirs):
             'hosts': hosts}
 
 
+# Verifier-side inputs whose content can change a result: the comparator and parser, the host build
+# and compare scripts, and this pipeline with the record assembly and the validator it calls.
+RESULT_TOOLS = list(pipeline.TOOL_FILES) + ['tools/verifier/confirm', 'tools/verifier/pipeline.py',
+                                            'tools/verifier/match_record.py', 'tools/check.py']
+
+
+def source_state(task, closure):
+    """Where the inputs came from, for the record's notes: base commit and every uncommitted input."""
+    head = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=REPO, capture_output=True, text=True)
+    if head.returncode != 0:
+        raise PipelineError('git rev-parse failed; run from a git checkout')
+    return (head.stdout.strip(), pipeline.git_dirty(closure + [task['recipe'], task['symbols_repo']] + RESULT_TOOLS),
+            check.comparator_source_sha256())
+
+
+def source_note(base, dirty, comparator):
+    bound = (f'The runs bind the unit digest, recipe and symbol-map hashes above and comparator source '
+             f'sha256 {comparator} (each report\'s comparator.source_sha256), not a commit')
+    if not dirty:
+        return f'Source state: committed tree at base commit {base}. {bound}; that commit holds all of them.'
+    return (f'Source state: working tree on base commit {base}, with uncommitted changes to {", ".join(dirty)} at '
+            f'confirm time. {bound}; tools/check.py recomputes them from whatever tree this record is committed in.')
+
+
 def preflight(task, closure, replace):
     if task['symbols_repo'] is None:
         raise PipelineError('confirm needs the repository symbol map (task.json "symbols": "reports/<build id>/...")')
-    dirty = pipeline.git_dirty(closure + [task['recipe'], task['symbols_repo']])
-    if dirty:
-        raise PipelineError('uncommitted changes in the unit, recipe or map (records bind integrated source): '
-                            + ', '.join(dirty))
     progress = json.loads((REPO / 'data/progress.json').read_text())
     entries = {f['id']: f for f in progress['functions']}
     for fn in task['functions']:
@@ -172,6 +195,8 @@ def confirm(task_dir, replace, stop_after):
     handle = pipeline.lock(task['dir'])  # noqa: F841 (held until exit)
     files, closure = pipeline.unit_manifest(task)
     preflight(task, closure, replace)
+    # Taken before uploading, so the note describes the files the hosts compiled.
+    tree_state = source_state(task, closure)
     recipe = json.loads((REPO / task['recipe']).read_text())
     config = pipeline.load_config(task['dir'])
     out_root = task['dir'] / 'confirm'
@@ -259,7 +284,7 @@ def confirm(task_dir, replace, stop_after):
                        '--out', out]
                 for compiled_on, compared_on, report in runs[fn['rva']]:
                     cmd += ['--run', compiled_on, compared_on, str(report)]
-                for note in notes(task, recipe):
+                for note in notes(task, recipe) + [source_note(*tree_state)]:
                     cmd += ['--note', note]
                 proc = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True)
                 lines.append(f'  record {out}: ' + ('written' if proc.returncode == 0

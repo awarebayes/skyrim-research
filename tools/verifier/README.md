@@ -26,9 +26,12 @@ compile log and private diagnostics to `<task-id>/attempts/<NNN>/`, with a local
 disassembly per function (`llvm-objdump`; G2 material, never printed; rows that differ only in
 relocated fields are not marked). It binds unbound or renamed symbols from the compiled object
 itself (`bind.py`, hints in `<task-id>/bind-hints.json`) and compares again in the same run; a run
-that compared nothing because of binding is not counted against `max_attempts`. `confirm` needs committed
-source, inventory entries and the repository symbol map; it refuses to overwrite a record
-without `--replace`. Both keep the target image on each machine at `~/private/<build id>/`
+that compared nothing because of binding is not counted against `max_attempts`. `confirm` runs on the
+working tree (records bind the unit digest, recipe and map hashes and, per report, the comparator
+source hash, not a commit; a note in each record names the base commit, the comparator source hash
+and every uncommitted input among the unit, recipe, map, comparator and verifier files), needs
+inventory entries and the
+repository symbol map, and refuses to overwrite a record without `--replace`. Both keep the target image on each machine at `~/private/<build id>/`
 (uploaded once, checked by hash once per boot) and print only sanitized lines through
 `boat exec`. Private settings live in `.local/verifier/config.json`:
 `{"image": "<local SkyrimSE.exe>", "objdump": "<llvm-objdump>"}`.
@@ -77,6 +80,11 @@ without `--replace`. Both keep the target image on each machine at `~/private/<b
   verifier machine and check `pinned.sha256`, run one task in its own `~/tasks/<task-id>` with a
   file round trip, and stop it while printing compute used. Usage and rules are in
   `docs/boat-agent-guidelines.md`; `BOAT_CLI` overrides the CLI path.
+
+After the comparison lines `attempt` prints the findings of `tools/check_labels.py` on the unit's
+sources as `label warning:` lines (COMMUNITY names and enumerator values checked against the local
+pinned community checkouts, GUESS names those checkouts declare, Evidence files that miss a compared
+RVA). They never change the exit status; the check reads private clones and does not run in CI.
 
 `attempt` and `confirm` queue their Boat usage for the cost ledger through `tools/cost_hooks.py`
 when that module is present (wall time for an attempt, the compute counter delta for a confirm);

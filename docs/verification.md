@@ -256,7 +256,11 @@ cleared; CI and the pre-commit check are blocked meanwhile. The inventory status
 during that window (no revoke), and `reconstruction/INDEX.md` shows `STALE`. Clearing it:
 
 1. Re-confirm: `tools/verifier/confirm` regenerates the unit's match records by real runs on two
-   hosts, as for a new function. Until then nothing else can proceed.
+   hosts, as for a new function. Until then nothing else can proceed. `confirm` runs on the
+   working tree, because the pre-commit check blocks a commit that holds the unit change alone:
+   the unit change, its new records, the re-review and the acceptance land in one commit. Each
+   record notes the base commit and the inputs that were uncommitted when it ran; what it binds
+   is the unit digest, recipe and map hashes, which the check recomputes from the committed tree.
 2. Re-review: a Reviewer approves the function again, either by a full review or by a delta
    review. A delta review reads only the unit diff from the digest the earlier approve bound to
    the new one (`tools/review_packet.py` prints it, from the commit where that digest was

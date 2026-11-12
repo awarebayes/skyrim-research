@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "8d8ec9b6cf0c39adaa7a2825f04d3d0f259c3659f234a8557db7cec37c3f307d",
+        "object_sha256": "3f3949be283a5714838d9861c18df20f7f2868c7387468235a270f9001df0695",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/ArmorRatingVisitor.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "5f3ff9f93b6894f69262cc4a91b672b0d87d24857794554c5017b253e9a6d4c0",
+        "object_sha256": "a54cec77a0abcfb96ece994cefabc2625fbefb8157e4336ec1af48c322f96e8d",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/inventory/ArmorRatingVisitor.cpp",
@@ -63,7 +63,8 @@
     "Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed before the compile, INCLUDE then set by the msvc-wine wrapper to toolchain and SDK directories only; /showIncludes added after the recipe flags, and the repository files the compiler opened equalled the include closure. Each host's flags, cleared variables, object hash and opened files are in the build block, as that host reported them; the gate checks that block for presence and consistency with the runs, not for truth.",
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
-    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this."
+    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
+    "Source state: working tree on base commit baa2d660f5e8f96ed5a9e1565f320a3e6ffc6009, with uncommitted changes to reports/sse-steam-1-7-104/symbol-map.json, tools/compare.py, tools/verifier/confirm, tools/verifier/verify_function.py at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -79,11 +80,11 @@
         "candidate": {
           "code_section_sha256": "a9faf7cd616f9511c1ab0aacd9867b7cad6ee0faeb6d903515018c7e6baf0af1",
           "code_sections": 1,
-          "object_sha256": "5f3ff9f93b6894f69262cc4a91b672b0d87d24857794554c5017b253e9a6d4c0"
+          "object_sha256": "a54cec77a0abcfb96ece994cefabc2625fbefb8157e4336ec1af48c322f96e8d"
         },
         "comparator": {
-          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
-          "version": "0.2.0"
+          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
+          "version": "0.4.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -155,11 +156,11 @@
         "candidate": {
           "code_section_sha256": "a9faf7cd616f9511c1ab0aacd9867b7cad6ee0faeb6d903515018c7e6baf0af1",
           "code_sections": 1,
-          "object_sha256": "5f3ff9f93b6894f69262cc4a91b672b0d87d24857794554c5017b253e9a6d4c0"
+          "object_sha256": "a54cec77a0abcfb96ece994cefabc2625fbefb8157e4336ec1af48c322f96e8d"
         },
         "comparator": {
-          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
-          "version": "0.2.0"
+          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
+          "version": "0.4.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -231,11 +232,11 @@
         "candidate": {
           "code_section_sha256": "a9faf7cd616f9511c1ab0aacd9867b7cad6ee0faeb6d903515018c7e6baf0af1",
           "code_sections": 1,
-          "object_sha256": "8d8ec9b6cf0c39adaa7a2825f04d3d0f259c3659f234a8557db7cec37c3f307d"
+          "object_sha256": "3f3949be283a5714838d9861c18df20f7f2868c7387468235a270f9001df0695"
         },
         "comparator": {
-          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
-          "version": "0.2.0"
+          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
+          "version": "0.4.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -307,11 +308,11 @@
         "candidate": {
           "code_section_sha256": "a9faf7cd616f9511c1ab0aacd9867b7cad6ee0faeb6d903515018c7e6baf0af1",
           "code_sections": 1,
-          "object_sha256": "8d8ec9b6cf0c39adaa7a2825f04d3d0f259c3659f234a8557db7cec37c3f307d"
+          "object_sha256": "3f3949be283a5714838d9861c18df20f7f2868c7387468235a270f9001df0695"
         },
         "comparator": {
-          "source_sha256": "117562fbd52f4d0cdb34a9d1e20519188ea925b4e149a2116c85f3c45e1c3e74",
-          "version": "0.2.0"
+          "source_sha256": "ba949f0b8482e18c1af4037ff056f52e917a7f0a06d6648bad113256aee7d9a3",
+          "version": "0.4.0"
         },
         "contract_version": 2,
         "coverage": {
@@ -387,7 +388,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "4d0b6ea41728266f057d95986cf9039bb9cbaf86cb2478f793d9ebc54c5c0646"
+    "sha256": "6a54554c910cb26e4fc1c89d471b133b757ce7b8cc801a6bb03e9fb1c877d84e"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

@@ -2,20 +2,84 @@
   "schema": 1,
   "build_id": "sse-steam-1-7-104",
   "symbols": {
+    "?GetAVEffect@MagicItem@@QEBAPEAVEffectSetting@@XZ": {
+      "rva": 1378976,
+      "size": null
+    },
+    "?CalculateCost@MagicItem@@QEBAMPEAVActor@@@Z": {
+      "rva": 1382272,
+      "size": null
+    },
     "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z": {
       "rva": 1460400,
+      "size": null
+    },
+    "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ": {
+      "rva": 1483248,
       "size": null
     },
     "?CreateRefHandle@@YAXAEAU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z": {
       "rva": 1566272,
       "size": null
     },
+    "?OpenTES@TESFile@@QEAA_NW4OpenMode@NiFile@@_N@Z": {
+      "rva": 1877088,
+      "size": 36
+    },
+    "?OpenInternal@TESFile@@AEAA_NPEAD0W4OpenMode@NiFile@@_N@Z": {
+      "rva": 1877136,
+      "size": null
+    },
+    "?GetFormType@TESFile@@QEAA?AW4FormType@@XZ": {
+      "rva": 1890256,
+      "size": 72
+    },
+    "?GetCurrentSubRecordType@TESFile@@QEAAIXZ": {
+      "rva": 1891344,
+      "size": 47
+    },
+    "?ReadFormHeader@TESFile@@AEAA_NXZ": {
+      "rva": 1896688,
+      "size": null
+    },
+    "?ReadChunkHeader@TESFile@@AEAA_NXZ": {
+      "rva": 1897184,
+      "size": null
+    },
+    "?GetLevel@TESActorBaseData@@QEBAGXZ": {
+      "rva": 1954736,
+      "size": null
+    },
+    "?ConvertFormType@@YA?AW4FormType@@I@Z": {
+      "rva": 1989648,
+      "size": null
+    },
+    "?HasShout@TESSpellList@@QEBA_NPEAVTESShout@@@Z": {
+      "rva": 2040032,
+      "size": null
+    },
     "?GetArmorFinalRating@@YAMPEAVInventoryEntryData@@MM@Z": {
       "rva": 2266592,
       "size": null
     },
-    "?MakeInventoryChanges@Actor@@QEAAPEAVInventoryChanges@@XZ": {
+    "?MakeInventoryChanges@TESObjectREFR@@QEAAPEAVInventoryChanges@@XZ": {
       "rva": 2274016,
+      "size": null
+    },
+    "??1ItemFilter@InventoryUtils@@UEAA@XZ": {
+      "rva": 2275088,
+      "size": 11
+    },
+    "?InitOutfitItems@InventoryChanges@@QEAAXPEAVBGSOutfit@@G@Z": {
+      "rva": 2310032,
+      "size": 44
+    },
+    "?VisitInventory@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z": {
+      "rva": 2323136,
+      "size": 58
+    },
+    "?ForEachOutfitItemGuess@@YAXPEAU?$BSTArray@PEAVTESForm@@@@AEAUOutfitItemCapture@@@Z": {
+      "rva": 2357888,
       "size": null
     },
     "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z": {
@@ -26,12 +90,140 @@
       "rva": 2616816,
       "size": null
     },
+    "?GetLevelFromData@BGSEncounterZone@@QEBAGXZ": {
+      "rva": 2685408,
+      "size": null
+    },
+    "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ": {
+      "rva": 2863488,
+      "size": null
+    },
+    "?GetScale@TESObjectREFR@@QEBAMXZ": {
+      "rva": 3043120,
+      "size": 68
+    },
     "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z": {
       "rva": 3047360,
       "size": 156
     },
+    "?GetTransform@TESObjectREFR@@QEBAXAEAUNiTransform@@@Z": {
+      "rva": 3075616,
+      "size": 152
+    },
+    "?GetCurrentLocation@TESObjectREFR@@QEBAPEAVBGSLocation@@XZ": {
+      "rva": 3095408,
+      "size": 117
+    },
+    "?GetEncounterZone@TESObjectREFR@@QEBAPEAVBGSEncounterZone@@XZ": {
+      "rva": 3148464,
+      "size": null
+    },
+    "?GetCalcLevel@TESObjectREFR@@QEBAG_N@Z": {
+      "rva": 3148688,
+      "size": 143
+    },
+    "?LookupLocation@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z": {
+      "rva": 3215344,
+      "size": null
+    },
     "?HandleEntryPoint@@YAXIPEAVActor@@PEAVTESObjectARMO@@PEAM@Z": {
       "rva": 3723248,
+      "size": null
+    },
+    "??$HandleEntryPoint@PEAVMagicItem@@PEAM@BGSEntryPoint@@SAXW4ENTRY_POINT@ENTRY_POINTS@0@PEAVActor@@PEAVMagicItem@@PEAM@Z": {
+      "rva": 3723248,
+      "size": null
+    },
+    "?GetHeightScale@TESNPC@@QEBAMXZ": {
+      "rva": 3958208,
+      "size": null
+    },
+    "?GetCollisionObject@NiAVObject@@QEBAPEAVbhkCollisionObject@@XZ": {
+      "rva": 4217424,
+      "size": 33
+    },
+    "?FindCollisionObject@@YAXPEBVNiAVObject@@AEAPEAVbhkCollisionObject@@@Z": {
+      "rva": 4218224,
+      "size": null
+    },
+    "?GetSoundLevelValue@AIFormulas@@YAHW4SOUND_LEVEL@@@Z": {
+      "rva": 4314096,
+      "size": null
+    },
+    "?GetCurrentSpellCost@MagicCaster@@QEAAMXZ": {
+      "rva": 6040768,
+      "size": 57
+    },
+    "?InterruptCast@MagicCaster@@QEAAX_N@Z": {
+      "rva": 6073056,
+      "size": 104
+    },
+    "?FinishCast@MagicCaster@@QEAAXXZ": {
+      "rva": 6084272,
+      "size": null
+    },
+    "?PlayReleaseSound@MagicCaster@@QEAAXPEAVMagicItem@@@Z": {
+      "rva": 6086480,
+      "size": 165
+    },
+    "?FindPickTarget@MagicCaster@@QEAAPEAVMagicTarget@@AEAVNiPoint3@@PEAPEAVTESObjectCELL@@AEAVbhkPickData@@@Z": {
+      "rva": 6090512,
+      "size": 163
+    },
+    "?ContinueFindPickTarget@MagicCaster@@QEAAPEAVMagicTarget@@_NMAEAVNiPoint3@@PEAPEAVTESObjectCELL@@AEAVbhkPickData@@@Z": {
+      "rva": 6090688,
+      "size": null
+    },
+    "?GetLevel@Actor@@QEBAGXZ": {
+      "rva": 6789024,
+      "size": 13
+    },
+    "?GetLevel@PlayerCharacter@@QEAAGXZ": {
+      "rva": 6789024,
+      "size": null
+    },
+    "?IsInRagdollState@Actor@@QEBA_NXZ": {
+      "rva": 6847520,
+      "size": 102
+    },
+    "?ApplySoundEvent@@YAXPEAVActor@@H@Z": {
+      "rva": 6946384,
+      "size": null
+    },
+    "?GetMoveDirectionRelativeToFacing@Actor@@QEAAMXZ": {
+      "rva": 7008688,
+      "size": 20
+    },
+    "?GetActorValueModifier@Actor@@QEBAMW4ACTOR_VALUE_MODIFIER@@W4ActorValue@@@Z": {
+      "rva": 7099456,
+      "size": 115
+    },
+    "?IsAttacking@Actor@@QEBA_NXZ": {
+      "rva": 7125280,
+      "size": 14
+    },
+    "?HasShout@Actor@@QEBA_NPEAVTESShout@@@Z": {
+      "rva": 7173968,
+      "size": 16
+    },
+    "?GetVoiceRecoveryTime@Actor@@QEAAMXZ": {
+      "rva": 7180976,
+      "size": 20
+    },
+    "?GetModifiers@ActorValueStorage@@QEBAPEBUModifiers@@W4ActorValue@@@Z": {
+      "rva": 7222528,
+      "size": null
+    },
+    "?SetActorsDetectionEvent@AIProcess@@QEAAXPEAVActor@@AEBVNiPoint3@@HPEAVTESObjectREFR@@@Z": {
+      "rva": 7284064,
+      "size": null
+    },
+    "?GetVoiceRecoveryTime@AIProcess@@QEBAMXZ": {
+      "rva": 7340288,
+      "size": null
+    },
+    "?GetMoveDirectionRelativeToFacing@AIProcess@@QEAAMXZ": {
+      "rva": 7484368,
       "size": null
     },
     "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z": {
@@ -46,17 +238,101 @@
       "rva": 7581184,
       "size": 172
     },
+    "?Stop@BSSoundHandle@@QEAA_NXZ": {
+      "rva": 13407904,
+      "size": null
+    },
+    "?UnlockForRead@BSReadWriteLock@@QEAAXXZ": {
+      "rva": 13514000,
+      "size": 5
+    },
+    "?UnlockForWrite@BSReadWriteLock@@QEAAXXZ": {
+      "rva": 13514016,
+      "size": 26
+    },
     "?SetGlobalTimeMultiplier@BSTimer@@QEAAXM_N@Z": {
       "rva": 13515120,
       "size": 76
+    },
+    "?CreateDeviceWithGUID@BSDirectInputManager@@QEAAPEAVIDirectInputDevice8A@@PEAUGUID@@@Z": {
+      "rva": 13610608,
+      "size": 48
+    },
+    "?ReleaseDevice@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@@Z": {
+      "rva": 13610672,
+      "size": 37
+    },
+    "?GetDeviceState@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@IPEAX@Z": {
+      "rva": 13610720,
+      "size": 113
+    },
+    "?GetDeviceData@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@PEAIPEAPEAUDIDEVICEOBJECTDATA@@@Z": {
+      "rva": 13610848,
+      "size": 126
     },
     "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z": {
       "rva": 15583744,
       "size": null
     },
+    "?SetEulerAngles@NiMatrix3@@QEAAXMMM@Z": {
+      "rva": 15590016,
+      "size": null
+    },
     "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z": {
       "rva": 15698176,
       "size": 53
+    },
+    "?SetCollisionLayer@NiAVObject@@QEAAXW4COL_LAYER@@@Z": {
+      "rva": 17117824,
+      "size": 23
+    },
+    "?SetCollisionLayerAndGroup@NiAVObject@@QEAAXW4COL_LAYER@@I@Z": {
+      "rva": 17117856,
+      "size": 28
+    },
+    "?ApplyCollisionLayerAndGroup@@YAXPEAVNiAVObject@@AEBUCollisionLayerAndGroup@@@Z": {
+      "rva": 17123296,
+      "size": null
+    },
+    "?ApplyCollisionLayer@@YAXPEAVNiAVObject@@AEBW4COL_LAYER@@@Z": {
+      "rva": 17124000,
+      "size": null
+    },
+    "?UpdateRigidConstraints@NiAVObject@@QEAAX_NEI@Z": {
+      "rva": 17146720,
+      "size": 43
+    },
+    "?EnableRigidConstraints@@YAXPEAVNiAVObject@@AEBE@Z": {
+      "rva": 17154480,
+      "size": null
+    },
+    "?DisableRigidConstraints@@YAXPEAVNiAVObject@@AEBE@Z": {
+      "rva": 17154704,
+      "size": null
+    },
+    "memset": {
+      "rva": 22714360,
+      "size": null
+    },
+    "??_7ItemFilter@InventoryUtils@@6B@": {
+      "rva": 25188480,
+      "size": null
+    },
+    "__real@3c23d70a": {
+      "rva": 28687824,
+      "size": null
+    },
+    "__real@3f800000": {
+      "rva": 28687912,
+      "size": null
+    },
+    "?gCalcLevelCounterReset@@3GA": {
+      "rva": 34061512,
+      "size": null
+    },
+    "?gCalcLevelCounterMax@@3HA": {
+      "rva": 34061536,
+      "size": null
     },
     "?QGlobalTimeMultiplier@BSTimer@@2MA": {
       "rva": 34392776,
@@ -69,17 +345,56 @@
     "?kNullHandle@@3IA": {
       "rva": 35251548,
       "size": null
+    },
+    "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA": {
+      "rva": 52057896,
+      "size": null
+    },
+    "?gCalcLevelCounter@@3GA": {
+      "rva": 52294712,
+      "size": null
+    },
+    "?singleton@PlayerCharacter@@2PEAV1@EA": {
+      "rva": 52627320,
+      "size": null
     }
   },
-  "folds": [],
+  "folds": [
+    [
+      "?GetLevel@Actor@@QEBAGXZ",
+      "?GetLevel@PlayerCharacter@@QEAAGXZ"
+    ]
+  ],
   "_provenance": {
     "database": "Address Library 1.7.104.0 versionlib-1-7-104-0.bin sha256 8aab3dd251d135b849bd983f86a4a205c920fa3e81f8e30c0e63ccfef9423842",
-    "names": "CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT); mangled forms are the reconstruction's chosen declarations; entries without a community name are reference targets observed in the pinned image and say so",
+    "names": "CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT), and powerof3/CommonLibSSE 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0) where an entry says so; mangled forms are the reconstruction's chosen declarations; entries without a community name are reference targets observed in the pinned image and say so",
     "entries": [
+      {
+        "name": "?GetAVEffect@MagicItem@@QEBAPEAVEffectSetting@@XZ",
+        "ae_id": 11302,
+        "rva": "0x150aa0",
+        "size_from": null,
+        "community_name": "MagicItem::GetAVEffect"
+      },
+      {
+        "name": "?CalculateCost@MagicItem@@QEBAMPEAVActor@@@Z",
+        "ae_id": 11321,
+        "rva": "0x151780",
+        "size_from": null,
+        "community_name": "Offset::MagicItem::CalculateCost"
+      },
       {
         "name": "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z",
         "ae_id": 11702,
         "rva": "0x1648b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ",
+        "ae_id": 11830,
+        "rva": "0x16a1f0",
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
@@ -92,6 +407,74 @@
         "community_name": "Offset::CreateRefHandle"
       },
       {
+        "name": "?OpenTES@TESFile@@QEAA_NW4OpenMode@NiFile@@_N@Z",
+        "ae_id": 13931,
+        "rva": "0x1ca460",
+        "size_from": ".pdata",
+        "community_name": "TESFile::OpenTES"
+      },
+      {
+        "name": "?OpenInternal@TESFile@@AEAA_NPEAD0W4OpenMode@NiFile@@_N@Z",
+        "ae_id": 13932,
+        "rva": "0x1ca490",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetFormType@TESFile@@QEAA?AW4FormType@@XZ",
+        "ae_id": 13982,
+        "rva": "0x1cd7d0",
+        "size_from": ".pdata",
+        "community_name": "TESFile::GetFormType"
+      },
+      {
+        "name": "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "ae_id": 13988,
+        "rva": "0x1cdc10",
+        "size_from": ".pdata",
+        "community_name": "TESFile::GetCurrentSubRecordType"
+      },
+      {
+        "name": "?ReadFormHeader@TESFile@@AEAA_NXZ",
+        "ae_id": 14033,
+        "rva": "0x1cf0f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?ReadChunkHeader@TESFile@@AEAA_NXZ",
+        "ae_id": 14034,
+        "rva": "0x1cf2e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetLevel@TESActorBaseData@@QEBAGXZ",
+        "ae_id": 14384,
+        "rva": "0x1dd3b0",
+        "size_from": null,
+        "community_name": "TESActorBaseData::GetLevel"
+      },
+      {
+        "name": "?ConvertFormType@@YA?AW4FormType@@I@Z",
+        "ae_id": 14624,
+        "rva": "0x1e5c10",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?HasShout@TESSpellList@@QEBA_NPEAVTESShout@@@Z",
+        "ae_id": 14940,
+        "rva": "0x1f20e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
         "name": "?GetArmorFinalRating@@YAMPEAVInventoryEntryData@@MM@Z",
         "ae_id": 16017,
         "rva": "0x2295e0",
@@ -99,11 +482,41 @@
         "community_name": "GetArmorFinalRating"
       },
       {
-        "name": "?MakeInventoryChanges@Actor@@QEAAPEAVInventoryChanges@@XZ",
+        "name": "?MakeInventoryChanges@TESObjectREFR@@QEAAPEAVInventoryChanges@@XZ",
         "ae_id": 16040,
         "rva": "0x22b2e0",
         "size_from": null,
         "community_name": "TESObjectREFR::MakeInventoryChanges"
+      },
+      {
+        "name": "??1ItemFilter@InventoryUtils@@UEAA@XZ",
+        "ae_id": 16047,
+        "rva": "0x22b710",
+        "size_from": "analysis body",
+        "community_name": null,
+        "note": "Address Library id; community name InventoryChanges::GetItemCount is contradicted by the code (it only stores a vftable pointer); the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?InitOutfitItems@InventoryChanges@@QEAAXPEAVBGSOutfit@@G@Z",
+        "ae_id": 16072,
+        "rva": "0x233f90",
+        "size_from": ".pdata",
+        "community_name": "InventoryChanges::InitOutfitItems"
+      },
+      {
+        "name": "?VisitInventory@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z",
+        "ae_id": 16095,
+        "rva": "0x2372c0",
+        "size_from": ".pdata",
+        "community_name": "InventoryChanges::VisitInventory"
+      },
+      {
+        "name": "?ForEachOutfitItemGuess@@YAXPEAU?$BSTArray@PEAVTESForm@@@@AEAUOutfitItemCapture@@@Z",
+        "ae_id": 16155,
+        "rva": "0x23fa80",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "?GetHandle@?$BSPointerHandleManagerInterface@VActor@@UBSPointerHandleManager@@@@SA?AU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z",
@@ -121,6 +534,28 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?GetLevelFromData@BGSEncounterZone@@QEBAGXZ",
+        "ae_id": 18198,
+        "rva": "0x28f9e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ",
+        "ae_id": 18905,
+        "rva": "0x2bb180",
+        "size_from": null,
+        "community_name": "TESObjectCELL::GetLocation"
+      },
+      {
+        "name": "?GetScale@TESObjectREFR@@QEBAMXZ",
+        "ae_id": 19664,
+        "rva": "0x2e6f30",
+        "size_from": ".pdata",
+        "community_name": "TESObjectREFR::GetScale"
+      },
+      {
         "name": "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z",
         "ae_id": 19691,
         "rva": "0x2e7fc0",
@@ -128,11 +563,225 @@
         "community_name": "Actor::HasOutfitItems"
       },
       {
+        "name": "?GetTransform@TESObjectREFR@@QEBAXAEAUNiTransform@@@Z",
+        "ae_id": 19753,
+        "rva": "0x2eee20",
+        "size_from": ".pdata",
+        "community_name": "TESObjectREFR::GetTransform"
+      },
+      {
+        "name": "?GetCurrentLocation@TESObjectREFR@@QEBAPEAVBGSLocation@@XZ",
+        "ae_id": 19812,
+        "rva": "0x2f3b70",
+        "size_from": ".pdata",
+        "community_name": "TESObjectREFR::GetCurrentLocation"
+      },
+      {
+        "name": "?GetEncounterZone@TESObjectREFR@@QEBAPEAVBGSEncounterZone@@XZ",
+        "ae_id": 20202,
+        "rva": "0x300ab0",
+        "size_from": null,
+        "community_name": "TESObjectREFR::GetEncounterZone",
+        "note": "community name from powerof3/CommonLibSSE 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0)"
+      },
+      {
+        "name": "?GetCalcLevel@TESObjectREFR@@QEBAG_N@Z",
+        "ae_id": 20205,
+        "rva": "0x300b90",
+        "size_from": ".pdata",
+        "community_name": "TESObjectREFR::GetCalcLevel"
+      },
+      {
+        "name": "?LookupLocation@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z",
+        "ae_id": 20539,
+        "rva": "0x310ff0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
         "name": "?HandleEntryPoint@@YAXIPEAVActor@@PEAVTESObjectARMO@@PEAM@Z",
         "ae_id": 23526,
         "rva": "0x38cff0",
         "size_from": null,
         "community_name": "ENTRY_POINTS::HandleEntryPoint"
+      },
+      {
+        "name": "??$HandleEntryPoint@PEAVMagicItem@@PEAM@BGSEntryPoint@@SAXW4ENTRY_POINT@ENTRY_POINTS@0@PEAVActor@@PEAVMagicItem@@PEAM@Z",
+        "ae_id": 23526,
+        "rva": "0x38cff0",
+        "size_from": null,
+        "community_name": "BGSEntryPoint::HandleEntryPoint"
+      },
+      {
+        "name": "?GetHeightScale@TESNPC@@QEBAMXZ",
+        "ae_id": 24763,
+        "rva": "0x3c65c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetCollisionObject@NiAVObject@@QEBAPEAVbhkCollisionObject@@XZ",
+        "ae_id": 26022,
+        "rva": "0x405a50",
+        "size_from": ".pdata",
+        "community_name": "NiAVObject::GetCollisionObject"
+      },
+      {
+        "name": "?FindCollisionObject@@YAXPEBVNiAVObject@@AEAPEAVbhkCollisionObject@@@Z",
+        "ae_id": 26030,
+        "rva": "0x405d70",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetSoundLevelValue@AIFormulas@@YAHW4SOUND_LEVEL@@@Z",
+        "ae_id": 26367,
+        "rva": "0x41d3f0",
+        "size_from": null,
+        "community_name": "AIFormulas::GetSoundLevelValue",
+        "note": "community name from powerof3/CommonLibSSE 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0)"
+      },
+      {
+        "name": "?GetCurrentSpellCost@MagicCaster@@QEAAMXZ",
+        "ae_id": 34204,
+        "rva": "0x5c2cc0",
+        "size_from": ".pdata",
+        "community_name": "MagicCaster::GetCurrentSpellCost"
+      },
+      {
+        "name": "?InterruptCast@MagicCaster@@QEAAX_N@Z",
+        "ae_id": 34408,
+        "rva": "0x5caae0",
+        "size_from": ".pdata",
+        "community_name": "MagicCaster::InterruptCast"
+      },
+      {
+        "name": "?FinishCast@MagicCaster@@QEAAXXZ",
+        "ae_id": 34435,
+        "rva": "0x5cd6b0",
+        "size_from": null,
+        "community_name": "MagicCaster::FinishCast"
+      },
+      {
+        "name": "?PlayReleaseSound@MagicCaster@@QEAAXPEAVMagicItem@@@Z",
+        "ae_id": 34448,
+        "rva": "0x5cdf50",
+        "size_from": ".pdata",
+        "community_name": "MagicCaster::PlayReleaseSound"
+      },
+      {
+        "name": "?FindPickTarget@MagicCaster@@QEAAPEAVMagicTarget@@AEAVNiPoint3@@PEAPEAVTESObjectCELL@@AEAVbhkPickData@@@Z",
+        "ae_id": 34456,
+        "rva": "0x5cef10",
+        "size_from": ".pdata",
+        "community_name": "MagicCaster::FindPickTarget"
+      },
+      {
+        "name": "?ContinueFindPickTarget@MagicCaster@@QEAAPEAVMagicTarget@@_NMAEAVNiPoint3@@PEAPEAVTESObjectCELL@@AEAVbhkPickData@@@Z",
+        "ae_id": 34457,
+        "rva": "0x5cefc0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetLevel@Actor@@QEBAGXZ",
+        "ae_id": 37334,
+        "rva": "0x6797a0",
+        "size_from": "analysis body",
+        "community_name": "Actor::GetLevel"
+      },
+      {
+        "name": "?GetLevel@PlayerCharacter@@QEAAGXZ",
+        "ae_id": 37334,
+        "rva": "0x6797a0",
+        "size_from": null,
+        "community_name": "Actor::GetLevel",
+        "note": "second declaration of Actor::GetLevel (same Address Library id) on the PlayerCharacter stand-in in reconstruction/forms/TESObjectREFR.h; listed in folds as an alias of one target function, not as a claim of identical-code folding"
+      },
+      {
+        "name": "?IsInRagdollState@Actor@@QEBA_NXZ",
+        "ae_id": 37491,
+        "rva": "0x687c20",
+        "size_from": ".pdata",
+        "community_name": "Actor::IsInRagdollState"
+      },
+      {
+        "name": "?ApplySoundEvent@@YAXPEAVActor@@H@Z",
+        "ae_id": 37711,
+        "rva": "0x69fe50",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetMoveDirectionRelativeToFacing@Actor@@QEAAMXZ",
+        "ae_id": 37960,
+        "rva": "0x6af1b0",
+        "size_from": "analysis body",
+        "community_name": "Actor::GetMoveDirectionRelativeToFacing"
+      },
+      {
+        "name": "?GetActorValueModifier@Actor@@QEBAMW4ACTOR_VALUE_MODIFIER@@W4ActorValue@@@Z",
+        "ae_id": 38469,
+        "rva": "0x6c5440",
+        "size_from": ".pdata",
+        "community_name": "Actor::GetActorValueModifier"
+      },
+      {
+        "name": "?IsAttacking@Actor@@QEBA_NXZ",
+        "ae_id": 38590,
+        "rva": "0x6cb920",
+        "size_from": "analysis body",
+        "community_name": "Actor::IsAttacking"
+      },
+      {
+        "name": "?HasShout@Actor@@QEBA_NPEAVTESShout@@@Z",
+        "ae_id": 38783,
+        "rva": "0x6d7750",
+        "size_from": "analysis body",
+        "community_name": "Actor::HasShout"
+      },
+      {
+        "name": "?GetVoiceRecoveryTime@Actor@@QEAAMXZ",
+        "ae_id": 38808,
+        "rva": "0x6d92b0",
+        "size_from": "analysis body",
+        "community_name": "Actor::GetVoiceRecoveryTime"
+      },
+      {
+        "name": "?GetModifiers@ActorValueStorage@@QEBAPEBUModifiers@@W4ActorValue@@@Z",
+        "ae_id": 39020,
+        "rva": "0x6e3500",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?SetActorsDetectionEvent@AIProcess@@QEAAXPEAVActor@@AEBVNiPoint3@@HPEAVTESObjectREFR@@@Z",
+        "ae_id": 39286,
+        "rva": "0x6f2560",
+        "size_from": null,
+        "community_name": "AIProcess::SetActorsDetectionEvent"
+      },
+      {
+        "name": "?GetVoiceRecoveryTime@AIProcess@@QEBAMXZ",
+        "ae_id": 39532,
+        "rva": "0x700100",
+        "size_from": null,
+        "community_name": "AIProcess::GetVoiceRecoveryTime",
+        "note": "NG declares AIProcess::GetVoiceRecoveryTime with an inline body and no address id; that this Address Library id is that function is a guess"
+      },
+      {
+        "name": "?GetMoveDirectionRelativeToFacing@AIProcess@@QEAAMXZ",
+        "ae_id": 39877,
+        "rva": "0x7233d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z",
@@ -156,11 +805,60 @@
         "community_name": "ArmorRatingVisitorBase::Visit"
       },
       {
+        "name": "?Stop@BSSoundHandle@@QEAA_NXZ",
+        "ae_id": 67619,
+        "rva": "0xcc96a0",
+        "size_from": null,
+        "community_name": "BSSoundHandle::Stop"
+      },
+      {
+        "name": "?UnlockForRead@BSReadWriteLock@@QEAAXXZ",
+        "ae_id": 68239,
+        "rva": "0xce3510",
+        "size_from": "analysis body",
+        "community_name": "BSReadWriteLock::UnlockForRead"
+      },
+      {
+        "name": "?UnlockForWrite@BSReadWriteLock@@QEAAXXZ",
+        "ae_id": 68240,
+        "rva": "0xce3520",
+        "size_from": "analysis body",
+        "community_name": "BSReadWriteLock::UnlockForWrite"
+      },
+      {
         "name": "?SetGlobalTimeMultiplier@BSTimer@@QEAAXM_N@Z",
         "ae_id": 68245,
         "rva": "0xce3970",
         "size_from": "analysis body",
         "community_name": "BSTimer::SetGlobalTimeMultiplier"
+      },
+      {
+        "name": "?CreateDeviceWithGUID@BSDirectInputManager@@QEAAPEAVIDirectInputDevice8A@@PEAUGUID@@@Z",
+        "ae_id": 68675,
+        "rva": "0xcfae70",
+        "size_from": ".pdata",
+        "community_name": "BSDirectInputManager::CreateDeviceWithGUID"
+      },
+      {
+        "name": "?ReleaseDevice@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@@Z",
+        "ae_id": 68676,
+        "rva": "0xcfaeb0",
+        "size_from": ".pdata",
+        "community_name": "BSDirectInputManager::ReleaseDevice"
+      },
+      {
+        "name": "?GetDeviceState@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@IPEAX@Z",
+        "ae_id": 68677,
+        "rva": "0xcfaee0",
+        "size_from": ".pdata",
+        "community_name": "BSDirectInputManager::GetDeviceState"
+      },
+      {
+        "name": "?GetDeviceData@BSDirectInputManager@@QEAAXPEAVIDirectInputDevice8A@@PEAIPEAPEAUDIDEVICEOBJECTDATA@@@Z",
+        "ae_id": 68678,
+        "rva": "0xcfaf60",
+        "size_from": ".pdata",
+        "community_name": "BSDirectInputManager::GetDeviceData"
       },
       {
         "name": "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
@@ -170,11 +868,119 @@
         "community_name": "NiObject::ProcessClone"
       },
       {
+        "name": "?SetEulerAngles@NiMatrix3@@QEAAXMMM@Z",
+        "ae_id": 70221,
+        "rva": "0xede280",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
         "name": "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z",
         "ae_id": 70826,
         "rva": "0xef8900",
         "size_from": ".pdata",
         "community_name": "NiTimeController::ProcessClone"
+      },
+      {
+        "name": "?SetCollisionLayer@NiAVObject@@QEAAXW4COL_LAYER@@@Z",
+        "ae_id": 77998,
+        "rva": "0x1053280",
+        "size_from": ".pdata",
+        "community_name": "NiAVObject::SetCollisionLayer"
+      },
+      {
+        "name": "?SetCollisionLayerAndGroup@NiAVObject@@QEAAXW4COL_LAYER@@I@Z",
+        "ae_id": 77999,
+        "rva": "0x10532a0",
+        "size_from": ".pdata",
+        "community_name": "NiAVObject::SetCollisionLayerAndGroup"
+      },
+      {
+        "name": "?ApplyCollisionLayerAndGroup@@YAXPEAVNiAVObject@@AEBUCollisionLayerAndGroup@@@Z",
+        "ae_id": 78011,
+        "rva": "0x10547e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?ApplyCollisionLayer@@YAXPEAVNiAVObject@@AEBW4COL_LAYER@@@Z",
+        "ae_id": 78013,
+        "rva": "0x1054aa0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?UpdateRigidConstraints@NiAVObject@@QEAAX_NEI@Z",
+        "ae_id": 78103,
+        "rva": "0x105a360",
+        "size_from": ".pdata",
+        "community_name": "NiAVObject::UpdateRigidConstraints"
+      },
+      {
+        "name": "?EnableRigidConstraints@@YAXPEAVNiAVObject@@AEBE@Z",
+        "ae_id": 78143,
+        "rva": "0x105c1b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?DisableRigidConstraints@@YAXPEAVNiAVObject@@AEBE@Z",
+        "ae_id": 78144,
+        "rva": "0x105c290",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "memset",
+        "ae_id": 109694,
+        "rva": "0x15a97f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "??_7ItemFilter@InventoryUtils@@6B@",
+        "ae_id": 188597,
+        "rva": "0x1805880",
+        "size_from": null,
+        "community_name": "VTABLE_InventoryUtils__ItemFilter[0]"
+      },
+      {
+        "name": "__real@3c23d70a",
+        "ae_id": 187068,
+        "rva": "0x1b5bdd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id of a floating-point constant; the name is the compiler's constant label"
+      },
+      {
+        "name": "__real@3f800000",
+        "ae_id": 186482,
+        "rva": "0x1b5be28",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id of a floating-point constant; the name is the compiler's constant label"
+      },
+      {
+        "name": "?gCalcLevelCounterReset@@3GA",
+        "ae_id": 360555,
+        "rva": "0x207bcc8",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?gCalcLevelCounterMax@@3HA",
+        "ae_id": 360558,
+        "rva": "0x207bce0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "?QGlobalTimeMultiplier@BSTimer@@2MA",
@@ -197,6 +1003,29 @@
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA",
+        "ae_id": 400884,
+        "rva": "0x31a5728",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?gCalcLevelCounter@@3GA",
+        "ae_id": 401105,
+        "rva": "0x31df438",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?singleton@PlayerCharacter@@2PEAV1@EA",
+        "ae_id": 403521,
+        "rva": "0x3230778",
+        "size_from": null,
+        "community_name": "Offset::PlayerCharacter::Singleton"
       }
     ]
   }
