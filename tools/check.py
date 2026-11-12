@@ -54,6 +54,9 @@ REVIEW_DELTA_FIELDS = {'review_kind', 'previous_source_digest', 'previous_review
 REVIEW_NAMING_FIELDS = {'naming_findings'}
 REVIEW_SCHEMA_FIELDS = {1: REVIEW_FIELDS, 2: REVIEW_FIELDS | REVIEW_DELTA_FIELDS,
                         3: REVIEW_FIELDS | REVIEW_DELTA_FIELDS | REVIEW_NAMING_FIELDS}
+# Family records keep all ordinary source/code bindings and add the family and committed batch.
+# Schema 3 remains the format for individual reviews and is not made legacy by this addition.
+REVIEW_SCHEMA_FIELDS[4] = REVIEW_SCHEMA_FIELDS[3] | {'family_evidence'}
 REVIEW_RECORD_SCHEMA = 3
 # Records below REVIEW_RECORD_SCHEMA predate the four-check review format, so check.py accepts one
 # only if it is one of the records that existed when that format took effect (commit e51d00a): this
@@ -64,7 +67,7 @@ REVIEW_RECORD_SCHEMA = 3
 LEGACY_REVIEW_RECORDS = Path(__file__).resolve().parent / 'legacy_review_records.json'
 REVIEW_KINDS = {'full', 'delta'}
 LABEL_ONLY = 'label-only'
-REVIEW_KINDS_BY_SCHEMA = {2: REVIEW_KINDS, 3: REVIEW_KINDS | {LABEL_ONLY}}
+REVIEW_KINDS_BY_SCHEMA = {2: REVIEW_KINDS, 3: REVIEW_KINDS | {LABEL_ONLY}, 4: {'family'}}
 # Naming findings are the one free-text field published in a Reviewer record, so they are held to
 # a mechanical filter against code, bytes and private paths; the Reviewer is told they are public.
 MAX_NAMING_FINDINGS = 20
@@ -407,6 +410,9 @@ def validate_review(fn, record, root=None):
     require(valid_date, 'Review record: invalid review_date')
     if review['review_record_schema'] >= 2:
         check_review_kind(review, record)
+    if review['review_record_schema'] == 4:
+        import family_review
+        family_review.validate_public_review(root, fn, record, review)
     # Last, so a malformed legacy record is reported for what is wrong with it.
     require(review['review_record_schema'] >= REVIEW_RECORD_SCHEMA or legacy_review_allowed(name, review),
             f'Review record: {name} is schema {review["review_record_schema"]}, which is accepted only for '
@@ -494,7 +500,7 @@ def check_review_kind(review, record):
         # field when that approval was a schema 1 or 2 record.
         check_naming_findings(review['naming_findings'], allow_unknown=kind == LABEL_ONLY)
     current = record_code_section(record)
-    if kind == 'full':
+    if kind in ('full', 'family'):
         require(review['previous_source_digest'] is None and review['previous_review_sha256'] is None
                 and review['previous_code_section_sha256'] is None,
                 'Review record: a full review names no previous digest, review or code-section hash')
@@ -663,6 +669,8 @@ def validate(data, target, root=None, stale_ok=False):
         map_name = name[:-len('.history.json')] + '.json'
         require((reports.parent / map_name).is_file(), f'{name}: no symbol map {map_name} beside it')
         symbol_maps.load_state(reports.parent, map_name)
+    import family_review
+    family_review.validate_metadata(ROOT if root is None else root)
     seen = set()
     for item in data['work_items']:
         require(isinstance(item['id'], str) and re.fullmatch(r'[a-z0-9][a-z0-9-]*', item['id'])

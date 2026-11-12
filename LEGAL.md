@@ -67,8 +67,8 @@ bytes and decompiler output stay private, and this project still never acquires 
 PDBs or middleware source itself.
 
 Each function is published only once accepted under the acceptance rule in
-`docs/verification.md`, which includes a per-function provenance review by a Reviewer subagent,
-with provenance or legal doubt escalated to the maintainer. The copyright status of reconstructed
+`docs/verification.md`, which includes provenance review by an admitted Reviewer under the
+individual or family procedure, with provenance or legal doubt escalated to the maintainer. The copyright status of reconstructed
 implementations is not settled by matching bytes or withholding binaries.
 Nothing in this repository grants third-party rights. See `LICENSE` for the narrow infrastructure
 license; do not label the entire repository MIT. Material reused from FNV under the decision

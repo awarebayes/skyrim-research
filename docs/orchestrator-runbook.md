@@ -83,6 +83,60 @@ commit nor blocks it; the shared checkout is not touched. Afterwards `next-actio
 byte-identical to the integrated files; if any local file differs it refuses and lists it: that
 is a stop for the strong role, never a reason to delete or overwrite a file yourself.
 
+## Family batches
+
+`next-actions` also prints family review needed, draw sample, review sample and accept batch
+steps. The planning orchestrator and Engineer choose a bounded family and batch; the routine
+orchestrator never picks parameters, ranges, the population or a seed. A family is the generator
+or stamp template plus version and template digest, bound to the target build, recipe, compiler
+and comparator. Any change starts a new family. Each member carries its parameter row and
+name-source label; a comparator pass proves no name.
+
+Engineer setup (no verifier or acceptance is performed by these metadata commands):
+
+1. Prepare a private JSON spec with `origin`, `binding`, `template_source`, `parameter_source`,
+   `parameter_ranges` and `first_members` (the first 20 enrolled inventory ids, in order).
+   `binding` is `family_review.binding(fn, match_record)`; each source has `path` and `sha256`.
+   Run `python3 tools/flow.py family-plan --spec <spec>` to freeze member digests, write the
+   public manifest under `reports/<build>/families/`, and generate its Reviewer brief.
+2. If the first 20 are confirmed and ungrouped, planning creates one normal group and a combined
+   brief: one fresh admitted primary Reviewer writes both the family JSON and their individual
+   review blocks in one pass. The independent second-pass safeguard still applies. Integrate the
+   first 20 normally before approving the family. Already-reviewed first 20 keep their normal
+   evidence and safeguards. Start the family Reviewer on the generated brief; its JSON format
+   and checklist are in `docs/reviewer-runbook.md`, "Family reviews". `family-approve <manifest>
+   --review .local/reviews/<task>.family.json` checks the saved approval and all 20 safeguards.
+3. `python3 tools/flow.py family-batch <manifest> --name <batch> --seed <seed> --functions <ids...>`
+   freezes the complete later population, including member digests. Stage the metadata by name,
+   run `check.py --staged`, and commit it before `family-draw <batch path>`. Commit the drawn
+   batch before any population member is accepted. These metadata commits belong to the Engineer;
+   the routine orchestrator hands an uncommitted metadata refusal to the strong role.
+
+The draw ranks population ids by SHA-256 of canonical JSON `[seed, function_id]`, breaking ties
+by id, and takes `min(population, max(20, ceil(5%)))`. The public batch preserves seed, full
+population, member hashes, pre-draw commit and sample. The gate checks that the planned metadata
+was committed before selection, the draw was committed before acceptance, and no population
+member had already been accepted at that exact origin and row in that history. Never redraw,
+shrink a population or change a seed after seeing the sample.
+
+The ordinary `review-group` excludes eligible unsampled members, reviews all sampled members
+and all parameters outside the approved ranges, and keeps every existing second-pass safeguard.
+`integrate-family <batch path>` accepts the remaining unsampled in-range members only after
+those individual reviews and safeguards pass, in the same isolated integration/check/commit/push
+path as ordinary groups. The acceptance tool requires the actual saved approving family review,
+an admitted model, active family, exact origin/version/digest and target bindings, unchanged
+member rows and the committed draw. Other functions keep individual review; a family approval
+cannot be carried by label-only acceptance. No family command changes the comparator or lint.
+
+On sampled rejection, binding error, non-reproduction, provenance doubt, Reviewer disagreement
+or another material defect, stop the whole family and run `family-pause <manifest> --reason
+'<short public reason>'`. Commit the pause by name after the staged check. Assess the affected
+population, explicitly revoke accepted members whose evidence is invalidated, and escalate
+policy/provenance or systemic doubt under the existing rules. A pause freezes new acceptance;
+existing records stay auditable until explicit revocation. Correct the cause and use a freshly
+reviewed family version before resuming. Never clear a pause by hand or retain invalidated
+acceptances silently.
+
 ## What each worker returns
 
 | worker | returns | full output |
@@ -144,7 +198,8 @@ started you.
 
 ## Never
 
-Commit or push except through `flow.py integrate`; run `accept_function.py` directly; edit a
+Commit or push except through `flow.py integrate` or `flow.py integrate-family` (Engineer metadata
+commits are described above); run `accept_function.py` directly; edit a
 saved review; start a Reviewer on work it drafted, engineered or triaged; give a worker
 material its model is not cleared to read; start a Boat machine (Boat is retired; confirm briefs
 use the runner hosts); post anything publicly.

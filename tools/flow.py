@@ -50,6 +50,7 @@ import tempfile
 TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
 import accept_function as af  # noqa: E402
+import family_review as fr  # noqa: E402
 import profiles  # noqa: E402
 from source_digest import include_closure, tu_digest  # noqa: E402
 import work_queue as wq  # noqa: E402
@@ -385,6 +386,343 @@ def choose_sample(name, rvas, comps, counts, seed='flow'):
     return sorted(chosen, key=lambda r: int(r, 16))
 
 
+# ------------------------------------------------------------------ family reviews
+
+def family_manifests(root):
+    return {p.relative_to(root).as_posix(): fr.read(root, p.relative_to(root))
+            for p in sorted((root / 'reports').glob('*/families/*.json'))}
+
+
+def family_batches(root):
+    return {p.relative_to(root).as_posix(): fr.read(root, p.relative_to(root))
+            for p in sorted((root / 'reports').glob('*/family-batches/*.json'))}
+
+
+def family_reviewed_gate(root, fdir, required, data, target):
+    """Reviewed members keep the ordinary parser, comparator gate and second-pass safeguard."""
+    by_id = {fn['id']: fn for fn in data['functions']}
+    for fid in sorted(required):
+        fn = by_id[fid]
+        fr.require(fn['status'] == 'matched', f'{fid}: sampled or first-20 member needs its own approving review')
+        rec = af.validate_match(fn, target, root)
+        rv = af.validate_review(fn, rec, root)
+        fr.require(rv.get('review_kind') in ('full', 'delta'), f'{fid}: needs an individual full or delta review')
+        rva = hexrva(fn['rva'])
+        candidates = [g for g in groups(fdir).values() if g['kind'] == 'review'
+                      and rva in g['functions'] and g['task_id'] == rv['review_task_id']]
+        fr.require(bool(candidates), f'{fid}: reviewed member lacks its sampling safeguard group')
+        g = candidates[-1]
+        review_file = review_path(root, g['task_id'])
+        fr.require(review_file.is_file() and hashlib.sha256(review_file.read_bytes()).hexdigest() == rv['review_sha256'],
+                   f'{fid}: saved sample review hash differs from its approval')
+        status, blocks = read_review(root, g, data['functions'])
+        fr.require(status == 'ok' and blocks[rva].get('verdict') == 'approve'
+                   and blocks[rva].get('source_digest') == rec['source']['digest'],
+                   f'{fid}: saved approving sample review missing or stale')
+        ok, why = sampling_gate(root, fdir, g, data)
+        fr.require(ok, f'{fid}: sampling safeguard: {why}')
+
+
+def plan_family(root, spec_file, fdir=None):
+    family = fr.read(root, spec_file)
+    data, target = af.load(root)
+    by_id = {fn['id']: fn for fn in data['functions']}
+    first = family['first_members']
+    fr.require(isinstance(first, list) and len(set(first)) == 20, 'provide the ordered first 20 member ids')
+    family.update(family_schema=1, review=None, paused=False, pause_reason='')
+    family['first_members'] = {}
+    for fid in first:
+        fn = by_id[fid]
+        record = af.validate_match(fn, target, root)
+        fr.check_member(family, fn, record)
+        family['first_members'][fid] = fr.member_digest(fn, record)
+    fr.validate_family(family, approved=False)
+    if any(by_id[fid]['status'] != 'matched' for fid in first):
+        states = function_states(root, fdir or flow_dir(root), online=False)
+        fr.require(all(states.get(hexrva(by_id[fid]['rva']), {}).get('state') == 'confirmed'
+                       and not states[hexrva(by_id[fid]['rva'])].get('group') for fid in first),
+                   'first 20 must be confirmed and ungrouped before planning a new family')
+    path = f'reports/{target["build_id"]}/families/{fr.family_key(family)}.json'
+    fr.require(not (root / path).exists(), 'family manifest already exists')
+    fr.write(root, path, family)
+    if any(by_id[fid]['status'] != 'matched' for fid in first):
+        fdir = fdir or flow_dir(root)
+        made = review_group(root, fdir, max_size=20, select=set(first))
+        fr.require(len(made) == 1, 'first 20 must form one new review group; resolve existing groups first')
+        g = load_group(fdir, made[0])
+        g.update(family_review_path=path, task_id='review-family-' + fr.family_key(family)[:20],
+                 member_brief=g['brief'])
+        save_group(fdir, g)
+        g['brief'] = family_brief(root, path, session_profile(fdir), fdir)[1]
+        save_group(fdir, g)
+    return path
+
+
+def family_brief(root, path, profile=None, fdir=None):
+    family = fr.read(root, path)
+    profile = profile or session_profile(flow_dir(root))
+    task = 'review-family-' + fr.family_key(family)[:20]
+    attached = [g for g in groups(fdir or flow_dir(root)).values()
+                if g.get('family_review_path') == path and g['kind'] == 'review']
+    if attached:
+        task = attached[0]['task_id']
+    brief = f'.local/briefs/{task}.md'
+    members = (f"Also write `.local/reviews/{task}.md` with ordinary full-review blocks for all first 20, "
+               f"in this same pass. Their group is {attached[0]['name']}; the standard checklist and member inputs "
+               f"are in `{attached[0]['member_brief']}`. Use task id {task}, not the earlier task id in that brief."
+               if attached else 'The first 20 already have individual approvals; assess them with the template.')
+    text = f"""# Family review {task}
+
+Role: fresh independent admitted Reviewer. Follow docs/reviewer-runbook.md, Family reviews.
+Task: {task}; review scope is the family at `{path}` (spec digest `{fr.digest(fr.spec(family))}`).
+Gates and exposure: docs/authorizations.md. Stop if the model lacks authorization to read an input.
+Allowed inputs: pinned template and parameter source, the manifest and its first 20 members,
+public match records and reconstructed units. Read no other review or handoff.
+Review source plausibility, provenance, extraction, target bindings, labels and all first 20.
+Output: `.local/reviews/{task}.family.json`, exactly the JSON schema in the family-review runbook.
+{members}
+Profile: {profile}. Do not edit anything else, push, post publicly,
+mark matched, use verifier hosts or start agents. Limit: 40 minutes, one pass; escalate doubts.
+"""
+    (root / brief).parent.mkdir(parents=True, exist_ok=True)
+    (root / brief).write_text(text)
+    return task, brief
+
+
+def approve_family(root, fdir, path, review_file):
+    family = fr.read(root, path)
+    fr.validate_family(family, approved=False)
+    fr.require(family['review'] is None and not family['paused'], 'family already reviewed or paused')
+    file = Path(review_file).resolve()
+    base = (root / REVIEWS).resolve()
+    fr.require(file.is_relative_to(base) and file.is_file(), 'family review must be saved under .local/reviews')
+    doc = fr.read(root, file)
+    family['review'] = {k: doc[k] for k in ('review_task_id', 'reviewer_model', 'profile', 'spec_sha256')}
+    family['review']['review_sha256'] = hashlib.sha256(file.read_bytes()).hexdigest()
+    fr.validate_family(family)
+    fr.private_approval(root, family, session_profile(fdir))
+    for field in ('template_source', 'parameter_source'):
+        src = family[field]
+        fr.require(hashlib.sha256((root / src['path']).read_bytes()).hexdigest() == src['sha256'],
+                   'template or extraction source changed')
+    data, target = af.load(root)
+    family_reviewed_gate(root, fdir, family['first_members'], data, target)
+    for fn in data['functions']:
+        if fn['id'] in family['first_members']:
+            rec = af.validate_match(fn, target, root)
+            fr.check_member(family, fn, rec)
+            fr.require(fr.member_digest(fn, rec) == family['first_members'][fn['id']], 'first-20 member changed')
+    fr.write(root, path, family)
+    return path
+
+
+def plan_family_batch(root, family_path, name, seed, population):
+    fr.require(fr.ID.fullmatch(name) is not None, 'invalid batch name')
+    family = fr.read(root, family_path)
+    fr.validate_family(family)
+    fr.require(not family['paused'], 'family is paused')
+    data, target = af.load(root)
+    by_id = {fn['id']: fn for fn in data['functions']}
+    fr.require(len(population) == len(set(population)) and bool(population), 'empty or duplicate batch population')
+    members = {}
+    for fid in population:
+        fn = by_id[fid]
+        fr.require(fn['status'] != 'matched', 'sample drawn after an acceptance in its population')
+        record = af.validate_match(fn, target, root)
+        fr.check_member(family, fn, record, ranges=False)
+        members[fid] = fr.member_digest(fn, record)
+    for old in family_batches(root).values():
+        fr.require(old['family_path'] != family_path or not set(population) & set(old['population']),
+                   'member already belongs to a recorded batch of this family')
+    path = f'reports/{target["build_id"]}/family-batches/{name}.json'
+    fr.require(not (root / path).exists(), 'batch already exists')
+    batch = dict(batch_schema=1, family_path=family_path, family_sha256=fr.digest(fr.spec(family)),
+                 seed=seed, population=sorted(population), members=members, commitment=None, sample=None)
+    fr.require(isinstance(seed, str) and bool(seed), 'missing draw seed')
+    fr.write(root, path, batch)
+    return path
+
+
+def draw_family_batch(root, path):
+    batch = fr.read(root, path)
+    fr.require(batch['sample'] is None and batch['commitment'] is None, 'batch already drawn; never redraw')
+    fr.committed(root, path, batch)
+    head = fr.git(root, 'rev-parse', 'HEAD')
+    fr.no_prior_acceptance(root, batch['population'], head, batch['members'])
+    data = inventory(root)
+    fr.require(not any(fn['id'] in batch['population'] and fn['status'] == 'matched' for fn in data['functions']),
+               'sample drawn after an acceptance in its population')
+    family = fr.read(root, batch['family_path'])
+    fr.validate_family(family)
+    fr.require(not family['paused'], 'family is paused')
+    batch.update(commitment=head, sample=fr.draw(batch['seed'], batch['population']))
+    fr.validate_batch(batch, family)
+    fr.write(root, path, batch)
+    return batch
+
+
+def pause_family(root, path, reason):
+    from check import naming_finding_problem
+    fr.require(naming_finding_problem(reason) is None, 'pause reason must be short public prose')
+    family = fr.read(root, path)
+    fr.validate_family(family, approved=family['review'] is not None)
+    family.update(paused=True, pause_reason=reason)
+    fr.write(root, path, family)
+
+
+def family_sample_problem(root, fdir, batch, data):
+    expected = {hexrva(fn['rva']): fr.read(root, fn['report'])['source']['digest']
+                for fn in data['functions'] if fn['id'] in (batch['sample'] or [])}
+    for g in groups(fdir).values():
+        if g['kind'] != 'review' or not set(g['functions']) & set(expected):
+            continue
+        status, blocks = read_review(root, g, data['functions'])
+        if status != 'ok':
+            continue
+        current = [b for r, b in blocks.items() if r in expected and b.get('source_digest') == expected[r]]
+        if not current:
+            continue
+        if any(b.get('verdict') != 'approve' for b in current):
+            return 'sample rejection or escalation'
+        ok, why = sampling_gate(root, fdir, g, data)
+        if not ok and why.startswith('DISAGREE'):
+            return 'sampling disagreement'
+    return None
+
+
+def family_group_hold(root, fdir, ids):
+    """A sample rejection or disagreement freezes every member of that family."""
+    data = inventory(root)
+    by_id = {fn['id']: fn for fn in data['functions']}
+    for path, family in family_manifests(root).items():
+        relevant = any(by_id[fid].get('report')
+                       and fr.read(root, by_id[fid]['report']).get('origin') == family['origin']
+                       and fr.binding(by_id[fid], fr.read(root, by_id[fid]['report'])) == family['binding']
+                       for fid in ids)
+        if not relevant:
+            continue
+        fr.require(not family['paused'], 'family is paused: ' + path)
+        for g in groups(fdir).values():
+            if g.get('family_review_path') == path:
+                review_file = root / REVIEWS / (g['task_id'] + '.family.json')
+                if review_file.is_file():
+                    fr.require(fr.read(root, review_file).get('verdict') == 'approve',
+                               'family Reviewer did not approve; pause family ' + path)
+    for path, batch in family_batches(root).items():
+        if not any(fid in batch['population'] and by_id[fid].get('report')
+                   and fr.member_digest(by_id[fid], fr.read(root, by_id[fid]['report'])) == batch['members'][fid]
+                   for fid in ids):
+            continue
+        family = fr.read(root, batch['family_path'])
+        fr.require(not family['paused'], 'family is paused: ' + batch['family_path'])
+        if batch['sample'] is None:
+            raise ValueError('Family review: draw and commit sample before reviewing a family batch')
+        fr.ordering(root, path, batch)
+        problem = family_sample_problem(root, fdir, batch, data)
+        fr.require(problem is None, f'{problem}; pause family ' + batch['family_path'])
+
+
+def integrate_family(root, fdir, path, branch='main', push=True):
+    root = Path(root)
+    batch = fr.read(root, path)
+    family = fr.read(root, batch['family_path'])
+    fr.validate_family(family)
+    fr.validate_batch(batch, family)
+    fr.require(not family['paused'], 'family is paused')
+    fr.private_approval(root, family, session_profile(fdir))
+    fr.ordering(root, path, batch)
+    data, target = af.load(root)
+    required = set(batch['sample'])
+    for fn in data['functions']:
+        if fn['id'] in batch['population']:
+            rec = af.validate_match(fn, target, root)
+            fr.check_member(family, fn, rec, ranges=False)
+            fr.require(fr.member_digest(fn, rec) == batch['members'][fn['id']], 'member differs from committed population')
+            if fn['status'] == 'matched' or not fr.in_ranges(rec.get('family_parameters'), family['parameter_ranges']):
+                required.add(fn['id'])
+    family_reviewed_gate(root, fdir, required, data, target)
+    name = 'family-' + Path(path).stem
+    existing = groups(fdir).get(name)
+    if not existing:
+        functions = [hexrva(fn['rva']) for fn in data['functions']
+                     if fn['id'] in batch['population'] and fn['id'] not in required]
+        fr.require(bool(functions), 'batch has no members needing family acceptance')
+        save_group(fdir, dict(name=name, kind='family', task_id=family['review']['review_task_id'],
+                             build_id=family['binding']['build_id'], functions=functions, batch_path=path,
+                             reviewer_model=family['review']['reviewer_model'], profile=session_profile(fdir),
+                             integrated=None, sampled=[]))
+    return integrate(root, fdir, name, branch, push)
+
+
+def family_deferred(root, fn):
+    for family in family_manifests(root).values():
+        if (family['paused'] or (family['review'] is None and fn['id'] not in family['first_members'])) and fn.get('report'):
+            rec = fr.read(root, fn['report'])
+            if rec.get('origin') == family['origin'] and fr.binding(fn, rec) == family['binding']:
+                return True
+    for batch in family_batches(root).values():
+        if fn['id'] not in batch['population']:
+            continue
+        family = fr.read(root, batch['family_path'])
+        if family['paused'] or batch['sample'] is None:
+            return True
+        fr.validate_batch(batch, family)
+        rec = fr.read(root, fn['report'])
+        return fn['id'] not in batch['sample'] and fr.in_ranges(rec.get('family_parameters'), family['parameter_ranges'])
+    return False
+
+
+def family_actions(root, fdir):
+    acts = []
+    for path, family in family_manifests(root).items():
+        fr.validate_family(family, approved=family['review'] is not None)
+        if family['paused']:
+            acts.append(('stop', f'family paused: {path}: {family["pause_reason"]}; assess accepted population before resuming'))
+        elif family['review'] is None:
+            task, brief = family_brief(root, path, session_profile(fdir), fdir)
+            review = f'{REVIEWS}/{task}.family.json'
+            if (root / review).is_file():
+                doc = fr.read(root, review)
+                if doc.get('verdict') != 'approve':
+                    acts.append(('stop', f'family review {task} did not approve; pause {path} and escalate per the rule'))
+                elif all(fn['status'] == 'matched' for fn in inventory(root)['functions']
+                         if fn['id'] in family['first_members']):
+                    acts.append(('run', f'python3 tools/flow.py family-approve {path} --review {review}'))
+                else:
+                    acts.append(('wait', f'family approval {task} waits for first-20 individual integration and safeguards'))
+            elif any(e.get('event') == 'family-dispatched' and e.get('task') == task for e in events(fdir)):
+                acts.append(('wait', f'family Reviewer {task} is running; saved review: {review}'))
+            else:
+                profile = session_profile(fdir)
+                entry = dict(profiles.role(profile, 'reviewer'))
+                if not af.reviewer_admitted(root, entry['model'], profile):
+                    entry = {'model': 'opus', 'harness': 'claude-code'}
+                prompt = f'Read docs/reviewer-runbook.md and follow it. Your brief is {brief}.'
+                acts.append(('dispatch', f'family review needed: {start_worker(entry, prompt, "reviewer")}. '
+                             f'Then: python3 tools/flow.py family-dispatched {path}'))
+    by_id = {fn['id']: fn for fn in inventory(root)['functions']}
+    for path, batch in family_batches(root).items():
+        family = fr.read(root, batch['family_path'])
+        if family['paused']:
+            continue
+        if batch['sample'] is None:
+            acts.append(('run', f'python3 tools/flow.py family-draw {path}    # draw sample; seed and population must be committed first'))
+            continue
+        fr.validate_batch(batch, family)
+        problem = family_sample_problem(root, fdir, batch, inventory(root))
+        if problem:
+            acts.append(('stop', f'{problem}: pause family with python3 tools/flow.py family-pause '
+                         f"{batch['family_path']} --reason 'Sample review or reproduction defect.'"))
+            continue
+        required = [fid for fid in batch['population'] if fid in batch['sample'] or not fr.in_ranges(
+                    fr.read(root, by_id[fid]['report']).get('family_parameters'), family['parameter_ranges'])]
+        if any(by_id[fid]['status'] != 'matched' for fid in required):
+            acts.append(('run', 'python3 tools/flow.py review-group    # review sample and out-of-range members; keep second-pass safeguard'))
+        elif any(by_id[fid]['status'] != 'matched' for fid in batch['population']):
+            acts.append(('run', f'python3 tools/flow.py integrate-family {path}    # accept batch after sample reviews'))
+    return acts
+
+
 # ------------------------------------------------------------------ reviewer model
 
 def reviewer_class(model):
@@ -430,7 +768,7 @@ def next_group_name(fdir):
     return f'g{n:03d}'
 
 
-def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, seed='flow'):
+def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, seed='flow', select=None):
     """Group every confirmed function not yet in a review group, unit by unit; returns new group names."""
     root = Path(root)
     profile = session_profile(fdir)
@@ -448,7 +786,8 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
     states = function_states(root, fdir, online=False)
     data = inventory(root)
     by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == data['target_build_id']}
-    todo = [r for r, s in states.items() if s['state'] == 'confirmed' and not s.get('group')]
+    todo = [r for r, s in states.items() if s['state'] == 'confirmed' and not s.get('group')
+            and not family_deferred(root, by_rva[r]) and (select is None or by_rva[r]['id'] in select)]
     units = {}
     for rva in sorted(todo, key=lambda r: int(r, 16)):
         units.setdefault(unit_of(root, by_rva[rva])[0], []).append(rva)
@@ -607,6 +946,10 @@ def redo_review(root, fdir, name):
     data = inventory(root)
     by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == data['target_build_id']}
     g['brief'] = write_review_brief(root, g, by_rva)
+    if g.get('family_review_path'):
+        g['member_brief'] = g['brief']
+        save_group(fdir, g)
+        g['brief'] = family_brief(root, g['family_review_path'], g.get('profile'), fdir)[1]
     save_group(fdir, g)
     log_event(fdir, 'redo-review', group=name, task_id=g['task_id'])
     return g
@@ -656,12 +999,14 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
     states = function_states(root, fdir, branch, online)
     gs = groups(fdir)
     stops, acts, waits = [], [], []
+    for kind, text in family_actions(root, fdir):
+        (stops if kind == 'stop' else waits if kind == 'wait' else acts).append((kind, text))
     profile = session_profile(fdir)
     s_entry = profiles.role(profile, 'strong')
     strong = (f'the strong role ({profiles.model_label(s_entry)}'
               + ('; Agent tool subagent_type engineer)' if s_entry['harness'] == 'claude-code' else '; a Codex session)'))
     for name, g in gs.items():
-        if g.get('superseded_by'):
+        if g.get('superseded_by') or g['kind'] == 'family':
             continue
         status, blocks = read_review(root, g, data['functions'])
         if status.startswith('malformed'):
@@ -677,7 +1022,9 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
             acts.append(('dispatch', f'sampling re-run for {name}: {strong} with brief .local/briefs/rerun-{name}.md, '
                          f'or run its commands yourself. Then: python3 tools/flow.py dispatched {name} --rerun'))
         if status == 'missing':
-            if not g.get('dispatched'):
+            if g.get('family_review_path'):
+                waits.append(('wait', f'first-20 review {g["task_id"]} is handled by its family brief'))
+            elif not g.get('dispatched'):
                 acts.append(dispatch_line(g))
             else:
                 waits.append(('wait', f'Reviewer for {name} ({g["task_id"]}) is running; its file appears at {REVIEWS}/{g["task_id"]}.md'))
@@ -722,7 +1069,9 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
     if passed or stale:
         acts.append(('run', f'python3 tools/flow.py brief confirm    # {len(passed)} drafted unit(s), {len(stale)} stale record(s); '
                      f'then run its commands, or start {strong} with it'))
-    if any(s['state'] == 'confirmed' and not s.get('group') for s in states.values()):
+    if any(s['state'] == 'confirmed' and not s.get('group')
+           and not family_deferred(root, next(fn for fn in data['functions'] if hexrva(fn['rva']) == r))
+           for r, s in states.items()):
         acts.append(('run', 'python3 tools/flow.py review-group'))
     held = [r for r, s in states.items() if s.get('held') and not s.get('group')]
     if held and not any(e.get('event') == 'triage-brief' and e.get('held') for e in events(fdir)):
@@ -1091,17 +1440,22 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     """
     root = Path(root)
     g = load_group(fdir, name)
-    refuse(g['kind'] == 'review', f'{name} is a sampling group; integrate its primary group {g.get("pair")}')
+    refuse(g['kind'] in ('review', 'family'), f'{name} is a sampling group; integrate its primary group {g.get("pair")}')
     data = inventory(root)
-    status, blocks = read_review(root, g, data['functions'])
-    refuse(status != 'missing', f'review {REVIEWS}/{g["task_id"]}.md is not saved yet; wait for the Reviewer')
-    refuse(status == 'ok', f'review {g["task_id"]} {status}; run: python3 tools/flow.py redo-review {name}')
-    esc = [r for r, b in blocks.items() if b.get('verdict') == 'escalate' and b.get('escalation_category') in BLOCKING_ESCALATIONS]
-    refuse(not esc, f'blocking escalation for {", ".join(esc)}: escalate to the maintainer; group held')
-    ok, problem = sampling_gate(root, fdir, g, data)
-    refuse(ok, f'sampling gate: {problem}')
+    family_group = g['kind'] == 'family'
+    if family_group:
+        blocks = {r: {'verdict': 'approve'} for r in g['functions']}
+    else:
+        status, blocks = read_review(root, g, data['functions'])
+        refuse(status != 'missing', f'review {REVIEWS}/{g["task_id"]}.md is not saved yet; wait for the Reviewer')
+        refuse(status == 'ok', f'review {g["task_id"]} {status}; run: python3 tools/flow.py redo-review {name}')
+        esc = [r for r, b in blocks.items() if b.get('verdict') == 'escalate' and b.get('escalation_category') in BLOCKING_ESCALATIONS]
+        refuse(not esc, f'blocking escalation for {", ".join(esc)}: escalate to the maintainer; group held')
+        ok, problem = sampling_gate(root, fdir, g, data)
+        refuse(ok, f'sampling gate: {problem}')
     approved = sorted((r for r, b in blocks.items() if b.get('verdict') == 'approve'), key=lambda r: int(r, 16))
     refuse(approved, 'the review has no approve block; nothing to integrate')
+    family_group_hold(root, fdir, [fn['id'] for fn in data['functions'] if hexrva(fn['rva']) in approved])
     integ = g.get('integrated') or {}
     review_file = str((root / REVIEWS / f'{g["task_id"]}.md').resolve())
     tree = integration_tree(fdir, name)
@@ -1119,8 +1473,20 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         done = all(by_rva[r]['status'] == 'matched' for r in approved)
         printed = list(carried)
         if not done:
-            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file,
-                       '--profile', g.get('profile', profiles.DEFAULT)], tree, 'accept_function.py',
+            if family_group:
+                batch = fr.read(root, g['batch_path'])
+                for path in (g['batch_path'], batch['family_path']):
+                    fr.committed(root, path, fr.read(root, path))
+                    fr.committed(tree, path, fr.read(root, path))
+                private = tree / REVIEWS
+                private.parent.mkdir(parents=True, exist_ok=True)
+                private.symlink_to((root / REVIEWS).resolve(), target_is_directory=True)
+                cmd = [python, 'tools/accept_function.py', '--family-batch', g['batch_path'],
+                       '--family-flow-dir', str(fdir.resolve()), '--profile', g.get('profile', profiles.DEFAULT)]
+            else:
+                cmd = [python, 'tools/accept_function.py', '--all-approved', '--review', review_file,
+                       '--profile', g.get('profile', profiles.DEFAULT)]
+            out = run(cmd, tree, 'accept_function.py',
                       env=dict(os.environ, SKYRIM_FLOW_DIR=str(fdir.resolve())))
             take = False
             for line in out.splitlines():
@@ -1273,6 +1639,27 @@ def parser():
     s = sub.add_parser('review-group')
     s.add_argument('--max', type=int, default=DEFAULT_GROUP_MAX)
     s.add_argument('--reviewer-model', help='override the profile\'s Reviewer (refused unless the rule admits it)')
+    s = sub.add_parser('family-plan')
+    s.add_argument('--spec', required=True)
+    s = sub.add_parser('family-dispatched')
+    s.add_argument('path')
+    s = sub.add_parser('family-approve')
+    s.add_argument('path')
+    s.add_argument('--review', required=True)
+    s = sub.add_parser('family-batch')
+    s.add_argument('family_path')
+    s.add_argument('--name', required=True)
+    s.add_argument('--seed', required=True)
+    s.add_argument('--functions', nargs='+', required=True)
+    s = sub.add_parser('family-draw')
+    s.add_argument('path')
+    s = sub.add_parser('family-pause')
+    s.add_argument('path')
+    s.add_argument('--reason', required=True)
+    s = sub.add_parser('integrate-family')
+    s.add_argument('path')
+    s.add_argument('--no-push', action='store_true')
+    s.add_argument('--branch', default='main')
     s = sub.add_parser('dispatched')
     s.add_argument('group')
     s.add_argument('--rerun', action='store_true', help='the sampling re-run, not the Reviewer, was started')
@@ -1326,6 +1713,29 @@ def main(argv=None):
             if a.functions:
                 for rva, s in sorted(states.items(), key=lambda kv: int(kv[0], 16)):
                     print(f'{rva}\t{s.get("state")}\t{s.get("group") or "-"}\t{s.get("profile") or "-"}\t{s.get("detail") or ""}')
+        elif a.cmd == 'family-plan':
+            path = plan_family(root, a.spec, fdir)
+            print(path)
+            print(family_brief(root, path, session_profile(fdir), fdir)[1])
+        elif a.cmd == 'family-dispatched':
+            task, _ = family_brief(root, a.path, session_profile(fdir), fdir)
+            log_event(fdir, 'family-dispatched', task=task, family=a.path)
+            print('family Reviewer dispatched: ' + task)
+        elif a.cmd == 'family-approve':
+            print(approve_family(root, fdir, a.path, a.review))
+        elif a.cmd == 'family-batch':
+            print(plan_family_batch(root, a.family_path, a.name, a.seed, a.functions))
+            print('Engineer: commit the seed and population before family-draw; commit the draw before any acceptance.')
+        elif a.cmd == 'family-draw':
+            batch = draw_family_batch(root, a.path)
+            print('sample: ' + ' '.join(batch['sample']))
+            print('Engineer: commit the draw before reviewing or accepting the batch.')
+        elif a.cmd == 'family-pause':
+            pause_family(root, a.path, a.reason)
+            print('family paused; assess accepted members and revoke invalidated evidence')
+        elif a.cmd == 'integrate-family':
+            g = integrate_family(root, fdir, a.path, a.branch, not a.no_push)
+            print('family batch integration: ' + str(g.get('integrated')))
         elif a.cmd == 'review-group':
             made = review_group(root, fdir, a.max, a.reviewer_model)
             if not made:
@@ -1387,7 +1797,7 @@ def main(argv=None):
         elif a.cmd == 'event':
             log_event(fdir, a.kind, note=a.note)
             print(f'recorded {a.kind}')
-    except (FlowError, wq.QueueError) as exc:
+    except (FlowError, wq.QueueError, ValueError, KeyError, TypeError, OSError) as exc:
         print(f'flow: {exc}', file=sys.stderr)
         return 1
     return 0

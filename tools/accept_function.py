@@ -3,6 +3,7 @@
     python3 tools/accept_function.py --build-id <build id> --rva 0x<rva> \
         --review .local/reviews/<task-id>.md --verdict approve
     python3 tools/accept_function.py --all-approved --review <file or -> [--functions ...] [--units ...]
+    python3 tools/accept_function.py --family-batch reports/<build>/family-batches/<batch>.json
     python3 tools/accept_function.py --label-only [--functions ...] [--units ...]
     python3 tools/accept_function.py --refresh-named [--functions ...] [--units ...]
     python3 tools/accept_function.py --build-id <build id> --rva 0x<rva> --revoke --reason '<why>'
@@ -48,6 +49,11 @@ Revoking sets the entry back to `mapped`, drops its `report` and `named`, and de
 and match records; git history keeps both. The dated note in the function's finding is written by
 hand: the tool prints what to add.
 
+--family-batch accepts only unsampled in-range members of an active, approved family after the
+committed draw, all sampled individual approvals and their sampling safeguards. Its schema 4
+records name the saved family review rather than claiming an individual review. The ordinary
+comparator and validator checks still apply.
+
 No mode commits. Stage the printed files by name and commit them with the evidence.
 """
 import argparse
@@ -69,6 +75,7 @@ from build_index import INDEX, write_index  # noqa: E402
 from lint_reconstruction import LABELS_VERSION, lint_tree  # noqa: E402
 from source_digest import DIGEST_METHOD  # noqa: E402
 import review_packet  # noqa: E402
+import family_review as fr  # noqa: E402
 
 PROGRESS = 'data/progress.json'
 TARGET = 'builds/target.json'
@@ -523,9 +530,9 @@ def prepare(root, data, target, index, title, header, block, blob, when):
     previous = None
     if fn['status'] == 'matched':
         previous = _json_or_none(out)
-        # A label-only record was written without a Reviewer pass on its digest; a full review of
-        # that digest may replace it, which is how its carried naming findings get closed.
-        relabelled = (previous is not None and previous.get('review_kind') == LABEL_ONLY
+        # Label-only and family records have no individual Reviewer pass on this digest; a full
+        # review may replace them, which is how their naming findings get closed.
+        relabelled = (previous is not None and previous.get('review_kind') in (LABEL_ONLY, 'family')
                       and previous.get('source_digest') == record['source']['digest'] and kind == 'full')
         refuse(previous is not None and (previous.get('source_digest') != record['source']['digest'] or relabelled),
                f'{fn["id"]} is already matched')
@@ -537,6 +544,7 @@ def prepare(root, data, target, index, title, header, block, blob, when):
     if kind == 'full':
         # A full review stands on its own; it carries no link to the approval it replaces.
         return fn, record, review_record(fn, record, header, title, blob, when, 'full', naming)
+    refuse(previous is None or previous.get('review_kind') != 'family', 'family approval needs a full individual review')
     refuse(previous is not None, f'{fn["id"]} has no earlier approval; a delta review needs one, do a full review')
     refuse(block.get('previous_source_digest') == previous['source_digest'],
            'delta review previous_source_digest is not the digest the superseded Reviewer record approved')
@@ -727,6 +735,60 @@ def accept(root, build_id, rva, review_file, verdict, when=None, profile=None):
     return accept_many(root, review_file, [(build_id, rva)], verdict, when, profile=profile)[0]
 
 
+def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None):
+    """Accept unsampled members only after all required individual reviews and safeguards passed."""
+    import flow
+    root = Path(root)
+    profile = profile or active_profile(root)
+    data, target = load(root)
+    validate(data, target, root, stale_ok=True)
+    batch_path = fr.public_path(batch_path, f'reports/{target["build_id"]}/family-batches/')
+    batch = fr.read(root, batch_path)
+    family_path = fr.public_path(batch['family_path'], f'reports/{target["build_id"]}/families/')
+    family = fr.read(root, family_path)
+    fr.validate_family(family)
+    fr.require(not family['paused'], 'family is paused: ' + family['pause_reason'])
+    fr.private_approval(root, family, profile)
+    fr.validate_batch(batch, family)
+    fr.ordering(root, batch_path, batch)
+    flow.family_group_hold(root, fdir or flow.flow_dir(root), batch['population'])
+    by_id = {fn['id']: fn for fn in data['functions']}
+    # Enrollment already checked the first 20 and their safeguards; their frozen row digests
+    # are bound by the saved family review. Later batches review only their own required members.
+    required = set(batch['sample'])
+    for fid in batch['population']:
+        fn = by_id[fid]
+        rec = validate_match(fn, target, root)
+        fr.check_member(family, fn, rec, ranges=False)
+        fr.require(batch['members'][fid] == fr.member_digest(fn, rec), 'member differs from committed population')
+        if fn['status'] == 'matched' or not fr.in_ranges(rec.get('family_parameters'), family['parameter_ranges']):
+            required.add(fid)
+    flow.family_reviewed_gate(root, fdir or flow.flow_dir(root), required, data, target)
+    when = when or now_utc()
+    prepared, new = [], copy.deepcopy(data)
+    for fid in batch['population']:
+        index = next(i for i, fn in enumerate(data['functions']) if fn['id'] == fid)
+        fn = data['functions'][index]
+        if fid in required:
+            continue
+        fr.require(fn['status'] != 'matched', 'unsampled member already accepted; use a new batch')
+        rec = validate_match(fn, target, root)
+        fr.check_member(family, fn, rec)
+        fr.require(not (root / review_record_path(fn)).exists(), 'member already has an approval')
+        rv = review_record(fn, rec, family['review'], family['review']['review_task_id'], b'', when,
+                           'family', ['Family approval does not assess individual names.'])
+        rv.update(review_record_schema=4, review_sha256=family['review']['review_sha256'],
+                  family_evidence={'family_path': family_path, 'batch_path': batch_path,
+                                   'batch_sha256': fr.digest(batch), 'member_sha256': fr.member_digest(fn, rec)})
+        prepared.append((index, fn, rec, rv))
+        new['functions'][index]['status'] = 'matched'
+        set_named(new['functions'], index, False)
+    if not prepared:
+        return []
+    selected = {fn['id'] for _, fn, _, _ in prepared}
+    return apply(root, data, new, target, prepared, stale_ids(root, data) - selected, when)
+
+
 def superseded_approval(fn, record, previous):
     """Refuse unless `previous` is a well-formed approve of this function for another digest."""
     where = review_record_path(fn)
@@ -769,6 +831,8 @@ def label_only(root, select=None, when=None):
         current = record_code_section(record)
         refuse(current is not None, f'{fn["id"]}: the match record carries no code-section hash; a review is needed')
         previous = _json_or_none(root / review_record_path(fn))
+        refuse(previous is None or previous.get('review_kind') != 'family',
+               'family approval cannot be carried by label-only; use full review or a new family batch')
         superseded_approval(fn, record, previous)
         old, where = review_packet.previous_code_section(root, fn, previous['source_digest'])
         refuse(old is not None, f'{fn["id"]}: no code-section hash for the approved digest ({where}); a review is needed')
@@ -861,6 +925,8 @@ def main(argv=None):
     p.add_argument('--rva', type=parse_rva, help='RVA, hex with 0x or decimal')
     p.add_argument('--review', help=f'Review file under {REVIEWS}/ or outside the repository, or - for stdin')
     p.add_argument('--verdict', choices=['approve', 'reject', 'escalate'], help='Verdict parsed from the review')
+    p.add_argument('--family-flow-dir', type=Path, help=argparse.SUPPRESS)
+    p.add_argument('--family-batch', help='Accept unsampled members of a precommitted family batch')
     p.add_argument('--all-approved', action='store_true', help='Accept every approve block of the review')
     p.add_argument('--label-only', action='store_true',
                    help='Re-accept review-behind entries whose compared code section is unchanged, without a review')
@@ -874,13 +940,19 @@ def main(argv=None):
     args = p.parse_args(argv)
     skipped = []
     try:
-        modes = sum(map(bool, (args.revoke, args.all_approved, args.label_only, args.refresh_named)))
-        refuse(modes <= 1, 'choose one of --revoke, --all-approved, --label-only, --refresh-named')
+        modes = sum(map(bool, (args.revoke, args.all_approved, args.label_only, args.refresh_named, args.family_batch)))
+        refuse(modes <= 1, 'choose one of --revoke, --all-approved, --label-only, --refresh-named, --family-batch')
         selecting = bool(args.functions or args.units)
         refuse(not selecting or args.all_approved or args.label_only or args.refresh_named,
                '--functions and --units go with --all-approved, --label-only or --refresh-named')
+        refuse(args.family_flow_dir is None or args.family_batch, '--family-flow-dir requires --family-batch')
         select = resolve_selection(args.root, load(args.root)[0], args.functions, args.units) if selecting else None
-        if args.revoke:
+        if args.family_batch:
+            refuse(not selecting and args.review is None and args.verdict is None
+                   and args.build_id is None and args.rva is None, '--family-batch takes no function or review selection')
+            changed = accept_family_batch(args.root, args.family_batch, profile=args.profile, fdir=args.family_flow_dir)
+            print('accepted unsampled family members: status matched, family review recorded')
+        elif args.revoke:
             refuse(args.review is None and args.verdict is None, '--revoke takes no --review or --verdict')
             refuse(args.build_id is not None and args.rva is not None, '--revoke needs --build-id and --rva')
             changed, finding, note = revoke(args.root, args.build_id, args.rva, args.reason)

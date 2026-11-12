@@ -119,6 +119,90 @@ whether it keeps every existing fail-closed check, has tests for the new behavio
 negative cases) and does not weaken what counts as evidence. Acceptance-rule changes are always
 `escalate` (category `systemic`) after your review.
 
+## Family reviews
+
+A family approval replaces individual review only for unsampled members inside reviewed parameter
+ranges. Every member still needs the unchanged comparator pass on two independent hosts. Review
+`docs/verification.md`, "Family reviews", and the generated brief. You must be an admitted model
+for the profile, in fresh context, and must not have drafted or triaged the template, extraction
+or members. A family review proves no name and grants no new exposure permission.
+
+Check the pinned generator or stamp template as source a programmer could have written, including
+all ordinary blocking grounds. Check its parameter extraction: what each parameter means, where
+it comes from, type/width/sign, allowed values or inclusive ranges, and how it binds a function's
+build, RVA and size. Check the template digest, extraction source digest, target image, recipe,
+compiler and comparator pins. For a stamp, check that the template is the claimed already-matched
+function. Read every one of the first 20 enrolled members with the ordinary checklist, including
+source plausibility, source digest and report bindings. Check each member's name-source label
+(public symbol source or labelled guess with confidence); neither a matching body nor a shared
+family establishes a name. Never infer target names from the template's name.
+
+The first 20 also retain ordinary per-function approval records and the existing second-pass
+sampling safeguard. A combined family brief asks you to write their ordinary `.md` blocks and
+the family JSON in the same primary pass; use the task id in that combined brief for both. Their order and identities are frozen in `first_members` when the Engineer
+plans the family; the family cannot exempt a member until all 20 have passed individual review
+and their safeguards. The saved approval freezes that initial evidence; later batches do not
+repeat the first-20 review. Later sampled members and out-of-range members use the normal output
+format and review groups above. A sampled rejection, wrong binding, non-reproduction, provenance
+doubt or disagreement stops the family; report it for `flow.py family-pause`, and assess already
+accepted members rather than silently retaining invalidated evidence.
+
+For the family itself, write `.local/reviews/<task-id>.family.json` once, as JSON with exactly
+these keys (no comments, extra or duplicate keys). The generated brief gives `spec_sha256` and the
+profile. Compute the spec digest independently with `family_review.digest(family_review.spec(manifest))`
+and compute the template/extraction file hashes yourself. An approve needs all checks `pass`;
+otherwise write `reject` or `escalate`, with a non-`none` escalation category for escalation, and
+report reasons privately in your return. Never edit a saved review to change a verdict.
+
+```json
+{
+  "family_review_schema": 1,
+  "review_task_id": "<task-id>",
+  "reviewer_model": "<admitted model id>",
+  "profile": "<cheap|full|claude-low>",
+  "spec_sha256": "<SHA-256>",
+  "fresh_context": true,
+  "drafted_or_triaged": false,
+  "verdict": "approve",
+  "escalation_category": "none",
+  "checks": {
+    "plausible_source": "pass",
+    "provenance": "pass",
+    "claim_scope": "pass",
+    "publication_hygiene": "pass",
+    "parameter_extraction": "pass",
+    "target_binding": "pass",
+    "name_sources": "pass",
+    "first_20": "pass"
+  }
+}
+```
+
+Return the private review path and a short verdict; do not publish template source or parameter
+extraction material in that message. `family-approve` checks the saved file, admitted model,
+freshness, independence, spec digest, source pins, first 20 individual approvals and safeguards.
+The public manifest contains its task id, model, profile, file hash and spec hash. An exempt
+member's schema 4 review record names that approval and its committed batch, and remains
+`named: false` until an individual review and the ordinary label check establish tier 2.
+
+Machine-readable generator contract: preserve these fields from generation into each confirmed
+match record (alongside, never instead of, its normal source and two-host report fields):
+
+- `origin`: exactly `family`, `version` and `template_digest` (strings). `template_digest` is the
+  SHA-256 of the pinned generator/template source file. A changed extraction source also needs
+  a new version or template digest. The family manifest binds both source files and all target,
+  recipe, compiler and comparator pins.
+- `family_parameters`: an object mapping reviewed parameter names to exact integer, boolean or
+  string values. Numeric rules are inclusive `min`/`max`; enumerations use `values`. Missing or
+  extra parameters and wrong value types are outside the reviewed ranges.
+- `name_source`: the existing per-function label string, such as `GUESS(low)` or a pinned
+  `COMMUNITY(...)`, `EXE_RTTI(...)` or `SIBLING(...)` citation. Preserve its source meaning;
+  another game's symbol is never evidence of this target's name.
+
+Only structured, publication-safe metadata belongs in public records. Raw extraction tables and
+analysis stay private. Changing a member's source, parameters, origin or name source after the
+population commitment invalidates that row; fix it under individual review or plan a new batch.
+
 ## Verdicts
 
 - `approve`: every blocking ground (items 1 to 5) holds, whatever `naming_findings` lists.

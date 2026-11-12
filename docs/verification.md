@@ -74,7 +74,8 @@ A function is accepted only when ALL of these hold:
      introduced only for matching, or a justification comment that is not a programmer's reason.
 3. **Reviewer approval.** A Reviewer (`docs/reviewer-runbook.md`; in Claude Code the
    `.claude/agents/reviewer.md` subagent) of an admitted class, started with fresh context, which
-   did not draft, engineer or triage that function, returns `approve` for it,
+   did not draft, engineer or triage that function, returns `approve` for it (or supplies the family approval
+   and member reviews under "Family reviews" below),
    for the current source or, under "Label-only re-acceptance" below, for an earlier source whose
    compiled code section is identical. The Reviewer is a necessary sanity and provenance check,
    not match evidence: it can only veto or approve, cannot substitute for item 1, and cannot edit
@@ -177,7 +178,8 @@ accepted functions by `--refresh-named`. Functions accepted before this rule hav
 Open naming findings are closed by a Reviewer: a later full or delta review that lists none.
 Label fixes themselves do not need one: see "Label-only re-acceptance".
 
-**Sampling safeguard.** At least 5% of accepted functions, chosen at random by the orchestrator,
+**Sampling safeguard.** At least 5% of individually reviewed accepted functions (including reviewed
+family members), chosen at random by the orchestrator,
 plus the first 20 accepted functions under every new recipe or compiler, every new Drafter prompt
 version, every new Reviewer prompt version (`.claude/agents/reviewer.md`, `docs/reviewer-runbook.md`)
 or Reviewer model, and every new version of
@@ -210,25 +212,29 @@ a separate strong Reviewer pass on that change (Sol under `claude-low`, Opus oth
 independent of the Engineer), and are listed in the maintainer's summary report; they
 are not blocked waiting for the maintainer, except changes to this rule itself, which escalate.
 
-### Proposed family review rule (not enabled)
+### Family reviews
 
-This proposal requires Reviewer review and maintainer confirmation of its exact wording. Until
-then the existing per-function acceptance rule applies, and the acceptance tool does not accept a
-family review in place of an individual review.
-
-A family identifies one generator or stamping template by version and template digest, together
-with the target build, recipe, compiler and comparator version. A change to any of these starts a
-new family. Each member records its parameter row and target binding. Every member independently
+A family identifies one generator or stamping template by version and template digest, bound to
+the target build, recipe, compiler and comparator version. A change to any of these starts a new
+family. Each member records its parameter row and target binding. Every member independently
 passes the unchanged comparator on two independent approved hosts with different OS loaders,
-against the integrated source and pinned recipe.
+against the integrated source and pinned recipe. All comparator, validator, provenance and
+publication checks remain in force.
 
 A fresh admitted Reviewer reviews the generator or template, parameter extraction and binding,
 and the first 20 members. For every subsequent batch, record the seed and complete population
 before selection, then draw a reproducible random sample of the greater of 20 or 5% of members,
-rounding up; review all members if there are fewer than 20. Review individually every member with
-parameters outside the reviewed ranges. The existing sampling safeguard, including a second Opus
+rounding up; review all members if there are fewer than 20. The seed, complete population and
+member bindings are committed before drawing, and the deterministic draw is committed before any
+member is accepted. Review individually every member with parameters outside the reviewed ranges.
+The existing sampling safeguard, including a second Opus
 pass and a from-scratch comparator re-run for the first 20 per new Reviewer or rule version and at
-least 5% random, applies to reviewed members as well as its other existing triggers.
+least 5% random, applies to reviewed members with all its existing triggers. An unsampled member may
+rely on the family only when its origin version and digest match a saved approving family review
+under `.local/reviews/` by an admitted model, the family is active, and its parameters are in the
+reviewed ranges. Every sampled member needs its own approval before the remaining batch is
+accepted. Other functions retain the per-function rule. The sanitized member record names and
+hashes the family review, family manifest and committed batch it relies on.
 
 A comparator pass proves no name. Each function records its name source as a public symbol source
 or a labelled guess, with its confidence. A family review does not substitute for the existing
@@ -239,7 +245,16 @@ non-reproduction, provenance doubt, Reviewer disagreement or another material de
 affected members and assess the entire affected population. If a family is invalidated, revoke
 any accepted member whose supporting evidence is invalidated; do not silently retain it. Correct
 the cause and repeat the required comparisons and reviews before re-acceptance; escalate policy or
-provenance uncertainty to the maintainer before resuming.
+provenance uncertainty to the maintainer before resuming. A pause freezes new acceptance; it does
+not silently revoke or endorse existing members. Revocation of invalidated evidence is explicit
+and recorded under "Audit and revocation" above. Correct the cause and use a freshly reviewed
+family version before resuming.
+
+Family metadata, review format and commands are in `docs/reviewer-runbook.md` and
+`docs/orchestrator-runbook.md`. `tools/family_review.py`, `tools/accept_function.py` and
+`tools/flow.py` enforce the exemption; `tests/test_family_review.py` exercises it on synthetic
+comparator reports. A schema 4 member approval is a family approval, never an individual review,
+and cannot be carried forward by `--label-only`.
 
 ## Match gate
 
@@ -437,7 +452,8 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
   `escalation_category`, `review_sha256` and `review_date` (schema 1), plus `review_kind`,
   `previous_source_digest`, `previous_review_sha256`, `previous_code_section_sha256` and
   `code_section_sha256` (schema 2), plus `naming_findings` (schema 3, written by
-  `tools/accept_function.py`), so the only free text published is the naming findings;
+  `tools/accept_function.py`), plus structured `family_evidence` for schema 4 family approvals
+  (`reports/README.md`), so the only free text published is the naming findings;
 - a record below schema 3 is accepted only if its path and the SHA-256 of its canonical JSON are
   listed in `tools/legacy_review_records.json`, generated from the 58 records that existed at
   commit `e51d00a` when the four-check review format took effect. A list outside the records is
@@ -449,6 +465,12 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
   match record's (next section); a `label-only` record (schema 3 only) is a `delta` whose
   previous review hash equals its own review hash, since no new review was made, and whose
   code-section hashes are present;
+- schema 4: only `review_kind: family`, with no previous fields and the current code-section
+  hash, a matching pinned family spec and saved approval hash, a committed batch whose sample
+  recomputes from seed and population, the exact member digest and parameters inside reviewed
+  ranges, and membership outside that sample. The acceptance tool additionally checks the actual
+  private approval, admitted model, active family, git ordering and individual sample reviews
+  with their safeguards;
 - schema 3: `naming_findings` is a list of at most 20 single-line strings of at most 300
   printable ASCII characters, none holding a brace, a backtick fence, a private path (`.local`,
   `/Users/`, `/home/`, `~/`, a drive letter), a run of 16 or more hex digits, four or more
@@ -506,6 +528,9 @@ written before comparator version 2 carry no code-section hash; a stale acceptan
 approved record lacks it needs a full re-review.
 
 ### Label-only re-acceptance
+
+This path extends individual approvals only. A schema 4 family approval needs a full individual
+review or a newly committed eligible family batch; it cannot become a label-only record.
 
 Step 2 needs no Reviewer when the function's compared code did not change: then the code a
 Reviewer approved is the code the new runs compared. `python3 tools/accept_function.py

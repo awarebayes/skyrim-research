@@ -185,13 +185,18 @@ orchestrator does not start a phase until the previous one's finish condition fr
 - **Draft loop**: a Drafter writes a reconstruction in its own git worktree (`isolation:
   "worktree"`), submits it to a verifier, reads only the sanitized diff summary, and retries within
   an attempt limit set in the brief. Stuck tasks go to an Engineer with the attempt history.
-- **Review**: each function with a reproduced pass goes to a fresh Reviewer (never its Drafter
-  or an Engineer who engineered or triaged it), singly or in a batch. `reject` returns it to the
-  draft loop with reasons;
-  `escalate` follows `docs/verification.md`. The sampling safeguard there (at least 5% random,
-  plus the first 20 per new recipe, compiler, Drafter or Reviewer prompt version or acceptance-rule
-  version, and the first 20 label-only re-acceptances under each acceptance-rule version) gets a second Reviewer and a
-  from-scratch comparator re-run; a disagreement pauses that batch and escalates.
+- **Review**: a reproduced pass gets a fresh admitted Reviewer (never its Drafter or an Engineer who engineered or triaged it). Under the family rule in `docs/verification.md`, review the pinned generator or
+  stamp template, extraction and first 20 members once; later batches review a reproducible
+  random sample of max(20, 5%), rounded up, or all if fewer than 20, plus every out-of-range
+  member. Commit seed and population before drawing and the draw before any acceptance. Only
+  active families with saved admitted approval and matching version, digest and bindings may
+  exempt unsampled in-range members. Every member still passes the unchanged comparator on two
+  independent hosts and carries its name source; a pass proves no name. Other functions keep
+  individual review. `reject` returns to drafting; `escalate` follows `docs/verification.md`.
+  The existing second-Reviewer and clean comparator re-run safeguard applies to reviewed members
+  with all its first-20 and random triggers. Rejection, binding error, non-reproduction,
+  provenance doubt or disagreement pauses the family. Assess its whole population and explicitly
+  revoke accepted members whose evidence is invalidated before re-comparison and re-review.
 - **Verifier hosts**: the runner hosts in `.local/verifier/runners.json`
   (`tools/verifier/runners.py`), all at the same comparator commit and recipe, each with its own
   hash-checked toolchain and image. Every pass is reproduced on two hosts that are different

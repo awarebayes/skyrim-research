@@ -22,6 +22,10 @@ a from-scratch comparator re-run) and git history as the audit trail.
 - `reports/<build id>/<rva>-recheck-cases.json`: optional supporting evidence, such as negative
   cases run alongside a re-check, with reports embedded verbatim. Not a match record; the gate
   does not read it.
+- `reports/<build id>/families/<id>.json`: a pinned family spec and sanitized family approval,
+  with pause state; its full review stays under `.local/reviews/`.
+- `reports/<build id>/family-batches/<id>.json`: committed seed, complete population, member
+  digests, pre-draw commit and reproducible sample.
 - `reports/<build id>/symbol-map.json`: the symbol map the record's runs used (comparator
   contract "Mapping source symbols to target RVAs"). It holds RVAs, sizes and names from public
   community sources only, with their provenance.
@@ -71,7 +75,7 @@ unwind coverage. The comparator's `acceptance: not-evaluated` stays as written.
 A change to `tools/compare.py` or `tools/pecoff.py` makes every record stale until its runs are
 repeated. This is deliberate: a record vouches only for the comparator that produced it.
 
-## Reviewer record (`review_record_schema` 1, 2 or 3)
+## Reviewer record (`review_record_schema` 1, 2, 3 or 4)
 
 The public trace of the Reviewer step of the acceptance rule in `docs/verification.md`. Schema 1
 fields, and no others: `function_id`, `build_id`, `rva`, `size`, `source_digest_method`,
@@ -87,7 +91,7 @@ Schema 1 records are full reviews. Schema 2 adds exactly:
   (the code-section hash of the match record at that digest), which must equal
   `code_section_sha256`; all three are `null` for a full review.
 
-`tools/accept_function.py` writes schema 3, which adds `naming_findings`: the Reviewer's
+`tools/accept_function.py` writes schema 3 for individual reviews, which adds `naming_findings`: the Reviewer's
 non-blocking findings on names, labels and wording (tier 2, `docs/verification.md`), a list of
 short single-line strings of printable ASCII held to a mechanical filter, empty when none are
 open. The filter (`naming_finding_problem` in `tools/check.py`) refuses braces, code fences,
@@ -103,6 +107,18 @@ its `previous_review_sha256` equals its `review_sha256`.
 `tools/check.py` requires one for every `matched` entry, with verdict `approve`, the entry's
 identity and the match record's source digest. An entry is `matched` only when both records
 pass; a match record alone means a reproduced pass awaiting review, not an accepted match.
+
+Schema 4 is only `review_kind: family`: the member relies on a family review, not an individual
+pass. It keeps schema 3's identity, source and code-section bindings and adds `family_evidence`:
+`family_path`, `batch_path`, `batch_sha256` (canonical JSON digest) and `member_sha256` (the
+committed row digest). `review_task_id`, `reviewer_model` and `review_sha256` name the saved
+`.local/reviews/<task-id>.family.json` approval. Previous-review fields are `null`. The fixed
+naming finding says that family approval does not assess individual names; tier 2 remains false.
+The validator checks the family spec, origin/version/template digest, target and parameter
+bindings, sample recomputation and member digests. The acceptance tool also checks the saved
+private approval, admitted model, active family, git ordering and individual sample reviews with
+their second-pass safeguards. Schema 3 remains current for individual reviews; schema 4 cannot
+be carried by label-only acceptance. See `docs/verification.md`, "Family reviews".
 
 ## Contents
 
