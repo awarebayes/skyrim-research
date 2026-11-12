@@ -15,8 +15,9 @@ Which models may review is set by the acceptance rule, not by you or your brief:
 names a model class the rule does not admit, say so in the return table and stop.
 
 Under `claude-low`, `gpt-6.1-sol` is admitted for any review; `gpt-6.1-terra` is the default
-first Reviewer. Sol is required for strong duties (sampling, non-Opus escalation confirmation,
-and rule or machinery reviews), subject to the independent Opus second pass for a Sol first review.
+first Reviewer. Strong duties (sampling, non-Opus escalation confirmation, and rule or machinery
+reviews) are done by Sol or Opus, never Terra, and by a different model from the first review; an
+independent Opus does the second pass for a Sol first review.
 
 ## Limits
 

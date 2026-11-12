@@ -119,13 +119,13 @@ A function is accepted only when ALL of these hold:
    Reviewer-checked rule change.
 
    The Sol class as the strong Reviewer is admitted only as `gpt-6.1-sol` under `claude-low`
-   for any review. Terra is the default first Reviewer; Sol is required for the strong duties:
-   sampling second passes, confirmation of a non-Opus `escalate` before the maintainer,
-   and reviews of comparator, validator, verifier or acceptance-rule changes. Unlike Terra,
+   for any review. Terra is the default first Reviewer. For the strong duties (sampling second
+   passes, confirmation of a non-Opus `escalate` before the maintainer, and reviews of comparator,
+   validator, verifier or acceptance-rule changes) the tools admit Sol or Opus, never Terra, and
+   require a different model from the first review. Unlike Terra,
    Sol was admitted by maintainer decision WITHOUT a calibration:
-   "sol is goood enough dont waste time" (`docs/authorizations.md`, Notes). Terra remains the
-   default first function Reviewer; Sol may give a fresh function review when confirming an
-   escalation. Under `claude-low`, every second pass must use a different model from the first review (Opus
+   "sol is goood enough dont waste time" (`docs/authorizations.md`, Notes). Sol may give a fresh
+   function review when confirming an escalation. Under `claude-low`, every second pass must use a different model from the first review (Opus
    aliases count as one model); if the first review was Sol, use an independent Opus Reviewer.
    Outside `claude-low`, Opus remains required for these strong review duties and the existing
    sampling policy is unchanged. Reviewer independence is per run: use fresh context, never the
