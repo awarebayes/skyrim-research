@@ -18,7 +18,9 @@ object (tools/verifier/bind.py, hints in <task-dir>/bind-hints.json, the destruc
 pack); when that changes a binding (`unbound:` symbols, a renamed declaration, a new callee, a new
 hint, a plain destructor bound where the target is a deleting one) it compares again in the same
 invocation. A hint at a compared function's RVA that ends up unused is printed as a WARNING. A run in which nothing
-could be compared because of binding does not count against max_attempts. It prints one line per function with the reason code, first mismatch offset and
+could be compared because of binding does not count against max_attempts, nor do the first three
+compile failures of a unit (later ones count). A repository include the compiler would not find
+with the recipe's include roots is refused locally before any upload, uncounted. It prints one line per function with the reason code, first mismatch offset and
 candidate/target sizes, what was bound or is still missing, and where to read the side-by-side
 disassembly, then the findings of tools/check_labels.py on the unit's sources as warnings and the
 bodies tools/check_origin.py finds close to a same-named community or FNV body. The
@@ -47,12 +49,32 @@ from pipeline import PipelineError  # noqa: E402
 LABEL = 'standing'
 
 
-def counted_attempts(log):
-    """Attempts that count against max_attempts: every logged run except binding-only ones."""
+# A compile error is usually a typo or an include the Drafter can fix without learning anything
+# about the target, so the first few per unit are free; the cap keeps a unit that never compiles
+# from looping on the machine forever.
+FREE_COMPILE_FAILURES = 3
+
+
+def log_rows(log):
     if not log.is_file():
-        return 0
-    rows = [json.loads(line) for line in log.read_text().splitlines() if line.strip()]
-    return sum(1 for r in rows if r.get('counted', True))
+        return []
+    return [json.loads(line) for line in log.read_text().splitlines() if line.strip()]
+
+
+def counted_attempts(log):
+    """Attempts that count against max_attempts: every logged run except binding-only ones and
+    the free compile failures."""
+    return sum(1 for r in log_rows(log) if r.get('counted', True))
+
+
+def charge(code, binding_only, log):
+    """(counted, free_compile_failure) for a finished run: binding-only runs never count, and a
+    compile failure (exit 3) is free while fewer than FREE_COMPILE_FAILURES were free before."""
+    if binding_only:
+        return False, False
+    if code == 3 and sum(1 for r in log_rows(log) if r.get('free_compile_failure')) < FREE_COMPILE_FAILURES:
+        return False, True
+    return True, False
 
 
 def results_of(task, dest):
@@ -91,6 +113,11 @@ def attempt(task_dir):
         print(f'attempt budget exhausted: {budget} of {budget} used. Write your result lines and stop.')
         return 5
     files, closure = pipeline.unit_manifest(task)
+    problem = pipeline.compiler_include_problem(task)
+    if problem:
+        # Refused before any upload or log entry, so it neither uses the machine nor counts.
+        print(f'attempt {number} {task["task_id"]}: REFUSED include (not counted)\n    {problem}')
+        return 4
     config = pipeline.load_config(task_dir)
     machine, how = pipeline.ensure_standing()
     host = pipeline.Host(machine, LABEL, f'{boatctl.REMOTE_HOME}/tasks/{task["task_id"]}', task,
@@ -118,11 +145,17 @@ def attempt(task_dir):
                 bind_lines.append('  re-compared after binding (same source)')
     results = results_of(task, dest)
     binding_only = code in (0, 1) and bool(results) and all(r in bind.BINDING_REASONS for r in results.values())
-    counted = not binding_only
+    counted, free_compile = charge(code, binding_only, task_dir / 'attempts.jsonl')
     lines, all_rows = [], []
     shown = used + (1 if counted else 0)
+    why_free = ''
+    if binding_only:
+        why_free = ' (binding only, not counted)'
+    elif free_compile:
+        n = sum(1 for r in log_rows(task_dir / 'attempts.jsonl') if r.get('free_compile_failure')) + 1
+        why_free = f' (compile failure {n}/{FREE_COMPILE_FAILURES} free, not counted)'
     head = (f'attempt {number} {task["task_id"]} ({task["compiled"]}); counted {shown}'
-            + (f'/{budget}' if budget else '') + ('' if counted else ' (binding only, not counted)'))
+            + (f'/{budget}' if budget else '') + why_free)
     error = None
     if (dest / 'error.json').is_file():
         error = json.loads((dest / 'error.json').read_text())
@@ -163,6 +196,7 @@ def attempt(task_dir):
     (dest / 'attempt.txt').write_text(text + '\n' + ''.join(f'{r}\n' for r in all_rows))
     with open(task_dir / 'attempts.jsonl', 'a') as log:
         log.write(json.dumps({'attempt': number, 'exit': code, 'counted': counted,
+                              **({'free_compile_failure': True} if free_compile else {}),
                               'seconds': round(time.monotonic() - started, 1),
                               'source_revision': _revision(dest)}) + '\n')
     print(text)

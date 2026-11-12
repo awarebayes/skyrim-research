@@ -167,5 +167,97 @@ class SideBySide(unittest.TestCase):
         self.assertIn('llvm-objdump', why)
 
 
+class CompilerIncludeRoots(unittest.TestCase):
+    """The local check that the compiler, given only the recipe's /I roots, finds every include."""
+
+    def setUp(self):
+        self.repo = Path(tempfile.mkdtemp()).resolve()
+        for area in ('a', 'b', 'recipes'):
+            (self.repo / 'reconstruction' / area).mkdir(parents=True)
+        (self.repo / 'reconstruction/b/B.h').write_text('#pragma once\n')
+        self.recipe('plain', ['/nologo', '/c', '/O2'])
+
+    def tearDown(self):
+        shutil.rmtree(self.repo)
+
+    def recipe(self, name, flags):
+        (self.repo / f'reconstruction/recipes/{name}.json').write_text(json.dumps({'flags': flags}))
+        return f'reconstruction/recipes/{name}.json'
+
+    def problem(self, include, recipe='reconstruction/recipes/plain.json'):
+        (self.repo / 'reconstruction/a/A.cpp').write_text(f'#include "{include}"\n')
+        return pipeline.compiler_include_problem({'compiled': 'reconstruction/a/A.cpp', 'recipe': recipe}, self.repo)
+
+    def test_root_relative_include_is_refused_without_a_root(self):
+        # The closure accepts it through INCLUDE_ROOTS, so only this check stops the C1083 upload.
+        import source_digest
+        (self.repo / 'reconstruction/a/A.cpp').write_text('#include "b/B.h"\n')
+        self.assertIn('reconstruction/b/B.h', source_digest.include_closure(self.repo, 'reconstruction/a/A.cpp'))
+        problem = self.problem('b/B.h')
+        self.assertIsNotNone(problem)
+        self.assertIn('"../<area>/<Class>.h"', problem)
+
+    def test_relative_includes_pass(self):
+        self.assertIsNone(self.problem('../b/B.h'))
+        (self.repo / 'reconstruction/a/S.h').write_text('#pragma once\n')
+        self.assertIsNone(self.problem('S.h'))
+
+    def test_a_recipe_root_is_honoured(self):
+        for flags in (['/I', 'reconstruction'], ['/Ireconstruction'], ['-I', 'reconstruction']):
+            with self.subTest(flags=flags):
+                self.assertIsNone(self.problem('b/B.h', self.recipe('rooted', ['/c'] + flags)))
+
+    def test_recipe_include_roots(self):
+        self.assertEqual(pipeline.recipe_include_roots(['/c', '/I', 'x', '-Iy', '/O2']), ('x', 'y'))
+        self.assertEqual(pipeline.recipe_include_roots(['/nologo', '/c', '/O2', '/GR']), ())
+
+    def test_pinned_recipes_pass_no_root(self):
+        # If a pinned recipe ever gains /I, the include wording in docs/drafter-card.md is stale.
+        for path in sorted((ROOT / 'reconstruction/recipes').glob('*.json')):
+            with self.subTest(recipe=path.name):
+                self.assertEqual(pipeline.recipe_include_roots(json.loads(path.read_text())['flags']), ())
+
+
+class AttemptCharge(unittest.TestCase):
+    """Which runs count against a unit's attempt budget."""
+
+    def setUp(self):
+        self.attempt = load_script('attempt')
+        self.tmp = Path(tempfile.mkdtemp()).resolve()
+        self.log = self.tmp / 'attempts.jsonl'
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp)
+
+    def log_run(self, code):
+        counted, free = self.attempt.charge(code, False, self.log)
+        with open(self.log, 'a') as f:
+            f.write(json.dumps({'exit': code, 'counted': counted, **({'free_compile_failure': True} if free else {})})
+                    + '\n')
+        return counted, free
+
+    def test_compile_failures_are_free_up_to_the_cap(self):
+        cap = self.attempt.FREE_COMPILE_FAILURES
+        self.assertEqual(cap, 3)
+        for _ in range(cap):
+            self.assertEqual(self.log_run(3), (False, True))
+        self.assertEqual(self.log_run(3), (True, False))
+        self.assertEqual(self.attempt.counted_attempts(self.log), 1)
+
+    def test_comparisons_always_count_and_do_not_use_the_free_failures(self):
+        self.assertEqual(self.log_run(1), (True, False))
+        self.assertEqual(self.log_run(0), (True, False))
+        self.assertEqual(self.log_run(3), (False, True))
+        self.assertEqual(self.attempt.counted_attempts(self.log), 2)
+
+    def test_binding_only_runs_never_count(self):
+        self.assertEqual(self.attempt.charge(1, True, self.log), (False, False))
+
+    def test_old_logs_without_the_field(self):
+        self.log.write_text(json.dumps({'exit': 3, 'counted': True}) + '\n')
+        self.assertEqual(self.attempt.charge(3, False, self.log), (False, True))
+        self.assertEqual(self.attempt.counted_attempts(self.log), 1)
+
+
 if __name__ == '__main__':
     unittest.main()

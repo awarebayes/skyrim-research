@@ -35,7 +35,9 @@ compile log and private diagnostics to `<task-id>/attempts/<NNN>/`, with a local
 disassembly per function (`llvm-objdump`; G2 material, never printed; rows that differ only in
 relocated fields are not marked). It binds unbound or renamed symbols from the compiled object
 itself (`bind.py`, hints in `<task-id>/bind-hints.json`) and compares again in the same run; a run
-that compared nothing because of binding is not counted against `max_attempts`. `confirm` runs on the
+that compared nothing because of binding is not counted against `max_attempts`, nor are a unit's
+first three compile failures; a repository include the compiler would not find with the recipe's
+include roots is refused locally before upload, also uncounted. `confirm` runs on the
 working tree (records bind the unit digest, recipe and map hashes and, per report, the comparator
 source hash, not a commit; a note in each record names the base commit, the comparator source hash
 and every uncommitted input among the unit, recipe, map, comparator and verifier files), needs

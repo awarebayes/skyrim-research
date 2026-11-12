@@ -192,6 +192,40 @@ def unit_manifest(task, repo=REPO):
     return files, closure
 
 
+def recipe_include_roots(flags):
+    """The `/I` (or `-I`) directories a recipe's flags pass to the compiler, in order."""
+    roots, i = [], 0
+    while i < len(flags):
+        body = flags[i][1:] if flags[i][:1] in '/-' else ''
+        if body == 'I' and i + 1 < len(flags):
+            roots.append(flags[i + 1])
+            i += 1
+        elif body[:1] == 'I' and len(body) > 1:
+            roots.append(body[1:].strip())
+        i += 1
+    return tuple(roots)
+
+
+def compiler_include_problem(task, repo=REPO):
+    """Why the compiler will not find a repository include the closure accepts, or None.
+
+    The closure (tools/source_digest.py) also searches INCLUDE_ROOTS, which a recipe may pass as
+    `/I`; the pinned recipes pass none, so `#include "forms/TESForm.h"` resolves for the closure but
+    is a C1083 on the host. Checked locally so the mistake costs no machine time and no attempt.
+    """
+    repo = Path(repo)
+    flags = json.loads((repo / task['recipe']).read_text()).get('flags') or []
+    roots = recipe_include_roots(flags)
+    try:
+        include_closure(repo, task['compiled'], roots=roots)
+    except (ValueError, OSError) as exc:
+        if roots:
+            return f'{exc} (recipe include roots: {", ".join(roots)})'
+        return (f'{exc}; this recipe passes no include root, so a repository header is found only relative to '
+                'the including file: "<Class>.h" in the same area, "../<area>/<Class>.h" from another')
+    return None
+
+
 def unit_spec(task, files, host):
     return {'unit_spec_schema': 1, 'task_id': task['task_id'], 'host': host, 'build_id': task['build_id'],
             'compiled': task['compiled'], 'recipe': task['recipe'],

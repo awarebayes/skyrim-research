@@ -188,8 +188,14 @@ def recipe_flag_problem(flags):
     return None
 
 
-def include_closure(root, compiled):
-    """Every repository file of the translation unit of `compiled`, sorted; see the module doc."""
+def include_closure(root, compiled, roots=None):
+    """Every repository file of the translation unit of `compiled`, sorted; see the module doc.
+
+    `roots` replaces INCLUDE_ROOTS for one call. The match gate always uses the default; a narrower
+    tuple lets a caller ask whether the unit still resolves with only the `/I` roots a given recipe
+    passes, which is what the compiler will see.
+    """
+    roots = INCLUDE_ROOTS if roots is None else tuple(roots)
     root = Path(root)
     start = _repo_file(root, compiled)
     if start is None or start != PurePosixPath(compiled).as_posix():
@@ -209,7 +215,7 @@ def include_closure(root, compiled):
         for kind, target in quoted_includes((root / name).read_bytes(), name):
             shown = f'"{target}"' if kind == '"' else f'<{target}>'
             # Angle includes search only the /I roots (then the toolchain), never the includer's directory.
-            bases = (dirs if kind == '"' else []) + [PurePosixPath(r) for r in INCLUDE_ROOTS]
+            bases = (dirs if kind == '"' else []) + [PurePosixPath(r) for r in roots]
             if kind == '<' and (PurePosixPath(target).is_absolute() or '..' in PurePosixPath(target).parts):
                 raise ValueError(f'{name}: #include {shown} leaves the include roots')
             found = []
