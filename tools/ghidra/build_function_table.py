@@ -620,14 +620,17 @@ def scan_community(root, cache=None):
     return classes, dict(sizes)
 
 
-def primary_slots(entry, chain_leaves):
+def primary_slots(entry, chain_leaves, inherited_destructors=()):
     """{slot: (method, is_override)} of the primary vftable: slots in an `override (X)` section of a
     secondary base are numbered in that base's own vftable and are left out."""
     out = {}
     for slot, method, ov, section, *decl in entry['slots']:
         if section and section[0] == 'override' and section[1] and leaf(section[1]) not in chain_leaves:
             continue
-        out.setdefault(slot, (method, ov, decl[0] if decl else None))
+        # A virtual destructor overrides an inherited virtual destructor even without the
+        # optional `override` keyword. Only slots named by a checked ancestor count as evidence.
+        implicit = method.startswith('~') and slot in inherited_destructors
+        out.setdefault(slot, (method, ov or implicit, decl[0] if decl else None))
     return out
 
 
@@ -887,7 +890,7 @@ def build(cfg, ghidra_dir, out_dir, rerun_ghidra=False, rerun_disasm=False):
     timing['community_s'] = round(time.monotonic() - t, 1)
 
     t = time.monotonic()
-    for c in classes.values():
+    for c in sorted(classes.values(), key=lambda c: len(c['chain'])):
         size, how = None, None
         own_dtor = c['slots'][0] if c['slots'] else None
         parent = classes.get(c['parent']) if c['parent'] else None
@@ -913,7 +916,15 @@ def build(cfg, ghidra_dir, out_dir, rerun_ghidra=False, rerun_disasm=False):
             ae = vt_ids.get(key)
             vt_rva = by_id.get(ae) if ae is not None else None
             rtti_match = (vt_rva == c['vftable']) if vt_rva is not None else None
-            d = primary_slots(entry, chain_leaves)
+            inherited_destructors = set()
+            ancestor = parent
+            while ancestor:
+                checked = ancestor.get('community', {}).get(src, {})
+                if checked.get('passes'):
+                    inherited_destructors.update(k for k, name in checked['names'].items()
+                                                 if name.startswith('~'))
+                ancestor = classes.get(ancestor.get('parent'))
+            d = primary_slots(entry, chain_leaves, inherited_destructors)
             asserted = sizes.get(entry['name'], []) if entry['name'] == leaf(c['class']) else []
             chk = class_checks(d, c['slots'], parent['slots'] if parent else None, asserted, size, rtti_match,
                                entry['bases'][0] if entry['bases'] else None,

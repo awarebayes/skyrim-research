@@ -1539,13 +1539,18 @@ AREA_PREFIXES = (('Ni', 'netimmerse'), ('BS', 'bsengine'), ('TES', 'forms'), ('B
 ACTOR_CLASSES = {'Actor', 'Character', 'PlayerCharacter'}
 
 
-def area_for(cls):
-    """The area by prefix rule 2 of reconstruction/README.md, or None when the rule has no line for it."""
-    if cls in ACTOR_CLASSES or cls.endswith('Process'):
+def area_for(cls, classes=None):
+    """Prefix rule, or a known owning area from the existing class table (never `other`)."""
+    if cls in ACTOR_CLASSES:
         return 'actors'
     for prefix, area in AREA_PREFIXES:
         if cls.startswith(prefix) and cls[len(prefix):len(prefix) + 1].isupper():
             return area
+    if cls.endswith('Process'):
+        return 'actors'
+    area = (classes or {}).get(cls, {}).get('area')
+    if area in ('magic', 'forms', 'actors'):
+        return area
     return None
 
 
@@ -2539,9 +2544,10 @@ def table_eligibility(row, classes, claimed, max_bytes=None):
         return 'middleware or std area'
     if '<' in cls or '::' in cls:
         return 'template or nested class (no unit name rule)'
-    if area_for(cls) is None:
+    area = area_for(cls, classes)
+    if area is None:
         return 'no area rule for the class (reconstruction/README.md rule 3)'
-    if area_for(cls) == 'actors' and c['area'] in ('netimmerse', 'bsengine'):
+    if area == 'actors' and c['area'] in ('netimmerse', 'bsengine'):
         # `*Process` would file a library class (NiCullingProcess) under actors; ask before using it.
         return 'area rules disagree (library prefix and *Process)'
     if max_bytes and (row['size'] or 0) > max_bytes:
@@ -2690,7 +2696,7 @@ def cmd_plan_table(args):
         fs = sorted(picked.get(c, []), key=lambda r: (r['size'] or 0, r['rva']))
         if not fs:
             continue
-        unit = f'reconstruction/{area_for(c)}/{c}.cpp'
+        unit = f'reconstruction/{area_for(c, classes)}/{c}.cpp'
         existing = sorted((REPO / 'reconstruction').glob(f'*/{c}.cpp'))
         if existing:
             unit = existing[0].relative_to(REPO).as_posix()
@@ -2769,6 +2775,8 @@ def cmd_plan_cheap(args):
             'catalogue': catalogue, 'headers': headers, 'task_prefix': args.task_prefix}
     if args.normal_functions is not None:
         opts['normal_functions'] = args.normal_functions
+    if args.small_task_floor is not None:
+        opts['small_task_floor'] = args.small_task_floor
     tasks, stats = plan_cheap.plan(rows, classes, claimed, opts, table_eligibility)
     stats['tls_scanned'], stats['tls_found'], stats['parked_rvas'] = len(pre), len(tls), len(parked)
     target = dict(target, ng_revision=cfg['ng_revision'], po3_revision=cfg.get('po3_revision', ''))
@@ -2782,7 +2790,7 @@ def cmd_plan_cheap(args):
                  'score': round(tk['score'], 2), 'units': []}
         for u in tk['units']:
             c = u['class']
-            unit = f'reconstruction/{area_for(c)}/{c}.cpp'
+            unit = f'reconstruction/{area_for(c, classes)}/{c}.cpp'
             group = f' group={tk["id"]}' if tk['kind'] == 'small' else ''
             for r in u['functions']:
                 lines.append(f'{target["build_id"]}  0x{r["rva"]:x}  {u["task_id"]}  {unit}{group} budget={u["budget"]}')
@@ -2794,7 +2802,7 @@ def cmd_plan_cheap(args):
                                                   'fnv': r['rva'] in fnv_rvas, 'cluster_size': r.get('cluster_size'),
                                                   'score': round(r['_score'], 2)} for r in u['functions']]})
         plan_tasks.append(entry)
-    comp = plan_cheap.composition(tasks, classes, fnv_rvas, area_for)
+    comp = plan_cheap.composition(tasks, classes, fnv_rvas, lambda c: area_for(c, classes))
     (out_dir / 'list.txt').write_text('\n'.join(lines) + '\n')
     (out_dir / 'inventory-rows.json').write_text(json.dumps(inventory, indent=2) + '\n')
     plan = {'build_id': target['build_id'], 'order': 'cheap', 'table': meta.get('inputs'),
@@ -3110,6 +3118,8 @@ def main():
                     help='cheap: census JSON whose "skip" and "m2_noh" RVA lists are parked families')
     pl.add_argument('--catalogue', default=None, help='cheap: FNV inline-helper catalogue (JSON keyed by class)')
     pl.add_argument('--normal-functions', type=int, default=None, help='cheap: functions reserved for normal tasks')
+    pl.add_argument('--small-task-floor', type=int, default=None,
+                    help='cheap: minimum functions per family task (1 for queues that claim one class at a time)')
     pl.add_argument('--table', default=None, help='Default: .local/analysis')
     pl.add_argument('--eh', type=int, default=20, help='fanin: C++ EH functions with few states to mix in')
     pl.add_argument('--max-eh-states', type=int, default=3)

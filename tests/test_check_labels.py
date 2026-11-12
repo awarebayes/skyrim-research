@@ -58,6 +58,17 @@ def git(cwd, *args):
 
 
 class LabelCheckTests(unittest.TestCase):
+    def test_cpp17_nested_namespace_keeps_declarations_in_the_innermost_scope(self):
+        index = check_labels.Index.__new__(check_labels.Index)
+        index.root = Path('.')
+        index.tokens, index.declared = set(), set()
+        index.scopes, index.enums, index.where, index.lines = {}, {}, {}, {}
+        index.add('namespace EX::Container { enum class Result { Stop, Continue }; }')
+        self.assertEqual(index.has('Container::Result'), 'scope')
+        self.assertEqual(index.has('EX::Container'), 'scope')
+        self.assertIsNone(index.has('EX::Result'))
+        self.assertIsNone(index.has('Other::Result'))
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name) / 'repo'

@@ -76,7 +76,8 @@ INLINE_BASE_REFS = ('VTABLE_NiRefObject', 'NiRefObject::TotalObjectCount')
 INLINE_BASE_ROOTS = ('NiRefObject', 'NiObject')
 _NG = 'COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)'
 # Opaque declarations from the pinned NG headers: no object layout or enum values inferred.
-# BSTEvent.h, NiPointer.h, NiAllocator.h, BSStorage.h and BSIMusicTrack.h.
+# BSTEvent.h, NiPointer.h, NiAllocator.h, BSStorage.h, BSIMusicTrack.h,
+# BSContainer.h, MagicSystem.h and EffectArchetypes.h.
 SUPPORT_DECLARATIONS = {
     'BSTEventSource': 'template <class Event> class BSTEventSource;',
     'NiPointer': 'template <class T> class NiPointer;',
@@ -85,6 +86,14 @@ SUPPORT_DECLARATIONS = {
     'BSStorageDefs::ErrorCode': 'namespace BSStorageDefs { enum class ErrorCode : int; }',
     'BSStorageDefs::SeekMode': 'namespace BSStorageDefs { enum class SeekMode : int; }',
     'TrackType': 'enum class TrackType : std::uint32_t;',
+    'BSContainer::ForEachResult': 'namespace BSContainer { enum class ForEachResult : int; }',
+    'MagicSystem::CastingSource': 'namespace MagicSystem { enum class CastingSource : int; }',
+    'MagicSystem::CastingType': 'namespace MagicSystem { enum class CastingType : int; }',
+    'MagicSystem::Delivery': 'namespace MagicSystem { enum class Delivery : int; }',
+    'MagicSystem::SoundID': 'namespace MagicSystem { enum class SoundID : int; }',
+    'MagicSystem::SpellType': 'namespace MagicSystem { enum class SpellType : int; }',
+    'EffectArchetype': ('struct EffectArchetypes { enum class ArchetypeID : int; };\n'
+                       'using EffectArchetype = EffectArchetypes::ArchetypeID;'),
 }
 _NI_SLOTS = [
     ('const NiRTTI*', 'GetRTTI() const'), ('NiNode*', 'AsNode()'), ('NiSwitchNode*', 'AsSwitchNode()'),
@@ -269,6 +278,22 @@ def _text(path):
         return ''
 
 
+def header_text(path, repo, seen=None):
+    """Declarations in a header's local include closure, for collision and size checks."""
+    seen = set() if seen is None else seen
+    path = Path(path).resolve()
+    if path in seen or not path.is_relative_to(Path(repo).resolve()) or not path.is_file():
+        return ''
+    seen.add(path)
+    text = _text(path)
+    includes = re.findall(r'^\s*#\s*include\s+"([^"\n]+)"', text, re.M)
+    return text + '\n' + '\n'.join(header_text(path.parent / name, repo, seen) for name in includes)
+
+
+def class_defined(text, name):
+    return bool(re.search(rf'\b(?:class|struct)\s+{re.escape(name)}\b[^;{{}}]*{{', text))
+
+
 def brief_evidence(brief):
     m = re.search(r'Evidence: cite `((?:findings|reports)/[^`]+)`', brief)
     return m.group(1) if m else None
@@ -337,9 +362,11 @@ def split_declaration(decl):
     code = re.sub(r'\[\[[^\]]*\]\]', ' ', decl.split('//', 1)[0])
     code = re.sub(r'\{.*\}\s*;?\s*$', '', code).strip().rstrip(';').strip()
     code = re.sub(r'\bRE::', '', code)
+    code = re.sub(r'\bSKYRIM_REL_VR_VIRTUAL\b', '', code)
     # The pinned recipe is C++14; use byte-sized storage for C++17 byte pointer declarations.
     code = code.replace('std::byte', 'std::uint8_t')
-    open_ = code.find('(')
+    call_operator = re.search(r'\boperator\s*\(\s*\)\s*\(', code)
+    open_ = call_operator.end() - 1 if call_operator else code.find('(')
     if open_ < 0:
         return None
     depth, close = 0, -1
@@ -415,6 +442,8 @@ def method_of(fn, cls):
         return 'ctor'
     if method.startswith('~') or method in ('dtor', 'Destructor'):
         return 'dtor'
+    if method == 'operator' and re.search(r'\boperator\s*\(\s*\)', fn.get('readme') or ''):
+        return 'operator()'
     return method
 
 
@@ -435,8 +464,12 @@ def plan(unit, repo=None):
     include, standins = None, []
     for anc in chain:
         shared_path = (repo / unit['header']).parent / shared[anc] if anc in shared else None
-        if (shared_path and shared_path.is_file() and '// TODO type ' not in _text(shared_path)
-                and not inline_base):
+        included = header_text(shared_path, repo) if shared_path else ''
+        asserted = re.search(rf'static_assert\(sizeof\({re.escape(anc)}\)\s*==\s*(0x[0-9a-fA-F]+|\d+)',
+                             included)
+        sized = asserted and (anc not in sizes or int(asserted.group(1), 0) == sizes[anc])
+        collisions = any(class_defined(included, name) for name in [cls] + standins)
+        if (included and sized and not collisions and '// TODO type ' not in included and not inline_base):
             include = (anc, shared[anc])
             break
         standins.append(anc)
@@ -448,7 +481,7 @@ def plan(unit, repo=None):
     included_text = ''
     if include:
         path = (Path(repo) / unit['header']).parent / include[1]
-        included_text = _text(path)
+        included_text = header_text(path, repo)
     elif inline_base:
         included_text = inline_base_blocks() + '\n'.join(f'class {t};' for t in INLINE_BASE_FORWARD)
     class_label = excerpt_label(unit['material'], packs)
@@ -507,6 +540,7 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
             add(s, 'STANDIN EXE_RTTI')
 
     forward, todo_types, decls, defs, notes = [], [], [], [], []
+    nested_forward = {}
     event_types = set()
     has_ctor = any(m['method'] == 'ctor' for m in p['members'])
     has_dtor = any(m['method'] == 'dtor' for m in p['members'])
@@ -560,11 +594,18 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
                 if t in by_ref + by_value and not defined_in(p['included_text'], t):
                     event_types.add(t)
                     add(t, 'STANDIN ' + _NG)
+                    if t == 'EffectArchetype':
+                        add(['EffectArchetypes', 'EffectArchetypes::ArchetypeID'], 'STANDIN ' + _NG)
             for t in by_ref:
                 if t in event_types:
                     continue
                 if '::' in t:
-                    todo_types.append((t, 'nested type: declare a stand-in for it or change the type'))
+                    outer, _, inner = t.partition('::')
+                    if outer in [cls] + p['standins'] and '::' not in inner:
+                        nested_forward.setdefault(outer, set()).add(inner)
+                        add(t, 'STANDIN ' + (m['label'] or _NG))
+                    else:
+                        todo_types.append((t, 'nested type: declare a stand-in for it or change the type'))
                 elif (t != cls and t not in forward and not defined_in(p['included_text'], t)
                       and t not in (INLINE_BASE_FORWARD if p['inline_base'] else ())):
                     forward.append(t)
@@ -606,11 +647,13 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
         vptr = [f'    virtual ~{s}() = default;'] if parent is None else []
         if vptr:
             add(f'{s}::~{s}', 'GUESS(low)')
-        blocks.append('\n'.join([f'class {s}{base}', '{', 'public:', *inherit, *vptr, *body, '};', *assert_line, '']))
+        nested = [f'    struct {n};' for n in sorted(nested_forward.get(s, ()))]
+        blocks.append('\n'.join([f'class {s}{base}', '{', 'public:', *nested, *inherit, *vptr, *body, '};', *assert_line, '']))
         parent = s
     body, assert_line, running = pad_lines(cls, running, p['sizes'], pads)
     base = f' : public {parent}' if parent else ''
-    cls_block = [f'class {cls}{base}', '{', 'public:', *[f'    {d}' for d in decls]]
+    nested = [f'    struct {n};' for n in sorted(nested_forward.get(cls, ()))]
+    cls_block = [f'class {cls}{base}', '{', 'public:', *nested, *[f'    {d}' for d in decls]]
     if parent is None and not any(d.startswith('virtual ') for d in decls) and p['rtti']:
         cls_block.append('    void* unknown00;  // primary vftable storage')
         pads.append('unknown00')
@@ -738,7 +781,7 @@ def write_skeleton(task_dir, drafted_by=None, repo=None):
             out.write(text)
     p = plan(load_unit(task_dir, repo), repo)
     hints = {f'{p["cls"]}::{m["method"]}': m['fn']['rva'] for m in p['members']
-             if m['method'].startswith('UnknownDtor_')}
+             if m['method'].startswith('UnknownDtor_') or m['method'] == 'operator()'}
     if hints:
         hint_path = Path(task_dir) / 'bind-hints.json'
         previous = _json(hint_path)

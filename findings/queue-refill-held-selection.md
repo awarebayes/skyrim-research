@@ -3,7 +3,7 @@
 Status: OBSERVED properties of the pinned image; selection only. Nothing reconstructed or compared.
 Author / human operator: awarebayes
 AI assistance / model: GPT Sol integrating Engineer, task p46-queue-refill-2; local analysis authorized by the maintainer
-Date (UTC): 2026-11-13
+Date (UTC): 2026-11-12
 Target build id / image SHA-256: `sse-steam-1-7-104` / `846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f`
 Function RVA / size (if applicable): private stage manifest `.local/scratch/p46/a-manifest.json`
 Source exposure: mixed (binary-analysis of the pinned image through the private function table; community-headers; community name databases; the FNV sibling index)

@@ -37,8 +37,9 @@ Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source
      `actors/`;
   3. otherwise ask for a new prefix line here before adding the unit. There is no `misc/`: an
      area chosen by default would only have to move later.
-  `tools/ghidra/export_pack.py` proposes the unit path by rules 2 and 3 (`area_for`); rule 1 is
-  given in the list file.
+  `tools/ghidra/export_pack.py` proposes the unit path by prefix, then uses an existing class
+  table owning area (`magic`, `forms` or `actors`) when known. An `other` area stays unresolved;
+  no default area is invented. Other rule 1 choices are given in the list file.
 - **Stand-ins.** A unit may declare the other classes its functions use as minimal per-unit
   stand-ins (only the members and slots the compared code needs). Label them in the header as
   stand-ins, with the community source of each name. When a class is declared by several units

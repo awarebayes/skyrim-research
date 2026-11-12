@@ -118,6 +118,21 @@ class CommunityTests(unittest.TestCase):
         self.assertEqual(slots[2][:2], ('Beta', True))
         self.assertEqual(slots[3][:2], ('Gamma', False))
 
+    def test_implicit_destructor_override_needs_checked_ancestor_slot(self):
+        entry = {'slots': [(0, '~Derived', False, None, 'virtual ~Derived();')]}
+        unchecked = bft.primary_slots(entry, {'Derived', 'Base'})
+        checked = bft.primary_slots(entry, {'Derived', 'Base'}, {0})
+        self.assertFalse(bft.class_checks(unchecked, [20], [10], [8], 8, True,
+                                         'Base', 'Base')['passes'])
+        self.assertTrue(bft.class_checks(checked, [20], [10], [8], 8, True,
+                                        'Base', 'Base')['passes'])
+        self.assertFalse(bft.class_checks(checked, [20], [10], [16], 8, True,
+                                         'Base', 'Base')['passes'])
+        self.assertFalse(bft.class_checks(checked, [20], [10], [8], 8, True,
+                                         'WrongBase', 'Base')['passes'])
+        entry['slots'] = [(0, 'Other', False, None, 'virtual void Other();')]
+        self.assertFalse(bft.primary_slots(entry, {'Derived', 'Base'}, {0})[0][1])
+
     def test_checks(self):
         decl = bft.primary_slots(self.bodies['Derived'], {'Derived', 'Base'})
         parent = [10, 11, 12]

@@ -54,6 +54,27 @@ def opts(**kw):
 
 
 class PlanTests(unittest.TestCase):
+    def test_known_owning_area_is_used_without_defaulting_unknowns(self):
+        classes = {'FireEffect': cls([], area='magic'), 'FormHelper': cls([], area='forms'),
+                   'Unknown': cls([], area='other')}
+        self.assertEqual(ep.area_for('FireEffect', classes), 'magic')
+        self.assertEqual(ep.area_for('FormHelper', classes), 'forms')
+        self.assertIsNone(ep.area_for('Unknown', classes))
+        self.assertIsNone(ep.area_for('FireEffect'))
+        self.assertIsNone(ep.table_eligibility(row(1, 'FireEffect'), classes, set()))
+        self.assertIn('no area rule', ep.table_eligibility(row(2, 'Unknown'), classes, set()))
+        self.assertEqual(ep.area_for('NiCullingProcess', classes), 'netimmerse')
+
+    def test_long_names_remain_distinct_through_planning(self):
+        names = ['TES' + 'LongClassName' * 5 + suffix for suffix in ('Alpha', 'Beta')]
+        classes = {name: cls(['TESForm']) for name in names}
+        tasks, _ = plan_cheap.plan([row(1, names[0]), row(2, names[1])], classes, set(),
+                                   opts(small_task_floor=1), ep.table_eligibility)
+        ids = [u['task_id'] for t in tasks for u in t['units']]
+        self.assertEqual(len(ids), 2)
+        self.assertEqual(len(set(ids)), 2)
+        self.assertTrue(all(len(i) <= 56 for i in ids))
+
     def test_long_task_ids_are_distinct_and_stable(self):
         prefix = 'q-s01-' + 'longprefix' * 6
         a = plan_cheap.task_slug(prefix + '-alpha')

@@ -39,6 +39,7 @@ public:
     virtual ~WidgetBase();
     void* unk08;
 }};
+static_assert(sizeof(WidgetBase) == 0x10, "WidgetBase size");
 """
 # Class material as the pack export writes it: base chain and image sizes.
 CLASS_SKELETON = """// synthetic class material
@@ -203,6 +204,41 @@ class SkeletonText(Fixture):
         self.assertIn('enum class BSEventNotifyControl : int;', h)
         self.assertNotIn('// TODO type BSTEventSource', h)
 
+    def test_nested_reference_only_type_is_forward_declared_in_local_base(self):
+        pack = self.root / '.local/packs' / BUILD / '0x1000/README.md'
+        pack.write_text(pack_readme('virtual MidWidget::Data* GetData();'))
+        _hr, h, _cr, cpp = self.files()
+        self.assertIn('struct Data;', h)
+        self.assertIn('MidWidget::Data* FancyWidget::GetFlag()', cpp)
+        self.assertNotIn('// TODO type MidWidget::Data', h)
+
+    def test_shared_include_closure_cannot_define_the_new_class(self):
+        base = self.root / 'reconstruction/misc/WidgetBase.h'
+        base.write_text(BASE_H + '#include "Helper.h"\n')
+        (base.parent / 'Helper.h').write_text('class FancyWidget {};\n')
+        _hr, h, _cr, _cpp = self.files()
+        self.assertNotIn('#include "../misc/WidgetBase.h"', h)
+        self.assertIn('class WidgetBase', h)
+
+    def test_shared_header_needs_a_matching_size_assertion(self):
+        base = self.root / 'reconstruction/misc/WidgetBase.h'
+        base.write_text(BASE_H.replace('sizeof(WidgetBase) == 0x10', 'sizeof(WidgetBase) == 0x18'))
+        _hr, h, _cr, _cpp = self.files()
+        self.assertNotIn('#include "../misc/WidgetBase.h"', h)
+
+    def test_call_operator_keeps_parameters_name_and_binding_hint(self):
+        task = json.loads((self.unit / 'task.json').read_text())
+        task['functions'] = [dict(task['functions'][0], community_name='FancyWidget::operator')]
+        (self.unit / 'task.json').write_text(json.dumps(task))
+        pack = self.root / '.local/packs' / BUILD / '0x1000/README.md'
+        pack.write_text(pack_readme('virtual bool operator()(Cell* a_cell);'))
+        _hr, h, _cr, cpp = self.files()
+        self.assertIn('virtual bool operator()(Cell* a_cell);', h)
+        self.assertIn('bool FancyWidget::operator()(Cell* a_cell)', cpp)
+        us.write_skeleton(self.unit, repo=self.root)
+        hints = json.loads((self.unit / 'bind-hints.json').read_text())
+        self.assertEqual(hints['FancyWidget::operator()'], '0x1000')
+
     def test_unresolved_shared_header_falls_back_to_local_standins(self):
         (self.root / 'reconstruction/misc/WidgetBase.h').write_text('// TODO type Missing: unresolved.\n')
         _hr, h, _cr, _cpp = self.files()
@@ -271,6 +307,10 @@ class SkeletonText(Fixture):
                          ('bool', 'NiObject* a_object', '', True, False))
         self.assertEqual(us.split_declaration('void Read(std::byte* a_bytes);')[1],
                          'std::uint8_t* a_bytes')
+        self.assertEqual(us.split_declaration('SKYRIM_REL_VR_VIRTUAL void Update();'),
+                         ('void', '', '', False, False))
+        self.assertEqual(us.split_declaration('virtual Result operator()(Cell* a_cell) const;'),
+                         ('Result', 'Cell* a_cell', 'const', True, False))
         self.assertIsNone(us.split_declaration('int value;'))
         self.assertEqual(us.without_defaults('int a = 0, float b = f(1, 2)'), 'int a, float b')
 
@@ -374,7 +414,8 @@ class InlineNiBase(Fixture):
             'class NiObject : public ::NiRefObject\n{\n};\nstatic_assert(sizeof(NiObject) == 0x10);\n'
             'class FancyWidget : public ::NiObject\n{\n};\nstatic_assert(sizeof(FancyWidget) == 0x18);\n')
         (self.root / 'reconstruction/netimmerse').mkdir()
-        (self.root / 'reconstruction/netimmerse/NiObject.h').write_text('#pragma once\nclass NiObject {};\n')
+        (self.root / 'reconstruction/netimmerse/NiObject.h').write_text('#pragma once\nclass NiObject {public: virtual ~NiObject(); void* data;};\n'
+                        'static_assert(sizeof(NiObject) == 0x10, "NiObject size");\n')
         brief = self.unit / 'BRIEF.md'
         brief.write_text(brief.read_text().replace(
             '- `WidgetBase`: `#include "../misc/WidgetBase.h"`', '- `NiObject`: `#include "../netimmerse/NiObject.h"`'))

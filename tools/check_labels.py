@@ -69,7 +69,7 @@ COMMENTS = re.compile(r'//[^\n]*|/\*.*?\*/|"(?:[^"\\\n]|\\.)*"|\'(?:[^\'\\\n]|\\
 # template-template parameter `class Allocator` would otherwise take the body of `Table` as its own,
 # while `struct A : public B<struct C> {` is a base clause of A (base_clause_ok).
 SCOPE = re.compile(r'\b(class|struct|union|namespace|enum(?:\s+class|\s+struct)?)\s+'
-                   r'(?:alignas\s*\([^)]*\)\s*|__declspec\s*\((?:[^()]|\([^()]*\))*\)\s*|\[\[[^\]]*\]\]\s*)*([A-Za-z_]\w*)\b'
+                   r'(?:alignas\s*\([^)]*\)\s*|__declspec\s*\((?:[^()]|\([^()]*\))*\)\s*|\[\[[^\]]*\]\]\s*)*([A-Za-z_]\w*(?:::[A-Za-z_]\w*)*)\b'
                    r'([^;{}()]*)\{')
 BASE = re.compile(r'\b(?:public|protected|private)\s+(?:virtual\s+)?((?:\w+::)*\w+)')
 # An identifier followed by one of these is being declared (member, method, parameter, enumerator).
@@ -222,14 +222,19 @@ class Index:
         for m in scope_matches(text):
             open_at = m.end() - 1
             body = text[open_at + 1:match.get(open_at, open_at)]
-            entry = self.scopes.setdefault(m.group(2), {'declared': set(), 'bases': set()})
+            names = m.group(2).split('::')
+            if m.group(1) == 'namespace':
+                for outer, inner in zip(names, names[1:]):
+                    self.scopes.setdefault(outer, {'declared': set(), 'bases': set()})['declared'].add(inner)
+            name = names[-1]
+            entry = self.scopes.setdefault(name, {'declared': set(), 'bases': set()})
             entry['declared'].update(DECLARED.findall(body))
             entry['bases'].update(b.split('::')[-1] for b in BASE.findall(m.group(3)))
             if rel is not None:
-                self.where.setdefault(m.group(2), []).append(
+                self.where.setdefault(name, []).append(
                     (rel, text.count('\n', 0, m.start()) + 1, text.count('\n', 0, match.get(open_at, open_at)) + 1))
             if m.group(1).startswith('enum'):
-                values = self.enums.setdefault(m.group(2), {})
+                values = self.enums.setdefault(name, {})
                 for name, value in enumerators(body):
                     values.setdefault(name, set()).add(value)
 
