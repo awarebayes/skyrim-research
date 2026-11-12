@@ -369,6 +369,8 @@ def main():
     if not dirs:
         p.error('a task directory is required')
     try:
+        import bind
+        bind.preflight(dirs)
         if a.fork:
             if len(dirs) != 1 or a.out or a.resume:
                 p.error('--fork confirms one unit and writes to reports/ (no --out, no --resume)')
@@ -388,7 +390,7 @@ def main():
         import confirm_session
         return confirm_session.run(sys.modules[__name__], dirs, a.replace,
                                    a.out.resolve() if a.out else None)
-    except (PipelineError, boatctl.BoatError, RunnerError) as exc:
+    except (PipelineError, boatctl.BoatError, RunnerError, ValueError) as exc:
         print(f'confirm: {exc}', file=sys.stderr)
         return 2
 

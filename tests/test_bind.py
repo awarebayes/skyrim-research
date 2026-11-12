@@ -42,6 +42,18 @@ class BindTests(unittest.TestCase):
         if hints is not None:
             (self.task_dir / bind.HINTS).write_text(json.dumps(hints))
 
+    def test_list_preflight_checks_references_before_publication(self):
+        self.write_task('Function', {'Reference': {'rva': 8192}})
+        other = self.root / 'other'
+        other.mkdir()
+        (other / 'task.json').write_text(json.dumps({
+            'functions': [{'symbol': 'OtherSignature', 'rva': '0x2000'}]}))
+        before = (self.task_dir / 'symbols.json').read_bytes()
+        with self.assertRaisesRegex(ValueError, 'conflicting symbol declarations'):
+            bind.preflight([self.task_dir, other], repo=self.root)
+        self.assertEqual(before, (self.task_dir / 'symbols.json').read_bytes())
+        bind.preflight([self.task_dir, self.task_dir], repo=self.root)
+
     def run_bind(self):
         report = bind.bind(self.task_dir, self.root / 'obj', self.root / 'image', repo=self.root)
         return report, json.loads((self.task_dir / 'symbols.json').read_text())['symbols']

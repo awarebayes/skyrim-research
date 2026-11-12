@@ -799,13 +799,50 @@ def describe(report, task_dir):
     return lines
 
 
+def preflight(task_dirs, repo=REPO):
+    """Check selected functions and private reference maps before publishing any unit."""
+    declarations = {}
+    for directory in task_dirs:
+        directory = Path(repo) / directory
+        task = json.loads((directory / 'task.json').read_text())
+        entries = [(f['symbol'], {'rva': f['rva']}) for f in task['functions']]
+        private_map = directory / 'symbols.json'
+        if private_map.is_file():
+            objects = sorted(directory.glob('attempts/[0-9][0-9][0-9]/candidate.obj'))
+            active = ({s.name for s in CoffObject(objects[-1].read_bytes()).symbols.values()}
+                      if objects else None)
+            entries += [(name, entry) for name, entry in
+                        json.loads(private_map.read_text())['symbols'].items()
+                        if active is None or name in active]
+        for name, entry in entries:
+            if 'rva' not in entry or name.startswith(UNBOUND) or name.startswith('??_7'):
+                continue
+            key = (task.get('build_id'), parse_rva(entry['rva']))
+            previous = declarations.setdefault(key, name)
+            if previous != name:
+                raise ValueError(f'conflicting symbol declarations at {key[0]} {hex(key[1])}: '
+                                 f'{previous} versus {name}')
+
+
 def main(argv=None):
     import argparse
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('--task', required=True)
+    p.add_argument('--task')
+    p.add_argument('--list', type=Path, help='preflight every task before binding any task')
     p.add_argument('--object', default=None, help='Default: the newest attempts/<NNN>/candidate.obj')
     p.add_argument('--image', default=None, help='Default: .local/verifier/config.json "image"')
     a = p.parse_args(argv)
+    if a.list:
+        directories = [line.strip() for line in a.list.read_text().splitlines()
+                       if line.strip() and not line.lstrip().startswith('#')]
+        preflight(directories)
+        for directory in directories:
+            result = main(['--task', directory])
+            if result:
+                return result
+        return 0
+    if not a.task:
+        p.error('--task or --list is required')
     task_dir = Path(a.task)
     obj = a.object
     if obj is None:
