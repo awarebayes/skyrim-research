@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PENDING = ROOT / '.local/costs/pending.jsonl'
 
 
-def record_boat(task_id, stage, seconds, wall=None, functions=(), pending=PENDING):
+def record_boat(task_id, stage, seconds, wall=None, functions=(), pending=PENDING, starts=None):
     """Append one Boat usage entry. functions holds '<build id>:<rva>' targets; empty means overhead.
 
     Never raises on I/O trouble: cost bookkeeping must not fail a verifier run.
@@ -21,6 +21,9 @@ def record_boat(task_id, stage, seconds, wall=None, functions=(), pending=PENDIN
              'wall': None if wall is None else round(float(wall), 3),
              'functions': [str(f) for f in functions],
              'date': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d')}
+    if starts is not None:
+        # Machine starts are a plan limit, not compute; kept in the queue for the session's report.
+        entry['starts'] = int(starts)
     try:
         pending = Path(pending)
         pending.parent.mkdir(parents=True, exist_ok=True)

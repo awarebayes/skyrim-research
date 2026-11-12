@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+"""Start, inspect, extend and end a verifier session (machines A and B; see vsession.py).
+
+    tools/verifier/session up [--ttl S] [--only a|b] [--create] [--reserve N] [--force]
+    tools/verifier/session status
+    tools/verifier/session extend [--ttl S]
+    tools/verifier/session down [--only a|b] [--force]
+
+`up` reuses a running machine (its deadline is only ever pushed later, never shortened),
+resumes a stopped one (one start each) and, with --create, builds a missing B from the recipe.
+It then checks each machine's compiler binaries against pinned.sha256 and its private target
+image against builds/target.json (uploading the image once if B lacks it), and writes
+`.local/verifier/session.json`. While that session is up, `attempt` and `confirm` use A and B
+and never start or stop a machine.
+
+`down` refuses while a `~/tasks/<task-id>/.running` marker exists on a machine it would stop
+(--force only for markers known to be stale), stops the machines, and queues the session's
+machine time not already booked by attempt/confirm for the cost ledger (`python3
+tools/cost_ledger.py flush` moves it into data/costs.json).
+
+Every command prints the starts budget from `boat limits`. A start that would leave fewer than
+the reserve (default 10, SR_STARTS_RESERVE) for the rest of the rolling day is refused unless
+--force; a full hour or minute window is always refused. Nothing here buys extra starts.
+Exit status: 0 done, 4 tasks still marked running, 5 starts budget, 2 anything else.
+"""
+import argparse
+from pathlib import Path
+import sys
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent))
+import boatctl  # noqa: E402
+import starts  # noqa: E402
+import vsession  # noqa: E402
+try:
+    import cost_hooks  # noqa: E402
+except ImportError:
+    cost_hooks = None
+
+
+def record(seconds, made):
+    if cost_hooks is None or seconds is None:
+        return
+    try:
+        cost_hooks.record_boat('verifier-session', 'orchestration', seconds, None, (), starts=made)
+    except Exception:  # cost bookkeeping must never fail a stop
+        pass
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = p.add_subparsers(dest='cmd', required=True)
+    u = sub.add_parser('up')
+    u.add_argument('--ttl', type=int, default=vsession.DEFAULT_TTL)
+    u.add_argument('--only', choices=('a', 'b'))
+    u.add_argument('--create', action='store_true', help='build a missing B from the recipe')
+    u.add_argument('--reserve', type=int)
+    u.add_argument('--force', action='store_true', help='allow starts that use the daily reserve')
+    sub.add_parser('status')
+    e = sub.add_parser('extend')
+    e.add_argument('--ttl', type=int, default=vsession.DEFAULT_TTL)
+    d = sub.add_parser('down')
+    d.add_argument('--only', choices=('a', 'b'))
+    d.add_argument('--force', action='store_true', help='stop despite task markers (stale ones only)')
+    a = p.parse_args()
+    try:
+        if a.cmd == 'up':
+            vsession.up(a.ttl, a.reserve, a.force, a.create, a.only)
+        elif a.cmd == 'status':
+            vsession.status()
+        elif a.cmd == 'extend':
+            vsession.extend(a.ttl)
+        else:
+            vsession.down(a.only, a.force, record=record)
+        return 0
+    except vsession.SessionBusy as exc:
+        print(f'session: {exc}', file=sys.stderr)
+        return 4
+    except starts.StartsRefused as exc:
+        print(f'session: {exc}', file=sys.stderr)
+        return 5
+    except boatctl.BoatError as exc:
+        print(f'session: {exc}', file=sys.stderr)
+        return 5 if 'not starting' in str(exc) else 2
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

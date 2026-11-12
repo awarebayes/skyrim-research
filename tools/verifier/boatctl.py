@@ -66,7 +66,17 @@ def seconds_left(sandbox):
     return int((when - datetime.now(timezone.utc)).total_seconds())
 
 
-def resume(machine, ttl):
+def _take_start(reason, machine, force):
+    # Every start goes through the shared budget check and log (starts.py).
+    import starts
+    try:
+        starts.take(reason, machine, force=force or None, cli=cli)
+    except starts.StartsRefused as exc:
+        raise BoatError(str(exc)) from None
+
+
+def resume(machine, ttl, reason='resume', force=False):
+    _take_start(reason, machine, force)
     cli('resume', machine, '--ttl', str(ttl), '--json', timeout=300)
 
 
@@ -82,7 +92,8 @@ def delete(machine):
     cli('delete', machine, '--yes', '--json', timeout=120)
 
 
-def fork(source, name, ttl):
+def fork(source, name, ttl, reason='fork', force=False):
+    _take_start(reason, name, force)
     proc = cli('fork', source, '--no-env', '--no-monitoring', '--ttl', str(ttl), '--wait', '--json', timeout=600)
     found = None
     for event in _json_lines(proc.stdout):

@@ -2,10 +2,11 @@
 """One reconstruction attempt: compile the unit on the standing verifier and compare each function.
 
     tools/verifier/attempt <task-dir>            # .local/tasks/<task-id>/ with task.json
-    tools/verifier/attempt --stop [<task-dir>]   # stop the standing machine (and remove the task's files on it)
+    tools/verifier/attempt --clean <task-dir>    # remove this task's files on the machine (never stops it)
 
-Run from the checkout whose reconstruction/ sources you are trying. The command resumes the
-standing machine if needed (or extends its auto-stop deadline), uploads only files that changed
+Run from the checkout whose reconstruction/ sources you are trying. When a verifier session is
+up (tools/verifier/session) it uses machine A and never starts or stops a machine; without a
+session it resumes the standing machine if needed (or extends its auto-stop deadline). It uploads only files that changed
 since the last attempt, compiles with the task's recipe, compares every listed function against
 the pinned image kept on the machine, and fetches private diagnostics to
 <task-dir>/attempts/<NNN>/. When a function or reference is not yet bound (`unbound:` symbols, a
@@ -14,7 +15,8 @@ renamed declaration, a new callee) it binds the names from the compiled object
 invocation; a run in which nothing could be compared because of binding does not count against
 max_attempts. It prints one line per function with the reason code, first mismatch offset and
 candidate/target sizes, what was bound or is still missing, and where to read the side-by-side
-disassembly. The machine stops itself at its deadline; --stop is for an Engineer ending a session.
+disassembly. The machine stops itself at its deadline; an Engineer ends a session with
+`tools/verifier/session down` (attempt never stops a machine; --stop is retired).
 
 Exit status: 0 every function passed, 1 a function failed, 3 compile failed, 4 unit or include
 problem, 5 budget exhausted, 2 anything else. A pass is evidence for review only; it makes
@@ -170,38 +172,37 @@ def _revision(dest):
         return None
 
 
-def stop(task_dir, force):
+def clean(task_dir):
+    """Remove this task's directory on the standing machine if it is running; never starts or stops it."""
+    task = pipeline.load_task(task_dir)
+    handle = pipeline.lock(task['dir'])  # noqa: F841 (held until exit)
     machine, state = boatctl.lookup()
-    if machine is None:
-        print(f'no machine named {boatctl.STANDING}')
-        return 2
-    if state in boatctl.RUNNING:
-        if task_dir is not None:
-            task = pipeline.load_task(task_dir)
-            remote = f'{boatctl.REMOTE_HOME}/tasks/{task["task_id"]}'
-            boatctl.execute(machine, f'rm -rf {shlex.quote(remote)}', 60)
-            (task['dir'] / '.attempt' / 'sync.json').unlink(missing_ok=True)
-        code, out, _ = boatctl.execute(machine, f'ls -d {boatctl.REMOTE_HOME}/tasks/*/.running 2>/dev/null || true', 60)
-        busy = [p.split('/')[-2] for p in out.split()]
-        if busy and not force:
-            print(f'not stopping: tasks still running on the machine: {" ".join(busy)} (--force if stale)')
-            return 4
-        boatctl.stop(machine)
-        pipeline.wait_state(machine, {'stopped'}, 300)
-    print(f'{boatctl.STANDING} stopped; usage since create {boatctl.usage_seconds(machine)} s; '
-          f'compute {json.dumps(boatctl.compute_used())}')
+    remote = f'{boatctl.REMOTE_HOME}/tasks/{task["task_id"]}'
+    if machine is not None and state in boatctl.RUNNING:
+        boatctl.execute(machine, f'rm -rf {shlex.quote(remote)}', 60)
+        print(f'removed {remote} on {boatctl.STANDING}')
+    else:
+        print(f'{boatctl.STANDING} is {state}; nothing removed remotely (the next attempt uploads afresh)')
+    (task['dir'] / '.attempt' / 'sync.json').unlink(missing_ok=True)
     return 0
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('task_dir', nargs='?')
-    p.add_argument('--stop', action='store_true', help='stop the standing machine')
-    p.add_argument('--force', action='store_true', help='with --stop: ignore stale running markers')
+    p.add_argument('--clean', action='store_true', help="remove the task's files on the machine")
+    p.add_argument('--stop', action='store_true', help=argparse.SUPPRESS)
+    p.add_argument('--force', action='store_true', help=argparse.SUPPRESS)
     a = p.parse_args()
     try:
         if a.stop:
-            return stop(a.task_dir, a.force)
+            print('attempt --stop is retired: attempt never stops a machine. Engineers end a session with '
+                  'tools/verifier/session down; per-task cleanup is attempt --clean <task-dir>.', file=sys.stderr)
+            return 2
+        if a.clean:
+            if not a.task_dir:
+                p.error('--clean needs a task directory')
+            return clean(a.task_dir)
         if not a.task_dir:
             p.error('a task directory is required')
         return attempt(a.task_dir)

@@ -134,8 +134,9 @@ orchestrator does not start a phase until the previous one's finish condition fr
   and recipe. Every pass is re-run on a different machine before it is reported. Machines carry
   only the inputs their gate allows, auto-stop at their deadline, and never run untrusted PR code.
 - **Boat use**: every agent that touches a Boat machine follows `docs/boat-agent-guidelines.md`
-  (resume or fork the standing verifier machine, never rebuild by hand; buy nothing; stop
-  machines and record compute before and after in the handoff).
+  (one verifier session per work period, `tools/verifier/session up`/`down`, run by the
+  orchestrator or an Engineer told to; no per-unit forks; keep the starts reserve; buy nothing;
+  record compute and starts in the handoff).
 - **Budget**: the orchestrator tallies machine-hours and subagent runs against the G3 cap from
   worker reports and stops dispatching at the cap; workers stop their machines on completion.
 - **Integration**: an Engineer merges passing, Reviewer-approved worktree branches, reruns the
