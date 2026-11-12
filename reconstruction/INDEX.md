@@ -11,63 +11,63 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 
 | unit | function (name origin) | build / RVA / size | recipe | record | status | review | names |
 |---|---|---|---|---|---|---|---|
-| - | `BGSEquipType::GetEquipSlot` (COMMUNITY) | `sse-steam-1-7-104` / `0x146700` / 5 | - | - | mapped | - | - |
-| - | `TESFullName::GetFullName` (COMMUNITY) | `sse-steam-1-7-104` / `0x146720` / 9 | - | - | mapped | - | - |
-| - | `BGSEquipType::SetEquipSlot` (COMMUNITY) | `sse-steam-1-7-104` / `0x146a50` / 5 | - | - | mapped | - | - |
+| `forms/BGSEquipType` | `BGSEquipType::GetEquipSlot` (COMMUNITY) | `sse-steam-1-7-104` / `0x146700` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x146700.json` | mapped, record awaiting review | - | - |
+| `forms/TESFullName` | `TESFullName::GetFullName` (COMMUNITY) | `sse-steam-1-7-104` / `0x146720` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x146720.json` | mapped, record awaiting review | - | - |
+| `forms/BGSEquipType` | `BGSEquipType::SetEquipSlot` (COMMUNITY) | `sse-steam-1-7-104` / `0x146a50` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x146a50.json` | mapped, record awaiting review | - | - |
 | - | `NiAVObject::GetCollisionObject` (COMMUNITY) | `sse-steam-1-7-104` / `0x1900a0` / 94 | - | - | mapped | - | - |
 | - | `NiStream::SaveLinkID` (COMMUNITY) | `sse-steam-1-7-104` / `0x19e930` / 73 | - | - | mapped | - | - |
-| - | `BGSStoryManagerBranchNode::GetChild` (COMMUNITY) | `sse-steam-1-7-104` / `0x1c7cd0` / 11 | - | - | mapped | - | - |
-| - | `BGSStoryManagerBranchNode::QChildCount` (COMMUNITY) | `sse-steam-1-7-104` / `0x1c8500` / 4 | - | - | mapped | - | - |
-| - | `BGSStoryManagerNodeBase::QConditions` (COMMUNITY) | `sse-steam-1-7-104` / `0x1c8520` / 5 | - | - | mapped | - | - |
+| `forms/BGSStoryManagerBranchNode` | `BGSStoryManagerBranchNode::GetChild` (COMMUNITY) | `sse-steam-1-7-104` / `0x1c7cd0` / 11 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1c7cd0.json` | mapped, record awaiting review | - | - |
+| `forms/BGSStoryManagerBranchNode` | `BGSStoryManagerBranchNode::QChildCount` (COMMUNITY) | `sse-steam-1-7-104` / `0x1c8500` / 4 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1c8500.json` | mapped, record awaiting review | - | - |
+| `forms/BGSStoryManagerNodeBase` | `BGSStoryManagerNodeBase::QConditions` (COMMUNITY) | `sse-steam-1-7-104` / `0x1c8520` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1c8520.json` | mapped, record awaiting review | - | - |
 | `forms/TESFile` | `TESFile::OpenTES` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ca460` / 36 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1ca460.json` | matched | label-only | - |
 | `forms/TESFile` | `TESFile::GetFormType` (COMMUNITY) | `sse-steam-1-7-104` / `0x1cd7d0` / 72 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1cd7d0.json` | matched | label-only | - |
 | `forms/TESFile` | `TESFile::Seek` (COMMUNITY) | `sse-steam-1-7-104` / `0x1cd860` / 409 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1cd860.json` | matched | label-only | - |
 | `forms/TESFile` | `TESFile::GetCurrentSubRecordType` (COMMUNITY) | `sse-steam-1-7-104` / `0x1cdc10` / 47 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1cdc10.json` | matched | label-only | - |
 | `forms/TESFile` | `TESFile::SeekNextSubrecord` (COMMUNITY) | `sse-steam-1-7-104` / `0x1cdc60` / 167 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1cdc60.json` | matched | label-only | - |
 | `forms/TESFile` | `TESFile::Duplicate` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ce7e0` / 188 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1ce7e0.json` | matched | label-only | - |
-| - | `BGSBlockBashData::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d2240` / 11 | - | - | mapped | - | - |
-| - | `BGSDestructibleObjectForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d2750` / 9 | - | - | mapped | - | - |
-| - | `BGSDestructibleObjectForm::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d2760` / 42 | - | - | mapped | - | - |
-| - | `BGSIdleCollection::Ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d75f0` / 29 | - | - | mapped | - | - |
-| - | `BGSIdleCollection::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d76e0` / 16 | - | - | mapped | - | - |
+| `forms/BGSBlockBashData` | `BGSBlockBashData::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d2240` / 11 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1d2240.json` | mapped, record awaiting review | - | - |
+| `forms/BGSDestructibleObjectForm` | `BGSDestructibleObjectForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d2750` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1d2750.json` | mapped, record awaiting review | - | - |
+| `forms/BGSDestructibleObjectForm` | `BGSDestructibleObjectForm::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d2760` / 42 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1d2760.json` | mapped, record awaiting review | - | - |
+| `forms/BGSIdleCollection` | `BGSIdleCollection::Ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d75f0` / 29 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1d75f0.json` | mapped, record awaiting review | - | - |
+| `forms/BGSIdleCollection` | `BGSIdleCollection::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1d76e0` / 16 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1d76e0.json` | mapped, record awaiting review | - | - |
 | - | `TESObjectREFR::PlayAnimation` (COMMUNITY) | `sse-steam-1-7-104` / `0x1da760` / 385 | - | - | mapped | - | - |
-| - | `BGSOverridePackCollection::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1daad0` / 19 | - | - | mapped | - | - |
-| - | `BGSOverridePackCollection::~BGSOverridePackCollection` (COMMUNITY) | `sse-steam-1-7-104` / `0x1db070` / 43 | - | - | mapped | - | - |
-| - | `BGSPerkRankArray::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1db110` / 7 | - | - | mapped | - | - |
-| - | `TESActorBaseData::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1dc5e0` / 59 | - | - | mapped | - | - |
-| - | `TESActorBaseData::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1dc630` / 38 | - | - | mapped | - | - |
-| - | `TESActorBaseData::GetInvulnerable` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5c0` / 7 | - | - | mapped | - | - |
-| - | `TESActorBaseData::GetIsGhost` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5d0` / 9 | - | - | mapped | - | - |
-| - | `TESActorBaseData::Unk_07` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5e0` / 3 | - | - | mapped | - | - |
-| - | `TESActorBaseData::GetVoiceType` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5f0` / 5 | - | - | mapped | - | - |
-| - | `TESAIForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de800` / 26 | - | - | mapped | - | - |
-| - | `TESAIForm::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de820` / 9 | - | - | mapped | - | - |
-| - | `TESAttackDamageForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1df0c0` / 7 | - | - | mapped | - | - |
-| - | `TESAttackDamageForm::GetAttackDamage` (COMMUNITY) | `sse-steam-1-7-104` / `0x1df130` / 5 | - | - | mapped | - | - |
-| - | `TESAttackDamageForm::~TESAttackDamageForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1df1a0` / 43 | - | - | mapped | - | - |
-| - | `TESContainer::GetItemCount` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e0b10` / 43 | - | - | mapped | - | - |
-| - | `TESDescription::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1240` / 8 | - | - | mapped | - | - |
-| - | `TESEnchantableForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1e60` / 14 | - | - | mapped | - | - |
+| `forms/BGSOverridePackCollection` | `BGSOverridePackCollection::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1daad0` / 19 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1daad0.json` | mapped, record awaiting review | - | - |
+| `forms/BGSOverridePackCollection` | `BGSOverridePackCollection::~BGSOverridePackCollection` (COMMUNITY) | `sse-steam-1-7-104` / `0x1db070` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1db070.json` | mapped, record awaiting review | - | - |
+| `forms/BGSPerkRankArray` | `BGSPerkRankArray::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1db110` / 7 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1db110.json` | mapped, record awaiting review | - | - |
+| `forms/TESActorBaseData` | `TESActorBaseData::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1dc5e0` / 59 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1dc5e0.json` | mapped, record awaiting review | - | - |
+| `forms/TESActorBaseData` | `TESActorBaseData::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1dc630` / 38 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1dc630.json` | mapped, record awaiting review | - | - |
+| `forms/TESActorBaseData` | `TESActorBaseData::GetInvulnerable` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5c0` / 7 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1de5c0.json` | mapped, record awaiting review | - | - |
+| `forms/TESActorBaseData` | `TESActorBaseData::GetIsGhost` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5d0` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1de5d0.json` | mapped, record awaiting review | - | - |
+| `forms/TESActorBaseData` | `TESActorBaseData::Unk_07` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5e0` / 3 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1de5e0.json` | mapped, record awaiting review | - | - |
+| `forms/TESActorBaseData` | `TESActorBaseData::GetVoiceType` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de5f0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1de5f0.json` | mapped, record awaiting review | - | - |
+| `forms/TESAIForm` | `TESAIForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de800` / 26 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1de800.json` | mapped, record awaiting review | - | - |
+| `forms/TESAIForm` | `TESAIForm::ClearDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1de820` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1de820.json` | mapped, record awaiting review | - | - |
+| `forms/TESAttackDamageForm` | `TESAttackDamageForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1df0c0` / 7 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1df0c0.json` | mapped, record awaiting review | - | - |
+| `forms/TESAttackDamageForm` | `TESAttackDamageForm::GetAttackDamage` (COMMUNITY) | `sse-steam-1-7-104` / `0x1df130` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1df130.json` | mapped, record awaiting review | - | - |
+| `forms/TESAttackDamageForm` | `TESAttackDamageForm::~TESAttackDamageForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1df1a0` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1df1a0.json` | mapped, record awaiting review | - | - |
+| `forms/TESContainer` | `TESContainer::GetItemCount` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e0b10` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e0b10.json` | mapped, record awaiting review | - | - |
+| `forms/TESDescription` | `TESDescription::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1240` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e1240.json` | mapped, record awaiting review | - | - |
+| `forms/TESEnchantableForm` | `TESEnchantableForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1e60` / 14 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e1e60.json` | mapped, record awaiting review | - | - |
 | `forms/TESForm` | `TESForm::GetEnchantment` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1fd0` / 91 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e1fd0.json` | matched | label-only | open |
-| - | `TESEnchantableForm::~TESEnchantableForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e20a0` / 43 | - | - | mapped | - | - |
-| - | `TESEnchantableForm::GetCastingType` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e20d0` / 5 | - | - | mapped | - | - |
+| `forms/TESEnchantableForm` | `TESEnchantableForm::~TESEnchantableForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e20a0` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e20a0.json` | mapped, record awaiting review | - | - |
+| `forms/TESEnchantableForm` | `TESEnchantableForm::GetCastingType` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e20d0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e20d0.json` | mapped, record awaiting review | - | - |
 | `forms/TESForm` | `TESForm::ClearData` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e36b0` / 3 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e36b0.json` | matched | label-only | checked |
 | `forms/TESForm` | `TESForm::SaveGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e5700` / 91 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e5700.json` | matched | label-only | open |
 | `forms/TESForm` | `TESForm::LoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e5770` / 185 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e5770.json` | matched | label-only | open |
 | - | `TESForm::SetFile` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e5b30` / 216 | - | - | mapped | - | - |
 | `forms/TESForm` | `TESForm::IsTemporaryFormID` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e6010` / 15 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e6010.json` | matched | label-only | open |
 | - | `TESForm::CopyComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e6930` / 205 | - | - | mapped | - | - |
-| - | `TESLeveledList::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e8850` / 18 | - | - | mapped | - | - |
-| - | `TESLeveledList::GetChanceNone` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e8880` / 20 | - | - | mapped | - | - |
-| - | `TESLeveledList::GetMultCalc` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e88f0` / 9 | - | - | mapped | - | - |
-| - | `TESLeveledList::GetUseAll` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e8930` / 10 | - | - | mapped | - | - |
-| - | `TESModelTextureSwap::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ecd70` / 14 | - | - | mapped | - | - |
-| - | `TESProduceForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ee470` / 14 | - | - | mapped | - | - |
-| - | `TESProduceForm::~TESProduceForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1eee40` / 43 | - | - | mapped | - | - |
-| - | `TESRaceForm::CopyComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ef750` / 63 | - | - | mapped | - | - |
-| - | `TESReactionForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ef9c0` / 5 | - | - | mapped | - | - |
+| `forms/TESLeveledList` | `TESLeveledList::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e8850` / 18 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e8850.json` | mapped, record awaiting review | - | - |
+| `forms/TESLeveledList` | `TESLeveledList::GetChanceNone` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e8880` / 20 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e8880.json` | mapped, record awaiting review | - | - |
+| `forms/TESLeveledList` | `TESLeveledList::GetMultCalc` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e88f0` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e88f0.json` | mapped, record awaiting review | - | - |
+| `forms/TESLeveledList` | `TESLeveledList::GetUseAll` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e8930` / 10 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e8930.json` | mapped, record awaiting review | - | - |
+| `forms/TESModelTextureSwap` | `TESModelTextureSwap::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ecd70` / 14 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1ecd70.json` | mapped, record awaiting review | - | - |
+| `forms/TESProduceForm` | `TESProduceForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ee470` / 14 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1ee470.json` | mapped, record awaiting review | - | - |
+| `forms/TESProduceForm` | `TESProduceForm::~TESProduceForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1eee40` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1eee40.json` | mapped, record awaiting review | - | - |
+| `forms/TESRaceForm` | `TESRaceForm::CopyComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ef750` / 63 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1ef750.json` | mapped, record awaiting review | - | - |
+| `forms/TESReactionForm` | `TESReactionForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1ef9c0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1ef9c0.json` | mapped, record awaiting review | - | - |
 | `forms/TESForm` | `TESForm::GetGoldValue` (COMMUNITY) | `sse-steam-1-7-104` / `0x1f3560` / 157 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1f3560.json` | matched | label-only | open |
-| - | `TESWeightForm::CopyComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1f3760` / 61 | - | - | mapped | - | - |
+| `forms/TESWeightForm` | `TESWeightForm::CopyComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1f3760` / 61 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1f3760.json` | mapped, record awaiting review | - | - |
 | - | `BGSDecalNode::CreateClone` (COMMUNITY) | `sse-steam-1-7-104` / `0x2030b0` / 17 | - | - | mapped | - | - |
 | - | `BGSDecalNode::AttachDecal` (COMMUNITY) | `sse-steam-1-7-104` / `0x203360` / 54 | - | - | mapped | - | - |
 | - | `TESObjectREFR::GetInventoryChanges` (COMMUNITY) | `sse-steam-1-7-104` / `0x22b2c0` / 18 | - | - | mapped | - | - |
@@ -78,8 +78,8 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `InventoryChanges::RemoveFavorite` (COMMUNITY) | `sse-steam-1-7-104` / `0x237a20` / 435 | - | - | mapped | - | - |
 | `bsengine/BSPointerHandleManagerInterface` | `BSPointerHandleManagerInterface::GetHandle` (COMMUNITY) | `sse-steam-1-7-104` / `0x240f50` / 54 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x240f50.json` | matched | label-only | - |
 | - | `BGSConstructibleObject::ClearData` (COMMUNITY) | `sse-steam-1-7-104` / `0x25de90` / 34 | - | - | mapped | - | - |
-| - | `BGSMovableStatic::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x2640a0` / 12 | - | - | mapped | - | - |
-| - | `BGSMovableStatic::dtor` (COMMUNITY) | `sse-steam-1-7-104` / `0x264444` / 9 | - | - | mapped | - | - |
+| `forms/BGSMovableStatic` | `BGSMovableStatic::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x2640a0` / 12 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2640a0.json` | mapped, record awaiting review | - | - |
+| `forms/BGSMovableStatic` | `BGSMovableStatic::dtor` (COMMUNITY) | `sse-steam-1-7-104` / `0x264444` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x264444.json` | mapped, record awaiting review | - | - |
 | - | `BGSTalkingActivator::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x2671e0` / 16 | - | - | mapped | - | - |
 | - | `BGSTalkingActivator::SaveGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x267460` / 60 | - | - | mapped | - | - |
 | - | `BGSTalkingActivator::Revert` (COMMUNITY) | `sse-steam-1-7-104` / `0x267530` / 53 | - | - | mapped | - | - |
@@ -152,9 +152,9 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `forms/TESObjectREFR` | `TESObjectREFR::GetCalcLevel` (COMMUNITY) | `sse-steam-1-7-104` / `0x300b90` / 143 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x300b90.json` | matched | label-only | open |
 | - | `TESObjectREFR::AddTeleport` (COMMUNITY) | `sse-steam-1-7-104` / `0x300f80` / 163 | - | - | mapped | - | - |
 | - | `TESObjectREFR::GetTeleportData` (COMMUNITY) | `sse-steam-1-7-104` / `0x301090` / 9 | - | - | mapped | - | - |
-| - | `TESWaterForm::GetDangerous` (COMMUNITY) | `sse-steam-1-7-104` / `0x306f80` / 10 | - | - | mapped | - | - |
-| - | `TESWaterForm::~TESWaterForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x3078e0` / 52 | - | - | mapped | - | - |
-| - | `TESTexture1024::GetMaxAllowedSize` (COMMUNITY) | `sse-steam-1-7-104` / `0x309f20` / 6 | - | - | mapped | - | - |
+| `forms/TESWaterForm` | `TESWaterForm::GetDangerous` (COMMUNITY) | `sse-steam-1-7-104` / `0x306f80` / 10 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x306f80.json` | mapped, record awaiting review | - | - |
+| `forms/TESWaterForm` | `TESWaterForm::~TESWaterForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x3078e0` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3078e0.json` | mapped, record awaiting review | - | - |
+| `forms/TESTexture1024` | `TESTexture1024::GetMaxAllowedSize` (COMMUNITY) | `sse-steam-1-7-104` / `0x309f20` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x309f20.json` | mapped, record awaiting review | - | - |
 | - | `TESWorldSpace::ClearData` (COMMUNITY) | `sse-steam-1-7-104` / `0x30b630` / 210 | - | - | mapped | - | - |
 | `forms/TESWorldSpace` | `TESWorldSpace::GetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x30b710` / 22 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x30b710.json` | matched | label-only | - |
 | - | `TESWorldSpace::SetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x30b730` / 92 | - | - | mapped | - | - |
@@ -204,12 +204,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TESNPC::GetBaseOverlays` (COMMUNITY) | `sse-steam-1-7-104` / `0x3c8d00` / 126 | - | - | mapped | - | - |
 | - | `TESNPC::GetNumBaseOverlays` (COMMUNITY) | `sse-steam-1-7-104` / `0x3c8d90` / 120 | - | - | mapped | - | - |
 | `forms/TESNPC` | `TESNPC::SetObjectVoiceType` (COMMUNITY) | `sse-steam-1-7-104` / `0x3cd8d0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3cd8d0.json` | matched | full | checked |
-| - | `TESQuest::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x3ce410` / 48 | - | - | mapped | - | - |
-| - | `TESQuest::FinishLoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x3d2870` / 42 | - | - | mapped | - | - |
+| `forms/TESQuest` | `TESQuest::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x3ce410` / 48 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3ce410.json` | mapped, record awaiting review | - | - |
+| `forms/TESQuest` | `TESQuest::FinishLoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x3d2870` / 42 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3d2870.json` | mapped, record awaiting review | - | - |
 | - | `TESQuest::GetAlias` (COMMUNITY) | `sse-steam-1-7-104` / `0x3d31f0` / 41 | - | - | mapped | - | - |
-| - | `TESQuest::~TESQuest` (COMMUNITY) | `sse-steam-1-7-104` / `0x3dedb0` / 52 | - | - | mapped | - | - |
+| `forms/TESQuest` | `TESQuest::~TESQuest` (COMMUNITY) | `sse-steam-1-7-104` / `0x3dedb0` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3dedb0.json` | mapped, record awaiting review | - | - |
 | - | `TESQuest::GetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x3df9b0` / 22 | - | - | mapped | - | - |
-| - | `TESQuest::QConditions` (COMMUNITY) | `sse-steam-1-7-104` / `0x3dfeb0` / 8 | - | - | mapped | - | - |
+| `forms/TESQuest` | `TESQuest::QConditions` (COMMUNITY) | `sse-steam-1-7-104` / `0x3dfeb0` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3dfeb0.json` | mapped, record awaiting review | - | - |
 | - | `TESRace::GetBodyPartData` (COMMUNITY) | `sse-steam-1-7-104` / `0x3e6250` / 22 | - | - | mapped | - | - |
 | - | `TESRace::GetMovementType` (COMMUNITY) | `sse-steam-1-7-104` / `0x3e64a0` / 24 | - | - | mapped | - | - |
 | - | `BGSTextureModel::~BGSTextureModel` (COMMUNITY) | `sse-steam-1-7-104` / `0x3eb800` / 52 | - | - | mapped | - | - |
@@ -226,34 +226,34 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TESPackage::GetObjectTypeName` (COMMUNITY) | `sse-steam-1-7-104` / `0x49e270` / 17 | - | - | mapped | - | - |
 | - | `TESPackage::~TESPackage` (COMMUNITY) | `sse-steam-1-7-104` / `0x49e890` / 52 | - | - | mapped | - | - |
 | - | `TESPackage::GetRefCount` (COMMUNITY) | `sse-steam-1-7-104` / `0x49e8d0` / 7 | - | - | mapped | - | - |
-| - | `BSTempEffect::ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9860` / 112 | - | - | mapped | - | - |
-| - | `BSTempEffect::Update` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9910` / 18 | - | - | mapped | - | - |
-| - | `BSTempEffect::SaveGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9940` / 139 | - | - | mapped | - | - |
-| - | `BSTempEffect::LoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a99e0` / 110 | - | - | mapped | - | - |
-| - | `BSTempEffect::~BSTempEffect` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9f20` / 65 | - | - | mapped | - | - |
-| - | `BSTempEffect::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9fc0` / 6 | - | - | mapped | - | - |
-| - | `BSTempEffect::Initialize` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9fd0` / 5 | - | - | mapped | - | - |
+| `bsengine/BSTempEffect` | `BSTempEffect::ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9860` / 112 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4a9860.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSTempEffect` | `BSTempEffect::Update` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9910` / 18 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4a9910.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSTempEffect` | `BSTempEffect::SaveGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9940` / 139 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4a9940.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSTempEffect` | `BSTempEffect::LoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a99e0` / 110 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4a99e0.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSTempEffect` | `BSTempEffect::~BSTempEffect` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9f20` / 65 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4a9f20.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSTempEffect` | `BSTempEffect::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9fc0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4a9fc0.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSTempEffect` | `BSTempEffect::Initialize` (COMMUNITY) | `sse-steam-1-7-104` / `0x4a9fd0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4a9fd0.json` | mapped, record awaiting review | - | - |
 | - | `BSTempEffectDebris::Get3D` (COMMUNITY) | `sse-steam-1-7-104` / `0x4aa860` / 5 | - | - | mapped | - | - |
 | - | `BSTempEffectGeometryDecal::~BSTempEffectGeometryDecal` (COMMUNITY) | `sse-steam-1-7-104` / `0x4adc40` / 52 | - | - | mapped | - | - |
 | - | `BSTempEffectSimpleDecal::Initialize` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b1090` / 35 | - | - | mapped | - | - |
 | - | `BSTempEffectSimpleDecal::Get3D` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b2950` / 5 | - | - | mapped | - | - |
 | - | `BSTempEffectSimpleDecal::~BSTempEffectSimpleDecal` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4a40` / 52 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterialBase::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4ad0` / 6 | - | - | mapped | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4ad0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4b4ad0.json` | mapped, record awaiting review | - | - |
 | - | `BSTempEffectSPG::FinishLoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b5250` / 53 | - | - | mapped | - | - |
 | - | `BSTempEffectSPG::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b5800` / 6 | - | - | mapped | - | - |
 | - | `BSTerrainEffect::GetManagerHandlesSaveLoad` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b7c40` / 5 | - | - | mapped | - | - |
-| - | `BGSStoryManagerBranchNode::InitItemImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x5358d0` / 29 | - | - | mapped | - | - |
-| - | `BGSStoryManagerEventNode::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x535c10` / 28 | - | - | mapped | - | - |
-| - | `BGSStoryManagerEventNode::GetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x535d60` / 39 | - | - | mapped | - | - |
-| - | `BGSStoryManagerNodeBase::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x5360f0` / 34 | - | - | mapped | - | - |
-| - | `BGSStoryManagerQuestNode::Revert` (COMMUNITY) | `sse-steam-1-7-104` / `0x539020` / 40 | - | - | mapped | - | - |
+| `forms/BGSStoryManagerBranchNode` | `BGSStoryManagerBranchNode::InitItemImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x5358d0` / 29 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x5358d0.json` | mapped, record awaiting review | - | - |
+| `forms/BGSStoryManagerEventNode` | `BGSStoryManagerEventNode::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x535c10` / 28 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x535c10.json` | mapped, record awaiting review | - | - |
+| `forms/BGSStoryManagerEventNode` | `BGSStoryManagerEventNode::GetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x535d60` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x535d60.json` | mapped, record awaiting review | - | - |
+| `forms/BGSStoryManagerNodeBase` | `BGSStoryManagerNodeBase::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x5360f0` / 34 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x5360f0.json` | mapped, record awaiting review | - | - |
+| `forms/BGSStoryManagerQuestNode` | `BGSStoryManagerQuestNode::Revert` (COMMUNITY) | `sse-steam-1-7-104` / `0x539020` / 40 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x539020.json` | mapped, record awaiting review | - | - |
 | `magic/MagicCaster` | `MagicCaster::GetCurrentSpellCost` (COMMUNITY) | `sse-steam-1-7-104` / `0x5c2cc0` / 57 | `o2-fpfast` | `reports/sse-steam-1-7-104/0x5c2cc0.json` | matched | label-only | - |
 | `magic/MagicCaster` | `MagicCaster::InterruptCast` (COMMUNITY) | `sse-steam-1-7-104` / `0x5caae0` / 104 | `o2-fpfast` | `reports/sse-steam-1-7-104/0x5caae0.json` | matched | label-only | - |
 | `magic/MagicCaster` | `MagicCaster::PlayReleaseSound` (COMMUNITY) | `sse-steam-1-7-104` / `0x5cdf50` / 165 | `o2-fpfast` | `reports/sse-steam-1-7-104/0x5cdf50.json` | matched | label-only | - |
 | `magic/MagicCaster` | `MagicCaster::FindPickTarget` (COMMUNITY) | `sse-steam-1-7-104` / `0x5cef10` / 163 | `o2-fpfast` | `reports/sse-steam-1-7-104/0x5cef10.json` | matched | label-only | - |
 | - | `BGSDefaultObjectManager::GetEquipSlot` (COMMUNITY) | `sse-steam-1-7-104` / `0x5d5b70` / 29 | - | - | mapped | - | - |
-| - | `BGSLoadGameBuffer::GetVersion` (COMMUNITY) | `sse-steam-1-7-104` / `0x637a90` / 12 | - | - | mapped | - | - |
-| - | `BGSLoadGameBuffer::ReadFormID` (COMMUNITY) | `sse-steam-1-7-104` / `0x637ab0` / 110 | - | - | mapped | - | - |
+| `forms/BGSLoadGameBuffer` | `BGSLoadGameBuffer::GetVersion` (COMMUNITY) | `sse-steam-1-7-104` / `0x637a90` / 12 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x637a90.json` | mapped, record awaiting review | - | - |
+| `forms/BGSLoadGameBuffer` | `BGSLoadGameBuffer::ReadFormID` (COMMUNITY) | `sse-steam-1-7-104` / `0x637ab0` / 110 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x637ab0.json` | mapped, record awaiting review | - | - |
 | - | `BGSLoadGameBuffer::LoadDataEndian` (COMMUNITY) | `sse-steam-1-7-104` / `0x637e70` / 51 | - | - | mapped | - | - |
 | `actors/Actor` | `Actor::GetLevel` (COMMUNITY) | `sse-steam-1-7-104` / `0x6797a0` / 13 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x6797a0.json` | matched | label-only | - |
 | `actors/Character` | `Character::SetCrimeFaction` (COMMUNITY) | `sse-steam-1-7-104` / `0x67eab0` / 234 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x67eab0.json` | matched | full | open |
@@ -311,11 +311,11 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiStream::LoadObjectSizeTable` (COMMUNITY) | `sse-steam-1-7-104` / `0xee6f60` / 217 | - | - | mapped | - | - |
 | - | `NiObjectNET::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xeea6c0` / 59 | - | - | mapped | - | - |
 | - | `NiObjectNET::LinkObject` (COMMUNITY) | `sse-steam-1-7-104` / `0xeea710` / 148 | - | - | mapped | - | - |
-| - | `NiObjectNET::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xeea7b0` / 195 | - | - | mapped | - | - |
+| `netimmerse/NiObjectNET` | `NiObjectNET::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xeea7b0` / 195 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xeea7b0.json` | mapped, record awaiting review | - | - |
 | - | `NiObjectNET::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xeea880` / 275 | - | - | mapped | - | - |
 | - | `NiAVObject::SetName` (COMMUNITY) | `sse-steam-1-7-104` / `0xeeac80` / 9 | - | - | mapped | - | - |
-| - | `NiObjectNET::ProcessClone` (COMMUNITY) | `sse-steam-1-7-104` / `0xeeb8c0` / 122 | - | - | mapped | - | - |
-| - | `NiObjectNET::ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0xeeb940` / 50 | - | - | mapped | - | - |
+| `netimmerse/NiObjectNET` | `NiObjectNET::ProcessClone` (COMMUNITY) | `sse-steam-1-7-104` / `0xeeb8c0` / 122 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xeeb8c0.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiObjectNET` | `NiObjectNET::ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0xeeb940` / 50 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xeeb940.json` | mapped, record awaiting review | - | - |
 | - | `NiAVObject::RecalculateWorldTransform` (COMMUNITY) | `sse-steam-1-7-104` / `0xeec1a0` / 346 | - | - | mapped | - | - |
 | - | `NiLight::~NiLight` (COMMUNITY) | `sse-steam-1-7-104` / `0xeed200` / 62 | - | - | mapped | - | - |
 | - | `NiCamera::UpdateWorldData` (COMMUNITY) | `sse-steam-1-7-104` / `0xef1770` / 27 | - | - | mapped | - | - |
@@ -325,10 +325,10 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiTexture::~NiTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0xef3ea0` / 52 | - | - | mapped | - | - |
 | - | `NiSkinInstance::~NiSkinInstance` (COMMUNITY) | `sse-steam-1-7-104` / `0xef6f50` / 52 | - | - | mapped | - | - |
 | `netimmerse/NiTimeController` | `NiTimeController::ProcessClone` (COMMUNITY) | `sse-steam-1-7-104` / `0xef8900` / 53 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef8900.json` | matched | label-only | - |
-| - | `NiExtraData::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xef9880` / 43 | - | - | mapped | - | - |
-| - | `NiExtraData::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xef98d0` / 68 | - | - | mapped | - | - |
-| - | `NiExtraData::IsEqual` (COMMUNITY) | `sse-steam-1-7-104` / `0xef9960` / 61 | - | - | mapped | - | - |
-| - | `NiExtraData::~NiExtraData` (COMMUNITY) | `sse-steam-1-7-104` / `0xef9c50` / 83 | - | - | mapped | - | - |
+| `netimmerse/NiExtraData` | `NiExtraData::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xef9880` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef9880.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiExtraData` | `NiExtraData::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xef98d0` / 68 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef98d0.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiExtraData` | `NiExtraData::IsEqual` (COMMUNITY) | `sse-steam-1-7-104` / `0xef9960` / 61 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef9960.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiExtraData` | `NiExtraData::~NiExtraData` (COMMUNITY) | `sse-steam-1-7-104` / `0xef9c50` / 83 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef9c50.json` | mapped, record awaiting review | - | - |
 | - | `NiPointLight::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xefe1f0` / 192 | - | - | mapped | - | - |
 | - | `NiPointLight::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xefe2e0` / 192 | - | - | mapped | - | - |
 | - | `NiPointLight::IsEqual` (COMMUNITY) | `sse-steam-1-7-104` / `0xefe3b0` / 102 | - | - | mapped | - | - |
@@ -367,12 +367,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiAccumulator::~NiAccumulator` (COMMUNITY) | `sse-steam-1-7-104` / `0xf1ee00` / 50 | - | - | mapped | - | - |
 | - | `NiTriBasedGeom::Unk_36` (COMMUNITY) | `sse-steam-1-7-104` / `0xf1f3f0` / 28 | - | - | mapped | - | - |
 | - | `NiTriBasedGeom::~NiTriBasedGeom` (COMMUNITY) | `sse-steam-1-7-104` / `0xf1f480` / 62 | - | - | mapped | - | - |
-| - | `NiInterpolator::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cbd0` / 5 | - | - | mapped | - | - |
-| - | `NiInterpolator::GetActiveTimeRange` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6ccf0` / 8 | - | - | mapped | - | - |
-| - | `NiInterpolator::GetSequenceInterpolator` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cd10` / 35 | - | - | mapped | - | - |
-| - | `NiInterpolator::ResolveDependencies` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cd40` / 3 | - | - | mapped | - | - |
-| - | `NiInterpolator::~NiInterpolator` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cda0` / 50 | - | - | mapped | - | - |
-| - | `NiInterpolator::GetRTTI` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cde0` / 8 | - | - | mapped | - | - |
+| `netimmerse/NiInterpolator` | `NiInterpolator::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cbd0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf6cbd0.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiInterpolator` | `NiInterpolator::GetActiveTimeRange` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6ccf0` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf6ccf0.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiInterpolator` | `NiInterpolator::GetSequenceInterpolator` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cd10` / 35 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf6cd10.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiInterpolator` | `NiInterpolator::ResolveDependencies` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cd40` / 3 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf6cd40.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiInterpolator` | `NiInterpolator::~NiInterpolator` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cda0` / 50 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf6cda0.json` | mapped, record awaiting review | - | - |
+| `netimmerse/NiInterpolator` | `NiInterpolator::GetRTTI` (COMMUNITY) | `sse-steam-1-7-104` / `0xf6cde0` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf6cde0.json` | mapped, record awaiting review | - | - |
 | - | `NiParticleSystem::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xf98f50` / 127 | - | - | mapped | - | - |
 | - | `NiParticleSystem::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xf99260` / 89 | - | - | mapped | - | - |
 | - | `NiParticleSystem::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xf992c0` / 193 | - | - | mapped | - | - |
@@ -419,12 +419,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSShaderAccumulator::FinishAccumulatingPostResolveDepth` (COMMUNITY) | `sse-steam-1-7-104` / `0x151ef00` / 49 | - | - | mapped | - | - |
 | - | `BSShaderAccumulator::StartGroupingAlphas` (COMMUNITY) | `sse-steam-1-7-104` / `0x1520d50` / 21 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialBase::CopyMembers` (COMMUNITY) | `sse-steam-1-7-104` / `0x15237e0` / 384 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterialBase::GetDefault` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523d10` / 8 | - | - | mapped | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::GetDefault` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523d10` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1523d10.json` | mapped, record awaiting review | - | - |
 | - | `BSLightingShaderMaterialBase::OnLoadTextureSet` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523d20` / 286 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialBase::ClearTextures` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523e50` / 163 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterialBase::ReceiveValuesFromRootMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523f00` / 191 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterialBase::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x1524030` / 396 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterialBase::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x15241d0` / 396 | - | - | mapped | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::ReceiveValuesFromRootMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523f00` / 191 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1523f00.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x1524030` / 396 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1524030.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x15241d0` / 396 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x15241d0.json` | mapped, record awaiting review | - | - |
 | - | `BSShaderTextureSet::GetTexturePath` (COMMUNITY) | `sse-steam-1-7-104` / `0x153b3c0` / 9 | - | - | mapped | - | - |
 | - | `BSCubeMapCamera::RenderCubemap` (COMMUNITY) | `sse-steam-1-7-104` / `0x1559a60` / 14 | - | - | mapped | - | - |
 | - | `BSOrderedNode::OnVisible` (COMMUNITY) | `sse-steam-1-7-104` / `0x1570700` / 23 | - | - | mapped | - | - |
