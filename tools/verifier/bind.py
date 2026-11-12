@@ -44,6 +44,13 @@ the game encodes; in order:
 Anything left is listed with the file to edit. The comparator still checks every binding: a
 wrong RVA fails with relocation-target-mismatch, it cannot pass.
 
+Where the map lives. A task whose `symbols` is the repository map (`reports/<build id>/...`) has
+its new entries added through `tools/symbol_map.py`, the only writer of that map, with a
+provenance entry saying bind found them. A rename or removal is applied only if it leaves every
+match record in the checkout valid (a draft renaming its own function); otherwise bind refuses
+and the change needs `tools/symbol_map.py add --allow-change`. A private `symbols.json` is edited
+in place as before.
+
 `bind-hints.json` (private, optional), keys are decorated names (`?...`) or qualified names as
 the Drafter wrote them (`BSTimer::QGlobalTimeMultiplier`, `GetArmorKind`), values are RVAs:
 
@@ -67,6 +74,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 sys.path.insert(0, str(REPO / 'tools'))
 from pecoff import CoffObject, PeImage, SCN_CNT_CODE, STORAGE_EXTERNAL  # noqa: E402
+import symbol_map as symbol_maps  # noqa: E402
 
 UNBOUND = 'unbound:'
 HINTS = 'bind-hints.json'
@@ -364,11 +372,13 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
     """Update task.json and symbols.json in place; returns a report dict (see `describe`)."""
     task_dir = Path(task_dir)
     task = json.loads((task_dir / 'task.json').read_text())
-    smap_path = task_dir / task.get('symbols', 'symbols.json')
+    map_name = task.get('symbols', 'symbols.json')
+    public = map_name.startswith('reports/')
+    smap_path = (Path(repo) / map_name) if public else task_dir / map_name
     smap = json.loads(smap_path.read_text())
-    if task.get('symbols', 'symbols.json').startswith('reports/'):
-        raise ValueError('bind edits only a private task symbol map, not the repository map')
+    before = json.loads(json.dumps(smap.get('symbols', {})))
     symbols = smap.setdefault('symbols', {})
+    found = {}  # name -> (how, community name) for provenance of public additions
     obj = CoffObject(Path(obj_path).read_bytes())
     image = PeImage(Path(image_path).read_bytes()) if image_path and Path(image_path).is_file() else None
     hints = load_hints(task_dir)
@@ -454,6 +464,7 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
         entry = {'rva': rva, 'size': parse_rva(fn['size'])}
         if symbols.get(new) != entry:
             symbols[new] = entry
+            found[new] = (how, fn.get('community_name'))
             report['changed'] = True
         report['functions'].append({'rva': hex(rva), 'symbol': new, 'how': how})
 
@@ -503,12 +514,30 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
                     report['unbound_references'].append(ref)
                 continue
             symbols[ref] = {'rva': value, 'size': None}
+            found[ref] = (how, None)
             report['references'].append({'symbol': ref, 'rva': hex(value), 'how': how})
             report['changed'] = True
     if report['changed']:
+        if public:
+            publish(Path(repo), map_name, smap, before, found)
+        else:
+            smap_path.write_text(json.dumps(smap, indent=2) + '\n')
         (task_dir / 'task.json').write_text(json.dumps(task, indent=2) + '\n')
-        smap_path.write_text(json.dumps(smap, indent=2) + '\n')
     return report
+
+
+def publish(repo, map_name, smap, before, found):
+    """Apply bind's edits to the repository map through tools/symbol_map.py (see the module doc)."""
+    after = smap['symbols']
+    touched = {n: e for n, e in after.items() if before.get(n) != e}
+    incoming = {'schema': 1, 'build_id': smap.get('build_id'), 'symbols': touched,
+                '_provenance': {'entries': [
+                    {'name': n, 'rva': hex(e['rva']), 'size_from': 'task' if e.get('size') else None,
+                     'community_name': found.get(n, (None, None))[1],
+                     'note': f'bound by tools/verifier/bind.py ({found.get(n, ("unknown", None))[0]}) from the '
+                             'task pack; the decorated name is the reconstruction\'s'} for n, e in touched.items()]}}
+    removed = [n for n in before if n not in after]
+    symbol_maps.apply_change(repo, map_name, incoming, remove=removed, allow_unpinned_change=True)
 
 
 def describe(report, task_dir):

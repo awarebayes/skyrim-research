@@ -95,23 +95,20 @@ def attempt(task_dir):
     # bound to the wrong one of several definitions (a plain destructor for a deleting one) fails
     # with a code difference, and a hint added afterwards would otherwise never be read.
     if code in (0, 1) and not (dest / 'error.json').is_file() and (dest / 'candidate.obj').is_file():
-        if task['symbols_repo'] is not None:
-            bind_lines.append('  binding skipped: task.json names the repository map; bind edits private maps only')
-        else:
-            try:
-                report = bind.bind(task_dir, dest / 'candidate.obj', config.get('image'), config.get('objdump'))
-            except (OSError, ValueError) as exc:
-                report = None
-                bind_lines.append(f'  binding failed: {exc}')
-            if report is not None:
-                bind_lines += bind.describe(report, task_dir)
-                if report['changed']:
-                    # Same source, new names: compile and compare again so this invocation reports real results.
-                    task = pipeline.load_task(task_dir)
-                    files, closure = pipeline.unit_manifest(task)
-                    host.task = task
-                    code = run_once(task, host, files, task_dir, dest)
-                    bind_lines.append('  re-compared after binding (same source)')
+        try:
+            report = bind.bind(task_dir, dest / 'candidate.obj', config.get('image'), config.get('objdump'))
+        except (OSError, ValueError) as exc:
+            report = None
+            bind_lines.append(f'  binding failed: {exc}')
+        if report is not None:
+            bind_lines += bind.describe(report, task_dir)
+            if report['changed']:
+                # Same source, new names: compile and compare again so this invocation reports real results.
+                task = pipeline.load_task(task_dir)
+                files, closure = pipeline.unit_manifest(task)
+                host.task = task
+                code = run_once(task, host, files, task_dir, dest)
+                bind_lines.append('  re-compared after binding (same source)')
     results = results_of(task, dest)
     binding_only = code in (0, 1) and bool(results) and all(r in bind.BINDING_REASONS for r in results.values())
     counted = not binding_only

@@ -10,6 +10,10 @@
       "rva": 1382272,
       "size": null
     },
+    "?IsWorn@ExtraDataList@@QEAA_N_N0@Z": {
+      "rva": 1459760,
+      "size": null
+    },
     "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z": {
       "rva": 1460400,
       "size": null
@@ -20,6 +24,10 @@
     },
     "?CreateRefHandle@@YAXAEAU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z": {
       "rva": 1566272,
+      "size": null
+    },
+    "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z": {
+      "rva": 1848960,
       "size": null
     },
     "?OpenTES@TESFile@@QEAA_NW4OpenMode@NiFile@@_N@Z": {
@@ -34,9 +42,21 @@
       "rva": 1890256,
       "size": 72
     },
+    "?Seek@TESFile@@QEAA_NI@Z": {
+      "rva": 1890400,
+      "size": 409
+    },
     "?GetCurrentSubRecordType@TESFile@@QEAAIXZ": {
       "rva": 1891344,
       "size": 47
+    },
+    "?SeekNextSubrecord@TESFile@@QEAA_NXZ": {
+      "rva": 1891424,
+      "size": 167
+    },
+    "?Duplicate@TESFile@@QEAAPEAV1@I@Z": {
+      "rva": 1894368,
+      "size": 188
     },
     "?ReadFormHeader@TESFile@@AEAA_NXZ": {
       "rva": 1896688,
@@ -44,6 +64,18 @@
     },
     "?ReadChunkHeader@TESFile@@AEAA_NXZ": {
       "rva": 1897184,
+      "size": null
+    },
+    "?DuplicateForThread@TESFile@@AEAAPEAV1@II@Z": {
+      "rva": 1898112,
+      "size": null
+    },
+    "?SeekRaw@TESFile@@AEAAXII@Z": {
+      "rva": 1899760,
+      "size": null
+    },
+    "?GetBipedObjectForm@@YAPEAUBGSBipedObjectForm@@PEAVTESForm@@@Z": {
+      "rva": 1909184,
       "size": null
     },
     "?GetLevel@TESActorBaseData@@QEBAGXZ": {
@@ -62,6 +94,10 @@
       "rva": 2266592,
       "size": null
     },
+    "?FindInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z": {
+      "rva": 2273984,
+      "size": null
+    },
     "?MakeInventoryChanges@TESObjectREFR@@QEAAPEAVInventoryChanges@@XZ": {
       "rva": 2274016,
       "size": null
@@ -74,9 +110,17 @@
       "rva": 2310032,
       "size": 44
     },
+    "?HasQuestItem@InventoryChanges@@QEAA_NXZ": {
+      "rva": 2313248,
+      "size": null
+    },
     "?VisitInventory@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z": {
       "rva": 2323136,
       "size": 58
+    },
+    "?VisitWornItems@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z": {
+      "rva": 2323200,
+      "size": 262
     },
     "?ForEachOutfitItemGuess@@YAXPEAU?$BSTArray@PEAVTESForm@@@@AEAUOutfitItemCapture@@@Z": {
       "rva": 2357888,
@@ -98,9 +142,17 @@
       "rva": 2863488,
       "size": null
     },
+    "?HasQuestObject@TESObjectREFR@@QEBA_NXZ": {
+      "rva": 3037792,
+      "size": 86
+    },
     "?GetScale@TESObjectREFR@@QEBAMXZ": {
       "rva": 3043120,
       "size": 68
+    },
+    "?CanBeMoved@TESObjectREFR@@QEAA_NXZ": {
+      "rva": 3044256,
+      "size": 84
     },
     "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z": {
       "rva": 3047360,
@@ -314,8 +366,28 @@
       "rva": 22714360,
       "size": null
     },
+    "__imp_FormatMessageA": {
+      "rva": 24937088,
+      "size": null
+    },
+    "__imp_LocalFree": {
+      "rva": 24937096,
+      "size": null
+    },
+    "__imp_GetLastError": {
+      "rva": 24937104,
+      "size": null
+    },
+    "__imp_GetCurrentThreadId": {
+      "rva": 24937536,
+      "size": null
+    },
     "??_7ItemFilter@InventoryUtils@@6B@": {
       "rva": 25188480,
+      "size": null
+    },
+    "?g_seekOrigin@@3IB": {
+      "rva": 27530240,
       "size": null
     },
     "__real@3c23d70a": {
@@ -324,6 +396,18 @@
     },
     "__real@3f800000": {
       "rva": 28687912,
+      "size": null
+    },
+    "?g_threadSafeFiles@@3_NA": {
+      "rva": 34045928,
+      "size": null
+    },
+    "?g_tes4RecordType@@3IA": {
+      "rva": 34046544,
+      "size": null
+    },
+    "?gWeaponSlotMasks@@3QBHB": {
+      "rva": 34058672,
       "size": null
     },
     "?gCalcLevelCounterReset@@3GA": {
@@ -342,6 +426,10 @@
       "rva": 34392780,
       "size": null
     },
+    "?singleton@TESDataHandler@@2PEAV1@EA": {
+      "rva": 35249880,
+      "size": null
+    },
     "?kNullHandle@@3IA": {
       "rva": 35251548,
       "size": null
@@ -352,6 +440,10 @@
     },
     "?gCalcLevelCounter@@3GA": {
       "rva": 52294712,
+      "size": null
+    },
+    "?singleton@Main@@2PEAV1@EA": {
+      "rva": 52626736,
       "size": null
     },
     "?singleton@PlayerCharacter@@2PEAV1@EA": {
@@ -384,6 +476,14 @@
         "community_name": "Offset::MagicItem::CalculateCost"
       },
       {
+        "name": "?IsWorn@ExtraDataList@@QEAA_N_N0@Z",
+        "ae_id": 11696,
+        "rva": "0x164630",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
         "name": "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z",
         "ae_id": 11702,
         "rva": "0x1648b0",
@@ -405,6 +505,14 @@
         "rva": "0x17e640",
         "size_from": null,
         "community_name": "Offset::CreateRefHandle"
+      },
+      {
+        "name": "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z",
+        "ae_id": 13783,
+        "rva": "0x1c3680",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "?OpenTES@TESFile@@QEAA_NW4OpenMode@NiFile@@_N@Z",
@@ -429,11 +537,32 @@
         "community_name": "TESFile::GetFormType"
       },
       {
+        "name": "?Seek@TESFile@@QEAA_NI@Z",
+        "ae_id": 13984,
+        "rva": "0x1cd860",
+        "size_from": ".pdata",
+        "community_name": "TESFile::Seek"
+      },
+      {
         "name": "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
         "ae_id": 13988,
         "rva": "0x1cdc10",
         "size_from": ".pdata",
         "community_name": "TESFile::GetCurrentSubRecordType"
+      },
+      {
+        "name": "?SeekNextSubrecord@TESFile@@QEAA_NXZ",
+        "ae_id": 13990,
+        "rva": "0x1cdc60",
+        "size_from": ".pdata",
+        "community_name": "TESFile::SeekNextSubrecord"
+      },
+      {
+        "name": "?Duplicate@TESFile@@QEAAPEAV1@I@Z",
+        "ae_id": 14018,
+        "rva": "0x1ce7e0",
+        "size_from": ".pdata",
+        "community_name": "TESFile::Duplicate"
       },
       {
         "name": "?ReadFormHeader@TESFile@@AEAA_NXZ",
@@ -447,6 +576,30 @@
         "name": "?ReadChunkHeader@TESFile@@AEAA_NXZ",
         "ae_id": 14034,
         "rva": "0x1cf2e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?DuplicateForThread@TESFile@@AEAAPEAV1@II@Z",
+        "ae_id": 14039,
+        "rva": "0x1cf680",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?SeekRaw@TESFile@@AEAAXII@Z",
+        "ae_id": 14042,
+        "rva": "0x1cfcf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetBipedObjectForm@@YAPEAUBGSBipedObjectForm@@PEAVTESForm@@@Z",
+        "ae_id": 14121,
+        "rva": "0x1d21c0",
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
@@ -482,6 +635,14 @@
         "community_name": "GetArmorFinalRating"
       },
       {
+        "name": "?FindInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z",
+        "ae_id": 16039,
+        "rva": "0x22b2c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
         "name": "?MakeInventoryChanges@TESObjectREFR@@QEAAPEAVInventoryChanges@@XZ",
         "ae_id": 16040,
         "rva": "0x22b2e0",
@@ -504,11 +665,26 @@
         "community_name": "InventoryChanges::InitOutfitItems"
       },
       {
+        "name": "?HasQuestItem@InventoryChanges@@QEAA_NXZ",
+        "ae_id": 16082,
+        "rva": "0x234c20",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
         "name": "?VisitInventory@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z",
         "ae_id": 16095,
         "rva": "0x2372c0",
         "size_from": ".pdata",
         "community_name": "InventoryChanges::VisitInventory"
+      },
+      {
+        "name": "?VisitWornItems@InventoryChanges@@QEAAXAEAVIItemChangeVisitor@1@@Z",
+        "ae_id": 16096,
+        "rva": "0x237300",
+        "size_from": ".pdata",
+        "community_name": "InventoryChanges::VisitWornItems"
       },
       {
         "name": "?ForEachOutfitItemGuess@@YAXPEAU?$BSTArray@PEAVTESForm@@@@AEAUOutfitItemCapture@@@Z",
@@ -549,11 +725,25 @@
         "community_name": "TESObjectCELL::GetLocation"
       },
       {
+        "name": "?HasQuestObject@TESObjectREFR@@QEBA_NXZ",
+        "ae_id": 19627,
+        "rva": "0x2e5a60",
+        "size_from": ".pdata",
+        "community_name": "TESObjectREFR::HasQuestObject"
+      },
+      {
         "name": "?GetScale@TESObjectREFR@@QEBAMXZ",
         "ae_id": 19664,
         "rva": "0x2e6f30",
         "size_from": ".pdata",
         "community_name": "TESObjectREFR::GetScale"
+      },
+      {
+        "name": "?CanBeMoved@TESObjectREFR@@QEAA_NXZ",
+        "ae_id": 19670,
+        "rva": "0x2e73a0",
+        "size_from": ".pdata",
+        "community_name": "TESObjectREFR::CanBeMoved"
       },
       {
         "name": "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z",
@@ -944,11 +1134,51 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "__imp_FormatMessageA",
+        "ae_id": 174995,
+        "rva": "0x17c8280",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id of the import address table slot for KERNEL32.dll!FormatMessageA; the name is the linker's import symbol"
+      },
+      {
+        "name": "__imp_LocalFree",
+        "ae_id": 174996,
+        "rva": "0x17c8288",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id of the import address table slot for KERNEL32.dll!LocalFree; the name is the linker's import symbol"
+      },
+      {
+        "name": "__imp_GetLastError",
+        "ae_id": 174997,
+        "rva": "0x17c8290",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id of the import address table slot for KERNEL32.dll!GetLastError; the name is the linker's import symbol"
+      },
+      {
+        "name": "__imp_GetCurrentThreadId",
+        "ae_id": 175063,
+        "rva": "0x17c8440",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id of the import address table slot for KERNEL32.dll!GetCurrentThreadId; the name is the linker's import symbol"
+      },
+      {
         "name": "??_7ItemFilter@InventoryUtils@@6B@",
         "ae_id": 188597,
         "rva": "0x1805880",
         "size_from": null,
         "community_name": "VTABLE_InventoryUtils__ItemFilter[0]"
+      },
+      {
+        "name": "?g_seekOrigin@@3IB",
+        "ae_id": 236866,
+        "rva": "0x1a41400",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "__real@3c23d70a",
@@ -965,6 +1195,30 @@
         "size_from": null,
         "community_name": null,
         "note": "Address Library id of a floating-point constant; the name is the compiler's constant label"
+      },
+      {
+        "name": "?g_threadSafeFiles@@3_NA",
+        "ae_id": 359065,
+        "rva": "0x2077fe8",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?g_tes4RecordType@@3IA",
+        "ae_id": 359126,
+        "rva": "0x2078250",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?gWeaponSlotMasks@@3QBHB",
+        "ae_id": 360260,
+        "rva": "0x207b1b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
         "name": "?gCalcLevelCounterReset@@3GA",
@@ -997,6 +1251,14 @@
         "community_name": "BSTimer::QGlobalTimeMultiplierTarget"
       },
       {
+        "name": "?singleton@TESDataHandler@@2PEAV1@EA",
+        "ae_id": 400269,
+        "rva": "0x219ded8",
+        "size_from": null,
+        "community_name": "Offset::TESDataHandler::Singleton",
+        "note": "the global pointer Offset::TESDataHandler::Singleton names; NG reads it through GetSingleton, and the static member name is the reconstruction's GUESS"
+      },
+      {
         "name": "?kNullHandle@@3IA",
         "ae_id": 400312,
         "rva": "0x219e55c",
@@ -1019,6 +1281,14 @@
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?singleton@Main@@2PEAV1@EA",
+        "ae_id": 403449,
+        "rva": "0x3230530",
+        "size_from": null,
+        "community_name": "Offset::Main::Singleton",
+        "note": "the global pointer Offset::Main::Singleton names; NG reads it through GetSingleton, and the static member name is the reconstruction's GUESS"
       },
       {
         "name": "?singleton@PlayerCharacter@@2PEAV1@EA",
