@@ -5933,6 +5933,34 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a0337d98327c7aee3",
+   "date": "2026-11-12",
+   "role": "engineer",
+   "model": "claude-opus-5-5",
+   "task": "p19-winpc-ssh",
+   "stage": "tooling",
+   "tokens": {
+    "input": 18,
+    "cache_creation": 22434,
+    "cache_read": 161618,
+    "output": 7763
+   },
+   "messages": 9,
+   "tool_uses": 8,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 95,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a057b7042972ff1fc",
    "date": "2026-11-12",
    "role": "engineer",
@@ -6298,6 +6326,90 @@
     {
      "target": "sse-steam-1-7-104:0x3078e0",
      "share": 0.071423
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
+   "id": "agent-a0fcb5ce8eb472a87",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p19-wave2-1",
+   "stage": "review",
+   "tokens": {
+    "input": 54,
+    "cache_creation": 213600,
+    "cache_read": 1967547,
+    "output": 22351
+   },
+   "messages": 27,
+   "tool_uses": 32,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 574,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xf01650",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf01600",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf016e0",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf01be0",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0xf01660",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e85f0",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e8680",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7fb0",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7ef0",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7450",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x14e7390",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0xeeac80",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1900a0",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfddac0",
+     "share": 0.066667
+    },
+    {
+     "target": "sse-steam-1-7-104:0xeec1a0",
+     "share": 0.066662
     }
    ],
    "estimated": true,
@@ -7717,6 +7829,34 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a59b6f299aa528689",
+   "date": "2026-11-12",
+   "role": "engineer",
+   "model": "claude-opus-5-5",
+   "task": "p18-ci-fix",
+   "stage": "tooling",
+   "tokens": {
+    "input": 62,
+    "cache_creation": 56317,
+    "cache_read": 1213968,
+    "output": 24311
+   },
+   "messages": 30,
+   "tool_uses": 34,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 573,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a5ca4297cbdf08529",
    "date": "2026-11-12",
    "role": "engineer",
@@ -7826,6 +7966,34 @@
     {
      "target": "sse-steam-1-7-104:0x3078e0",
      "share": 0.0625
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
+   "id": "agent-a5e4e83eb15463c9e",
+   "date": "2026-11-12",
+   "role": "engineer",
+   "model": "claude-opus-5-5",
+   "task": "p19-accept-wave1-confirm-wave2",
+   "stage": "integrate",
+   "tokens": {
+    "input": 332,
+    "cache_creation": 695017,
+    "cache_read": 26525822,
+    "output": 92581
+   },
+   "messages": 166,
+   "tool_uses": 171,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 2884,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
     }
    ],
    "estimated": true,
@@ -8033,6 +8201,34 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a6834b8c6eedcb325",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p19-funclet-extent",
+   "stage": "review",
+   "tokens": {
+    "input": 64,
+    "cache_creation": 99356,
+    "cache_read": 2181756,
+    "output": 40856
+   },
+   "messages": 32,
+   "tool_uses": 34,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 730,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a686cbd9cf472d2e1",
    "date": "2026-11-12",
    "role": "reviewer",
@@ -8098,6 +8294,34 @@
     {
      "target": "sse-steam-1-7-104:0xce3520",
      "share": 0.08333333333333333
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
+   "id": "agent-a699af081a965d1f4",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p18-contributor-flow",
+   "stage": "review",
+   "tokens": {
+    "input": 44,
+    "cache_creation": 108449,
+    "cache_read": 1641088,
+    "output": 25387
+   },
+   "messages": 22,
+   "tool_uses": 24,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 338,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -8529,6 +8753,34 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a7a00ea3c2bc47efa",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p19-funclet-extent-2",
+   "stage": "review",
+   "tokens": {
+    "input": 50,
+    "cache_creation": 169466,
+    "cache_read": 1508844,
+    "output": 29716
+   },
+   "messages": 25,
+   "tool_uses": 25,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 688,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a7a96be3f58a3f1e8",
    "date": "2026-11-12",
    "role": "reviewer",
@@ -8817,6 +9069,130 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a7f4f7513bb66fb78",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p19-wave2-4",
+   "stage": "review",
+   "tokens": {
+    "input": 42,
+    "cache_creation": 194789,
+    "cache_read": 1349986,
+    "output": 16079
+   },
+   "messages": 21,
+   "tool_uses": 24,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 516,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x316110",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x317ce0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x318c10",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x31a0c0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x31b530",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x38cac0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x38f480",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x31cac0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x391210",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x31d7b0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x29e710",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2955d0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x29cd00",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x321c34",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x321740",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x328688",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x328570",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x327e40",
+     "share": 0.055548
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
+   "id": "agent-a7f87ddfa1a6ac44c",
+   "date": "2026-11-12",
+   "role": "engineer",
+   "model": "claude-opus-5-5",
+   "task": "p18-integrate-wave1",
+   "stage": "integrate",
+   "tokens": {
+    "input": 176,
+    "cache_creation": 212749,
+    "cache_read": 12355284,
+    "output": 65387
+   },
+   "messages": 88,
+   "tool_uses": 92,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 1129,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a8372d26981ab30cd",
    "date": "2026-11-12",
    "role": "engineer",
@@ -8903,6 +9279,94 @@
    "estimated": true,
    "complete": false,
    "source": "session transcript; still running when ingested"
+  },
+  {
+   "id": "agent-a87874787c8963021",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p19-wave2-2",
+   "stage": "review",
+   "tokens": {
+    "input": 52,
+    "cache_creation": 236841,
+    "cache_read": 2182145,
+    "output": 25001
+   },
+   "messages": 26,
+   "tool_uses": 30,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 596,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x38fa30",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x38fa40",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x38fa60",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x5d5b70",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x31bd50",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x31b830",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x28f5e0",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x28fcb0",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x28fe70",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x28fc40",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x28fbc0",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f0b30",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x301090",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e8660",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f3e00",
+     "share": 0.0625
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f41e0",
+     "share": 0.0625
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
   },
   {
    "id": "agent-a87abe60f7cb7bb4c",
@@ -9361,6 +9825,102 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a94f4c9cebfe10e33",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p19-wave2-3",
+   "stage": "review",
+   "tokens": {
+    "input": 66,
+    "cache_creation": 196176,
+    "cache_read": 2491872,
+    "output": 25178
+   },
+   "messages": 33,
+   "tool_uses": 54,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 609,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x26a890",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x26b3e0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3b2fb0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x340c00",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3b8200",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2a8e70",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2a8df0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x340ec0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2a9130",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2aa2e0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3ebda0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3e6250",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3e64a0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3eb840",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x387ea0",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3eee90",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3f3150",
+     "share": 0.055556
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3f3180",
+     "share": 0.055548
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a963a24eaad190626",
    "date": "2026-11-12",
    "role": "reviewer",
@@ -9535,6 +10095,126 @@
    "estimated": false,
    "complete": false,
    "source": "session transcript; still running when ingested"
+  },
+  {
+   "id": "agent-aa13679aa0ff3fada",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p19-wave2-sampling",
+   "stage": "review",
+   "tokens": {
+    "input": 86,
+    "cache_creation": 315196,
+    "cache_read": 5560373,
+    "output": 38879
+   },
+   "messages": 43,
+   "tool_uses": 56,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 747,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4a9fd0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4a9fc0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4a9910",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4a9f20",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4a99e0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4a9860",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x31bd50",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x391210",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x637a90",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x637ab0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x321c34",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2aa2e0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e5a60",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e6f30",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e73a0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f3b70",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x300b90",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3dfeb0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3d2870",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3ce410",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3dedb0",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x405a50",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1053280",
+     "share": 0.041667
+    },
+    {
+     "target": "sse-steam-1-7-104:0x10532a0",
+     "share": 0.041659
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
   },
   {
    "id": "agent-aa82c66797db93024",
@@ -9974,6 +10654,34 @@
    "boat_seconds": null,
    "boat_wall_seconds": null,
    "agent_wall_seconds": 816,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
+   "id": "agent-acd14fde1af47bff8",
+   "date": "2026-11-12",
+   "role": "engineer",
+   "model": "claude-opus-5-5",
+   "task": "p18-contributor-flow",
+   "stage": "tooling",
+   "tokens": {
+    "input": 526,
+    "cache_creation": 940180,
+    "cache_read": 51117980,
+    "output": 249685
+   },
+   "messages": 259,
+   "tool_uses": 368,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 4526,
    "allocations": [
     {
      "target": "overhead",
