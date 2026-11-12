@@ -96,6 +96,16 @@ def render(data, revision, costs=None):
         planned=tasks['planned'], active=tasks['active'], blocked=tasks['blocked'], done=tasks['done'])
 
 
+def render_join(data, revision):
+    """The join page; every number comes from the validated inventory, like the report."""
+    counts = Counter(fn['status'] for fn in data['functions'])
+    target = json.loads((ROOT / 'builds/target.json').read_text())
+    return Template((ROOT / 'site/join.html').read_text()).substitute(
+        matched=counts['matched'], mapped=counts['mapped'], inventory=len(data['functions']),
+        target=escape(data['target_build_id'] or 'Not pinned'), version=escape(target.get('version') or 'unknown'),
+        updated=escape(data['updated_at']), revision=escape(revision))
+
+
 def main():
     data = load()
     try:
@@ -109,6 +119,7 @@ def main():
     ledger = ROOT / 'data/costs.json'
     costs = json.loads(ledger.read_text()) if ledger.exists() else None
     (output / 'index.html').write_text(render(data, revision, costs))
+    (output / 'join.html').write_text(render_join(data, revision))
     (output / 'style.css').write_text((ROOT / 'site/style.css').read_text())
     graphic = ROOT / 'docs/progress.svg'
     if graphic.exists():

@@ -539,7 +539,9 @@ spelling and licence word on any label for a known community repository, compare
 `SIBLING(...)` labels in every file and `Sibling source:` lines limited to an allowed sibling at
 its pin, the latter with no `..` path component; the header comment fields of
 `reconstruction/README.md`; the one-class-per-pair layout; and include style (quoted repository
-headers, no include in a block comment or conditional block). Passing the lint does not replace
+headers, no include in a block comment or conditional block, every include name a plain relative
+path with no drive letter, backslash, leading `/` or `..`, so contributed source cannot make the
+compiler open a host file before the verifier's include check). Passing the lint does not replace
 the Reviewer; it only spares the Reviewer those checks. Tests: `tests/test_lint_reconstruction.py`.
 
 The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,

@@ -1,5 +1,10 @@
 # Instructions for all agents and contributors
 
+**Helping an external contributor match a function?** Follow
+[docs/contributing-agent.md](docs/contributing-agent.md) for the workflow and skip "Multi-agent
+execution" below and everything about Boat; those are for the project's own agents. "Keep private
+inputs private" and "Be precise about evidence" bind every agent, yours included.
+
 ## First read
 
 Read `README.md`, `LEGAL.md`, `PROVENANCE.md`, `docs/verification.md` and
@@ -18,8 +23,14 @@ Cargo/build/cache instructions here or modify its checkout as part of a research
   (`docs/authorizations.md`, Notes; `LEGAL.md`). It is never evidence about the Skyrim binary.
 - Do not upload game-derived material to an AI/cloud service without explicit owner authorization
   and assessment of the service terms. Permission to research locally is not permission to upload.
-- Analyze your own legally obtained inputs. Do not download game binaries or unofficial PDBs,
-  acquire cracks, or add copy-protection removal instructions/tools.
+  An external contributor may let their own coding agent read listings made locally from their own
+  legally obtained copy, under their own account and their AI provider's terms; that is their
+  decision and responsibility, and the contributor docs say so and ask once. Nothing game-derived
+  goes into the repository, PRs, issues or CI either way (`docs/authorizations.md`, Notes).
+- Analyze your own legally obtained inputs. Do not download game binaries from anyone else or
+  unofficial PDBs, acquire cracks, or add copy-protection removal instructions/tools. An owner
+  fetching their own purchased copy with their own account through Valve's Steam client or SteamCMD
+  is fine; the project itself never distributes a game file.
 - Stop the affected publication if provenance is uncertain. Record the question without reproducing
   suspect content. Unrelated original tooling work may continue.
 

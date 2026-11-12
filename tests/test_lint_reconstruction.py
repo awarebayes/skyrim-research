@@ -256,5 +256,28 @@ class ReviewerFollowUpTests(LintTests):
         self.assertEqual(self.problems(), [])
 
 
+class IncludeNameTests(LintTests):
+    """Include names that could reach a host file are refused before any compile; the one parent
+    step allowed is another area's header, `"../<area>/<Class>.h"`."""
+
+    def include(self, line):
+        self.write(source=SOURCE.replace('#include "Widget.h"', f'#include "Widget.h"\n{line}'))
+        return [p for p in self.problems() if 'include name' in p]
+
+    def test_plain_and_shared_header_forms_pass(self):
+        (self.root / 'reconstruction/netimmerse').mkdir()
+        (self.root / 'reconstruction/netimmerse/NiObject.h').write_text(HEADER.replace('Widget', 'NiObject'))
+        self.assertEqual(self.include('#include <cstdint>'), [])
+        self.assertEqual(self.include('#include "../netimmerse/NiObject.h"'), [])
+
+    def test_host_and_escaping_paths_are_refused(self):
+        for bad in ('#include "/abs.h"', '#include "C:x.h"', '#include "a\\\\b.h"', '#include "../x.h"',
+                    '#include "../../x/Y.h"', '#include "../netimmerse/../../Y.h"', '#include "../Net/Y.h"',
+                    '#include "../netimmerse/y.h"', '#include "../netimmerse/Y.cpp"', '#include <../misc/Widget.h>',
+                    '#include <C:/Windows/win.ini>', '#include <Z:\\\\home\\\\x.h>', '#include <sub/../x.h>',
+                    '#include <.hidden>'):
+            self.assertTrue(self.include(bad), bad)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -48,7 +48,9 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
 - include style: the include-closure scan of tools/source_digest.py accepts the file, every
   include of a repository file is quoted, and no include sits inside a block comment or a
   conditional block (other than the header guard), because the verifier requires the compiler's
-  /showIncludes list to equal the closure and such includes are counted but never opened.
+  /showIncludes list to equal the closure and such includes are counted but never opened; every
+  include names a plain relative path (no drive letter, backslash, leading `/` or `..`), so no
+  source can make the compiler open a host file before the verifier's include check runs.
 
 The byte-data rules (`\\x` strings, byte lists) are heuristics: they catch the obvious ways of
 smuggling code or data bytes into source, not every way. The Reviewer remains responsible for
@@ -134,6 +136,10 @@ DEFINE_BANNED = re.compile(rf'(?<![A-Za-z0-9_])(?:__declspec|__pragma|_Pragma|{A
 INT_LITERAL = re.compile(r'(?<![\w.])(0[xX][0-9A-Fa-f]+|\d+)[uUlL]*(?![\w.])')
 CHAR_LITERAL = re.compile(r"(?:u8|u|U|L)?'(\\x[0-9A-Fa-f]+|\\[0-7]{1,3}|\\.|[^'\\\n])'")
 BRACED = re.compile(r'\{([^{}]*)\}', re.S)
+INCLUDE_NAME = re.compile(r'[A-Za-z0-9_][A-Za-z0-9_.+-]*(?:/[A-Za-z0-9_][A-Za-z0-9_.+-]*)*')
+# The one parent step allowed: a header of another area, `"../<area>/<Class>.h"` (docs/drafter-card.md),
+# which from reconstruction/<area>/ stays inside reconstruction/.
+SHARED_HEADER = re.compile(r'\.\./[a-z][a-z0-9_]*/[A-Z][A-Za-z0-9_]*\.h')
 PRAGMA_LINE = re.compile(r'^[ \t]*#[ \t]*pragma\b(.*)$', re.M)
 # Placeholders of tools/skeleton.py (unit_skeleton.py): the stub body and the header fields the
 # Drafter has to fill. Any spelling that starts with the prefix counts, so a new placeholder is
@@ -419,6 +425,14 @@ def lint_file(root, name, target_build, skeleton_ok=False):
         targets = []
     problems += include_layout_problems(name, text.replace('\\\n', ''))
     for kind, target in targets:
+        # The compiler opens an include before the verifier's /showIncludes check can refuse it, so a
+        # name that could reach a host file (drive letter, backslash, absolute or parent path) is
+        # refused here, before any compile of contributed source.
+        shared = kind == '"' and SHARED_HEADER.fullmatch(target)
+        if not shared and (not INCLUDE_NAME.fullmatch(target) or '..' in target.split('/')):
+            problems.append(f'{name}: include name {target!r} must be a plain relative path '
+                            '(letters, digits, _ . + - and /; no drive, backslash, leading / or ..), '
+                            'or "../<area>/<Class>.h" for another area\'s header')
         if kind == '<':
             for base in INCLUDE_ROOTS:
                 if (root / base / target).exists():

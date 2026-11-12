@@ -2345,6 +2345,21 @@ def plan_select(cands, n_classes, extend):
     return chosen[:n_classes], missing
 
 
+def open_claim_rvas():
+    """RVAs with an open, unlapsed claim issue or pull request by an outside contributor
+    (tools/contrib.py), so a plan does not hand the same function to a Drafter. Offline (or with
+    SR_CONTRIB_OFFLINE set) it warns and returns nothing: planning still works, unchecked."""
+    try:
+        import contrib
+        ctx = contrib.Ctx(interactive=False, as_json=True)
+        items = ctx.github().open_items()
+    except Exception as exc:  # noqa: BLE001 - any failure means "not checked", never a stop
+        print(f'warning: contributor claims not checked ({exc}); compare the plan with open claim issues',
+              file=sys.stderr)
+        return set()
+    return {rva for rva, its in items.items() if contrib.claim_state(its, None)[1]}
+
+
 def cmd_plan(args):
     cfg = load_config(args.config)
     target, img, addrlib, comms = setup(cfg)
@@ -2355,6 +2370,7 @@ def cmd_plan(args):
     # a re-run propose a different batch instead of reproducing the recorded one.
     claimed = {fn['rva'] for fn in progress['functions'] if fn['build_id'] == target['build_id']
                and fn['evidence'] not in (args.reuse_evidence or [])}
+    claimed |= open_claim_rvas()
     accepted = {fn['rva'] for fn in progress['functions'] if fn['status'] == 'matched'}
     existing_units = {p.stem: p.relative_to(REPO).as_posix() for p in (REPO / 'reconstruction').glob('*/*.cpp')}
     rows = []
@@ -2657,6 +2673,7 @@ def cmd_plan_table(args):
     fns, _, classes, meta = t
     progress = json.loads((REPO / 'data/progress.json').read_text())
     claimed = {fn['rva'] for fn in progress['functions'] if fn['build_id'] == target['build_id']}
+    claimed |= open_claim_rvas()
     opts = {'classes': args.classes, 'total': args.total or 150, 'eh': args.eh, 'max_eh_states': args.max_eh_states,
             'min_functions': args.min_functions, 'max_function_bytes': args.max_function_bytes,
             'max_classes_per_area': args.max_classes_per_area, 'extend': args.extend,
@@ -2725,6 +2742,7 @@ def cmd_plan_cheap(args):
     fns, _, classes, meta = t
     progress = json.loads((REPO / 'data/progress.json').read_text())
     claimed = {fn['rva'] for fn in progress['functions'] if fn['build_id'] == target['build_id']}
+    claimed |= open_claim_rvas()
     blob = Path(cfg['image']).read_bytes()
     if sha256_bytes(blob) != target['image_sha256']:
         raise SystemExit('image SHA-256 differs from builds/target.json')
