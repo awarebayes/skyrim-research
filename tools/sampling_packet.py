@@ -9,7 +9,8 @@ the label-only part of the sampling packet.
 committed record's source digest and result set, one code-section hash equal to the committed
 one, and compiles on two hosts. The label-only packet gives, per unit, the approved digest the
 carried-forward approval binds, the commit where the unit had it (recomputed from the committed
-blobs), the full diff to HEAD, and the re-run verdict per sampled function.
+blobs of the file list the match record named at that commit), the full diff to HEAD, and the
+re-run verdict per sampled function.
 
 `--compare FILE` reads the verdicts from an earlier comparison file instead of recomputing them.
 Its rows end in AGREE or DISAGREE; they are read without their line endings, so a row's verdict
@@ -27,7 +28,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from review_packet import digest_at  # noqa: E402
+from review_packet import approved_commit  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = 'sse-steam-1-7-104'
@@ -91,11 +92,17 @@ def label_packet(root, sample, verdicts, build=BUILD):
             problems.append(f'{unit}: sampled reviews disagree on their digests')
             continue
         previous, current = previous.pop(), current.pop()
-        base = next((c for c in git(root, 'log', '--format=%H', head, '--', *files).decode().split()
-                     if digest_at(root, c, files) == previous), None)
+        # The approved digest covers the unit's file list as the match record named it at that
+        # commit. A header added to the closure since then is absent from the old tree, so hashing
+        # today's list there finds no commit at all.
+        fn = {'build_id': build, 'rva': int(rvas[0], 16), 'report': f'reports/{build}/{rvas[0]}.json'}
+        found = approved_commit(root, fn, files, previous)
+        base, base_files = (found[0], list(found[1])) if found else (None, files)
         out += [f'## Unit {unit}', '', f'translation unit: {", ".join(files)}', f'approved digest: {previous}',
-                f'base commit with that digest: {base or "NOT FOUND"}', f'accepted digest: {current}', '',
-                'sampled functions:']
+                f'base commit with that digest: {base or "NOT FOUND"}', f'accepted digest: {current}', '']
+        if base and base_files != files:
+            out += [f'translation unit at the base commit: {", ".join(base_files)}', '']
+        out += ['sampled functions:']
         for rva, review in zip(rvas, reviews):
             verdict = verdicts.get(rva, 'MISSING')
             out.append(f'- {rva} size {review.get("size")}: code section {review.get("code_section_sha256")} '
@@ -107,7 +114,7 @@ def label_packet(root, sample, verdicts, build=BUILD):
         if base is None:
             problems.append(f'{unit}: no commit with the approved digest')
             continue
-        diff = git(root, 'diff', '--no-color', '-U3', base, head, '--', *files).decode()
+        diff = git(root, 'diff', '--no-color', '-U3', base, head, '--', *dict.fromkeys(base_files + files)).decode()
         if comment_only(diff):
             problems.append(f'{unit}: non-comment lines changed')
         out += ['```diff', diff.rstrip('\n'), '```', '']
