@@ -22,6 +22,24 @@ class ProgressSvgTests(unittest.TestCase):
         self.assertEqual(self.svg, gen.render(ROOT))
         self.assertEqual(self.svg, (ROOT / 'docs/progress.svg').read_text(), 'run tools/build_progress_svg.py')
 
+    def test_check_requires_the_rendered_picture(self):
+        import tempfile
+        from unittest import mock
+        import check
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'docs').mkdir()
+            (root / 'docs/progress.svg').write_text('<svg/>')
+            with mock.patch.object(gen, 'render', return_value='<svg/>'):
+                check.check_progress_svg(root)
+            with mock.patch.object(gen, 'render', return_value='<svg>new</svg>'):
+                with self.assertRaisesRegex(ValueError, 'progress.svg is out of date'):
+                    check.check_progress_svg(root)
+            (root / 'docs/progress.svg').unlink()
+            with mock.patch.object(gen, 'render', return_value='<svg/>'):
+                with self.assertRaisesRegex(ValueError, 'progress.svg is out of date'):
+                    check.check_progress_svg(root)
+
     def test_self_contained_and_small(self):
         self.assertLess(len(self.svg.encode()), 600_000)
         for forbidden in ('<script', '<image', 'http://', '@import', 'href='):

@@ -559,6 +559,14 @@ def check_index(root, data):
             f'{INDEX} is out of date with data/progress.json and the records; run python3 tools/build_index.py')
 
 
+def check_progress_svg(root):
+    """The README picture must be what tools/build_progress_svg.py (its --check) renders from this tree."""
+    import build_progress_svg  # here, not at the top: it reads the same data files and is optional to load
+    path = root / 'docs/progress.svg'
+    require(path.is_file() and path.read_text() == build_progress_svg.render(root),
+            'docs/progress.svg is out of date with the tracked data; run python3 tools/build_progress_svg.py')
+
+
 COST_LEDGER = 'data/costs.json'
 
 
@@ -587,6 +595,7 @@ def load(staged=False):
         lint(ROOT, sorted({n for n in names if n and (ROOT / n).is_file()}))
         check_index(ROOT, data)
         check_costs(ROOT, data)
+        check_progress_svg(ROOT)
         return data
     # Match records, source and recipe are checked as staged too, so the index gets its own tree.
     with tempfile.TemporaryDirectory() as tmp:
@@ -597,6 +606,7 @@ def load(staged=False):
         lint(root)
         check_index(root, data)
         check_costs(root, data)
+        check_progress_svg(root)
         return data
 
 
