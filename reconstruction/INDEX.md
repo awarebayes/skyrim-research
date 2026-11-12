@@ -238,7 +238,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSTempEffectSimpleDecal::Initialize` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b1090` / 35 | - | - | mapped | - | - |
 | - | `BSTempEffectSimpleDecal::Get3D` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b2950` / 5 | - | - | mapped | - | - |
 | - | `BSTempEffectSimpleDecal::~BSTempEffectSimpleDecal` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4a40` / 52 | - | - | mapped | - | - |
-| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4ad0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4b4ad0.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4ad0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4b4ad0.json` | matched | full | open |
 | - | `BSTempEffectSPG::FinishLoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b5250` / 53 | - | - | mapped | - | - |
 | - | `BSTempEffectSPG::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b5800` / 6 | - | - | mapped | - | - |
 | - | `BSTerrainEffect::GetManagerHandlesSaveLoad` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b7c40` / 5 | - | - | mapped | - | - |
@@ -419,12 +419,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSShaderAccumulator::FinishAccumulatingPostResolveDepth` (COMMUNITY) | `sse-steam-1-7-104` / `0x151ef00` / 49 | - | - | mapped | - | - |
 | - | `BSShaderAccumulator::StartGroupingAlphas` (COMMUNITY) | `sse-steam-1-7-104` / `0x1520d50` / 21 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialBase::CopyMembers` (COMMUNITY) | `sse-steam-1-7-104` / `0x15237e0` / 384 | - | - | mapped | - | - |
-| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::GetDefault` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523d10` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1523d10.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::GetDefault` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523d10` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1523d10.json` | matched | full | open |
 | - | `BSLightingShaderMaterialBase::OnLoadTextureSet` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523d20` / 286 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialBase::ClearTextures` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523e50` / 163 | - | - | mapped | - | - |
-| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::ReceiveValuesFromRootMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523f00` / 191 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1523f00.json` | mapped, record awaiting review | - | - |
-| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x1524030` / 396 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1524030.json` | mapped, record awaiting review | - | - |
-| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x15241d0` / 396 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x15241d0.json` | mapped, record awaiting review | - | - |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::ReceiveValuesFromRootMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x1523f00` / 191 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1523f00.json` | matched | full | open |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x1524030` / 396 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1524030.json` | matched | full | open |
+| `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x15241d0` / 396 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x15241d0.json` | matched | full | open |
 | - | `BSShaderTextureSet::GetTexturePath` (COMMUNITY) | `sse-steam-1-7-104` / `0x153b3c0` / 9 | - | - | mapped | - | - |
 | - | `BSCubeMapCamera::RenderCubemap` (COMMUNITY) | `sse-steam-1-7-104` / `0x1559a60` / 14 | - | - | mapped | - | - |
 | - | `BSOrderedNode::OnVisible` (COMMUNITY) | `sse-steam-1-7-104` / `0x1570700` / 23 | - | - | mapped | - | - |
