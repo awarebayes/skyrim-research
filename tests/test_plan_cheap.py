@@ -54,6 +54,15 @@ def opts(**kw):
 
 
 class PlanTests(unittest.TestCase):
+    def test_long_task_ids_are_distinct_and_stable(self):
+        prefix = 'q-s01-' + 'longprefix' * 6
+        a = plan_cheap.task_slug(prefix + '-alpha')
+        b = plan_cheap.task_slug(prefix + '-beta')
+        self.assertNotEqual(a, b)
+        self.assertLessEqual(len(a), 56)
+        self.assertEqual(a, plan_cheap.task_slug(prefix + '-alpha'))
+        self.assertEqual(plan_cheap.task_slug('short-id'), 'short-id')
+
     def rows(self):
         rows = []
         for i, c in enumerate(('TESAlpha', 'TESBeta', 'TESGamma', 'TESDelta')):

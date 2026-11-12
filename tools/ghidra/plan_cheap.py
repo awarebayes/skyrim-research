@@ -22,6 +22,7 @@ class whose header already exists, fan-in; one function per L1 cluster.
 Pure functions here; `export_pack.cmd_plan_cheap` reads the tables and writes the plan files.
 """
 from collections import Counter, defaultdict
+import hashlib
 import re
 
 # mov r64, gs:[0x58] (the TLS array pointer of the TEB), any destination register: the start of
@@ -196,11 +197,11 @@ def plan(rows, classes, claimed, opts, eligibility):
             s_i += 1
             t['id'] = f'{o["task_prefix"]}s{s_i:02d}-{slug(t["family"])}'[:48]
             for u in t['units']:
-                u['task_id'] = f'{t["id"][:34]}-{slug(u["class"])}'[:56].rstrip('-.')
+                u['task_id'] = task_slug(f'{t["id"][:34]}-{slug(u["class"])}')
                 u['budget'] = max(o['small_attempts_floor'], o['small_attempts_per_function'] * len(u['functions']))
         else:
             n_i += 1
-            t['id'] = f'{o["task_prefix"]}{slug(t["family"])}'[:56]
+            t['id'] = task_slug(f'{o["task_prefix"]}{slug(t["family"])}')
             u = t['units'][0]
             u['task_id'] = t['id']
             u['budget'] = o['normal_attempts_per_function'] * len(u['functions']) + o['normal_attempts_extra']
@@ -212,6 +213,13 @@ def plan(rows, classes, claimed, opts, eligibility):
 
 def slug(name):
     return re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-') or 'x'
+
+
+def task_slug(name):
+    """Keep long identifiers distinct while respecting the task id length limit."""
+    if len(name) <= 56:
+        return name
+    return name[:43].rstrip('-.') + '-' + hashlib.sha256(name.encode()).hexdigest()[:12]
 
 
 def composition(tasks, classes, fnv_rvas, area_for):

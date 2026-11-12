@@ -174,6 +174,41 @@ class SkeletonText(Fixture):
         self.assertIn('Evidence: findings/batch.md', cpp)
         self.assertIn('Recipe: reconstruction/recipes/r.json', cpp)
 
+    def test_root_standin_has_vptr_and_size_t_include(self):
+        (self.root / 'reconstruction/misc/WidgetBase.h').unlink()
+        _hr, h, _cr, _cpp = self.files()
+        self.assertIn('virtual ~WidgetBase() = default;', h)
+        self.assertIn('#include <cstddef>', h)
+
+    def test_duplicate_bare_destructors_have_distinct_guessed_names_and_hints(self):
+        task = json.loads((self.unit / 'task.json').read_text())
+        task['functions'] = [dict(task['functions'][0], community_name='FancyWidget::dtor'),
+                             dict(task['functions'][2], community_name='FancyWidget::dtor')]
+        (self.unit / 'task.json').write_text(json.dumps(task))
+        _hr, h, _cr, cpp = self.files()
+        self.assertNotIn('~FancyWidget()', h)
+        self.assertIn('void UnknownDtor_1000();', h)
+        self.assertIn('void UnknownDtor_1200();', h)
+        us.write_skeleton(self.unit, repo=self.root)
+        hints = json.loads((self.unit / 'bind-hints.json').read_text())
+        self.assertEqual(hints, {'FancyWidget::UnknownDtor_1000': '0x1000',
+                                 'FancyWidget::UnknownDtor_1200': '0x1200'})
+
+    def test_event_template_and_enum_are_declared(self):
+        pack = self.root / '.local/packs' / BUILD / '0x1000/README.md'
+        pack.write_text(pack_readme('virtual BSEventNotifyControl ProcessEvent(Cell* a_event, '
+                                    'BSTEventSource<Cell>* a_source);'))
+        _hr, h, _cr, _cpp = self.files()
+        self.assertIn('template <class Event> class BSTEventSource;', h)
+        self.assertIn('enum class BSEventNotifyControl : int;', h)
+        self.assertNotIn('// TODO type BSTEventSource', h)
+
+    def test_unresolved_shared_header_falls_back_to_local_standins(self):
+        (self.root / 'reconstruction/misc/WidgetBase.h').write_text('// TODO type Missing: unresolved.\n')
+        _hr, h, _cr, _cpp = self.files()
+        self.assertNotIn('#include "../misc/WidgetBase.h"', h)
+        self.assertIn('class WidgetBase', h)
+
     def test_drafted_by_fills_the_model_line(self):
         _h, _ht, _c, cpp = us.skeleton_files(self.unit, drafted_by='test-model', repo=self.root)
         self.assertIn('Drafted by test-model', cpp)

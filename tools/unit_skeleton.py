@@ -421,7 +421,9 @@ def plan(unit, repo=None):
                    and any(inlines_ni_base(f) for f in unit['functions']))
     include, standins = None, []
     for anc in chain:
-        if anc in shared and not inline_base:
+        shared_path = (repo / unit['header']).parent / shared[anc] if anc in shared else None
+        if (shared_path and shared_path.is_file() and '// TODO type ' not in _text(shared_path)
+                and not inline_base):
             include = (anc, shared[anc])
             break
         standins.append(anc)
@@ -446,6 +448,14 @@ def plan(unit, repo=None):
         members.append({'fn': f, 'method': method, 'label': label, 'decl': decl,
                         'parts': split_declaration(decl) if decl else None})
         class_label = class_label or label
+    # Repeated bare `dtor` names are not evidence that distinct RVAs are one C++ destructor.
+    # Keep each address separately draftable without inventing subobject ownership or a signature.
+    ambiguous = [m for m in members if m['method'] == 'dtor' and not m['fn'].get('destructor')]
+    if len(ambiguous) > 1:
+        for m in ambiguous:
+            rva = m['fn']['rva']
+            rva = int(rva, 16) if isinstance(rva, str) else rva
+            m.update(method=f'UnknownDtor_{rva:x}', label=None)
     return {'cls': cls, 'task': task, 'chain': chain, 'bases': bases, 'sizes': sizes, 'include': include,
             'included_text': included_text, 'standins': standins, 'class_label': class_label,
             'inline_base': inline_base,
@@ -484,6 +494,7 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
             add(s, 'STANDIN EXE_RTTI')
 
     forward, todo_types, decls, defs, notes = [], [], [], [], []
+    event_types = set()
     has_ctor = any(m['method'] == 'ctor' for m in p['members'])
     has_dtor = any(m['method'] == 'dtor' for m in p['members'])
     ctor_params = base_constructor(p['included_text'], p['include'][0]) if p['include'] else None
@@ -532,7 +543,13 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
             decls.append(f'{prefix}{ret} {method}({params}){" " + quals if quals else ""};  // compared: 0x{rva:x}')
             head = f'{ret} {cls}::{method}({without_defaults(params)}){" " + quals if quals else ""}'
             by_ref, by_value = type_names(f'{ret} ({params})')
+            for t in ('BSTEventSource', 'BSEventNotifyControl'):
+                if t in by_ref + by_value and not defined_in(p['included_text'], t):
+                    event_types.add(t)
+                    add(t, 'STANDIN ' + (m['label'] or _NG))
             for t in by_ref:
+                if t in event_types:
+                    continue
                 if '::' in t:
                     todo_types.append((t, 'nested type: declare a stand-in for it or change the type'))
                 elif (t != cls and t not in forward and not defined_in(p['included_text'], t)
@@ -541,11 +558,14 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
                     if m['label']:
                         add(t, 'STANDIN ' + m['label'])
             for t in by_value:
-                if t != cls and not defined_in(p['included_text'], t) and t not in (x for x, _ in todo_types):
+                if (t != cls and t not in event_types and t not in forward
+                        and not defined_in(p['included_text'], t) and t not in (x for x, _ in todo_types)):
                     todo_types.append((t, 'used by value: declare it (an enum or a small class) before the class'))
         else:
             if m['label']:
                 add(f'{cls}::{method}', m['label'])
+            else:
+                add(f'{cls}::{method}', 'GUESS(low)')
             decls.append(f'void {method}();  // compared: 0x{rva:x}; TODO signature: no community declaration, '
                          'read it from the listing')
             head = f'void {cls}::{method}()'
@@ -570,11 +590,17 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
         body, assert_line, running = pad_lines(s, running, p['sizes'], pads)
         base = f' : public {parent}' if parent else ''
         inherit = [f'    using {parent}::{parent};'] if ctor_params and parent else []
-        blocks.append('\n'.join([f'class {s}{base}', '{', 'public:', *inherit, *body, '};', *assert_line, '']))
+        vptr = [f'    virtual ~{s}() = default;'] if parent is None else []
+        if vptr:
+            add(f'{s}::~{s}', 'GUESS(low)')
+        blocks.append('\n'.join([f'class {s}{base}', '{', 'public:', *inherit, *vptr, *body, '};', *assert_line, '']))
         parent = s
     body, assert_line, running = pad_lines(cls, running, p['sizes'], pads)
     base = f' : public {parent}' if parent else ''
     cls_block = [f'class {cls}{base}', '{', 'public:', *[f'    {d}' for d in decls]]
+    if parent is None and not any(d.startswith('virtual ') for d in decls) and p['rtti']:
+        cls_block.append('    void* unknown00;  // primary vftable storage')
+        pads.append('unknown00')
     if body:
         cls_block += ['', '    // TODO members: replace part of the padding with the members the bodies read,',
                       '    // keeping every offset and the size check true.', *body]
@@ -600,6 +626,7 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
         '',
         *(['#include <intrin.h>'] if p['inline_base'] else []),
         '#include <cstdint>',
+        '#include <cstddef>',
     ]
     if p['include']:
         header.append(f'#include "{p["include"][1]}"')
@@ -608,6 +635,10 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
         header += [f'class {t};' for t in INLINE_BASE_FORWARD] + ['']
     if forward:
         header += [f'class {t};' for t in forward] + ['']
+    if 'BSTEventSource' in event_types:
+        header += ['template <class Event> class BSTEventSource;', '']
+    if 'BSEventNotifyControl' in event_types:
+        header += ['enum class BSEventNotifyControl : int;', '']
     for t, why in todo_types:
         header.append(f'// TODO type {t}: {why}.')
     if todo_types:
@@ -694,6 +725,13 @@ def write_skeleton(task_dir, drafted_by=None, repo=None):
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, 'x') as out:  # 'x': never replace a file created since the check above
             out.write(text)
+    p = plan(load_unit(task_dir, repo), repo)
+    hints = {f'{p["cls"]}::{m["method"]}': m['fn']['rva'] for m in p['members']
+             if m['method'].startswith('UnknownDtor_')}
+    if hints:
+        hint_path = Path(task_dir) / 'bind-hints.json'
+        previous = _json(hint_path)
+        hint_path.write_text(json.dumps(dict(hints, **previous), indent=2) + '\n')
     return h_rel, cpp_rel
 
 
