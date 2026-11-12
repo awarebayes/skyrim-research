@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "533564156b0214ebcc68ec18539ca7a87f810f84df64eac079081547adc3c25b",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x539020",
+  "naming_findings": [
+    "unk60 is a guessed opaque region standing for two community hash-map members that are not modelled",
+    "the story-manager base chain, TESCondition and BSTArray are stand-ins duplicated across four unit headers rather than shared"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "1df7a7e73959756ef646f02f00ea0cd549883ca7f5c57e2dc01881f433c26590",
+  "review_task_id": "review-p18-wave1-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 5476384,
+  "size": 40,
+  "source_digest": "4d1408942a035438e6e089ef0b54bc2af5377cbe9c2a62cc3a87a0b10b8bcc6f",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

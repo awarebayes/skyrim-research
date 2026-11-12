@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "88eab9329a02098a83d85600353d66163c098d3f630642cf107cb2f9fe3a2673",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x3dedb0",
+  "naming_findings": [
+    "the unit header lists GetFormEditorID among the compared functions and says all five are compared, but that function has no match record"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "1df7a7e73959756ef646f02f00ea0cd549883ca7f5c57e2dc01881f433c26590",
+  "review_task_id": "review-p18-wave1-3",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 4058544,
+  "size": 52,
+  "source_digest": "f3a0307687dc56a16456e428e4fc34bd75719cb20a958e6441a17885ad614254",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

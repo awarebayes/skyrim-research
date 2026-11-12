@@ -1,0 +1,21 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "37cea46ffeb15751b520e17b0d7599a9746460142c263a650ec288928d3fe679",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1ecd70",
+  "naming_findings": [],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "23ec578140928d6ef50bb043db2435493570f696f3f1bddd6fa6ececd368ed3a",
+  "review_task_id": "review-p18-wave1-4",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 2018672,
+  "size": 14,
+  "source_digest": "a10e9e6128426f61b8198c64bee422ec869f23a3ea63ac4dd67dbc742908f92b",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

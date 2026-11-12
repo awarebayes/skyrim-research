@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "085fefb9c67d3358b1584cd9090e9c448317ae8524ef5e907a22347fb12bd7d0",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1d76e0",
+  "naming_findings": [
+    "unk0A and unk1C are labelled GUESS although the community header names that space pad0A, pad0C and pad1C",
+    "idleFlags is a plain signed byte where the community wraps it in an enumeration type; the label notes this"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
+  "review_task_id": "review-p18-wave1-2",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 1930976,
+  "size": 16,
+  "source_digest": "896cc6766a2a978954014684633d86cf4d59dd9c90f923551492adb1221a4bb3",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

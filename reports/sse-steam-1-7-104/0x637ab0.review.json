@@ -1,0 +1,25 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "2c7f220ebcf2b4777451a7c8400894f03e2bada5ce9e5bf5ab15dcb9b2a62539",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x637ab0",
+  "naming_findings": [
+    "the comment justifies the two-then-one byte copy by how the target copies, which is a matching reason rather than a programmer's",
+    "the bool result (true when a non-empty index resolves to zero) is not described; consider a note",
+    ".cpp header says the three listed functions are compared, but LoadDataEndian was dropped from comparison"
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-12",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "6686fd60e3c0ddd89888d122bebb4f52e017bb995bf3c1c7346a4319def2e608",
+  "review_task_id": "review-p18-wave1-1",
+  "reviewer_model": "claude-opus-5-5",
+  "rva": 6519472,
+  "size": 110,
+  "source_digest": "2d3ede09b045fd242abffdcd9afa3a436d7d324f895a727b1c398aa59cd19685",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}
