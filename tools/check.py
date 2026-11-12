@@ -413,6 +413,16 @@ def review_record_path(fn):
     return f'reports/{fn["build_id"]}/0x{fn["rva"]:x}.review.json'
 
 
+
+def check_internal_admission(record):
+    """Only compiler-generated initializer/teardown helpers are admitted internal functions."""
+    if record.get('match_record_schema') != 3:
+        return
+    for run in record['runs']:
+        symbol = run['report']['function']['symbol']
+        require(re.fullmatch(r'\?\?__([EF]).+@@YAXXZ', symbol) is not None,
+                'Internal acceptance requires a compiler-generated static initializer or teardown')
+
 def validate_review(fn, record, root=None):
     """Require a sanitized Reviewer `approve` bound to this function and to the source the record matched.
 
@@ -421,8 +431,7 @@ def validate_review(fn, record, root=None):
     digest means an approval cannot be carried over to other source or another function; any source
     change makes it stale together with the match record.
     """
-    require(record.get('match_record_schema') != 3,
-            'Internal prototype cannot be accepted until the contract and rule have separate approval')
+    check_internal_admission(record)
     root = ROOT if root is None else root
     name = review_record_path(fn)
     require((root / name).is_file(), f'Review record: {name} is missing; matched needs a Reviewer approve')

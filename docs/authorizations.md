@@ -43,3 +43,22 @@ Engineer role allocation (maintainer statements by awarebayes, 2026-11-13, suppl
 ### Family review rule
 
 The family review rule is in force by maintainer decision; the separate Reviewer pass on this rule change was waived by the maintainer. Grantor: awarebayes, 2026-11-13. Asked “May I land the family review rule with those six points once it has passed a review?”, the maintainer said: “Of course”. On the separate Opus review: “p54 is eu levels of buerocracy. Opus review of a review of a review of change rules. Bullshit.”
+
+
+### Internal static initialiser and teardown admission
+
+Grantor: awarebayes (human maintainer), 2026-11-13; relayed by the planning orchestrator and
+recorded by the integrating Engineer. Question and answer, verbatim:
+
+> May static initialisers and teardowns be accepted as `matched` under the same rule as other functions (comparator pass on both hosts, then family review), once the comparator extension is on main? Today's rule only covers functions with an external symbol, so accepting these needs your yes.
+
+> Sure
+
+Scope: compiler-generated internal static initialisers and teardowns under the TU-bound identity,
+complete independently delimited section-at-zero and all existing comparator, two-host,
+validator, hygiene and review requirements in `docs/verification.md`. Other internal function
+kinds or section layouts are not admitted. The maintainer directed this approved extension and
+rule wording to land with tests and CI, without another machinery/rule review round. This does
+not waive the individual or family review required for future function acceptance. No function
+is marked `matched` by this machinery change. This is a new acceptance-rule version for the
+existing sampling safeguard.

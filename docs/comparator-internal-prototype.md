@@ -1,7 +1,8 @@
-# Internal function comparator prototype, contract 3
+# Internal function comparator, contract 3
 
-Status: **prototype for independent machinery review; internal acceptance disabled**. This is
-an opt-in extension in `tools/compare_internal.py`, version `0.7.1-internal-prototype`.
+Status: **implemented; compiler-generated static initialisers and teardowns admitted under
+verification.md**. This is an opt-in extension in `tools/compare_internal.py`, version
+`0.7.1-internal`.
 `tools/compare.py` and `tools/pecoff.py` remain unchanged, including their contract-2 behavior,
 version and source hash. Existing schema-2 match records remain valid unchanged. The internal
 engine reuses their provenance, relocation, byte, unwind, EH, funclet, TLS and overlap checks.
@@ -89,8 +90,8 @@ map and requires the same runtime dependencies in every run. It does not count t
 CRT implementation loaded by Windows. No external action can pass from a map name alone.
 Other external actions and catch handlers remain refused; ordinary object-local funclets keep
 the complete-section/EH checks. Contract 2 is unchanged and still refuses external actions.
-This is part of the unaccepted internal prototype and needs the same independent machinery
-and rule review before acceptance can be enabled.
+This runtime-dependency check is part of the internal comparator. Future function acceptance
+still needs the same two-host evidence, hygiene and individual or family review.
 
 ## Task, runner and report schemas
 
@@ -119,9 +120,11 @@ source, recipe, map, full coverage, code-section and build-environment checks. I
 require the **exact current map hash**; additive map carry-forward is conservatively refused.
 The record's function is placed through its scoped map key, not its unscoped spelling.
 
-`validate_match` can check prototype record consistency, and confirm can assemble such records.
-The public matched gate and all acceptance modes refuse schema-3 internal records pending
-separate machinery and rule approval. No internal function is accepted by this prototype.
+`validate_match` checks internal record consistency, and confirm assembles these records.
+The public matched gate and all acceptance modes admit only compiler-generated static
+initialisers and teardowns (MSVC `??__E...@@YAXXZ` and `??__F...@@YAXXZ` helpers), under the
+unchanged two-host, hygiene and individual or family review requirements. Ordinary internal
+functions remain comparable for research but are not admitted for acceptance.
 
 ## Original synthetic fixtures and reproduction
 
@@ -146,6 +149,6 @@ The synthetic DLL has no CRT entry point and is never executed. Its linker map i
 statics by both symbol spelling and object TU; no same-name lookup across TUs is used. Positive
 comparisons and binding perturbations are measurements, not proof of runtime registration.
 
-Any proposal to admit contract 3 into acceptance belongs in a separate maintainer-confirmed,
-Reviewer-checked rule change. The private Engineer handoff records trial results, remaining
-refusals and review questions; it is not an acceptance-rule amendment.
+The maintainer's admission decision is recorded in `docs/authorizations.md`; the governing
+acceptance conditions are in `docs/verification.md`. The private Engineer handoff records trial
+results, remaining refusals and review questions. Trial passes alone are not acceptance.

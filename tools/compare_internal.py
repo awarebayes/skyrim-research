@@ -18,7 +18,7 @@ from pecoff import (SCN_CNT_CODE, SCN_MEM_EXECUTE, STORAGE_EXTERNAL, STORAGE_STA
                     CoffObject, PeImage, Reject, Symbol, SYM_UNDEFINED)
 from source_digest import DIGEST_METHOD
 
-COMPARATOR_VERSION = '0.7.1-internal-prototype'
+COMPARATOR_VERSION = '0.7.1-internal'
 CONTRACT_VERSION = 3
 REPORT_SCHEMA = 2
 SELECTOR_FIELDS = {'symbol_type', 'storage_class', 'section_number', 'section_name', 'entry_offset'}

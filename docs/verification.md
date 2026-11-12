@@ -23,7 +23,8 @@ A reconstruction is not a match.
 - A reproducible source revision, source path and recipe, exact compiler binary hash,
   SDK/library provenance, command flags and tool versions.
 - All function bytes covered, including exception-related code in the selected scope (the scope
-  comparator contract version 2 defines in `docs/comparator-contract.md`);
+  comparator contract version 2 defines in `docs/comparator-contract.md`, or contract 3 for the
+  admitted internal statics in `docs/comparator-internal-prototype.md`);
   calls, data references, relocations and alias/fold handling checked rather than masked away.
 - Explicit definitions for generated code, linked libraries, thunks, padding, excluded entries
   and overlapping function ranges. No silent scope shrinkage to improve a percentage.
@@ -51,6 +52,15 @@ A function is accepted only when ALL of these hold:
    reproduced on a second verifier host; and the validator's report/source consistency checks
    passing on the integrated tree ("Match gate" below). Only this is evidence of a byte match.
    A model's opinion, including the Reviewer's, never is.
+
+   Compiler-generated internal-linkage static initialisers and teardowns are admitted under this
+   same rule (maintainer decision, `docs/authorizations.md`). Their candidate identity is bound
+   to the translation unit's source digest and the pinned object, symbol kind/storage, section
+   and entry offset; it resolves uniquely in that object. The entry must be at offset zero of
+   a complete independently delimited code section, with no absorbed procedure. Full-range,
+   unwind/EH and funclet coverage, exact per-member references, alias/fold protections, both
+   verifier hosts, source/recipe/validator checks and the existing individual or family review
+   requirements all remain mandatory. Other internal function kinds or layouts are not admitted.
 2. **Automated hygiene**, enforced by tools, not by a Reviewer:
    - `tools/lint_reconstruction.py` reports nothing for any file under `reconstruction/` (run
      by `tools/check.py`): no inline assembly, `__emit`, raw byte arrays, `\x` byte strings,
@@ -260,10 +270,9 @@ and cannot be carried forward by `--label-only`.
 
 ## Match gate
 
-Schema note: the [internal-function prototype](comparator-internal-prototype.md) adds schema-3
-record consistency checks and versioned internal tasks/reports. It cannot support `matched`:
-the public acceptance path refuses those records pending separate machinery and rule approval.
-Schema-2 records and their contract-2 comparator pins remain unchanged.
+Schema note: the [internal-function comparator](comparator-internal-prototype.md) uses schema-3
+match records and versioned internal tasks/reports for the admitted compiler-generated static
+initialisers and teardowns. Schema-2 records and their contract-2 comparator pins remain unchanged.
 
 This is how `tools/check.py` enforces items 1 to 3 of tier 1 of the acceptance rule on the committed tree.
 An inventory entry may name a match record in `report` (`reports/README.md`) before it is

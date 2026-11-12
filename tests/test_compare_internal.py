@@ -261,6 +261,18 @@ class InternalGateTests(GateFixture, unittest.TestCase):
         reports = []
         for stamp in (1, 2):
             args = internalize(fx.inputs(obj=compiled_object(stamp), image=self.image, recipe_bytes=self.recipe_bytes))
+            # Give the original synthetic function the compiler's generated helper spelling.
+            blob = bytearray(args['object_bytes']); co = CoffObject(blob)
+            primary = next(sym for sym in co.symbols.values() if sym.name == fx.FUNCTION)
+            table, count = struct.unpack_from('<II', blob, 8); strings = table + 18 * count
+            length = struct.unpack_from('<I', blob, strings)[0]
+            spelling = '??__Eobject@@YAXXZ'
+            struct.pack_into('<II', blob, table + 18 * primary.index, 0, length)
+            blob += spelling.encode() + b'\0'
+            struct.pack_into('<I', blob, strings, length + len(spelling) + 1)
+            args['object_bytes'] = bytes(blob)
+            args['task']['symbol'] = spelling
+            args['build_record']['object_sha256'] = fx.sha256(blob)
             revision = tu_digest(self.root, [CPP, HDR]); args['task'].update(source_revision=revision, source_path=CPP)
             args['build_record'].update(source_revision=revision, source_path=CPP)
             co = CoffObject(args['object_bytes']); sym = next(iter(co.symbols.values()))
@@ -276,11 +288,11 @@ class InternalGateTests(GateFixture, unittest.TestCase):
         self.record = self.make_record([('host-a', 'host-a', reports[0]), ('host-b', 'host-b', reports[1])])
         self.record['match_record_schema'] = 3; self.save_record()
 
-    def test_two_host_internal_record_passes_consistency_only(self):
+    def test_two_host_generated_static_record_passes_the_existing_review_gate(self):
         validate_match(self.fn, self.target, self.root)
-        self.assertGateRejects('Internal prototype cannot be accepted')
+        self.check()
 
-    def test_acceptance_tool_refuses_consistent_prototype(self):
+    def test_acceptance_tool_admits_a_reviewed_generated_static(self):
         from test_accept_function import AcceptFunctionTests, REVIEW_FILE
         from test_match_gate import REVIEW
         import accept_function as af
@@ -289,11 +301,16 @@ class InternalGateTests(GateFixture, unittest.TestCase):
         self.write('data/progress.json', json.dumps(self.data))
         self.write('builds/target.json', json.dumps(self.target))
         AcceptFunctionTests.write_review(self)
-        before = (self.root / 'data/progress.json').read_bytes()
-        with self.assertRaisesRegex(af.Refused, 'Internal prototype cannot be accepted'):
-            af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE, 'approve')
-        self.assertEqual((self.root / 'data/progress.json').read_bytes(), before)
-        self.assertFalse((self.root / REVIEW).exists())
+        af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE, 'approve')
+        self.assertEqual(json.loads((self.root / 'data/progress.json').read_text())['functions'][0]['status'], 'matched')
+        self.assertTrue((self.root / REVIEW).exists())
+
+    def test_ordinary_internal_functions_remain_outside_admission(self):
+        from check import check_internal_admission
+        record = copy.deepcopy(self.record)
+        record['runs'][0]['report']['function']['symbol'] = 'OrdinaryLocalFunction'
+        with self.assertRaisesRegex(ValueError, 'static initializer or teardown'):
+            check_internal_admission(record)
 
     def test_changed_identity_on_second_host_rejected(self):
         self.record['runs'][1]['report']['function']['internal_identity']['section_number'] += 1
