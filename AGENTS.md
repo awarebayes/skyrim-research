@@ -1,5 +1,9 @@
 # Instructions for all agents and contributors
 
+**Helping an external contributor match a function?** Follow
+[docs/contributing-agent.md](docs/contributing-agent.md) only; it is self-contained. The rest of this
+file, including Boat and the multi-agent roles, is for the project's own agents.
+
 ## First read
 
 Read `README.md`, `LEGAL.md`, `PROVENANCE.md`, `docs/verification.md` and

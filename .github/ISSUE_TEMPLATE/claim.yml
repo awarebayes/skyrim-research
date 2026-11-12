@@ -1,0 +1,24 @@
+name: Claim a function
+description: Reserve one function before reconstructing it (tools/contrib.py claim files this for you)
+title: "claim: sse-steam-1-7-104 0x<rva> <Class::Method>"
+labels: [claim]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        One function per claim; the title names its RVA so the helper can find it. A claim lapses after
+        14 days without activity on this issue or its pull request, and anyone may then take it over.
+        Close the issue to give the function back. Do not attach or paste game files, bytes, listings,
+        disassembly or decompiler output here.
+  - type: textarea
+    id: function
+    attributes:
+      label: Function (build id, RVA, size, community name)
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: Who is working on it, and with which AI assistance (if any)
+    validations:
+      required: false
