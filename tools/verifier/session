@@ -4,7 +4,7 @@
     tools/verifier/session up [--ttl S] [--only a|b] [--create] [--reserve N] [--force]
     tools/verifier/session status
     tools/verifier/session extend [--ttl S]
-    tools/verifier/session down [--only a|b] [--force]
+    tools/verifier/session down [--only a|b] [--keep a|b] [--force]
 
 `up` reuses a running machine (its deadline is only ever pushed later, never shortened),
 resumes a stopped one (one start each) and, with --create, builds a missing B from the recipe.
@@ -14,7 +14,8 @@ image against builds/target.json (uploading the image once if B lacks it), and w
 and never start or stop a machine.
 
 `down` refuses while a `~/tasks/<task-id>/.running` marker exists on a machine it would stop
-(--force only for markers known to be stale), stops the machines, and queues the session's
+(--force only for markers known to be stale), stops the machines (`--keep a` ends the session
+but leaves A running for agents that use it outside the session), and queues the session's
 machine time not already booked by attempt/confirm for the cost ledger (`python3
 tools/cost_ledger.py flush` moves it into data/costs.json).
 
@@ -63,6 +64,8 @@ def main():
     d = sub.add_parser('down')
     d.add_argument('--only', choices=('a', 'b'))
     d.add_argument('--force', action='store_true', help='stop despite task markers (stale ones only)')
+    d.add_argument('--keep', choices=('a', 'b'), action='append', default=[],
+                   help='end the session without stopping this machine (others are using it)')
     a = p.parse_args()
     try:
         if a.cmd == 'up':
@@ -72,7 +75,7 @@ def main():
         elif a.cmd == 'extend':
             vsession.extend(a.ttl)
         else:
-            vsession.down(a.only, a.force, record=record)
+            vsession.down(a.only, a.force, record=record, keep=a.keep)
         return 0
     except vsession.SessionBusy as exc:
         print(f'session: {exc}', file=sys.stderr)

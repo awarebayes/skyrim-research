@@ -12,9 +12,11 @@ Rules: `docs/boat-agent-guidelines.md`.
 2. If it shows `tasks running:` with any task id, stop: name the tasks and ask the user whether
    they are finished or stale. Continue only if the user confirms, then add `--force` in step 3.
    Never force on your own judgement.
-3. Run `python3 tools/verifier/session down` (or `--only a` / `--only b` when the user asked to
-   stop one machine, for example to leave A running for other agents). Exit 4 means tasks are
-   still marked running: go back to step 2.
+3. Run `python3 tools/verifier/session down`. If other agents still use A (Drafters or
+   Engineers attempting outside this session, or the user said so), run
+   `python3 tools/verifier/session down --keep a` instead: it stops B, ends the session and
+   leaves A running on its own auto-stop deadline. `--only a` / `--only b` stops one machine and
+   keeps the session up. Exit 4 means tasks are still marked running: go back to step 2.
 4. Run `python3 tools/cost_ledger.py flush`.
 5. Report: machines stopped, seconds billed per machine this session, session overhead seconds
    queued for the ledger, starts made this session, and the starts budget line.

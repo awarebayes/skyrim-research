@@ -93,7 +93,7 @@ def write_records(base, task, closure, recipe, runs, build_path, out):
 def confirm_unit(base, task, files, closure, hosts, replace, out):
     """(rows, lines, failed) for one unit; removes its task files from both machines afterwards."""
     started = time.monotonic()
-    handle = pipeline.lock(task['dir'])  # noqa: F841 (held until return)
+    handle = pipeline.lock(task['dir'])  # held until the unit is done
     recipe = json.loads((REPO / task['recipe']).read_text())
     config = pipeline.load_config(task['dir'])
     out_root = task['dir'] / 'confirm'
@@ -157,6 +157,7 @@ def confirm_unit(base, task, files, closure, hosts, replace, out):
         # Both machines are busy for the unit's wall time; idle time is booked by `session down`.
         pipeline.record_cost(task, 'confirm', 2 * wall, wall)
         lines.append(f'  private: {out_root}/  time {wall:.0f} s')
+        handle.close()
     return rows, lines, failed
 
 

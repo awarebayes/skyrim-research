@@ -17,7 +17,7 @@ tools/verifier/session up | status | extend | down     # verifier session: machi
 tools/verifier/attempt .local/tasks/<task-id>          # one attempt: compile the unit, compare each function
 tools/verifier/attempt --clean .local/tasks/<task-id>  # remove the task's files on the machine
 tools/verifier/confirm .local/tasks/<task-id>          # acceptance evidence: A and B compile, 3 compare hosts, records
-tools/verifier/confirm --all <task-dir>... [--out DIR] # many units in one run, one summary table
+tools/verifier/confirm --session <task-dir>... [--out DIR] # many units on A then B, no starts, one table
 tools/verifier/confirm --fork .local/tasks/<task-id>   # old path: one fork (one start) per unit
 ```
 

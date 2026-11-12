@@ -174,11 +174,13 @@ def compute_counters():
                'trialComputeUsedSeconds': d.get('trialComputeUsedSeconds')}
 
 
-def create(name, ttl, force, log):
+def create(name, ttl, force, log, reserve=None):
     """Build a machine from the recipe through boat_up.sh's create path (one start, several minutes)."""
     env = dict(os.environ, BOAT_VERIFIER_NAME=name, BOAT_ALLOW_CREATE='1', BOAT_TTL=str(ttl))
     if force:
         env['SR_STARTS_FORCE'] = '1'
+    if reserve is not None:
+        env['SR_STARTS_RESERVE'] = str(reserve)
     log(f'{name}: creating from the recipe (setup_boat_machine.sh; about 7 minutes)')
     proc = subprocess.run([str(HERE / 'boat_up.sh')], env=env, capture_output=True, text=True)
     tail = (proc.stderr or '').strip().splitlines()[-3:]
@@ -219,11 +221,13 @@ def up(ttl=DEFAULT_TTL, reserve=None, force=False, allow_create=False, only=None
                            'attributed_consumed': 0.0}
     session['state'] = 'up'
     os.environ['SR_SESSION_ID'] = session['started_at']
+    if reserve is not None:
+        os.environ['SR_STARTS_RESERVE'] = str(reserve)
     for key in keys:
         name = NAMES[key]
         machine, state = found[key]
         if state == 'missing':
-            machine = create(name, ttl, force, log)
+            machine = create(name, ttl, force, log, reserve)
             how = 'created from the recipe'
         elif state in boatctl.RUNNING:
             left = boatctl.seconds_left(boatctl.info(machine))
@@ -382,12 +386,25 @@ def extend(ttl=DEFAULT_TTL, log=print):
     save(session)
 
 
-def down(only=None, force=False, log=print, record=None):
-    """Stop the session's machines (or one); refuses while task markers exist unless force."""
+def down(only=None, force=False, log=print, record=None, keep=()):
+    """Stop the session's machines (or one); refuses while task markers exist unless force.
+
+    Machines in `keep` leave the session without being stopped: A is shared with agents that
+    run attempts outside any session, so the session owner books its share and hands it back
+    running, and A's own auto-stop deadline still applies.
+    """
     session = load()
     if session is None:
         raise boatctl.BoatError('no verifier session file; `session status` shows the machines')
-    keys = [only] if only else sorted(session['machines'])
+    keep = set(keep or ())
+    if only and only in keep:
+        raise boatctl.BoatError(f'machine {only.upper()} cannot be both stopped (--only) and kept (--keep)')
+    keys = [only] if only else sorted(k for k, e in session['machines'].items() if e.get('state') != 'down')
+    for key in sorted(keep):
+        entry = session['machines'].get(key)
+        if entry is None:
+            raise boatctl.BoatError(f'machine {key.upper()} is not part of this session')
+    keys = [k for k in keys if k not in keep]
     machines = {}
     for key in keys:
         entry = session['machines'].get(key)
@@ -413,6 +430,17 @@ def down(only=None, force=False, log=print, record=None):
         entry.update({'state': 'down', 'down_at': now_iso(), 'seconds': delta})
         seconds += delta
         log(f'{key.upper()} {entry["name"]}: stopped; {delta} s billed since session up')
+    for key in sorted(keep):
+        entry = session['machines'][key]
+        if entry.get('state') == 'down':
+            continue
+        machine, _ = boatctl.lookup(entry['name'])
+        delta = boatctl.usage_seconds(machine) - (entry.get('usage_at_up') or 0) if machine else 0
+        entry.update({'state': 'down', 'released_at': now_iso(), 'seconds': delta, 'left_running': True})
+        # Not booked: agents outside the session book their own attempts on a shared machine, so
+        # its whole running time is not this session's overhead.
+        log(f'{key.upper()} {entry["name"]}: left running for other agents (not stopped); {delta} s billed '
+            'since session up, shared, not booked as session overhead')
     remaining = [k for k, e in session['machines'].items() if e.get('state') == 'up']
     made = starts.logged(since=session['started_at'])
     attributed = attributed_since(session['started_at']) - session.get('attributed_consumed', 0.0)

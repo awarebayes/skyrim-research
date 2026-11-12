@@ -237,6 +237,75 @@ class FakeBoat(unittest.TestCase):
         self.assertEqual(self.state()['started'], before)
         self.assertFalse([c for c in self.state()['calls'] if c[0] in ('resume', 'fork', 'new', 'stop')][before:])
 
+    def test_down_keep_releases_a_without_stopping_it(self):
+        self.write_state(a='idle', b='stopped')
+        vsession.up(log=self.quiet)
+        self.assertEqual(self.state()['started'], 1)
+        # Another agent's task on A must not block a session end that keeps A running.
+        self.edit(lambda st: st['machines']['bx_a'].__setitem__('markers', ['other-task']))
+        booked = []
+        vsession.down(keep=['a'], log=self.quiet, record=lambda s, n: booked.append((s, n)))
+        st = self.state()
+        self.assertEqual((st['machines']['bx_a']['state'], st['machines']['bx_b']['state']), ('idle', 'stopped'))
+        self.assertEqual([c[1] for c in st['calls'] if c[0] == 'stop'], ['bx_b'])
+        session = vsession.load()
+        self.assertEqual(session['state'], 'down')
+        self.assertTrue(session['machines']['a']['left_running'])
+        self.assertEqual(booked, [(30, 1)])  # B's stop only; shared A is not session overhead
+        with self.assertRaises(boatctl.BoatError):
+            vsession.down(only='a', keep=['a'], log=self.quiet)
+
+    def test_down_after_partial_down_does_not_book_a_machine_twice(self):
+        vsession.up(log=self.quiet)
+        booked = []
+        vsession.down(only='b', log=self.quiet, record=lambda s, n: booked.append(s))
+        vsession.down(keep=['a'], log=self.quiet, record=lambda s, n: booked.append(s))
+        self.assertEqual(booked, [30, 0])
+        self.assertEqual([c[1] for c in self.state()['calls'] if c[0] == 'stop'], ['bx_b'])
+
+    def test_batch_confirm_runs_every_unit_on_a_then_b_with_no_starts(self):
+        vsession.up(log=self.quiet)
+        before = self.state()['started']
+        tasks = []
+        for name in ('unit-one', 'unit-two'):
+            d = self.tmp / '.local' / 'tasks' / name
+            d.mkdir(parents=True)
+            tasks.append({'dir': d, 'task_id': name, 'build_id': TARGET['build_id'],
+                          'compiled': f'reconstruction/x/{name}.cpp',
+                          'recipe': 'reconstruction/recipes/msvc-19.16.27054-o2.json',
+                          'functions': [{'rva': 0x10 + len(tasks), 'size': 4, 'symbol': 'f'}],
+                          'symbols_repo': 'm.json'})
+        by_dir = {str(t['dir']): t for t in tasks}
+        ran = []
+
+        class FakeHost:
+            def __init__(self, machine, label, remote_dir, task, **_):
+                self.machine, self.label, self.task = machine, label, task['task_id']
+
+            def run(self, files, stage, fresh=False):
+                ran.append((self.task, self.label, self.machine))
+                return 0, ''
+
+            def fetch(self, dest):
+                Path(dest).mkdir(parents=True, exist_ok=True)
+                return Path(dest)
+
+        base = mock.Mock()
+        base.result_of.return_value = ('fail', 'byte-mismatch')
+        base.mac_compare.return_value = (1, self.tmp / 'none.json')
+        out = []
+        with mock.patch.object(confirm_session, 'prepare', lambda b, d, r, o: (by_dir[d], {}, [])), \
+                mock.patch.object(pipeline, 'Host', FakeHost), \
+                mock.patch.object(pipeline, 'load_config', lambda d: {}), \
+                mock.patch.object(pipeline, 'record_cost', lambda *a: None):
+            code = confirm_session.run(base, list(by_dir), log=out.append)
+        self.assertEqual(code, 1)
+        self.assertEqual(sorted(ran), [('unit-one', 'boat-verifier-a', 'bx_a'), ('unit-one', 'boat-verifier-b', 'bx_b'),
+                                       ('unit-two', 'boat-verifier-a', 'bx_a'), ('unit-two', 'boat-verifier-b', 'bx_b')])
+        self.assertEqual([h[0] for h in vsession.hosts()], ['a', 'b'])  # first pass A, second B
+        self.assertEqual(self.state()['started'], before)
+        self.assertEqual(sum('NOT REPRODUCED' in line for line in out), 2)
+
     def test_confirm_without_session_refuses(self):
         with self.assertRaises(pipeline.PipelineError):
             confirm_session.run(mock.Mock(), ['x'], log=self.quiet)
@@ -270,6 +339,16 @@ class Counters(unittest.TestCase):
         self.assertIn('reserve', starts.check(dict(c, hour={'limit': 25, 'used': 0, 'remaining': 25},
                                                    minute={'limit': 50, 'used': 0, 'remaining': 50}), 23, reserve=10))
         self.assertIn('32 left', starts.line(c))
+
+    def test_paid_plan_limits(self):
+        paid = {'sandboxPlanKey': 'plan-20', 'activeSandboxes': 2, 'maxActiveSandboxes': 100,
+                'starts': {'day': {'limit': 200, 'used': 189}, 'hour': {'limit': 60, 'used': 3},
+                           'minute': {'limit': 12, 'used': 0}, 'unlimited': False}}
+        c = starts.parse(paid)
+        self.assertEqual((c['day']['remaining'], c['hour']['remaining'], c['minute']['remaining']), (11, 57, 12))
+        self.assertIsNone(starts.check(c, 1, reserve=10))
+        self.assertIn('reserve', starts.check(c, 2, reserve=10))
+        self.assertIsNone(starts.check(dict(c, unlimited=True), 50, reserve=10))
 
     def test_minute_window_is_never_forced(self):
         c = starts.parse(dict(RECORDED_LIMITS, starts=dict(RECORDED_LIMITS['starts'],
