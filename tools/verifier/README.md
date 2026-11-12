@@ -49,6 +49,11 @@ repository symbol map, and refuses to overwrite a record without `--replace`. Bo
   writes `align.txt` (private aligned listing) and `align.json` (for a search tool) next to the
   side-by-side. Run it on stored attempts with `tools/verifier/align.py --attempt <dir>`. A
   reading aid and a score, never evidence of a match.
+- `permute.py`: source permuter for one near-miss function, no model in the loop
+  ([docs/permuter.md](../../docs/permuter.md)). Seeded rewrites of one body from the cookbook's
+  mechanisable rules, every candidate linted, batches compiled in parallel on the standing
+  machine in one `boat exec` each and scored with `align.py`; a distance-0 winner is compiled
+  and compared once more by `unit_build.py`.
 - `unit_build.py`: runs on the verifier host. Checks the synced copy against the spec's hashes,
   the toolchain against `pinned.sha256` and the image against `builds/target.json` (once per
   boot), compiles with the build-path checks of `docs/verification.md` (cleared `INCLUDE`/`CL`/
