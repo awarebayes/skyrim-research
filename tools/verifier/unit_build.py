@@ -1,10 +1,16 @@
 """Compile one reconstruction unit with the pinned recipe and compare each of its functions.
 
-Runs on a verifier host (a Boat machine with the msvc-wine toolchain), inside a minimal copy of the
-repository that `tools/verifier/attempt` and `tools/verifier/confirm` keep in sync:
+Runs on a verifier host, inside a minimal copy of the repository that `tools/verifier/attempt` and
+`tools/verifier/confirm` keep in sync:
 
     python3 tools/verifier/unit_build.py --repo <copy> --spec <spec.json> --msvc ~/msvc \
-        --image ~/private/<build id>/SkyrimSE.exe --work <dir>
+        --image ~/private/<build id>/SkyrimSE.exe --work <dir> [--loader wine|native]
+
+`--loader wine` (default) runs the msvc-wine wrapper `<msvc>/bin/x64/cl` (a Boat machine, or this
+Mac under Wine); `--loader native` runs `<msvc>/VC/Tools/MSVC/<ver>/bin/Hostx64/x64/cl.exe` directly
+on Windows with INCLUDE built the way the msvc-wine wrapper builds it, from the same unpacked
+toolset and SDK. Either way the compiler binaries are checked against pinned.sha256 and their
+hashes are written to result.json, so a record can name what each host actually ran.
 
 The spec (JSON) names the task id, host label, compiled file, recipe, symbol map, the functions
 to compare and the SHA-256 of every file the copy must hold. Steps, each failing closed:
@@ -33,8 +39,10 @@ failed, 4 unit or include problem, 42/43/44 as above (43: copy does not match th
 import argparse
 import hashlib
 import json
+import ntpath
 import os
 from pathlib import Path, PurePosixPath
+import platform
 import re
 import shutil
 import subprocess
@@ -51,6 +59,11 @@ SHOW_INCLUDES = '/showIncludes'
 NOTE_PREFIX = 'Note: including file:'
 KEEP_IN_COPY = {'.unit', '.local'}
 EXIT_IMAGE, EXIT_SYNC, EXIT_TOOLCHAIN = 42, 43, 44
+LOADERS = ('wine', 'native')
+# The include directories the msvc-wine wrapper (msvcenv.sh) puts in INCLUDE, in its order; a native
+# compile uses the same list so both loaders search the same unpacked toolset and SDK.
+MSVC_INCLUDE_DIRS = (('msvc', 'atlmfc\\include'), ('msvc', 'include'), ('sdk', 'shared'), ('sdk', 'ucrt'),
+                     ('sdk', 'um'), ('sdk', 'winrt'), ('sdk', 'km'))
 
 
 class UnitError(Exception):
@@ -82,6 +95,25 @@ def wrapper_settings(msvc, env):
     if out.returncode != 0 or len(lines) < 3:
         raise UnitError(EXIT_TOOLCHAIN, 'toolchain-wrapper', 'cannot read the wrapper environment')
     return {'INCLUDE': lines[0], 'BASE': lines[1], 'BINDIR': lines[2]}
+
+
+def native_settings(msvc):
+    """INCLUDE, BASE and BINDIR for a native Windows compile from an unpacked toolset at `msvc`.
+
+    Exactly one toolset version and one SDK include version must be present: picking one of several
+    silently would let a host compile with a compiler or headers the pins do not describe.
+    """
+    msvc = Path(msvc)
+    toolsets = sorted(p for p in (msvc / 'VC' / 'Tools' / 'MSVC').glob('*') if p.is_dir())
+    sdks = sorted(p for p in (msvc / 'Windows Kits' / '10' / 'Include').glob('10.*') if p.is_dir())
+    if len(toolsets) != 1 or len(sdks) != 1:
+        raise UnitError(EXIT_TOOLCHAIN, 'toolchain-layout',
+                        f'expected one MSVC toolset and one SDK include version, found {len(toolsets)} and {len(sdks)}')
+    base = ntpath.normpath(str(msvc).replace('/', '\\'))
+    roots = {'msvc': ntpath.join(base, 'VC', 'Tools', 'MSVC', toolsets[0].name),
+             'sdk': ntpath.join(base, 'Windows Kits', '10', 'Include', sdks[0].name)}
+    include = ';'.join(ntpath.join(roots[kind], sub) for kind, sub in MSVC_INCLUDE_DIRS)
+    return {'INCLUDE': include, 'BASE': base, 'BINDIR': str(toolsets[0] / 'bin' / 'Hostx64' / 'x64')}
 
 
 def include_problem(include, base):
@@ -135,6 +167,49 @@ def classify_includes(opened, repo, toolchain):
     return sorted(repo_files), tool_count, outside
 
 
+def classify_includes_windows(opened, repo, toolchain):
+    """classify_includes for a native Windows compile: drive-letter paths, case-insensitive roots,
+    repository paths kept in the spelling the compiler printed."""
+    def norm(p):
+        return ntpath.normpath(str(p).replace('/', '\\'))
+    repo_n = norm(repo).rstrip('\\')
+    tool_n = norm(toolchain).rstrip('\\').lower() + '\\'
+    repo_files, outside, tool_count = set(), [], 0
+    for raw in opened:
+        p = norm(raw)
+        low = p.lower()
+        if low.startswith(tool_n):
+            tool_count += 1
+        elif low.startswith(repo_n.lower() + '\\') and '\\..\\' not in low + '\\':
+            repo_files.add(p[len(repo_n) + 1:].replace('\\', '/'))
+        else:
+            outside.append(raw)
+    return sorted(repo_files), tool_count, outside
+
+
+def fold_case_includes(outside, repo, closure, repo_files):
+    """Entries of `outside` that are closure files spelled in another case, moved into repo_files.
+
+    macOS volumes are usually case-insensitive and Wine there may print an opened header in lower
+    case, so it no longer starts with the repository path as spelled. Only an exact
+    case-insensitive match to a file of the derived closure is accepted; anything else stays
+    outside and still fails the build.
+    """
+    prefix = os.path.normpath(str(repo)).lower() + '/'
+    by_lower = {c.lower(): c for c in closure}
+    files, rest = set(repo_files), []
+    for raw in outside:
+        path = _norm(raw)
+        hit = None
+        if path is not None and path.lower().startswith(prefix):
+            hit = by_lower.get(path.lower()[len(prefix):])
+        if hit:
+            files.add(hit)
+        else:
+            rest.append(raw)
+    return sorted(files), rest
+
+
 def closure_difference(compiler_files, compiled, closure):
     """Problem text if the compiler's repository files differ from the derived closure, else None.
 
@@ -174,30 +249,51 @@ def sync_copy(repo, files):
         if rel_dir == '.':
             dirnames[:] = [d for d in dirnames if d not in KEEP_IN_COPY]
         for fn in filenames:
-            rel = PurePosixPath(os.path.normpath(os.path.join(rel_dir, fn))).as_posix()
+            # as_posix() of a native relative path: on Windows a normpath'd string keeps backslashes and
+            # would never equal a spec name, so every file would look unwanted.
+            rel = Path(dirpath, fn).relative_to(repo).as_posix()
             if rel not in wanted:
                 os.unlink(os.path.join(dirpath, fn))
 
 
+def boot_id():
+    """An identifier that changes at every boot, or None where none is known (then nothing is cached)."""
+    try:
+        return Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+    except OSError:
+        pass
+    if sys.platform == 'darwin':
+        out = subprocess.run(['sysctl', '-n', 'kern.boottime'], capture_output=True, text=True)
+        if out.returncode == 0 and out.stdout.strip():
+            return 'darwin ' + out.stdout.strip()
+    return None
+
+
 def prepare_host(repo, msvc, image, wrapper, expected_image, marker_dir=None):
-    """Toolchain and image checks, once per boot (a resume or a fork is a new boot)."""
+    """Toolchain and image checks, once per boot (a resume or a fork is a new boot).
+
+    Returns (state, {binary name: sha256}): the hashes of the compiler binaries this host runs,
+    which equal the pins whenever the check passed.
+    """
     marker_dir = marker_dir or os.environ.get('SR_PREP_MARKER_DIR', '/dev/shm')
     pins = (repo / 'tools/verifier/pinned.sha256').read_text()
-    try:
-        boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
-    except OSError:
-        boot = 'no-boot-id'
+    boot = boot_id()
     key = hashlib.sha256(f'{boot}\n{pins}\n{wrapper["BINDIR"]}\n{image}\n{expected_image}'.encode()).hexdigest()
     marker = Path(marker_dir) / f'sr-verifier-prep-{key[:16]}'
-    if marker.exists():
-        return 'cached'
+    if boot is not None and marker.is_file():
+        try:
+            return 'cached', json.loads(marker.read_text())
+        except ValueError:
+            pass
+    hashes = {}
     for line in pins.splitlines():
         parts = line.split()
         if len(parts) != 2:
             continue
         digest, name = parts
         binary = Path(wrapper['BINDIR']) / name
-        if not binary.is_file() or sha256_file(binary) != digest:
+        hashes[name] = sha256_file(binary) if binary.is_file() else None
+        if hashes[name] != digest:
             raise UnitError(EXIT_TOOLCHAIN, 'toolchain-mismatch', f'{name} does not match pinned.sha256')
     image = Path(image)
     if not image.is_file():
@@ -205,11 +301,20 @@ def prepare_host(repo, msvc, image, wrapper, expected_image, marker_dir=None):
         raise UnitError(EXIT_IMAGE, 'image-missing', 'target image is not on this host')
     if sha256_file(image) != expected_image:
         raise UnitError(EXIT_IMAGE, 'image-mismatch', 'target image hash differs from builds/target.json')
-    try:
-        marker.write_text('ok\n')
-    except OSError:
-        pass
-    return 'checked'
+    if boot is not None:
+        try:
+            marker.write_text(json.dumps(hashes, sort_keys=True) + '\n')
+        except OSError:
+            pass
+    return 'checked', hashes
+
+
+def host_facts(loader, compiler_hashes):
+    """What a record may say about the host: OS, CPU architecture, loader and compiler hashes.
+    Never a path, user name or address."""
+    system = {'darwin': 'macos', 'win32': 'windows'}.get(sys.platform, sys.platform)
+    return {'os': system, 'machine': platform.machine().lower(), 'loader': loader,
+            'compiler_sha256': dict(sorted(compiler_hashes.items()))}
 
 
 def make_task(spec, fn, digest, recipe_sha):
@@ -234,7 +339,14 @@ def run(args):
     work.mkdir(parents=True)
     sync_copy(repo, spec['files'])
     env = clean_env(os.environ)
-    wrapper = wrapper_settings(msvc, env)
+    # English /showIncludes notes whatever the host's language; it changes messages, not objects.
+    env['VSLANG'] = '1033'
+    loader = getattr(args, 'loader', None) or 'wine'
+    if loader == 'native':
+        wrapper = native_settings(msvc)
+        env['INCLUDE'] = wrapper['INCLUDE']
+    else:
+        wrapper = wrapper_settings(msvc, env)
     problem = include_problem(wrapper['INCLUDE'], wrapper['BASE'])
     if problem:
         raise UnitError(4, 'include-env', problem)
@@ -242,8 +354,9 @@ def run(args):
     if target.get('build_id') != spec['build_id']:
         raise UnitError(4, 'invalid-spec', 'spec build id differs from builds/target.json')
     spec['image_sha256'] = target['image_sha256']
-    prep = prepare_host(repo, msvc, args.image, wrapper, target['image_sha256'])
-    print(f'host {spec["host"]} prep {prep}')
+    prep, compiler_hashes = prepare_host(repo, msvc, args.image, wrapper, target['image_sha256'])
+    host = host_facts(loader, compiler_hashes)
+    print(f'host {spec["host"]} prep {prep} {host["os"]} {loader}')
 
     compiled = spec['compiled']
     try:
@@ -259,7 +372,8 @@ def run(args):
     recipe_sha = sha256_file(recipe_path)
 
     obj = work / 'candidate.obj'
-    cmd = [str(msvc / 'bin/x64/cl')] + recipe['flags'] + [SHOW_INCLUDES, f'/Fo{obj}', compiled]
+    cl = str(Path(wrapper['BINDIR']) / 'cl.exe') if loader == 'native' else str(msvc / 'bin/x64/cl')
+    cmd = [cl] + recipe['flags'] + [SHOW_INCLUDES, f'/Fo{obj}', compiled]
     proc = subprocess.run(cmd, cwd=repo, env=env, capture_output=True, text=True, errors='replace')
     (work / 'compile-command.json').write_text(json.dumps(cmd[1:], indent=1) + '\n')
     opened, rest = parse_show_includes(proc.stdout)
@@ -269,7 +383,12 @@ def run(args):
     if proc.returncode != 0 or not obj.is_file():
         print(f'compile failed exit {proc.returncode} errors {errors}')
         return 3
-    repo_files, tool_count, outside = classify_includes(opened, repo, Path(wrapper['BASE'][2:].replace('\\', '/')))
+    if loader == 'native':
+        repo_files, tool_count, outside = classify_includes_windows(opened, repo, wrapper['BASE'])
+    else:
+        repo_files, tool_count, outside = classify_includes(opened, repo, Path(wrapper['BASE'][2:].replace('\\', '/')))
+        if outside and sys.platform == 'darwin':
+            repo_files, outside = fold_case_includes(outside, repo, closure, repo_files)
     if outside:
         raise UnitError(4, 'include-outside', f'{len(outside)} included file(s) outside the repository and toolchain')
     diff = closure_difference(repo_files, compiled, closure)
@@ -317,7 +436,7 @@ def run(args):
         worst = max(worst, status)
         results.append({'rva': fn['rva'], 'result': report.get('result'), 'reason': report.get('reason')})
         print(f'0x{fn["rva"]:x} {report.get("result")} {report.get("reason")} {mismatch_offset(report.get("detail"))}')
-    (work / 'result.json').write_text(json.dumps({'host': spec['host'], 'object_sha256': obj_sha,
+    (work / 'result.json').write_text(json.dumps({'host': spec['host'], 'host_facts': host, 'object_sha256': obj_sha,
                                                   'source_revision': digest, 'functions': results}, indent=2) + '\n')
     return worst
 
@@ -329,6 +448,8 @@ def main():
     p.add_argument('--msvc', required=True)
     p.add_argument('--image', required=True)
     p.add_argument('--work', required=True)
+    p.add_argument('--loader', choices=LOADERS, default='wine',
+                   help='wine: the msvc-wine wrapper; native: cl.exe directly on Windows')
     args = p.parse_args()
     try:
         return run(args)

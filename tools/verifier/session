@@ -19,6 +19,10 @@ but leaves A running for agents that use it outside the session), and queues the
 machine time not already booked by attempt/confirm for the cost ledger (`python3
 tools/cost_ledger.py flush` moves it into data/costs.json).
 
+When .local/verifier/runners.json sends attempts to a local or ssh runner (tools/verifier/runners.py),
+Boat is no longer the default: `status` reports the runner hosts first, and `up` refuses unless
+--boat is given, so no start is spent by habit. `down` and `extend` are unchanged.
+
 Every command prints the starts budget from `boat limits`. A start that would leave fewer than
 the reserve (default 10, SR_STARTS_RESERVE) for the rest of the rolling day is refused unless
 --force; a full hour or minute window is always refused. Nothing here buys extra starts.
@@ -32,6 +36,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import boatctl  # noqa: E402
+import runners  # noqa: E402
 import starts  # noqa: E402
 import vsession  # noqa: E402
 try:
@@ -58,7 +63,9 @@ def main():
     u.add_argument('--create', action='store_true', help='build a missing B from the recipe')
     u.add_argument('--reserve', type=int)
     u.add_argument('--force', action='store_true', help='allow starts that use the daily reserve')
-    sub.add_parser('status')
+    u.add_argument('--boat', action='store_true', help='bring Boat machines up although runners are the default')
+    st = sub.add_parser('status')
+    st.add_argument('--runners-only', action='store_true', help='report the runner hosts and skip Boat')
     e = sub.add_parser('extend')
     e.add_argument('--ttl', type=int, default=vsession.DEFAULT_TTL)
     d = sub.add_parser('down')
@@ -69,9 +76,16 @@ def main():
     a = p.parse_args()
     try:
         if a.cmd == 'up':
+            if runners.for_attempt() is not None and not a.boat:
+                print('session: attempts run on a runner host (.local/verifier/runners.json); Boat is not the '
+                      'default. `session up --boat` brings Boat up anyway (it spends starts).', file=sys.stderr)
+                return 2
             vsession.up(a.ttl, a.reserve, a.force, a.create, a.only)
         elif a.cmd == 'status':
-            vsession.status()
+            bad = runners.status() if runners.load() is not None else 0
+            if not a.runners_only:
+                vsession.status()
+            return 1 if bad else 0
         elif a.cmd == 'extend':
             vsession.extend(a.ttl)
         else:
@@ -86,6 +100,9 @@ def main():
     except boatctl.BoatError as exc:
         print(f'session: {exc}', file=sys.stderr)
         return 5 if 'not starting' in str(exc) else 2
+    except runners.RunnerError as exc:
+        print(f'session: {exc}', file=sys.stderr)
+        return 2
 
 
 if __name__ == '__main__':

@@ -4,6 +4,12 @@
     tools/verifier/confirm <task-dir> [--replace] [--out DIR]          # session mode (default)
     tools/verifier/confirm --session <task-dir>... | --list FILE [--replace] [--out DIR]   # batch (--all is the same)
     tools/verifier/confirm --fork <task-dir> [--replace] [--stop]      # old per-unit fork
+    tools/verifier/confirm --boat ...                                  # Boat session even with runners set
+
+When .local/verifier/runners.json lists `confirm` hosts, confirm runs on them instead of Boat
+(confirm_runners.py: the maintainer's Mac under Wine and Windows PC natively; every unit compiled
+on each, compared on each and cross-compared on this Mac). Until docs/verification.md admits
+those hosts, a runner confirm writes only with --out. --boat keeps the Boat session path.
 
 Session mode (confirm_session.py) needs a verifier session (tools/verifier/session up): it
 compiles on machines A and B, compares on A, B and this Mac, starts no machine, and labels the
@@ -50,6 +56,7 @@ import boatctl  # noqa: E402
 import pipeline  # noqa: E402
 import check  # noqa: E402  (pipeline puts tools/ on the path)
 from pipeline import REPO, PipelineError  # noqa: E402
+from runners import RunnerError  # noqa: E402
 
 STANDING_LABEL = 'boat-standing-verifier'
 FORK_LABEL = 'boat-fork-of-standing-verifier'
@@ -342,6 +349,7 @@ def main():
                    help='session mode, several units: every task directory given, first pass on A, second on B')
     p.add_argument('--list', type=Path, help='session mode: file with one task directory per line')
     p.add_argument('--out', type=Path, help='session mode: write records under OUT/<build id>/, not reports/')
+    p.add_argument('--boat', action='store_true', help='use the Boat session even when runner confirm hosts are set')
     a = p.parse_args()
     dirs = list(a.task_dirs)
     if a.list:
@@ -357,10 +365,16 @@ def main():
             p.error('several task directories need --all')
         if a.stop:
             p.error('--stop is for --fork; a session ends with tools/verifier/session down')
+        import runners
+        hosts = None if a.boat else runners.for_confirm()
+        if hosts:
+            import confirm_runners
+            return confirm_runners.run(sys.modules[__name__], dirs, a.replace, a.out.resolve() if a.out else None,
+                                       hosts=hosts)
         import confirm_session
         return confirm_session.run(sys.modules[__name__], dirs, a.replace,
                                    a.out.resolve() if a.out else None)
-    except (PipelineError, boatctl.BoatError) as exc:
+    except (PipelineError, boatctl.BoatError, RunnerError) as exc:
         print(f'confirm: {exc}', file=sys.stderr)
         return 2
 

@@ -1,0 +1,32 @@
+{
+  "runners_schema": 1,
+  "attempt": "mac",
+  "confirm": ["mac", "winpc"],
+  "hosts": {
+    "boat": {"backend": "boat"},
+    "mac": {
+      "backend": "local",
+      "host_id": "mac-wine",
+      "machine": "maintainer-mac",
+      "loader": "wine",
+      "msvc": ".local/toolchains/msvc-19.16.27054",
+      "wine_bin": ".local/toolchains/wine-11.0_1/Wine Stable.app/Contents/Resources/wine/bin",
+      "wineprefix": ".local/verifier/hosts/mac/wineprefix",
+      "work": ".local/verifier/hosts/mac/work",
+      "max_parallel": 6
+    },
+    "winpc": {
+      "backend": "ssh",
+      "host_id": "winpc-native",
+      "machine": "maintainer-winpc",
+      "loader": "native",
+      "ssh_config": ".local/winpc/ssh_config",
+      "ssh_host": "winpc",
+      "python": ["py", "-3.12"],
+      "msvc": "C:/sr-test/msvc",
+      "image": "C:/sr-test/private/SkyrimSE.exe",
+      "work": "C:/sr-test/work",
+      "max_parallel": 4
+    }
+  }
+}

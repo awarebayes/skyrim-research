@@ -57,7 +57,7 @@ def prepare(base, task_dir, replace, out):
     return task, files, closure
 
 
-def write_records(base, task, closure, recipe, runs, build_path, out):
+def write_records(base, task, closure, recipe, runs, build_path, out, notes=None):
     lines, failed = [], False
     scratch = None
     if out:
@@ -73,7 +73,7 @@ def write_records(base, task, closure, recipe, runs, build_path, out):
                    '--out', str(target.relative_to(REPO))]
             for compiled_on, compared_on, report in runs[fn['rva']]:
                 cmd += ['--run', compiled_on, compared_on, str(report)]
-            for note in session_notes(base, task, recipe):
+            for note in (notes if notes is not None else session_notes(base, task, recipe)):
                 cmd += ['--note', note]
             proc = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True)
             ok = proc.returncode == 0

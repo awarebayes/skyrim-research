@@ -21,6 +21,30 @@ tools/verifier/confirm --session <task-dir>... [--out DIR] # many units on A the
 tools/verifier/confirm --fork .local/tasks/<task-id>   # old path: one fork (one start) per unit
 ```
 
+## Runners: where attempts and confirms run
+
+`.local/verifier/runners.json` (private; example `runners.example.json`, parser `runners.py`)
+names the hosts. Backends: `boat` (the session machines below, unchanged), `local` (this Mac:
+the pinned compiler under Wine from `.local/toolchains/`, no network) and `ssh` (a host reached
+with its own ssh_config; first use the maintainer's Windows PC, the pinned compiler run natively).
+`"attempt"` picks the host `attempt` uses; `"confirm"` lists the compile hosts of a runner confirm
+(two machines, two loaders). Without the file, attempt and confirm use Boat as before.
+
+A local or ssh run uploads one archive (the unit's include closure, the comparator and host
+scripts, the spec) and `host_agent.py`; the command line holds only paths and fixed options. The
+host compiles and compares with `unit_build.py` (`--loader wine|native`), packs its work directory
+for one fetch and deletes the run. `result.json` carries the host's OS, loader and the hashes of
+the compiler binaries it ran. Each host has `max_parallel` slots (file locks under
+`.local/verifier/runner-slots/`); attempts beyond that wait in turn.
+
+```sh
+python3 tools/verifier/runners.py status                    # each host: toolchain, image, CPUs, busy slots
+python3 tools/verifier/reproduce_records.py --host <name>   # recompile every recorded unit there; equal/different
+```
+
+A runner confirm writes records only with `--out` until `docs/verification.md` admits these
+hosts (`confirm_runners.RUNNER_RECORDS_ALLOWED`); `confirm --boat` keeps the Boat session path.
+
 A session (`session`, `vsession.py`) brings up the standing machine A and the separately
 installed B once per work period, at most one start each, and checks their toolchain and image
 hashes; `attempt` and `confirm` then never start or stop a machine (`confirm_session.py`). Every
@@ -49,6 +73,10 @@ repository symbol map, and refuses to overwrite a record without `--replace`. Bo
 
 ## Files
 
+- `runners.py`, `host_agent.py`, `confirm_runners.py`, `reproduce_records.py`, `runners.example.json`:
+  runner selection and the local/ssh backends, the host-side script shipped with every run,
+  confirm on runner hosts, and the reproduction of committed records on one host (tests in
+  `tests/test_runners.py` use a stub ssh transport and a fake compiler).
 - `session`, `vsession.py`, `confirm_session.py`, `starts.py`: verifier sessions, session-mode
   confirm and the starts budget (tests in `tests/test_session.py` use a fake `boat` CLI).
 - `attempt`, `confirm`: the commands above; `pipeline.py` holds their shared logic, `boatctl.py`
