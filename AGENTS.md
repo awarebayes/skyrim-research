@@ -105,9 +105,9 @@ Codex for orchestration, review and strong work, Haiku or Luna drafting). `cheap
 because weak-model drafting passes the same comparator gate; it stays default only while the
 friction report shows its pass rate at or above the threshold in `tools/profiles.json`. A profile
 never changes what counts as a match, and a Reviewer model the acceptance rule does not admit is
-refused whatever a profile says. Today the rule admits Opus Reviewers only: Sonnet and Terra
-Reviewers are prepared and pending a blind calibration against the Opus reviews and a
-Reviewer-checked rule change, so every profile's review groups get an Opus Reviewer until then.
+refused whatever a profile says. The rule admits Sonnet Reviewers by default and Terra Reviewers
+under `claude-low`, each on its blind calibration against the Opus reviews; sampling second
+passes, confirmations of a non-Opus escalation and machinery reviews stay with Opus.
 What OpenAI models may read under `claude-low` is recorded in `docs/authorizations.md` (Notes).
 
 **Friction and direction checks.** The routine orchestrator produces the friction report

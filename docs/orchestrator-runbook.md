@@ -35,11 +35,10 @@ your harness does:
 | T3 (`delegate_task`) | `delegate_task` with the model and effort given and the prompt line as the task text. |
 | any other (two terminals) | open a second terminal in this repository, start the named model's CLI there (Claude Code, Codex) with the model and effort given, and paste the prompt line. Wait for its return table. |
 
-**Reviewer model.** The acceptance rule (`docs/verification.md`) admits Opus Reviewers only.
-Sonnet (`cheap`) and Terra (`claude-low`) Reviewers are prepared but not in force: they wait for
-a blind calibration against the Opus reviews and a Reviewer-checked rule change. Until then
-`flow.py review-group` prints a note and gives every group an Opus Reviewer whatever the profile
-says, so under `claude-low` review still uses the Claude subscription.
+**Reviewer model.** The acceptance rule (`docs/verification.md`, "Admitted Reviewer classes")
+admits Sonnet Reviewers by default and Terra Reviewers under `claude-low`; `flow.py` gives sampling
+second passes and confirmations of a non-Opus escalation to Opus by itself. A profile Reviewer the
+rule does not admit is replaced by Opus with a note.
 
 A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`; Drafter
