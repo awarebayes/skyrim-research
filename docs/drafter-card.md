@@ -102,6 +102,19 @@ is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated 
   Labels are still expected on every name; they no longer block acceptance (a Reviewer lists
   label problems as naming findings, `docs/verification.md`, "Tier 2"), but they decide `named`.
   A missing `Sibling source:` line for a reused FNV body is not a label problem: it blocks.
+- **Declare adapted bodies when you write them.** If a body, or a substantial part of one, comes
+  from a community checkout or the FNV clone, say so in the unit's header comment at the time:
+  the method, the upstream file and revision, and the licence (NG: MIT, and copy NG's licence
+  notice from its `LICENSE` at `b93280e` verbatim into that file's header; powerof3: GPL-3.0, stated in the file's header;
+  FNV: one `Sibling source:` line per body). Do not write a blanket claim such as "no community
+  code is copied"; write instead "bodies adapted from community sources are listed above;
+  `tools/check_origin.py` reports none other above its threshold at <pins>" and only after
+  running it. `python3 tools/check_origin.py reconstruction/<area>/<Class>.h
+  reconstruction/<area>/<Class>.cpp` (also printed by `attempt` as `origin:` lines) lists every
+  body close to a same-named community or FNV body; each `adapted` line it marks as not declared
+  needs a header statement. `trivial` lines (an empty body or one `return` of a constant, a
+  member or `this`) need nothing per body. It cannot see a body renamed or moved to another class,
+  so declare those yourself.
 - Before you draft, read `docs/matching-cookbook.md` once. A flag bit the target tests as a load,
   `shr`, `test al,1` goes through a by-value bit-index helper (rule 16) from the first draft.
 - No decompiler output pasted as source, no code from unlicensed projects other than the FNV

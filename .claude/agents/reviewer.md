@@ -83,7 +83,13 @@ blocks; you list what you find as `naming_findings` and still approve.
    `momusdigital/fnv_decomp@91e1b6e8` (allowed by maintainer decision, `docs/authorizations.md`,
    Notes), no leaked or proprietary material. The source header states provenance and source
    exposure, and what it says about origin and licence is true. (A file with GPL-licensed labels
-   names GPL in its header: the lint checks that.) FNV material must be declared: open the FNV
+   names GPL in its header: the lint checks that.) Start from the packet's `body origin` list and
+   its per-function `community/sibling body similarity` line (`tools/check_origin.py`): every
+   `adapted` body must be named in the unit header with its upstream file, revision and licence
+   (NG: MIT with NG's notice kept in the file; powerof3: GPL-3.0; FNV: a `Sibling source:` line),
+   and a header claim about what is not copied must be true for every listed body. `trivial`
+   bodies need no statement. The list does not see bodies renamed or moved between classes, so
+   still read the bodies against the community and sibling files you open. FNV material must be declared: open the FNV
    function the pack or `.local/analysis/fnv_index.jsonl` lists for each reviewed function (by
    our RVA in `ours`) and compare; if the body or a substantial part of it is reused, the unit
    needs a `Sibling source: <repo>@<rev> <path>[:<line>]` header line. Reuse of a sibling body
