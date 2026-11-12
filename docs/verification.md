@@ -434,6 +434,28 @@ something a Reviewer would reject (pasted decompiler output that compiles to the
 not re-checked until the next full review or the sampling safeguard, which samples label-only
 acceptances like any other.
 
+### Re-review with an earlier review as context
+
+A review written before the current output format (no `report_binding`, `checks`,
+`blocking_findings` or `naming_findings`) is refused by the acceptance tool, and its verdicts are
+never converted by script: an earlier `reject` may rest on a reason that is now a naming finding,
+or on a blocking one, and only a Reviewer can tell which. Such functions get a new full review
+in the current format, which may start from the earlier one:
+
+    python3 tools/review_packet.py --prior-review .local/reviews/<earlier>.md [--prior-ref <commit>] [ids...]
+
+Without ids the packet covers every function the earlier review has a block for, except those
+already accepted at the current digest. Per function it prints the earlier block verbatim, the
+earlier file's SHA-256 and the digest it reviewed, whether the unit still has that digest, and if
+not the unit diff from a commit where it had (found in history, or `--prior-ref`, whose digest
+is checked first; no diff without a verified base), the FNV counterparts from the sibling index,
+and a blank block in the current format with a `prior_review: <task-id> <sha256>` line. The
+Reviewer re-judges every earlier reason against the blocking grounds, moves naming ones to
+`naming_findings`, and still checks the whole function: the earlier review saves reading time,
+it is not evidence, and `prior_review` is ignored by the acceptance tool. When the digest is
+unchanged and the earlier rejects were naming-only, the new review is mostly a reclassification;
+when the unit changed with no verified base, the Reviewer reads the whole unit.
+
 ## Acceptance tool, source lint and tests
 
 `tools/accept_function.py` checks the private review file (its block for the function says
@@ -468,7 +490,9 @@ The negative tests in `tests/test_match_gate.py` reject each of these when it is
 stale or inconsistent, `tests/test_accept_function.py` covers the acceptance tool, and `tests/test_acceptance_flow.py`
 covers stale acceptances, delta reviews, batch acceptance and the generated index, and
 `tests/test_two_tier.py` covers the blocking grounds, naming findings, tier 2, subset selection
-and label-only re-acceptance. They use
+and label-only re-acceptance, and `tests/test_merged_rules.py` probes the two-tier rule together
+with the sibling source (lint, label check against a synthetic clone, sibling-label naming
+findings, undeclared reuse blocking) and the packet's re-review options. They use
 reports that the comparator produced from synthetic fixtures. The comparator itself is tested
 in `tests/test_compare.py` against its contract (`docs/comparator-contract.md`).
 

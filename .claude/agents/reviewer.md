@@ -38,6 +38,14 @@ current Reviewer record and the review each function needs. Read the packet inst
 match records; open a record only when the packet leaves a question. The packet is a reading aid
 from public files, not evidence; still compute the digest yourself for checklist item 3.
 
+When the brief names an earlier review (one in the old format, or one whose rejects may now be
+naming findings), the packet comes from `python3 tools/review_packet.py --prior-review <file>`:
+it shows the earlier block, whether the unit changed since the digest it saw, the diff when a
+verified base exists, the FNV counterparts, and a blank block in the output format below with a
+`prior_review:` line to keep. Re-judge each earlier reason against items 1 to 5; a reason that
+falls under item 6 becomes a naming finding. Your review is still a full review of the function
+(`review_kind: full`); the earlier one is context, never your verdict.
+
 ## Delta reviews
 
 A function already accepted whose unit changed (another function added, a stand-in edited) shows
@@ -156,10 +164,11 @@ checks:
   publication_hygiene: <pass|fail>, <one line>
 blocking_findings: <none, or one "  - <item>" line each below>
 naming_findings: <none, or one "  - <item>" line each below; published>
+prior_review: <re-review only: the line the packet gives>
 reasons: <short prose; no code, bytes or disassembly>
 ```
 
-Omit the two delta-only lines in a full review. A list field with items is written as the key
+Omit the two delta-only lines in a full review, and `prior_review` unless the packet gave one. A list field with items is written as the key
 alone followed by one `  - <item>` line per item. The integrating Engineer accepts the `approve`
 blocks with `python3 tools/accept_function.py --all-approved --review <saved review or ->`
 (or one function with `--build-id <build id> --rva <RVA hex> --review ... --verdict approve`),
