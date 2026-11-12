@@ -53,8 +53,12 @@ already installed, `setup --yes --accept-microsoft-license` installed Wine and t
 unattended in under 4 minutes (about 3.5 GB on disk, about 0.9 GB downloaded), and the self-test
 compiled an accepted function to the same code-section hash as the project's own two verifier
 hosts. A compare takes about 7 seconds. Linux uses the recipe of the project's own verifiers
-(Ubuntu 24.04 with Wine), but this helper has not been run there; Windows (native compiler, no
-Wine) is untested. Please report what happens on yours.
+(Ubuntu 24.04 with Wine), but this helper has not been run there. **Windows 11 x64 (native
+compiler, no Wine) works for setup and compare**: on one PC, `.\sr.cmd` doctor, setup (with the
+compiler already unpacked) and its self-test, and a practice compare all passed, and the native
+compiler gave the project's code-section hashes for every accepted function
+(`docs/windows-verifier-host.md`); the compiler download through `setup` and the winget package
+installs were not run there. Please report what happens on yours.
 
 ### The game executable
 
