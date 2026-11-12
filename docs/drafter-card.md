@@ -47,6 +47,10 @@ also lints other Drafters' unfinished files; a Reviewer rejects the rest):
   the same or the previous line, saying why a programmer would have written it
   (`// hot path: the engine inlines this accessor everywhere`). The lint checks that the comment
   is there; the Reviewer rejects a justification that is only "to match".
+- `__declspec(noinline)` only where the callee has its own body at its own RVA in the image and
+  the target's caller calls or jumps to it there; the comment says it stands in for that
+  translation-unit boundary. If the callee is not compared in the unit, declare it without
+  defining it instead. Remove the attribute when no caller in the unit is left (cookbook rule 27).
 - One class per `reconstruction/<area>/<Class>.{h,cpp}`; the area follows the rule in
   `reconstruction/README.md` (`Ni*` netimmerse, `BS*` bsengine, `TES*`/`BGS*` forms, actor
   classes actors, or the owning system your brief names). The .cpp includes its header as

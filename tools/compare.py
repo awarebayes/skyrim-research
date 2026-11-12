@@ -695,7 +695,13 @@ class Function:
             the image's unwind info leads to, whatever its handler: reading a structure that only
             looks like a FuncInfo can add a refusal, never a pass;
           - every target .pdata entry inside the funclet that does not start it is chained or
-            starts at an entry of a FuncInfo compared here (`eh-funclet-absorbs-procedure`).
+            starts at an entry of a FuncInfo compared here (`eh-funclet-absorbs-procedure`);
+          - every target .pdata entry inside the funclet ends at the funclet end, at the start of
+            another of its entries, or at an entry of a FuncInfo compared here
+            (`eh-funclet-past-pdata`): code after a procedure's last unwind entry that no metadata
+            starts is not that procedure's.
+        Rules 2 to 5 cannot tell the funclet's last bytes from undeclared bytes before the next
+        declared start (no metadata assigns them); those bytes are compared like the rest.
         Candidate-side facts are never evidence: an EH reference of the candidate can point one
         past its own truncated section, and a symbol-map entry placed at the cut names nothing the
         target shows. Anything else could be the rest of a funclet the candidate truncated.
@@ -712,6 +718,12 @@ class Function:
             need(flags & UNW_FLAG_CHAININFO, 'eh-funclet-absorbs-procedure',
                  f'funclet section #{sec.index} holds a target .pdata entry that is neither its start, '
                  'chained, nor a funclet entry of this function')
+        span_starts = {begin for begin, _finish, _unwind in spans}
+        for _begin, finish, _unwind in spans:
+            need(finish == end or finish in span_starts
+                 or finish in guard and guard[finish] <= self.compared_funcinfo, 'eh-funclet-past-pdata',
+                 f'funclet section #{sec.index} goes on past the end of a target .pdata entry into code '
+                 'no metadata starts')
         declared = self.declared_funclet_entries()
         if any(finish == end for _begin, finish, _unwind in spans):
             kind = 'pdata-end'

@@ -61,7 +61,8 @@ A function is accepted only when ALL of these hold:
      comment, as `docs/authorizations.md` requires, and every `COMMUNITY(` (any case,
      any file) is a well-formed label, and a label for a known community repository (owner and
      repository compared without case) spells it as listed and states its licence
-     (`COMMUNITY_LICENCES` in the lint). A `SIBLING(...)` label,
+     (`COMMUNITY_LICENCES` in the lint). An MIT licence notice is never cut short or edited.
+     A `SIBLING(...)` label,
      in any file, or a `Sibling source:` line names only an allowed sibling at its pin with its
      licence word, and a `Sibling source:` line sits in the leading comment with no `..` in its
      path; `tools/check_labels.py` (private clone) checks the cited path and
@@ -312,11 +313,15 @@ Match record, recomputed from the tree:
   fully covered; the contract, not this file, defines that scope and its unsupported cases.
   For funclets this includes their extent: each funclet is compared over the candidate's whole
   section, and the target must show that the funclet ends exactly there, by target-side evidence
-  only (its own `.pdata` entry ending there, a `.pdata` entry, compared code or a funclet entry
-  starting there that a FuncInfo reached through this function's own handlers names, or `int3`
-  padding), with no other function's funclet entry (under any handler) and no unchained `.pdata`
-  entry of another procedure inside it; from comparator 0.6.0 the report names the evidence per
-  funclet (`coverage.funclet_end_evidence`). The contract ("Exception and termination handlers")
+  only: its own `.pdata` entry ending there; a `.pdata` entry starting there; compared code
+  starting there; a funclet entry starting there that a FuncInfo reached through this function's
+  own handlers names; or `int3` padding. No other function's funclet entry (under any handler)
+  and no unchained `.pdata` entry of another procedure may lie inside it, and it may not run on
+  past one of its own `.pdata` entries into code nothing starts. From comparator 0.6.0 the report
+  names the evidence per funclet (`coverage.funclet_end_evidence`). Where the end is shown by a
+  start that follows it or by padding (not by the funclet's own `.pdata` end), a pass may include
+  trailing bytes that no metadata assigns to any procedure, lying before that next start; they
+  are compared byte for byte, but metadata cannot say they belong to the funclet. The contract ("Exception and termination handlers")
   gives the rules, the premise they rest on and the cases that stay refused.
   Each report carries `candidate.code_section_sha256` over the function and funclet sections,
   which the gate requires from all runs or none, equal across runs (delta reviews below).
@@ -543,7 +548,9 @@ universal character names (`\u`, `\U`) anywhere, pragma operators, codegen-only 
 codegen intrinsics; GPL (any case) named in the leading comment of a file with a GPL-licensed
 `COMMUNITY` label, every `COMMUNITY(` (any case) written as a well-formed label, and the listed
 spelling and licence word on any label for a known community repository, compared without case
-(`COMMUNITY_LICENCES`); the name-origin label grammar in files that declare `Labels: v2`;
+(`COMMUNITY_LICENCES`); every MIT licence notice in a comment complete (copyright line, then
+the permission and disclaimer text matching a stored hash, and the cited repository's whole
+LICENSE where its pinned clone is under `.local/sources/`); the name-origin label grammar in files that declare `Labels: v2`;
 `SIBLING(...)` labels in every file and `Sibling source:` lines limited to an allowed sibling at
 its pin, the latter with no `..` path component; the header comment fields of
 `reconstruction/README.md`; the one-class-per-pair layout; and include style (quoted repository

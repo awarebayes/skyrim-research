@@ -379,12 +379,25 @@ Completeness, so nothing is skipped:
   - no funclet entry may lie strictly inside a funclet unless every FuncInfo naming it was
     compared here (`eh-funclet-entry-inside`). These entries come from every FuncInfo that a
     primary unwind info of the image leads to, whatever its handler (the image uses
-    `__CxxFrameHandler3` and the GS variant; data of any other handler is read as a FuncInfo too
-    and kept only with magic 0x19930522). Wider than rule 4 on purpose: a structure mistaken for
-    a FuncInfo can only add a refusal, never a pass;
+    `__CxxFrameHandler3` and the GS variant; data of any other handler is read as a FuncInfo
+    too). Wider than rule 4 on purpose, and read leniently: any FuncInfo magic MSVC has used
+    (0x19930520 to 0x19930522) counts, and every entry read before an unreadable part of a
+    FuncInfo is kept. A structure mistaken for a FuncInfo can only add a refusal, never a pass;
   - every target `.pdata` entry inside a funclet that does not start it must be chained or start
     at a funclet entry of a FuncInfo compared here (`eh-funclet-absorbs-procedure`), so a whole
-    procedure of its own cannot be absorbed.
+    procedure of its own cannot be absorbed;
+  - every target `.pdata` entry inside a funclet must end at the funclet end, at the start of
+    another of its entries, or at a funclet entry of a FuncInfo compared here
+    (`eh-funclet-past-pdata`): bytes after a procedure's unwind coverage that nothing starts are
+    not that procedure's.
+
+  What a pass cannot exclude (limitation, by design): when the end is shown by rule 2, 3, 4 or 5
+  (a start that follows, or padding) rather than by the funclet's own `.pdata` end, the funclet's
+  last bytes may be bytes that no metadata assigns to any procedure, lying before that next
+  declared start. A leaf funclet without `.pdata` has no metadata of its own extent, so such
+  bytes cannot be told from its code. They are still compared byte for byte; the claim they
+  support is that the candidate reproduces those bytes, not that metadata assigns them to the
+  funclet (synthetic case "leaf funclet with undeclared bytes before a neighbour entry").
   Candidate-side facts are not boundaries: a symbol-map entry at that address names
   nothing the target shows, and an EH code reference of the candidate may point one past its
   own truncated section (an IP-to-state entry at the cut).
@@ -401,12 +414,14 @@ Completeness, so nothing is skipped:
   violations of the premise on an image (overlapping `.pdata` entries, funclet entries strictly
   inside a `.pdata` range, own-`.pdata` funclets ending at no accepted boundary); all three are 0
   on the pinned image, and `tests/test_eh_premise.py` asserts that wherever the image is
-  available locally (it skips in CI).
+  available locally (it skips in CI). It cannot measure the premise inside leaf funclets without
+  `.pdata`: nothing gives their extent, so an entry inside one is not detectable there.
 
   Kept refused, by design: a funclet followed by bytes no rule explains (a neighbour funclet
   whose FuncInfo is reached only through another handler, such as `__C_specific_handler` scope
   tables, which are not scanned for rule 4); an end that is only an IP-to-state address or a
-  map entry; a `.pdata` entry that stops short of the section end; and a funclet entry of a
+  map entry; a `.pdata` entry that stops short of the section end with nothing starting where
+  it stops (`eh-funclet-past-pdata`); and a funclet entry of a
   folded (shared) funclet inside the section, which `eh-funclet-entry-inside` refuses even if
   this function's FuncInfo names it too; and a second unchained `.pdata` entry inside a funclet
   that is no funclet entry of this function, even where MSVC put two procedures in one section.
@@ -499,7 +514,7 @@ under `.local/`. Exit status is 0 for `pass`, 1 for `fail`, 2 for unreadable inp
 |---|---|---|
 | 0.4.0 | 2 | EH data, funclets, chained unwind, jump tables |
 | 0.5.0 | 2 | thread-local variables: `SECREL` in code against thread-local map entries, `_tls_index` from the TLS directory, the `thread-local` map entry kind; reports add `symbol_map_sha256` and `coverage.funclet_ranges` |
-| 0.6.0 | 2 | funclet extent: a funclet's own `.pdata` end and a FuncInfo's funclet entry count as its end; a funclet holding another function's funclet entry is `eh-funclet-entry-inside`, one holding an unchained `.pdata` entry of another procedure `eh-funclet-absorbs-procedure`; extents are checked after all funclets are bound; reports add `coverage.funclet_end_evidence` |
+| 0.6.0 | 2 | funclet extent: a funclet's own `.pdata` end and a FuncInfo's funclet entry count as its end; a funclet holding another function's funclet entry is `eh-funclet-entry-inside`, one holding an unchained `.pdata` entry of another procedure `eh-funclet-absorbs-procedure`, one running past its own `.pdata` coverage into code nothing starts `eh-funclet-past-pdata`; extents are checked after all funclets are bound; reports add `coverage.funclet_end_evidence` |
 
 0.5.0 widens what can pass and also turns some 0.4.0 passes into fails. A candidate without a
 `SECREL` relocation, compared with a map whose entries carry no `kind` key and which has no

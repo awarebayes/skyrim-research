@@ -10,7 +10,10 @@ This measures that assumption on a whole image and prints counts only, never byt
 - `pdata_funclets_unexplained`: funclet entries with their own `.pdata` entry whose end is not a
   `.pdata` start, a funclet entry or followed by int3 padding.
 
-All three must be 0 for the rules to hold on that image. tests/test_eh_premise.py runs this on
+All three must be 0 for the rules to hold on that image. Not measurable here: an entry inside a
+leaf funclet that has no `.pdata` entry, since nothing in the image gives that funclet's extent
+(the output says so in `not_measured`); the comparator's `eh-funclet-entry-inside` refuses such
+an entry only inside the compared funclet itself. tests/test_eh_premise.py runs this on
 the pinned image when it is available locally (SKYRIM_IMAGE, or the private export config) and
 skips otherwise, so CI, which never has the image, skips it.
 
@@ -52,7 +55,8 @@ def premise_counts(image):
                 following = b''
             if not (following and all(b == 0xCC for b in following)):
                 unexplained += 1
-    return {'pdata_entries': len(rf), 'funclet_entries': len(entries), 'funclet_entries_with_pdata': own,
+    return {'not_measured': 'funclet entries inside leaf funclets without .pdata (no extent to test against)',
+            'pdata_entries': len(rf), 'funclet_entries': len(entries), 'funclet_entries_with_pdata': own,
             'pdata_overlaps': overlaps, 'entries_inside_pdata': inside, 'pdata_funclets_unexplained': unexplained}
 
 

@@ -295,7 +295,7 @@ class PeImage:
                 if (key is not None and handler not in key) or funcinfo in seen:
                     continue
                 seen.add(funcinfo)
-                found = self.funcinfo_entries(funcinfo)
+                found = self.funcinfo_entries(funcinfo, lenient=key is None)
             except Reject:
                 continue
             for rva in found:
@@ -303,23 +303,32 @@ class PeImage:
         self._funclet_entries[key] = out
         return out
 
-    def funcinfo_entries(self, funcinfo):
-        """Funclet entry RVAs one FuncInfo names; raises Reject if any part of it is unreadable."""
+    def funcinfo_entries(self, funcinfo, lenient=False):
+        """Funclet entry RVAs one FuncInfo names.
+
+        Strict (evidence): magic 0x19930522 only, and Reject if any part is unreadable. Lenient
+        (the refusal guard): every FuncInfo magic MSVC has used, and every entry read before an
+        unreadable part is kept, so a damaged or older FuncInfo still refuses.
+        """
         fields = struct.unpack('<10I', self.read(funcinfo, 40, 'FuncInfo')[1])
         magic, max_state, unwind_map, n_try, try_map = fields[:5]
-        if magic != FUNCINFO_MAGIC:
+        if magic not in (FUNCINFO_MAGICS if lenient else (FUNCINFO_MAGIC,)):
             raise Reject('eh-funcinfo-unsupported', 'FuncInfo magic is not 0x19930522')
         found = set()
-        if max_state:
-            table = self.read(unwind_map, 8 * max_state, 'unwind map')[1]
-            found |= {struct.unpack_from('<I', table, 8 * i + 4)[0] for i in range(max_state)}
-        if n_try:
-            tries = self.read(try_map, 20 * n_try, 'try-block map')[1]
-            for t in range(n_try):
-                n_catch, handlers = struct.unpack_from('<II', tries, 20 * t + 12)
-                if n_catch:
-                    table = self.read(handlers, 20 * n_catch, 'handler array')[1]
-                    found |= {struct.unpack_from('<I', table, 20 * c + 12)[0] for c in range(n_catch)}
+        try:
+            if max_state:
+                table = self.read(unwind_map, 8 * max_state, 'unwind map')[1]
+                found |= {struct.unpack_from('<I', table, 8 * i + 4)[0] for i in range(max_state)}
+            if n_try:
+                tries = self.read(try_map, 20 * n_try, 'try-block map')[1]
+                for t in range(n_try):
+                    n_catch, handlers = struct.unpack_from('<II', tries, 20 * t + 12)
+                    if n_catch:
+                        table = self.read(handlers, 20 * n_catch, 'handler array')[1]
+                        found |= {struct.unpack_from('<I', table, 20 * c + 12)[0] for c in range(n_catch)}
+        except Reject:
+            if not lenient:
+                raise
         # A null action (a state without cleanup) names no code.
         found.discard(0)
         return found
@@ -350,6 +359,8 @@ EH_HANDLERS = {
     '__GSHandlerCheck': ('gs',),
 }
 FUNCINFO_MAGIC = 0x19930522
+# Every FuncInfo version magic MSVC has emitted; the guard reads all of them, evidence only the last.
+FUNCINFO_MAGICS = (0x19930520, 0x19930521, 0x19930522)
 GS_HAS_ALIGNMENT = 0x4
 
 # x64 C++ EH structures as MSVC 19.16 emits them; every field is 4 bytes. Field kinds:

@@ -201,6 +201,16 @@ defined in the same unit, so the compiler sees it cannot throw and drops its IP-
 Seen in TESObjectREFR::PopulateGraphNodesToTarget 0x2fd4f0, whose missing entry is at its call to
 Get3D2, which the unit also defines (not yet closed).
 
+**27. `__declspec(noinline)` stands in for a translation-unit boundary, nothing else.** (policy)
+The one-unit-per-class layout puts functions in one file that the image built in separate units,
+so the compiler may inline a callee the image calls. `__declspec(noinline)` is acceptable only
+when the callee has its own out-of-line body at its own RVA in the image and the compared
+caller reaches it there by a call or a jump. Its comment says it stands in for that boundary
+(`// noinline: own body at its own RVA; the image calls it from GetScale`). When the callee is
+not itself compared in the unit, prefer declaring it without defining it: the call stays a
+call and no attribute is needed. An attribute whose callee no longer has a caller in the unit
+is removed. Using it to change the caller's code in any other way is "to match" and is rejected.
+
 ## Unsolved patterns
 
 **12. A pure callee-saved register swap with the same instructions.** (low)

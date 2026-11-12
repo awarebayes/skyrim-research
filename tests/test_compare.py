@@ -726,14 +726,17 @@ PACKED_CASES = {
         lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME, funclet_pdata=FRAME_PDATA),
                             image=merged_pdata_image()),
         'unwind-coverage-missing'),
-    # Both sides' .pdata entry stops one byte before the section end; that byte is unproven.
+    # Both sides' .pdata entry stops one byte before the section end and nothing starts there.
     'frame funclet: pdata ends short of the section': (
         lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME,
                                            funclet_pdata=(0, len(FRAME) - 1, fx.FRAME_FUNCLET_UNWIND)),
                             fx.packed_unit(funclet_code=FRAME, funclet_pdata=(0, len(FRAME) - 1,
                                                                               fx.FRAME_FUNCLET_UNWIND),
                                            neighbor_magic=BAD_MAGIC)),
-        'eh-funclet-extent'),
+        'eh-funclet-past-pdata'),
+    # A frame funclet, then a leaf funclet of the same FuncInfo in the same section: the .pdata
+    # end inside the section is fine, but it is not the section end, and nothing follows it.
+    'frame funclet then own leaf, nothing after': (lambda: frame_then_leaf_case(), 'eh-funclet-extent'),
     # The guard sees FuncInfos under every handler, not only this function's: the neighbour
     # swallowed here is reached through __GSHandlerCheck_EH, which the compared function never names.
     'candidate swallows a neighbour under another handler': (
@@ -764,7 +767,34 @@ PACKED_CASES = {
         lambda: fx.nested_inputs(), 'all-checks-passed', {'compared-code': 1, 'pdata-end': 1, 'int3-padding': 1}),
     # The candidate funclet also holds a whole procedure with its own unchained .pdata entry.
     'funclet absorbs a procedure with its own pdata': (lambda: absorb_case(), 'eh-funclet-absorbs-procedure'),
+    # The guard keeps FuncInfos of older magics and what it could read of a damaged one.
+    'candidate swallows a neighbour with an older FuncInfo magic': (
+        lambda: packed_case(swallowing_candidate(), fx.packed_unit(neighbor_magic=BAD_MAGIC)),
+        'eh-funclet-entry-inside'),
+    'candidate swallows a neighbour whose FuncInfo is readable only in part': (
+        lambda: packed_case(swallowing_candidate(), fx.packed_unit(neighbor_bad_try_map=True)),
+        'eh-funclet-entry-inside'),
+    # The frame funclet's .pdata entry ends, then undeclared nops run up to the neighbour's entry.
+    'frame funclet goes on past its pdata end': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME + b'\x90' * 3, funclet_pdata=FRAME_PDATA),
+                            fx.packed_unit(funclet_code=FRAME, funclet_pdata=FRAME_PDATA, neighbor_gap=3)),
+        'eh-funclet-past-pdata'),
+    # Not refusable from metadata, so a pass by design (contract): a leaf funclet ending in
+    # undeclared bytes, all equal, before a declared neighbour entry.
+    'leaf funclet with undeclared bytes before a neighbour entry': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=LEAF + b'\x90' * 4),
+                            fx.packed_unit(neighbor_gap=4)),
+        'all-checks-passed', {'funclet-entry': 1}),
 }
+
+
+def frame_then_leaf_case():
+    def unit(neighbor):
+        u = fx.packed_unit(neighbor=neighbor, funclet_code=FRAME + LEAF, funclet_pdata=FRAME_PDATA,
+                           extra_action=len(FRAME), neighbor_magic=BAD_MAGIC)
+        u.reloc(u.packed_funclet, 0x13, fx.CALLEE, fx.REL32)
+        return u
+    return packed_case(unit(False), unit(True))
 
 
 def fake_case(chained):
@@ -856,8 +886,12 @@ class PackedFuncletMutationTests(unittest.TestCase):
             ('        for sec in compared:\n            start = self.bound[sec.index]\n'
              '            self.check_funclet_end(sec, start, start + len(sec.data))', '        pass'))),
         'catch handler read at the wrong offset': ('pecoff.py', 'table, 20 * c + 12)', 'table, 20 * c + 8)'),
-        'FuncInfo counted in part': ('pecoff.py', '        if n_try:\n            tries = self.read(',
-                                     '        if n_try and try_map < len(self.blob):\n            tries = self.read('),
+        'evidence counts a FuncInfo in part': ('pecoff.py', '            if not lenient:\n                raise',
+                                               '            pass'),
+        'guard drops a FuncInfo read in part': ('pecoff.py', '            if not lenient:\n                raise',
+                                                '            raise'),
+        'past-pdata check removed': ('compare.py', 'need(finish == end or finish in span_starts',
+                                     'need(True or finish == end or finish in span_starts'),
         'chained unwind infos read': ('pecoff.py', 'if head[0] & 0x7 != 1 or flags & UNW_FLAG_CHAININFO or not',
                                       'if head[0] & 0x7 != 1 or not'),
         'pdata end loosened': ('compare.py', 'if any(finish == end for', 'if any(finish <= end for'),
@@ -866,7 +900,14 @@ class PackedFuncletMutationTests(unittest.TestCase):
                                             'elif any(abs(end - r) <= 4 for r in declared):'),
         'handler filter dropped': ('pecoff.py', 'if (key is not None and handler not in key) or funcinfo in seen:',
                                    'if funcinfo in seen:'),
-        'magic check dropped': ('pecoff.py', 'if magic != FUNCINFO_MAGIC:', 'if False:'),
+        'magic check dropped': ('pecoff.py', 'if magic not in (FUNCINFO_MAGICS if lenient else (FUNCINFO_MAGIC,)):',
+                                'if False:'),
+        'evidence accepts older magics': ('pecoff.py',
+                                          'if magic not in (FUNCINFO_MAGICS if lenient else (FUNCINFO_MAGIC,)):',
+                                          'if magic not in FUNCINFO_MAGICS:'),
+        'guard reads the current magic only': ('pecoff.py',
+                                               'if magic not in (FUNCINFO_MAGICS if lenient else (FUNCINFO_MAGIC,)):',
+                                               'if magic != FUNCINFO_MAGIC:'),
         'ip-to-state entries counted': (
             'pecoff.py', '        # A null action (a state without cleanup) names no code.',
             "        n_ip, ip_map = fields[5:7]\n"
