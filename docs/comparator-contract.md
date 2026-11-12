@@ -204,7 +204,10 @@ analysis), is a provenance question for the task, not something the comparator c
 wrong map produces `relocation-target-mismatch`, never a silent pass.
 
 The comparator reads the whole map: the names it resolves, and also the absence of entries at or
-inside the function and funclet ranges, `__ImageBase` and the EH handler names. A result
+inside the function and funclet ranges, of an entry naming the task symbol elsewhere, of
+`__ImageBase`, of `_tls_index` (checked against the TLS directory's slot whenever present), of
+any thread-local entry (each is checked against the image's TLS template, and the first makes a
+TLS directory required), and of the EH handler names. A result
 therefore depends on more than the resolved entries, which is why the matching gate
 (`docs/verification.md`, "Symbol map") carries a record across map additions only when none of
 them could have touched those checks, and never across a change to an entry the pinned version

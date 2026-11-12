@@ -3,9 +3,11 @@
 Built on the match-gate fixture, so the record under test holds reports the real comparator wrote
 for the synthetic function, and `check` is the full repository validation CI runs.
 """
+import ast
 import copy
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -15,11 +17,14 @@ import unittest
 TOOLS = Path(__file__).resolve().parents[1] / 'tools'
 sys.path.insert(0, str(TOOLS))
 import symbol_map as sm  # noqa: E402
-from test_match_gate import MAP, RECORD, GateFixture, sha256  # noqa: E402
+from pecoff import EH_HANDLERS  # noqa: E402
+from test_match_gate import MAP, RECORD, GateFixture, compiled_object, sha256  # noqa: E402
 import synthetic_pecoff as fx  # noqa: E402
 
 HISTORY = sm.history_name(MAP)
 FAR = 0x5000  # outside every fixture range
+# SHA-256 of the stripped compare.py lines that read the symbol map (PresenceRuleCoverageTests).
+MAP_READING_SHA256 = '3f4f2b43ff5675315d18b8ab58327f1762b6709b78299d89f01d21d15559f0f4'
 
 
 class SymbolMapFixture(GateFixture):
@@ -75,13 +80,31 @@ class AdditionTests(SymbolMapFixture, unittest.TestCase):
             self.add({'Unrelated': {'rva': FAR, 'size': None}})
 
 
-    def test_thread_local_entry_is_refused(self):
-        with self.assertRaisesRegex(ValueError, 'must be {rva, size}'):
-            self.add({'tVar': {'kind': 'thread-local', 'tls_offset': 8, 'size': None}})
+    def test_malformed_thread_local_entry_is_refused(self):
+        for bad in ({'kind': 'thread-local', 'tls_offset': 8},
+                    {'kind': 'thread-local', 'tls_offset': 8, 'size': None, 'rva': 8},
+                    {'kind': 'thread-locals', 'tls_offset': 8, 'size': None},
+                    {'kind': 'thread-local', 'tls_offset': -1, 'size': None},
+                    {'kind': 'thread-local', 'tls_offset': True, 'size': None},
+                    {'kind': 'thread-local', 'tls_offset': 8, 'size': 0},
+                    {'kind': 'thread-local', 'tls_offset': '8', 'size': None}):
+            with self.assertRaisesRegex(ValueError, 'must be {rva, size} or'):
+                self.add({'tVar': bad}, allow_change=True)
+        self.assertFalse((self.root / HISTORY).exists())
+
+    def test_thread_local_entry_is_written_canonically(self):
+        new = sm.plan(self.current_map(), self.incoming(
+            {'tVar': {'size': 4, 'tls_offset': 8, 'kind': 'thread-local'}}))['map']
+        self.assertEqual(list(new['symbols'])[-1], 'tVar')
+        self.assertEqual(list(new['symbols']['tVar'].items()), [('kind', 'thread-local'), ('tls_offset', 8), ('size', 4)])
+
+    def test_non_canonical_thread_local_entry_fails_the_map(self):
         smap = self.current_map()
-        smap['symbols']['tVar'] = {'kind': 'thread-local', 'tls_offset': 8, 'size': None}
-        with self.assertRaisesRegex(ValueError, 'thread-local entries'):
+        smap['symbols']['tVar'] = {'tls_offset': 8, 'kind': 'thread-local', 'size': None}
+        with self.assertRaisesRegex(ValueError, 'in that order'):
             sm.check_map(smap)
+        smap['symbols']['tVar'] = {'kind': 'thread-local', 'tls_offset': 8, 'size': None}
+        sm.check_map(smap)
 
 class ChangeTests(SymbolMapFixture, unittest.TestCase):
     def test_changed_entry_is_refused_without_flag(self):
@@ -208,6 +231,177 @@ class ShadowTests(SymbolMapFixture, unittest.TestCase):
         self.check()
         self.add({'__GSHandlerCheck_EH': {'rva': FAR, 'size': None}}, allow_change=True)
         self.assertGateRejects('EH handler name was added')
+
+
+class TlsAdditionTests(SymbolMapFixture, unittest.TestCase):
+    """`_tls_index` and thread-local additions: the comparator checks both against the image's TLS
+    directory for every function, so neither can be carried across (the fixture image has none)."""
+    TLS = {'kind': 'thread-local', 'tls_offset': 8, 'size': 4}
+
+    def comparator_result(self):
+        report = self.run_comparator(obj=compiled_object(1))
+        return report['result'], report['reason']
+
+    def test_unrelated_addition_still_carries(self):
+        self.add({'Unrelated': {'rva': FAR, 'size': None}})
+        self.assertEqual(self.comparator_result(), ('pass', 'all-checks-passed'))
+        self.check()
+
+    def test_tls_index_addition_is_refused_and_lists_the_record(self):
+        with self.assertRaisesRegex(ValueError, rf'adds _tls_index(.|\n)*stale: {RECORD}: _tls_index was added'):
+            self.add({'_tls_index': {'rva': FAR, 'size': 4}})
+        self.assertFalse((self.root / HISTORY).exists())
+
+    def test_tls_index_addition_makes_record_stale(self):
+        summary = self.add({'_tls_index': {'rva': FAR, 'size': 4}}, allow_change=True)
+        self.assertEqual([p for p, _ in summary['stale_records']], [RECORD])
+        # The rule's premise: the same record's runs would now fail.
+        self.assertEqual(self.comparator_result(), ('fail', 'tls-directory-missing'))
+        self.assertGateRejects('_tls_index was added')
+
+    def test_tls_index_addition_is_refused_without_any_record(self):
+        (self.root / RECORD).unlink()
+        with self.assertRaisesRegex(ValueError, 'adds _tls_index'):
+            self.add({'_tls_index': {'rva': FAR, 'size': 4}})
+
+    def test_thread_local_addition_is_refused_and_lists_the_record(self):
+        with self.assertRaisesRegex(ValueError, rf'stale: {RECORD}: thread-local entry tVar was added'):
+            self.add({'tVar': self.TLS})
+        self.assertFalse((self.root / HISTORY).exists())
+
+    def test_thread_local_addition_makes_record_stale(self):
+        self.add({'tVar': self.TLS}, allow_change=True)
+        self.assertEqual(self.comparator_result(), ('fail', 'tls-directory-missing'))
+        self.assertGateRejects('thread-local entry tVar was added')
+
+    def test_thread_local_addition_without_records_is_accepted(self):
+        (self.root / RECORD).unlink()
+        self.add({'tVar': self.TLS})
+        self.add({'Later': {'rva': FAR, 'size': None}})
+        state = sm.load_state(self.root, MAP)
+        self.assertEqual(len(state.valid), 3)
+
+    def test_function_name_added_elsewhere_is_not_carried(self):
+        reports = [run['report'] for run in self.record['runs']]
+        state = sm.MapState({'symbols': {fx.FUNCTION: {'rva': FAR, 'size': None}}}, 'x' * 64, {}, set())
+        self.assertIn('names the function', sm.carry_forward_problem(state, set(), fx.LAYOUT[fx.FUNCTION],
+                                                                     len(fx.CODE), reports))
+
+
+class ThreadLocalVersionTests(unittest.TestCase):
+    """Changes to thread-local entries a record's version held, on a map whose records are stubs
+    carrying only what the stale check reads (the synthetic image has no TLS directory, so no
+    record pinned to a map with a thread-local entry can be produced by the comparator here)."""
+    MAP = 'reports/b/symbol-map.json'
+    RECORD = 'reports/b/0x1000.json'
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        smap = {'schema': 1, 'build_id': 'b', 'folds': [], 'symbols': {
+            'Fn': {'rva': 0x1000, 'size': 0x10},
+            'tVar': {'kind': 'thread-local', 'tls_offset': 0x40, 'size': 8}}}
+        path = self.root / self.MAP
+        path.parent.mkdir(parents=True)
+        path.write_bytes(sm.serialize(smap))
+        record = {'symbol_map': {'path': self.MAP, 'sha256': sha256(path.read_bytes())},
+                  'runs': [{'report': {'function': {'rva': 0x1000, 'size': 0x10, 'symbol': 'Fn'}, 'coverage': {}}}]}
+        (self.root / self.RECORD).write_text(json.dumps(record))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def add(self, symbols, **kw):
+        return sm.apply_change(self.root, self.MAP, {'build_id': 'b', 'symbols': symbols}, **kw)
+
+    def problem(self):
+        sm._CACHE.clear()
+        state = sm.load_state(self.root, self.MAP)
+        return sm.record_problem(state, json.loads((self.root / self.RECORD).read_text()))
+
+    def test_rva_addition_after_thread_local_entry_carries(self):
+        # Same number as the thread-local offset: different address spaces, no shadowing.
+        self.add({'Data': {'rva': 0x40, 'size': 8}})
+        self.assertIsNone(self.problem())
+
+    def test_changed_thread_local_entry_stales(self):
+        moved = {'kind': 'thread-local', 'tls_offset': 0x48, 'size': 8}
+        with self.assertRaisesRegex(ValueError, 'changes existing entries: tVar'):
+            self.add({'tVar': moved})
+        self.add({'tVar': moved}, allow_change=True)
+        self.assertIn('changed or removed', self.problem())
+
+    def test_resized_thread_local_entry_stales(self):
+        self.add({'tVar': {'kind': 'thread-local', 'tls_offset': 0x40, 'size': None}}, allow_change=True)
+        self.assertIn('changed or removed', self.problem())
+
+    def test_removed_thread_local_entry_stales(self):
+        with self.assertRaisesRegex(ValueError, 'removes entries: tVar'):
+            sm.apply_change(self.root, self.MAP, {'build_id': 'b', 'symbols': {}}, remove=['tVar'])
+        sm.apply_change(self.root, self.MAP, {'build_id': 'b', 'symbols': {}}, remove=['tVar'], allow_change=True)
+        self.assertIn('changed or removed', self.problem())
+
+    def test_second_thread_local_entry_stales(self):
+        with self.assertRaisesRegex(ValueError, 'thread-local entry tOther was added'):
+            self.add({'tOther': {'kind': 'thread-local', 'tls_offset': 0x80, 'size': 4}})
+        self.add({'tOther': {'kind': 'thread-local', 'tls_offset': 0x80, 'size': 4}}, allow_change=True)
+        self.assertIn('thread-local entry tOther', self.problem())
+
+    def test_thread_local_entry_sharing_an_offset_is_refused(self):
+        for entry in ({'kind': 'thread-local', 'tls_offset': 0x40, 'size': None},
+                      {'kind': 'thread-local', 'tls_offset': 0x44, 'size': 4},
+                      {'kind': 'thread-local', 'tls_offset': 0x3c, 'size': 8}):
+            with self.assertRaisesRegex(ValueError, 'shares an address or range with existing entry tVar'):
+                self.add({'tNew': entry})
+
+    def test_unknown_entry_kind_is_not_carried(self):
+        state = sm.MapState({'symbols': {'Odd': {'kind': 'other', 'rva': FAR}}}, 'x' * 64, {}, set())
+        self.assertIn('no kind', sm.carry_forward_problem(state, set(), 0x1000, 0x10, [{}]))
+
+
+class PresenceRuleCoverageTests(unittest.TestCase):
+    """The comparator names special symbols and entry kinds only where carry_forward_problem has a rule."""
+    COMPARE = TOOLS / 'compare.py'
+    # Symbol-like string constants: leading underscore or MSVC decoration characters.
+    SYMBOL_LIKE = re.compile(r'(_[A-Za-z_]\w*|\?[\w@?$]+)')
+
+    def constants(self):
+        """String constants of the comparator's two source files (pecoff.py holds the handler names)."""
+        out = set()
+        for path in (self.COMPARE, TOOLS / 'pecoff.py'):
+            tree = ast.parse(path.read_text())
+            out |= {n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+        return out
+
+    def test_every_special_symbol_has_a_rule(self):
+        names = {c for c in self.constants() if self.SYMBOL_LIKE.fullmatch(c)} - {'__main__'}
+        self.assertTrue(names, 'the scan found no special symbol names in compare.py')
+        self.assertLessEqual(names, sm.PRESENCE_NAMES,
+                             'compare.py names a symbol carry_forward_problem has no rule for')
+        self.assertLessEqual(set(EH_HANDLERS), sm.PRESENCE_NAMES)
+
+    def test_every_entry_kind_has_a_rule(self):
+        import compare
+        self.assertEqual(sm.ENTRY_KINDS, {compare.THREAD_LOCAL})
+        smap = {'schema': 1, 'build_id': 'b', 'symbols': {'X': {'kind': 'unheard-of', 'rva': 1}}}
+        with self.assertRaisesRegex(Exception, 'unknown'):
+            compare.load_symbol_map({'build_id': 'b'}, smap)
+
+    def test_each_presence_name_is_not_carried(self):
+        handlers = [{'coverage': {'eh': {'handlers': {'__CxxFrameHandler3': 1}}}}]
+        for name in sorted(sm.PRESENCE_NAMES):
+            state = sm.MapState({'symbols': {name: {'rva': FAR, 'size': None}}}, 'x' * 64, {}, set())
+            self.assertIsNotNone(sm.carry_forward_problem(state, set(), 0x1000, 0x10, handlers), name)
+
+    def test_map_reading_lines_are_the_audited_ones(self):
+        """Fails on any edit to a compare.py line that reads the map, so the carry-forward rules are
+        re-audited against it (the audit table is in the handoff of the change that set this hash)."""
+        words = ('entries', 'symbol_map', 'folds', 'IMAGE_BASE', 'TLS_INDEX', 'THREAD_LOCAL', 'EH_HANDLERS')
+        lines = [line.strip() for line in self.COMPARE.read_text().splitlines() if any(w in line for w in words)]
+        digest = sha256('\n'.join(lines).encode())
+        self.assertEqual(digest, MAP_READING_SHA256,
+                         'compare.py changed where it reads the symbol map: re-audit carry_forward_problem '
+                         'in tools/symbol_map.py and docs/verification.md "Symbol map", then update this hash')
 
 
 class DuplicateKeyTests(SymbolMapFixture, unittest.TestCase):
@@ -352,6 +546,32 @@ class FuncletCarryForwardTests(unittest.TestCase):
     def test_malformed_range_refused(self):
         for bad in ([[0x2000]], [[0x2000, 0]], [['0x2000', 0x20]], [[-1, 0x20]], 'x'):
             self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}}, self.reports(bad)))
+
+    def test_two_ascending_disjoint_funclets_carry(self):
+        ranges = [[0x2000, 0x20], [0x2020, 0x10]]
+        self.assertIsNone(self.problem({'Far': {'rva': FAR, 'size': 8}}, self.reports(ranges, sections=2, total=0x30)))
+
+    def test_overlapping_or_unordered_funclets_refused(self):
+        for ranges in ([[0x2000, 0x20], [0x2010, 0x10]], [[0x2020, 0x10], [0x2000, 0x20]],
+                       [[0x2000, 0x20], [0x2000, 0x10]]):
+            self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}},
+                                                      self.reports(ranges, sections=2, total=0x30)))
+
+    def test_funclet_overlapping_the_function_refused(self):
+        for start, length in ((self.RVA, 0x20), (self.RVA + 0x30, 0x20), (self.RVA - 0x10, 0x20)):
+            self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}},
+                                                      self.reports([[start, length]], total=length)))
+
+    def test_funclet_adjacent_to_the_function_carries(self):
+        self.assertIsNone(self.problem({'Far': {'rva': FAR, 'size': 8}},
+                                       self.reports([[self.RVA + self.SIZE, 0x20]])))
+
+    def test_non_integer_counts_refused(self):
+        for key, value in (('funclet_sections', 1.0), ('funclet_sections', True), ('funclet_bytes_total', 32.0)):
+            reports = self.reports([list(self.FUNCLET)])
+            for r in reports:
+                r['coverage'][key] = value
+            self.assertIn('do not give', self.problem({'Far': {'rva': FAR, 'size': 8}}, reports), key)
 
 
 class CommandTests(SymbolMapFixture, unittest.TestCase):

@@ -439,19 +439,42 @@ class ThreadLocalBindTests(unittest.TestCase):
         report, _ = self.run_bind(hints)
         self.assertEqual(report['ignored_hints'], [])
 
-    def test_thread_local_is_not_published_to_the_repository_map(self):
-        name = 'reports/synthetic-fixture/symbol-map.json'
+    PUBLIC = 'reports/synthetic-fixture/symbol-map.json'
+
+    def public_map(self, provenance=False):
         task = json.loads((self.task_dir / 'task.json').read_text())
-        task['symbols'] = name
+        task['symbols'] = self.PUBLIC
         (self.task_dir / 'task.json').write_text(json.dumps(task))
         smap = json.loads((self.task_dir / 'symbols.json').read_text())
         smap.update(build_id='synthetic-fixture', folds=[])
-        path = self.root / name
+        if provenance:
+            smap['_provenance'] = {'database': 'synthetic', 'entries': [{'name': n, 'note': 'synthetic'}
+                                                                       for n in smap['symbols']]}
+        path = self.root / self.PUBLIC
         path.parent.mkdir(parents=True)
         path.write_text(json.dumps(smap, indent=2) + '\n')
-        blob = path.read_bytes()
         (self.task_dir / bind.HINTS).write_text(json.dumps({fx.TLS_VAR: hex(fx.TLS_OFFSET).replace('0x', 'tls:0x')}))
-        with self.assertRaisesRegex(ValueError, 'thread-local'):
+        return path
+
+    def test_thread_local_is_published_to_the_repository_map(self):
+        path = self.public_map(provenance=True)
+        bind.bind(self.task_dir, self.root / 'obj', self.root / 'image', repo=self.root)
+        smap = json.loads(path.read_text())
+        self.assertEqual(list(smap['symbols'][fx.TLS_VAR].items()),
+                         [('kind', 'thread-local'), ('tls_offset', fx.TLS_OFFSET), ('size', None)])
+        prov = {e['name']: e for e in smap['_provenance']['entries']}[fx.TLS_VAR]
+        self.assertEqual(prov['tls_offset'], hex(fx.TLS_OFFSET))
+        self.assertNotIn('rva', prov)
+        self.assertTrue((self.root / 'reports/synthetic-fixture/symbol-map.history.json').is_file())
+
+    def test_thread_local_publication_refused_while_it_would_stale_a_record(self):
+        path = self.public_map()
+        blob = path.read_bytes()
+        # Only what the stale check reads: a record pinned to the current map, its function elsewhere.
+        record = {'symbol_map': {'path': self.PUBLIC, 'sha256': hashlib.sha256(blob).hexdigest()},
+                  'runs': [{'report': {'function': {'rva': 0x9000, 'size': 16, 'symbol': 'Other'}, 'coverage': {}}}]}
+        (self.root / 'reports/synthetic-fixture/0x9000.json').write_text(json.dumps(record))
+        with self.assertRaisesRegex(ValueError, 'stale.*thread-local entry'):
             bind.bind(self.task_dir, self.root / 'obj', self.root / 'image', repo=self.root)
         self.assertEqual(path.read_bytes(), blob)
 

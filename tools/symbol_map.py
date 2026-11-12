@@ -19,10 +19,16 @@ version that no longer rebuilds is a failure of the whole history unless it is m
 to a superseded or unknown version is stale.
 
 A pass also depended on what the old map did *not* contain: the comparator rejects a map entry
-that aliases or overlaps the function, a funclet, an `__ImageBase` other than 0, and treats EH
-handler names specially. `carry_forward_problem` refuses to carry a record across additions that
-could have changed its result, including an addition at or in a funclet range the reports
-give (and any addition at all for a function with funclets whose reports give no ranges).
+that aliases or overlaps the function or a funclet, an `__ImageBase` other than 0, a `_tls_index`
+other than the TLS directory's slot, a thread-local entry outside the image's TLS template (and
+any thread-local entry at all for an image without a usable TLS directory), and treats EH handler
+names specially. `carry_forward_problem` refuses to carry a record across additions that could
+have changed its result, including an addition at or in a funclet range the reports give (and any
+addition at all for a function with funclets whose reports give no consistent ranges).
+
+Entries are `{"rva", "size"}` or `{"kind": "thread-local", "tls_offset", "size"}`, the second
+written in that key order. Overlap and ordering rules compare RVA entries with RVA entries and
+thread-local entries with thread-local entries (by TLS-template offset), never across.
 
 Usage (paths relative to the repository root):
 
@@ -32,10 +38,11 @@ Usage (paths relative to the repository root):
 
 `add` takes entries (and their provenance entries and new fold groups) from a symbol-map-shaped
 file: names it lacks are left alone, names it shares must be identical. It refuses a change,
-removal, an entry sharing an RVA or range with an existing one, or anything that would turn a
-currently valid match record stale, unless `--allow-change` is given; it then lists the records
-it made stale. `--history` imports versions of another checkout's history (a worktree branch)
-that still rebuild from the result, so records confirmed there stay valid after integration.
+removal, an entry sharing an RVA, TLS offset or range with an existing one, an `__ImageBase` or
+`_tls_index` addition, or anything that would turn a currently valid match record stale, unless
+`--allow-change` is given; it then lists the records it made stale. `--history` imports versions
+of another checkout's history (a worktree branch) that still rebuild from the result, so records
+confirmed there stay valid after integration.
 """
 import argparse
 import copy
@@ -44,12 +51,29 @@ import json
 from pathlib import Path
 import sys
 
-from compare import IMAGE_BASE, load_symbol_map
+from compare import IMAGE_BASE, THREAD_LOCAL, TLS_INDEX, load_symbol_map
 from pecoff import EH_HANDLERS, Reject
 
 ROOT = Path(__file__).resolve().parents[1]
 HISTORY_SCHEMA = 1
 VERSION_FIELDS = {'sha256', 'base', 'added', 'superseded'}
+# Names the comparator treats by presence, beyond resolving them, and the entry kinds it accepts.
+# carry_forward_problem has a rule for each; tests/test_symbol_map.py fails if compare.py comes to
+# name a symbol or entry kind that is not listed here.
+PRESENCE_NAMES = frozenset({IMAGE_BASE, TLS_INDEX}) | frozenset(EH_HANDLERS)
+ENTRY_KINDS = frozenset({THREAD_LOCAL})
+THREAD_LOCAL_KEYS = ['kind', 'tls_offset', 'size']
+
+
+def is_thread_local(entry):
+    return isinstance(entry, dict) and 'kind' in entry
+
+
+def span(entry):
+    """(address space, start, size or None): RVA entries and thread-local offsets never overlap."""
+    if is_thread_local(entry):
+        return 'tls', entry['tls_offset'], entry.get('size')
+    return 'rva', entry['rva'], entry.get('size')
 
 
 def require(condition, message):
@@ -98,10 +122,12 @@ def check_map(smap, what='symbol map'):
         load_symbol_map({'build_id': smap['build_id']}, smap)
     except Reject as exc:
         raise ValueError(f'{what}: {exc.reason}: {exc.detail}') from None
-    # The overlap, ordering and carry-forward rules here compare RVAs; a thread-local entry holds a
-    # TLS-template offset instead, so it stays in private task maps until those rules cover it.
-    tls = sorted(n for n, e in smap['symbols'].items() if 'kind' in e)
-    require(not tls, f'{what}: thread-local entries ({", ".join(tls)}) are not supported in a repository map')
+    # One spelling per thread-local entry, so the same entry cannot appear in two byte forms (the
+    # comparator ignores extra keys and key order, a version rebuild does not).
+    for name, entry in smap['symbols'].items():
+        if is_thread_local(entry):
+            require(list(entry) == THREAD_LOCAL_KEYS,
+                    f'{what}: thread-local entry {name} must have exactly the keys kind, tls_offset, size, in that order')
     entries = provenance_entries(smap)
     if entries is not None:
         names = [e.get('name') if isinstance(e, dict) else None for e in entries]
@@ -220,23 +246,41 @@ def overlaps(rva, size, start, end):
 def carry_forward_problem(state, names, rva, size, reports):
     """Why entries added since version `names` could have changed this pass, or None.
 
-    The comparator reads the whole map, not only the names it resolves (docs/comparator-contract.md,
-    "Aliases, folds and overlaps"): an added entry at or inside the function range, an
-    `__ImageBase` entry, an EH handler name for a function with handler data, an entry at or inside
-    a funclet range the reports give, or any entry at all for a function with funclets whose reports
-    give no consistent ranges, might turn it into a fail.
+    A pass never resolved a name its map lacked (the comparator fails such a reference with
+    `unresolved-symbol`), so an addition matters only where the comparator reads the map by presence
+    (docs/comparator-contract.md, "Aliases, folds and overlaps" and "Thread-local variables"):
+    an added entry at or inside the function range or named as the function, an `__ImageBase` or
+    `_tls_index` entry, any thread-local entry, an EH handler name for a function with handler data,
+    an entry at or inside a funclet range the reports give, or any entry at all for a function with
+    funclets whose reports give no consistent ranges, might turn it into a fail.
     """
     added = {n: e for n, e in state.current['symbols'].items() if n not in names}
     if not added:
         return None
     if IMAGE_BASE in added:
         return f'{IMAGE_BASE} was added to the map'
+    if TLS_INDEX in added:
+        # Checked against the image's TLS directory slot whenever the map names it.
+        return f'{TLS_INDEX} was added to the map'
+    for name, entry in added.items():
+        kind = entry.get('kind') if isinstance(entry, dict) else 'not an object'
+        needed = 'tls_offset' if kind == THREAD_LOCAL else 'rva'
+        if kind not in (None, THREAD_LOCAL) or needed not in entry:
+            return f'added entry {name} is of no kind this rule knows'
+        if kind == THREAD_LOCAL:
+            # Every thread-local entry is checked against the image's TLS template, and the first
+            # one makes the comparator require a TLS directory at all. The pinned runs did not
+            # check this entry, and reports carry no template bounds that would show it inside.
+            return f'thread-local entry {name} was added, which the comparator checks against the image TLS template'
+    functions = {(r.get('function') or {}).get('symbol') for r in reports if isinstance(r, dict)}
+    if set(added) & functions:
+        return f'added entry {sorted(set(added) & functions)[0]} names the function'
     for name, entry in added.items():
         if overlaps(entry['rva'], entry.get('size'), rva, rva + size):
             return f'added entry {name} lies at or in the function range'
     coverage = [(r.get('coverage') or {}) for r in reports]
     if any(c.get('funclet_sections') for c in coverage):
-        ranges = funclet_ranges(coverage)
+        ranges = funclet_ranges(coverage, rva, size)
         if ranges is None:
             return 'the function has funclets whose ranges its reports do not give consistently, so no addition can be shown unrelated'
         for name, entry in added.items():
@@ -248,11 +292,14 @@ def carry_forward_problem(state, names, rva, size, reports):
     return None
 
 
-def funclet_ranges(coverage):
+def funclet_ranges(coverage, rva, size):
     """The [start, length] target ranges of the compared funclets all reports agree on, or None.
 
     The comparator rejects a map entry overlapping a funclet it binds; the ranges must account for
     every funclet byte it compared, so a report listing fewer funclets than it compared gives None.
+    Ranges must be ascending, disjoint from each other and from the function `[rva, rva + size)`,
+    which every consistent pass shows (the comparator refuses overlapping funclets); anything else
+    is not trusted to describe what was compared.
     """
     lists = [c.get('funclet_ranges') for c in coverage]
     first = lists[0]
@@ -261,8 +308,14 @@ def funclet_ranges(coverage):
     if not all(isinstance(r, list) and len(r) == 2 and all(type(v) is int and v >= 0 for v in r) and r[1] > 0
                for r in first):
         return None
-    if any(len(first) != c.get('funclet_sections') or sum(r[1] for r in first) != c.get('funclet_bytes_total')
+    if any(type(c.get('funclet_sections')) is not int or type(c.get('funclet_bytes_total')) is not int
+           or len(first) != c['funclet_sections'] or sum(r[1] for r in first) != c['funclet_bytes_total']
            for c in coverage):
+        return None
+    if any(a[0] + a[1] > b[0] for a, b in zip(first, first[1:])):
+        return None
+    if any(overlaps(start, length, rva, rva + size) or overlaps(rva, size, start, start + length)
+           for start, length in first):
         return None
     return [tuple(r) for r in first]
 
@@ -310,16 +363,35 @@ def _insert_sorted(order, rva_of, name):
     order.insert(at, name)
 
 
+def incoming_entry(name, entry):
+    """An incoming entry in its canonical form: `{rva, size}` as given, or a thread-local entry
+    rewritten as kind, tls_offset, size (`size` required, null or positive)."""
+    require(isinstance(entry, dict), f'incoming entry {name} must be an object')
+    if 'kind' not in entry:
+        require(set(entry) <= {'rva', 'size'} and type(entry.get('rva')) is int,
+                f'incoming entry {name} must be {{rva, size}} or {{kind: "thread-local", tls_offset, size}}')
+        return entry
+    size = entry.get('size')
+    require(set(entry) == set(THREAD_LOCAL_KEYS) and entry['kind'] == THREAD_LOCAL
+            and type(entry['tls_offset']) is int and entry['tls_offset'] >= 0
+            and (size is None or (type(size) is int and size > 0)),
+            f'incoming entry {name} must be {{rva, size}} or {{kind: "thread-local", tls_offset, size}}')
+    return {'kind': THREAD_LOCAL, 'tls_offset': entry['tls_offset'], 'size': size}
+
+
 def plan(current, incoming, remove=(), allow_change=False):
     """The merged map and what merging `incoming` into `current` adds, changes, removes and refuses."""
     require(isinstance(incoming, dict) and isinstance(incoming.get('symbols'), dict), 'incoming map needs symbols')
     require(incoming.get('build_id') == current['build_id'], 'incoming map is for another build')
-    cur, inc = current['symbols'], incoming['symbols']
-    for name, entry in inc.items():
-        require(isinstance(entry, dict) and set(entry) <= {'rva', 'size'} and type(entry.get('rva')) is int,
-                f'incoming entry {name} must be {{rva, size}}')
+    cur = current['symbols']
+    inc = {name: incoming_entry(name, entry) for name, entry in incoming['symbols'].items()}
     refusals = []
     added = [n for n in inc if n not in cur]
+    for name in (IMAGE_BASE, TLS_INDEX):
+        if name in added:
+            # The comparator checks these by presence for every function, so the addition can
+            # change any earlier pass (carry_forward_problem stales every record pinned before it).
+            refusals.append(f'adds {name}, which every match record pinned to an earlier map version did not have')
     changed = [n for n in inc if n in cur and inc[n] != cur[n]]
     removed = list(dict.fromkeys(remove))
     for name in removed:
@@ -331,6 +403,9 @@ def plan(current, incoming, remove=(), allow_change=False):
         old = {e['name']: e for e in cur_prov}
         for name in added:
             require(name in inc_prov, f'incoming entry {name} has no _provenance entry')
+            # A thread-local entry has no address, so a provenance entry giving one would mislead.
+            require(not is_thread_local(inc[name]) or 'rva' not in inc_prov[name],
+                    f'_provenance entry for thread-local {name} gives an rva')
         changed += [n for n in inc_prov if n in old and n not in changed and n not in removed and inc_prov[n] != old[n]]
         top_cur = {k: v for k, v in current['_provenance'].items() if k != 'entries'}
         inc_top = incoming.get('_provenance')
@@ -349,17 +424,18 @@ def plan(current, incoming, remove=(), allow_change=False):
     keep = [n for n in cur if n not in removed]
     shadowing = []
     for name in added:
-        rva, size = inc[name]['rva'], inc[name].get('size')
+        space, start, size = span(inc[name])
         for other in keep:
-            o = cur[other] if other not in changed else inc[other]
-            if o['rva'] == rva or overlaps(rva, size, o['rva'], o['rva'] + (o.get('size') or 1)) \
-                    or overlaps(o['rva'], o.get('size'), rva, rva + (size or 1)):
+            o_space, o_start, o_size = span(cur[other] if other not in changed else inc[other])
+            if o_space == space and (o_start == start or overlaps(start, size, o_start, o_start + (o_size or 1))
+                                     or overlaps(o_start, o_size, start, start + (size or 1))):
                 shadowing.append(f'added entry {name} shares an address or range with existing entry {other}')
     folded = [set(g) for g in incoming.get('folds', [])]
     for i, name in enumerate(added):
         for other in added[i + 1:]:
-            if inc[name]['rva'] == inc[other]['rva'] and not any({name, other} <= g for g in folded):
-                shadowing.append(f'added entries {name} and {other} share an RVA without a fold group')
+            if span(inc[name])[:2] == span(inc[other])[:2] and not any({name, other} <= g for g in folded):
+                what = 'an RVA' if span(inc[name])[0] == 'rva' else 'a TLS offset'
+                shadowing.append(f'added entries {name} and {other} share {what} without a fold group')
     refusals += shadowing
 
     new = copy.deepcopy(current)
@@ -370,7 +446,8 @@ def plan(current, incoming, remove=(), allow_change=False):
     order = list(symbols)
     for name in added:
         symbols[name] = copy.deepcopy(inc[name])
-        _insert_sorted(order, lambda n: symbols[n]['rva'], name)
+        # RVA entries first by RVA, then thread-local entries by offset.
+        _insert_sorted(order, lambda n: span(symbols[n])[:2], name)
     new['symbols'] = {n: symbols[n] for n in order}
     folds = [[n for n in g if n not in removed] for g in new.get('folds', [])]
     folds = [g for g in folds if len(g) > 1]

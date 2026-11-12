@@ -62,8 +62,11 @@ Thread-local variables (references by a SECREL relocation) are never bound by po
 only a hint `"<name>": "tls:0x<offset>"` binds one, as a `thread-local` map entry with that
 TLS-template offset (docs/comparator-contract.md, "Thread-local variables"). `_tls_index` needs
 no entry; the comparator takes it from the image's TLS directory. A `tls:` hint that no compared
-SECREL reference uses is listed under ignored hints. Thread-local entries go into private maps
-only: tools/symbol_map.py accepts RVA entries, so bind refuses to publish one to the repository map.
+SECREL reference uses is listed under ignored hints. A thread-local entry is published to the
+repository map like any other, with a provenance entry giving its offset; because the comparator
+checks every thread-local entry against the image's TLS template, adding one makes every match
+record pinned to an earlier map version stale, so bind refuses it while such records exist and
+the addition needs `tools/symbol_map.py add --allow-change` and re-confirmation of those records.
 
 `bind-hints.json` (private, optional), keys are decorated names (`?...`) or qualified names as
 the Drafter wrote them (`BSTimer::QGlobalTimeMultiplier`, `GetArmorKind`), values are RVAs:
@@ -735,20 +738,25 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
     return report
 
 
+def provenance_entry(name, entry, found):
+    """Provenance of one entry bind publishes; a thread-local entry names its offset, never an RVA."""
+    how = found.get(name, ('unknown', None))[0]
+    if entry.get('kind') == 'thread-local':
+        return {'name': name, 'tls_offset': hex(entry['tls_offset']), 'size_from': None, 'community_name': None,
+                'note': f'bound by tools/verifier/bind.py ({how}) from a tls: bind hint; the offset is the one the '
+                        'target code adds to the TLS block, the decorated name is the reconstruction\'s'}
+    return {'name': name, 'rva': hex(entry['rva']), 'size_from': 'task' if entry.get('size') else None,
+            'community_name': found.get(name, (None, None))[1],
+            'note': f'bound by tools/verifier/bind.py ({how}) from the task pack; the decorated name is the '
+                    'reconstruction\'s'}
+
+
 def publish(repo, map_name, smap, before, found):
     """Apply bind's edits to the repository map through tools/symbol_map.py (see the module doc)."""
     after = smap['symbols']
     touched = {n: e for n, e in after.items() if before.get(n) != e}
-    tls = sorted(n for n, e in touched.items() if 'rva' not in e)
-    if tls:
-        raise ValueError(f'thread-local entries ({", ".join(tls)}) are not added to the repository map; '
-                         'give the task a private symbols.json')
     incoming = {'schema': 1, 'build_id': smap.get('build_id'), 'symbols': touched,
-                '_provenance': {'entries': [
-                    {'name': n, 'rva': hex(e['rva']), 'size_from': 'task' if e.get('size') else None,
-                     'community_name': found.get(n, (None, None))[1],
-                     'note': f'bound by tools/verifier/bind.py ({found.get(n, ("unknown", None))[0]}) from the '
-                             'task pack; the decorated name is the reconstruction\'s'} for n, e in touched.items()]}}
+                '_provenance': {'entries': [provenance_entry(n, e, found) for n, e in touched.items()]}}
     removed = [n for n in before if n not in after]
     symbol_maps.apply_change(repo, map_name, incoming, remove=removed, allow_unpinned_change=True)
 
