@@ -323,27 +323,36 @@ Match record, recomputed from the tree:
   per batch, or per day of acceptances if that is sooner, is also re-run on a machine that is not
   a fork of the compile hosts (a separately provisioned machine from the pinned recipe, or the
   macOS host for the comparison), and that re-check is recorded in the batch's handoff and in
-  the summary report.
+  the summary report. An optional third-party host may be added later. The gate does not read the
+  `independence` label yet; it is policy, checked by the sampling safeguard. Host names are
+  self-reported labels: the gate cannot verify which machine produced a run. As a tripwire
+  against one report copied under two labels, runs from different compile hosts must name
+  different candidate object hashes (two clean compiles differ in time stamp and path records,
+  so identical objects mean one compile was relabelled). A recipe that makes compiles
+  bit-identical, such as `/Brepro`, would trip it and needs a gate change first.
 - **Runner hosts.** Records may also come from the hosts named in the private runner config
   (`tools/verifier/runners.py`; the maintainer's own machines, `docs/authorizations.md` Notes).
   Such a record is evidence only if its compile hosts are at least two hosts from that config
   that are different physical machines (distinct `machine` in the config) and run the pinned
-  compiler under different OS loaders (one natively on Windows, one under Wine), each with its
-  own install of the toolchain and its own copy of the image, both checked by hash before
-  compiling. Every compile host compares its own object; the local host also compares every
+  compiler under different OS loaders (one natively on Windows, one under Wine on another OS),
+  each with its own install of the toolchain and its own copy of the image, both hashed during
+  the confirm run before compiling (no cached check). Every compile host compares its own
+  object, and the `local` host, which must be one of the compile hosts, also compares every
   other host's object. The record carries a note starting
   `independence: separate-machine, different-loader` that names each compile host by its host
-  id, machine, OS, CPU architecture, loader and the SHA-256 of the compiler binaries it ran;
-  `tools/verifier/confirm` refuses to write a record unless the config names two machines and
-  the hosts' own reports show two loaders. Such a pair is not a fork of each other, so a record from it
-  also satisfies the per-batch re-check above. Every other condition of this section is
-  unchanged. Host names, machines and loaders are self-reported like all host labels. An optional third-party host may be added later. The gate does not read the
-  `independence` label yet; it is policy, checked by the sampling safeguard. Host names are self-reported
-  labels: the gate cannot verify which machine produced a run. As a tripwire against one report
-  copied under two labels, runs from different compile hosts must name different candidate
-  object hashes (two clean compiles differ in time stamp and path records, so identical objects
-  mean one compile was relabelled). A recipe that makes compiles bit-identical, such as
-  `/Brepro`, would trip it and needs a gate change first.
+  id, machine, OS, CPU architecture, loader and the SHA-256 of the compiler binaries it ran.
+  `tools/verifier/confirm` refuses to write a record unless the config names two machines, the
+  hosts' own reports show two loaders and two operating systems, a host reporting `native`
+  reports Windows, each host reports the loader its config names and a fresh toolchain check,
+  and a `local` host is among the compile hosts. Such a pair is not a fork of each other, so a
+  record from it also satisfies the per-batch re-check above. Every other condition of this
+  section is unchanged. Machines and loaders are self-reported like all host labels; the OS
+  check makes "one natively on Windows" a measured claim only to the extent the host's own
+  Python reports its platform truthfully.
+- **Combining hosts.** All compile hosts of one record are of one kind: either all are Boat
+  machines meeting "Reproduction" above, or all are runner hosts meeting "Runner hosts". A
+  record whose compile hosts mix the two kinds is not evidence under either bullet;
+  `tools/verifier/confirm` never writes one (runner confirm lists runner hosts only).
 
 Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory id), for every
 `matched` entry:

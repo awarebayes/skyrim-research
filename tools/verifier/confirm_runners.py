@@ -8,7 +8,11 @@ So a record has runs from at least two compile hosts and two compare hosts, as t
 requires, and each host is named by its host id, with its OS, loader and compiler hashes in a note.
 
 docs/verification.md ("Runner hosts") admits these records as acceptance evidence
-(RUNNER_RECORDS_ALLOWED); --out still writes them under DIR/<build id>/ for inspection.
+(RUNNER_RECORDS_ALLOWED); --out still writes them under DIR/<build id>/ for inspection. Writing
+into reports/ needs a `local` host among the confirm hosts, because the rule requires the local
+cross-compare of every other host's object. Every confirm run hashes each host's toolchain afresh
+(no per-boot cache), and the hosts' own reports must show the loaders their config names, a
+native compile on Windows and two operating systems (runners.independence_problem).
 Record assembly, the build block and the Mac comparison are tools/verifier/confirm's own
 functions, passed in as `base`.
 """
@@ -39,9 +43,42 @@ def independence_note(hosts, facts):
                      f'run {how}; compiler binaries sha256: {hashes})')
     return ('independence: separate-machine, different-loader. The compile hosts are the maintainer\'s own '
             'machines, each with its own install of the pinned toolchain, reached by tools/verifier/runners.py: '
-            + '; '.join(parts) + '. Each host checked its compiler binaries against pinned.sha256 and its own copy '
-            'of the image against builds/target.json before compiling, and compared its own object; the local host '
+            + '; '.join(parts) + '. Each host hashed its compiler binaries during this confirm run and checked them '
+            'against pinned.sha256, checked its own copy of the image against builds/target.json before compiling, '
+            'and compared its own object; the local host '
             'also compared the other hosts\' objects. Host facts are self-reported by tools/verifier/unit_build.py.')
+
+
+def reproduction(base, task, fn, closure, recipe):
+    """The commands each compile host ran: the msvc-wine wrapper under Wine, cl.exe natively."""
+    import check
+    flags = ' '.join(recipe['flags'] + check.BUILD_ADDED_FLAGS)
+    unset = ', '.join(check.BUILD_CLEARED_ENV)
+    version = recipe['compiler']['version'].split(' ')[0]
+    return (f'From the repository root, on each compile host, with cl {version} x64 unpacked at <msvc> (an MSVC '
+            f'toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; '
+            f'tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and {unset} removed '
+            f'from the environment. Under Wine: <msvc>/bin/x64/cl {flags} /Fo<work>/candidate.obj {task["compiled"]} '
+            f'(the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set '
+            f'INCLUDE to the directories the wrapper uses, in its order, '
+            f'<msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;'
+            f'<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km '
+            f'(tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run '
+            f'<msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe {flags} /Fo<work>/candidate.obj '
+            f'{task["compiled"]}. On both, the verifier required the repository files /showIncludes lists to equal '
+            f'--unit below ; ' + base.compare_steps(task, fn, ' '.join(closure)))
+
+
+def facts_problem(hosts, facts):
+    """Why the hosts' reported facts cannot go into a record, or None: the independence rule, and a
+    toolchain hash measured in this run on every host."""
+    problem = runners.independence_problem(hosts, facts)
+    if problem:
+        return problem
+    for h in hosts:
+        if (facts.get(h['host_id']) or {}).get('toolchain_check') != 'checked':
+            return f'{h["host_id"]} did not report a toolchain check made in this run'
+    return None
 
 
 def runner_notes(base, task, recipe, hosts, facts, tree_state):
@@ -62,7 +99,7 @@ def confirm_unit(base, task, files, closure, hosts, out, log):
     stage = task['dir'] / '.confirm-stage'
     local = [h for h in hosts if h['backend'] == 'local']
     lines, rows, failed = [], {}, True
-    workers = {h['host_id']: runners.AgentHost(h, task, log=log) for h in hosts}
+    workers = {h['host_id']: runners.AgentHost(h, task, log=log, fresh_prep=True) for h in hosts}
     try:
         outcome = {}
 
@@ -85,7 +122,7 @@ def confirm_unit(base, task, files, closure, hosts, out, log):
                 raise PipelineError(f'{label}: the unit did not build or was refused (exit {code}); '
                                     f'run tools/verifier/attempt first, details in {value}')
         facts = {label: w.facts for label, w in workers.items()}
-        problem = runners.independence_problem(hosts, facts)
+        problem = facts_problem(hosts, facts)
         if problem:
             raise PipelineError(f'compile hosts are not independent as reported: {problem}')
         runs = {fn['rva']: [] for fn in task['functions']}
@@ -113,7 +150,8 @@ def confirm_unit(base, task, files, closure, hosts, out, log):
                                              indent=2) + '\n')
             more, failed = confirm_session.write_records(
                 base, task, closure, recipe, runs, build_path, out,
-                notes=runner_notes(base, task, recipe, hosts, facts, tree_state))
+                notes=runner_notes(base, task, recipe, hosts, facts, tree_state),
+                reproduction=lambda *a: reproduction(base, *a))
             lines += more
     except (PipelineError, runners.RunnerError) as exc:
         lines.append(f'  ERROR {exc}')
@@ -133,7 +171,11 @@ def run(base, task_dirs, replace=False, out=None, log=print, hosts=None):
         raise PipelineError('records from runner hosts are not acceptance evidence until docs/verification.md admits '
                             'them; pass --out DIR to write inspection records outside reports/')
     if not any(h['backend'] == 'local' for h in hosts):
-        log('confirm: no local host among the confirm hosts; each object is compared on its own host only')
+        if out is None:
+            raise PipelineError('records in reports/ need a local host among the confirm hosts: docs/verification.md '
+                                '("Runner hosts") requires it to compare every other host\'s object')
+        log('confirm: no local host among the confirm hosts; each object is compared on its own host only '
+            '(inspection records under --out only)')
     prepared = [confirm_session.prepare(base, d, replace, out) for d in task_dirs]
     ids = [t['task_id'] for t, _, _ in prepared]
     if len(set(ids)) != len(ids):

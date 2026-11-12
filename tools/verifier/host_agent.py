@@ -32,6 +32,13 @@ import time
 
 RUN_NAME = re.compile(r'[a-z0-9][a-z0-9.-]{0,80}-[0-9a-f]{12}')
 PRUNE_AFTER = 86400
+# The agent refused its own inputs (run name, label, archive): a host or transport problem, never
+# a result about the candidate, so tools/verifier/attempt does not count it against the budget.
+EXIT_AGENT = 45
+
+
+class AgentRefusal(Exception):
+    pass
 
 
 def sha256_file(path):
@@ -51,7 +58,7 @@ def run_paths(run):
     """(work root, name) of a run directory, refusing names the runner would not have made."""
     run = Path(run).resolve()
     if not RUN_NAME.fullmatch(run.name):
-        raise SystemExit('agent-error bad run directory name')
+        raise AgentRefusal('bad run directory name')
     return run.parent, run.name
 
 
@@ -97,7 +104,7 @@ def unpack(bundle, dest):
             for member in tar.getmembers():
                 p = Path(member.name)
                 if p.is_absolute() or '..' in p.parts or not (member.isfile() or member.isdir()):
-                    raise SystemExit('agent-error unsafe archive member')
+                    raise AgentRefusal('unsafe archive member')
             tar.extractall(dest)
     Path(bundle).unlink()
 
@@ -105,8 +112,7 @@ def unpack(bundle, dest):
 def cmd_run(a):
     root, name = run_paths(a.run)
     if not re.fullmatch(r'[a-z0-9][a-z0-9-]{1,39}', a.label):
-        print('agent-error bad label')
-        return 2
+        raise AgentRefusal('bad label')
     prune(root, name)
     run = root / name
     unpack(Path(a.bundle), run)
@@ -188,7 +194,11 @@ def main():
     s = sub.add_parser('clean')
     s.add_argument('--run', required=True)
     a = p.parse_args()
-    return {'run': cmd_run, 'probe': cmd_probe, 'clean': cmd_clean}[a.command](a)
+    try:
+        return {'run': cmd_run, 'probe': cmd_probe, 'clean': cmd_clean}[a.command](a)
+    except (AgentRefusal, tarfile.TarError) as exc:
+        print(f'agent-error {exc if isinstance(exc, AgentRefusal) else "unsafe or unreadable archive"}')
+        return EXIT_AGENT
 
 
 if __name__ == '__main__':

@@ -17,8 +17,9 @@ to compare and the SHA-256 of every file the copy must hold. Steps, each failing
 
 1. The copy holds exactly the listed files with the listed hashes (other files are removed), so
    a half-finished upload cannot be compiled.
-2. Once per boot: the compiler binaries the wrapper runs match tools/verifier/pinned.sha256, and
-   the image matches builds/target.json. Exit 42 if the image is missing or wrong (the caller
+2. Once per boot (every run when the spec sets `fresh_prep`, as confirm on runner hosts does):
+   the compiler binaries the wrapper runs match tools/verifier/pinned.sha256, and the image
+   matches builds/target.json. Exit 42 if the image is missing or wrong (the caller
    uploads it and retries), 44 if the toolchain differs.
 3. The unit is the include closure of the compiled file (tools/source_digest.py) and the recipe
    names no include path but the closure's roots.
@@ -269,8 +270,9 @@ def boot_id():
     return None
 
 
-def prepare_host(repo, msvc, image, wrapper, expected_image, marker_dir=None):
-    """Toolchain and image checks, once per boot (a resume or a fork is a new boot).
+def prepare_host(repo, msvc, image, wrapper, expected_image, marker_dir=None, use_cache=True):
+    """Toolchain and image checks, once per boot (a resume or a fork is a new boot), or on every
+    call when `use_cache` is False.
 
     Returns (state, {binary name: sha256}): the hashes of the compiler binaries this host runs,
     which equal the pins whenever the check passed.
@@ -280,7 +282,7 @@ def prepare_host(repo, msvc, image, wrapper, expected_image, marker_dir=None):
     boot = boot_id()
     key = hashlib.sha256(f'{boot}\n{pins}\n{wrapper["BINDIR"]}\n{image}\n{expected_image}'.encode()).hexdigest()
     marker = Path(marker_dir) / f'sr-verifier-prep-{key[:16]}'
-    if boot is not None and marker.is_file():
+    if use_cache and boot is not None and marker.is_file():
         try:
             return 'cached', json.loads(marker.read_text())
         except ValueError:
@@ -309,12 +311,16 @@ def prepare_host(repo, msvc, image, wrapper, expected_image, marker_dir=None):
     return 'checked', hashes
 
 
-def host_facts(loader, compiler_hashes):
-    """What a record may say about the host: OS, CPU architecture, loader and compiler hashes.
-    Never a path, user name or address."""
+def host_facts(loader, compiler_hashes, toolchain_check=None):
+    """What a record may say about the host: OS, CPU architecture, loader, compiler hashes and
+    whether those hashes were measured in this run (`checked`) or read from the per-boot marker
+    (`cached`). Never a path, user name or address."""
     system = {'darwin': 'macos', 'win32': 'windows'}.get(sys.platform, sys.platform)
-    return {'os': system, 'machine': platform.machine().lower(), 'loader': loader,
-            'compiler_sha256': dict(sorted(compiler_hashes.items()))}
+    facts = {'os': system, 'machine': platform.machine().lower(), 'loader': loader,
+             'compiler_sha256': dict(sorted(compiler_hashes.items()))}
+    if toolchain_check is not None:
+        facts['toolchain_check'] = toolchain_check
+    return facts
 
 
 def make_task(spec, fn, digest, recipe_sha):
@@ -354,8 +360,9 @@ def run(args):
     if target.get('build_id') != spec['build_id']:
         raise UnitError(4, 'invalid-spec', 'spec build id differs from builds/target.json')
     spec['image_sha256'] = target['image_sha256']
-    prep, compiler_hashes = prepare_host(repo, msvc, args.image, wrapper, target['image_sha256'])
-    host = host_facts(loader, compiler_hashes)
+    prep, compiler_hashes = prepare_host(repo, msvc, args.image, wrapper, target['image_sha256'],
+                                         use_cache=not spec.get('fresh_prep'))
+    host = host_facts(loader, compiler_hashes, prep)
     print(f'host {spec["host"]} prep {prep} {host["os"]} {loader}')
 
     compiled = spec['compiled']

@@ -98,8 +98,12 @@ def reproduction(task, fn, closure, recipe):
             f'binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): '
             f'env {unset} <msvc>/bin/x64/cl {flags} /Fo<work>/candidate.obj {task["compiled"]} '
             f'(the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the '
-            f'repository files /showIncludes lists to equal --unit below) ; '
-            f'python3 -I tools/verifier/tu_task.py --function-id {task["build_id"]}-0x{fn["rva"]:x} '
+            f'repository files /showIncludes lists to equal --unit below) ; ' + compare_steps(task, fn, unit))
+
+
+def compare_steps(task, fn, unit):
+    """The steps after the compile: task file from the object, then the comparator."""
+    return (f'python3 -I tools/verifier/tu_task.py --function-id {task["build_id"]}-0x{fn["rva"]:x} '
             f"--symbol '{fn['symbol']}' --compiled {task['compiled']} --unit {unit} --recipe {task['recipe']} "
             f'--symbols {task["symbols_repo"]} --object <work>/candidate.obj --out <work> ; '
             f'python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object '

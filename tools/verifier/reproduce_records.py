@@ -12,7 +12,8 @@ candidate code-section hash equals the one every run of the record reports. Anyt
 
 This proves a host reproduces the committed evidence; it writes no record and accepts nothing.
 Output is counts, RVAs, reason codes and hashes; private run files go to
-.local/verifier/reproduce/<host id>/ (or --out). Exit 0 all equal, 1 some different, 2 error.
+.local/verifier/reproduce/<host id>/ (or --out); each run's summary is kept as
+summaries/<UTC time>-<random>.json there, and summary.json is a copy of the latest. Exit 0 all equal, 1 some different, 2 error.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -22,6 +23,7 @@ from pathlib import Path
 import re
 import sys
 import time
+import uuid
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -125,6 +127,23 @@ def reproduce_unit(host, task, by_rva, out_root, log):
             'facts': worker.facts, 'functions': rows}
 
 
+def save_summary(out_root, summary, now=None):
+    """Write the summary to <out_root>/summaries/<UTC time>-<random>.json, never replacing an earlier
+    one, and copy it to <out_root>/summary.json as the latest; returns the per-run path.
+
+    A later run (even one of a single unit) must not overwrite the evidence of an earlier full one.
+    """
+    stamp = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime(now))
+    folder = Path(out_root) / 'summaries'
+    folder.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(summary, indent=1) + '\n'
+    path = folder / f'{stamp}-{uuid.uuid4().hex[:8]}.json'
+    with open(path, 'x') as f:
+        f.write(text)
+    (Path(out_root) / 'summary.json').write_text(text)
+    return path
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--host', required=True, help='host name in .local/verifier/runners.json')
@@ -172,13 +191,13 @@ def main():
                'units': len(results), 'jobs': jobs, 'wall_seconds': round(time.monotonic() - started, 1),
                'unit_seconds_median': seconds[len(seconds) // 2] if seconds else None,
                'host_facts': [json.loads(f) for f in sorted(facts)], 'results': results}
-    Path(out_root).mkdir(parents=True, exist_ok=True)
-    (Path(out_root) / 'summary.json').write_text(json.dumps(summary, indent=1) + '\n')
+    saved = save_summary(out_root, summary)
     print(f'records: {eq}/{len(rows)} equal; matched (data/progress.json): {m_eq}/{len(m_rows)} equal, '
           f'{len(m_rows) - m_eq} different; {len(results)} units, wall {summary["wall_seconds"]} s, '
           f'median unit {summary["unit_seconds_median"]} s')
     for f in summary['host_facts']:
         print(f'host facts: {json.dumps(f, sort_keys=True)}')
+    print(f'summary: {saved} (private; summary.json is a copy of the latest run)')
     return 0 if eq == len(rows) else 1
 
 
