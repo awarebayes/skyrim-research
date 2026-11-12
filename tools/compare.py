@@ -18,7 +18,7 @@ from pecoff import (EH_HANDLERS, EH_LAYOUTS, FUNCINFO_MAGIC, GS_HAS_ALIGNMENT, R
                     PeImage, Reject, eh_size, rel_name, unwind_header)
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPARATOR_VERSION = '0.5.0'
+COMPARATOR_VERSION = '0.6.0'
 CONTRACT_VERSION = 2
 REPORT_SCHEMA = 1
 SHA256 = re.compile(r'[0-9a-f]{64}')
@@ -259,6 +259,10 @@ class Function:
         self.funclet_order = []
         self.compared_unwind = set()
         self.compared_funcinfo = set()
+        # Target RVAs of FuncInfo-based handlers this function's compared unwind info names, and
+        # the target .pdata spans inside each funclet; both are funclet-extent evidence.
+        self.funcinfo_handler_rvas = set()
+        self.funclet_pdata = {}
         self._pdata_starts = None
         self.claimed = {}
         self.consumed = {}
@@ -525,6 +529,9 @@ class Function:
              f'{what} uses handler {handler.name!r}, which contract v2 does not decode')
         self.claim(index, at, 4, f'{what} handler')
         self.ref_field(index, at, t_at, f'{what} handler', 'external', 'eh-handler-mismatch')
+        if EH_HANDLERS[handler.name][0] == 'funcinfo':
+            # The target's own field, just shown to hold the named handler's address.
+            self.funcinfo_handler_rvas.add(self.target_u32(t_at, f'{what} handler'))
         handlers = self.eh['handlers']
         handlers[handler.name] = handlers.get(handler.name, 0) + 1
         at, t_at = at + 4, t_at + 4
@@ -576,6 +583,8 @@ class Function:
                      'a target .pdata entry extends beyond the function range')
                 targets.append((begin - start, finish - start, unwind))
         targets.sort()
+        if sec is not self.func_sec:
+            self.funclet_pdata[sec.index] = [(start + b, start + f) for b, f, _ in targets]
         candidates = self.pdata_entries(sec)
         for begin, finish, *_ in candidates:
             need(0 <= begin < finish <= len(sec.data), 'malformed-pdata', 'candidate .pdata entry is outside the function')
@@ -638,7 +647,7 @@ class Function:
 
     def compare_funclets(self):
         """Compare every code section the exception data bound, as the function itself is."""
-        done = set()
+        done, compared = set(), []
         while self.code_queue:
             index = self.code_queue.pop(0)
             if index in done:
@@ -653,30 +662,65 @@ class Function:
             self.coverage['funclet_bytes_total'] += len(sec.data)
             self.compare_unwind(sec)
             self.compare_code(sec, target, 'funclet_bytes_exact', 'funclet_bytes_by_reference')
-            self.check_funclet_end(sec, start + len(sec.data))
+            compared.append(sec)
             # Target addresses only: a later map addition is shown unrelated to this pass by these
             # ranges (tools/symbol_map.py carry_forward_problem), which the report would not carry otherwise.
             self.coverage['funclet_ranges'].append([start, len(sec.data)])
+        # Extents are checked once every funclet is bound, so a funclet bound late still counts as
+        # a compared start for one checked before it.
+        for sec in compared:
+            start = self.bound[sec.index]
+            self.check_funclet_end(sec, start, start + len(sec.data))
 
-    def check_funclet_end(self, sec, end):
-        """A funclet's length comes from the candidate section, so the target must show a boundary there.
+    def check_funclet_end(self, sec, start, end):
+        """A funclet's length comes from the candidate section, so the target must show it ends there.
 
-        Only target-side evidence counts: a target .pdata entry or another compared code range starts
-        at `end`, or the bytes from `end` to the next 16-byte boundary (at least one byte) are int3
-        padding. Candidate-side facts do not: an EH reference of the candidate can point one past its
-        own truncated section, and a symbol-map entry placed at the cut names nothing the target
-        shows. Anything else could be the rest of a funclet the candidate truncated, so it is rejected.
+        Only target-side evidence counts, in this order:
+          1. `pdata-end`: a target .pdata entry inside the funclet ends at `end`. The entry was
+             matched to a candidate entry with the same offsets, and a procedure's unwind entries
+             cover all of its code (a part placed elsewhere is chained, and a chain or handler
+             entry outside the compared code fails check_target_closure).
+          2. `pdata-start`: a target .pdata entry starts at `end`.
+          3. `compared-code`: the function or another compared funclet starts at `end`.
+          4. `funclet-entry`: a FuncInfo of the image names `end` as an unwind action or catch
+             handler (PeImage.funclet_entries), so a funclet starts there.
+          5. `int3-padding`: the bytes from `end` to the next 16-byte boundary (at least one) are int3.
+        Rules 1 to 4 rest on one premise: code that the image's own exception metadata declares as
+        a procedure or funclet start is not the interior of another procedure. To keep the
+        candidate from claiming such a start as its own interior, no funclet entry named only by
+        FuncInfos not compared here may lie strictly inside the funclet (`eh-funclet-entry-inside`).
+        Candidate-side facts are never evidence: an EH reference of the candidate can point one
+        past its own truncated section, and a symbol-map entry placed at the cut names nothing the
+        target shows. Anything else could be the rest of a funclet the candidate truncated.
         """
-        known = self.pdata_starts() | {a for a, _ in self.code_ranges}
-        if end in known:
-            return
-        pad = (-end) % 16 or 1
-        try:
-            following = self.image.read(end, pad, 'bytes after a funclet')[1]
-        except Reject:
-            following = b''
-        need(following and all(b == 0xCC for b in following), 'eh-funclet-extent',
-             f'the target continues after funclet section #{sec.index} without padding or a known start')
+        declared = self.declared_funclet_entries()
+        inside = [rva for rva in declared if start < rva < end and not declared[rva] <= self.compared_funcinfo]
+        need(not inside, 'eh-funclet-entry-inside',
+             f'{len(inside)} funclet entr(y/ies) of another function lie inside funclet section #{sec.index}')
+        if any(finish == end for _begin, finish in self.funclet_pdata.get(sec.index, ())):
+            kind = 'pdata-end'
+        elif end in self.pdata_starts():
+            kind = 'pdata-start'
+        elif end in {a for a, _ in self.code_ranges}:
+            kind = 'compared-code'
+        elif end in declared:
+            kind = 'funclet-entry'
+        else:
+            pad = (-end) % 16 or 1
+            try:
+                following = self.image.read(end, pad, 'bytes after a funclet')[1]
+            except Reject:
+                following = b''
+            need(following and all(b == 0xCC for b in following), 'eh-funclet-extent',
+                 f'the target continues after funclet section #{sec.index} with no .pdata entry ending or '
+                 'starting there, no compared code or funclet entry starting there and no int3 padding')
+            kind = 'int3-padding'
+        evidence = self.coverage['funclet_end_evidence']
+        evidence[kind] = evidence.get(kind, 0) + 1
+
+    def declared_funclet_entries(self):
+        """Funclet entries the image's FuncInfos name, through the handlers this function uses."""
+        return self.image.funclet_entries(self.funcinfo_handler_rvas)
 
     def pdata_starts(self):
         if self._pdata_starts is None:
@@ -791,7 +835,7 @@ def compare(task, manifest, recipe_bytes, build_record, object_bytes, image_byte
                 'relocations_by_type': {}, 'self_rva_fields': 0, 'unwind_entries': 0, 'unwind_chained_entries': 0,
                 'unwind_bytes_exact': 0, 'unwind': 'not-checked', 'aliases_declared': [],
                 'funclet_sections': 0, 'funclet_bytes_total': 0, 'funclet_bytes_exact': 0,
-                'funclet_bytes_by_reference': 0, 'funclet_ranges': [],
+                'funclet_bytes_by_reference': 0, 'funclet_ranges': [], 'funclet_end_evidence': {},
                 'eh': {'handlers': {}, 'structures': {}, 'ref_fields': 0, 'int_fields': 0, 'bytes': 0,
                        'type_names_compared': 0}}
     report = {'report_schema': REPORT_SCHEMA, 'contract_version': CONTRACT_VERSION,

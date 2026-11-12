@@ -187,6 +187,20 @@ body), and bind the thunk's decorated name (`??_E...W...`, from the compiled obj
 binding the deleting destructor it jumps to as well helps. Closed BGSMovableStatic 0x264444 in a
 one-host attempt (not yet confirmed on two hosts).
 
+**26. `eh-funclet-extent`, `eh-funclet-entry-inside` and `FuncInfo.n_ip_map`.** (medium)
+From comparator 0.6.0 a funclet packed against another function's funclet passes when its bytes
+match: the image's own `.pdata` or the other FuncInfo proves where it ends. So
+`eh-funclet-extent` now means the candidate's funclet is shorter than the target's, and
+`eh-funclet-entry-inside` that it is longer; `unwind-entry-crosses-boundary` on a funclet means
+the target's funclet has a frame and a call (its own `.pdata`) where the candidate's is a leaf,
+for example a `new` whose constructor can throw and whose cleanup calls a sized
+`operator delete`. All three are fixed from source by changing what the cleanup does. An
+`n_ip_map` count lower than the target's, with identical instructions, means the target treats a
+call as able to throw where the candidate does not. Likely cause (untested): the callee is
+defined in the same unit, so the compiler sees it cannot throw and drops its IP-to-state entry.
+Seen in TESObjectREFR::PopulateGraphNodesToTarget 0x2fd4f0, whose missing entry is at its call to
+Get3D2, which the unit also defines (not yet closed).
+
 ## Unsolved patterns
 
 **12. A pure callee-saved register swap with the same instructions.** (low)

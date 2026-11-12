@@ -23,8 +23,11 @@ import synthetic_pecoff as fx  # noqa: E402
 
 HISTORY = sm.history_name(MAP)
 FAR = 0x5000  # outside every fixture range
-# map_audit fingerprint of tools/compare.py as audited (MapReadingGuardTests).
-MAP_AUDIT_SHA256 = '957f955fd43f1b5a7f35d3c8e9d509a170a8f77f258c45cd25182d0d827e8645'
+# map_audit fingerprint of tools/compare.py as audited (MapReadingGuardTests). Last re-audit:
+# Function.__init__ gained funcinfo_handler_rvas and funclet_pdata. Both hold values read from
+# the target image (a handler field already shown equal to the mapped handler, .pdata spans), never
+# map data, so carry_forward_problem needs no new rule; the digest changed for that alone.
+MAP_AUDIT_SHA256 = 'f8c712f024876aef65939d2fb0fd8c197327071ae50249f656d52d95b3906247'
 
 # Names under which compare.py holds symbol-map data: the parsed map and its entries, folds and
 # thread-local entries, as locals or parameters, and as attributes of a Function.

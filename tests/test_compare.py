@@ -66,7 +66,7 @@ class ComparatorTests(unittest.TestCase):
         self.assertEqual(report['target']['image_sha256'], args['task']['target_image_sha256'])
         self.assertEqual(report['recipe']['flags'], ['/O2', '/Gy'])
         self.assertEqual(len(report['recipe']['compiler_binary_sha256']), 64)
-        self.assertEqual(report['comparator']['version'], '0.5.0')
+        self.assertEqual(report['comparator']['version'], '0.6.0')
         self.assertEqual(report['contract_version'], 2)
         self.assertEqual(report['function'], {'build_id': 'synthetic-fixture', 'rva': 0x1010,
                                               'size': len(fx.CODE), 'symbol': fx.FUNCTION})
@@ -632,6 +632,217 @@ class ExceptionDataTests(unittest.TestCase):
             text = json.dumps(report).lower()
             self.assertEqual([w for w in windows if w in text], [], report['reason'])
             self.assertNotIn('SyntheticError', json.dumps(report))
+
+
+# -- packed funclets (comparator 0.6.0) -------------------------------------------------------
+#
+# Each case returns comparator inputs and the reason the comparator must give. The cases are a
+# table so the mutation test below can run all of them against altered comparator source.
+
+LEAF, NEIGHBOR, FRAME = fx.LEAF_FUNCLET, fx.NEIGHBOR_FUNCLET, fx.FRAME_FUNCLET
+FRAME_PDATA = (0, len(FRAME), fx.FRAME_FUNCLET_UNWIND)
+BAD_MAGIC = 0x19930521
+
+
+def packed_case(candidate=None, image_unit=None, image=None, **image_args):
+    candidate = candidate or fx.packed_unit(neighbor=False)
+    if image is None:
+        image = fx.packed_image(image_unit or fx.packed_unit(), **image_args)
+    return fx.packed_inputs(candidate, image)
+
+
+def swallowing_candidate():
+    """A candidate funclet that also holds the neighbour's funclet, byte for byte."""
+    unit = fx.packed_unit(neighbor=False, funclet_code=LEAF + NEIGHBOR)
+    unit.reloc(unit.packed_funclet, 8, fx.CALLEE, fx.REL32)
+    return unit
+
+
+def merged_pdata_image():
+    """The frame funclet covered by two target .pdata entries instead of one."""
+    unit = fx.packed_unit(funclet_code=FRAME, funclet_pdata=FRAME_PDATA, neighbor_magic=BAD_MAGIC)
+    at = fx.PACKED_FUNCLET_AT
+    unwind = fx.section_rva(unit, f'$unwind$?dtor$0@?0??{fx.PACKED_FUNCTION}@@4HA')
+    extra = ((at, at + 9, unwind), (at + 9, at + len(FRAME), unwind))
+    return fx.packed_image(unit, drop_pdata=(at,), extra_pdata=extra)
+
+
+PACKED_CASES = {
+    # Positive: the neighbour's FuncInfo names the address right after the funclet.
+    'leaf funclet ends at a neighbour funclet entry': (lambda: packed_case(), 'all-checks-passed'),
+    # Positive: the funclet's own .pdata entry ends where the candidate section ends; nothing
+    # after it is declared (the neighbour's FuncInfo is not readable as one).
+    'frame funclet ends at its own pdata end': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME, funclet_pdata=FRAME_PDATA),
+                            fx.packed_unit(funclet_code=FRAME, funclet_pdata=FRAME_PDATA, neighbor_magic=BAD_MAGIC)),
+        'all-checks-passed'),
+    # The same bytes after the funclet, but no metadata declares them: nothing proves the end.
+    'neighbour code without metadata': (
+        lambda: packed_case(image_unit=fx.packed_unit(neighbor=False),
+                            patches={fx.PACKED_FUNCLET_AT + len(LEAF): NEIGHBOR}),
+        'eh-funclet-extent'),
+    'candidate one byte shorter': (
+        lambda: packed_case(image_unit=fx.packed_unit(funclet_code=LEAF + b'\x90')), 'eh-funclet-extent'),
+    # One byte longer, equal to the neighbour's first byte, so only the extent rules can catch it.
+    'candidate one byte longer': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=LEAF + NEIGHBOR[:1])),
+        'eh-funclet-entry-inside'),
+    # The candidate claims the neighbour's whole funclet; int3 padding follows it in the image.
+    'candidate swallows the neighbour funclet': (lambda: packed_case(swallowing_candidate()),
+                                                 'eh-funclet-entry-inside'),
+    'byte differs inside the funclet': (
+        lambda: packed_case(patches={fx.PACKED_FUNCLET_AT + 3: b'\x31'}), 'code-byte-mismatch'),
+    # The neighbour's unwind map names an address 4 bytes into its funclet, not the boundary.
+    'neighbour action elsewhere': (
+        lambda: packed_case(image_unit=fx.packed_unit(neighbor_action_addend=4)), 'eh-funclet-extent'),
+    # Only an IP-to-state entry of the neighbour points at the boundary; that is no funclet entry.
+    'neighbour ip-to-state entry only': (
+        lambda: packed_case(image_unit=fx.packed_unit(neighbor_action_addend=4, neighbor_ip_into_funclet=0)),
+        'eh-funclet-extent'),
+    # The neighbour's handler is not one this function's compared unwind info names.
+    'neighbour under another handler': (
+        lambda: packed_case(image_unit=fx.packed_unit(neighbor_handler='__GSHandlerCheck_EH')),
+        'eh-funclet-extent'),
+    'neighbour funcinfo magic wrong': (
+        lambda: packed_case(image_unit=fx.packed_unit(neighbor_magic=BAD_MAGIC)), 'eh-funclet-extent'),
+    # The compared parent's own unwind map sends the action 4 bytes further in the target.
+    'own unwind action elsewhere': (
+        lambda: packed_case(image_unit=fx.packed_unit(action_addend=4)), 'code-byte-mismatch'),
+    'frame funclet: candidate one byte shorter': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME[:-1],
+                                           funclet_pdata=(0, len(FRAME) - 1, fx.FRAME_FUNCLET_UNWIND)),
+                            fx.packed_unit(funclet_code=FRAME, funclet_pdata=FRAME_PDATA)),
+        'unwind-entry-crosses-boundary'),
+    'frame funclet: candidate one byte longer': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME + NEIGHBOR[:1],
+                                           funclet_pdata=FRAME_PDATA),
+                            fx.packed_unit(funclet_code=FRAME, funclet_pdata=FRAME_PDATA)),
+        'eh-funclet-entry-inside'),
+    'frame funclet: candidate lacks the pdata entry': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME),
+                            fx.packed_unit(funclet_code=FRAME, funclet_pdata=FRAME_PDATA)),
+        'unwind-coverage-missing'),
+    'frame funclet: target splits the pdata entry': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME, funclet_pdata=FRAME_PDATA),
+                            image=merged_pdata_image()),
+        'unwind-coverage-missing'),
+    # Both sides' .pdata entry stops one byte before the section end; that byte is unproven.
+    'frame funclet: pdata ends short of the section': (
+        lambda: packed_case(fx.packed_unit(neighbor=False, funclet_code=FRAME,
+                                           funclet_pdata=(0, len(FRAME) - 1, fx.FRAME_FUNCLET_UNWIND)),
+                            fx.packed_unit(funclet_code=FRAME, funclet_pdata=(0, len(FRAME) - 1,
+                                                                              fx.FRAME_FUNCLET_UNWIND),
+                                           neighbor_magic=BAD_MAGIC)),
+        'eh-funclet-extent'),
+}
+
+
+class PackedFuncletTests(unittest.TestCase):
+    """Funclet extent from image metadata: own .pdata end, or a funclet entry of another FuncInfo."""
+
+    def test_cases(self):
+        for label, (make, reason) in PACKED_CASES.items():
+            with self.subTest(label):
+                report = compare(**make())
+                self.assertEqual(report['reason'], reason, report['detail'])
+                self.assertEqual(report['result'], 'pass' if reason == 'all-checks-passed' else 'fail')
+
+    def test_leaf_pass_covers_the_whole_funclet_and_names_its_evidence(self):
+        report = compare(**PACKED_CASES['leaf funclet ends at a neighbour funclet entry'][0]())
+        cov = report['coverage']
+        self.assertEqual(cov['funclet_ranges'], [[fx.PACKED_FUNCLET_AT, len(LEAF)]])
+        self.assertEqual(cov['funclet_bytes_exact'] + cov['funclet_bytes_by_reference'], len(LEAF))
+        self.assertEqual(cov['funclet_end_evidence'], {'funclet-entry': 1})
+
+    def test_frame_pass_names_pdata_end(self):
+        report = compare(**PACKED_CASES['frame funclet ends at its own pdata end'][0]())
+        self.assertEqual(report['coverage']['funclet_end_evidence'], {'pdata-end': 1})
+        self.assertEqual(report['coverage']['unwind_entries'], 2)
+
+    def test_packed_image_really_packs(self):
+        # The fixture must place the neighbour's funclet at the candidate's end with no int3 between.
+        image = fx.packed_image(fx.packed_unit())
+        start = fx.PACKED_FUNCLET_AT + len(LEAF)
+        from pecoff import PeImage
+        pe = PeImage(image)
+        self.assertEqual(pe.read(start, 7, 'x')[1], NEIGHBOR[:7])
+        self.assertNotIn(start, {b for b, _e, _u in pe.runtime_functions()})
+        self.assertIn(start, pe.funclet_entries({fx.HANDLER_THUNKS['__CxxFrameHandler3']}))
+
+    def test_existing_padding_evidence_is_named(self):
+        report = compare(**fx.catch_inputs())
+        self.assertEqual(report['result'], 'pass', report['detail'])
+        self.assertEqual(report['coverage']['funclet_end_evidence'], {'int3-padding': 1})
+
+
+class PackedFuncletMutationTests(unittest.TestCase):
+    """Each weakening of the extent rules lets at least one PACKED_CASES case through wrongly."""
+
+    TOOLS = Path(__file__).resolve().parents[1] / 'tools'
+    MUTATIONS = {
+        'entry-inside check removed': ('compare.py', "need(not inside, 'eh-funclet-entry-inside',",
+                                       "need(True, 'eh-funclet-entry-inside',"),
+        'pdata end loosened': ('compare.py', 'if any(finish == end for', 'if any(finish <= end for'),
+        'pdata end taken from any entry': ('compare.py', 'self.funclet_pdata.get(sec.index, ())',
+                                           '[e for v in self.funclet_pdata.values() for e in v] + [(0, end)]'),
+        'entry rule accepts a near entry': ('compare.py', 'elif end in declared:',
+                                            'elif any(abs(end - r) <= 4 for r in declared):'),
+        'handler filter dropped': ('pecoff.py', 'if handler not in key or funcinfo in seen:',
+                                   'if funcinfo in seen:'),
+        'magic check dropped': ('pecoff.py', 'if magic != FUNCINFO_MAGIC:', 'if False:'),
+        'ip-to-state entries counted': (
+            'pecoff.py', '        # A null action (a state without cleanup) names no code.',
+            "        n_ip, ip_map = fields[5:7]\n"
+            "        if n_ip:\n"
+            "            table = self.read(ip_map, 8 * n_ip, 'ip map')[1]\n"
+            "            found |= {struct.unpack_from('<I', table, 8 * i)[0] for i in range(n_ip)}"),
+    }
+
+    def load_mutant(self, filename, old, new):
+        import importlib.util
+        source = (self.TOOLS / filename).read_text()
+        self.assertEqual(source.count(old), 1, old)
+        saved = {name: sys.modules.get(name) for name in ('pecoff', 'compare_mutant')}
+        # The mutant hashes its own source into each report, so its files must outlive the load.
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        try:
+            for name in ('compare.py', 'pecoff.py'):
+                text = (self.TOOLS / name).read_text()
+                (Path(tmp.name) / name).write_text(text.replace(old, new) if name == filename else text)
+            spec = importlib.util.spec_from_file_location('pecoff', Path(tmp.name) / 'pecoff.py')
+            pecoff_mutant = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(pecoff_mutant)
+            sys.modules['pecoff'] = pecoff_mutant
+            spec = importlib.util.spec_from_file_location('compare_mutant', Path(tmp.name) / 'compare.py')
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            return module.compare
+        finally:
+            for name, mod in saved.items():
+                if mod is None:
+                    sys.modules.pop(name, None)
+                else:
+                    sys.modules[name] = mod
+
+    def wrong_cases(self, mutant):
+        wrong = []
+        for label, (make, reason) in PACKED_CASES.items():
+            try:
+                got = mutant(**make())['reason']
+            except Exception as exc:     # a mutant that crashes is caught as well
+                got = type(exc).__name__
+            if got != reason:
+                wrong.append(label)
+        return wrong
+
+    def test_unmutated_source_gets_every_case_right(self):
+        self.assertEqual(self.wrong_cases(self.load_mutant('compare.py', 'def u32(', 'def u32(')), [])
+
+    def test_every_mutation_is_caught(self):
+        for label, (filename, old, new) in self.MUTATIONS.items():
+            with self.subTest(label):
+                self.assertNotEqual(self.wrong_cases(self.load_mutant(filename, old, new)), [], label)
 
 
 def tls_entry(offset=fx.TLS_OFFSET, size=4):

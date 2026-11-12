@@ -458,6 +458,138 @@ def section_rva(unit, symbol):
     return unit.default_placement()[section] + value
 
 
+# --- Packed funclets: two parents whose unwind funclets the linker placed back to back ---------
+#
+# The candidate holds one parent; the image holds it and a neighbour whose funclet starts right
+# where the candidate's funclet ends, with no int3 between them and no .pdata start there. The
+# neighbour is never compared; only its FuncInfo says that code starts at that address.
+
+PACKED_FUNCTION = 'SyntheticPacked'
+NEIGHBOR_FUNCTION = 'SyntheticNeighborOwner'
+PACKED_CODE = bytes.fromhex(
+    '4883ec28'          # +0x00 sub  rsp, 0x28
+    'e800000000'        # +0x04 call SyntheticAddOne           (REL32 at +0x05)
+    '4883c428'          # +0x09 add  rsp, 0x28
+    'c3')               # +0x0d ret
+LEAF_FUNCLET = bytes.fromhex(
+    '488d8a30000000'    # +0x00 lea  rcx, [rdx+0x30]            (unwind funclet, no .pdata)
+    'e900000000')       # +0x07 jmp  SyntheticAddOne            (REL32 at +0x08)
+NEIGHBOR_FUNCLET = bytes.fromhex(
+    '488d8a38000000'    # +0x00 lea  rcx, [rdx+0x38]
+    'e900000000')       # +0x07 jmp  SyntheticAddOne            (REL32 at +0x08)
+FRAME_FUNCLET = bytes.fromhex(
+    '4055'              # +0x00 push rbp                        (unwind funclet with a frame)
+    '4883ec20'          # +0x02 sub  rsp, 0x20
+    '488bea'            # +0x06 mov  rbp, rdx
+    'ba20000000'        # +0x09 mov  edx, 0x20
+    '488b4d40'          # +0x0e mov  rcx, [rbp+0x40]
+    'e800000000'        # +0x12 call SyntheticAddOne            (REL32 at +0x13)
+    '4883c420'          # +0x17 add  rsp, 0x20
+    '5d'                # +0x1b pop  rbp
+    'c3')               # +0x1c ret
+FRAME_FUNCLET_UNWIND = bytes.fromhex('01060200' '06320250')  # push rbp, alloc 0x20; no handler
+PACKED_UNWIND = bytes.fromhex('19040100' '04420000')         # EHANDLER|UHANDLER, alloc 0x28
+PACKED_FUNCLET_AT = 0x1800
+
+
+def packed_parent(u, name, funclet_code, handler='__CxxFrameHandler3', magic=0x19930522, funclet_pdata=None,
+                  action_addend=0, ip_into_funclet=None, tag=''):
+    """Add one parent (code, FuncInfo, unwind map, IP map, unwind info, .pdata) to `u`.
+
+    The funclet is a `.text$x` section of its own. `funclet_pdata` gives (begin, end, unwind
+    bytes) for a .pdata entry of the funclet; `action_addend` moves the unwind action inside
+    the funclet section; `ip_into_funclet` adds an IP-to-state entry at that funclet offset.
+    """
+    f = u.section('.text$mn', PACKED_CODE, SCN_TEXT)
+    x = u.section('.text$x', funclet_code, SCN_TEXT)
+    u.define(name, f, storage=STORAGE_EXTERNAL, function=True)
+    label = u.define(f'$LN{tag}{name}', f, 0, STORAGE_LABEL)
+    dtor = u.define(f'?dtor$0@?0??{name}@@4HA', x, 0)
+    for ext in (CALLEE, handler):
+        u.external(ext)
+    u.reloc(f, 0x05, CALLEE, REL32)
+    for at in range(len(funclet_code) - 4, 0, -1):
+        if funclet_code[at - 1] in (0xE8, 0xE9) and funclet_code[at:at + 4] == bytes(4):
+            u.reloc(x, at, CALLEE, REL32)
+            break
+    n_ip = 3 if ip_into_funclet is None else 4
+    funcinfo = u.section('.rdata', dwords(magic, 1, 0, 0, 0, n_ip, 0, 0x20, 0, 1), SCN_RDATA8)
+    u.define(f'$cppxdata${name}', funcinfo)
+    unwind_map = u.section('.xdata', dwords(-1, action_addend), SCN_XDATA)
+    u.define(f'$stateUnwindMap${name}', unwind_map)
+    ips = [(name, 0, -1), (name, 4, 0), (name, 9, -1)]
+    if ip_into_funclet is not None:
+        ips.append((dtor, ip_into_funclet, -1))
+    ip_map = u.section('.rdata', b''.join(dwords(addend, state) for _s, addend, state in ips), SCN_RDATA8)
+    u.define(f'$ip2state${name}', ip_map)
+    u.reloc(funcinfo, 0x08, f'$stateUnwindMap${name}', ADDR32NB)
+    u.reloc(funcinfo, 0x18, f'$ip2state${name}', ADDR32NB)
+    u.reloc(unwind_map, 0x04, dtor, ADDR32NB)
+    for i, (sym, _addend, _state) in enumerate(ips):
+        u.reloc(ip_map, 8 * i, sym, ADDR32NB)
+    xd = u.section('.xdata', PACKED_UNWIND + dwords(0, 0), SCN_XDATA)
+    u.define(f'$unwind${name}', xd)
+    u.reloc(xd, len(PACKED_UNWIND), handler, ADDR32NB)
+    u.reloc(xd, len(PACKED_UNWIND) + 4, f'$cppxdata${name}', ADDR32NB)
+    pd = u.section('.pdata', dwords(0, len(PACKED_CODE), 0), SCN_XDATA)
+    for k, sym in ((0, label), (4, label), (8, f'$unwind${name}')):
+        u.reloc(pd, k, sym, ADDR32NB)
+    if funclet_pdata is not None:
+        begin, end, codes = funclet_pdata
+        fxd = u.section('.xdata', codes, SCN_XDATA)
+        u.define(f'$unwind${dtor}', fxd)
+        fpd = u.section('.pdata', dwords(begin, end, 0), SCN_XDATA)
+        for k, sym in ((0, dtor), (4, dtor), (8, f'$unwind${dtor}')):
+            u.reloc(fpd, k, sym, ADDR32NB)
+    return x
+
+
+def packed_unit(funclet_code=LEAF_FUNCLET, neighbor=True, neighbor_code=NEIGHBOR_FUNCLET, neighbor_gap=0,
+                **parent_args):
+    """The compared parent, then (for the image only) a neighbour parent.
+
+    Placement is fixed so the compared parent's sections land at the same RVAs with or without
+    the neighbour: its funclet at PACKED_FUNCLET_AT, the neighbour's `neighbor_gap` bytes after
+    the end of `funclet_code`. A gap is filled with nop, never int3, so it is no padding.
+    `parent_args` go to the compared parent; keys starting `neighbor_` (stripped) to the neighbour.
+    """
+    mine = {k: v for k, v in parent_args.items() if not k.startswith('neighbor_')}
+    theirs = {k[len('neighbor_'):]: v for k, v in parent_args.items() if k.startswith('neighbor_')}
+    u = Unit()
+    x = packed_parent(u, PACKED_FUNCTION, funclet_code, **mine)
+    u.packed_funclet = x
+    if neighbor:
+        u.neighbor_funclet = packed_parent(u, NEIGHBOR_FUNCTION, neighbor_code, tag='n', **theirs)
+    u.neighbor_gap = neighbor_gap
+    return u
+
+
+def packed_placement(unit, funclet_length=None):
+    placement = unit.default_placement()
+    placement[unit.packed_funclet] = PACKED_FUNCLET_AT
+    if hasattr(unit, 'neighbor_funclet'):
+        length = len(unit.sections[unit.packed_funclet - 1][1]) if funclet_length is None else funclet_length
+        placement[unit.neighbor_funclet] = PACKED_FUNCLET_AT + length + unit.neighbor_gap
+    return placement
+
+
+def packed_image(unit, funclet_length=None, externals=None, **link_args):
+    """Link `unit` with its funclets packed; any neighbour gap is filled with nop."""
+    placement = packed_placement(unit, funclet_length)
+    patches = dict(link_args.pop('patches', None) or {})
+    if unit.neighbor_gap and hasattr(unit, 'neighbor_funclet'):
+        gap_at = placement[unit.neighbor_funclet] - unit.neighbor_gap
+        patches.setdefault(gap_at, b'\x90' * unit.neighbor_gap)
+    return unit.link(externals or image_externals(), placement, patches=patches, **link_args)
+
+
+def packed_inputs(candidate, image, extra_map=None):
+    """Comparator inputs for PACKED_FUNCTION in `candidate` against `image`."""
+    args = unit_inputs(candidate, PACKED_FUNCTION, image_externals(), image=image, extra_map=extra_map)
+    args['task']['rva'] = packed_placement(candidate)[1]
+    return args
+
+
 # --- Chained unwind info: three .pdata entries over one section, the later two chained -------
 
 CHAIN_FUNCTION = 'SyntheticChain'

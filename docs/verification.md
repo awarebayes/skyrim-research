@@ -310,6 +310,13 @@ Match record, recomputed from the tree:
   also means that the exception-related scope the contract defines (handler data, funclets,
   chained unwind info, several `.pdata` entries per function, jump tables) was compared and
   fully covered; the contract, not this file, defines that scope and its unsupported cases.
+  For funclets this includes their extent: each funclet is compared over the candidate's whole
+  section, and the target must show that the funclet ends exactly there, by target-side evidence
+  only (its own `.pdata` entry ending there, a `.pdata` entry, compared code or a funclet entry
+  named by another FuncInfo of the image starting there, or `int3` padding), with no other
+  function's funclet entry inside it; from comparator 0.6.0 the report names the evidence per
+  funclet (`coverage.funclet_end_evidence`). The contract ("Exception and termination handlers")
+  gives the rules, the premise they rest on and the cases that stay refused.
   Each report carries `candidate.code_section_sha256` over the function and funclet sections,
   which the gate requires from all runs or none, equal across runs (delta reviews below).
 - **Reproduction.** There are at least two runs, from at least two compile hosts and two

@@ -132,7 +132,7 @@ also lints other Drafters' unfinished files; a Reviewer rejects the rest):
 - Before you draft, read `docs/matching-cookbook.md` once. A flag bit the target tests as a load,
   `shr`, `test al,1` goes through a by-value bit-index helper (rule 16) from the first draft.
   `static_assert` always takes a message (rule 17). A 3-byte copy is rule 24; a `??_E...W...`
-  adjustor thunk is rule 25.
+  adjustor thunk is rule 25. Funclet extent and IP-to-state counts are rule 26.
 - No decompiler output pasted as source, no code from unlicensed projects other than the FNV
   decompilation (labelled as above), nothing leaked. Unknowns stay unknown (`unk28`), not
   invented names.
