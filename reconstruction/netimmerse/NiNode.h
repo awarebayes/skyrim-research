@@ -7,6 +7,33 @@
 // Layout and slot order come from the image RTTI and vftables (tools/ghidra/class_skeleton.py);
 // signatures are restored from the community declarations. Every class here is a stand-in that
 // declares only what the unit needs; the vtable slot placeholders keep later slots in place.
+// Adapted code: the NiBinaryStream WriteFn alias and the write and binary_write bodies are
+// adapted from CharmedBaryon/CommonLibSSE-NG b93280e include/RE/N/NiBinaryStream.h and
+// src/RE/N/NiBinaryStream.cpp under its MIT licence (assert dropped, binary_write defined
+// inline). NG's licence notice, from its LICENSE at b93280e, is kept as it requires:
+//
+//   MIT License
+//
+//   Copyright (c) 2018 Ryan-rsm-McKenzie
+//
+//   Permission is hereby granted, free of charge, to any person obtaining a copy
+//   of this software and associated documentation files (the "Software"), to deal
+//   in the Software without restriction, including without limitation the rights
+//   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//   copies of the Software, and to permit persons to whom the Software is
+//   furnished to do so, subject to the following conditions:
+//
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
+//
+//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//   SOFTWARE.
+//
 // Array members: NiTArray holds the 16-bit capacity, filled index, size and growth at
 // +0x10..+0x16, as the community NiTArray declares them.
 // NiTArray: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)

@@ -5,7 +5,36 @@
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e (MIT) include/RE/N/NiObject.h,
 // include/RE/N/NiRefObject.h, include/RE/N/NiCloningProcess.h and powerof3/CommonLibSSE 654e55f
 // (GPL-3.0) include/RE/N/NiObject.h for Clone; this file therefore carries the GPL-3.0 notice of
-// that source for the name Clone only. No community code is copied.
+// that source for the name Clone only.
+// Adapted code: the inline bodies of AsNode through AsBhkLimitedHingeConstraint (slots 03 to
+// 16, each returning nullptr) are taken from CharmedBaryon/CommonLibSSE-NG b93280e
+// include/RE/N/NiObject.h under its MIT licence. The NiRefObject constructor follows the logic
+// of NG src/RE/N/NiRefObject.cpp, written here with a compiler intrinsic and a counter named by
+// guess. No other community code is copied. NG's licence notice, from its LICENSE at b93280e,
+// is kept as it requires:
+//
+//   MIT License
+//
+//   Copyright (c) 2018 Ryan-rsm-McKenzie
+//
+//   Permission is hereby granted, free of charge, to any person obtaining a copy
+//   of this software and associated documentation files (the "Software"), to deal
+//   in the Software without restriction, including without limitation the rights
+//   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//   copies of the Software, and to permit persons to whom the Software is
+//   furnished to do so, subject to the following conditions:
+//
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
+//
+//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//   SOFTWARE.
+//
 // Vtable slot order and sizeof(NiObject) == 0x10 come from the image RTTI and vftable.
 // NiObject, NiRefObject, NiCloningProcess: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) EXE_RTTI; each declaration below carries its own label
 #pragma once

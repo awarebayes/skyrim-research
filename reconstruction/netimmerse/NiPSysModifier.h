@@ -4,7 +4,36 @@
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e (MIT): include/RE/N/NiPSysModifier.h,
 // NiObject.h, NiStream.h, NiBinaryStream.h, NiCloningProcess.h. Vtable order and class size come
-// from the image RTTI and vftable (class skeleton). No NG code is copied.
+// from the image RTTI and vftable (class skeleton).
+// Adapted code: the NiBinaryStream ReadFn and WriteFn aliases and the read, write and put
+// template bodies are adapted from NG b93280e include/RE/N/NiBinaryStream.h and
+// src/RE/N/NiBinaryStream.cpp under its MIT licence: put is NG's body; read and write fold in
+// NG's binary_read and binary_write and return true instead of comparing the byte count. No
+// other NG code is copied. NG's licence notice, from its LICENSE at b93280e, is kept as it
+// requires:
+//
+//   MIT License
+//
+//   Copyright (c) 2018 Ryan-rsm-McKenzie
+//
+//   Permission is hereby granted, free of charge, to any person obtaining a copy
+//   of this software and associated documentation files (the "Software"), to deal
+//   in the Software without restriction, including without limitation the rights
+//   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//   copies of the Software, and to permit persons to whom the Software is
+//   furnished to do so, subject to the following conditions:
+//
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
+//
+//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//   SOFTWARE.
+//
 // NiRefObject, NiObject: STANDIN EXE_RTTI COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slots only, 0x10 bytes
 // NiPSysModifier: EXE_RTTI COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) OBSERVED; 0x30 bytes, size from the listings
 // NiStream, NiBinaryStream, NiCloningProcess, BSFixedString, NiParticleSystem, NiPSysData, NiPoint3, NiColorA: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only the members and slots the unit uses

@@ -7173,6 +7173,106 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a79de67e352ca0468",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p15-rereview-2",
+   "stage": "review",
+   "tokens": {
+    "input": 68,
+    "cache_creation": 139224,
+    "cache_read": 3333748,
+    "output": 26848
+   },
+   "messages": 34,
+   "tool_uses": 34,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 298,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xee1560",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee1650",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee2cc0",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee17b0",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee15a0",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee16e0",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcb60",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcb90",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc740",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcbc0",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc920",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc7e0",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa11c0",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1010",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1040",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1140",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1090",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa0f40",
+     "share": 0.05263157894736842
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa11d0",
+     "share": 0.05263157894736842
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a7a96be3f58a3f1e8",
    "date": "2026-11-12",
    "role": "reviewer",
@@ -7875,6 +7975,178 @@
    "estimated": false,
    "complete": false,
    "source": "session transcript; still running when ingested"
+  },
+  {
+   "id": "agent-aa82c66797db93024",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p15-rereview-1",
+   "stage": "review",
+   "tokens": {
+    "input": 78,
+    "cache_creation": 187001,
+    "cache_read": 4988063,
+    "output": 31812
+   },
+   "messages": 39,
+   "tool_uses": 46,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 351,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1e36b0",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e4ac0",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e6010",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e1fd0",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5700",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1f3560",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5770",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3cd8d0",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3afeb0",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3a4e00",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3c65c0",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3c8c00",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e5a60",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e6f30",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e73a0",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2eee20",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f3b70",
+     "share": 0.05555555555555555
+    },
+    {
+     "target": "sse-steam-1-7-104:0x300b90",
+     "share": 0.05555555555555555
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
+   "id": "agent-ab20cb2200da815d2",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p15-rereview-3",
+   "stage": "review",
+   "tokens": {
+    "input": 58,
+    "cache_creation": 122882,
+    "cache_read": 2387172,
+    "output": 21774
+   },
+   "messages": 29,
+   "tool_uses": 30,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 242,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x692ea0",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73ad70",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73a760",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6cc910",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73a8b0",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73abc0",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x67eab0",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x4b4ad0",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523d10",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523f00",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1524030",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x15241d0",
+     "share": 0.07692307692307693
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2bb180",
+     "share": 0.07692307692307693
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
   },
   {
    "id": "agent-ab56823d6483bca61",
@@ -10301,6 +10573,58 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-199af00f4f09",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-nipsysmodifier",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 23.632,
+   "boat_wall_seconds": 11.816,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfa11c0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1040",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1140",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1090",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa0f40",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa11d0",
+     "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-19ab567b09d0",
    "date": "2026-11-12",
    "role": "verifier",
@@ -10562,6 +10886,50 @@
     {
      "target": "sse-steam-1-7-104:0xee16e0",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-2263524bb954",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesnpc",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 36.005,
+   "boat_wall_seconds": 18.002,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x3cd8d0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3afeb0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3a4e00",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3c65c0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x3c8c00",
+     "share": 0.2
     }
    ],
    "estimated": false,
@@ -11309,6 +11677,54 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-2c2ad7b80989",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-ninode",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.296,
+   "boat_wall_seconds": 9.296,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xee1560",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee1650",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee2cc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee17b0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee15a0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee16e0",
+     "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-2c2ffa90ef62",
    "date": "2026-11-12",
    "role": "verifier",
@@ -11446,6 +11862,58 @@
     {
      "target": "sse-steam-1-7-104:0x1e5b30",
      "share": 0.1111111111111111
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-2edc41fea6d4",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesform",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 40.926,
+   "boat_wall_seconds": 20.463,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1e36b0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e4ac0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e6010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e1fd0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5700",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1f3560",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5770",
+     "share": 0.14285714285714285
     }
    ],
    "estimated": false,
@@ -12310,6 +12778,54 @@
     {
      "target": "sse-steam-1-7-104:0xce3970",
      "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-3f28d6614345",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-ninode",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 20.207,
+   "boat_wall_seconds": 10.103,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xee1560",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee1650",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee2cc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee17b0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee15a0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee16e0",
+     "share": 0.16666666666666666
     }
    ],
    "estimated": false,
@@ -13969,6 +14485,106 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-523f560febde",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-nipsysmodifier",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.541,
+   "boat_wall_seconds": 9.541,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfa11c0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1040",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1140",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1090",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa0f40",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa11d0",
+     "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-527ae235c566",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-niobject",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 20.866,
+   "boat_wall_seconds": 10.433,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xedcb60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcb90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc740",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcbc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc920",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc7e0",
+     "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-539099162167",
    "date": "2026-11-12",
    "role": "verifier",
@@ -14070,6 +14686,54 @@
     {
      "target": "sse-steam-1-7-104:0x2e7fc0",
      "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-542045b7eaee",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-niobject",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 9.061,
+   "boat_wall_seconds": 9.061,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xedcb60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcb90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc740",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcbc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc920",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc7e0",
+     "share": 0.16666666666666666
     }
    ],
    "estimated": false,
@@ -14469,6 +15133,46 @@
     },
     {
      "target": "sse-steam-1-7-104:0x2eee20",
+     "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-5a3195e55af0",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-bsdirectinputmanager",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 15.467,
+   "boat_wall_seconds": 7.733,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xcfaeb0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfae70",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfaee0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfaf60",
      "share": 0.25
     }
    ],
@@ -14925,6 +15629,46 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-605d0def0b31",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesworldspace",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 15.098,
+   "boat_wall_seconds": 7.549,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x30b710",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x314930",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x30e8d0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x30d050",
+     "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-610ab8ec0881",
    "date": "2026-11-12",
    "role": "verifier",
@@ -15186,6 +15930,50 @@
     {
      "target": "sse-steam-1-7-104:0xedc7e0",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-63c3cfe424c6",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-bslightingshadermaterialbase",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 8.708,
+   "boat_wall_seconds": 8.708,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b4ad0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523d10",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523f00",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1524030",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x15241d0",
+     "share": 0.2
     }
    ],
    "estimated": false,
@@ -15730,6 +16518,34 @@
     {
      "target": "sse-steam-1-7-104:0x2bb180",
      "share": 0.1
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-6de6944de056",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "verifier-session",
+   "stage": "orchestration",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 262.025,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -16853,6 +17669,54 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-7b26c11ea4fd",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-tesobjectrefr",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 43.983,
+   "boat_wall_seconds": 21.991,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2e6f30",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f3b70",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x300b90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2eee20",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e73a0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e5a60",
+     "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-7d2a27ca73ff",
    "date": "2026-11-12",
    "role": "verifier",
@@ -16894,6 +17758,46 @@
     {
      "target": "sse-steam-1-7-104:0x2e5a60",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-7eeadd917a36",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-inventorychanges",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 14.413,
+   "boat_wall_seconds": 7.207,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x22b710",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x233f90",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2372c0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x237300",
+     "share": 0.25
     }
    ],
    "estimated": false,
@@ -17253,6 +18157,54 @@
     },
     {
      "target": "sse-steam-1-7-104:0x2e5a60",
+     "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-8441557a87dc",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-ninode",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 37.12,
+   "boat_wall_seconds": 18.56,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xee1560",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee1650",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee2cc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee17b0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee15a0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xee16e0",
      "share": 0.16666666666666666
     }
    ],
@@ -18562,6 +19514,58 @@
     {
      "target": "sse-steam-1-7-104:0x2bb180",
      "share": 0.1
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-95fd0d81b3ea",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesobjectcell",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 20.401,
+   "boat_wall_seconds": 10.2,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2cbed0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be9b0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2bc660",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2cbef0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be700",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be530",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2bb180",
+     "share": 0.14285714285714285
     }
    ],
    "estimated": false,
@@ -21669,6 +22673,54 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-c77274442988",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-niobject",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 20.247,
+   "boat_wall_seconds": 10.124,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xedcb60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcb90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc740",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcbc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc920",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc7e0",
+     "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-c775403104ac",
    "date": "2026-11-12",
    "role": "verifier",
@@ -22218,6 +23270,54 @@
     {
      "target": "sse-steam-1-7-104:0x5cdf50",
      "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-cb02e8ac526e",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-tesfile",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 19.047,
+   "boat_wall_seconds": 9.523,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1ca460",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cdc10",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cd7d0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cdc60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1ce7e0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cd860",
+     "share": 0.16666666666666666
     }
    ],
    "estimated": false,
@@ -23533,6 +24633,58 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-e2790ceb398e",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-character",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 21.116,
+   "boat_wall_seconds": 10.558,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x692ea0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73ad70",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73a760",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6cc910",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73a8b0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73abc0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x67eab0",
+     "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-e4318b13c9b1",
    "date": "2026-11-12",
    "role": "verifier",
@@ -24018,6 +25170,50 @@
     {
      "target": "sse-steam-1-7-104:0x67eab0",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-e9c8632eff1e",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-bslightingshadermaterialbase",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 18.721,
+   "boat_wall_seconds": 9.36,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b4ad0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523d10",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523f00",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1524030",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x15241d0",
+     "share": 0.2
     }
    ],
    "estimated": false,
@@ -25358,6 +26554,58 @@
     {
      "target": "sse-steam-1-7-104:0x30d050",
      "share": 0.2
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-fbb78fbd626e",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-nipsysmodifier",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 23.12,
+   "boat_wall_seconds": 11.56,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfa11c0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1040",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1140",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1090",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa0f40",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa11d0",
+     "share": 0.14285714285714285
     }
    ],
    "estimated": false,
