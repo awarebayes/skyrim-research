@@ -1500,8 +1500,10 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
                     printed.append(line.strip().split('  ')[0])
                 elif take:
                     take = False
+        run([python, 'tools/build_index.py'], tree, 'build_index.py')
+        run([python, 'tools/build_progress_svg.py'], tree, 'build_progress_svg.py')
         data = inventory(tree)
-        paths = set(printed) | {'data/progress.json', 'reconstruction/INDEX.md', 'docs/progress.svg'}
+        paths = set(printed) | {'data/progress.json', 'reconstruction/INDEX.md', 'docs/progress.svg', 'docs/progress-map.svg'}
         for fn in data['functions']:
             if fn.get('report'):
                 paths.add(fn['report'])

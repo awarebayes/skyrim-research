@@ -397,6 +397,8 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
             if step == 'accept_function.py':
                 changed = af.accept_family_batch(tree, self.batch_path, fdir=self.fdir, profile='cheap')
                 return 'changed files (stage these by name; nothing was committed):\n' + ''.join('  ' + p + '\n' for p in changed)
+            if step in ('build_index.py', 'build_progress_svg.py'):
+                return ''
             if step == 'check.py --staged':
                 check.validate(fr.read(tree, 'data/progress.json'), self.target, tree)
                 return 'PASS'
@@ -406,7 +408,7 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
             group = flow.integrate_family(self.root, self.fdir, self.batch_path, push=False)
         result = group['integrated']
         self.assertIsNone(result['pushed'])
-        self.assertEqual(ran, ['accept_function.py', 'check.py --staged'])
+        self.assertEqual(ran, ['accept_function.py', 'build_index.py', 'build_progress_svg.py', 'check.py --staged'])
         checks.assert_called_once()
         integrated = json.loads(self.git('show', result['commit'] + ':data/progress.json'))
         self.assertTrue(all(fn['status'] == 'matched' for fn in integrated['functions']))

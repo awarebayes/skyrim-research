@@ -81,6 +81,9 @@ class Repo:
         (r / 'tools/accept_function.py').write_text(STUB_ACCEPT)
         for name in ('check.py', 'build_site.py', 'ci_status.py'):
             (r / 'tools' / name).write_text('import sys\nsys.exit(0)\n')
+        (r / 'tools/build_index.py').write_text("from pathlib import Path\nPath('reconstruction/INDEX.md').write_text(Path('data/progress.json').read_text())\n")
+        (r / 'tools/build_progress_svg.py').write_text("from pathlib import Path\nfor p in ('docs/progress.svg', 'docs/progress-map.svg'):\n Path(p).write_text(Path('data/progress.json').read_text())\n")
+        (r / 'tools/check.py').write_text("import subprocess, sys\nif '--staged' in sys.argv:\n data = subprocess.check_output(['git', 'show', ':data/progress.json'])\n for p in ('reconstruction/INDEX.md', 'docs/progress.svg', 'docs/progress-map.svg'):\n  assert subprocess.check_output(['git', 'show', ':' + p]) == data\n")
         (r / 'tests').mkdir()
         (r / 'tests/test_ok.py').write_text('import unittest\nclass T(unittest.TestCase):\n    def test(self):\n        pass\n')
         (r / '.gitignore').write_text('.local/\n')
