@@ -26,6 +26,11 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   its leading comment, every `COMMUNITY(` (any case) is a well-formed label, and a label for a
   repository in `COMMUNITY_LICENCES` (compared without case) spells it as listed and states its
   licence word; in every file, labelled v2 or not;
+- licence notices: a comment block that carries an MIT notice (a `MIT License` line, `Permission
+  is hereby granted` or `THE SOFTWARE IS PROVIDED`) holds all of it: a copyright line, then the
+  permission and disclaimer text whose whitespace-normalised form hashes to `MIT_BODY_SHA256`.
+  Where the pinned clone of a cited MIT repository is present under `.local/sources/`, a file
+  naming that repository must carry its LICENSE in full, copyright line included;
 - name-origin labels: in a file whose leading comment says `Labels: v2`, every label is on a
   `// <names>: <LABEL> [<LABEL>...][; note]` line, LABEL being `COMMUNITY(<owner>/<repo>@<rev>,
   <licence>)`, `SIBLING(<owner>/<repo>@<rev>, <licence>)` (only a sibling decompilation listed in
@@ -59,6 +64,7 @@ rejecting source whose content is raw bytes in any spelling (docs/verification.m
     python3 tools/lint_reconstruction.py [files...]   # default: every file under reconstruction/
     python3 tools/lint_reconstruction.py --skeleton-ok [files...]   # a fresh skeleton: all else must pass
 """
+import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
@@ -296,6 +302,64 @@ COMMUNITY_LABEL = re.compile(r'COMMUNITY\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-
 COMMUNITY_OPEN = re.compile(r'community\(', re.I)
 
 
+# The MIT permission and disclaimer text, from "Permission is hereby granted" through "DEALINGS IN
+# THE SOFTWARE.", whitespace collapsed to single spaces. It is the same for every MIT licence, so a
+# hash serves where no pinned LICENSE is at hand (CI); a notice cut short or edited fails it.
+MIT_BODY_SHA256 = 'fe2a9817987f862eaced948f0468c7f51d2fedfc48c5c505b246a49a3870e9a5'
+MIT_BODY_START = 'Permission is hereby granted'
+MIT_BODY_END = 'DEALINGS IN THE SOFTWARE.'
+# Pinned local clones whose LICENSE a notice must reproduce whole when the clone is present.
+LOCAL_SOURCES = ROOT / '.local/sources'
+LICENCE_FILES = {'CharmedBaryon/CommonLibSSE-NG': 'CommonLibSSE-NG/LICENSE'}
+
+
+def normalised(text):
+    return ' '.join(text.split())
+
+
+def comment_runs(text):
+    """Runs of consecutive comment lines, as the normalised text of their contents."""
+    runs, current = [], []
+    for line in text.split('\n') + ['']:
+        stripped = line.strip()
+        if stripped.startswith(('//', '/*', '*')):
+            current.append(re.sub(r'^(?://+|/\*+|\*+(?!/))|\*+/$', '', stripped).strip())
+        elif current:
+            runs.append(current)
+            current = []
+    return runs
+
+
+def notice_problems(name, text, sources=None):
+    """Every MIT notice in a comment block is complete (see the module docstring)."""
+    sources = LOCAL_SOURCES if sources is None else Path(sources)
+    problems, notices = [], []
+    for run in comment_runs(text):
+        joined = normalised(' '.join(run))
+        if not (any(line == 'MIT License' for line in run) or MIT_BODY_START in joined
+                or 'THE SOFTWARE IS PROVIDED' in joined):
+            continue
+        notices.append(joined)
+        start = joined.find(MIT_BODY_START)
+        end = joined.find(MIT_BODY_END, max(start, 0))
+        if start < 0 or end < 0:
+            problems.append(f'{name}: MIT licence notice is incomplete (truncated before "{MIT_BODY_END}" '
+                            f'or missing "{MIT_BODY_START}")')
+            continue
+        body = joined[start:end + len(MIT_BODY_END)]
+        if hashlib.sha256(body.encode()).hexdigest() != MIT_BODY_SHA256:
+            problems.append(f'{name}: MIT licence notice differs from the MIT licence text')
+        if 'Copyright' not in joined[:start]:
+            problems.append(f'{name}: MIT licence notice needs its copyright line before "{MIT_BODY_START}"')
+    for repo, licence in LICENCE_FILES.items():
+        path = sources / licence
+        if repo.casefold() not in text.casefold() or not notices or not path.is_file():
+            continue
+        if not any(normalised(path.read_text()) in notice for notice in notices):
+            problems.append(f'{name}: no complete copy of the LICENSE of {repo} (pinned clone {licence})')
+    return problems
+
+
 def licence_problems(name, text, header):
     """A file with a GPL-licensed COMMUNITY label states GPL in its header (docs/authorizations.md);
     the wording of the statement is the Reviewer's to judge, its presence is checked here. Every
@@ -450,6 +514,7 @@ def lint_file(root, name, target_build, skeleton_ok=False):
         problems.append(f'{name}: header comment must name the build id {target_build}')
     problems += label_problems(name, spliced, header, ext)
     problems += licence_problems(name, spliced, header)
+    problems += notice_problems(name, text)
     problems += sibling_label_problems(name, spliced)
     problems += sibling_header_problems(name, header)
     if 'Sibling source:' in spliced and spliced.count('Sibling source:') != header.count('Sibling source:'):

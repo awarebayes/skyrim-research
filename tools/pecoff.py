@@ -203,6 +203,7 @@ class PeImage:
         if ndirs > TLS_DIRECTORY:
             self.tls_dir = unpack('<II', blob, opt + 112 + 8 * TLS_DIRECTORY, 'TLS directory')
         self._tls = None
+        self._funclet_entries = {}
         self.sections = read_sections(blob, opt + optsize, nsec, None, 'image')
         for sec in self.sections:
             if sec.raw_size:
@@ -267,6 +268,71 @@ class PeImage:
         _, table = self.read(rva, size, 'exception directory')
         return [struct.unpack_from('<III', table, i) for i in range(0, size, RUNTIME_FUNCTION_SIZE)]
 
+    def funclet_entries(self, handler_rvas):
+        """{code RVA: set of FuncInfo RVAs} for every funclet entry a FuncInfo in the image names.
+
+        A funclet entry is the action of an unwind-map entry or the handler of a catch entry: the
+        address the C++ EH runtime calls, so code starts there. IP-to-state addresses are not
+        entries (they mark state changes inside code) and are left out. FuncInfos are found
+        through primary (unchained) `.pdata` entries whose unwind info names a handler in
+        `handler_rvas`, the handlers whose data starts with a FuncInfo RVA; `None` takes every
+        handler and reads its data as a FuncInfo, which may pick up a structure that only looks
+        like one, so that set is for refusing, never for evidence. A FuncInfo that is not version
+        0x19930522 or cannot be read whole adds nothing.
+        """
+        key = None if handler_rvas is None else frozenset(handler_rvas)
+        if key in self._funclet_entries:
+            return self._funclet_entries[key]
+        out, seen = {}, set()
+        for _begin, _end, unwind in self.runtime_functions() if key is None or key else ():
+            try:
+                head = self.read(unwind, 4, 'unwind info')[1]
+                flags, count = head[0] >> 3, head[2]
+                if head[0] & 0x7 != 1 or flags & UNW_FLAG_CHAININFO or not flags & (UNW_FLAG_EHANDLER | UNW_FLAG_UHANDLER):
+                    continue
+                at = unwind + 4 + 2 * (count + (count & 1))
+                handler, funcinfo = struct.unpack('<II', self.read(at, 8, 'handler and data')[1])
+                if (key is not None and handler not in key) or funcinfo in seen:
+                    continue
+                seen.add(funcinfo)
+                found = self.funcinfo_entries(funcinfo, lenient=key is None)
+            except Reject:
+                continue
+            for rva in found:
+                out.setdefault(rva, set()).add(funcinfo)
+        self._funclet_entries[key] = out
+        return out
+
+    def funcinfo_entries(self, funcinfo, lenient=False):
+        """Funclet entry RVAs one FuncInfo names.
+
+        Strict (evidence): magic 0x19930522 only, and Reject if any part is unreadable. Lenient
+        (the refusal guard): every FuncInfo magic MSVC has used, and every entry read before an
+        unreadable part is kept, so a damaged or older FuncInfo still refuses.
+        """
+        fields = struct.unpack('<10I', self.read(funcinfo, 40, 'FuncInfo')[1])
+        magic, max_state, unwind_map, n_try, try_map = fields[:5]
+        if magic not in (FUNCINFO_MAGICS if lenient else (FUNCINFO_MAGIC,)):
+            raise Reject('eh-funcinfo-unsupported', 'FuncInfo magic is not 0x19930522')
+        found = set()
+        try:
+            if max_state:
+                table = self.read(unwind_map, 8 * max_state, 'unwind map')[1]
+                found |= {struct.unpack_from('<I', table, 8 * i + 4)[0] for i in range(max_state)}
+            if n_try:
+                tries = self.read(try_map, 20 * n_try, 'try-block map')[1]
+                for t in range(n_try):
+                    n_catch, handlers = struct.unpack_from('<II', tries, 20 * t + 12)
+                    if n_catch:
+                        table = self.read(handlers, 20 * n_catch, 'handler array')[1]
+                        found |= {struct.unpack_from('<I', table, 20 * c + 12)[0] for c in range(n_catch)}
+        except Reject:
+            if not lenient:
+                raise
+        # A null action (a state without cleanup) names no code.
+        found.discard(0)
+        return found
+
 
 def unwind_header(blob, what):
     """Return (flags, length of header plus codes) for a version 1 UNWIND_INFO.
@@ -293,6 +359,8 @@ EH_HANDLERS = {
     '__GSHandlerCheck': ('gs',),
 }
 FUNCINFO_MAGIC = 0x19930522
+# Every FuncInfo version magic MSVC has emitted; the guard reads all of them, evidence only the last.
+FUNCINFO_MAGICS = (0x19930520, 0x19930521, 0x19930522)
 GS_HAS_ALIGNMENT = 0x4
 
 # x64 C++ EH structures as MSVC 19.16 emits them; every field is 4 bytes. Field kinds:

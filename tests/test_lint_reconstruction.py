@@ -1,4 +1,5 @@
 """Tests for tools/lint_reconstruction.py: each rule rejects its construct, the accepted unit passes."""
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -277,6 +278,89 @@ class IncludeNameTests(LintTests):
                     '#include <C:/Windows/win.ini>', '#include <Z:\\\\home\\\\x.h>', '#include <sub/../x.h>',
                     '#include <.hidden>'):
             self.assertTrue(self.include(bad), bad)
+
+
+# The standard MIT licence text, as NG's LICENSE has it.
+MIT_TEXT = """MIT License
+
+Copyright (c) 2018 Ryan-rsm-McKenzie
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+NG = 'CharmedBaryon/CommonLibSSE-NG'
+
+
+def notice_header(text, indent='// '):
+    lines = [(indent + line).rstrip() for line in text.splitlines()]
+    return HEADER.replace('#pragma once', f'// Body adapted from {NG}@b93280e, MIT. Notice:\n'
+                          + '\n'.join(lines) + '\n#pragma once')
+
+
+class LicenceNoticeTests(LintTests):
+    def test_hash_is_of_the_mit_text(self):
+        joined = lint.normalised(MIT_TEXT)
+        body = joined[joined.index(lint.MIT_BODY_START):joined.index(lint.MIT_BODY_END) + len(lint.MIT_BODY_END)]
+        self.assertEqual(hashlib.sha256(body.encode()).hexdigest(), lint.MIT_BODY_SHA256)
+        pinned = ROOT / '.local/sources' / lint.LICENCE_FILES[NG]
+        if pinned.is_file():
+            self.assertIn(body, lint.normalised(pinned.read_text()))
+
+    def test_complete_notice_passes_in_any_comment_style(self):
+        for indent in ('// ', '//   ', ' * '):
+            with self.subTest(indent=indent):
+                text = notice_header(MIT_TEXT, indent)
+                if indent == ' * ':
+                    text = text.replace(' * MIT License', '/* MIT License', 1).replace('#pragma once', ' */\n#pragma once')
+                self.write(header=text)
+                self.assertEqual(self.problems(), [])
+
+    def test_incomplete_or_altered_notices_refused(self):
+        cut = MIT_TEXT[:MIT_TEXT.index('ARISING FROM,') + len('ARISING FROM,')]
+        cases = {
+            'cut after ARISING FROM': (cut, 'is incomplete'),
+            'cut before the disclaimer': (MIT_TEXT[:MIT_TEXT.index('THE SOFTWARE IS')], 'is incomplete'),
+            'heading only': ('MIT License\n\nCopyright (c) 2018 Ryan-rsm-McKenzie\n', 'is incomplete'),
+            'disclaimer only': (MIT_TEXT[MIT_TEXT.index('THE SOFTWARE IS'):], 'is incomplete'),
+            'a word changed': (MIT_TEXT.replace('free of charge', 'for a fee'), 'differs from the MIT'),
+            'a sentence dropped': (MIT_TEXT.replace('The above copyright notice and this permission notice shall '
+                                                    'be included in all\ncopies or substantial portions of the '
+                                                    'Software.\n', ''), 'differs from the MIT'),
+            'no copyright line': (MIT_TEXT.replace('Copyright (c) 2018 Ryan-rsm-McKenzie\n', ''),
+                                  'needs its copyright line'),
+        }
+        for label, (text, needle) in cases.items():
+            with self.subTest(label):
+                self.assert_problem(needle, header=notice_header(text))
+
+    def test_pinned_licence_compared_when_present(self):
+        sources = self.root / 'sources'
+        (sources / 'CommonLibSSE-NG').mkdir(parents=True)
+        (sources / 'CommonLibSSE-NG/LICENSE').write_text(MIT_TEXT)
+        good = notice_header(MIT_TEXT)
+        other = notice_header(MIT_TEXT.replace('2018 Ryan-rsm-McKenzie', '2020 Someone Else'))
+        self.assertEqual(lint.notice_problems('a.h', good, sources), [])
+        found = lint.notice_problems('a.h', other, sources)
+        self.assertTrue(any('no complete copy of the LICENSE' in p for p in found), found)
+        # Without the clone only the generic MIT rules apply, which the other copyright passes.
+        self.assertEqual(lint.notice_problems('a.h', other, self.root / 'absent'), [])
+        # A file that does not name the repository is not held to its LICENSE.
+        self.assertEqual(lint.notice_problems('a.h', other.replace(NG, 'someone/else'), sources), [])
 
 
 if __name__ == '__main__':
