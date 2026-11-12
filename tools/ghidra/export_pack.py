@@ -1897,6 +1897,11 @@ def render_brief(task, packs):
 # the listings point to, and the FNV sibling pointers.
 
 COOKBOOK = 'docs/matching-cookbook.md'
+# One line in every unit brief (once in a group brief): the origin check runs inside `attempt`, and a
+# body adapted from a community or FNV source must be declared where it is written, not afterwards.
+ORIGIN_LINE = ('Body origin: `attempt` prints `origin:` lines, and `origin advice:` while an adapted community '
+               'or FNV body is undeclared; declare it in the header comment of each file holding adapted code, '
+               'with its licence notice (`docs/drafter-card.md`).')
 COOKBOOK_RULES = {
     'flag-test': '16: a flag bit tested as load, `shr`, `test al,1` goes through a by-value bit-index '
                  'helper (`TestBit(word, n)`) from the first draft.',
@@ -1967,7 +1972,7 @@ def brief_sections(cls, packs, functions, root=None):
     root = Path(root or REPO)
     t = analysis_tables()
     classes = t[2] if t else {}
-    lines = []
+    lines = ['', ORIGIN_LINE]
     hdrs = shared_headers(cls, packs, repository_headers(root), classes)
     if hdrs:
         lines += ['', 'Shared headers (existing; include with `#include "<area>/<Class>.h"` instead of declaring '
@@ -2052,9 +2057,10 @@ def render_group_brief(group, gdir):
         lines.append(f'| `{u["dir"]}` | `{u["compiled"]}` | {len(u["functions"])} | {u["bytes"]} | {u["max_attempts"]} |')
     lines += ['', f'Total budget {group["max_attempts"]} counted attempts over all units.',
               'Class and member names are COMMUNITY (unverified); do not edit other units or the listed shared headers.',
-              '']
+              ORIGIN_LINE, '']
     # The per-unit briefs repeat the same generic lines; the group brief keeps them once (above).
-    generic = ('Known risks:', 'Order (smallest first)', '- Class and member names', '- Declare other classes')
+    generic = ('Known risks:', 'Order (smallest first)', '- Class and member names', '- Declare other classes',
+               'Body origin:')
     for u in sorted(group['units'], key=lambda u: (u['bytes'], u['dir'])):
         text = (gdir / u['dir'] / 'BRIEF.md').read_text().splitlines()
         lines += [f'## {u["dir"]}', '']
@@ -2808,8 +2814,33 @@ def refresh_pack(pack_dir, target, img, addrlib, comms):
     return pack, files
 
 
+def refresh_briefs(task_dirs):
+    """Rewrite only BRIEF.md (and a group's group.json and combined brief) from the task files and
+    pack.json already on disk: no image, Ghidra or class-material run, and the attempt history
+    (attempts.jsonl, attempts/) is never touched."""
+    done = []
+    for t in (Path(d) for d in task_dirs):
+        if (t / 'group.json').is_file() and not (t / 'task.json').is_file():
+            group = json.loads((t / 'group.json').read_text())
+            units = [t / u['dir'] for u in group['units']]
+            for u in units:
+                done += refresh_briefs([u])
+            write_group(t, units)
+            done.append(t / 'BRIEF.md')
+            continue
+        task = json.loads((t / 'task.json').read_text())
+        packs = [json.loads((REPO / f['pack'] / 'pack.json').read_text()) for f in task['functions'] if f.get('pack')]
+        (t / 'BRIEF.md').write_text(render_brief(task, packs))
+        done.append(t / 'BRIEF.md')
+    return done
+
+
 def cmd_refresh(args):
     """Rewrite the Drafter aids of existing packs; with --tasks also their class material and briefs."""
+    if args.briefs_only:
+        for b in refresh_briefs(args.tasks or []):
+            print(f'wrote {b}')
+        return
     cfg = load_config(args.config)
     target, img, addrlib, comms = setup(cfg)
     pack_dirs = list(args.pack)
@@ -2946,6 +2977,8 @@ def main():
     r = sub.add_parser('refresh', help='Rebuild Drafter aids of existing packs without running Ghidra')
     r.add_argument('pack', nargs='*')
     r.add_argument('--tasks', nargs='+', help='Task dirs: refresh their packs, class material, README and BRIEF')
+    r.add_argument('--briefs-only', action='store_true',
+                   help='With --tasks (unit or group dirs): rewrite only the briefs from files on disk')
     b = sub.add_parser('bind')
     b.add_argument('--task', required=True)
     b.add_argument('--object', default=None, help='Default: the newest attempts/<NNN>/candidate.obj')

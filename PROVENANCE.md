@@ -24,6 +24,8 @@ when a reviewer could not independently reproduce a claim. Preserve failed exper
 
 `SOURCES.md` records references used during bootstrap. Before importing anything, pin its
 revision, inspect the license at that revision, retain notices and record exactly what was used.
+A retained notice (or licence statement) sits in every file that contains adapted code from that
+source, header or `.cpp`; a pointer to the notice in another file of the unit is not enough.
 `momusdigital/fnv_decomp` at `91e1b6e8` is the one unlicensed source the maintainer has allowed
 for reuse (names, declarations and code in reconstructions; `docs/authorizations.md`, Notes): its
 `LICENSE` grants no licence and its README tags some names as from an Xbox 360 development-build

@@ -2,6 +2,8 @@
 
 Everything a Drafter needs. Do not read AGENTS.md or other policy documents; the tools enforce them.
 Gates: G1 to G5 granted; private inputs and outputs stay under `.local/` and are never pasted anywhere.
+Card version: `shared-headers` (shared headers, multi-unit tasks; follows `origin-check`). A new
+version restarts the sampling safeguard's first-20 count for Drafter prompts (`docs/verification.md`).
 
 **You get** a context pack (function notes, community types) in your brief and a private task
 directory `.local/tasks/<task-id>/` with `task.json` (build id, RVA, size, compiled file, recipe,
@@ -47,6 +49,9 @@ is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated 
 - Other classes the function uses may be declared in your header as minimal stand-ins (only the
   members and virtual slots the code needs). Say in the header comment which declarations are
   stand-ins and where each name comes from. Do not edit another unit to share a class.
+- If the brief lists a shared header for a class you use, include it (`#include "<area>/<Class>.h"`)
+  instead of declaring a stand-in; never edit it. If it lacks a member or slot you need, declare
+  your own stand-in and report `header-gap <Class>` in your result line.
 - Include lines are exactly `#include "path"` or `#include <system>` with nothing else on the line;
   never `#` and `include` together in a comment or string; no include inside `/* */` or `#if`
   (header guard aside); repository headers quoted. `attempt` refuses a unit whose compiler include
@@ -105,15 +110,16 @@ is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated 
 - **Declare adapted bodies when you write them.** If a body, or a substantial part of one, comes
   from a community checkout or the FNV clone, say so in the unit's header comment at the time:
   the method, the upstream file and revision, and the licence (NG: MIT, and copy NG's licence
-  notice from its `LICENSE` at `b93280e` verbatim into that file's header; powerof3: GPL-3.0, stated in the file's header;
+  notice from its `LICENSE` at `b93280e` verbatim into the header comment of every file, `.h` or
+  `.cpp`, that contains adapted code; powerof3: GPL-3.0, stated in each such file's header;
   FNV: one `Sibling source:` line per body). Do not write a blanket claim such as "no community
   code is copied"; write instead "bodies adapted from community sources are listed above;
   `tools/check_origin.py` reports none other above its threshold at <pins>" and only after
   running it. `python3 tools/check_origin.py reconstruction/<area>/<Class>.h
-  reconstruction/<area>/<Class>.cpp` (also printed by `attempt` as `origin:` lines) lists every
-  body close to a same-named community or FNV body; each `adapted` line it marks as not declared
-  needs a header statement. `trivial` lines (an empty body or one `return` of a constant, a
-  member or `this`) need nothing per body. It cannot see a body renamed or moved to another class,
+  reconstruction/<area>/<Class>.cpp` (also printed by `attempt` as `origin:` lines, with an
+  `origin advice:` line while one is undeclared) lists every body close to a same-named community
+  or FNV body; each `adapted` line it marks as not declared needs a header statement. `trivial`
+  lines (an empty body or one `return` of a constant, a member or `this`) need nothing per body. It cannot see a body renamed or moved to another class,
   so declare those yourself.
 - Before you draft, read `docs/matching-cookbook.md` once. A flag bit the target tests as a load,
   `shr`, `test al,1` goes through a by-value bit-index helper (rule 16) from the first draft.
@@ -141,3 +147,9 @@ sizes and attempt number of the best try, then the remaining difference in a sen
 {"rva": "0x73ad90", "result": "pass", "reason": "all-checks-passed", "attempts": 3}
 {"task": "<task-id>", "unit": "reconstruction/<area>/<Class>.cpp", "attempts": 3, "blocker": null}
 ```
+
+**Multi-unit (small) tasks.** A group directory holds `group.json`, a combined `BRIEF.md` and one
+task directory per unit. Work unit by unit in the order the brief gives, one `attempt` per unit
+directory (`attempt <group dir>` only prints each unit's counted/budget and last result). Write
+`.local/handoffs/<group id>.jsonl`: one line per function and one task line per unit (its unit
+task id), and return the same lines.

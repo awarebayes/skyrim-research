@@ -170,8 +170,10 @@ class GroupTests(unittest.TestCase):
         for c, n in (('TESAlpha', 2), ('TESBeta', 1)):
             d = self.gdir / f'batch9-s01-tesform-{c.lower()}'
             d.mkdir(parents=True)
-            fns = [{'rva': hex(0x100 * (i + 1)), 'size': 10 * (i + 1), 'symbol': 'unbound:x'} for i in range(n)]
+            fns = [{'rva': hex(0x100 * (i + 1)), 'size': 10 * (i + 1), 'symbol': 'unbound:x',
+                    'community_name': f'{c}::F{i}'} for i in range(n)]
             (d / 'task.json').write_text(json.dumps({'task_id': d.name, 'compiled': f'reconstruction/forms/{c}.cpp',
+                                                     'build_id': 'b', 'recipe': 'reconstruction/recipes/r.json',
                                                      'functions': fns, 'max_attempts': max(3, 2 * n)}))
             (d / 'BRIEF.md').write_text(f'# Brief: {d.name}\n\nUnit line\nOrder (smallest first): x\n1. `0x100`\n'
                                         'Known risks:\n- Class and member names are COMMUNITY\n## Sibling source\n')
@@ -191,8 +193,20 @@ class GroupTests(unittest.TestCase):
         self.assertIn('### Sibling source', brief)
         self.assertNotIn('Known risks:', brief)
         self.assertEqual(brief.count('Class and member names are COMMUNITY'), 1)
+        self.assertEqual(brief.count('Body origin:'), 1)
         # Smallest unit first.
         self.assertLess(brief.index('## batch9-s01-tesform-tesbeta'), brief.index('## batch9-s01-tesform-tesalpha'))
+
+    def test_refresh_briefs_keeps_attempt_history(self):
+        ep.write_group(self.gdir, self.units)
+        history = json.dumps({'attempt': 1, 'counted': True}) + '\n'
+        (self.units[0] / 'attempts.jsonl').write_text(history)
+        done = ep.refresh_briefs([self.gdir])
+        self.assertIn(self.gdir / 'BRIEF.md', done)
+        self.assertEqual((self.units[0] / 'attempts.jsonl').read_text(), history)
+        for u in self.units:
+            self.assertIn(ep.ORIGIN_LINE, (u / 'BRIEF.md').read_text())
+        self.assertEqual((self.gdir / 'BRIEF.md').read_text().count('Body origin:'), 1)
 
     def test_attempt_prints_group_state(self):
         ep.write_group(self.gdir, self.units)

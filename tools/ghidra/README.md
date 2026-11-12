@@ -34,6 +34,7 @@ python3 tools/ghidra/export_pack.py survey --named                    # every NG
 python3 tools/ghidra/export_pack.py plan --label <name> [--extend <Class>] [--area <Class>=<area>]
         [--classes 8] [--per-class 5] [--total 40] [--task-prefix <prefix>]   # class units from the survey
 python3 tools/ghidra/export_pack.py refresh [<pack dir>...] [--tasks .local/tasks/<id>...]  # no Ghidra
+python3 tools/ghidra/export_pack.py refresh --briefs-only --tasks .local/tasks/<id or group>...  # briefs only; attempt history kept
 python3 tools/ghidra/export_pack.py bind --task .local/tasks/<id> [--object <candidate.obj>]
 ```
 
