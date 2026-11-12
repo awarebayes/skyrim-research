@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "94c979187ec6c77181d8a7febced93100294696a396a507dae4d142e80d986b5",
+        "object_sha256": "8ff5a8b10c788c0f7561949cf81999c5ee6f933463b38aea8e998e9ccd6f9f42",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/BGSLoadGameBuffer.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "267cae0728ecdd8efe270b0e0fa2644af7790f64bbde9d4c48a9367b5776868c",
+        "object_sha256": "690e11f100deb97c0eea06c6dd5bf543c77f1b6a677c7ac89100d0c981e512ba",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/BGSLoadGameBuffer.cpp",
@@ -79,7 +79,7 @@
         "candidate": {
           "code_section_sha256": "c6d7ed73472f79e9817b11a630c0f6ebdef0e3cc187807d623d14ce017e0ca5c",
           "code_sections": 1,
-          "object_sha256": "94c979187ec6c77181d8a7febced93100294696a396a507dae4d142e80d986b5"
+          "object_sha256": "8ff5a8b10c788c0f7561949cf81999c5ee6f933463b38aea8e998e9ccd6f9f42"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -141,9 +141,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/BGSLoadGameBuffer.cpp",
-          "source_revision": "2d3ede09b045fd242abffdcd9afa3a436d7d324f895a727b1c398aa59cd19685"
+          "source_revision": "0c971890557da10f71762108d8f50179974f92817e11175269eb35a75ffd21cb"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -159,7 +159,7 @@
         "candidate": {
           "code_section_sha256": "c6d7ed73472f79e9817b11a630c0f6ebdef0e3cc187807d623d14ce017e0ca5c",
           "code_sections": 1,
-          "object_sha256": "94c979187ec6c77181d8a7febced93100294696a396a507dae4d142e80d986b5"
+          "object_sha256": "8ff5a8b10c788c0f7561949cf81999c5ee6f933463b38aea8e998e9ccd6f9f42"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -221,9 +221,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/BGSLoadGameBuffer.cpp",
-          "source_revision": "2d3ede09b045fd242abffdcd9afa3a436d7d324f895a727b1c398aa59cd19685"
+          "source_revision": "0c971890557da10f71762108d8f50179974f92817e11175269eb35a75ffd21cb"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -239,7 +239,7 @@
         "candidate": {
           "code_section_sha256": "c6d7ed73472f79e9817b11a630c0f6ebdef0e3cc187807d623d14ce017e0ca5c",
           "code_sections": 1,
-          "object_sha256": "267cae0728ecdd8efe270b0e0fa2644af7790f64bbde9d4c48a9367b5776868c"
+          "object_sha256": "690e11f100deb97c0eea06c6dd5bf543c77f1b6a677c7ac89100d0c981e512ba"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -301,9 +301,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/BGSLoadGameBuffer.cpp",
-          "source_revision": "2d3ede09b045fd242abffdcd9afa3a436d7d324f895a727b1c398aa59cd19685"
+          "source_revision": "0c971890557da10f71762108d8f50179974f92817e11175269eb35a75ffd21cb"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -319,7 +319,7 @@
         "candidate": {
           "code_section_sha256": "c6d7ed73472f79e9817b11a630c0f6ebdef0e3cc187807d623d14ce017e0ca5c",
           "code_sections": 1,
-          "object_sha256": "267cae0728ecdd8efe270b0e0fa2644af7790f64bbde9d4c48a9367b5776868c"
+          "object_sha256": "690e11f100deb97c0eea06c6dd5bf543c77f1b6a677c7ac89100d0c981e512ba"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -381,9 +381,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/BGSLoadGameBuffer.cpp",
-          "source_revision": "2d3ede09b045fd242abffdcd9afa3a436d7d324f895a727b1c398aa59cd19685"
+          "source_revision": "0c971890557da10f71762108d8f50179974f92817e11175269eb35a75ffd21cb"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -394,7 +394,7 @@
   ],
   "source": {
     "compiled": "reconstruction/forms/BGSLoadGameBuffer.cpp",
-    "digest": "2d3ede09b045fd242abffdcd9afa3a436d7d324f895a727b1c398aa59cd19685",
+    "digest": "0c971890557da10f71762108d8f50179974f92817e11175269eb35a75ffd21cb",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/forms/BGSLoadGameBuffer.cpp",
@@ -403,7 +403,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00"
+    "sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

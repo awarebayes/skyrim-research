@@ -7,7 +7,8 @@
 // Source exposure: mixed. Drafted by claude-sonnet-5-5 from local instruction listings of the
 // pinned image and the class layout in the header beside this file. A byte match shows that this
 // source and recipe produce the checked code; it does not verify the community names.
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The three functions above are compared.
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. GetVersion and ReadFormID are compared.
+// LoadDataEndian is defined here but not compared: a name it binds clashes with an existing symbol-map entry.
 #include "BGSLoadGameBuffer.h"
 
 #include <cstring>

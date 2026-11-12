@@ -11,7 +11,8 @@
 // here; 0x15a743c is the global sized operator delete; 0x1e5840 is TESForm::FinishLoadGame; 0x204250 is
 // QueuedPromoteQuestTask::Finish; the empty string at 0x1b58020 is the literal in BSString::c_str.
 // Bodies adapted from community sources: none; tools/check_origin.py reports none above its threshold.
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. All five functions above are compared.
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The four functions other than GetFormEditorID are compared.
+// GetFormEditorID is defined here but not compared: a name it binds clashes with an existing symbol-map entry.
 #include "TESQuest.h"
 
 // Not compared: defined so that this unit emits the vftable and with it the deleting destructor.

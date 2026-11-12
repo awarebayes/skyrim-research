@@ -7,7 +7,8 @@
 // Base classes: NiRefObject and NiObject are declared here as stand-ins with inline destructors,
 // because the image inlines both into ~BSTempEffect and the shared netimmerse/NiObject.h declares
 // them out of line (header-gap NiObject, header-gap NiRefObject).
-// Adapted bodies: none declared; tools/check_origin.py reports none above its threshold at
+// Adapted bodies: none in this header; BSTempEffect.cpp lists the one it has (Initialize, from
+// the FNV sibling). tools/check_origin.py reports none other above its threshold at
 // CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
 // TEMP_EFFECT_TYPE, BGSLoadGameBuffer, BGSSaveGameBuffer, TESObjectCELL: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // BSTempEffect: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) EXE_RTTI

@@ -1552,6 +1552,318 @@
         "?RegisterStreamables@NiObjectNET@@UEAA_NAEAVNiStream@@@Z",
         "??_7NiObjectNET@@6B@"
       ]
+    },
+    {
+      "sha256": "c03cebe13f0b7f3f2dab6426741e4ec6082fa58053f341fd479f222a346649ec",
+      "base": 46,
+      "added": [
+        "?ForEachTexture@BSShaderProperty@@UEAAHAEAVForEachVisitor@1@@Z",
+        "?QMaterialAlpha@BSShaderProperty@@UEAAMXZ",
+        "?DoClearRenderPasses@BSShaderProperty@@UEAAXXZ",
+        "?SetFlags@BSShaderProperty@@QEAAXW4EShaderPropertyFlag8@@_N@Z",
+        "?SaveBinary@BSShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "?ClearRenderPass@BSRenderPass@@QEAAXXZ",
+        "?SaveBinary@NiShadeProperty@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary@NiPoint2@@QEAAXPEAVNiStream@@@Z",
+        "?LoadBinary@NiShadeProperty@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@NiPoint2@@QEAAXAEAVNiStream@@@Z"
+      ]
+    },
+    {
+      "sha256": "fa7b4238738416315d3caf8deabcabfb32e8a9c2d4a216f4d33607580483af6e",
+      "base": 47,
+      "added": [
+        "?tell@BSResourceNiBinaryStream@@UEBAIXZ",
+        "?good@BSResourceNiBinaryStream@@UEBA_NXZ",
+        "?set_endian_swap@BSResourceNiBinaryStream@@UEAAX_N@Z",
+        "??_GBSResourceNiBinaryStream@@UEAAPEAXI@Z",
+        "?get_info@BSResourceNiBinaryStream@@UEAAXAEAUBufferInfo@@@Z",
+        "?WriteNoSwap@@YAIPEAVNiBinaryStream@@PEBXIPEAII@Z",
+        "?WriteSwap@@YAIPEAVNiBinaryStream@@PEBXIPEAII@Z",
+        "?ReadNoSwap@@YAIPEAVNiBinaryStream@@PEAXIPEAII@Z",
+        "?ReadSwap@@YAIPEAVNiBinaryStream@@PEAXIPEAII@Z",
+        "??1BSResourceNiBinaryStream@@UEAA@XZ",
+        "?FillInfo@StreamBuffer@@QEAAXPEAUBufferInfo@@PEAI_K@Z"
+      ]
+    },
+    {
+      "sha256": "848acbd6df7bea4fe47f3229d7787f6e3859e69831e2dadd2dad1b6948b2f5c6",
+      "base": 48,
+      "added": [
+        "?InitializeData@TESEffectShader@@UEAAXXZ",
+        "?Initialize@EffectShaderData@@QEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "217e9f7da274c0babb61719452dcc844ab4512324d627f176b61489e87cc7742",
+      "base": 49,
+      "added": [
+        "?InitializeData@TESEyes@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "2f689b00eb4d4785944231030738683379f51abe2b2a547e9da47a1014c05f0d",
+      "base": 50,
+      "added": [
+        "??_GTESIdleForm@@UEAAPEAXI@Z",
+        "??1TESIdleForm@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "d5ff2afed9e3f34dad666623ca1a2ba444241e6aed362a7f7e23892cd374ecec",
+      "base": 51,
+      "added": [
+        "?ClearData@TESLoadScreen@@UEAAXXZ",
+        "?Clear@TESCondition@@QEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "ca9b18f2041a9a35acb3758a823c3be824c8317819e46f0f22324ed346163a1d",
+      "base": 52,
+      "added": [
+        "?CreateDuplicateForm@TESObjectLAND@@UEAAPEAVTESForm@@_NPEAX@Z",
+        "?SetAltered@TESObjectLAND@@UEAAX_N@Z",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "??_R0?AVTESObjectLAND@@@8",
+        "?SetAltered@TESForm@@UEAAX_N@Z"
+      ]
+    },
+    {
+      "sha256": "22d0b336d88811f267b97dc35c0060756a11375b702f13110517968bc7ea131e",
+      "base": 53,
+      "added": [
+        "?GetKnown@TESShout@@UEBA_NXZ"
+      ]
+    },
+    {
+      "sha256": "1852233ec7950b5f053f9b91bc4c839c0edd25c408ffb30a2c0ad107c5bddcd3",
+      "base": 54,
+      "added": [
+        "?IsFormTypeChild@TESTopic@@UEAA_NW4FormType@@@Z"
+      ]
+    },
+    {
+      "sha256": "2510c12aebe65451d8d2d6bed7e4db4e2bf2d8fd53bac3a1435fc9d15d2083c2",
+      "base": 55,
+      "added": [
+        "?LoadGame@TESTopicInfo@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESTopicInfo@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z"
+      ]
+    },
+    {
+      "sha256": "6b6e0092f22cba8ad518b3e4c2ae150df2af52fd47b77ea94dc0761a1fe4ee10",
+      "base": 56,
+      "added": [
+        "?InitializeData@BGSCameraPath@@UEAAXXZ",
+        "??_GBGSCameraPath@@UEAAPEAXI@Z",
+        "??1BGSCameraPath@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "b0aca61da9378f6979e2f34c2c1c5382e6d80269afaf524d28ad4caec1f457b7",
+      "base": 57,
+      "added": [
+        "?InitializeData@BGSCameraShot@@UEAAXXZ",
+        "??_GBGSCameraShot@@UEAAPEAXI@Z",
+        "??1BGSCameraShot@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "357ec695943dbdbb8dfb212caafb7312fd789c4c27c4ee76948fb87f74bfee5c",
+      "base": 58,
+      "added": [
+        "?InitializeData@BGSColorForm@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "737f13fd5e642363edd32fe1c100812ba47104fdb3f8253bbd2997ff1b3d0697",
+      "base": 59,
+      "added": [
+        "?InitializeData@BGSDialogueBranch@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "bc05575a865c1b0622a7092ed28da94f9799a1c37e8e04b301de514ed459dd26",
+      "base": 60,
+      "added": [
+        "?InitializeData@BGSEquipSlot@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "567e887120e8236bf9eec66a54fce63226beaa9cec921da0be4e2d0ee9f734e7",
+      "base": 61,
+      "added": [
+        "??_GBGSFootstep@@UEAAPEAXI@Z",
+        "??1TESForm@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "73d873d10ee1a11693dfc24edcc5753ba6f3281139b70b6c295e3e5060d97cff",
+      "base": 62,
+      "added": [
+        "?InitializeData@BGSImpactData@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "db9b9e6da24c4dde1b4e238d71873823607137f58d7b2247ea5ce1d581025030",
+      "base": 63,
+      "added": [
+        "?GetFormEditorID@BGSKeyword@@UEBAPEBDXZ"
+      ]
+    },
+    {
+      "sha256": "792f534c3f192932cca1821b4767ab743f47f482ceece37080cf223fbee92963",
+      "base": 64,
+      "added": [
+        "?InitializeData@BGSLightingTemplate@@UEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "89ffb5ab702c26fa183050ee3c9e51dbb29ba02dc4ee90726fff058b540f84b7",
+      "base": 65,
+      "added": [
+        "??_EBGSMaterialObject@@WEI@EAAPEAXI@Z",
+        "?EnsureLoaded@BGSMaterialObject@@UEAAXXZ",
+        "??_EBGSMaterialObject@@UEAAPEAXI@Z",
+        "?LoadFileData@BGSMaterialObject@@QEAAXXZ"
+      ]
+    },
+    {
+      "sha256": "c9697ecc6b7f07ee0e9f6e2490add582a1b814714471f5bfb86d1bd56f536929",
+      "base": 66,
+      "added": [
+        "?SetName@NiAVObject@@QEAAXAEBVBSFixedString@@@Z",
+        "?GetCollisionObject@NiAVObject@@QEAAPEAVbhkCollisionObject@@XZ",
+        "?GetBoneFromName@NiAVObject@@SAPEAV1@PEAV1@AEBVBSFixedString@@_N@Z",
+        "?RecalculateWorldTransform@NiAVObject@@QEAAXXZ",
+        "?Copy@BSFixedString@@QEAAXAEBV1@@Z",
+        "?NiRTTI_bhkCollisionObject@@3VNiRTTI@@B",
+        "?HasValue@BSFixedString@@QEBAHXZ",
+        "?kBoneMapName@@3VBSFixedString@@B",
+        "?GetExtraData@NiObjectNET@@QEBAPEAVNiExtraData@@AEBVBSFixedString@@@Z",
+        "?FindBone@@YA_NPEAVNiExtraData@@AEBVBSFixedString@@AEAPEAVNiAVObject@@@Z",
+        "?NiRTTI_BSFlattenedBoneTree@@3VNiRTTI@@B",
+        "?FindFlattenedBone@@YAPEAVNiAVObject@@PEAV1@AEBVBSFixedString@@_N@Z",
+        "??DNiTransform@@QEBA?AV0@AEBV0@@Z",
+        "?IsInvalid@@YA_NPEBVNiTransform@@@Z"
+      ]
+    },
+    {
+      "sha256": "4edfaf2d99f7bfa61fa2308e2f4f4344cea3fb007aebc056abce946d3bebd269",
+      "base": 67,
+      "added": [
+        "?GetLeftHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetRightHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetVoiceEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetEquipSlot@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@I@Z",
+        "??_GBGSDefaultObjectManager@@UEAAPEAXI@Z",
+        "??0BGSDefaultObjectManager@@QEAA@XZ",
+        "?GetDefaultObject@BGSDefaultObjectManager@@SAPEAVTESForm@@I@Z",
+        "??_7BGSDefaultObjectManager@@6B@",
+        "??0TESForm@@QEAA@XZ",
+        "?SetFormID@TESForm@@UEAAXI_N@Z"
+      ]
+    },
+    {
+      "sha256": "44978fb11e7449a501330d53cddcb71e80e46b68ac6cb28a42315573833051a4",
+      "base": 68,
+      "added": [
+        "??_GTESCombatStyle@@UEAAPEAXI@Z",
+        "??_7TESCombatStyle@@6B@"
+      ]
+    },
+    {
+      "sha256": "6ae31416b8a82c8c158d5d90f344f5ed6595b259b1ed77872a975e409bf0ba0f",
+      "base": 69,
+      "added": [
+        "?SetFormEditorID@TESGlobal@@UEAA_NPEBD@Z",
+        "?Set@BSStringT@@QEAA_NPEBDI@Z"
+      ]
+    },
+    {
+      "sha256": "369df56b02ca7a41d502e3321522babd433b30ef1c97346708878fd46ede0dab",
+      "base": 70,
+      "added": [
+        "?SetFormEditorID@TESImageSpaceModifier@@UEAA_NPEBD@Z",
+        "??_GTESImageSpaceModifier@@UEAAPEAXI@Z",
+        "??1TESImageSpaceModifier@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "039b47932e94ab1e68f803e4324f7c41613794855fffd1f3758a8b527dff7e28",
+      "base": 71,
+      "added": [
+        "?GetPlayable@TESRace@@UEBA_NXZ",
+        "?GetBodyPartData@TESRace@@QEAAPEAVBGSBodyPartData@@XZ",
+        "?GetMovementType@TESRace@@QEAAPEAVBGSMovementType@@H@Z",
+        "??_GTESRace@@UEAAPEAXI@Z",
+        "?defaultBodyPartData@@3PEAVBGSBodyPartData@@EA",
+        "?GetDefaultMovementType@BGSDefaultObjectManager@@SAPEAVBGSMovementType@@H@Z",
+        "??1TESRace@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "23d1ec13dc96d711c3207a97e0a1653577d7dd4082b79df05e3d590e7dce7f21",
+      "base": 72,
+      "added": [
+        "?SetFormEditorID@BGSHeadPart@@UEAA_NPEBD@Z",
+        "??4BSFixedString@@QEAAAEAV0@PEBD@Z"
+      ]
+    },
+    {
+      "sha256": "742e07bef7846370e67429ab4deb50db20098ef6812267721590d099d2278266",
+      "base": 73,
+      "added": [
+        "??_GBGSLocation@@UEAAPEAXI@Z",
+        "??1BGSLocation@@UEAA@XZ"
+      ]
+    },
+    {
+      "sha256": "aa2473c7d2a24b0187c99c9c7e5b6fa71a134672a861c51a0702af27ed475194",
+      "base": 74,
+      "added": [
+        "??_EBGSMusicType@@WCA@EAAPEAXI@Z",
+        "?SetFormEditorID@BGSMusicType@@UEAA_NPEBD@Z",
+        "?DoPause@BGSMusicType@@UEAAXXZ",
+        "??_EBGSMusicType@@UEAAPEAXI@Z"
+      ]
+    },
+    {
+      "sha256": "97b35a5910347d9ba71eb985b17df7b149fcd169d7f168a49cf76b535d98deb4",
+      "base": 75,
+      "added": [
+        "?InitializeData@BGSEncounterZone@@UEAAXXZ",
+        "?Revert@BGSEncounterZone@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "??_GBGSEncounterZone@@UEAAPEAXI@Z",
+        "?LoadGame@BGSEncounterZone@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@BGSEncounterZone@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "??_7BGSEncounterZone@@6B@"
+      ]
+    },
+    {
+      "sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
+      "base": 76,
+      "added": [
+        "?GetReferenceName@TESObjectREFR@@QEBAPEBDXZ",
+        "?GetTeleportData@TESObjectREFR@@QEBAPEAUDoorTeleportData@@XZ",
+        "?GetContainer@TESObjectREFR@@QEBAPEAVTESContainer@@XZ",
+        "?GetWorldSpace@TESObjectREFR@@QEBAPEAVTESWorldSpace@@XZ",
+        "?GetDistanceBetweenSquared@TESObjectREFR@@QEBAMPEBV1@_N1@Z",
+        "?GetFormName@TESForm@@QEBAPEBDXZ",
+        "?GetTeleportData@ExtraDataList@@QEBAPEAUDoorTeleportData@@XZ",
+        "__real@7f7fffff",
+        "?SameWorldspace@TESObjectREFR@@QEBA_NPEBV1@_N@Z",
+        "?GetInventoryChanges@ExtraDataList@@QEBAPEAVInventoryChanges@@W4FormType@@@Z"
+      ]
+    },
+    {
+      "sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
+      "base": 77,
+      "added": [
+        "__CxxFrameHandler3"
+      ]
     }
   ]
 }

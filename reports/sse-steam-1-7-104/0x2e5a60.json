@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "ebaae5fb93a48c36f976340aa27164899ee59100fefa1a70f6aa4edf2b52340e",
+        "object_sha256": "793a5f436f70a9d43e0ee9ba15c9845970dec4c837fc96e5f50ef089c9fdf113",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/TESObjectREFR.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "c30ab2b48ee40347416a7c6da1c77c4e8fd7b25280952c33fa0609126efa2340",
+        "object_sha256": "864de2d4686916164249f1f3270a9fb4acadcb8387f6600546d77b4f4de5a51c",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/TESObjectREFR.cpp",
@@ -79,7 +79,7 @@
         "candidate": {
           "code_section_sha256": "067e154992d8430be38b337e4af9acaaaefc60e79c981ceaabc14cef3b967935",
           "code_sections": 1,
-          "object_sha256": "ebaae5fb93a48c36f976340aa27164899ee59100fefa1a70f6aa4edf2b52340e"
+          "object_sha256": "793a5f436f70a9d43e0ee9ba15c9845970dec4c837fc96e5f50ef089c9fdf113"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -141,9 +141,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectREFR.cpp",
-          "source_revision": "c2080d8928071fa76425204d51cbd5141ad8b944315137fdd230ab53165199ec"
+          "source_revision": "9f259ca0f8713d95fba202b23880944f5a4f04eb56be3e48768b47d05828aab6"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -159,7 +159,7 @@
         "candidate": {
           "code_section_sha256": "067e154992d8430be38b337e4af9acaaaefc60e79c981ceaabc14cef3b967935",
           "code_sections": 1,
-          "object_sha256": "ebaae5fb93a48c36f976340aa27164899ee59100fefa1a70f6aa4edf2b52340e"
+          "object_sha256": "793a5f436f70a9d43e0ee9ba15c9845970dec4c837fc96e5f50ef089c9fdf113"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -221,9 +221,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectREFR.cpp",
-          "source_revision": "c2080d8928071fa76425204d51cbd5141ad8b944315137fdd230ab53165199ec"
+          "source_revision": "9f259ca0f8713d95fba202b23880944f5a4f04eb56be3e48768b47d05828aab6"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -239,7 +239,7 @@
         "candidate": {
           "code_section_sha256": "067e154992d8430be38b337e4af9acaaaefc60e79c981ceaabc14cef3b967935",
           "code_sections": 1,
-          "object_sha256": "c30ab2b48ee40347416a7c6da1c77c4e8fd7b25280952c33fa0609126efa2340"
+          "object_sha256": "864de2d4686916164249f1f3270a9fb4acadcb8387f6600546d77b4f4de5a51c"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -301,9 +301,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectREFR.cpp",
-          "source_revision": "c2080d8928071fa76425204d51cbd5141ad8b944315137fdd230ab53165199ec"
+          "source_revision": "9f259ca0f8713d95fba202b23880944f5a4f04eb56be3e48768b47d05828aab6"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -319,7 +319,7 @@
         "candidate": {
           "code_section_sha256": "067e154992d8430be38b337e4af9acaaaefc60e79c981ceaabc14cef3b967935",
           "code_sections": 1,
-          "object_sha256": "c30ab2b48ee40347416a7c6da1c77c4e8fd7b25280952c33fa0609126efa2340"
+          "object_sha256": "864de2d4686916164249f1f3270a9fb4acadcb8387f6600546d77b4f4de5a51c"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -381,9 +381,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESObjectREFR.cpp",
-          "source_revision": "c2080d8928071fa76425204d51cbd5141ad8b944315137fdd230ab53165199ec"
+          "source_revision": "9f259ca0f8713d95fba202b23880944f5a4f04eb56be3e48768b47d05828aab6"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -394,7 +394,7 @@
   ],
   "source": {
     "compiled": "reconstruction/forms/TESObjectREFR.cpp",
-    "digest": "c2080d8928071fa76425204d51cbd5141ad8b944315137fdd230ab53165199ec",
+    "digest": "9f259ca0f8713d95fba202b23880944f5a4f04eb56be3e48768b47d05828aab6",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/forms/TESObjectREFR.cpp",
@@ -403,7 +403,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
+    "sha256": "d24cac1072a27d2c3647d349a3d6c23f4a075629f650ec17929d5ecd2b98dda3"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

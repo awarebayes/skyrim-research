@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "a3a80b168d7bfc3ab9cc8b81e450fc5b8043b545e5f4726f406846299b6bae63",
+        "object_sha256": "48b776dad8dba70e9361c0c6fca15ac72805dd736b08f33ad6512b9d7fe39d66",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSTempEffect.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "971dfd775783a6995e70eec7a1688a9084258f063bf3db4fdd770409dcb3e16f",
+        "object_sha256": "1e22c7c87529d6dc0f7e4f74e5a0238716350b80b72143a6f791e86e2e235187",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSTempEffect.cpp",
@@ -79,7 +79,7 @@
         "candidate": {
           "code_section_sha256": "282913feb351de89ef6211f6fe3189de8fb04b0ad522b8730abf4fb289742ed9",
           "code_sections": 1,
-          "object_sha256": "a3a80b168d7bfc3ab9cc8b81e450fc5b8043b545e5f4726f406846299b6bae63"
+          "object_sha256": "48b776dad8dba70e9361c0c6fca15ac72805dd736b08f33ad6512b9d7fe39d66"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -141,9 +141,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSTempEffect.cpp",
-          "source_revision": "246308c8a8c94a675f960345a96261b06fa7f49300fc46d8d655da73073e5ae5"
+          "source_revision": "7343d8e9f8602ecefdaaf276c2ccf86e90659513cc021f3e0a28ee7c91ae23f1"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -159,7 +159,7 @@
         "candidate": {
           "code_section_sha256": "282913feb351de89ef6211f6fe3189de8fb04b0ad522b8730abf4fb289742ed9",
           "code_sections": 1,
-          "object_sha256": "a3a80b168d7bfc3ab9cc8b81e450fc5b8043b545e5f4726f406846299b6bae63"
+          "object_sha256": "48b776dad8dba70e9361c0c6fca15ac72805dd736b08f33ad6512b9d7fe39d66"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -221,9 +221,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSTempEffect.cpp",
-          "source_revision": "246308c8a8c94a675f960345a96261b06fa7f49300fc46d8d655da73073e5ae5"
+          "source_revision": "7343d8e9f8602ecefdaaf276c2ccf86e90659513cc021f3e0a28ee7c91ae23f1"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -239,7 +239,7 @@
         "candidate": {
           "code_section_sha256": "282913feb351de89ef6211f6fe3189de8fb04b0ad522b8730abf4fb289742ed9",
           "code_sections": 1,
-          "object_sha256": "971dfd775783a6995e70eec7a1688a9084258f063bf3db4fdd770409dcb3e16f"
+          "object_sha256": "1e22c7c87529d6dc0f7e4f74e5a0238716350b80b72143a6f791e86e2e235187"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -301,9 +301,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSTempEffect.cpp",
-          "source_revision": "246308c8a8c94a675f960345a96261b06fa7f49300fc46d8d655da73073e5ae5"
+          "source_revision": "7343d8e9f8602ecefdaaf276c2ccf86e90659513cc021f3e0a28ee7c91ae23f1"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -319,7 +319,7 @@
         "candidate": {
           "code_section_sha256": "282913feb351de89ef6211f6fe3189de8fb04b0ad522b8730abf4fb289742ed9",
           "code_sections": 1,
-          "object_sha256": "971dfd775783a6995e70eec7a1688a9084258f063bf3db4fdd770409dcb3e16f"
+          "object_sha256": "1e22c7c87529d6dc0f7e4f74e5a0238716350b80b72143a6f791e86e2e235187"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -381,9 +381,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSTempEffect.cpp",
-          "source_revision": "246308c8a8c94a675f960345a96261b06fa7f49300fc46d8d655da73073e5ae5"
+          "source_revision": "7343d8e9f8602ecefdaaf276c2ccf86e90659513cc021f3e0a28ee7c91ae23f1"
         },
-        "symbol_map_sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -394,7 +394,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSTempEffect.cpp",
-    "digest": "246308c8a8c94a675f960345a96261b06fa7f49300fc46d8d655da73073e5ae5",
+    "digest": "7343d8e9f8602ecefdaaf276c2ccf86e90659513cc021f3e0a28ee7c91ae23f1",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSTempEffect.cpp",
@@ -403,7 +403,7 @@
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "152664c77b81f5f17589648713ab607435873e53ca61184f89a82a40aff1ce00"
+    "sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

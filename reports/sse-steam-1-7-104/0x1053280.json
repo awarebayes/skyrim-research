@@ -26,11 +26,12 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "6685de7c2bfd56549a4c63b7a889fa06b11d69c692dc2e5177e829b8d4c281a6",
+        "object_sha256": "8f3b7bf22738d6b56ef0142c470ba11d62811af86169e97379a8622327120493",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiAVObject.cpp",
-          "reconstruction/netimmerse/NiAVObject.h"
+          "reconstruction/netimmerse/NiAVObject.h",
+          "reconstruction/netimmerse/NiObject.h"
         ]
       },
       "boat-verifier-b": {
@@ -46,11 +47,12 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "7566d67a7942d422236981e125b307c5548ecb32688923d5a06ef1159ebf3809",
+        "object_sha256": "5981518236b924a862286ca046fab224e1d08e2ece5c0d3feac7bd57425f081a",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiAVObject.cpp",
-          "reconstruction/netimmerse/NiAVObject.h"
+          "reconstruction/netimmerse/NiAVObject.h",
+          "reconstruction/netimmerse/NiObject.h"
         ]
       }
     }
@@ -69,7 +71,7 @@
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
     "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
   },
-  "reproduction": "From the repository root, with cl 19.16.27054 x64 under msvc-wine whose binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): env -u CL -u EXTERNAL_INCLUDE -u INCLUDE -u LIB -u LIBPATH -u _CL_ <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/netimmerse/NiAVObject.cpp (the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the repository files /showIncludes lists to equal --unit below) ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x1053280 --symbol '?SetCollisionLayer@NiAVObject@@QEAAXW4COL_LAYER@@@Z' --compiled reconstruction/netimmerse/NiAVObject.cpp --unit reconstruction/netimmerse/NiAVObject.cpp reconstruction/netimmerse/NiAVObject.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/symbol-map.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "reproduction": "From the repository root, with cl 19.16.27054 x64 under msvc-wine whose binaries match tools/verifier/pinned.sha256 (tools/verifier/setup_boat_machine.sh installs it at <msvc>): env -u CL -u EXTERNAL_INCLUDE -u INCLUDE -u LIB -u LIBPATH -u _CL_ <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/netimmerse/NiAVObject.cpp (the wrapper then sets INCLUDE to toolchain and SDK directories only; the verifier required the repository files /showIncludes lists to equal --unit below) ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x1053280 --symbol '?SetCollisionLayer@NiAVObject@@QEAAXW4COL_LAYER@@@Z' --compiled reconstruction/netimmerse/NiAVObject.cpp --unit reconstruction/netimmerse/NiAVObject.cpp reconstruction/netimmerse/NiAVObject.h reconstruction/netimmerse/NiObject.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/symbol-map.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
   "runs": [
     {
       "compared_on": "boat-verifier-a",
@@ -79,7 +81,7 @@
         "candidate": {
           "code_section_sha256": "a9e8815cf5ebf58412a379052a37314aaed6d10fbe6e8aebfe2ae40a3f226e4a",
           "code_sections": 1,
-          "object_sha256": "6685de7c2bfd56549a4c63b7a889fa06b11d69c692dc2e5177e829b8d4c281a6"
+          "object_sha256": "8f3b7bf22738d6b56ef0142c470ba11d62811af86169e97379a8622327120493"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -141,9 +143,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiAVObject.cpp",
-          "source_revision": "b5bb4ad6ded773f98826d205ea32dc666295ae63e2107890cbfba5ebab71fc54"
+          "source_revision": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -159,7 +161,7 @@
         "candidate": {
           "code_section_sha256": "a9e8815cf5ebf58412a379052a37314aaed6d10fbe6e8aebfe2ae40a3f226e4a",
           "code_sections": 1,
-          "object_sha256": "6685de7c2bfd56549a4c63b7a889fa06b11d69c692dc2e5177e829b8d4c281a6"
+          "object_sha256": "8f3b7bf22738d6b56ef0142c470ba11d62811af86169e97379a8622327120493"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -221,9 +223,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiAVObject.cpp",
-          "source_revision": "b5bb4ad6ded773f98826d205ea32dc666295ae63e2107890cbfba5ebab71fc54"
+          "source_revision": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -239,7 +241,7 @@
         "candidate": {
           "code_section_sha256": "a9e8815cf5ebf58412a379052a37314aaed6d10fbe6e8aebfe2ae40a3f226e4a",
           "code_sections": 1,
-          "object_sha256": "7566d67a7942d422236981e125b307c5548ecb32688923d5a06ef1159ebf3809"
+          "object_sha256": "5981518236b924a862286ca046fab224e1d08e2ece5c0d3feac7bd57425f081a"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -301,9 +303,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiAVObject.cpp",
-          "source_revision": "b5bb4ad6ded773f98826d205ea32dc666295ae63e2107890cbfba5ebab71fc54"
+          "source_revision": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -319,7 +321,7 @@
         "candidate": {
           "code_section_sha256": "a9e8815cf5ebf58412a379052a37314aaed6d10fbe6e8aebfe2ae40a3f226e4a",
           "code_sections": 1,
-          "object_sha256": "7566d67a7942d422236981e125b307c5548ecb32688923d5a06ef1159ebf3809"
+          "object_sha256": "5981518236b924a862286ca046fab224e1d08e2ece5c0d3feac7bd57425f081a"
         },
         "comparator": {
           "source_sha256": "f74de5185c1f63f8c272d2db5dce9f98bbb31b42f8bb58d06ab99e8e6ee62807",
@@ -381,9 +383,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiAVObject.cpp",
-          "source_revision": "b5bb4ad6ded773f98826d205ea32dc666295ae63e2107890cbfba5ebab71fc54"
+          "source_revision": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000"
         },
-        "symbol_map_sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb",
+        "symbol_map_sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -394,16 +396,17 @@
   ],
   "source": {
     "compiled": "reconstruction/netimmerse/NiAVObject.cpp",
-    "digest": "b5bb4ad6ded773f98826d205ea32dc666295ae63e2107890cbfba5ebab71fc54",
+    "digest": "58ad78fa2442068c2d723718c842bf6848c8b672595f36964cbefb2a5ab6b000",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/netimmerse/NiAVObject.cpp",
-      "reconstruction/netimmerse/NiAVObject.h"
+      "reconstruction/netimmerse/NiAVObject.h",
+      "reconstruction/netimmerse/NiObject.h"
     ]
   },
   "symbol_map": {
     "path": "reports/sse-steam-1-7-104/symbol-map.json",
-    "sha256": "31c10b2b7ebfc1586d7ffb3666d6ea4995b1d987312489436bfbe8c55922c1cb"
+    "sha256": "6a9d05a4fc87c798625682438d1e9525ad8537d41bcf8309e202c1ca6a7313fc"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",
