@@ -38,12 +38,14 @@ python3 tools/contrib.py submit     # open the pull request (source and a saniti
 ```
 
 Or open a coding agent in the clone and say *"help me match one function; follow
-docs/contributing-agent.md"*. You are asked only for your game's path and to accept Microsoft's
-compiler licence yourself. After you submit, the project re-runs the comparison on two of its own
-machines and a Reviewer checks the source; only then is the function counted as matched, with
-credit to you. Details, other ways to help and the rules: [CONTRIBUTING.md](CONTRIBUTING.md).
-Status: the helper's comparator, pack and checks run against the real game file on macOS; its
-compiler install and compile steps are not yet tested with the real compiler on any platform.
+docs/contributing-agent.md"*. The helper asks you only for your game's path and to accept
+Microsoft's compiler licence yourself; your system may also ask for your password (`sudo`) or, on
+Apple silicon, to install Rosetta 2. After you submit, the project re-runs the comparison on two of
+its own machines and a Reviewer checks the source; only then is the function counted as matched,
+with credit to you. Details, other ways to help and the rules: [CONTRIBUTING.md](CONTRIBUTING.md).
+Status: macOS on Apple silicon runs the whole path with the real compiler (setup in under four
+minutes unattended once Rosetta is present; the self-test reproduces the project's code-section hash
+for an accepted function). Linux and Windows have not been run yet.
 
 ## Start here
 

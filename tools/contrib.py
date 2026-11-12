@@ -325,10 +325,14 @@ def exe_candidates(ctx, exists=os.path.isfile, dir_exists=os.path.isdir, read=No
         p = lib / 'steamapps' / 'common' / 'Skyrim Special Edition' / 'SkyrimSE.exe'
         if exists(str(p)):
             found.append(str(p))
-    # The SteamCMD route below installs into a directory of the contributor's choice under .local/.
-    own = ctx.private / 'game' / 'SkyrimSE.exe'
-    if exists(str(own)):
-        found.append(str(own))
+    # The SteamCMD route installs into .local/contrib/game; its depot-only variant writes under
+    # SteamCMD's own steamapps/content folder.
+    own = [ctx.private / 'game' / 'SkyrimSE.exe']
+    own += [d / 'steamapps' / 'content' / f'app_{STEAM_APP_ID}' / f'depot_{STEAM_EXE_DEPOT}' / 'SkyrimSE.exe'
+            for d in steamcmd_dirs(ctx)]
+    for p in own:
+        if exists(str(p)):
+            found.append(str(p))
     return list(dict.fromkeys(found))
 
 
@@ -352,13 +356,24 @@ def steamcmd_route(ctx):
     """The official SteamCMD steps for the contributor's own account; credentials are typed into
     SteamCMD by the contributor and never pass through this tool."""
     where = ctx.private / 'game'
-    return [f'steamcmd   (then type these at its Steam> prompt; it asks for your password itself)',
+    return ['steamcmd   (then type these at its Steam> prompt; it asks for your password itself)',
             '@sSteamCmdForcePlatformType windows',
             f'force_install_dir "{where}"',
             'login <your-steam-login>',
-            f'app_update {STEAM_APP_ID} validate',
+            f'app_update {STEAM_APP_ID} validate      (whole game, about 13 GB; the route the maintainer used)',
+            f'  or: download_depot {STEAM_APP_ID} {STEAM_EXE_DEPOT} {STEAM_EXE_MANIFEST}      (only the executable, '
+            'about 38 MB; not yet tried by the project; SteamCMD prints the folder it wrote)',
             'quit',
-            f'then: {ctx.cli} setup --exe "{where / "SkyrimSE.exe"}"']
+            f'then: {ctx.cli} setup      (it looks in both places; or pass --exe "<path to SkyrimSE.exe>")']
+
+
+def steamcmd_dirs(ctx):
+    """Where SteamCMD keeps its own files on this platform (its depot downloads land beneath)."""
+    home = Path(ctx.env.get('USERPROFILE' if ctx.windows else 'HOME') or str(Path.home()))
+    if ctx.windows:
+        return [Path(r'C:\steamcmd')]
+    return [home / 'Library/Application Support/Steam', home / '.steam/steamcmd', home / '.steam/steam',
+            home / '.local/share/Steam', home / 'Steam', Path('/usr/games/steamcmd')]
 
 
 def resolve_exe(ctx, target, given=None):
@@ -962,7 +977,7 @@ def cmd_doctor(ctx, args):
         f'{ctx.cli} setup --yes', required=False)
     ok = all(c['ok'] for c in checks if c['required'])
     if ok and nxt is None:
-        tasks = list((ctx.private / 'tasks').glob('*/task.json')) if (ctx.private / 'tasks').is_dir() else []
+        tasks = list((ctx.private / 'tasks').glob('contrib-*/task.json')) if (ctx.private / 'tasks').is_dir() else []
         nxt = f'{ctx.cli} compare' if tasks else f'{ctx.cli} go'
     return (OK if ok else MISSING), {'checks': checks, 'platform': ctx.platform}, nxt
 
@@ -1234,9 +1249,19 @@ def cmd_setup(ctx, args):
     # 1. Packages first, so SteamCMD is available for the executable step.
     tool = check_toolchain(ctx)
     want = wanted_packages(ctx, tool)
-    if getattr(args, 'steamcmd', False) and not ctx.which('steamcmd'):
-        want.append('steamcmd')
     pm = package_manager(ctx)
+    if getattr(args, 'steamcmd', False) and not ctx.which('steamcmd'):
+        if pm == 'apt-get':
+            # Debian's package shows Valve's Steam licence in a debconf dialog; a person answers it,
+            # so this tool never installs it with -y or preseeds the answer.
+            step('steamcmd', 'needs-person', 'run: sudo apt install steamcmd   (it shows the Steam licence for you '
+                 'to accept; Ubuntu needs the multiverse repository and i386: sudo add-apt-repository multiverse; '
+                 'sudo dpkg --add-architecture i386; sudo apt update)')
+        elif ctx.windows:
+            step('steamcmd', 'needs-person', 'download SteamCMD from Valve: '
+                 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip (unzip it to C:\\steamcmd)')
+        else:
+            want.append('steamcmd')
     if want:
         table = PACKAGES.get(pm or '', {})
         names = [table[w] for w in want if table.get(w)]
@@ -1281,6 +1306,16 @@ def cmd_setup(ctx, args):
             raise Stop(CONSENT, 'Wine is needed to run the compiler on macOS', f'{ctx.cli} setup --yes', steps=steps)
     # 2. The game executable.
     info, how = resolve_exe(ctx, target, args.exe)
+    steamcmd = ctx.which('steamcmd')
+    if (info is None or info['status'] != 'ok') and getattr(args, 'steamcmd', False) and steamcmd \
+            and ctx.interactive and not args.exe:
+        # SteamCMD runs in this terminal: the person types the login, password and guard code into
+        # it directly, so none of them pass through this process.
+        ctx.say('\n'.join(steamcmd_route(ctx)))
+        if ctx.ask('Start SteamCMD now (you type the steps above at its prompt)?', '--steamcmd'):
+            (ctx.private / 'game').mkdir(parents=True, exist_ok=True)
+            subprocess.run([steamcmd], env=ctx.env)
+            info, how = resolve_exe(ctx, target, None)
     if info is not None and info['status'] == 'ok':
         save_config(ctx, exe=info['path'])
         step('game executable', 'ok', f'{info["path"]} ({how}), {target["version"]}, SHA-256 pinned')

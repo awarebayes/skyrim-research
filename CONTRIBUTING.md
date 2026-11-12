@@ -9,7 +9,8 @@ you supply the game and approve two things.
 
 **You need:** a computer running Windows, macOS or Linux; Python 3.11 or newer and git; a GitHub
 account; your own copy of Skyrim Special Edition **1.7.104.0 from Steam** (the exact file is pinned
-in `builds/target.json`); about 5 GB of free disk. Everything else is installed for you.
+in `builds/target.json`); about 5 GB of free disk and a download of about 1 GB. Everything else is
+installed for you.
 
 ```sh
 git clone https://github.com/awarebayes/skyrim-research.git
@@ -25,7 +26,11 @@ ever asked of you:
 
 1. **Where your `SkyrimSE.exe` is** (found automatically in a normal Steam library).
 2. **Whether you accept Microsoft's licence** for the Visual Studio 2017 Build Tools, which the
-   compiler download requires. Nothing accepts it on your behalf.
+   compiler download requires. `setup` prints the licence link; nothing accepts it on your behalf.
+
+Your system may add its own questions: a package manager can ask for your password (`sudo` on
+Linux), Apple silicon Macs need Rosetta 2 (`softwareupdate --install-rosetta`, Apple's licence), and
+winget on Windows asks you once to accept the terms of its package source.
 
 Then write the function (or ask your agent to) and run:
 
@@ -43,23 +48,28 @@ re-compiles and re-compares your source on two of its own machines, and a Review
 is plausible source with honest provenance. If both agree, the function is recorded as matched and
 you are credited in the commit. If not, the reasons come back on your pull request.
 
-**Status of the platforms.** The comparator, the local pack and the checks are pure Python and run
-anywhere and have been run on macOS against the real game file. The pinned compiler recipe is the
-one the project's own verifiers use on Linux (Ubuntu 24.04 with Wine), but this helper's install and
-compile steps have not yet been run with the real compiler on any platform: on Linux, macOS (Wine)
-and Windows (native) they are untested. Please report what happens on yours.
+**Status of the platforms.** **macOS (Apple silicon) works end to end**: on a Mac with Rosetta
+already installed, `setup --yes --accept-microsoft-license` installed Wine and the pinned compiler
+unattended in under 4 minutes (about 3.5 GB on disk, about 0.9 GB downloaded), and the self-test
+compiled an accepted function to the same code-section hash as the project's own two verifier
+hosts. A compare takes about 7 seconds. Linux uses the recipe of the project's own verifiers
+(Ubuntu 24.04 with Wine), but this helper has not been run there; Windows (native compiler, no
+Wine) is untested. Please report what happens on yours.
 
 ### The game executable
 
 The comparator needs exactly the pinned file (`builds/target.json`: Steam, version 1.7.104.0,
 Steam build 24914197). `doctor` reads your file's version and hash and tells you plainly if it is
-another build. Use only your own copy through Valve's official clients: the Steam app on Windows,
-or Valve's command-line client SteamCMD (also the route on macOS, where the Steam app cannot install
-this Windows-only game). `setup --steamcmd` installs SteamCMD with your package manager and prints
-the steps; you type your Steam login into SteamCMD yourself. This tool never sees, stores or passes
-Steam credentials, never downloads the game itself, and the project gives no instructions for
-third-party downloaders, cracks or DRM removal. If the build Steam delivers is not the pinned one,
-`setup` says so; whether Steam still delivers 1.7.104.0 is not known to the project.
+another build. Fetching your own purchased copy with your own account through Valve's clients is
+fine: the Steam app on Windows, or Valve's command-line client SteamCMD (also the route on macOS
+and Linux, where the Steam app cannot install this Windows-only game). `setup --steamcmd` installs
+SteamCMD with your package manager and prints the steps; you type your Steam login into SteamCMD
+yourself. The printed steps install the whole game (about 13 GB download, the route the maintainer
+used); since only the executable is needed, they also show a shorter alternative that fetches just
+its depot (about 38 MB), not yet tried by the project. This tool never sees, stores or passes Steam credentials and never
+downloads the game itself; third-party downloaders, cracks and DRM removal are not acceptable
+routes. A Steam install made in October 2026 delivered exactly the pinned build; if yours is
+different, `setup` says so.
 
 ### Rules that the tools check for you
 
@@ -67,13 +77,18 @@ third-party downloaders, cracks or DRM removal. If the build Steam delivers is n
   skeleton gives you. Label every name with its origin (`docs/drafter-card.md`). Write C++ a
   programmer could have written; no inline assembly, byte arrays or tricks to force bytes.
 - Never paste or attach bytes, listings, disassembly or decompiler output anywhere public (issues,
-  pull requests, comments, screenshots). They stay in `.local/` on your machine.
-- Your coding agent reads the listing of your own copy of the game to do its work; that sends parts
-  of it to your AI provider. That is your choice under your own agreements; the project uploads
+  pull requests, comments, screenshots). They stay in `.local/` on your machine. When you post the
+  tool's output (for example in a platform report), run it with `--redact`, which replaces your
+  checkout and home paths.
+- A coding agent that helps you reads the listing made from your own copy, which sends parts of it
+  to your AI provider. Whether to allow that is your decision and your responsibility, under your
+  provider's terms; your agent asks you once. The project grants no rights in the game and uploads
   nothing.
-- Do not use the FNV decompilation as a source for now: whether its reuse permission covers
-  external contributors is not yet decided. Community headers (CommonLibSSE-NG, powerof3's
-  CommonLibSSE, meh321's Address Library names) are fine with their labels.
+- Community headers (CommonLibSSE-NG, powerof3's CommonLibSSE, meh321's Address Library names) and
+  the FNV decompilation (`momusdigital/fnv_decomp@91e1b6e8`, which `setup` clones) may be used, with
+  their labels: `SIBLING(...)` for what you take from FNV and a `Sibling source:` header line for a
+  reused body. FNV is another, older and 32-bit game: read it for shape and names, never as evidence
+  about Skyrim's offsets or layouts.
 - State who drafted the unit and which AI model helped (`--drafted-by`). You stay responsible for
   what your agent submits.
 
@@ -84,8 +99,8 @@ third-party downloaders, cracks or DRM removal. If the build Steam delivers is n
   pinned community headers (`python3 tools/check_labels.py <files>` after `contrib.py setup`) is
   re-accepted by the project without a new review when the compiled code is unchanged. Change
   comments and labels only, not code or declared names.
-- **Platform reports.** Run `python3 tools/contrib.py doctor` and `setup` on your machine and open
-  an issue with the output (it contains no game data) if something fails.
+- **Platform reports.** Run `python3 tools/contrib.py --redact doctor` and `setup` on your machine
+  and open an issue with the output (it contains no game data) if something fails.
 - **Documentation.** Unclear steps in this file or `docs/contributing-agent.md` are bugs.
 
 ## Project members and research contributions

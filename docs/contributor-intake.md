@@ -8,32 +8,43 @@ same point as a Drafter's worktree branch.
 
 1. **CI** (`.github/workflows/contrib-intake.yml`, GitHub-hosted, no secrets, no game data) runs the
    contributor-scope checks from the base branch's tools against the pull request's files read as
-   data: only `reconstruction/<area>/<Class>.{h,cpp}`, at most 64 KiB per file, the source lint
-   (`tools/lint_reconstruction.py`), and no newly added `SIBLING(...)` or `Sibling source:` material.
-   `check.yml` runs the usual infrastructure checks.
+   data: only `reconstruction/<area>/<Class>.{h,cpp}`, at most 64 KiB per file, and the source lint
+   (`tools/lint_reconstruction.py`, which also checks `SIBLING(...)` labels and `Sibling source:`
+   lines name the one allowed FNV revision). `check.yml` runs the usual infrastructure checks.
+   This job is **advisory**: a `pull_request` workflow runs as the pull request defines it, so a
+   pull request that edits the workflow can change what it checks. The Engineer's local re-run in
+   step 2 is the authoritative intake.
 2. **Pick-up.** The orchestrator treats an open contributor pull request like a finished draft and
    gives it to an Engineer. The Engineer reads the diff (source text, never executed) before
-   anything is compiled, re-runs the intake on a local branch
+   anything is compiled, re-runs the intake on a local branch with the project's own tools
    (`git fetch upstream pull/<n>/head:contrib/pr-<n>`, then
-   `python3 tools/contrib.py intake --base main --head contrib/pr-<n>`), and writes the internal
-   task directory for the unit as for any draft (`tools/ghidra/export_pack.py` or by hand).
+   `python3 tools/contrib.py intake --base main --head contrib/pr-<n>`; a pull request touching
+   anything outside `reconstruction/` stops here), and writes the internal task directory for the
+   unit as for any draft (`tools/ghidra/export_pack.py` or by hand).
 3. **Confirmation.** `tools/verifier/confirm` compiles and compares the unit on two project hosts,
    exactly as for internal drafts. The contributor's local summary is never evidence; it only says
    what to expect.
 4. **Review.** A fresh Reviewer (who did not triage the pull request) reviews the unit against the
    blocking grounds. Contributor and AI assistance stated in the header and pull request are read
-   like any other provenance statement.
+   like any other provenance statement. FNV material is allowed for contributors exactly as for
+   Drafters (maintainer decision, `docs/authorizations.md`, Notes): `SIBLING(...)` labels, a
+   `Sibling source:` line for a reused body, the origin check, and never evidence about the Skyrim
+   binary.
 5. **Integration.** The Engineer merges the contributor's commit without squashing, so its author
-   stays in history, runs `tools/accept_function.py` as usual, and adds a trailer to the
-   acceptance commit for each contributor:
+   stays in history, and runs `tools/accept_function.py` as usual. Current practice, which is the
+   orchestrator's decision: the acceptance commit carries a trailer for each contributor,
    `Co-authored-by: <name> <email as in the contributor's commit>`. The unit header's `Drafted by`
    line already names them.
 6. **Reject.** A `reject` is posted back on the pull request as its blocking reasons only (no bytes,
    listings or private paths; the same filter as naming findings). The contributor revises and the
    pull request re-enters at step 1. An `escalate` follows `docs/verification.md`.
 
-The project's own planner should skip RVAs named by an open claim issue or pull request
-(`claim: <build> 0x<rva> ...`); `python3 tools/contrib.py next --json` lists only unclaimed ones.
+The project's own planners (`tools/ghidra/export_pack.py plan`, including `--order cheap` and the
+table order) skip RVAs named by an open, unlapsed claim issue or pull request
+(`claim: <build> 0x<rva> ...`); offline they warn and plan without that check.
+`python3 tools/contrib.py next --json` lists only unclaimed functions. Contributors pick from
+`mapped` inventory rows, which can also be in one of the project's own batches: before dispatching
+a Drafter on a mapped function, the orchestrator compares the batch with the open claim issues.
 
 ## Threat note: compiling contributed source
 

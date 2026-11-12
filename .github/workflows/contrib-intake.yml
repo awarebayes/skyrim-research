@@ -1,8 +1,10 @@
 name: Contributor intake checks
 # Pull requests that change reconstruction sources: the contributor-scope rules of
-# tools/contrib.py (only unit files, size cap, source lint, no new sibling material). Runs on
-# GitHub-hosted runners with a read-only token and no secrets; it holds no game data and compiles
-# nothing. Byte comparison happens later on the project's own verifiers.
+# tools/contrib.py (only unit files, size cap, source lint). Runs on GitHub-hosted runners with a
+# read-only token and no secrets; it holds no game data and compiles nothing. Advisory only: a
+# pull_request workflow runs as the pull request defines it, so a pull request that edits this file
+# can change it. The Engineer's local intake re-run (docs/contributor-intake.md) is authoritative.
+# Byte comparison happens later on the project's own verifiers.
 on:
   pull_request:
     paths:
@@ -20,7 +22,7 @@ jobs:
         with:
           python-version: '3.12'
       # The checks run from the base branch's copy of the tools and read the pull request's files
-      # through git as data, so a pull request cannot change the rules it is checked against.
+      # through git as data, so the pull request's own copy of the tools is not what runs here.
       - run: git worktree add "$RUNNER_TEMP/base" "${{ github.event.pull_request.base.sha }}"
       - run: >-
           python3 "$RUNNER_TEMP/base/tools/contrib.py" intake

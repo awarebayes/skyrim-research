@@ -25,6 +25,9 @@ import synthetic_pecoff as sp  # noqa: E402
 
 STUB = json.dumps([sys.executable, str(ROOT / 'tests' / 'stub_cl.py')])
 TARGET = json.loads((ROOT / 'builds/target.json').read_text())
+# A function still open for claims; the inventory changes as functions are accepted.
+MAPPED = next(f['rva'] for f in json.loads((ROOT / 'data/progress.json').read_text())['functions']
+              if f['status'] == 'mapped' and contrib.PLAIN_NAME.fullmatch(f.get('name') or ''))
 
 
 class FakeGitHub:
@@ -66,7 +69,7 @@ class FakeGitHub:
 
 def item(author, days_ago, number=1):
     when = (datetime.now(timezone.utc) - timedelta(days=days_ago)).isoformat().replace('+00:00', 'Z')
-    return {'number': number, 'title': 'claim: x 0x1de5e0 A::B', 'url': f'https://github.com/x/y/issues/{number}',
+    return {'number': number, 'title': f'claim: x 0x{MAPPED:x} A::B', 'url': f'https://github.com/x/y/issues/{number}',
             'author': author, 'updated_at': when, 'pull_request': False}
 
 
@@ -209,7 +212,7 @@ class ClaimTests(Base):
         ctx = self.ctx(github=gh)
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
-            code = contrib.main(['--json', 'claim', '0x1de5e0', *extra], ctx=ctx)
+            code = contrib.main(['--json', 'claim', f'0x{MAPPED:x}', *extra], ctx=ctx)
         return code, json.loads(out.getvalue())
 
     def test_json_shape(self):
@@ -220,21 +223,21 @@ class ClaimTests(Base):
         self.assertEqual(out['claim'], 'https://github.com/x/y/issues/99')
 
     def test_collision_is_refused(self):
-        gh = FakeGitHub({0x1de5e0: [item('someone', 1)]})
+        gh = FakeGitHub({MAPPED: [item('someone', 1)]})
         code, out = self.run_claim(gh)
         self.assertEqual(code, contrib.CLAIMED)
         self.assertEqual(gh.created, [])
         self.assertIn('someone', out['error'])
 
     def test_lapsed_claim_needs_take_over(self):
-        gh = FakeGitHub({0x1de5e0: [item('someone', contrib.CLAIM_DAYS + 1, 7)]})
+        gh = FakeGitHub({MAPPED: [item('someone', contrib.CLAIM_DAYS + 1, 7)]})
         self.assertEqual(self.run_claim(gh)[0], contrib.CLAIMED)
         code, _ = self.run_claim(gh, '--take-over')
         self.assertEqual(code, 0)
         self.assertEqual(gh.comments, [7])
 
     def test_own_claim_is_reused(self):
-        gh = FakeGitHub({0x1de5e0: [item('me', 30)]})
+        gh = FakeGitHub({MAPPED: [item('me', 30)]})
         code, out = self.run_claim(gh)
         self.assertEqual(code, 0)
         self.assertEqual(gh.created, [])
@@ -553,25 +556,25 @@ class ClaimFollowUpTests(Base):
         ctx = self.ctx(github=gh, env=env or {'PATH': ''})
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
-            code = contrib.main(['--json', 'claim', '0x1de5e0', *extra], ctx=ctx)
+            code = contrib.main(['--json', 'claim', f'0x{MAPPED:x}', *extra], ctx=ctx)
         return code, json.loads(out.getvalue())
 
     def test_link_only_is_not_recorded_as_claimed(self):
         code, out = self.claim(FakeGitHub(can_create=False))
         self.assertEqual((code, out['claim']), (0, 'link-only'))
-        self.assertNotIn('0x1de5e0', contrib.local_claims(self.ctx()))
+        self.assertNotIn(f'0x{MAPPED:x}', contrib.local_claims(self.ctx()))
 
     def test_older_rival_after_creating_withdraws_ours(self):
         rival = item('someone', 0, 98)
         mine = dict(item('me', 0, 99), url='https://github.com/x/y/issues/99')
-        gh = FakeGitHub(after_create={0x1de5e0: [rival, mine]})
+        gh = FakeGitHub(after_create={MAPPED: [rival, mine]})
         code, out = self.claim(gh)
         self.assertEqual(code, contrib.CLAIMED)
         self.assertEqual(gh.closed, [99])
-        self.assertNotIn('0x1de5e0', contrib.local_claims(self.ctx()))
+        self.assertNotIn(f'0x{MAPPED:x}', contrib.local_claims(self.ctx()))
 
     def test_unknown_login_with_open_items_asks_for_it(self):
-        gh = FakeGitHub({0x1de5e0: [item('someone', 1)]}, me=None)
+        gh = FakeGitHub({MAPPED: [item('someone', 1)]}, me=None)
         code, out = self.claim(gh)
         self.assertEqual(code, contrib.USAGE)
         self.assertIn('--github-user', out['next'])
@@ -594,13 +597,42 @@ class FollowUpTests(Base):
         args = contrib.parser().parse_args(['--yes', 'setup'])
         self.assertFalse(args.accept_winget_source_agreements)
 
+    def test_steamcmd_depot_route_and_its_download_folder(self):
+        lines = '\n'.join(contrib.steamcmd_route(self.ctx()))
+        self.assertIn(f'download_depot {contrib.STEAM_APP_ID} {contrib.STEAM_EXE_DEPOT} {contrib.STEAM_EXE_MANIFEST}',
+                      lines)
+        home = self.tmp / 'home'
+        exe = (home / 'Library/Application Support/Steam/steamapps/content' / f'app_{contrib.STEAM_APP_ID}'
+               / f'depot_{contrib.STEAM_EXE_DEPOT}' / 'SkyrimSE.exe')
+        ctx = self.ctx(platform='darwin', env={'HOME': str(home)})
+        found = contrib.exe_candidates(ctx, exists=lambda p: p == str(exe), dir_exists=lambda p: False)
+        self.assertEqual(found, [str(exe)])
+
+    def test_apt_steamcmd_is_left_to_the_person(self):
+        bin_dir = self.tmp / 'bin'
+        bin_dir.mkdir()
+        for tool in ('git', 'apt-get', 'wine', 'msiextract', 'llvm-objdump'):
+            (bin_dir / tool).write_text('#!/bin/sh\nexit 0\n')
+            (bin_dir / tool).chmod(0o755)
+        ran = []
+        ctx = self.ctx(env={'PATH': str(bin_dir), 'HOME': str(self.tmp), 'SR_MSVC': str(self.tmp / 'msvc'),
+                            'SR_SKYRIM_EXE': str(self.tmp / 'none.exe')},
+                       platform='linux', assume_yes=True, runner=lambda cmd, **kw: ran.append(cmd))
+        with self.assertRaises(contrib.Stop) as cm:
+            contrib.cmd_setup(ctx, contrib.parser().parse_args(['setup', '--steamcmd']))
+        steps = {s['step']: s for s in cm.exception.data['steps']}
+        self.assertEqual(steps['steamcmd']['status'], 'needs-person')
+        self.assertIn('sudo apt install steamcmd', steps['steamcmd']['detail'])
+        self.assertFalse(any('steamcmd' in ' '.join(map(str, c)) for c in ran))
+
     def test_area_must_be_a_plain_directory_name(self):
         ctx = self.ctx(env={'PATH': ''})
         for bad in ('../tools', 'Forms', 'a/b', ''):
-            args = contrib.parser().parse_args(['start', '0x1de5e0', '--area', bad])
+            args = contrib.parser().parse_args(['start', f'0x{MAPPED:x}', '--area', bad])
             with self.assertRaises(contrib.Stop) as cm:
                 contrib.start(ctx, args)
             self.assertEqual(cm.exception.code, contrib.USAGE, bad)
+            self.assertIn('--area must be', cm.exception.message)
 
     def test_redact_hides_checkout_and_home(self):
         home = str(self.tmp / 'home')
@@ -692,19 +724,19 @@ class FollowUpTests(Base):
         claim.assert_not_called()
 
     def test_release_closes_only_own_claim_issues(self):
-        gh = FakeGitHub({0x1de5e0: [item('me', 1, 3), item('someone', 1, 4),
+        gh = FakeGitHub({MAPPED: [item('me', 1, 3), item('someone', 1, 4),
                                     dict(item('me', 1, 5), pull_request=True)]})
-        contrib.save_local_claim(self.ctx(), 0x1de5e0, {'status': 'published', 'url': 'u'})
-        code, data, _ = contrib.cmd_release(self.ctx(github=gh), contrib.parser().parse_args(['release', '0x1de5e0']))
+        contrib.save_local_claim(self.ctx(), MAPPED, {'status': 'published', 'url': 'u'})
+        code, data, _ = contrib.cmd_release(self.ctx(github=gh), contrib.parser().parse_args(['release', f'0x{MAPPED:x}']))
         self.assertEqual(gh.closed, [3])
-        self.assertNotIn('0x1de5e0', contrib.local_claims(self.ctx()))
+        self.assertNotIn(f'0x{MAPPED:x}', contrib.local_claims(self.ctx()))
 
     def test_planner_skips_open_claims_and_warns_offline(self):
         sys.path.insert(0, str(ROOT / 'tools' / 'ghidra'))
         import export_pack
-        gh = FakeGitHub({0x1de5e0: [item('someone', 1)], 0x2000: [item('someone', contrib.CLAIM_DAYS + 3)]})
+        gh = FakeGitHub({MAPPED: [item('someone', 1)], 0x2000: [item('someone', contrib.CLAIM_DAYS + 3)]})
         with unittest.mock.patch.object(contrib.Ctx, 'github', return_value=gh):
-            self.assertEqual(export_pack.open_claim_rvas(), {0x1de5e0})
+            self.assertEqual(export_pack.open_claim_rvas(), {MAPPED})
         err = io.StringIO()
         with unittest.mock.patch.object(contrib.Ctx, 'github', return_value=FakeGitHub(offline=True)), \
                 contextlib.redirect_stderr(err):
