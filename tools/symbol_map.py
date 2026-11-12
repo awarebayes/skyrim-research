@@ -534,6 +534,24 @@ def other_versions(history):
             if not v.get('superseded')]
 
 
+def create(root, map_name, smap):
+    """Publish a new immutable map through the same shape and history checks as updates."""
+    root = Path(root)
+    check_map(smap)
+    blob = serialize(smap)
+    path = root / map_name
+    if path.exists():
+        require(path.read_bytes() == blob, 'immutable unit symbol map differs')
+        load_state(root, map_name)
+        return
+    history = {'schema': 1, 'map': map_name,
+               'versions': [{'sha256': sha256(blob), 'base': None, 'added': list(smap['symbols'])}]}
+    check_history(map_name, blob, history)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(blob)
+    (root / history_name(map_name)).write_bytes(serialize(history))
+
+
 def apply_change(root, map_name, incoming, remove=(), allow_change=False, other_history=None, dry_run=False,
                  allow_unpinned_change=False):
     """Merge `incoming` into the map under `root`; returns a summary dict. Refusals raise ValueError.

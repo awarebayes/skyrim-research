@@ -805,6 +805,8 @@ def preflight(task_dirs, repo=REPO):
     for directory in task_dirs:
         directory = Path(repo) / directory
         task = json.loads((directory / 'task.json').read_text())
+        targets = {}
+        definitions = {f['symbol'] for f in task['functions']}
         entries = [(f['symbol'], {'rva': f['rva']}) for f in task['functions']]
         private_map = directory / 'symbols.json'
         if private_map.is_file():
@@ -818,10 +820,49 @@ def preflight(task_dirs, repo=REPO):
             if 'rva' not in entry or name.startswith(UNBOUND) or name.startswith('??_7'):
                 continue
             key = (task.get('build_id'), parse_rva(entry['rva']))
+            name_key = (task.get('build_id'), name)
+            target = targets.setdefault(name_key, key[1])
+            if target != key[1]:
+                raise ValueError(f'symbol {name} is bound to two RVAs')
+            if name not in definitions:
+                continue
             previous = declarations.setdefault(key, name)
             if previous != name:
                 raise ValueError(f'conflicting symbol declarations at {key[0]} {hex(key[1])}: '
                                  f'{previous} versus {name}')
+
+
+def unit_map(task_dir, repo=REPO):
+    """Freeze this unit's reference namespace without changing any existing public map."""
+    task_dir = Path(repo) / task_dir
+    path = task_dir / 'task.json'
+    task = json.loads(path.read_text())
+    private = json.loads((task_dir / 'symbols.json').read_text())
+    objects = sorted(task_dir.glob('attempts/[0-9][0-9][0-9]/candidate.obj'))
+    if not objects:
+        raise ValueError('unit reference map needs a compiled candidate object')
+    active = {s.name for s in CoffObject(objects[-1].read_bytes()).symbols.values()}
+    symbols = {n: e for n, e in private['symbols'].items() if n in active}
+    for fn in task['functions']:
+        entry = {'rva': parse_rva(fn['rva']), 'size': fn['size']}
+        if fn['symbol'] in symbols and symbols[fn['symbol']]['rva'] != entry['rva']:
+            raise ValueError(f"symbol {fn['symbol']} is bound to two RVAs")
+        symbols[fn['symbol']] = entry
+    groups = {}
+    for name, entry in symbols.items():
+        if 'rva' in entry:
+            groups.setdefault(parse_rva(entry['rva']), []).append(name)
+    folds = [names for names in groups.values() if len(names) > 1]
+    # A content-addressed map is immutable. New bindings get a new map; old records keep theirs.
+    import hashlib
+    payload = {'schema': 1, 'build_id': task['build_id'], 'symbols': symbols, 'folds': folds,
+               '_provenance': {'entries': [provenance_entry(n, e, {}) for n, e in symbols.items()],
+                               'note': 'Unit reference namespace from the task and candidate object'}}
+    digest = hashlib.sha256(symbol_maps.serialize(payload)).hexdigest()
+    map_name = f"reports/{task['build_id']}/unit-symbols/{digest}.json"
+    symbol_maps.create(repo, map_name, payload)
+    task['symbols'] = map_name
+    path.write_text(json.dumps(task, indent=2) + '\n')
 
 
 def main(argv=None):
@@ -829,6 +870,7 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--task')
     p.add_argument('--list', type=Path, help='preflight every task before binding any task')
+    p.add_argument('--unit-maps', action='store_true', help='keep reference names in immutable unit maps')
     p.add_argument('--object', default=None, help='Default: the newest attempts/<NNN>/candidate.obj')
     p.add_argument('--image', default=None, help='Default: .local/verifier/config.json "image"')
     a = p.parse_args(argv)
@@ -837,9 +879,16 @@ def main(argv=None):
                        if line.strip() and not line.lstrip().startswith('#')]
         preflight(directories)
         for directory in directories:
+            if a.unit_maps:
+                task_path = Path(directory) / 'task.json'
+                task = json.loads(task_path.read_text())
+                task['symbols'] = 'symbols.json'
+                task_path.write_text(json.dumps(task, indent=2) + '\n')
             result = main(['--task', directory])
             if result:
                 return result
+            if a.unit_maps:
+                unit_map(directory)
         return 0
     if not a.task:
         p.error('--task or --list is required')

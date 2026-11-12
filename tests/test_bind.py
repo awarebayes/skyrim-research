@@ -47,12 +47,73 @@ class BindTests(unittest.TestCase):
         other = self.root / 'other'
         other.mkdir()
         (other / 'task.json').write_text(json.dumps({
-            'functions': [{'symbol': 'OtherSignature', 'rva': '0x2000'}]}))
+            'functions': [{'symbol': 'OtherSignature', 'rva': hex(fx.LAYOUT[fx.FUNCTION])}]}))
         before = (self.task_dir / 'symbols.json').read_bytes()
         with self.assertRaisesRegex(ValueError, 'conflicting symbol declarations'):
             bind.preflight([self.task_dir, other], repo=self.root)
         self.assertEqual(before, (self.task_dir / 'symbols.json').read_bytes())
         bind.preflight([self.task_dir, self.task_dir], repo=self.root)
+
+    def test_preflight_allows_reference_aliases_but_not_two_targets(self):
+        self.write_task('Function', {'Reference': {'rva': 8192}})
+        other = self.root / 'other'
+        other.mkdir()
+        (other / 'task.json').write_text(json.dumps({
+            'functions': [{'symbol': 'OtherFunction', 'rva': '0x3000'}]}))
+        (other / 'symbols.json').write_text(json.dumps({
+            'symbols': {'OtherReference': {'rva': 8192}}}))
+        bind.preflight([self.task_dir, other], repo=self.root)
+        (other / 'symbols.json').write_text(json.dumps({
+            'symbols': {'OtherFunction': {'rva': 8193}}}))
+        with self.assertRaisesRegex(ValueError, 'two RVAs'):
+            bind.preflight([self.task_dir, other], repo=self.root)
+
+    def test_unit_maps_publish_independent_reference_names(self):
+        self.write_task(fx.FUNCTION, {fx.FUNCTION: {'rva': fx.LAYOUT[fx.FUNCTION], 'size': len(fx.CODE)},
+                                     fx.CALLEE: {'rva': fx.LAYOUT[fx.CALLEE], 'size': None}})
+        task = json.loads((self.task_dir / 'task.json').read_text())
+        task.update(build_id='synthetic-fixture')
+        (self.task_dir / 'task.json').write_text(json.dumps(task))
+        attempt = self.task_dir / 'attempts/001'
+        attempt.mkdir(parents=True)
+        (attempt / 'candidate.obj').write_bytes(fx.coff_object())
+        bind.unit_map(self.task_dir, repo=self.root)
+        first = json.loads((self.task_dir / 'task.json').read_text())['symbols']
+        first_bytes = (self.root / first).read_bytes()
+        private = json.loads((self.task_dir / 'symbols.json').read_text())
+        private['symbols'][fx.CALLEE]['rva'] += 16
+        (self.task_dir / 'symbols.json').write_text(json.dumps(private))
+        bind.unit_map(self.task_dir, repo=self.root)
+        second = json.loads((self.task_dir / 'task.json').read_text())['symbols']
+        self.assertNotEqual(first, second)
+        self.assertEqual((self.root / first).read_bytes(), first_bytes)
+        bind.symbol_maps.load_state(self.root, first)
+        bind.symbol_maps.load_state(self.root, second)
+
+    def test_two_units_publish_different_names_for_one_reference(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        directories = []
+        for index, reference in enumerate(['ReferenceA', 'ReferenceB']):
+            directory = self.root / f'unit{index}'
+            attempt = directory / 'attempts/001'
+            attempt.mkdir(parents=True)
+            (attempt / 'candidate.obj').write_bytes(b'synthetic placeholder')
+            function = f'Function{index}'
+            (directory / 'task.json').write_text(json.dumps({
+                'build_id': 'synthetic-fixture', 'functions': [
+                    {'symbol': function, 'rva': hex(4096 + index * 16), 'size': 5}]}))
+            (directory / 'symbols.json').write_text(json.dumps({
+                'symbols': {reference: {'rva': 8192, 'size': None}}}))
+            obj = SimpleNamespace(symbols={0: SimpleNamespace(name=reference)})
+            with patch.object(bind, 'CoffObject', return_value=obj):
+                bind.unit_map(directory, repo=self.root)
+            task = json.loads((directory / 'task.json').read_text())
+            state = bind.symbol_maps.load_state(self.root, task['symbols'])
+            self.assertEqual(state.current['symbols'][reference]['rva'], 8192)
+            directories.append(directory)
+        with patch.object(bind, 'CoffObject', return_value=SimpleNamespace(symbols={})):
+            bind.preflight(directories, repo=self.root)
 
     def run_bind(self):
         report = bind.bind(self.task_dir, self.root / 'obj', self.root / 'image', repo=self.root)
