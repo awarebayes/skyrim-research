@@ -445,6 +445,60 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.assertIn('-r2', redone['task_id'])
         self.assertIn('in this same pass', (self.root / redone['brief']).read_text())
 
+    def test_supersede_unapproved_family_preserves_reviews_and_replans(self):
+        (self.root / self.batch_path).unlink()
+        (self.root / self.family_path).unlink()
+        shutil.rmtree(self.fdir / 'groups')
+        for fn in self.data['functions']:
+            if fn['id'] in self.first:
+                fn['status'] = 'mapped'
+                fn.pop('named', None)
+                (self.root / check.review_record_path(fn)).unlink()
+        self.save_data()
+        old_path = flow.plan_family(self.root, '.local/family-spec.json', self.fdir)
+        flow.pause_family(self.root, old_path, 'Parameter range defect.')
+        old = fr.read(self.root, old_path)
+        group = next(g for g in flow.groups(self.fdir).values() if g['kind'] == 'review')
+        review = self.root / '.local/reviews' / (group['task_id'] + '.md')
+        review.parent.mkdir(parents=True, exist_ok=True)
+        review.write_text('saved reviewer evidence')
+        family_review = review.with_suffix('.family.json')
+        family_review.write_text('{"verdict":"escalate"}')
+        spec = fr.read(self.root, '.local/family-spec.json')
+        spec['parameter_ranges'] = fr.exact_ranges([{'width': 4}])
+        fr.write(self.root, '.local/new-spec.json', spec)
+        with patch('flow.review_group', side_effect=ValueError('synthetic refusal')):
+            with self.assertRaisesRegex(ValueError, 'synthetic refusal'):
+                flow.plan_family(self.root, '.local/new-spec.json', self.fdir, old_path)
+        self.assertEqual(fr.read(self.root, old_path), old)
+        self.assertTrue(review.is_file())
+        self.assertFalse(flow.load_group(self.fdir, group['name']).get('superseded_by'))
+        new_path = flow.plan_family(self.root, '.local/new-spec.json', self.fdir, old_path)
+        self.assertNotEqual(old_path, new_path)
+        self.assertEqual(fr.read(self.root, old_path)['superseded_by'], new_path)
+        self.assertEqual(fr.read(self.root, new_path)['supersedes'], old_path)
+        archive = self.root / '.local/reviews/superseded' / fr.family_key(old)
+        self.assertEqual((archive / review.name).read_text(), 'saved reviewer evidence')
+        self.assertTrue((archive / family_review.name).exists())
+        self.assertFalse(review.exists())
+        self.assertEqual(flow.load_group(self.fdir, group['name'])['superseded_by'], new_path)
+        self.assertEqual(len([g for g in flow.groups(self.fdir).values()
+                              if g['kind'] == 'review' and not g.get('superseded_by')]), 1)
+        fr.validate_metadata(self.root)
+        flow.family_group_hold(self.root, self.fdir, [self.first[0]])
+        replacement = fr.read(self.root, new_path)
+        replacement['binding']['image_sha256'] = 'f' * 64
+        fr.write(self.root, new_path, replacement)
+        with self.assertRaisesRegex(ValueError, 'supersession binding mismatch'):
+            fr.validate_metadata(self.root)
+
+    def test_supersede_approved_family_is_refused_without_changes(self):
+        old = fr.read(self.root, self.family_path)
+        with self.assertRaisesRegex(ValueError, 'never-approved'):
+            flow.plan_family(self.root, '.local/family-spec.json', self.fdir, self.family_path)
+        self.assertEqual(fr.read(self.root, self.family_path), old)
+        self.assertTrue((self.root / self.family_review_path).is_file())
+
     def test_seed_population_must_be_committed_before_draw(self):
         self.git('reset', '--quiet', '--hard', 'HEAD^^')
         path = flow.plan_family_batch(self.root, self.family_path, 'synthetic-batch', 'synthetic-seed', self.later)

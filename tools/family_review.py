@@ -145,18 +145,26 @@ def name_source_valid(label):
 
 
 def spec(family):
-    return {k: v for k, v in family.items() if k not in ('review', 'paused', 'pause_reason')}
+    return {k: v for k, v in family.items() if k not in ('review', 'paused', 'pause_reason', 'superseded_by')}
 
 
 def family_key(family):
-    return digest({'origin': family['origin'], 'binding': family['binding']})
+    key = {'origin': family['origin'], 'binding': family['binding']}
+    if family.get('supersedes'):
+        key.update(supersedes=family['supersedes'], parameter_ranges=family['parameter_ranges'])
+    return digest(key)
 
 
 def validate_family(family, approved=True):
-    require(isinstance(family, dict) and set(family) == FAMILY_FIELDS
+    require(isinstance(family, dict) and FAMILY_FIELDS <= set(family) <= FAMILY_FIELDS | {'supersedes', 'superseded_by'}
             and type(family['family_schema']) is int and family['family_schema'] == 1,
             'unknown family manifest schema')
     origin_valid(family['origin'])
+    for field in ('supersedes', 'superseded_by'):
+        if field in family:
+            public_path(family[field], f'reports/{family["binding"]["build_id"]}/families/')
+    if family.get('superseded_by'):
+        require(family['review'] is None and family['paused'], 'superseded family must be unapproved and paused')
     validate_ranges(family['parameter_ranges'])
     require(type(family['paused']) is bool, 'paused must be boolean')
     require(isinstance(family['pause_reason'], str), 'pause_reason must be text')
@@ -321,6 +329,17 @@ def validate_public_review(root, fn, record, review):
             'sanitized record names another family review')
 
 
+def check_superseded(root, path, family):
+    """A retired manifest cannot hide a pause without a matching replacement."""
+    replacement_path = public_path(family['superseded_by'],
+                                   f'reports/{family["binding"]["build_id"]}/families/')
+    require(replacement_path != str(path), 'family cannot supersede itself')
+    replacement = read(root, replacement_path)
+    validate_family(replacement, approved=replacement['review'] is not None)
+    require(replacement.get('supersedes') == str(path) and replacement['origin'] == family['origin']
+            and replacement['binding'] == family['binding'], 'family supersession binding mismatch')
+
+
 def validate_metadata(root):
     """Validate family files even before a member relies on them."""
     root = Path(root)
@@ -328,6 +347,8 @@ def validate_metadata(root):
         family = read(root, path.relative_to(root))
         validate_family(family, approved=family['review'] is not None)
         require(path.parent.parent.name == family['binding']['build_id'], 'family manifest belongs to another build')
+        if family.get('superseded_by'):
+            check_superseded(root, path.relative_to(root).as_posix(), family)
     for path in sorted((root / 'reports').glob('*/family-batches/*.json')):
         batch = read(root, path.relative_to(root))
         family = read(root, public_path(batch['family_path'], f'reports/{path.parent.parent.name}/families/'))

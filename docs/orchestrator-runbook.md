@@ -112,6 +112,14 @@ Engineer setup (no verifier or acceptance is performed by these metadata command
    batch before any population member is accepted. These metadata commits belong to the Engineer;
    the routine orchestrator hands an uncommitted metadata refusal to the strong role.
 
+To correct a family before approval, `python3 tools/flow.py family-plan --spec <corrected-spec>
+--supersede <old-manifest>` preserves the old paused manifest with a replacement pointer, archives
+its saved review files under `.local/reviews/superseded/`, releases its review groups and creates a
+fresh family plan and briefs. The replacement keeps the same origin, binding and first 20. The
+command refuses an approved family, a family with a batch, or accepted first-20 members; use the
+pause and revocation procedure for accepted evidence. Archived reviews are not approvals of the
+replacement. Resolve any independent provenance or policy escalation under the existing rule.
+
 The draw ranks population ids by SHA-256 of canonical JSON `[seed, function_id]`, breaking ties
 by id, and takes `min(population, max(20, ceil(5%)))`. The public batch preserves seed, full
 population, member hashes, pre-draw commit and sample. The gate checks that the planned metadata

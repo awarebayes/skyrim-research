@@ -362,7 +362,7 @@ def accepted_counts(root, fdir, states):
         for v, n in vals.items():
             counts.setdefault(comp, {})[v] = n
     for g in groups(fdir).values():
-        if g['kind'] != 'review':
+        if g['kind'] != 'review' or g.get('superseded_by'):
             continue
         for rva, comps in (g.get('components') or {}).items():
             if states.get(rva, {}).get('state') in ('accepted', 'pushed'):
@@ -423,12 +423,14 @@ def family_reviewed_gate(root, fdir, required, data, target):
         fr.require(ok, f'{fid}: sampling safeguard: {why}')
 
 
-def plan_family(root, spec_file, fdir=None):
+def plan_family(root, spec_file, fdir=None, supersede=None):
     family = fr.read(root, spec_file)
     data, target = af.load(root)
     by_id = {fn['id']: fn for fn in data['functions']}
     first = family['first_members']
     fr.require(isinstance(first, list) and len(set(first)) == 20, 'provide the ordered first 20 member ids')
+    if supersede:
+        family['supersedes'] = supersede
     family.update(family_schema=1, review=None, paused=False, pause_reason='')
     family['first_members'] = {}
     for fid in first:
@@ -437,6 +439,8 @@ def plan_family(root, spec_file, fdir=None):
         fr.check_member(family, fn, record)
         family['first_members'][fid] = fr.member_digest(fn, record)
     fr.validate_family(family, approved=False)
+    if supersede:
+        return supersede_family(root, fdir or flow_dir(root), supersede, family, first, data, target)
     if any(by_id[fid]['status'] != 'matched' for fid in first):
         states = function_states(root, fdir or flow_dir(root), online=False)
         fr.require(all(states.get(hexrva(by_id[fid]['rva']), {}).get('state') == 'confirmed'
@@ -457,6 +461,93 @@ def plan_family(root, spec_file, fdir=None):
         save_group(fdir, g)
     return path
 
+
+
+def supersede_family(root, fdir, old_path, family, first, data, target):
+    """Replace only an unapproved family, retaining its manifest and saved reviews."""
+    root, fdir = Path(root), Path(fdir)
+    old_path = fr.public_path(old_path, f'reports/{target["build_id"]}/families/')
+    old = fr.read(root, old_path)
+    fr.validate_family(old, approved=old['review'] is not None)
+    fr.require(old['review'] is None and not old.get('superseded_by'),
+               'only a never-approved family can be superseded')
+    fr.require(old['origin'] == family['origin'] and old['binding'] == family['binding'],
+               'replacement must preserve family origin and binding')
+    fr.require(set(old['first_members']) == set(first), 'replacement must preserve the first 20')
+    by_id = {fn['id']: fn for fn in data['functions']}
+    fr.require(all(by_id[fid]['status'] != 'matched' and record_state(root, by_id[fid]) == 'confirmed'
+                   for fid in first), 'first 20 must be unaccepted and confirmed')
+    fr.require(not any(b['family_path'] == old_path for b in family_batches(root).values()),
+               'family with a batch cannot be superseded; use pause and revoke')
+    path = f'reports/{target["build_id"]}/families/{fr.family_key(family)}.json'
+    fr.require(path != old_path and not (root / path).exists(), 'replacement manifest already exists')
+    all_groups = groups(fdir)
+    primaries = [g for g in all_groups.values() if g.get('family_review_path') == old_path
+                 and g['kind'] == 'review' and not g.get('superseded_by')]
+    fr.require(len(primaries) == 1, 'expected one active first-20 family review group')
+    primary = primaries[0]
+    expected = {hexrva(by_id[fid]['rva']) for fid in first}
+    fr.require(set(primary['functions']) == expected and not primary.get('integrated'),
+               'family review group differs from first 20 or is integrated')
+    release = [primary]
+    if primary.get('pair'):
+        pair = all_groups.get(primary['pair'])
+        fr.require(pair and pair['kind'] == 'sampling' and pair.get('pair') == primary['name']
+                   and not pair.get('integrated') and not pair.get('superseded_by'), 'invalid sampling group')
+        release.append(pair)
+    # No other live group may be displaced by this operation.
+    released_names = {g['name'] for g in release}
+    fr.require(not any(g['name'] not in released_names and not g.get('superseded_by')
+                       and g['kind'] == 'review' and expected.intersection(g['functions'])
+                       for g in all_groups.values()), 'first 20 also belong to another active review group')
+    ids = {g['task_id'] for g in release}
+    ids.add('review-family-' + fr.family_key(old)[:20])
+    pattern = re.compile(r'^(?:' + '|'.join(re.escape(i) for i in ids) + r')(?:-r[0-9]+)?(?:\.family)?\.(?:md|json)$')
+    reviews = root / REVIEWS
+    files = [p for p in reviews.iterdir() if p.is_file() and not p.is_symlink() and pattern.fullmatch(p.name)] if reviews.is_dir() else []
+    archive = reviews / 'superseded' / fr.family_key(old)
+    fr.require(not any((archive / p.name).exists() for p in files), 'superseded review archive already contains a file')
+    old_copy = dict(old)
+    snapshots = {g['name']: dict(g) for g in release}
+    existing_groups = set(all_groups)
+    briefs = root / BRIEFS
+    existing_briefs = set(briefs.iterdir()) if briefs.is_dir() else set()
+    moved = []
+    try:
+        archive.mkdir(parents=True, exist_ok=True)
+        for p in files:
+            p.rename(archive / p.name)
+            moved.append(p)
+        for g in release:
+            g['superseded_by'] = path
+            save_group(fdir, g)
+        old.update(paused=True, pause_reason='Superseded by a corrected unapproved family.', superseded_by=path)
+        fr.write(root, old_path, old)
+        fr.write(root, path, family)
+        made = review_group(root, fdir, max_size=20, select=set(first))
+        fr.require(len(made) == 1, 'first 20 must be confirmed, unheld and form one new review group')
+        g = load_group(fdir, made[0])
+        g.update(family_review_path=path, task_id='review-family-' + fr.family_key(family)[:20],
+                 member_brief=g['brief'])
+        save_group(fdir, g)
+        g['brief'] = family_brief(root, path, session_profile(fdir), fdir)[1]
+        save_group(fdir, g)
+        log_event(fdir, 'family-superseded', family=old_path, replacement=path)
+    except Exception:
+        for name in set(groups(fdir)) - existing_groups:
+            (fdir / 'groups' / (name + '.json')).unlink()
+        for original in snapshots.values():
+            save_group(fdir, original)
+        fr.write(root, old_path, old_copy)
+        (root / path).unlink(missing_ok=True)
+        for p in moved:
+            (archive / p.name).rename(p)
+        if briefs.is_dir():
+            for p in set(briefs.iterdir()) - existing_briefs:
+                if p.is_file():
+                    p.unlink()
+        raise
+    return path
 
 def family_brief(root, path, profile=None, fdir=None):
     family = fr.read(root, path)
@@ -576,7 +667,7 @@ def family_sample_problem(root, fdir, batch, data):
     expected = {hexrva(fn['rva']): fr.read(root, fn['report'])['source']['digest']
                 for fn in data['functions'] if fn['id'] in (batch['sample'] or [])}
     for g in groups(fdir).values():
-        if g['kind'] != 'review' or not set(g['functions']) & set(expected):
+        if g['kind'] != 'review' or g.get('superseded_by') or not set(g['functions']) & set(expected):
             continue
         status, blocks = read_review(root, g, data['functions'])
         if status != 'ok':
@@ -597,6 +688,9 @@ def family_group_hold(root, fdir, ids):
     data = inventory(root)
     by_id = {fn['id']: fn for fn in data['functions']}
     for path, family in family_manifests(root).items():
+        if family.get('superseded_by'):
+            fr.check_superseded(root, path, family)
+            continue
         relevant = any(by_id[fid].get('report')
                        and fr.read(root, by_id[fid]['report']).get('origin') == family['origin']
                        and fr.binding(by_id[fid], fr.read(root, by_id[fid]['report'])) == family['binding']
@@ -657,7 +751,10 @@ def integrate_family(root, fdir, path, branch='main', push=True):
 
 
 def family_deferred(root, fn):
-    for family in family_manifests(root).values():
+    for path, family in family_manifests(root).items():
+        if family.get('superseded_by'):
+            fr.check_superseded(root, path, family)
+            continue
         if (family['paused'] or (family['review'] is None and fn['id'] not in family['first_members'])) and fn.get('report'):
             rec = fr.read(root, fn['report'])
             if rec.get('origin') == family['origin'] and fr.binding(fn, rec) == family['binding']:
@@ -678,6 +775,9 @@ def family_actions(root, fdir):
     acts = []
     for path, family in family_manifests(root).items():
         fr.validate_family(family, approved=family['review'] is not None)
+        if family.get('superseded_by'):
+            fr.check_superseded(root, path, family)
+            continue
         if family['paused']:
             acts.append(('stop', f'family paused: {path}: {family["pause_reason"]}; assess accepted population before resuming'))
         elif family['review'] is None:
@@ -803,7 +903,7 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
         batches.append(cur)
     counts = accepted_counts(root, fdir, states)
     for g in groups(fdir).values():  # pending groups count too, so a version is not sampled twice over
-        if g['kind'] == 'review':
+        if g['kind'] == 'review' and not g.get('superseded_by'):
             for rva, comps in (g.get('components') or {}).items():
                 if states.get(rva, {}).get('state') not in ('accepted', 'pushed'):
                     for c, v in comps.items():
@@ -1649,6 +1749,7 @@ def parser():
     s.add_argument('--reviewer-model', help='override the profile\'s Reviewer (refused unless the rule admits it)')
     s = sub.add_parser('family-plan')
     s.add_argument('--spec', required=True)
+    s.add_argument('--supersede', help='replace an unapproved family while preserving its history')
     s = sub.add_parser('family-dispatched')
     s.add_argument('path')
     s = sub.add_parser('family-approve')
@@ -1722,7 +1823,7 @@ def main(argv=None):
                 for rva, s in sorted(states.items(), key=lambda kv: int(kv[0], 16)):
                     print(f'{rva}\t{s.get("state")}\t{s.get("group") or "-"}\t{s.get("profile") or "-"}\t{s.get("detail") or ""}')
         elif a.cmd == 'family-plan':
-            path = plan_family(root, a.spec, fdir)
+            path = plan_family(root, a.spec, fdir, a.supersede)
             print(path)
             print(family_brief(root, path, session_profile(fdir), fdir)[1])
         elif a.cmd == 'family-dispatched':
