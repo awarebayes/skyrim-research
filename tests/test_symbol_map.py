@@ -48,6 +48,28 @@ def _strip_docstrings(tree):
     return tree
 
 
+def _dump(node):
+    """AST dump that is the same on every supported Python, for the pinned map-audit fingerprint.
+
+    ast.dump's output depends on the interpreter: from 3.13 it leaves out None and empty-list
+    fields, while 3.12 (the CI interpreter) prints them, so a digest pinned on one version failed
+    on the other. This writes the 3.13+ form explicitly: None and [] fields are omitted, except a
+    Constant's value, which None legitimately is.
+    """
+    if isinstance(node, ast.AST):
+        parts = []
+        for name in node._fields:
+            value = getattr(node, name, None)
+            if value is None and not (isinstance(node, ast.Constant) and name == 'value') \
+                    or isinstance(value, list) and not value:
+                continue
+            parts.append(f'{name}={_dump(value)}')
+        return f'{type(node).__name__}({", ".join(parts)})'
+    if isinstance(node, list):
+        return '[' + ', '.join(_dump(v) for v in node) + ']'
+    return repr(node)
+
+
 def _touches_map(node):
     for n in ast.walk(node):
         if isinstance(n, ast.Name) and n.id in MAP_NAMES or isinstance(n, ast.arg) and n.arg in MAP_NAMES:
@@ -108,7 +130,7 @@ def map_audit(source):
         if name in seen:
             continue
         seen.add(name)
-        parts.append(name + '\n' + '\n'.join(ast.dump(n) for n in nodes))
+        parts.append(name + '\n' + '\n'.join(_dump(n) for n in nodes))
         cls = name.split('.')[0] if '.' in name else None
         for n in (m for node in nodes for m in ast.walk(node)):
             if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id in functions:
@@ -578,6 +600,25 @@ class MapReadingGuardTests(unittest.TestCase):
         source = self.mutated('"""Validate thread-local entries and any `_tls_index` entry against',
                               '"""Check thread-local entries and any `_tls_index` entry against', source)
         self.assertIsNone(self.guard_problem(source))
+
+    # Every None and empty-list field a 3.12 ast.dump would print is present in this snippet.
+    DUMP_SNIPPET = 'def f(a, b=None):\n    return g(a)[1:]\n'
+    DUMP_EXPECTED = (
+        "FunctionDef(name='f', args=arguments(args=[arg(arg='a'), arg(arg='b')], defaults=[Constant(value=None)]), "
+        "body=[Return(value=Subscript(value=Call(func=Name(id='g', ctx=Load()), args=[Name(id='a', ctx=Load())]), "
+        "slice=Slice(lower=Constant(value=1)), ctx=Load()))])")
+
+    def test_fingerprint_dump_is_version_independent(self):
+        # MAP_AUDIT_SHA256 is checked on the Mac and on the CI interpreter alike, so the dump it
+        # hashes must not change with the Python version.
+        node = ast.parse(self.DUMP_SNIPPET).body[0]
+        self.assertEqual(_dump(node), self.DUMP_EXPECTED)
+
+    @unittest.skipIf(sys.version_info < (3, 13), 'ast.dump prints empty fields before 3.13')
+    def test_fingerprint_dump_matches_ast_dump_where_comparable(self):
+        # The pinned digest was taken with ast.dump on 3.13+; equality here keeps it valid.
+        for node in ast.walk(ast.parse(self.COMPARE.read_text())):
+            self.assertEqual(_dump(node), ast.dump(node))
 
     def test_edits_outside_map_reading_pass(self):
         # Checks that never see the map may change without a re-audit.
