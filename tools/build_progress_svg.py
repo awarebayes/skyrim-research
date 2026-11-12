@@ -103,6 +103,7 @@ def stats(progress, root):
     units = [unit_of(fn, root) for fn in matched]
     areas = Counter(a for a, _ in units)
     return dict(counts=counts, matched=len(matched), matched_bytes=sum(fn['size'] for fn in matched),
+                named=sum(1 for fn in matched if fn.get('named') is True),
                 tracked=len(fns), areas=areas, classes=Counter(c for _, c in units if c))
 
 
@@ -316,6 +317,7 @@ def render(root=ROOT):
     counts = st['counts']
     review_pending = 0
     status_rows = [('Accepted (matched)', counts['matched'], thousands(counts['matched'])),
+                   ('Names checked', st['named'], thousands(st['named'])),
                    ('Awaiting review', review_pending, thousands(review_pending)),
                    ('Mapped, no match yet', counts['mapped'], thousands(counts['mapped']))]
     parts.append(bars(f'Functions by status ({st["tracked"]} tracked)', status_rows, LX, sy, LW, total=max(st['tracked'], 1),

@@ -37,54 +37,123 @@ A reconstruction is not a match.
 
 Acceptance of a function as `matched` is automated. The maintainer decided that individual
 functions are not hand-reviewed at this target's scale; do not ask the maintainer to review or
-accept individual functions or batches. A function is accepted only when ALL of these hold:
+accept individual functions or batches. Acceptance has two tiers (maintainer decision,
+`docs/authorizations.md`): tier 1, `matched`, rests on comparator evidence and basic hygiene and
+is the only tier that counts as a match; tier 2, `named`, says the names and their origin labels
+are also clean. Tier 2 never blocks tier 1 and is improved afterwards, mostly by tooling.
+
+### Tier 1: `matched` (blocking)
+
+A function is accepted only when ALL of these hold:
 
 1. **Deterministic evidence.** A comparator pass with complete coverage of the function on the
    pinned image, built from the pinned source revision, recipe and compiler; the same pass
    reproduced on a second verifier host; and the validator's report/source consistency checks
-   passing on the integrated tree. Only this is evidence of a byte match. A model's opinion,
-   including the Reviewer's, never is.
-2. **Reviewer approval.** A Reviewer subagent (`.claude/agents/reviewer.md`, Opus class) started
-   with fresh context, which did not draft or triage that function, returns `approve` for it.
-   The Reviewer is a necessary sanity and provenance check, not match evidence: it can only veto
-   or approve, cannot substitute for item 1, and cannot edit the reviewed source, the comparator,
-   the validator or any report. It checks, per function or per batch:
-   - the source is plausible C++ for what the function does, not a contrivance to force bytes:
-     no inline assembly, raw byte arrays or `__emit`, no `#pragma` or attribute tricks aimed only
-     at codegen, no nonsensical control flow or dead code whose only purpose is matching;
-     anything unusual is justified in a source comment. `__forceinline`, `[[msvc::...]]`
-     attributes and codegen intrinsics (`_BitScanForward`, `_InterlockedIncrement`, `__assume`,
-     `_mm_*` and the rest of `INTRINSICS` in `tools/lint_reconstruction.py`) are allowed only
-     with a one-line justification comment on the same or the previous line (lint-enforced);
-     the Reviewer judges whether the justification is a plausible reason a programmer had, not
-     a way to force bytes, and rejects otherwise;
-   - names and types are labelled by origin (community source and revision, or `GUESS`), and
-     unknowns are preserved rather than filled plausibly;
-   - provenance: no decompiler output pasted as source, no code from unlicensed projects (such
-     as the FNV repositories), no leaked or proprietary material; the source header states
-     provenance and source exposure;
-   - the report belongs to this source, recipe and target (hashes agree), and the claim is only
-     what was checked: a byte match of the checked code, not the correctness of an inferred name
-     and not behaviour;
-   - publication hygiene per `PROVENANCE.md` and `LEGAL.md`.
+   passing on the integrated tree ("Match gate" below). Only this is evidence of a byte match.
+   A model's opinion, including the Reviewer's, never is.
+2. **Automated hygiene**, enforced by tools, not by a Reviewer:
+   - `tools/lint_reconstruction.py` reports nothing for any file under `reconstruction/` (run
+     by `tools/check.py`): no inline assembly, `__emit`, raw byte arrays, `\x` byte strings,
+     codegen-only pragmas or `__declspec`; header fields present; include style. `__forceinline`,
+     `noinline`, `[[msvc::...]]` attributes and codegen intrinsics (`INTRINSICS` there) each
+     carry a justification comment on the same or the previous line. A file holding a
+     `COMMUNITY(..., GPL...)` label (or LGPL, AGPL, in any case) names GPL in its leading
+     comment, as `docs/authorizations.md` requires, and every `COMMUNITY(` (any case,
+     any file) is a well-formed label, and a label for a known community repository (owner and
+     repository compared without case) spells it as listed and states its licence
+     (`COMMUNITY_LICENCES` in the lint). A `SIBLING(...)` label,
+     in any file, or a `Sibling source:` line names only an allowed sibling at its pin with its
+     licence word, and a `Sibling source:` line sits in the leading comment with no `..` in its
+     path; `tools/check_labels.py` (private clone) checks the cited path and
+     line. Whether a body was reused at all is not machine-checked; that is the Reviewer's.
+   - The unit compiles from tracked files only: the match record's translation unit is the
+     include closure of repository files, and `tools/check.py --staged` (the pre-commit check)
+     recomputes it from the index, so a closure file that is not staged fails the commit.
+   - What the tools cannot see is left to the Reviewer's blocking grounds below: a helper
+     introduced only for matching, or a justification comment that is not a programmer's reason.
+3. **Reviewer approval.** A Reviewer subagent (`.claude/agents/reviewer.md`, Opus class) started
+   with fresh context, which did not draft or triage that function, returns `approve` for it,
+   for the current source or, under "Label-only re-acceptance" below, for an earlier source whose
+   compiled code section is identical. The Reviewer is a necessary sanity and provenance check,
+   not match evidence: it can only veto or approve, cannot substitute for item 1, and cannot edit
+   the reviewed source, the comparator, the validator or any report. Its **blocking grounds**,
+   the only reasons for `reject`, are:
+   - the source is pasted or lightly edited decompiler output (tells: `undefined8`, `param_1`,
+     `local_28`, `FUN_`/`DAT_` names, decompiler casts and control-flow shapes);
+   - byte steering: contortions with no programmer-level reason, such as nonsensical control
+     flow, dead code, a helper, attribute or intrinsic whose only plausible reason is forcing
+     bytes (a lint-required justification that is not a reason a programmer had counts here);
+   - code that cannot be what it claims, such as an unreachable branch or impossible type use
+     that signals a wrong binding or a wrong class;
+   - provenance: code from unlicensed projects other than the FNV decompilation
+     `momusdigital/fnv_decomp@91e1b6e8`, which the maintainer allowed (`docs/authorizations.md`,
+     Notes); leaked or proprietary material; a source header that does not state provenance and
+     source exposure, or whose origin or licence statement is false; and undeclared reuse of
+     sibling code, meaning a unit that reuses an FNV body or a substantial part of one without a
+     `Sibling source: <repo>@<rev> <path>[:<line>]` header line. FNV material is never evidence
+     for the match claim;
+   - claim scope beyond a byte match of the checked code (a claim of behaviour, or of a name
+     being right);
+   - publication hygiene per `PROVENANCE.md` and `LEGAL.md`;
+   - a match record that does not bind the unit (digest, recipe, compiler or image disagree, or
+     the second-host run is missing).
 
-   Verdicts are `approve`, `reject` (back to the Drafter or Engineer with reasons) or `escalate`
-   (with a category: `provenance`, `legal`, `systemic` or `other`). The review is kept privately
-   at `.local/reviews/<task-id>.md`; a sanitized verdict record (reviewer model, verdict,
-   escalation category, review file SHA-256, date, and the function identity and source digest
-   it reviewed) goes alongside the public report as `reports/<build id>/<rva>.review.json`.
-3. **Integration.** An Engineer merges the passing branch, reruns the full checks and the
+   Not blocking: names, name-origin labels (missing, unlabelled community names, `GUESS` where a
+   community or sibling name exists, a missing or imperfect `SIBLING(...)` label on a name or
+   declaration taken from FNV; a reused body is declared by its `Sibling source:` line, whose
+   absence is the blocking ground above), placeholder versus community naming, dead or
+   leftover declarations that compile to nothing, header and comment wording, and missing notes.
+   The Reviewer lists these as `naming_findings` for the function and still approves if no blocking ground holds.
+   They are published (next item), so they hold no code, bytes, disassembly or private paths.
+
+   Verdicts are `approve`, `reject` (on a blocking ground, back to the Drafter or Engineer with
+   reasons) or `escalate` (with a category: `provenance`, `legal`, `systemic` or `other`). The
+   review is kept privately at `.local/reviews/<task-id>.md`; a sanitized verdict record
+   (reviewer model, verdict, escalation category, review file SHA-256, date, the function
+   identity and source digest it reviewed, and the naming findings) goes alongside the public
+   report as `reports/<build id>/<rva>.review.json`.
+4. **Integration.** An Engineer merges the passing branch, reruns the full checks and the
    verifier on the integrated tree, and records the acceptance with `tools/accept_function.py`,
-   which writes the verdict record and sets that one entry to `matched` only if the validator
+   which writes the verdict record and sets that entry to `matched` only if the validator
    accepts the result. The change is then committed and pushed by the integrating Engineer (or
    the orchestrator when run with a shell) after the pre-push checks in `AGENTS.md`.
 
 Reviewer passes need G2, since they read reconstructed source. A `reject` or `escalate` stops
-acceptance of that function until a later Reviewer pass on a revised source returns `approve`.
+acceptance of that function until a later Reviewer pass on a revised source returns `approve`;
+`tools/accept_function.py` never accepts a `reject`, whatever its reasons say. A reject given
+under the earlier rule for naming reasons only is cleared by a fresh Reviewer pass under this one,
+not by editing the review.
+
+### Tier 2: `named` (non-blocking)
+
+Tier 2 is per function, because status, records and naming findings are per function; its
+label check runs on the function's whole translation unit, since labels live in the unit's
+files. A `matched` function is `named` when its Reviewer record lists no open naming finding
+(an empty `naming_findings`, schema 3) and `tools/check_labels.py` reports nothing for every file
+of its unit, each of which declares `Labels: v2`. It is the field `named` (`true` or `false`)
+beside `status` in `data/progress.json`, set only by `tools/accept_function.py` (on every
+acceptance and with `--refresh-named`); absent means not assessed. It is not a status value, so
+the `matched` counts are unaffected; `reconstruction/INDEX.md`, the progress picture and the
+site show it separately.
+
+What enforces it: `tools/check.py` refuses `named` on an entry that is not `matched`, a
+non-boolean value, and `named: true` unless the entry's Reviewer record is schema 3 with an empty
+`naming_findings`. The label check needs the private community checkouts under `.local/`, which
+CI lacks, so `tools/check.py` cannot re-run it: that half is checked by `tools/accept_function.py`
+when it sets the field (no checkout, or any finding, gives `false`), and it holds for the unit
+digest the Reviewer record binds, since any edit to the unit makes the acceptance stale and the
+next acceptance recomputes the field. A new rule in `tools/check_labels.py` is applied to
+accepted functions by `--refresh-named`. Functions accepted before this rule have no
+`naming_findings` (schema 1 or 2 records) and stay unassessed until a later review.
+
+Open naming findings are closed by a Reviewer: a later full or delta review that lists none.
+Label fixes themselves do not need one: see "Label-only re-acceptance".
 
 **Sampling safeguard.** At least 5% of accepted functions, chosen at random by the orchestrator,
-plus the first 20 accepted functions under every new recipe or compiler and under every new
-Drafter prompt version, get a second independent Reviewer pass (fresh context, a different
+plus the first 20 accepted functions under every new recipe or compiler, every new Drafter prompt
+version, every new Reviewer prompt version (`.claude/agents/reviewer.md`) and every new version of
+the acceptance rule (this section and `tools/accept_function.py`), and the first 20 label-only
+re-acceptances under each acceptance-rule version, get a second independent Reviewer pass (fresh context, a different
 Reviewer run) and a from-scratch comparator re-run on a clean checkout. Any disagreement, with
 either Reviewer or with the earlier comparator result, pauses acceptance for that batch and is
 escalated to the maintainer.
@@ -111,7 +180,7 @@ are not blocked waiting for the maintainer, except changes to this rule itself, 
 
 ## Match gate
 
-This is how `tools/check.py` enforces items 1 and 2 of the acceptance rule on the committed tree.
+This is how `tools/check.py` enforces items 1 to 3 of tier 1 of the acceptance rule on the committed tree.
 An inventory entry may name a match record in `report` (`reports/README.md`) before it is
 accepted; that record is checked whenever it is named, so a record awaiting review cannot go
 stale unnoticed. A `matched` entry must name one, and must also have a Reviewer record.
@@ -269,12 +338,29 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
   `source_digest_method`, `source_digest`, `reviewer_model`, `review_task_id`, `verdict`,
   `escalation_category`, `review_sha256` and `review_date` (schema 1), plus `review_kind`,
   `previous_source_digest`, `previous_review_sha256`, `previous_code_section_sha256` and
-  `code_section_sha256` (schema 2, written by `tools/accept_function.py`), so no free text is
-  published;
-- schema 2: a `full` review has no previous fields and its `code_section_sha256` equals the
+  `code_section_sha256` (schema 2), plus `naming_findings` (schema 3, written by
+  `tools/accept_function.py`), so the only free text published is the naming findings;
+- a record below schema 3 is accepted only if its path and the SHA-256 of its canonical JSON are
+  listed in `tools/legacy_review_records.json`, generated from the 58 records that existed at
+  commit `e51d00a` when the four-check review format took effect. A list outside the records is
+  used rather than a date bound because `review_date` sits in the record itself, so a hand-written
+  record could carry any date; an edited or new legacy record needs an edit to that tracked file;
+- schema 2 and 3: a `full` review has no previous fields and its `code_section_sha256` equals the
   match record's (or both are absent); a `delta` review names a previous digest other than its
   own, a previous review hash, and a previous code-section hash equal to its own and to the
-  match record's (next section);
+  match record's (next section); a `label-only` record (schema 3 only) is a `delta` whose
+  previous review hash equals its own review hash, since no new review was made, and whose
+  code-section hashes are present;
+- schema 3: `naming_findings` is a list of at most 20 single-line strings of at most 300
+  printable ASCII characters, none holding a brace, a backtick fence, a private path (`.local`,
+  `/Users/`, `/home/`, `~/`, a drive letter), a run of 16 or more hex digits, four or more
+  space-, comma-, semicolon-, colon- or dash-separated hex byte pairs, a run of 10 or more hex
+  digits mixing digits and letters (unless right after `@`, a commit pin), four or more two-digit
+  `0x` values in a row (unless fewer than eight and strictly ascending, as field offsets are), two
+  or more `\x`-escaped bytes, a bracketed register operand or a `ptr` operand; a `full` or `delta`
+  record has a list, a `label-only` record a
+  list or `null` (carried from a record that predates the field). The filter is mechanical; the
+  Reviewer writing them is responsible for the rest of their hygiene;
 - the function identity equals the inventory entry's, and the source digest equals the match
   record's, so an approval cannot be reused for other source or another function, and a change
   to any file in the compiled file's include closure (above) makes it stale together with the
@@ -301,7 +387,8 @@ during that window (no revoke), and `reconstruction/INDEX.md` shows `STALE`. Cle
    record notes the base commit and the inputs that were uncommitted when it ran; what it binds
    is the unit digest, recipe and map hashes, which the check recomputes from the committed tree.
 2. Re-review: a Reviewer approves the function again, either by a full review or by a delta
-   review. A delta review reads only the unit diff from the digest the earlier approve bound to
+   review, or, when the compared code section is unchanged, the tool re-accepts it without one
+   ("Label-only re-acceptance" below). A delta review reads only the unit diff from the digest the earlier approve bound to
    the new one (`tools/review_packet.py` prints it, from the commit where that digest was
    current) and needs the compared code section hash (`candidate.code_section_sha256`,
    `reports/README.md`) to be the same in the approved record and the new one: the function's
@@ -312,13 +399,85 @@ during that window (no revoke), and `reconstruction/INDEX.md` shows `STALE`. Cle
    (`review_kind: delta`, `previous_source_digest`, `code_section_unchanged: yes`), that the
    superseded Reviewer record approved exactly `previous_source_digest`, and that the previous
    code-section hash (from that record, or from the match record at the commit where the digest
-   was current) equals the new one; then it replaces the Reviewer record with a schema 2 record
+   was current) equals the new one; then it replaces the Reviewer record with a schema 3 record
    binding both digests and both hashes.
 
 A delta review is not weaker evidence of a match (the reproduced comparator pass is the
 evidence and is re-run in step 1); it narrows what the Reviewer re-reads to what changed. Records
 written before comparator version 2 carry no code-section hash; a stale acceptance whose
 approved record lacks it needs a full re-review.
+
+### Label-only re-acceptance
+
+Step 2 needs no Reviewer when the function's compared code did not change: then the code a
+Reviewer approved is the code the new runs compared. `python3 tools/accept_function.py
+--label-only [--functions ...] [--units ...]` re-accepts such an entry. Its scope is wider than
+"a label change": it re-accepts **any** change to the unit that leaves the function's code-section
+hash the same on both compile hosts. That includes comments and labels, renames that do not change
+the name of a relocation target, data definitions and stand-in bodies, the text of other functions
+of the unit, functions added to the unit, and the function's own text rewritten into a form that
+compiles to the same code. Other functions of the unit are outside this function's claim (each has
+its own acceptance); they are not naming material of this one. Diff confinement is not
+proven and not needed for the match claim: the evidence is the code-section hash, which covers every code byte, every
+relocation's offset and type and its target symbol's name, so renaming a callee or a referenced
+global changes it and needs a review. For each selected entry the tool requires, and refuses the
+whole run otherwise:
+
+1. the entry is `matched` and its state is `review behind`: the match record binds the
+   integrated unit digest (re-confirmed, step 1) and the Reviewer record an earlier one;
+2. the match record passes the whole match gate (two compile hosts, two compare hosts, current
+   comparator and pins, full coverage, and so on);
+3. every run of the record gives `candidate.code_section_sha256` and they agree, which includes
+   both compile hosts (`record_code_section`);
+4. the superseded Reviewer record is an `approve` with escalation `none` for this function, of a
+   known schema, binding another digest than the current one;
+5. the code-section hash that approval covered (from the superseded record, or from the match
+   record at the commit where its digest was current) exists and equals the new one;
+6. `tools/lint_reconstruction.py` reports nothing for the unit's files.
+
+It then writes a schema 3 record with `review_kind: label-only` that binds the new digest and the
+code-section hash and carries forward the superseded record's `reviewer_model`,
+`review_task_id`, `review_sha256`, `review_date` and `naming_findings`
+(`previous_review_sha256` equals `review_sha256`), and recomputes `named`. Repeated label-only
+steps chain: each needs the hash equal to its predecessor's, so all equal the hash the last
+Reviewer approved. Carried findings stay open until a Reviewer closes them (tier 2); a full review
+may replace a `label-only` record of a current entry for that purpose.
+
+What `tools/check.py` checks for a `label-only` record, from the tree alone: the delta checks
+above (previous digest a SHA-256 other than the current, code-section hashes present and equal to
+the match record's), previous review hash equal to the review hash, and the naming-findings
+filter. Items 4 and 5 compare against the superseded record or git history, which the validator
+does not read; as for delta records, a hand-written record claiming them is caught only by git
+history and the sampling safeguard. What this gives up: a Reviewer no longer reads a source change
+that leaves the function's compiled code identical, so a rewrite of the function's own text into
+something a Reviewer would reject (pasted decompiler output that compiles to the same code) is
+not re-checked until the next full review or the sampling safeguard, which samples label-only
+acceptances like any other. Nor is any other unit text on this path: comments, labels, other
+functions' bodies and added code are published without a Reviewer reading them, until a later
+review of some function of that unit. This is not a new publication channel, since unaccepted
+drafts are committed unreviewed too, but no Reviewer has vouched for that text.
+
+### Re-review with an earlier review as context
+
+A review written before the current output format (no `report_binding`, `checks`,
+`blocking_findings` or `naming_findings`) is refused by the acceptance tool, and its verdicts are
+never converted by script: an earlier `reject` may rest on a reason that is now a naming finding,
+or on a blocking one, and only a Reviewer can tell which. Such functions get a new full review
+in the current format, which may start from the earlier one:
+
+    python3 tools/review_packet.py --prior-review .local/reviews/<earlier>.md [--prior-ref <commit>] [ids...]
+
+Without ids the packet covers every function the earlier review has a block for, except those
+already accepted at the current digest. Per function it prints the earlier block verbatim, the
+earlier file's SHA-256 and the digest it reviewed, whether the unit still has that digest, and if
+not the unit diff from a commit where it had (found in history, or `--prior-ref`, whose digest
+is checked first; no diff without a verified base), the FNV counterparts from the sibling index,
+and a blank block in the current format with a `prior_review: <task-id> <sha256>` line. The
+Reviewer re-judges every earlier reason against the blocking grounds, moves naming ones to
+`naming_findings`, and still checks the whole function: the earlier review saves reading time,
+it is not evidence, and `prior_review` is ignored by the acceptance tool. When the digest is
+unchanged and the earlier rejects were naming-only, the new review is mostly a reclassification;
+when the unit changed with no verified base, the Reviewer reads the whole unit.
 
 ## Acceptance tool, source lint and tests
 
@@ -330,20 +489,58 @@ what ties it to the file kept under `.local/reviews/`. With `--all-approved` it 
 `approve` block of one review in one all-or-nothing step; the review may come from stdin or a
 transcript outside the repository, and is then saved to `.local/reviews/<task-id>.md` first. It
 also refreshes `updated_at` and `reconstruction/INDEX.md` and prints the files to stage.
+An `approve` block must also give `report_binding: agree`, `pass` for the four blocking checks
+(`plausible_source`, `provenance`, `claim_scope`, `publication_hygiene`), `blocking_findings:
+none` and a `naming_findings` field (`none` or a list), or it is refused as inconsistent.
+The block parser fails closed. The saved review must start at its `# Review <task-id>` title,
+hold no second title (in any case, in any section) and no unseen characters (control or format
+characters other than tab and CRLF, line separators, spaces other than U+0020). A section is a
+function block if its heading's first word is an inventory build id in any case, or if any of its
+lines starts with "verdict"; its heading must then be exactly `<build id> 0x<lowercase hex RVA>
+<size>` for an inventory function and that function's size, so a reject block with a heading such
+as `0x1010:` or an upper-case build id refuses the review instead of being dropped. In the header
+and in every function block (accepted or not) the parser refuses unknown keys, a key, check or
+list item given twice, a line that is not a field, a check sub-line, a `- ` item or a continuation
+(of `reasons`, or of an item indented at least to the item's text), items of one list at different
+indents, a list field with any value other than the literal `none` or with an empty value and no
+items, a closed-word field (verdict, escalation category, review kind, yes/no fields, report
+binding, the four checks) with another word or spelling, a block without all four checks, and a
+block missing any of its fields through `reasons`. The full grammar, and a mutation test that
+changes every structural token of a valid review one at a time, are in
+`tests/test_review_mutations.py`. A review refused for its format is remedied by a new Reviewer
+run under a new task id, never by editing the saved review: the saved file is what the record's
+hash binds, and an edit by anyone but the Reviewer would make the record vouch for text no
+Reviewer wrote.
+`--functions` (inventory ids or `0x<rva>`) and `--units` (compiled file, or `<area>/<Class>`)
+restrict `--all-approved`, `--label-only` and `--refresh-named` to a subset; a selected function
+without an `approve` block is refused. Entries outside the selection that were already stale
+before the run may stay stale; the selected ones, and every other entry, must validate.
 
 Source lint: `tools/check.py` also runs `tools/lint_reconstruction.py` on every file under
 `reconstruction/` (tracked or new; the index tree with `--staged`). It checks the mechanical part
 of the Reviewer's list: no inline assembly, `__emit`, raw byte arrays or `\x` byte strings,
 universal character names (`\u`, `\U`) anywhere, pragma operators, codegen-only `#pragma` or
-`__declspec`; a justification comment beside `__forceinline`, `[[msvc::...]]` and codegen
-intrinsics; the name-origin label grammar in files that declare `Labels: v2`; the header comment fields of
+`__declspec`; a justification comment beside `__forceinline`, `noinline`, `[[msvc::...]]` and
+codegen intrinsics; GPL (any case) named in the leading comment of a file with a GPL-licensed
+`COMMUNITY` label, every `COMMUNITY(` (any case) written as a well-formed label, and the listed
+spelling and licence word on any label for a known community repository, compared without case
+(`COMMUNITY_LICENCES`); the name-origin label grammar in files that declare `Labels: v2`;
+`SIBLING(...)` labels in every file and `Sibling source:` lines limited to an allowed sibling at
+its pin, the latter with no `..` path component; the header comment fields of
 `reconstruction/README.md`; the one-class-per-pair layout; and include style (quoted repository
 headers, no include in a block comment or conditional block). Passing the lint does not replace
 the Reviewer; it only spares the Reviewer those checks. Tests: `tests/test_lint_reconstruction.py`.
 
 The negative tests in `tests/test_match_gate.py` reject each of these when it is missing,
 stale or inconsistent, `tests/test_accept_function.py` covers the acceptance tool, and `tests/test_acceptance_flow.py`
-covers stale acceptances, delta reviews, batch acceptance and the generated index. They use
+covers stale acceptances, delta reviews, batch acceptance and the generated index, and
+`tests/test_two_tier.py` covers the blocking grounds, naming findings, tier 2, subset selection
+and label-only re-acceptance, and `tests/test_merged_rules.py` probes the two-tier rule together
+with the sibling source (lint, label check against a synthetic clone, sibling-label naming
+findings, undeclared reuse blocking) and the packet's re-review options,
+`tests/test_review_parser.py` and `tests/test_review_mutations.py` cover the fail-closed review parser, the naming-findings filter
+and the legacy-record list, and `tests/test_lint_hardening.py` the licence table, sibling
+citations in every file, `..` paths and the label check's template parsing. They use
 reports that the comparator produced from synthetic fixtures. The comparator itself is tested
 in `tests/test_compare.py` against its contract (`docs/comparator-contract.md`).
 
@@ -354,7 +551,10 @@ therefore cannot show that a comparison against the game took place, that it ran
 named, or that a Reviewer read the source. Those rest on the runs and the review being real. The
 safeguards for that are the sampling safeguard above (a second independent Reviewer pass and a
 from-scratch comparator re-run for a sample of accepted functions) and git history as the audit
-trail, not the validator.
+trail, not the validator. Likewise no tool can tell a naming finding from a misfiled blocking
+ground: an `approve` that lists, say, "the body is pasted decompiler output" under
+`naming_findings` passes every mechanical check and is accepted. Only the sampling safeguard's
+second Reviewer pass can catch that misclassification.
 
 Public CI cannot prove a match without private game inputs. It should check report/source
 consistency, not represent that check as an independent comparison to Skyrim. Once an authorized
@@ -364,8 +564,8 @@ untrusted PR code on a self-hosted machine that has private game inputs or accou
 ## Behavior and names
 
 Behavior claims require controlled original-game observations, test conditions and alternative
-explanations. Header declarations, AI comments and similar FNV code can suggest hypotheses but
-cannot establish Skyrim behavior. Separate measured observations from inferred algorithms.
+explanations. Header declarations, AI comments and similar FNV code (usable as source by the
+maintainer's decision) can suggest hypotheses but cannot establish Skyrim behavior. Separate measured observations from inferred algorithms.
 
 ## Progress and history
 

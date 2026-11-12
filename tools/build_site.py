@@ -77,8 +77,11 @@ def render(data, revision, costs=None):
     tasks = Counter(item['status'] for item in data['work_items'])
     # Derived from the validated inventory so the page cannot claim a gate state or total the data lacks.
     matched = counts['matched']
+    named = sum(1 for fn in data['functions'] if fn['status'] == 'matched' and fn.get('named') is True)
+    # Tier 2 is shown beside the match count, never folded into it (docs/verification.md, "Tier 2").
     matched_note = ('Matching gate implemented; no function accepted yet' if not matched else
-                    'Each: comparator pass on 2+ hosts and a Reviewer approve')
+                    'Each: comparator pass on 2+ hosts and a Reviewer approve; '
+                    f'names and labels also checked for {named:,}')
     matched_bytes_note = 'No function accepted yet' if not matched else 'Sum of accepted functions\' sizes'
     phase_blurb = phase_summary(data, counts, tasks)
     scope_note = ('Scope remains unknown; no completion percentage' if data['scope']['functions'] is None

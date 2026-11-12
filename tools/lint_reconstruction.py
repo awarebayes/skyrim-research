@@ -19,15 +19,26 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   literals; `#pragma` other than `once`, `pack` and `warning` (the rest steer code generation
   only), and any `#pragma` line whose first word is not plainly one of those; universal
   character names (`\\u`, `\\U`) anywhere;
-- justified constructs: `__forceinline`, `[[msvc::...]]` attributes and codegen intrinsics
-  (`INTRINSICS`) only with a `//` comment of three or more words on the same or previous line;
+- justified constructs: `__forceinline`, `noinline`, `[[msvc::...]]` attributes and codegen
+  intrinsics (`INTRINSICS`) only with a `//` comment of three or more words on the same or
+  previous line;
+- licence: a file with a `COMMUNITY(..., GPL...)` label (or LGPL, AGPL, any case) names GPL in
+  its leading comment, every `COMMUNITY(` (any case) is a well-formed label, and a label for a
+  repository in `COMMUNITY_LICENCES` (compared without case) spells it as listed and states its
+  licence word; in every file, labelled v2 or not;
 - name-origin labels: in a file whose leading comment says `Labels: v2`, every label is on a
   `// <names>: <LABEL> [<LABEL>...][; note]` line, LABEL being `COMMUNITY(<owner>/<repo>@<rev>,
-  <licence>)`, `GUESS`, `GUESS(low|medium|high)`, `EXE_RTTI`, `STANDIN` or `OBSERVED`;
+  <licence>)`, `SIBLING(<owner>/<repo>@<rev>, <licence>)` (only a sibling decompilation listed in
+  `SIBLING_SOURCES`, at its pin, with its licence word; this citation rule applies in every
+  file), `GUESS`, `GUESS(low|medium|high)`, `EXE_RTTI`, `STANDIN` or `OBSERVED`;
+- sibling bodies: a `Sibling source: <owner>/<repo>@<rev> <path>[:<line>]` line, required by the
+  Reviewer when a unit reuses a body or a substantial part of one, sits in the leading comment and
+  cites an allowed sibling at its pin with a path free of `..` components (tools/check_labels.py
+  checks the path in the clone);
 - header comment fields: the leading comment block names the pinned build id and a `Source
   exposure:` category from PROVENANCE.md; a .cpp also gives `RVA 0x...`, `<n> bytes`,
   `Evidence:` with an existing findings/ or reports/ path, `Drafted by` and `Recipe:` with an
-  existing recipe; a .h labels name origin (COMMUNITY, GUESS, EXE_RTTI or OBSERVED);
+  existing recipe; a .h labels name origin (COMMUNITY, SIBLING, GUESS, EXE_RTTI or OBSERVED);
 - include style: the include-closure scan of tools/source_digest.py accepts the file, every
   include of a repository file is quoted, and no include sits inside a block comment or a
   conditional block (other than the header guard), because the verifier requires the compiler's
@@ -49,7 +60,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from source_digest import INCLUDE_ROOTS, STRICT_INCLUDE, logical_lines, quoted_includes  # noqa: E402
 
 EXPOSURE = ('black-box', 'community-headers', 'binary-analysis', 'mixed')
-NAME_ORIGINS = ('COMMUNITY', 'GUESS', 'EXE_RTTI', 'OBSERVED')
+NAME_ORIGINS = ('COMMUNITY', 'SIBLING', 'GUESS', 'EXE_RTTI', 'OBSERVED')
 ALLOWED_PRAGMAS = {'once', 'pack', 'warning'}
 SOURCE = re.compile(r'reconstruction/([a-z][a-z0-9_]*)/([A-Z][A-Za-z0-9_]*)\.(h|cpp)')
 CODEGEN_DECLSPEC = r'naked|code_seg|allocate|safebuffers'
@@ -82,6 +93,7 @@ INTRINSICS = (r'__builtin_\w+|_mm\d*_\w+|_Interlocked\w+|_BitScan\w+|_bittest\w*
               r'|__faststorefence|_ReadWriteBarrier|_ReadBarrier|_WriteBarrier|__prefetch\w*')
 JUSTIFIED = (
     (re.compile(r'(?<![A-Za-z0-9_])__forceinline(?![A-Za-z0-9_])'), '__forceinline'),
+    (re.compile(r'(?<![A-Za-z0-9_])noinline(?![A-Za-z0-9_])'), 'noinline'),
     (re.compile(r'\[\[\s*msvc\s*::'), '[[msvc::...]] attribute'),
     (re.compile(rf'(?<![A-Za-z0-9_])(?:{INTRINSICS})(?![A-Za-z0-9_])'), 'codegen intrinsic'),
 )
@@ -92,12 +104,23 @@ DECLSPEC = re.compile(r'(?<![A-Za-z0-9_])__declspec\s*\(')
 # digests and reopen accepted matches.
 LABELS_VERSION = re.compile(r'\bLabels:\s*v(\d+)\b')
 LABEL = (r'(?:COMMUNITY\([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{7,40}, [A-Za-z0-9.+-]+\)'
+         r'|SIBLING\([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{7,40}, [A-Za-z0-9.+-]+\)'
          r'|GUESS(?:\((?:low|medium|high)\))?|EXE_RTTI|STANDIN|OBSERVED)')
+# Decompilations of other games of the engine family that the maintainer allowed as a source of
+# names, declarations and code (docs/authorizations.md, Notes): repository -> (pinned revision
+# prefix, the licence word its labels must carry). A SIBLING label or `Sibling source:` line
+# citing anything else is refused, so a new sibling needs a recorded decision and an entry here.
+SIBLING_SOURCES = {'momusdigital/fnv_decomp': ('91e1b6e8', 'no-licence')}
+SIBLING_LABEL = re.compile(r'SIBLING\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40}), ([A-Za-z0-9.+-]+)\)')
+# Header line of a unit that reuses a body, or a substantial part of one, from a sibling:
+# `Sibling source: <owner>/<repo>@<rev> <path>[:<line>]` (several lines for several bodies).
+SIBLING_HEADER = re.compile(r'Sibling source:\s*([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40})\s+'
+                            r'((?:src|include)/[^\s:]+)(?::(\d+))?')
 LABEL_LINE = re.compile(rf'^\s*//\s*(?P<names>\S(?:.*?\S)?)\s*:\s*(?P<labels>{LABEL}(?:\s+{LABEL})*)'
                         r'\s*(?:;\s*(?P<note>.*))?$')
-LABEL_WORD = re.compile(r'(?<![A-Za-z0-9_])(?:COMMUNITY|GUESS|EXE_RTTI|STANDIN|OBSERVED)[A-Za-z0-9_]*'
+LABEL_WORD = re.compile(r'(?<![A-Za-z0-9_])(?:COMMUNITY|SIBLING|GUESS|EXE_RTTI|STANDIN|OBSERVED)[A-Za-z0-9_]*'
                         r'|(?<![A-Za-z0-9_])(?:EXE[- ]RTTI|STAND[- _]IN)(?![A-Za-z0-9_])')
-ORIGIN_LABEL = re.compile(r'COMMUNITY\(|GUESS|EXE_RTTI|OBSERVED')
+ORIGIN_LABEL = re.compile(r'COMMUNITY\(|SIBLING\(|GUESS|EXE_RTTI|OBSERVED')
 DEFINE = re.compile(r'^[ \t]*#[ \t]*define\b(.*)$', re.M)
 DEFINE_BANNED = re.compile(rf'(?<![A-Za-z0-9_])(?:__declspec|__pragma|_Pragma|{ASM}|__emit|{CODEGEN_DECLSPEC})'
                            r'(?![A-Za-z0-9_])')
@@ -180,6 +203,39 @@ def construct_problems(name, text):
     return problems
 
 
+def sibling_problems(where, repo, rev, licence=None):
+    """A SIBLING citation must name an allowed sibling at its pinned revision, with its licence word."""
+    allowed = SIBLING_SOURCES.get(repo)
+    if allowed is None:
+        return [f'{where}: {repo} is not an allowed sibling source (allowed: {", ".join(sorted(SIBLING_SOURCES))}; '
+                'a new one needs a maintainer decision in docs/authorizations.md)']
+    pin, word = allowed
+    out = []
+    if not (rev.startswith(pin) or pin.startswith(rev)):
+        out.append(f'{where}: {repo} is pinned at {pin}, the citation gives {rev}')
+    if licence is not None and licence != word:
+        out.append(f'{where}: a {repo} label carries the licence word "{word}" (its LICENSE grants none), not "{licence}"')
+    return out
+
+
+def sibling_header_problems(name, header):
+    """`Sibling source:` lines in the leading comment are well formed and cite an allowed sibling;
+    one outside the leading comment is refused, since readers and tools look for it there."""
+    problems = []
+    for line in header.splitlines():
+        if 'Sibling source:' not in line:
+            continue
+        m = SIBLING_HEADER.search(line)
+        if not m:
+            problems.append(f'{name}: write "Sibling source: <owner>/<repo>@<rev> <src/ or include/ path>[:<line>]"')
+            continue
+        if '..' in PurePosixPath(m.group(3)).parts:
+            # check_labels.py opens this path in the clone; `..` would let it read outside it.
+            problems.append(f'{name}: a Sibling source path may not contain ".." components')
+        problems += sibling_problems(name, m.group(1), m.group(2))
+    return problems
+
+
 def label_problems(name, text, header, ext):
     """`Labels: v2` grammar: a label line is `// <names>: <LABEL> [<LABEL>...][; note]`, and no
     label word appears anywhere else, so every label is attached to the names it describes."""
@@ -196,15 +252,74 @@ def label_problems(name, text, header, ext):
         rest = m and (m.group('names') + ' ' + (m.group('note') or ''))
         if not m or LABEL_WORD.search(rest):
             problems.append(f'{name}:{number}: label outside the v2 grammar; write "// <names>: <LABEL> ...[; note]" '
-                            'with LABEL one of COMMUNITY(<owner>/<repo>@<rev>, <licence>), GUESS, '
+                            'with LABEL one of COMMUNITY(<owner>/<repo>@<rev>, <licence>), '
+                            'SIBLING(<owner>/<repo>@<rev>, <licence>), GUESS, '
                             'GUESS(low|medium|high), EXE_RTTI, STANDIN, OBSERVED')
             continue
         if not ORIGIN_LABEL.search(m.group('labels')):
-            problems.append(f'{name}:{number}: STANDIN also needs the origin of the name (COMMUNITY(...), GUESS, '
-                            'EXE_RTTI or OBSERVED)')
+            problems.append(f'{name}:{number}: STANDIN also needs the origin of the name (COMMUNITY(...), SIBLING(...), '
+                            'GUESS, EXE_RTTI or OBSERVED)')
         labelled += 1
     if ext == 'h' and not labelled:
         problems.append(f'{name}: a "Labels: v2" header needs at least one "// <names>: <LABEL>" line')
+    return problems
+
+
+GPL_LABEL = re.compile(r'COMMUNITY\([^)]*,\s*(?:A|L)?GPL', re.I)
+# The licence word each known community repository's labels carry (docs/drafter-card.md and
+# docs/authorizations.md): a label stating another licence for one of these misstates provenance.
+# A repository not listed here is not refused by this rule; the Reviewer judges its licence word.
+COMMUNITY_LICENCES = {
+    'CharmedBaryon/CommonLibSSE-NG': 'MIT',
+    'powerof3/CommonLibSSE': 'GPL-3.0',
+    'meh321/AddressLibraryDatabase': 'permission',
+}
+COMMUNITY_LABEL = re.compile(r'COMMUNITY\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40}), ([A-Za-z0-9.+-]+)\)')
+# Any case: a `community(` written in another case is still read as a label by a person.
+COMMUNITY_OPEN = re.compile(r'community\(', re.I)
+
+
+def licence_problems(name, text, header):
+    """A file with a GPL-licensed COMMUNITY label states GPL in its header (docs/authorizations.md);
+    the wording of the statement is the Reviewer's to judge, its presence is checked here. Every
+    `COMMUNITY(` (any case) is a label of the grammar `COMMUNITY(<owner>/<repo>@<rev>, <licence>)`,
+    and a label naming a repository of COMMUNITY_LICENCES (owner and repository compared without
+    case) spells it as listed and carries its licence word. All of this applies to every file,
+    labelled v2 or not, since a label anywhere is a provenance claim; a malformed label would
+    otherwise slip past the table."""
+    problems = []
+    hit = GPL_LABEL.search(text)
+    if hit and not re.search(r'GPL', header, re.I):
+        problems.append(f'{name}:{line_of(text, hit.start())}: a GPL-licensed COMMUNITY label needs the file\'s '
+                        'leading comment to state the GPL licence')
+    known = {repo.casefold(): repo for repo in COMMUNITY_LICENCES}
+    for opening in COMMUNITY_OPEN.finditer(text):
+        where = f'{name}:{line_of(text, opening.start())}'
+        m = COMMUNITY_LABEL.match(text, opening.start())
+        if not m:
+            problems.append(f'{where}: a COMMUNITY( label is not "COMMUNITY(<owner>/<repo>@<rev>, <licence>)" '
+                            '(upper case, lower-case hex revision, one licence word)')
+            continue
+        repo, _, licence = m.groups()
+        listed = known.get(repo.casefold())
+        if listed is None:
+            continue
+        if repo != listed:
+            problems.append(f'{where}: write the repository as {listed}, not {repo}')
+        if licence != COMMUNITY_LICENCES[listed]:
+            problems.append(f'{where}: {listed} is licensed "{COMMUNITY_LICENCES[listed]}"; '
+                            f'the label states "{licence}"')
+    return problems
+
+
+def sibling_label_problems(name, text):
+    """Every SIBLING(...) label in the file cites an allowed sibling at its pin with its licence
+    word, whether or not the file declares `Labels: v2` (the v2 grammar check adds nothing here)."""
+    problems = []
+    for m in SIBLING_LABEL.finditer(text):
+        problems += sibling_problems(f'{name}:{line_of(text, m.start())}', *m.groups())
+    if len(re.findall(r'SIBLING\(', text)) != len(SIBLING_LABEL.findall(text)):
+        problems.append(f'{name}: a SIBLING( label is not "SIBLING(<owner>/<repo>@<rev>, <licence>)"')
     return problems
 
 
@@ -295,6 +410,11 @@ def lint_file(root, name, target_build):
     if target_build and target_build not in header:
         problems.append(f'{name}: header comment must name the build id {target_build}')
     problems += label_problems(name, spliced, header, ext)
+    problems += licence_problems(name, spliced, header)
+    problems += sibling_label_problems(name, spliced)
+    problems += sibling_header_problems(name, header)
+    if 'Sibling source:' in spliced and spliced.count('Sibling source:') != header.count('Sibling source:'):
+        problems.append(f'{name}: "Sibling source:" lines belong in the leading comment')
     exposure = re.search(r'Source exposure:\s*([a-z-]+)', header)
     if not exposure or exposure.group(1) not in EXPOSURE:
         problems.append(f'{name}: header comment needs "Source exposure: <{"|".join(EXPOSURE)}>"')

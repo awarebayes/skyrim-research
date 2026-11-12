@@ -12,7 +12,10 @@ Cargo/build/cache instructions here or modify its checkout as part of a research
 - Use `.local/` for legally obtained executables, toolchains, databases, raw decompiler output,
   traces, saves and generated objects. Never force-add ignored paths.
 - No game files, binary bytes, disassembly, dumps, proprietary symbols/SDKs, leaked code or
-  unlicensed copied code in commits, PRs, issues, logs, releases or CI artifacts.
+  unlicensed copied code in commits, PRs, issues, logs, releases or CI artifacts. One maintainer
+  exception: names, declarations and code from the FNV decompilation `momusdigital/fnv_decomp@91e1b6e8`
+  may be reused in reconstructions, labelled `SIBLING(...)`, although its LICENSE grants none
+  (`docs/authorizations.md`, Notes; `LEGAL.md`). It is never evidence about the Skyrim binary.
 - Do not upload game-derived material to an AI/cloud service without explicit owner authorization
   and assessment of the service terms. Permission to research locally is not permission to upload.
 - Analyze your own legally obtained inputs. Do not download game binaries or unofficial PDBs,
@@ -66,7 +69,7 @@ must be recorded in `docs/authorizations.md` by the human maintainer before work
 | Maintainer | awarebayes (human) | grants gates, sets budgets, decides licence and policy questions, handles escalations, reads summary reports, may audit and revoke any accepted function | reviews individual functions (not asked to) |
 | Orchestrator | Claude Fable, latest available (`claude-fable-5-1` today) via `.claude/agents/orchestrator.md` | plans, splits work into tasks, writes worker briefs, dispatches workers and Reviewers, reads handoffs, triages failures, picks the sampling set, tracks spend against the cap, directs (or, when run with a shell, performs) commit and push of integrated checked work, reports to the maintainer | writes reconstructions or tooling, judges a match, edits gates, posts publicly |
 | Engineer | Claude Opus 5.5 (`claude-opus-5-5`) subagent | tooling, comparator, Ghidra/import work, failure analysis on near-misses, integration of worker branches, recording `matched` once the acceptance rule is met, commit and push | marks `matched` without a reproduced pass and a Reviewer `approve` |
-| Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) subagent via `.claude/agents/reviewer.md`, fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md` | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
+| Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) subagent via `.claude/agents/reviewer.md`, fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
 | Drafter | Claude Sonnet 5.5 (`claude-sonnet-5-5`) subagent | bounded high-volume tasks: reconstruction drafts, synthetic fixtures, report formatting, doc updates | decides scope or accepts its own output |
 | Verifier | deterministic job on a worker host (local Mac first, Boat VMs later) | compiles a pinned source revision with the pinned recipe and runs the comparator; emits a sanitized report | involves a model in the pass/fail decision |
 
@@ -128,7 +131,8 @@ orchestrator does not start a phase until the previous one's finish condition fr
 - **Review**: each function with a reproduced pass goes to a fresh Reviewer (never its Drafter
   or triaging Engineer), singly or in a batch. `reject` returns it to the draft loop with reasons;
   `escalate` follows `docs/verification.md`. The sampling safeguard there (at least 5% random,
-  plus the first 20 per new recipe, compiler or Drafter prompt version) gets a second Reviewer and a
+  plus the first 20 per new recipe, compiler, Drafter or Reviewer prompt version or acceptance-rule
+  version, and the first 20 label-only re-acceptances under each acceptance-rule version) gets a second Reviewer and a
   from-scratch comparator re-run; a disagreement pauses that batch and escalates.
 - **Verifier fleet**: machines cloned from the phase 2 snapshot, all at the same comparator commit
   and recipe. Every pass is re-run on a different machine before it is reported. Machines carry

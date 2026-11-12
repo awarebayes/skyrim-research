@@ -5,7 +5,8 @@ Describe the result, exact target/source revisions, reproduction and limitations
 ## Publication and provenance
 
 - [ ] I read LEGAL.md, PROVENANCE.md and the licensing scope, and can contribute this material.
-- [ ] No game bytes, raw exports, dumps, proprietary symbols, assets, secrets or unlicensed code.
+- [ ] No game bytes, raw exports, dumps, proprietary symbols, assets, secrets or unlicensed code
+  (FNV decompilation material allowed by the maintainer decision aside, labelled `SIBLING`).
 - [ ] External sources, AI assistance and source exposure are declared.
 - [ ] Any reconstructed source meets the acceptance rule in `docs/verification.md` (including a
   Reviewer `approve`); any implementation transfer has the `docs/clean-room.md` boundary review.

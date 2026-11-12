@@ -78,9 +78,11 @@ for controlled runtime experiments. Read [verification](docs/verification.md).
   symbol tooling and runtime probes.
 - [CommonLibSSE-NG](https://github.com/CharmedBaryon/CommonLibSSE-NG): community engine declarations.
 
-These are references, not vendored dependencies or endorsements. No source or website assets
-from these projects have been copied. Their licenses and provenance must be assessed separately;
-in particular the two FNV repositories grant no license. See [SOURCES.md](SOURCES.md).
+These are references, not vendored dependencies or endorsements. No website assets from these
+projects have been copied. Their licenses and provenance must be assessed separately; in
+particular the two FNV repositories grant no license. By maintainer decision, names, declarations
+and code from `momusdigital/fnv_decomp` may nevertheless be reused in reconstructions, labelled
+with that origin ([LEGAL.md](LEGAL.md), "Sibling decompilation (FNV)"). See [SOURCES.md](SOURCES.md).
 
 ## Legal and publication policy
 
@@ -92,13 +94,14 @@ only to identify the software studied. Other third-party marks belong to their o
 **Supply your own legally obtained game. No game executables, game assets, raw machine code,
 disassembly listings, memory dumps, saves, proprietary SDKs or debug-symbol files may be committed,
 uploaded to issues, published in Actions artifacts or distributed in releases.** Do not submit leaked,
-confidential or unlawfully obtained material, or material copied without permission. This project
+confidential or unlawfully obtained material, or material copied without permission (apart from the
+maintainer's decision on the FNV decompilation in [LEGAL.md](LEGAL.md)). This project
 provides no copy-protection removal tools or instructions.
 
 Reconstructed source is published in this repository, organized by engine area, in the same
 manner as the FNV decompilation project publishes its reconstruction; this is the maintainer's
 decision, recorded in [LEGAL.md](LEGAL.md) with the rules that still apply. It is not a legal
-opinion, and FNV code is not copied.
+opinion. Where a reconstruction reuses FNV names or code, its labels and header say so.
 
 Public availability is not permission to copy. Original infrastructure has a narrowly scoped MIT
 license; other material has no general license grant. See [LICENSE](LICENSE), [LEGAL.md](LEGAL.md)
