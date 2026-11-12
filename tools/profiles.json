@@ -47,7 +47,7 @@
         "reviewer": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "high", "harness": "codex",
                      "requires": "admitted as gpt-6.1-terra under claude-low; sampling second passes use an independent strong Reviewer"},
         "strong": {"provider": "openai", "model": "gpt-6.1-sol", "effort": "high", "harness": "codex",
-                   "requires": "strong Reviewer admitted only as gpt-6.1-sol under claude-low by maintainer decision without calibration; a second pass uses a different model"}
+                   "requires": "gpt-6.1-sol admitted for any review under claude-low and required for strong duties by maintainer decision without calibration; a second pass uses a different model"}
       },
       "project_docs": ["docs/drafter-runbook.md", "docs/drafter-card-small.md"],
       "contrib_docs": ["docs/contributing-agent.md", "docs/drafter-card-small.md (sections \"Rules for small functions\" and \"Result lines\")"],

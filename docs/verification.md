@@ -119,7 +119,8 @@ A function is accepted only when ALL of these hold:
    Reviewer-checked rule change.
 
    The Sol class as the strong Reviewer is admitted only as `gpt-6.1-sol` under `claude-low`
-   for sampling second passes, confirmation of a non-Opus `escalate` before the maintainer,
+   for any review. Terra is the default first Reviewer; Sol is required for the strong duties:
+   sampling second passes, confirmation of a non-Opus `escalate` before the maintainer,
    and reviews of comparator, validator, verifier or acceptance-rule changes. Unlike Terra,
    Sol was admitted by maintainer decision WITHOUT a calibration:
    "sol is goood enough dont waste time" (`docs/authorizations.md`, Notes). Terra remains the
@@ -127,10 +128,11 @@ A function is accepted only when ALL of these hold:
    escalation. Under `claude-low`, every second pass must use a different model from the first review (Opus
    aliases count as one model); if the first review was Sol, use an independent Opus Reviewer.
    Outside `claude-low`, Opus remains required for these strong review duties and the existing
-   sampling policy is unchanged. A Reviewer must never review work it drafted, engineered or
-   triaged, including machinery and rule changes. A non-Opus `reject` needs no confirmation.
+   sampling policy is unchanged. Reviewer independence is per run: use fresh context, never the
+   run that drafted, engineered, triaged or first-reviewed the function, including machinery
+   and rule changes. A non-Opus `reject` needs no confirmation.
    A new Reviewer model or class counts as a new Reviewer version for sampling. The acceptance
-   and flow tools refuse models not admitted for the profile and review role in use.
+   and flow tools refuse models not admitted for the profile in use.
 
    Verdicts are `approve`, `reject` (on a blocking ground, back to the Drafter or Engineer with
    reasons) or `escalate` (with a category: `provenance`, `legal`, `systemic` or `other`). The
@@ -570,7 +572,11 @@ An `approve` block must also give `report_binding: agree`, `pass` for the four b
 none` and a `naming_findings` field (`none` or a list), or it is refused as inconsistent.
 The saved review group's profile governs admission even if the active session later changes.
 A caller-supplied `--profile` must agree with that group, or with the active session when no
-group records the task; with neither, it defaults to the configured default unless supplied.
+group records the task; with neither, only the configured default is allowed. Start a session
+before first use of another profile. `SKYRIM_FLOW_DIR` is accepted only when it resolves to
+`.local/flow` under the shared checkout (the parent of the git common directory), including
+isolated integration worktrees. Saved groups, session events and independence assertions remain
+local, unauthenticated state: these checks prevent mistakes, not deliberate state forgery.
 The block parser fails closed. The saved review must start at its `# Review <task-id>` title,
 hold no second title (in any case, in any section) and no unseen characters (control or format
 characters other than tab and CRLF, line separators, spaces other than U+0020). A section is a

@@ -255,7 +255,7 @@ class FlowTests(unittest.TestCase):
         line = flow.dispatch_line(sample)[1]
         self.assertIn('model gpt-6.1-sol', line)
         self.assertIn('Codex session', line)
-        for model, profile in [('gpt-6.1-sol', 'cheap'), ('gpt-6.1-sol', 'full'),
+        for model, profile in [('gpt-6.1-terra', 'claude-low'), ('gpt-6.1-sol', 'cheap'), ('gpt-6.1-sol', 'full'),
                                ('gpt-5.6-sol', 'claude-low'), ('gpt-6-sol', 'claude-low')]:
             with self.subTest(model=model, profile=profile):
                 sample.update(reviewer_model=model, profile=profile)

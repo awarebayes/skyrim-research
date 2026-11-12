@@ -966,7 +966,7 @@ did, say so and stop). Gates: as recorded; G2 for reading reviews and packs.
 """ + '\n'.join(lines) + """
 
 For a reject: fix the blocking ground named in the review, re-run `attempt`, re-confirm, and leave
-the function for a fresh Reviewer (never the one who rejected it, never you). For an escalate
+the function for a fresh Reviewer run (never the run that rejected it, never this triage run). For an escalate
 `other`: resolve it, then the same. For a failed unit: analyse the first mismatch, fix or save a
 near-miss with the reason. Never weaken the comparator, validator, lint or a record.
 Write details to `.local/handoffs/triage-""" + stamp + """.md`; return a table: function, outcome, file.

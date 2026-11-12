@@ -27,6 +27,7 @@ byte match, or edit `docs/authorizations.md`.
   commit/push.
 - `model: "sonnet"` (Drafter) for bounded high-volume tasks: reconstruction drafts, synthetic
   fixtures, report formatting, doc updates.
+- Under `claude-low`, review runs through Codex per `docs/orchestrator-runbook.md`.
 - `subagent_type: "reviewer"` (Reviewer, Opus) for every function with a reproduced comparator
   pass, singly or in a batch, and for every change to the comparator, the validator's gate logic
   or the acceptance rule. Start it fresh (never a fork); never send it a function that the same

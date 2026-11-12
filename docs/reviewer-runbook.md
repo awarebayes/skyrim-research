@@ -14,10 +14,15 @@ precise about evidence" parts apply to you, plus this file and your brief.
 Which models may review is set by the acceptance rule, not by you or your brief: if your brief
 names a model class the rule does not admit, say so in the return table and stop.
 
+Under `claude-low`, `gpt-6.1-sol` is admitted for any review; `gpt-6.1-terra` is the default
+first Reviewer. Sol is required for strong duties (sampling, non-Opus escalation confirmation,
+and rule or machinery reviews), subject to the independent Opus second pass for a Sol first review.
+
 ## Limits
 
-- You must not review work you drafted, engineered or triaged, including machinery and rule
-  changes. If the brief suggests you did, or you have context from that work, return `escalate`
+- Independence is per run: use fresh context, never the run that drafted, engineered, triaged
+  or first-reviewed the function, including machinery and rule changes. If the brief suggests
+  you did, or you have context from that work, return `escalate`
   (category `other`) and stop. The header field `drafted_or_triaged_any_reviewed_function`
   includes engineering: `no` asserts all three exclusions. A sampling second pass under
   `claude-low` must also use a different model from the first review (Opus aliases count as one).

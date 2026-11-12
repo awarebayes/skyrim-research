@@ -37,14 +37,15 @@ your harness does:
 
 **Reviewer model.** The acceptance rule (`docs/verification.md`, "Admitted Reviewer classes")
 admits Opus by default and `gpt-6.1-terra` under `claude-low`; Sonnet is pending calibration and
-a Reviewer-checked rule change. Under `claude-low`, exactly `gpt-6.1-sol` is the strong Reviewer
+a Reviewer-checked rule change. Under `claude-low`, Sol is admitted for any review and Terra
+is the default first Reviewer; exactly `gpt-6.1-sol` is the strong Reviewer
 for sampling second passes, confirmation of non-Opus escalations and reviews of comparator,
 validator, verifier and acceptance-rule changes. Sol was admitted by maintainer decision WITHOUT
 a calibration ("sol is goood enough dont waste time"); Terra's admission followed calibration.
 Every second pass under `claude-low` uses a different model from the first review; an initial
-Sol review therefore needs Opus. Opus keeps these duties outside `claude-low`. No Reviewer may
-review work it drafted, engineered or triaged. A profile Reviewer the rule does not admit is
-replaced by Opus with a note; a sampling pass with no admitted independent model is refused.
+Sol review therefore needs Opus. Opus keeps these duties outside `claude-low`. Independence is
+per run: fresh context, never the run that drafted, engineered, triaged or first-reviewed the
+function. A profile Reviewer the rule does not admit is replaced by Opus with a note; a sampling pass with no admitted independent model is refused.
 
 A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`; Drafter

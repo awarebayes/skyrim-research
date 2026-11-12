@@ -7,7 +7,10 @@ from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime, timezone
 from pathlib import Path
 import sys
+import subprocess
+import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tests'))
@@ -111,6 +114,7 @@ reasons: synthetic
             with self.subTest(model=model):
                 self.write_review(model=model)
                 self.assertRefused('not admitted')
+        self.write('.local/flow/events.jsonl', json.dumps({'event': 'session-start', 'profile': 'claude-low'}) + '\n')
         self.write_review(model='gpt-5.6-terra')
         with self.assertRaisesRegex(af.Refused, 'not admitted'):
             af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
@@ -127,15 +131,52 @@ reasons: synthetic
             with self.subTest(model=model, profile=profile):
                 self.assertEqual(af.strong_reviewer_admitted(self.root, model, profile), admitted)
                 if not admitted:
+                    self.write('.local/flow/events.jsonl', json.dumps({'event': 'session-start', 'profile': profile}) + '\n')
                     self.write_review(model=model)
                     with self.assertRaisesRegex(af.Refused, 'not admitted'):
                         af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
                                   'approve', when=WHEN, profile=profile)
         self.assertFalse((self.root / REVIEW).exists())
+        self.write('.local/flow/events.jsonl', json.dumps({'event': 'session-start', 'profile': 'claude-low'}) + '\n')
         self.write_review(model='gpt-6.1-sol')
         af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
                   'approve', when=WHEN, profile='claude-low')
         self.assertEqual(json.loads((self.root / REVIEW).read_text())['reviewer_model'], 'gpt-6.1-sol')
+
+    def test_profile_without_session_requires_configured_default(self):
+        self.assertEqual(af.review_profile(self.root, 'new-task', None), 'cheap')
+        self.assertEqual(af.review_profile(self.root, 'new-task', 'cheap'), 'cheap')
+        with self.assertRaisesRegex(af.Refused, '--profile does not match'):
+            af.review_profile(self.root, 'new-task', 'claude-low')
+
+    def test_flow_directory_override_cannot_hide_profile(self):
+        self.write('.local/flow/events.jsonl', json.dumps({'event': 'session-start', 'profile': 'cheap'}) + '\n')
+        for directory in ('empty-flow', 'crafted-flow'):
+            if directory == 'crafted-flow':
+                self.write(directory + '/events.jsonl', json.dumps({'event': 'session-start', 'profile': 'claude-low'}) + '\n')
+            with self.subTest(directory=directory), patch.dict('os.environ', SKYRIM_FLOW_DIR=str(self.root / directory)):
+                with self.assertRaisesRegex(af.Refused, 'SKYRIM_FLOW_DIR must resolve'):
+                    af.review_profile(self.root, 'new-task', 'claude-low')
+        with patch.dict('os.environ', SKYRIM_FLOW_DIR=str(self.root / '.local/flow/../flow')):
+            self.assertEqual(af.review_profile(self.root, 'new-task', None), 'cheap')
+
+    def test_integration_worktree_uses_shared_flow_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            shared = Path(directory) / 'repo'
+            shared.mkdir()
+            def git(*args):
+                subprocess.run(['git', *args], cwd=shared, check=True, capture_output=True)
+            git('init')
+            git('-c', 'user.name=Synthetic', '-c', 'user.email=synthetic@example.invalid',
+                'commit', '--allow-empty', '-m', 'synthetic')
+            worktree = shared / '.local/integration'
+            git('worktree', 'add', '--detach', str(worktree))
+            expected = (shared / '.local/flow').resolve()
+            with patch.dict('os.environ', SKYRIM_FLOW_DIR=str(expected)):
+                self.assertEqual(af.active_flow_dir(worktree), expected)
+            with patch.dict('os.environ', SKYRIM_FLOW_DIR=str(worktree / '.local/flow')):
+                with self.assertRaisesRegex(af.Refused, 'SKYRIM_FLOW_DIR must resolve'):
+                    af.active_flow_dir(worktree)
 
     def test_profile_cannot_override_active_session(self):
         self.write('docs/verification.md', (ROOT / 'docs/verification.md').read_text())

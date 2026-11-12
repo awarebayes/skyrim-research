@@ -617,7 +617,16 @@ def strong_reviewer_admitted(root, model, profile):
 
 def active_flow_dir(root):
     import os
-    return Path(os.environ.get('SKYRIM_FLOW_DIR') or Path(root) / '.local/flow')
+    import subprocess
+    root = Path(root).resolve()
+    result = subprocess.run(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'],
+                            cwd=root, capture_output=True, text=True)
+    shared = Path(result.stdout.strip()).parent if result.returncode == 0 else root
+    expected = (shared / '.local/flow').resolve()
+    override = os.environ.get('SKYRIM_FLOW_DIR')
+    refuse(not override or Path(override).resolve() == expected,
+           'SKYRIM_FLOW_DIR must resolve to the repository shared .local/flow')
+    return expected
 
 
 def active_profile(root, default=None):
@@ -642,7 +651,7 @@ def review_profile(root, task_id, requested):
         if group.get('task_id') == task_id:
             recorded.add(group.get('profile') or profiles.DEFAULT)
     refuse(len(recorded) <= 1, 'review groups record conflicting profiles for this task')
-    assigned = next(iter(recorded)) if recorded else active_profile(root)
+    assigned = next(iter(recorded)) if recorded else active_profile(root, profiles.DEFAULT)
     refuse(not requested or not assigned or requested == assigned,
            '--profile does not match the recorded review group or active session profile')
     profile = assigned or requested or profiles.DEFAULT
