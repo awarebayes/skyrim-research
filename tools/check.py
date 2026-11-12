@@ -147,6 +147,26 @@ def check_unit(root, compiled, unit, what):
     require(not extra, f'{what}: translation_unit lists files {compiled} does not include: {", ".join(extra)}')
 
 
+
+def check_runtime_actions(report, symbol_map):
+    """Consistency of the internal engine's verified CRT dependencies; image proof stays private."""
+    actions = (report.get('coverage') or {}).get('runtime_actions', [])
+    require(isinstance(actions, list), 'Match record: runtime actions must be a list')
+    keys = {'symbol', 'rva', 'size', 'iat_rva', 'module', 'import'}
+    encoded = []
+    for action in actions:
+        require(isinstance(action, dict) and set(action) == keys
+                and action['symbol'] == action['import'] == '__std_terminate'
+                and action['module'] == 'vcruntime140.dll' and integer(action['size']) and action['size'] == 6
+                and integer(action['rva']) and integer(action['iat_rva']),
+                'Match record: invalid runtime action identity')
+        entry = symbol_map['symbols'].get(action['symbol'])
+        require(entry == {'rva': action['rva'], 'size': 6},
+                'Match record: runtime action differs from the pinned symbol map')
+        encoded.append(json.dumps(action, sort_keys=True))
+    require(len(set(encoded)) == len(encoded), 'Match record: duplicate runtime action')
+    return json.dumps(sorted(encoded))
+
 def validate_match(fn, target, root=None):
     """`check_match` with the inventory entry, record and unit named in any failure."""
     try:
@@ -239,7 +259,7 @@ def check_match(fn, target, root=None):
     engine = compare_internal if internal else legacy_comparator
     require(not internal or map_ref.get('sha256') == map_state.current_sha,
             'Match record: internal prototype requires the exact current symbol map')
-    identities = set()
+    identities, runtime_actions = set(), set()
     compiled_on, compared_on, symbols = set(), set(), set()
     object_hosts = {}
     current_comparator = engine.comparator_source_sha256()
@@ -293,11 +313,14 @@ def check_match(fn, target, root=None):
                 'Match record: report does not name its candidate object')
         object_hosts.setdefault(report['candidate']['object_sha256'], set()).add(run['compiled_on'])
         cov = report.get('coverage') or {}
+        if internal:
+            runtime_actions.add(check_runtime_actions(report, symbol_map))
         require(cov.get('code_bytes_total') == fn['size']
                 and integer(cov.get('code_bytes_exact')) and integer(cov.get('code_bytes_by_reference'))
                 and cov['code_bytes_exact'] + cov['code_bytes_by_reference'] == fn['size']
                 and cov.get('unwind') in {'covered', 'none-in-range'},
                 'Match record: report coverage is incomplete')
+    require(not internal or len(runtime_actions) == 1, 'Match record: runs compared different runtime actions')
     require(not internal or len(identities) == 1, 'Match record: runs compared different internal identities')
     require(len(symbols) == 1, 'Match record: runs compared different symbols')
     if pinned_names is not None:

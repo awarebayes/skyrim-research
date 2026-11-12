@@ -1,7 +1,7 @@
 # Internal function comparator prototype, contract 3
 
 Status: **prototype for independent machinery review; internal acceptance disabled**. This is
-an opt-in extension in `tools/compare_internal.py`, version `0.7.0-internal-prototype`.
+an opt-in extension in `tools/compare_internal.py`, version `0.7.1-internal-prototype`.
 `tools/compare.py` and `tools/pecoff.py` remain unchanged, including their contract-2 behavior,
 version and source hash. Existing schema-2 match records remain valid unchanged. The internal
 engine reuses their provenance, relocation, byte, unwind, EH, funclet, TLS and overlap checks.
@@ -65,6 +65,32 @@ unchanged contract-2 section hash plus every relocation's section, offset and sc
 key. A changed local binding identity therefore changes this hash even when its spelling is
 unique. It can conservatively change for unrelated TU edits; that does not justify reusing an
 approval.
+
+## Compiler runtime termination actions
+
+The compiler can reference `__std_terminate` directly as an unwind-map action of a normal
+noexcept global teardown. This is an imported CRT dependency, rather than an object-local
+funclet. The internal engine admits this one action only with all of these checks:
+
+- the reference is specifically an unwind-map `.action`, an `ADDR32NB` relocation to an
+  undefined external `__std_terminate` function symbol, with zero symbol offset and addend;
+- the ordinary exact action-RVA comparison and relocation-consumption checks still run;
+- its map entry pins exactly six bytes in an executable section, outside compared code and
+  every target procedure with unwind metadata;
+- all six bytes form a direct import jump: the opcode is checked and its displacement must
+  address the unique named `__std_terminate` IAT slot of `VCRUNTIME140.dll`;
+- that identity is read from the image's own bounded, terminated import descriptors and lookup
+  table. The unbound IAT must agree with that table. Wrong DLL/name, ordinal-only identity,
+  duplicate slots, bound imports, malformed tables and other thunk shapes are refused.
+
+A successful report adds `coverage.runtime_actions`, listing symbol, thunk RVA/size, IAT RVA,
+module and import name. The public consistency validator checks these fields against the pinned
+map and requires the same runtime dependencies in every run. It does not count the dependency as a candidate funclet or compare the
+CRT implementation loaded by Windows. No external action can pass from a map name alone.
+Other external actions and catch handlers remain refused; ordinary object-local funclets keep
+the complete-section/EH checks. Contract 2 is unchanged and still refuses external actions.
+This is part of the unaccepted internal prototype and needs the same independent machinery
+and rule review before acceptance can be enabled.
 
 ## Task, runner and report schemas
 

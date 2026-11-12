@@ -7,6 +7,7 @@ import argparse
 import base64
 import hashlib
 import json
+import struct
 from pathlib import Path
 import sys
 
@@ -14,10 +15,10 @@ from compare import (ROOT, TLS_INDEX, Function, check_placement, check_provenanc
                      check_relocation_layout, check_task, check_tls, code_section_sha256,
                      is_hash, is_text, is_uint, load_symbol_map, need, sanitized, sha256, write_diagnostics)
 from pecoff import (SCN_CNT_CODE, SCN_MEM_EXECUTE, STORAGE_EXTERNAL, STORAGE_STATIC, UNW_FLAG_CHAININFO,
-                    CoffObject, PeImage, Reject, Symbol)
+                    CoffObject, PeImage, Reject, Symbol, SYM_UNDEFINED)
 from source_digest import DIGEST_METHOD
 
-COMPARATOR_VERSION = '0.7.0-internal-prototype'
+COMPARATOR_VERSION = '0.7.1-internal-prototype'
 CONTRACT_VERSION = 3
 REPORT_SCHEMA = 2
 SELECTOR_FIELDS = {'symbol_type', 'storage_class', 'section_number', 'section_name', 'entry_offset'}
@@ -30,6 +31,61 @@ def comparator_source_sha256():
     for name in ('compare.py', 'pecoff.py', 'compare_internal.py', 'source_digest.py'):
         digest.update(name.encode() + b'\0' + Path(__file__).with_name(name).read_bytes())
     return digest.hexdigest()
+
+
+def runtime_import_slot(image):
+    """The unique unbound VCRUNTIME140 import of the compiler's termination action.
+
+    This is a CRT dependency, not a candidate funclet. Its identity must come from the image's
+    import structures; the map alone cannot turn an arbitrary action into a runtime dependency.
+    Bound imports, ordinal imports for this action, missing names and ambiguous slots refuse.
+    """
+    reason = 'eh-runtime-import'
+    blob = image.blob
+    opt = struct.unpack_from('<I', blob, 60)[0] + 24
+    count = struct.unpack_from('<I', blob, opt + 108)[0]
+    need(count > 1, reason, 'termination action needs an import directory')
+    directory, size = struct.unpack_from('<II', blob, opt + 120)
+    need(directory and 20 <= size <= 20 * 4096 and size % 20 == 0, reason,
+         'termination action needs bounded import descriptors')
+
+    def string(rva):
+        raw = bytearray()
+        for i in range(256):
+            value = image.read(rva + i, 1, 'runtime import string')[1][0]
+            if value == 0:
+                need(all(32 <= c < 127 for c in raw), reason, 'runtime import name is not ASCII')
+                return raw.decode('ascii')
+            raw.append(value)
+        raise Reject(reason, 'runtime import name is unterminated')
+
+    matches, terminated = [], False
+    for i in range(size // 20):
+        fields = struct.unpack('<5I', image.read(directory + 20 * i, 20, 'import descriptor')[1])
+        if not any(fields):
+            terminated = True
+            break
+        original, timestamp, _forward, name, iat = fields
+        if string(name).lower() != 'vcruntime140.dll':
+            continue
+        need(original and iat and timestamp == 0, reason, 'bound or nameless runtime imports are unsupported')
+        ended = False
+        for j in range(4096):
+            entry = struct.unpack('<Q', image.read(original + 8 * j, 8, 'runtime import lookup')[1])[0]
+            slot = iat + 8 * j
+            stored = struct.unpack('<Q', image.read(slot, 8, 'runtime import address')[1])[0]
+            need(stored == entry, reason, 'runtime IAT differs from its unbound lookup table')
+            if entry == 0:
+                ended = True
+                break
+            if entry & (1 << 63):
+                continue
+            need(entry <= 0xFFFFFFFF, reason, 'runtime import name is not an RVA')
+            if string(entry + 2) == '__std_terminate':
+                matches.append(slot)
+        need(ended, reason, 'runtime import lookup is unterminated')
+    need(terminated and len(matches) == 1, reason, 'termination action needs exactly one named runtime import')
+    return matches[0]
 
 
 def selector(obj, sym):
@@ -121,6 +177,39 @@ class InternalFunction(Function):
             need(sym.name != self.obj.section(sym.section).name, 'unsupported-relocation',
                  'SECREL refers to a section symbol')
         return super().secrel_field(rel, self.scoped_symbol(sym), addend_bytes)
+
+    def ref_field(self, index, offset, rva, what, expect, reason='eh-reference-mismatch'):
+        rel = self.relocs[index].get(offset)
+        sym = self.obj.symbols[rel.symbol] if rel is not None else None
+        if (expect == 'code' and what.endswith('.action') and sym is not None
+                and sym.name == '__std_terminate' and sym.section == SYM_UNDEFINED):
+            need(sym.storage == STORAGE_EXTERNAL and sym.value == 0 and sym.kind in (0, 0x20)
+                 and self.candidate_u32(index, offset, what) == 0,
+                 'eh-runtime-import', 'termination action must be an undefined function with no addend')
+            entry = self.entries.get(sym.name)
+            need(entry is not None and entry.get('size') == 6, 'eh-runtime-import',
+                 'termination action map must pin its complete six-byte import thunk')
+            # Retain the ordinary ADDR32NB field, relocation consumption and exact RVA checks.
+            super().ref_field(index, offset, rva, what, 'external', reason)
+            address = entry['rva']
+            need(not any(a < address + 6 and address < b for a, b in self.code_ranges),
+                 'eh-runtime-import', 'termination thunk overlaps compared candidate code')
+            section, thunk = self.image.read(address, 6, 'runtime termination import thunk')
+            need(section.flags & SCN_MEM_EXECUTE and thunk[:2] == bytes((0xFF, 0x25)),
+                 'eh-runtime-import', 'termination action is not a complete indirect import jump')
+            slot = address + 6 + struct.unpack_from('<i', thunk, 2)[0]
+            need(slot == runtime_import_slot(self.image), 'eh-runtime-import',
+                 'termination jump does not address the named runtime IAT slot')
+            for begin, end, _unwind in self.image.runtime_functions():
+                need(not (begin < address + 6 and address < end), 'eh-runtime-import',
+                     'termination thunk overlaps a procedure with unwind metadata')
+            known = self.coverage.setdefault('runtime_actions', [])
+            item = {'symbol': sym.name, 'rva': address, 'size': 6, 'iat_rva': slot,
+                    'module': 'vcruntime140.dll', 'import': '__std_terminate'}
+            if item not in known:
+                known.append(item)
+            return None
+        return super().ref_field(index, offset, rva, what, expect, reason)
 
     def compare_unwind(self, sec):
         count = super().compare_unwind(sec)

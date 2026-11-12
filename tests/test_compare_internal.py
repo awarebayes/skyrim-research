@@ -321,3 +321,152 @@ class InternalGateTests(GateFixture, unittest.TestCase):
     def test_legacy_schema_cannot_carry_internal_report(self):
         self.record['match_record_schema'] = 2; self.save_record()
         self.assertGateRejects('schema or contract')
+
+
+class RuntimeTerminationActionTests(unittest.TestCase):
+    """Original synthetic import structures; runtime actions never trust a map name alone."""
+
+    def inputs(self, module=b'VCRUNTIME140.dll', name=b'__std_terminate', ordinal=False, extra_import=False):
+        unit = fx.catch_unit(external_action='__std_terminate')
+        unwind = next(sym[2] for sym in unit.symbols if sym[0] == '$stateUnwindMap$SyntheticCatch')
+        unit.reloc(unwind, 12, '?dtor$0@?0??SyntheticCatch@@4HA', fx.ADDR32NB)
+        args = internalize(fx.catch_inputs(unit, fx.image_externals(__std_terminate=0x1170)))
+        image = bytearray(args['image_bytes'])
+        pe = ci.PeImage(image)
+
+        def put(rva, data):
+            sec = pe.section_for(rva)
+            at = sec.raw_ptr + rva - sec.vaddr
+            image[at:at + len(data)] = data
+
+        opt = struct.unpack_from('<I', image, 60)[0] + 24
+        struct.pack_into('<II', image, opt + 120, 0x2D00, 40)
+        put(0x2D00, struct.pack('<5I', 0x2D80, 0, 0, 0x2D40, 0x2DC0) + bytes(20))
+        put(0x2D40, module + b'\0')
+        entries = [1 << 63 | 1 if ordinal else 0x2E00]
+        if extra_import:
+            entries.append(0x2E00)
+        values = struct.pack('<' + 'Q' * (len(entries) + 1), *entries, 0)
+        put(0x2D80, values); put(0x2DC0, values)
+        put(0x2E00, b'\0\0' + name + b'\0')
+        put(0x1170, bytes((0xFF, 0x25)) + struct.pack('<i', 0x2DC0 - (0x1170 + 6)))
+        args['image_bytes'] = bytes(image)
+        args['task']['target_image_sha256'] = args['manifest']['image_sha256'] = fx.sha256(image)
+        args['symbol_map']['symbols']['__std_terminate']['size'] = 6
+        return args
+
+    def patch_image(self, args, rva, value):
+        pe = ci.PeImage(args['image_bytes']); sec = pe.section_for(rva)
+        image = bytearray(args['image_bytes']); at = sec.raw_ptr + rva - sec.vaddr
+        image[at:at + len(value)] = value
+        args['image_bytes'] = bytes(image)
+        args['task']['target_image_sha256'] = args['manifest']['image_sha256'] = fx.sha256(image)
+
+    def assertFails(self, args, reason='eh-runtime-import'):
+        report = ci.compare(**args)
+        self.assertEqual(report['result'], 'fail')
+        self.assertEqual(report['reason'], reason, report['detail'])
+
+    def test_known_runtime_action_has_checked_thunk_and_named_import(self):
+        args = self.inputs(); report = ci.compare(**args)
+        self.assertEqual(report['result'], 'pass', report['detail'])
+        self.assertEqual(report['coverage']['runtime_actions'], [
+            {'symbol': '__std_terminate', 'rva': 0x1170, 'size': 6, 'iat_rva': 0x2DC0,
+             'module': 'vcruntime140.dll', 'import': '__std_terminate'}])
+        # The legacy engine remains closed to this external unwind action.
+        legacy = copy.deepcopy(args); blob = bytearray(legacy['object_bytes'])
+        obj = CoffObject(blob); sym = next(s for s in obj.symbols.values() if s.name == fx.CATCH_FUNCTION)
+        table = struct.unpack_from('<I', blob, 8)[0]; blob[table + 18 * sym.index + 16] = 2
+        legacy['object_bytes'] = bytes(blob); legacy['build_record']['object_sha256'] = fx.sha256(blob)
+        self.assertEqual(legacy_compare(**legacy)['reason'], 'eh-reference-not-local')
+
+    def test_wrong_import_identity_or_ambiguous_slot_is_refused(self):
+        for kwargs in ({'module': b'OtherRuntime.dll'}, {'name': b'other_terminate'},
+                       {'ordinal': True}, {'extra_import': True}):
+            self.assertFails(self.inputs(**kwargs))
+
+    def test_all_thunk_bytes_and_its_exact_iat_slot_are_checked(self):
+        args = self.inputs(); self.patch_image(args, 0x1170, bytes((0xFF, 0x15)))
+        self.assertFails(args)
+        args = self.inputs(); self.patch_image(args, 0x1172, struct.pack('<i', 0x2DC8 - (0x1170 + 6)))
+        self.assertFails(args)
+
+    def test_map_must_pin_six_bytes_and_the_exact_action_rva(self):
+        for size in (None, 5, 7):
+            args = self.inputs(); args['symbol_map']['symbols']['__std_terminate']['size'] = size
+            self.assertFails(args)
+        args = self.inputs(); args['symbol_map']['symbols']['__std_terminate']['rva'] += 1
+        self.assertFails(args, 'eh-reference-mismatch')
+
+    def test_bound_import_or_changed_iat_is_refused(self):
+        args = self.inputs(); self.patch_image(args, 0x2D04, struct.pack('<I', 1))
+        self.assertFails(args)
+        args = self.inputs(); self.patch_image(args, 0x2DC0, struct.pack('<Q', 0x2E10))
+        self.assertFails(args)
+
+    def test_no_import_directory_or_unterminated_descriptors_is_refused(self):
+        args = self.inputs()
+        image = bytearray(args['image_bytes']); opt = struct.unpack_from('<I', image, 60)[0] + 24
+        struct.pack_into('<II', image, opt + 120, 0, 0)
+        args['image_bytes'] = bytes(image)
+        args['task']['target_image_sha256'] = args['manifest']['image_sha256'] = fx.sha256(image)
+        self.assertFails(args)
+        args = self.inputs(); self.patch_image(args, 0x2D14, struct.pack('<5I', 0x2D80, 0, 0, 0x2D40, 0x2DC0))
+        self.assertFails(args)
+
+    def test_other_external_actions_and_non_action_references_stay_refused(self):
+        args = internalize(fx.catch_inputs(fx.catch_unit(external_action='OtherRuntime'),
+                                          fx.image_externals(OtherRuntime=0x1170)))
+        self.assertFails(args, 'eh-reference-not-local')
+        unit = fx.catch_unit(external_action='__std_terminate')
+        unwind = next(sym[2] for sym in unit.symbols if sym[0] == '$stateUnwindMap$SyntheticCatch')
+        unit.reloc(unwind, 12, '?dtor$0@?0??SyntheticCatch@@4HA', fx.ADDR32NB)
+        # Using the same imported symbol as a catch handler does not make it a runtime action.
+        for sec in unit.sections:
+            sec[2] = [(off, '__std_terminate' if sym.startswith('?catch$') and off == 12 else sym, kind)
+                      for off, sym, kind in sec[2]]
+        original = self.inputs()
+        args = internalize(fx.catch_inputs(unit, fx.image_externals(__std_terminate=0x1170),
+                                          image=original['image_bytes']))
+        args['symbol_map']['symbols']['__std_terminate']['size'] = 6
+        self.assertFails(args, 'eh-reference-not-local')
+
+    def test_runtime_action_cannot_have_an_inline_addend_or_symbol_offset(self):
+        for symbol_offset in (False, True):
+            args = self.inputs(); blob = bytearray(args['object_bytes']); obj = CoffObject(blob)
+            if symbol_offset:
+                sym = next(s for s in obj.symbols.values() if s.name == '__std_terminate')
+                table = struct.unpack_from('<I', blob, 8)[0]
+                struct.pack_into('<I', blob, table + 18 * sym.index + 8, 1)
+            else:
+                sym = next(s for s in obj.symbols.values() if s.name == '$stateUnwindMap$SyntheticCatch')
+                struct.pack_into('<I', blob, obj.section(sym.section).raw_ptr + sym.value + 4, 1)
+            args['object_bytes'] = bytes(blob)
+            args['build_record']['object_sha256'] = args['task']['internal_identity']['object_sha256'] = fx.sha256(blob)
+            self.assertFails(args)
+
+    def test_runtime_thunk_cannot_absorb_a_procedure(self):
+        args = self.inputs(); image = ci.PeImage(args['image_bytes'])
+        entries = image.runtime_functions()
+        entries = sorted(list(entries) + [(0x1170, 0x1176, entries[0][2])])
+        self.patch_image(args, 0x4000, b''.join(struct.pack('<III', *entry) for entry in entries))
+        blob = bytearray(args['image_bytes']); opt = struct.unpack_from('<I', blob, 60)[0] + 24
+        struct.pack_into('<II', blob, opt + 112 + 24, 0x4000, 12 * len(entries))
+        args['image_bytes'] = bytes(blob)
+        args['task']['target_image_sha256'] = args['manifest']['image_sha256'] = fx.sha256(blob)
+        self.assertFails(args)
+
+    def test_runtime_report_metadata_is_checked_against_the_pinned_map(self):
+        from check import check_runtime_actions
+        args = self.inputs(); report = ci.compare(**args)
+        self.assertEqual(report['result'], 'pass')
+        check_runtime_actions(report, args['symbol_map'])
+        bad = copy.deepcopy(report); bad['coverage']['runtime_actions'][0]['size'] = 5
+        with self.assertRaisesRegex(ValueError, 'runtime action'):
+            check_runtime_actions(bad, args['symbol_map'])
+        bad = copy.deepcopy(report); bad['coverage']['runtime_actions'] *= 2
+        with self.assertRaisesRegex(ValueError, 'duplicate runtime action'):
+            check_runtime_actions(bad, args['symbol_map'])
+        bad_map = copy.deepcopy(args['symbol_map']); bad_map['symbols']['__std_terminate']['rva'] += 1
+        with self.assertRaisesRegex(ValueError, 'pinned symbol map'):
+            check_runtime_actions(report, bad_map)
