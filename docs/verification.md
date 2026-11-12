@@ -218,9 +218,11 @@ Match record, recomputed from the tree:
   or an entry kind without a rule here, if a function other than the audited ones in
   `docs/comparator-contract.md` ("Symbol map dependences") refers to map data by its names in
   `compare.py`, or if the comment- and docstring-free syntax tree of an audited function changes
-  (with the `compare.py` functions, `Function` methods and module constants they use). They do
-  not see a change in `pecoff.py` or a map read under another name, and passing them is not an
-  audit; a failure calls for one. Every run's report must name
+  (with the `compare.py` functions they call by name, the `Function` methods they call on `self`
+  and the module constants they use). They do not see a change in `pecoff.py`, a map read under
+  another name, or an edit inside a helper reached any other way (`Function.helper(self, ...)`,
+  or a method of another object), though adding such a call to an audited function changes its
+  tree and fails them; passing them is not an audit, and a failure calls for one. Every run's report must name
   the pinned map in `symbol_map_sha256`, the comparator's hash of the bytes it read, so the pin
   cannot be moved without new runs. Changing or removing an entry
   therefore makes exactly the records pinned to versions holding it stale. The map is written

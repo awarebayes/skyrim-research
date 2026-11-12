@@ -306,6 +306,8 @@ class ExceptionDataTests(unittest.TestCase):
         self.assertEqual(report['result'], 'pass', report['detail'])
         [(start, length)] = report['coverage']['funclet_ranges']
         self.assertEqual(length, len(fx.FUNCLET_CODE))
+        # The exact start, not only containment: a shifted range would still pass the overlap probe.
+        self.assertEqual(start, fx.section_rva(fx.catch_unit(), '?catch$0@?0??SyntheticCatch@@4HA'))
         fn = report['function']
         self.assertTrue(start >= fn['rva'] + fn['size'] or start + length <= fn['rva'])
         # A map entry inside that range is what the comparator rejects, so the range is the one recorded.
