@@ -403,6 +403,17 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(g2['task_id'], f'{g["task_id"]}-r2')
         self.assertEqual(flow.redo_review(self.root, self.fdir, g['name'])['task_id'], f'{g["task_id"]}-r3')
 
+    def test_redo_sampling_uses_current_strong_reviewer(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        primary = flow.load_group(self.fdir, flow.review_group(self.root, self.fdir, max_size=3)[0])
+        sample = flow.load_group(self.fdir, primary['pair'])
+        sample['reviewer_model'], sample['reviewer_harness'] = 'opus', 'claude-code'
+        flow.save_group(self.fdir, sample)
+        revised = flow.redo_review(self.root, self.fdir, sample['name'])
+        self.assertEqual((revised['reviewer_model'], revised['reviewer_harness']), ('gpt-6.1-sol', 'codex'))
+        self.assertIn('gpt-6.1-sol', (self.root / revised['brief']).read_text())
+
     def test_missing_review_is_refused(self):
         g = self.grouped()
         with self.assertRaisesRegex(flow.FlowError, 'not saved'):

@@ -940,6 +940,10 @@ def record_rerun(root, fdir, name, compare_file):
 def redo_review(root, fdir, name):
     """A fresh Reviewer under a new task id after a review the parser refused (never edit the file)."""
     g = load_group(fdir, name)
+    if g['kind'] == 'sampling':
+        primary = load_group(fdir, g['pair'])
+        entry = strong_reviewer_entry(root, g.get('profile', profiles.DEFAULT), primary['reviewer_model'])
+        g['reviewer_model'], g['reviewer_harness'] = entry['model'], entry['harness']
     m = re.fullmatch(r'(.*?)(?:-r(\d+))?', g['task_id'])
     g['task_id'] = f'{m.group(1)}-r{int(m.group(2) or 1) + 1}'
     g['dispatched'] = None
