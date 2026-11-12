@@ -192,13 +192,26 @@ class FlowTests(unittest.TestCase):
         g = self.grouped()
         blocks = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
         self.repo.save_review(g['task_id'], blocks, model='sonnet')
-        self.assertIn('reviewer_model', flow.read_review(self.root, g, flow.inventory(self.root)['functions'])[0])
+        self.assertEqual(flow.read_review(self.root, g, flow.inventory(self.root)['functions'])[0],
+                         'malformed: reviewer_model does not match assigned model')
         sample = flow.load_group(self.fdir, g['pair'])
         self.repo.save_review(sample['task_id'], blocks, 'yes', model='gpt-6.1-terra')
-        self.assertIn('reviewer_model', flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0])
+        self.assertEqual(flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0],
+                         'malformed: reviewer_model does not match assigned model')
         sample.update(reviewer_model='gpt-6.1-terra', profile='claude-low')
         self.assertIn('sampling reviewer_model must be Opus',
                       flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0])
+
+    def test_admitted_review_model_must_match_assigned_model(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        name = flow.review_group(self.root, self.fdir, max_size=3, reviewer_model='opus')[0]
+        g = flow.load_group(self.fdir, name)
+        blocks = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
+        self.repo.save_review(g['task_id'], blocks, model='gpt-6.1-terra')
+        self.assertTrue(flow.af.reviewer_admitted(self.root, 'gpt-6.1-terra', g['profile']))
+        self.assertEqual(flow.read_review(self.root, g, flow.inventory(self.root)['functions'])[0],
+                         'malformed: reviewer_model does not match assigned model')
 
     def test_first_twenty_counts_each_model_id(self):
         data = flow.inventory(self.root)
