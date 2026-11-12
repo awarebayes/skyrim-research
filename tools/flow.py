@@ -8,7 +8,8 @@
     python3 tools/flow.py dispatched <group>             # a Reviewer was started on that group's brief
     python3 tools/flow.py redo-review <group>            # new task id after a review the parser refused
     python3 tools/flow.py record-rerun <group> --compare FILE   # sampling re-run result (AGREE/DISAGREE rows)
-    python3 tools/flow.py integrate <group> [--no-push]  # accept, check, commit, push, watch CI; stops at the first failure
+    python3 tools/flow.py integrate <group> [--no-push]  # accept, check, commit, push, watch CI, in its own worktree; stops at the first failure
+    python3 tools/flow.py sync                           # fast-forward the shared checkout after an integration
     python3 tools/flow.py brief drafter|confirm|triage|rerun|direction ...   # write a brief file under .local/briefs/
     python3 tools/flow.py baseline <component> <value> <count>  # versions already past their first 20 (an Opus call)
     python3 tools/flow.py event friction|direction-check [--note ...]   # record that a report was produced
@@ -687,6 +688,9 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
         if back and not g.get('rejects_briefed'):
             acts.append(('run', f'python3 tools/flow.py brief triage --group {name}    # {len(back)} reject or escalate-other: '
                          f'then start {strong} with the brief it prints'))
+    behind = subprocess.run(['git', 'rev-list', '--count', f'HEAD..origin/{branch}'], cwd=root, capture_output=True, text=True)
+    if behind.returncode == 0 and behind.stdout.strip() not in ('', '0'):
+        acts.insert(0, ('run', f'python3 tools/flow.py sync    # the checkout is {behind.stdout.strip()} commit(s) behind origin/{branch}'))
     # Confirmation and grouping.
     stale = sorted(r for r, s in states.items() if s['state'] == 'confirm-stale' and not s.get('group'))
     passed = sorted({s['unit'] for s in states.values() if s['state'] == 'drafted-pass' and s.get('unit')})
@@ -803,7 +807,7 @@ def brief_confirm(root, fdir):
     text = f"""# Brief confirm-{stamp}
 
 Role: strong role of the profile (Claude: Engineer), or the routine orchestrator with a shell when every step below is a
-plain run. Reproduce the drafted passes on two hosts (docs/verification.md, Reproduction).
+plain run. Reproduce the drafted passes on two runner hosts (docs/verification.md, Runner hosts).
 
 Units with a passing function ({len(units)}), list file `{lst.relative_to(root).as_posix()}`:
 """ + ''.join(f'- `{u}`: {", ".join(sorted(r, key=lambda x: int(x, 16)))}\n' for u, r in sorted(units.items())) + f"""
@@ -811,9 +815,9 @@ Records that no longer bind their unit ({len(stale)}): {', '.join(stale) or 'non
 
 1. For each unit, remove from its `task.json` only functions that did not pass (their near-miss
    files stay), as earlier confirm runs did. Every remaining function must be an inventory entry.
-2. `tools/verifier/confirm --list {lst.relative_to(root).as_posix()} --replace` (hosts per the
-   runner config or a Boat session per docs/boat-agent-guidelines.md). Re-confirm stale records'
-   units the same way.
+2. `tools/verifier/confirm --list {lst.relative_to(root).as_posix()} --replace` (the runner hosts of
+   `.local/verifier/runners.json`; docs/verification.md, Runner hosts. Boat is retired: never pass
+   `--boat`). Re-confirm stale records' units the same way.
 3. A function that does not reproduce stays unconfirmed: note it; never edit a record.
 4. `python3 tools/check.py` must pass. Then `python3 tools/flow.py next-actions`.
 
@@ -915,11 +919,52 @@ def changed(root, paths):
     return sorted({entry[3:] for entry in r.stdout.split('\0') if len(entry) > 3})
 
 
+def integration_tree(fdir, name):
+    return Path(fdir) / 'integrate' / name / 'tree'
+
+
+def remove_tree(root, tree):
+    git(root, 'worktree', 'remove', '--force', str(tree), check=False)
+    shutil.rmtree(tree, ignore_errors=True)
+    git(root, 'worktree', 'prune', check=False)
+
+
+def carry_into_tree(root, tree, approved, by_rva):
+    """Copy, from the shared checkout into the integration tree, only what the approved functions
+    need: their inventory entries, match records and translation-unit files. Other units, which a
+    Drafter may still be editing, stay out of the commit and cannot block it."""
+    files = set()
+    for rva in approved:
+        fn = by_rva[rva]
+        refuse(fn.get('report'), f'{fn["id"]} names no match record in data/progress.json')
+        files.add(fn['report'])
+        files.update(json.loads((root / fn['report']).read_text())['source']['translation_unit'])
+    for rel in sorted(files):
+        src, dst = root / rel, tree / rel
+        refuse(src.is_file(), f'{rel} is missing from the checkout')
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, dst)
+    path = tree / 'data/progress.json'
+    data = json.loads(path.read_text())
+    index = {fn['id']: i for i, fn in enumerate(data['functions'])}
+    for rva in approved:
+        fn = by_rva[rva]
+        refuse(fn['id'] in index, f'{fn["id"]} is not an inventory entry on origin; land its inventory row first')
+        data['functions'][index[fn['id']]] = fn
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n')
+    return sorted(files)
+
+
 def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable):
     """Accept the approve blocks of one group's saved review, check, commit, push and watch CI.
 
+    The commit is built in its own worktree (under the flow dir) at origin's `branch`, never in the
+    shared checkout: only the approved functions' entries, records and unit files are carried over,
+    so other sessions' uncommitted work neither enters the commit nor blocks it. The shared checkout
+    is left as it was; `flow.py sync` brings it up to origin afterwards.
+
     Refuses before any change when the review is missing, malformed or holds a blocking escalation,
-    when the sampling gate is not met, or when the checkout is not `branch` level with origin.
+    when the sampling gate is not met, or when the shared checkout holds commits origin lacks.
     Each later step stops at its first failure. Re-running resumes after the last finished step.
     """
     root = Path(root)
@@ -936,19 +981,23 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     approved = sorted((r for r, b in blocks.items() if b.get('verdict') == 'approve'), key=lambda r: int(r, 16))
     refuse(approved, 'the review has no approve block; nothing to integrate')
     integ = g.get('integrated') or {}
-    refuse(git(root, 'rev-parse', '--abbrev-ref', 'HEAD') == branch, f'the checkout is not on {branch}')
-    review_file = f'{REVIEWS}/{g["task_id"]}.md'
+    review_file = str((root / REVIEWS / f'{g["task_id"]}.md').resolve())
+    tree = integration_tree(fdir, name)
     if not integ.get('commit'):
         git(root, 'fetch', '--quiet', 'origin', branch)
-        refuse(git(root, 'rev-parse', 'HEAD') == git(root, 'rev-parse', f'origin/{branch}'),
-               f'{branch} is not level with origin/{branch} (unpushed or missing commits); resolve that first')
-        refuse(not git(root, 'diff', '--cached', '--name-only'), 'the index already holds staged changes; '
-               'stage nothing by hand before integrate')
+        ahead = git(root, 'rev-list', '--count', f'origin/{branch}..HEAD')
+        refuse(ahead == '0', f'the checkout holds {ahead} commit(s) origin/{branch} lacks; push or drop them first')
+        remove_tree(root, tree)
+        tree.parent.mkdir(parents=True, exist_ok=True)
+        git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), f'origin/{branch}')
+        by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == g['build_id']}
+        carried = carry_into_tree(root, tree, approved, by_rva)
+        data = inventory(tree)
         by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == g['build_id']}
         done = all(by_rva[r]['status'] == 'matched' for r in approved)
-        printed = []
+        printed = list(carried)
         if not done:
-            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file], root, 'accept_function.py')
+            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file], tree, 'accept_function.py')
             take = False
             for line in out.splitlines():
                 if line.startswith('changed files'):
@@ -957,37 +1006,31 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
                     printed.append(line.strip().split('  ')[0])
                 elif take:
                     take = False
-        data = inventory(root)
+        data = inventory(tree)
         paths = set(printed) | {'data/progress.json', 'reconstruction/INDEX.md', 'docs/progress.svg'}
         for fn in data['functions']:
             if fn.get('report'):
                 paths.add(fn['report'])
-                rec = root / fn['report']
+                rec = tree / fn['report']
                 if rec.is_file():
                     paths.update(json.loads(rec.read_text())['source']['translation_unit'])
                 rv = rec.with_name(rec.name.replace('.json', '.review.json'))
                 if rv.is_file():
-                    paths.add(rv.relative_to(root).as_posix())
-        files = changed(root, paths)
+                    paths.add(rv.relative_to(tree).as_posix())
+        files = changed(tree, paths)
         refuse(files, 'nothing changed to commit')
-        git(root, 'add', '--', *files)
-        try:
-            run([python, 'tools/check.py', '--staged'], root, 'check.py --staged')
-        except FlowError:
-            git(root, 'reset', '--quiet', '--', *files)
-            raise
+        git(tree, 'add', '--', *files)
+        run([python, 'tools/check.py', '--staged'], tree, 'check.py --staged')
         accepted = len(approved)
         msg = (f'Accept {accepted} function(s) of review group {name}\n\n'
                f'Review {g["task_id"]}: {accepted} approve, '
                f'{sum(b.get("verdict") == "reject" for b in blocks.values())} reject; integrated by tools/flow.py.\n\n'
                'Co-Authored-By: Claude <noreply@anthropic.com>\n')
-        git(root, 'commit', '--quiet', '-m', msg)
-        integ = {'commit': git(root, 'rev-parse', 'HEAD'), 'files': files, 'accepted': accepted, 'checks': None,
+        git(tree, 'commit', '--quiet', '-m', msg)
+        integ = {'commit': git(tree, 'rev-parse', 'HEAD'), 'files': files, 'accepted': accepted, 'checks': None,
                  'pushed': None, 'ci': None}
         g['integrated'] = integ
         save_group(fdir, g)
-    refuse(git(root, 'rev-parse', 'HEAD') == integ['commit'] or integ.get('pushed'),
-           f'HEAD moved away from the integration commit {integ["commit"][:12]}; resolve by hand')
     if not integ.get('checks'):
         pre_push_checks(root, integ['commit'], python)
         integ['checks'] = utc()
@@ -995,10 +1038,19 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     if not push:
         return g
     if not integ.get('pushed'):
-        run(['git', 'push', 'origin', f'HEAD:{branch}'], root, 'git push')
+        # Fast-forward only. When origin moved meanwhile the commit is dropped, so the next run
+        # rebuilds it on the new origin and re-runs every check, rather than pushing a stale base.
+        try:
+            run(['git', 'push', 'origin', f'{integ["commit"]}:refs/heads/{branch}'], root, 'git push')
+        except FlowError:
+            g['integrated'] = None
+            save_group(fdir, g)
+            remove_tree(root, tree)
+            raise
         integ['pushed'] = utc()
         save_group(fdir, g)
         log_event(fdir, 'integrated', group=name, accepted=integ['accepted'], commit=integ['commit'])
+        remove_tree(root, tree)
     if integ.get('ci') != 'green':
         r = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
                            cwd=root, capture_output=True, text=True)
@@ -1009,6 +1061,45 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
                + ('fix main or report the cause to the maintainer before any further push.\n' if integ['ci'] == 'red'
                   else 'run integrate again later to re-check.\n') + r.stdout.strip())
     return g
+
+
+def sync(root, branch='main'):
+    """Fast-forward the shared checkout to origin after an integration, without losing anyone's work.
+
+    The integrated unit files usually sit in the checkout as untracked or modified copies, which
+    `git merge` refuses to overwrite. A copy byte-identical to origin's version is dropped first
+    (nothing is lost: the merge brings the same bytes back); any other difference stops the sync
+    with the list of files, so a Drafter's newer edit is never overwritten."""
+    root = Path(root)
+    refuse(git(root, 'rev-parse', '--abbrev-ref', 'HEAD') == branch, f'the checkout is not on {branch}')
+    git(root, 'fetch', '--quiet', 'origin', branch)
+    target = f'origin/{branch}'
+    if git(root, 'rev-parse', 'HEAD') == git(root, 'rev-parse', target):
+        return []
+    refuse(subprocess.run(['git', 'merge-base', '--is-ancestor', 'HEAD', target], cwd=root).returncode == 0,
+           f'the checkout has commits {target} lacks; resolve by hand')
+    incoming = [p for p in git(root, 'diff', '--name-only', '--no-renames', 'HEAD', target).splitlines() if p]
+    local = {}
+    if incoming:
+        out = subprocess.run(['git', 'status', '--porcelain', '-z', '--no-renames', '--untracked-files=all', '--', *incoming],
+                             cwd=root, capture_output=True, text=True).stdout
+        local = {e[3:]: e[:2] for e in out.split('\0') if len(e) > 3}
+    conflicts, same = [], []
+    for rel, code in sorted(local.items()):
+        path = root / rel
+        theirs = subprocess.run(['git', 'show', f'{target}:{rel}'], cwd=root, capture_output=True)
+        if code.strip() in ('??', 'M') and path.is_file() and theirs.returncode == 0 and path.read_bytes() == theirs.stdout:
+            same.append((rel, code.strip()))
+        else:
+            conflicts.append(rel)
+    refuse(not conflicts, 'local changes differ from the integrated versions; resolve by hand: ' + ', '.join(conflicts))
+    for rel, code in same:
+        if code == '??':
+            (root / rel).unlink()
+        else:
+            git(root, 'checkout', '--quiet', 'HEAD', '--', rel)
+    git(root, 'merge', '--quiet', '--ff-only', target)
+    return [rel for rel, _ in same]
 
 
 def pre_push_checks(root, commit, python):
@@ -1069,6 +1160,8 @@ def main(argv=None):
     s = sub.add_parser('integrate')
     s.add_argument('group')
     s.add_argument('--no-push', action='store_true', help='stop after the clean-tree checks')
+    s.add_argument('--branch', default='main')
+    s = sub.add_parser('sync')
     s.add_argument('--branch', default='main')
     s = sub.add_parser('brief')
     s.add_argument('kind', choices=('drafter', 'confirm', 'triage', 'rerun', 'direction'))
@@ -1131,6 +1224,11 @@ def main(argv=None):
             integ = g['integrated']
             print(f'{a.group}: accepted {integ["accepted"]}, commit {integ["commit"]}, checks {integ["checks"]}, '
                   f'pushed {integ.get("pushed") or "no"}, CI {integ.get("ci") or "not checked"}')
+            if integ.get('pushed'):
+                print('next: python3 tools/flow.py sync    # bring the shared checkout up to origin')
+        elif a.cmd == 'sync':
+            dropped = sync(root, a.branch)
+            print(f'checkout at origin/{a.branch}; {len(dropped)} identical local cop(ies) replaced by the integrated files')
         elif a.cmd == 'brief':
             if a.kind == 'drafter':
                 for path in brief_drafter(root, fdir, a.profile, a.count):

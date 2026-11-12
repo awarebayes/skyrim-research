@@ -105,7 +105,10 @@ Codex for orchestration, review and strong work, Haiku or Luna drafting). `cheap
 because weak-model drafting passes the same comparator gate; it stays default only while the
 friction report shows its pass rate at or above the threshold in `tools/profiles.json`. A profile
 never changes what counts as a match, and a Reviewer model the acceptance rule does not admit is
-refused whatever a profile says.
+refused whatever a profile says. Today the rule admits Opus Reviewers only: Sonnet and Terra
+Reviewers are prepared and pending a blind calibration against the Opus reviews and a
+Reviewer-checked rule change, so every profile's review groups get an Opus Reviewer until then.
+What OpenAI models may read under `claude-low` is recorded in `docs/authorizations.md` (Notes).
 
 **Friction and direction checks.** The routine orchestrator produces the friction report
 (`python3 tools/friction.py --write`) every work session. A direction check (strong model, fresh
@@ -198,7 +201,9 @@ orchestrator does not start a phase until the previous one's finish condition fr
   full checks and the verifier on the integrated tree, records `matched` with
   `tools/accept_function.py` (which writes the sanitized Reviewer record), then commits and pushes.
   For a review group of `tools/flow.py`, `python3 tools/flow.py integrate <group>` is that step as
-  one command that stops at the first failure. Claims refer to integrated source only. The maintainer gets periodic summaries, not commits.
+  one command that stops at the first failure; it builds the commit in its own worktree at origin,
+  carrying over only the approved functions' entries, records and unit files, and `flow.py sync`
+  then fast-forwards the shared checkout. Claims refer to integrated source only. The maintainer gets periodic summaries, not commits.
 
 ### Worker briefs and handoffs
 

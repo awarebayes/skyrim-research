@@ -35,6 +35,12 @@ your harness does:
 | T3 (`delegate_task`) | `delegate_task` with the model and effort given and the prompt line as the task text. |
 | any other (two terminals) | open a second terminal in this repository, start the named model's CLI there (Claude Code, Codex) with the model and effort given, and paste the prompt line. Wait for its return table. |
 
+**Reviewer model.** The acceptance rule (`docs/verification.md`) admits Opus Reviewers only.
+Sonnet (`cheap`) and Terra (`claude-low`) Reviewers are prepared but not in force: they wait for
+a blind calibration against the Opus reviews and a Reviewer-checked rule change. Until then
+`flow.py review-group` prints a note and gives every group an Opus Reviewer whatever the profile
+says, so under `claude-low` review still uses the Claude subscription.
+
 A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`; Drafter
 `Read docs/drafter-runbook.md in this repository and follow it exactly. Your worker label is <label>.`
@@ -63,8 +69,13 @@ A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `flow.py integrate <group>` is the whole integration: it runs the strict review parser,
 `tools/accept_function.py`, `tools/check.py --staged`, a commit, the pre-push checks in a clean
 worktree (`check.py`, unit tests, `build_site.py`), the push and `tools/ci_status.py`. It stops at
-the first failure and resumes after the last finished step when run again. Run it only from the
-main checkout on `main`; it refuses otherwise.
+the first failure and resumes after the last finished step when run again. It builds the commit
+in its own worktree at `origin/main` and carries over only the approved functions' inventory
+entries, match records and unit files, so a unit a Drafter is still editing neither enters the
+commit nor blocks it; the shared checkout is not touched. Afterwards `next-actions` lists
+`python3 tools/flow.py sync`, which fast-forwards the shared checkout, dropping only local copies
+byte-identical to the integrated files; if any local file differs it refuses and lists it: that
+is a stop for the strong role, never a reason to delete or overwrite a file yourself.
 
 ## What each worker returns
 
@@ -127,5 +138,5 @@ started you.
 
 Commit or push except through `flow.py integrate`; run `accept_function.py` directly; edit a
 saved review; start a Reviewer on a function its Drafter or triager would review; give a worker
-material its model is not cleared to read; start Boat machines (only the commands in a confirm
-brief, run by the strong role or by you if every step is a plain run); post anything publicly.
+material its model is not cleared to read; start a Boat machine (Boat is retired; confirm briefs
+use the runner hosts); post anything publicly.

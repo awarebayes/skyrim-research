@@ -71,6 +71,25 @@ class QueueAdditions(unittest.TestCase):
         u = wq.claim(self.q, 'haiku-1', t=1_000_100.0, repo=self.tmp)
         self.assertTrue((unit / 'near-miss/0x1000.cpp').is_file())
 
+    def test_near_miss_paths_derive_from_the_queue_in_use(self):
+        unit = self.tmp / '.local/tasks/g/g-u0'
+        (unit / 'near-miss').mkdir(parents=True)
+        (unit / 'near-miss/0x1000.cpp').write_text('// old\n')
+        # A scratch copy of the queue, outside any .local/queue/ layout, claims without a repo
+        # argument: the unit dirs resolve against the copy, so the real unit keeps its files.
+        scratch = self.tmp / 'scratch-queue'
+        shutil.copytree(self.q, scratch)
+        self.assertEqual(wq.queue_repo(scratch), scratch)
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(wq.main(['--queue-dir', str(scratch), 'next', '--worker', 'haiku-1']), 0)
+        self.assertTrue((unit / 'near-miss/0x1000.cpp').is_file())
+        # The queue in its own repository resolves against that repository, again with no argument.
+        self.assertEqual(wq.queue_repo(self.q), self.tmp)
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(wq.main(['--queue-dir', str(self.q), 'next', '--worker', 'haiku-1']), 0)
+        self.assertFalse((unit / 'near-miss/0x1000.cpp').exists())
+        self.assertEqual(len(list((unit / 'near-miss').glob('earlier-*/0x1000.cpp'))), 1)
+
     def test_cli_release(self):
         wq.claim(self.q, 'haiku-2')
         out = io.StringIO()

@@ -59,6 +59,18 @@ def queue_dir(arg=None):
     return Path(arg or os.environ.get('SKYRIM_QUEUE_DIR') or DEFAULT_DIR)
 
 
+def queue_repo(qdir):
+    """The directory a queue's relative unit dirs resolve against, derived from the queue itself.
+
+    A queue at `<repo>/.local/queue/<name>` belongs to `<repo>`. A queue anywhere else (a scratch
+    copy, a test) resolves them against its own directory, never against this checkout, so working
+    on a copy of a queue can never move or read files in the real task directories."""
+    q = Path(qdir).resolve()
+    if q.parent.name == 'queue' and q.parent.parent.name == '.local':
+        return q.parents[2]
+    return q
+
+
 def read_queue(qdir):
     """[{'dir', 'sources', 'functions', 'budget', 'key'}] in queue order."""
     path = qdir / 'queue.tsv'
@@ -108,7 +120,7 @@ def try_create(path, worker, t, profile=None):
     return True
 
 
-def set_aside_near_misses(unit_dir, t, repo=REPO):
+def set_aside_near_misses(unit_dir, t, repo):
     """Move near-miss files of an earlier session into near-miss/earlier-<time>/; returns that dir."""
     d = Path(unit_dir)
     nm = (d if d.is_absolute() else repo / d) / 'near-miss'
@@ -124,15 +136,16 @@ def set_aside_near_misses(unit_dir, t, repo=REPO):
     return dest
 
 
-def claim(qdir, worker, t=None, profile=None, repo=REPO):
+def claim(qdir, worker, t=None, profile=None, repo=None):
     """Claim a unit for `worker`: its own unfinished claim first, then the first unclaimed unit,
-    then the first stale claim. Returns the unit dict, or None when nothing is left to claim."""
+    then the first stale claim. Returns the unit dict, or None when nothing is left to claim.
+    Relative unit dirs resolve against `repo`, by default the queue's own (queue_repo)."""
     if not LABEL.fullmatch(worker or ''):
         raise QueueError('--worker must be a label like luna56-medium-1 (letters, digits, . _ -)')
     t = now() if t is None else t
     u = _claim(qdir, worker, t, profile)
     if u is not None and not u.get('resumed'):
-        u['earlier_near_misses'] = set_aside_near_misses(u['dir'], t, repo)
+        u['earlier_near_misses'] = set_aside_near_misses(u['dir'], t, queue_repo(qdir) if repo is None else repo)
     return u
 
 
@@ -239,7 +252,7 @@ def release(qdir, unit_dir, worker=None, t=None):
     return c.get('worker')
 
 
-def unit_line(unit_dir, repo=REPO):
+def unit_line(unit_dir, repo):
     """The queue.tsv line of a unit task dir: its sources, functions and remaining counted attempts."""
     d = Path(unit_dir)
     task = json.loads(((d if d.is_absolute() else repo / d) / 'task.json').read_text())
@@ -254,8 +267,10 @@ def unit_line(unit_dir, repo=REPO):
     return f'{rel}\t{cpp[:-4]}.h,{cpp}\t{functions}\t{budget}', budget
 
 
-def add(qdir, dirs, repo=REPO):
-    """Append unit task dirs (a group dir adds all its units) that are not queued yet."""
+def add(qdir, dirs, repo=None):
+    """Append unit task dirs (a group dir adds all its units) that are not queued yet. Relative
+    dirs resolve against `repo`, by default the queue's own (queue_repo)."""
+    repo = queue_repo(qdir) if repo is None else Path(repo)
     qdir.mkdir(parents=True, exist_ok=True)
     path = qdir / 'queue.tsv'
     have = {u['key'] for u in read_queue(qdir)} if path.is_file() else set()

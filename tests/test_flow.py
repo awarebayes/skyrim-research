@@ -289,10 +289,17 @@ class FlowTests(unittest.TestCase):
         g = self.integrate_ready()
         # An unrelated working-tree change is never staged.
         (self.root / 'reconstruction/x/Other.cpp').write_text('int other;\n')
+        head = git(self.root, 'rev-parse', 'HEAD')
         flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
         g = flow.load_group(self.fdir, g['name'])
         integ = g['integrated']
         self.assertEqual((integ['accepted'], integ['ci']), (2, 'green'))
+        # The commit was built elsewhere: the shared checkout is untouched until sync.
+        self.assertEqual(git(self.root, 'rev-parse', 'HEAD'), head)
+        self.assertEqual(integ['commit'], git(self.origin, 'rev-parse', 'main'))
+        self.assertFalse(flow.integration_tree(self.fdir, g['name']).exists())
+        self.assertTrue(any('flow.py sync' in t for _, t in self.actions()))
+        flow.sync(self.root)
         self.assertEqual(git(self.root, 'rev-parse', 'HEAD'), git(self.origin, 'rev-parse', 'main'))
         self.assertIn('reconstruction/x/Other.cpp', git(self.root, 'status', '--porcelain'))
         self.assertIn(f'reports/{BUILD}/0x1000.review.json', integ['files'])
@@ -318,7 +325,7 @@ class FlowTests(unittest.TestCase):
         (self.root / 'x.txt').write_text('x')
         git(self.root, 'add', 'x.txt')
         git(self.root, 'commit', '--quiet', '-m', 'local only')
-        with self.assertRaisesRegex(flow.FlowError, 'not level'):
+        with self.assertRaisesRegex(flow.FlowError, 'origin/main lacks'):
             flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
 
     def test_integrate_stops_on_red_ci_and_resumes(self):
@@ -340,7 +347,38 @@ class FlowTests(unittest.TestCase):
         integ = flow.load_group(self.fdir, g['name'])['integrated']
         self.assertTrue(integ['checks'])
         self.assertIsNone(integ['pushed'])
-        self.assertNotEqual(git(self.root, 'rev-parse', 'HEAD'), git(self.origin, 'rev-parse', 'main'))
+        self.assertNotEqual(integ['commit'], git(self.origin, 'rev-parse', 'main'))
+
+    def test_integrate_carries_only_the_approved_units(self):
+        # The approved unit was confirmed from uncommitted files; another unit is mid-edit.
+        foo = self.root / 'reconstruction/x/Foo.cpp'
+        foo.write_text('int a2;\n')
+        for rva in (0x1000, 0x1010):
+            path = self.root / f'reports/{BUILD}/0x{rva:x}.json'
+            rec = json.loads(path.read_text())
+            rec['source']['digest'] = tu_digest(self.root, rec['source']['translation_unit'])
+            path.write_text(json.dumps(rec))
+        g = self.integrate_ready()
+        (self.root / 'reconstruction/x/Bar.cpp').write_text('int c_half_edited;\n')
+        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        commit = flow.load_group(self.fdir, g['name'])['integrated']['commit']
+        self.assertEqual(git(self.origin, 'show', f'{commit}:reconstruction/x/Foo.cpp'), 'int a2;')
+        self.assertEqual(git(self.origin, 'show', f'{commit}:reconstruction/x/Bar.cpp'), 'int c;')
+        # Sync keeps the Drafter's edit: Bar.cpp did not change upstream, Foo.cpp copies are identical.
+        flow.sync(self.root)
+        self.assertEqual(git(self.root, 'rev-parse', 'HEAD'), commit)
+        self.assertEqual((self.root / 'reconstruction/x/Bar.cpp').read_text(), 'int c_half_edited;\n')
+        self.assertNotIn('Foo.cpp', git(self.root, 'status', '--porcelain'))
+
+    def test_sync_refuses_a_differing_local_copy(self):
+        g = self.integrate_ready()
+        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        (self.root / 'data/progress.json').write_text('{}\n')
+        head = git(self.root, 'rev-parse', 'HEAD')
+        with self.assertRaisesRegex(flow.FlowError, 'data/progress.json'):
+            flow.sync(self.root)
+        self.assertEqual(git(self.root, 'rev-parse', 'HEAD'), head)
+        self.assertEqual((self.root / 'data/progress.json').read_text(), '{}\n')
 
 
 class QueueStates(unittest.TestCase):
