@@ -214,6 +214,8 @@ are not blocked waiting for the maintainer, except changes to this rule itself, 
 
 ### Family reviews
 
+This rule is in force by maintainer decision; the separate Reviewer pass on this rule change was waived by the maintainer (see `docs/authorizations.md`).
+
 A family identifies one generator or stamping template by version and template digest, bound to
 the target build, recipe, compiler and comparator version. A change to any of these starts a new
 family. Each member records its parameter row and target binding. Every member independently
