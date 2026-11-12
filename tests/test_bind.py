@@ -371,16 +371,6 @@ class PublicMapBindTests(BindTests):
             self.run_bind()
         self.assertEqual((self.root / self.MAP).read_bytes(), blob)
 
-    def test_unsized_reference_entry_of_the_function_is_kept(self):
-        # Another unit's reference put the name in the map without a size; a record pins it.
-        self.write_task(fx.FUNCTION, {fx.FUNCTION: {'rva': fx.LAYOUT[fx.FUNCTION], 'size': None}})
-        blob = (self.root / self.MAP).read_bytes()
-        record = {'symbol_map': {'path': self.MAP, 'sha256': hashlib.sha256(blob).hexdigest()},
-                  'runs': [{'report': {'function': {'rva': 0x9000, 'size': 4}, 'coverage': {}}}]}
-        (self.root / 'reports/synthetic-fixture/0x9000.json').write_text(json.dumps(record))
-        _, symbols = self.run_bind()
-        self.assertEqual(symbols[fx.FUNCTION], {'rva': fx.LAYOUT[fx.FUNCTION], 'size': None})
-
 
 class ThreadLocalBindTests(unittest.TestCase):
     """A SECREL reference binds only through a `tls:` hint, as a thread-local entry; _tls_index never."""

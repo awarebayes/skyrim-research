@@ -55,9 +55,7 @@ Where the map lives. A task whose `symbols` is the repository map (`reports/<bui
 its new entries added through `tools/symbol_map.py`, the only writer of that map, with a
 provenance entry saying bind found them. A rename or removal is applied only if it leaves every
 match record in the checkout valid (a draft renaming its own function); otherwise bind refuses
-and the change needs `tools/symbol_map.py add --allow-change`. A compared function whose name the
-map already holds at its RVA without a size (another unit's reference) keeps that entry as it is.
-A private `symbols.json` is edited
+and the change needs `tools/symbol_map.py add --allow-change`. A private `symbols.json` is edited
 in place as before.
 
 Thread-local variables (references by a SECREL relocation) are never bound by position or name:
@@ -606,11 +604,6 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
             fn['symbol'] = new
             report['changed'] = True
         entry = {'rva': rva, 'size': parse_rva(fn['size'])}
-        if public and symbols.get(new) == {'rva': rva, 'size': None}:
-            # The repository map already holds the name at this RVA as an unsized reference target
-            # (another unit calls it). Sizing it would change an entry that match records pin and
-            # make them all stale; the comparator takes the function's size from the task anyway.
-            entry = symbols[new]
         if symbols.get(new) != entry:
             symbols[new] = entry
             found[new] = (how, fn.get('community_name'))
