@@ -1506,6 +1506,11 @@ def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts
     if attempts_per_function:
         # Several functions share one budget; each needs a few compile-compare rounds of its own.
         max_attempts = attempts_per_function * sum(1 for f in functions if f.get('role') != 'regression')
+    # A community `X::~X` at vtable slot 0 is a deleting destructor in the image; record which
+    # destructor function the target is so binding never settles on the plain `??1`.
+    sys.path.insert(0, str(REPO / 'tools' / 'verifier'))
+    import bind as binding
+    binding.annotate_destructors({'functions': functions}, REPO)
     classes = sorted({p['identity'].get('owning_class') or 'Unknown' for p in packs})
     task = {'task_id': task_id, 'build_id': target['build_id'], 'compiled': unit_cpp,
             'recipe': f'reconstruction/recipes/{recipe}.json', 'symbols': 'symbols.json',
@@ -1773,6 +1778,10 @@ def render_brief(task, packs):
             notes.append(f'{unnamed} unnamed target(s): GUESS names + bind hint')
         if any(r['resolution'] == 'import' for r in p.get('references', [])):
             notes.append('import call')
+        if f.get('destructor'):
+            notes.append(f'{f["destructor"]["kind"]} ({"/".join(f["destructor"]["symbols"])}): '
+                         + ('emitted only with the vftable, so define a constructor in the unit' if '??1' not in
+                            f['destructor']['symbols'] else 'kind undecided, bound by size'))
         refs = ', '.join(f'{k} {v}' for k, v in sorted((p.get('reference_counts') or {}).items())) or 'none'
         lines.append(f'{i}. `{f["rva"]}` {f["size"]} B `{f["community_name"]}`; refs {refs}'
                      + (f'; {"; ".join(notes)}' if notes else ''))

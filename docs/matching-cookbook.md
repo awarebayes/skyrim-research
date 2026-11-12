@@ -78,6 +78,21 @@ region MSVC splits the call again. Seen in RemoveFavorite 0x237a20.
 A call through slot N needs N - 1 earlier virtuals in the stand-in, including the inherited
 TESForm slots; add placeholders labelled GUESS. Used for CanBeMoved (slot 0x42).
 
+**14. A vtable slot 0 destructor is the deleting destructor, `??_G` (or `??_E`), not `??1`.**
+(high)
+Symptom: `function-size-mismatch` on `X::~X`, the target larger than the candidate, its listing
+testing bit 0 of the second argument and calling operator delete under it. The compiler always
+emits the plain `??1` separately; the slot body is `??_G` with the destructor inlined, emitted
+only beside the vftable, so the unit must define a constructor (or otherwise reference the
+vftable). `attempt` reads the kind from the pack (`task.json` `functions[].destructor`) and binds
+it; a bind hint it cannot use is printed as a WARNING. Closed TESGrass 0x270890.
+
+**15. An inlined map lookup matches through a bool helper that writes its out-parameter only on
+a hit.** (medium)
+Symptom: the target's inlined lookup leaves the caller's local untouched on a miss, where a
+candidate returning the value (or a default) stores on both paths. Fix: write the lookup as
+`bool Find(key, T& out)` that assigns `out` only when found and returns whether it did.
+
 ## Unsolved patterns
 
 **12. A pure callee-saved register swap with the same instructions.** (low)

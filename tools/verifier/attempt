@@ -8,11 +8,12 @@ Run from the checkout whose reconstruction/ sources you are trying. The command 
 standing machine if needed (or extends its auto-stop deadline), uploads only files that changed
 since the last attempt, compiles with the task's recipe, compares every listed function against
 the pinned image kept on the machine, and fetches private diagnostics to
-<task-dir>/attempts/<NNN>/. When a function or reference is not yet bound (`unbound:` symbols, a
-renamed declaration, a new callee) it binds the names from the compiled object
-(tools/verifier/bind.py, hints in <task-dir>/bind-hints.json) and compares again in the same
-invocation; a run in which nothing could be compared because of binding does not count against
-max_attempts. It prints one line per function with the reason code, first mismatch offset and
+<task-dir>/attempts/<NNN>/. After every successful compile it binds the names from the compiled
+object (tools/verifier/bind.py, hints in <task-dir>/bind-hints.json, the destructor kind from the
+pack); when that changes a binding (`unbound:` symbols, a renamed declaration, a new callee, a new
+hint, a plain destructor bound where the target is a deleting one) it compares again in the same
+invocation. A hint at a compared function's RVA that ends up unused is printed as a WARNING. A run in which nothing
+could be compared because of binding does not count against max_attempts. It prints one line per function with the reason code, first mismatch offset and
 candidate/target sizes, what was bound or is still missing, and where to read the side-by-side
 disassembly, then the findings of tools/check_labels.py on the unit's sources as warnings. The
 machine stops itself at its deadline; --stop is for an Engineer ending a session.
@@ -58,11 +59,6 @@ def results_of(task, dest):
     return out
 
 
-def needs_binding(task, results):
-    return any(fn['symbol'].startswith(bind.UNBOUND) for fn in task['functions']) \
-        or any(reason in bind.BINDING_REASONS for reason in results.values())
-
-
 def run_once(task, host, files, task_dir, dest):
     code, out = host.run(files, task_dir / '.attempt')
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -95,8 +91,10 @@ def attempt(task_dir):
     dest = attempts / f'{number:03d}'
     code = run_once(task, host, files, task_dir, dest)
     bind_lines = []
-    if code in (0, 1) and not (dest / 'error.json').is_file() and (dest / 'candidate.obj').is_file() \
-            and needs_binding(task, results_of(task, dest)):
+    # Binding runs on every compile, not only when a reason code says a name is missing: a function
+    # bound to the wrong one of several definitions (a plain destructor for a deleting one) fails
+    # with a code difference, and a hint added afterwards would otherwise never be read.
+    if code in (0, 1) and not (dest / 'error.json').is_file() and (dest / 'candidate.obj').is_file():
         if task['symbols_repo'] is not None:
             bind_lines.append('  binding skipped: task.json names the repository map; bind edits private maps only')
         else:

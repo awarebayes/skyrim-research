@@ -12,6 +12,19 @@ Drafter's declarations produce, so it is found in the object, in this order:
    parameters dropped) equals the community name;
 4. the one defined function whose member name (last component) equals the community name's.
 
+Destructors are special. A virtual destructor's vtable slot 0 in the image is the scalar
+(`??_G`) or vector (`??_E`) deleting destructor, not the plain `??1` the community name
+`X::~X` demangles to, and the compiler emits all of them as separate functions. The task's
+`functions[].destructor` (written by `annotate_destructors` from the pack: slot 0, a test of the
+delete-flag argument and a call guarded by it) lists the decorated prefixes the target can be.
+For such a function steps 2 to 4 are replaced by: the current symbol if its prefix is allowed,
+else the one allowed destructor of the class in the object, else, when several are allowed and
+defined, the one whose size equals the target's (closest otherwise), reported as a choice.
+
+A hint whose RVA is a compared function's RVA but which does not end up naming it (not defined
+in the object, ambiguous, or overridden) is reported as ignored and makes `main` fail; it is
+never dropped silently.
+
 A defined function is an external symbol at offset 0 of its own code section, which is what the
 comparator requires anyway. When a previously bound symbol is gone and another is found, that is
 reported as "decorated name changed" with both names, and the old map entry is removed (a stale
@@ -187,6 +200,141 @@ def by_position(image, fn_rva, rel):
     return None
 
 
+# MSVC special-name prefixes of the three destructor functions a class with a virtual destructor gets.
+DTOR_KINDS = {'??1': 'destructor', '??_G': 'scalar deleting destructor', '??_E': 'vector deleting destructor'}
+# Access codes of adjustor thunks (`[thunk]: ... adjustor{n}'`): a thunk is never the slot body itself.
+THUNK_ACCESS = set('GHOPWX')
+VOLATILE = {'A', 'C', 'D', 'R8', 'R9', 'R10', 'R11'}
+WRITES = {'MOV', 'LEA', 'MOVZX', 'MOVSX', 'MOVSXD', 'XOR', 'SUB', 'ADD', 'OR', 'SHL', 'SHR', 'SAR', 'IMUL', 'POP',
+          'CMOVZ', 'CMOVNZ', 'CMOVE', 'CMOVNE', 'SETZ', 'SETNZ', 'XCHG'}
+
+
+def dtor_decoration(name):
+    """(prefix, class) of a plain or deleting destructor's decorated name; None for others and thunks.
+
+    Template class scopes (`?$...`) are not parsed; such destructors bind by the ordinary rules.
+    """
+    for prefix in ('??_G', '??_E', '??1'):
+        if not name.startswith(prefix):
+            continue
+        rest = name[len(prefix):]
+        if '@@' not in rest or rest.startswith('?'):
+            return None
+        scope, tail = rest.split('@@', 1)
+        if not scope or not tail or tail[0] in THUNK_ACCESS or '?' in scope:
+            return None
+        return prefix, '::'.join(reversed(scope.split('@')))
+    return None
+
+
+def reg_family(op):
+    """Architectural register of an operand (`EBX` -> `B`, `R8D` -> `R8`), or None for memory/immediates."""
+    op = op.strip().upper()
+    m = re.fullmatch(r'R(8|9|1[0-5])[DWB]?', op)
+    if m:
+        return 'R' + m.group(1)
+    m = re.fullmatch(r'[RE]?([ABCD])X|([ABCD])L', op)
+    if m:
+        return m.group(1) or m.group(2)
+    m = re.fullmatch(r'[RE]?(SI|DI|BP|SP)L?', op)
+    return m.group(1) if m else None
+
+
+def listing_instructions(text):
+    """[(mnemonic, [operands])] from a pack listing (`  +0x01a  MOV EBX,EDX   [annotation]`)."""
+    out = []
+    for line in text.splitlines():
+        m = re.match(r'\s*\+0x[0-9a-fA-F]+\s+(\S.*)$', line)
+        if not m:
+            continue
+        insn = re.split(r'\s{2,}', m.group(1).strip())[0]
+        mnem, _, ops = insn.partition(' ')
+        out.append((mnem.upper(), [o.strip() for o in ops.split(',')] if ops.strip() else []))
+    return out
+
+
+def delete_flag_use(text):
+    """(bits of the second argument that are tested, whether a call or jump follows the first test).
+
+    Follows the x64 second argument (EDX) through register copies until it is overwritten or a
+    call clobbers it, which is how a deleting destructor keeps its flag across the inlined body.
+    """
+    flag, bits, called = {'D'}, set(), False
+    for mnem, ops in listing_instructions(text):
+        if mnem in ('TEST', 'AND', 'BT') and len(ops) == 2 and reg_family(ops[0]) in flag:
+            try:
+                imm = int(ops[1], 0)
+            except ValueError:
+                imm = None
+            if imm is not None:
+                if mnem == 'BT':
+                    imm = 1 << imm
+                bits |= {b for b in (1, 2) if imm & b}
+                continue
+        if mnem == 'CALL' or (mnem == 'JMP' and ops and ops[0].startswith('0x')):
+            called = called or bool(bits)
+            flag -= VOLATILE
+            continue
+        if not ops:
+            continue
+        dst = reg_family(ops[0])
+        src = reg_family(ops[1]) if len(ops) == 2 else None
+        if dst is None:
+            continue
+        if mnem == 'MOV' and src in flag:
+            flag.add(dst)
+        elif dst in flag and mnem in WRITES:
+            flag.discard(dst)
+    return bits, called
+
+
+def destructor_spec(community_name, name_how, listing):
+    """Which destructor functions a target can be, with the evidence; None when it is not a destructor."""
+    name = member(community_qualified(community_name)) or ''
+    slot0 = (name_how or '').strip() == 'slot 0'
+    if not name.startswith('~') and not slot0:
+        return None
+    bits, called = delete_flag_use(listing) if listing is not None else (set(), False)
+
+    def spec(prefixes, evidence, decided):
+        return {'symbols': list(prefixes), 'kind': ' or '.join(DTOR_KINDS[p] for p in prefixes),
+                'decided': decided, 'evidence': evidence}
+    if 2 in bits:
+        return spec(['??_E'], 'tests bit 1 (array delete) of the flag argument', True)
+    if bits and called:
+        return spec(['??_G'], 'tests bit 0 of the flag argument and calls operator delete under it', True)
+    if not name.startswith('~'):
+        return None
+    if bits:
+        return spec(['??_G', '??_E'], 'tests the flag argument but no call follows', False)
+    if listing is not None and not slot0:
+        return spec(['??1'], 'no delete-flag test and not a vtable slot 0', True)
+    return spec(['??_G', '??_E', '??1'], ('vtable slot 0 ' if slot0 else '')
+                + ('without a delete-flag test' if listing is not None else 'and no listing in the pack'), False)
+
+
+def annotate_destructors(task, repo=REPO):
+    """Set or clear `destructor` on each compared function from its pack; True when anything changed."""
+    changed = False
+    for fn in task['functions']:
+        if fn.get('role') == 'regression' or not fn.get('pack'):
+            continue
+        pack = Path(repo) / fn['pack']
+        try:
+            ident = json.loads((pack / 'pack.json').read_text()).get('identity', {})
+        except (OSError, ValueError):
+            continue
+        listing = (pack / 'listing.txt').read_text() if (pack / 'listing.txt').is_file() else None
+        spec = destructor_spec(fn.get('community_name'), ident.get('name_how'), listing)
+        if spec != fn.get('destructor'):
+            if spec is None:
+                fn.pop('destructor', None)
+            else:
+                fn['destructor'] = spec
+            changed = True
+    return changed
+
+
 def load_hints(task_dir):
     path = Path(task_dir) / HINTS
     if not path.is_file():
@@ -228,7 +376,12 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
     defined = defined_functions(obj)
     names.load(list(defined) + [s.name for s in obj.symbols.values()] + list(hints))
     report = {'functions': [], 'references': [], 'unbound_functions': [], 'unbound_references': [],
-              'renamed': [], 'changed': False}
+              'renamed': [], 'ignored_hints': [], 'destructor_choices': [], 'warnings': [], 'changed': False}
+    if annotate_destructors(task, repo):
+        report['changed'] = True
+
+    def size_of(d):
+        return obj.section(defined[d]).raw_size
 
     def hint_for(name):
         if name in hints:
@@ -242,26 +395,53 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
         old = fn.get('symbol') or ''
         community = community_qualified(fn.get('community_name'))
         how, new = None, None
+        spec = fn.get('destructor')
+        cls = community.rsplit('::', 1)[0] if community and '::' in community else None
+
+        def dtor_ok(d):
+            dec = dtor_decoration(d)
+            return bool(spec and dec and dec[0] in spec['symbols'] and cls
+                        and (dec[1] == cls or member(dec[1]) == member(cls)))
         hinted = [n for n, r in hints.items() if r == rva]
         for h in hinted:
             hits = [d for d in defined if d == h or names(d) == h]
             if len(hits) == 1:
                 how, new = 'hint', hits[0]
+                if spec and not dtor_ok(new):
+                    report['warnings'].append(f'hint {h} for {hex(rva)} overrides the pack evidence for a '
+                                              f'{spec["kind"]} ({spec["evidence"]})')
                 break
-        if new is None and old in defined:
-            how, new = 'kept', old
-        if new is None and community:
-            hits = [d for d in defined if names(d) == community and d not in taken]
-            if len(hits) == 1:
-                how, new = 'community name', hits[0]
-        if new is None and community:
-            hits = [d for d in defined if member(names(d)) == member(community) and d not in taken]
-            if len(hits) == 1:
-                how, new = 'member name', hits[0]
+        if spec is not None:
+            if new is None and old in defined and dtor_ok(old):
+                how, new = 'kept', old
+            hits = sorted(d for d in defined if dtor_ok(d) and d not in taken)
+            if new is None and len(hits) == 1:
+                how, new = 'destructor kind', hits[0]
+            elif new is None and hits:
+                size = parse_rva(fn['size'])
+                ranked = sorted(hits, key=lambda d: (abs(size_of(d) - size), d))
+                new = ranked[0]
+                exact = size_of(new) == size
+                how = 'destructor kind, ' + ('size match' if exact else 'closest size')
+                report['destructor_choices'].append({
+                    'rva': hex(rva), 'bound': new, 'size': size,
+                    'candidates': [{'symbol': d, 'size': size_of(d)} for d in ranked]})
+        else:
+            if new is None and old in defined:
+                how, new = 'kept', old
+            if new is None and community:
+                hits = [d for d in defined if names(d) == community and d not in taken]
+                if len(hits) == 1:
+                    how, new = 'community name', hits[0]
+            if new is None and community:
+                hits = [d for d in defined if member(names(d)) == member(community) and d not in taken]
+                if len(hits) == 1:
+                    how, new = 'member name', hits[0]
         if new is None:
             candidates = sorted(d for d in defined if d not in taken)
             report['unbound_functions'].append({'rva': hex(rva), 'community_name': fn.get('community_name'),
-                                                'symbol': old, 'defined_in_object': candidates[:12]})
+                                                'symbol': old, 'defined_in_object': candidates[:12],
+                                                'expected': spec})
             continue
         taken.add(new)
         if new != old:
@@ -277,6 +457,21 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
             report['changed'] = True
         report['functions'].append({'rva': hex(rva), 'symbol': new, 'how': how})
 
+    bound_at = {parse_rva(f['rva']): f['symbol'] for f in report['functions']}
+    for h, r in hints.items():
+        # A hint at a compared function's RVA is meant to name it; one that does not must be seen.
+        if r not in {parse_rva(f['rva']) for f in task['functions']}:
+            continue
+        got = bound_at.get(r)
+        if got is not None and (got == h or names(got) == h):
+            continue
+        hits = [d for d in defined if d == h or names(d) == h]
+        reason = ('not defined in the compiled object' if not hits else
+                  f'matches {len(hits)} definitions' if len(hits) > 1 else f'{hex(r)} was bound to {got} instead')
+        if not hits and dtor_decoration(h) and dtor_decoration(h)[0] != '??1':
+            reason += ('; the compiler emits a deleting destructor only beside the vftable, i.e. in a unit '
+                       'that defines a constructor or otherwise references the vftable')
+        report['ignored_hints'].append({'hint': h, 'rva': hex(r), 'reason': reason})
     compared = {fn['symbol']: fn for fn in task['functions'] if fn['symbol'] in defined}
     own = set(compared)
     for name, fn in compared.items():
@@ -327,9 +522,23 @@ def describe(report, task_dir):
     for r in report['renamed']:
         lines.append(f'  decorated name changed for {r["rva"]}: {r["old"]} -> {r["new"]}')
     hints = Path(task_dir) / HINTS
+    for c in report.get('destructor_choices', []):
+        lines.append(f'  destructor {c["rva"]} ({c["size"]} B) bound to {c["bound"]} of '
+                     + ', '.join(f'{x["symbol"]} {x["size"]} B' for x in c['candidates']))
+    for w in report.get('warnings', []):
+        lines.append(f'  WARNING {w}')
+    for h in report.get('ignored_hints', []):
+        lines.append(f'  WARNING bind hint {h["hint"]} -> {h["rva"]} ignored: {h["reason"]}')
     for f in report['unbound_functions']:
-        lines.append(f'  UNBOUND function {f["rva"]} ({f["community_name"]}): no unique definition in the object; '
-                     f'add {{"<decorated or Class::Method name>": "{f["rva"]}"}} to {hints}')
+        spec = f.get('expected')
+        if spec:
+            lines.append(f'  UNBOUND function {f["rva"]} ({f["community_name"]}): the target is a {spec["kind"]} '
+                         f'({spec["evidence"]}); the object defines no {"/".join(spec["symbols"])} of the class. '
+                         'A deleting destructor is emitted beside the vftable, so the unit must define a '
+                         f'constructor (or otherwise reference the vftable); or add a hint to {hints}')
+        else:
+            lines.append(f'  UNBOUND function {f["rva"]} ({f["community_name"]}): no unique definition in the object; '
+                         f'add {{"<decorated or Class::Method name>": "{f["rva"]}"}} to {hints}')
         if f['defined_in_object']:
             lines.append('    defined in object: ' + ', '.join(f['defined_in_object'][:6]))
     for name in report['unbound_references']:
@@ -357,7 +566,7 @@ def main(argv=None):
         config = json.loads(cfg.read_text())
     report = bind(task_dir, obj, a.image or config.get('image'), config.get('objdump'))
     print('\n'.join(describe(report, task_dir)) or '  nothing to bind')
-    return 1 if report['unbound_functions'] or report['unbound_references'] else 0
+    return 1 if report['unbound_functions'] or report['unbound_references'] or report['ignored_hints'] else 0
 
 
 if __name__ == '__main__':
