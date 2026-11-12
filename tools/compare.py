@@ -584,7 +584,7 @@ class Function:
                 targets.append((begin - start, finish - start, unwind))
         targets.sort()
         if sec is not self.func_sec:
-            self.funclet_pdata[sec.index] = [(start + b, start + f) for b, f, _ in targets]
+            self.funclet_pdata[sec.index] = [(start + b, start + f, u) for b, f, u in targets]
         candidates = self.pdata_entries(sec)
         for begin, finish, *_ in candidates:
             need(0 <= begin < finish <= len(sec.data), 'malformed-pdata', 'candidate .pdata entry is outside the function')
@@ -685,19 +685,35 @@ class Function:
           4. `funclet-entry`: a FuncInfo of the image names `end` as an unwind action or catch
              handler (PeImage.funclet_entries), so a funclet starts there.
           5. `int3-padding`: the bytes from `end` to the next 16-byte boundary (at least one) are int3.
+        Rule 4 counts FuncInfos of this function and of others, but only those reached through
+        the handlers this function's compared unwind info names.
         Rules 1 to 4 rest on one premise: code that the image's own exception metadata declares as
         a procedure or funclet start is not the interior of another procedure. To keep the
-        candidate from claiming such a start as its own interior, no funclet entry named only by
-        FuncInfos not compared here may lie strictly inside the funclet (`eh-funclet-entry-inside`).
+        candidate from claiming such a start as its own interior:
+          - no funclet entry may lie strictly inside the funclet unless every FuncInfo naming it
+            was compared here (`eh-funclet-entry-inside`). These entries come from every FuncInfo
+            the image's unwind info leads to, whatever its handler: reading a structure that only
+            looks like a FuncInfo can add a refusal, never a pass;
+          - every target .pdata entry inside the funclet that does not start it is chained or
+            starts at an entry of a FuncInfo compared here (`eh-funclet-absorbs-procedure`).
         Candidate-side facts are never evidence: an EH reference of the candidate can point one
         past its own truncated section, and a symbol-map entry placed at the cut names nothing the
         target shows. Anything else could be the rest of a funclet the candidate truncated.
         """
-        declared = self.declared_funclet_entries()
-        inside = [rva for rva in declared if start < rva < end and not declared[rva] <= self.compared_funcinfo]
+        guard = self.image.funclet_entries(None)
+        inside = [rva for rva in guard if start < rva < end and not guard[rva] <= self.compared_funcinfo]
         need(not inside, 'eh-funclet-entry-inside',
              f'{len(inside)} funclet entr(y/ies) of another function lie inside funclet section #{sec.index}')
-        if any(finish == end for _begin, finish in self.funclet_pdata.get(sec.index, ())):
+        spans = self.funclet_pdata.get(sec.index, ())
+        for begin, _finish, unwind in spans:
+            if begin == start or begin in guard and guard[begin] <= self.compared_funcinfo:
+                continue
+            flags = self.image.read(unwind, 1, 'target unwind info')[1][0] >> 3
+            need(flags & UNW_FLAG_CHAININFO, 'eh-funclet-absorbs-procedure',
+                 f'funclet section #{sec.index} holds a target .pdata entry that is neither its start, '
+                 'chained, nor a funclet entry of this function')
+        declared = self.declared_funclet_entries()
+        if any(finish == end for _begin, finish, _unwind in spans):
             kind = 'pdata-end'
         elif end in self.pdata_starts():
             kind = 'pdata-start'

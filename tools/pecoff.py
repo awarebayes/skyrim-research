@@ -274,15 +274,17 @@ class PeImage:
         A funclet entry is the action of an unwind-map entry or the handler of a catch entry: the
         address the C++ EH runtime calls, so code starts there. IP-to-state addresses are not
         entries (they mark state changes inside code) and are left out. FuncInfos are found
-        through `.pdata` entries whose unwind info names a handler in `handler_rvas`, the handlers
-        whose data starts with a FuncInfo RVA. A FuncInfo that is not version 0x19930522 or cannot
-        be read whole adds nothing, so a damaged one can only withhold evidence, never add it.
+        through primary (unchained) `.pdata` entries whose unwind info names a handler in
+        `handler_rvas`, the handlers whose data starts with a FuncInfo RVA; `None` takes every
+        handler and reads its data as a FuncInfo, which may pick up a structure that only looks
+        like one, so that set is for refusing, never for evidence. A FuncInfo that is not version
+        0x19930522 or cannot be read whole adds nothing.
         """
-        key = frozenset(handler_rvas)
+        key = None if handler_rvas is None else frozenset(handler_rvas)
         if key in self._funclet_entries:
             return self._funclet_entries[key]
         out, seen = {}, set()
-        for _begin, _end, unwind in self.runtime_functions() if key else ():
+        for _begin, _end, unwind in self.runtime_functions() if key is None or key else ():
             try:
                 head = self.read(unwind, 4, 'unwind info')[1]
                 flags, count = head[0] >> 3, head[2]
@@ -290,7 +292,7 @@ class PeImage:
                     continue
                 at = unwind + 4 + 2 * (count + (count & 1))
                 handler, funcinfo = struct.unpack('<II', self.read(at, 8, 'handler and data')[1])
-                if handler not in key or funcinfo in seen:
+                if (key is not None and handler not in key) or funcinfo in seen:
                     continue
                 seen.add(funcinfo)
                 found = self.funcinfo_entries(funcinfo)

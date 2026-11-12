@@ -10,8 +10,8 @@ explicit; everything version 1 compared is compared the same way. Comparator 0.5
 thread-local variables (`SECREL` against a declared TLS-template offset, `_tls_index` from the
 TLS directory) within contract version 2; see "Thread-local variables" and "Versions and earlier
 results". Comparator 0.6.0 proves funclet extents from more of the image's own exception metadata
-(a funclet's own `.pdata` end, another FuncInfo's funclet entry) and refuses a funclet that
-contains another function's funclet entry; see "Exception and termination handlers". A `pass` result is evidence under
+(a funclet's own `.pdata` end, a funclet entry a FuncInfo names) and refuses a funclet that
+contains another function's funclet entry or procedure; see "Exception and termination handlers". A `pass` result is evidence under
 [verification](verification.md); it is not acceptance and never sets a function to `matched`.
 A `matched` status needs a match record and a Reviewer `approve` record that `tools/check.py`
 accepts (`docs/verification.md`, "Acceptance rule" and "Match gate").
@@ -365,18 +365,27 @@ Completeness, so nothing is skipped:
      been matched to a candidate entry with the same offsets, and its unwind info compared.
   2. `pdata-start`: a target `.pdata` entry starts there.
   3. `compared-code`: the function or another compared funclet starts there.
-  4. `funclet-entry`: a FuncInfo of the image names that address as an unwind-map action or a
-     catch handler. FuncInfos are found through every target `.pdata` entry whose unwind info
-     names a handler at an address this function's compared unwind info shows for
-     `__CxxFrameHandler3` or `__GSHandlerCheck_EH` (the target's own handler field, already
-     shown to hold the mapped handler); a FuncInfo with another magic or any unreadable part
-     contributes nothing. IP-to-state addresses are not entries and never count.
+  4. `funclet-entry`: a FuncInfo of the image, this function's or another's, names that address
+     as an unwind-map action or a catch handler. Only FuncInfos reached through a primary
+     (unchained) target `.pdata` entry whose unwind info names a handler at an address this
+     function's compared unwind info shows for `__CxxFrameHandler3` or `__GSHandlerCheck_EH`
+     count (the target's own handler field, already shown to hold the mapped handler); a FuncInfo
+     with another magic or any unreadable part contributes nothing. IP-to-state addresses are
+     not entries and never count.
   5. `int3-padding`: the bytes from there to the next 16-byte boundary (at least one byte) are
      `int3`, which the MSVC linker puts between code sections.
-  Otherwise `eh-funclet-extent`. And no funclet entry (rule 4) named only by FuncInfos not
-  compared here may lie strictly inside a funclet (`eh-funclet-entry-inside`): a candidate
-  section that ran on into another function's funclet would otherwise claim it, even with every
-  byte equal. Candidate-side facts are not boundaries: a symbol-map entry at that address names
+  Otherwise `eh-funclet-extent`. Two more checks keep a candidate section that ran on into
+  other code from claiming it, even with every byte equal:
+  - no funclet entry may lie strictly inside a funclet unless every FuncInfo naming it was
+    compared here (`eh-funclet-entry-inside`). These entries come from every FuncInfo that a
+    primary unwind info of the image leads to, whatever its handler (the image uses
+    `__CxxFrameHandler3` and the GS variant; data of any other handler is read as a FuncInfo too
+    and kept only with magic 0x19930522). Wider than rule 4 on purpose: a structure mistaken for
+    a FuncInfo can only add a refusal, never a pass;
+  - every target `.pdata` entry inside a funclet that does not start it must be chained or start
+    at a funclet entry of a FuncInfo compared here (`eh-funclet-absorbs-procedure`), so a whole
+    procedure of its own cannot be absorbed.
+  Candidate-side facts are not boundaries: a symbol-map entry at that address names
   nothing the target shows, and an EH code reference of the candidate may point one past its
   own truncated section (an IP-to-state entry at the cut).
 
@@ -388,14 +397,20 @@ Completeness, so nothing is skipped:
   start, never a shared interior. A target funclet longer than the candidate would need another
   declared start inside its own code. Rule 1 also relies on `check_target_closure`: code of
   the funclet beyond its entry that had a chained entry, or a handler entry naming this FuncInfo,
-  fails as `unwind-chain-outside` or `eh-funclet-outside`.
+  fails as `unwind-chain-outside` or `eh-funclet-outside`. `tools/eh_premise.py` counts
+  violations of the premise on an image (overlapping `.pdata` entries, funclet entries strictly
+  inside a `.pdata` range, own-`.pdata` funclets ending at no accepted boundary); all three are 0
+  on the pinned image, and `tests/test_eh_premise.py` asserts that wherever the image is
+  available locally (it skips in CI).
 
   Kept refused, by design: a funclet followed by bytes no rule explains (a neighbour funclet
   whose FuncInfo is reached only through another handler, such as `__C_specific_handler` scope
   tables, which are not scanned for rule 4); an end that is only an IP-to-state address or a
   map entry; a `.pdata` entry that stops short of the section end; and a funclet entry of a
   folded (shared) funclet inside the section, which `eh-funclet-entry-inside` refuses even if
-  this function's FuncInfo names it too. Limitation (rule 5, unchanged since 0.4.0): a candidate
+  this function's FuncInfo names it too; and a second unchained `.pdata` entry inside a funclet
+  that is no funclet entry of this function, even where MSVC put two procedures in one section.
+  Limitation (rule 5, unchanged since 0.4.0): a candidate
   cut exactly before `int3` bytes that are part of the target funclet's code is not told apart
   and passes wrongly (no such funclet seen).
 - No target `.pdata` entry outside the compared code may belong to the function: a chained
@@ -484,7 +499,7 @@ under `.local/`. Exit status is 0 for `pass`, 1 for `fail`, 2 for unreadable inp
 |---|---|---|
 | 0.4.0 | 2 | EH data, funclets, chained unwind, jump tables |
 | 0.5.0 | 2 | thread-local variables: `SECREL` in code against thread-local map entries, `_tls_index` from the TLS directory, the `thread-local` map entry kind; reports add `symbol_map_sha256` and `coverage.funclet_ranges` |
-| 0.6.0 | 2 | funclet extent: a funclet's own `.pdata` end and another FuncInfo's funclet entry count as its end; a funclet holding another function's funclet entry is `eh-funclet-entry-inside`; extents are checked after all funclets are bound; reports add `coverage.funclet_end_evidence` |
+| 0.6.0 | 2 | funclet extent: a funclet's own `.pdata` end and a FuncInfo's funclet entry count as its end; a funclet holding another function's funclet entry is `eh-funclet-entry-inside`, one holding an unchained `.pdata` entry of another procedure `eh-funclet-absorbs-procedure`; extents are checked after all funclets are bound; reports add `coverage.funclet_end_evidence` |
 
 0.5.0 widens what can pass and also turns some 0.4.0 passes into fails. A candidate without a
 `SECREL` relocation, compared with a map whose entries carry no `kind` key and which has no
@@ -512,12 +527,16 @@ the 0.5.0 path and gives the same result, reason, detail and code-section hash; 
 `coverage.funclet_end_evidence: {}`. With funclets, results change in both directions:
 `eh-funclet-extent` becomes a pass where rule 1 or 4 now shows the end; a candidate funclet
 that runs on into another function's funclet entry, which 0.5.0 passed when the bytes matched and
-`int3` followed, is now `eh-funclet-entry-inside`; a failure that 0.5.0 reported as
+`int3` followed, is now `eh-funclet-entry-inside` (or `eh-funclet-absorbs-procedure` when it ran
+into a procedure with its own `.pdata`); a failure that 0.5.0 reported as
 `eh-funclet-extent` before a later funclet's mismatch may now name that mismatch instead, since
-extents are checked last; and the `eh-funclet-extent` detail text is reworded. No accepted
-function had funclets when 0.6.0 was made, measured by re-running both versions on every cached
-candidate object of the accepted functions held locally (444 runs of 111 of the 180 accepted
-functions): every run passed under both with identical reports apart from the new field. As with every version change,
+extents are checked last; and the `eh-funclet-extent` detail text is reworded. When 0.6.0
+was made, no accepted function had funclets, and of the 67 records awaiting review one did
+(BGSDefaultObjectManager's constructor 0x31b830, one 12-byte funclet ended by `int3` padding).
+Re-running both versions on every candidate object held locally for these 247 records (592 runs
+of 148 records) gave a pass under both with the same result, reason, detail, code-section hash and
+coverage apart from the new field; 0x31b830, whose recorded objects are not held locally, passes
+under both on three other local compiles with the recorded code-section hash. As with every version change,
 all match records go stale until real runs regenerate them.
 
 ## Where verification.md is silent or ambiguous

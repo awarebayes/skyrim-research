@@ -493,12 +493,16 @@ PACKED_FUNCLET_AT = 0x1800
 
 
 def packed_parent(u, name, funclet_code, handler='__CxxFrameHandler3', magic=0x19930522, funclet_pdata=None,
-                  action_addend=0, ip_into_funclet=None, tag=''):
+                  action_addend=0, ip_into_funclet=None, tag='', extra_action=None, catch_at=None,
+                  bad_try_map=False, more_funclet_pdata=()):
     """Add one parent (code, FuncInfo, unwind map, IP map, unwind info, .pdata) to `u`.
 
     The funclet is a `.text$x` section of its own. `funclet_pdata` gives (begin, end, unwind
-    bytes) for a .pdata entry of the funclet; `action_addend` moves the unwind action inside
-    the funclet section; `ip_into_funclet` adds an IP-to-state entry at that funclet offset.
+    bytes) for a .pdata entry of the funclet, `more_funclet_pdata` further such entries;
+    `action_addend` moves the unwind action inside the funclet section; `ip_into_funclet` adds
+    an IP-to-state entry at that funclet offset; `extra_action` adds a second unwind-map state
+    whose action is that funclet offset; `catch_at` adds a try block whose catch (...) handler
+    is that funclet offset; `bad_try_map` declares one try block at an address outside the image.
     """
     f = u.section('.text$mn', PACKED_CODE, SCN_TEXT)
     x = u.section('.text$x', funclet_code, SCN_TEXT)
@@ -513,10 +517,24 @@ def packed_parent(u, name, funclet_code, handler='__CxxFrameHandler3', magic=0x1
             u.reloc(x, at, CALLEE, REL32)
             break
     n_ip = 3 if ip_into_funclet is None else 4
-    funcinfo = u.section('.rdata', dwords(magic, 1, 0, 0, 0, n_ip, 0, 0x20, 0, 1), SCN_RDATA8)
+    states = 1 if extra_action is None else 2
+    n_try = 1 if catch_at is not None or bad_try_map else 0
+    try_field = 0x7FFF0000 if bad_try_map else 0
+    funcinfo = u.section('.rdata', dwords(magic, states, 0, n_try, try_field, n_ip, 0, 0x20, 0, 1), SCN_RDATA8)
     u.define(f'$cppxdata${name}', funcinfo)
-    unwind_map = u.section('.xdata', dwords(-1, action_addend), SCN_XDATA)
+    unwind_map = u.section('.xdata', dwords(-1, action_addend) + (dwords(0, extra_action) if states == 2 else b''),
+                           SCN_XDATA)
     u.define(f'$stateUnwindMap${name}', unwind_map)
+    if states == 2:
+        u.reloc(unwind_map, 0x0C, dtor, ADDR32NB)
+    if catch_at is not None:
+        try_map = u.section('.xdata', dwords(0, 0, 1, 1, 0), SCN_XDATA)
+        u.define(f'$tryMap${name}', try_map)
+        handlers = u.section('.xdata', dwords(0x40, 0, 0, catch_at, 0x38), SCN_XDATA)
+        u.define(f'$handlerMap${name}', handlers)
+        u.reloc(funcinfo, 0x10, f'$tryMap${name}', ADDR32NB)
+        u.reloc(try_map, 0x10, f'$handlerMap${name}', ADDR32NB)
+        u.reloc(handlers, 0x0C, dtor, ADDR32NB)
     ips = [(name, 0, -1), (name, 4, 0), (name, 9, -1)]
     if ip_into_funclet is not None:
         ips.append((dtor, ip_into_funclet, -1))
@@ -534,12 +552,13 @@ def packed_parent(u, name, funclet_code, handler='__CxxFrameHandler3', magic=0x1
     pd = u.section('.pdata', dwords(0, len(PACKED_CODE), 0), SCN_XDATA)
     for k, sym in ((0, label), (4, label), (8, f'$unwind${name}')):
         u.reloc(pd, k, sym, ADDR32NB)
-    if funclet_pdata is not None:
-        begin, end, codes = funclet_pdata
+    for i, entry in enumerate(([funclet_pdata] if funclet_pdata is not None else []) + list(more_funclet_pdata)):
+        begin, end, codes = entry
+        uname = f'$unwind${dtor}' if i == 0 else f'$unwind${i}${dtor}'
         fxd = u.section('.xdata', codes, SCN_XDATA)
-        u.define(f'$unwind${dtor}', fxd)
+        u.define(uname, fxd)
         fpd = u.section('.pdata', dwords(begin, end, 0), SCN_XDATA)
-        for k, sym in ((0, dtor), (4, dtor), (8, f'$unwind${dtor}')):
+        for k, sym in ((0, dtor), (4, dtor), (8, uname)):
             u.reloc(fpd, k, sym, ADDR32NB)
     return x
 
@@ -581,6 +600,92 @@ def packed_image(unit, funclet_length=None, externals=None, **link_args):
         gap_at = placement[unit.neighbor_funclet] - unit.neighbor_gap
         patches.setdefault(gap_at, b'\x90' * unit.neighbor_gap)
     return unit.link(externals or image_externals(), placement, patches=patches, **link_args)
+
+
+FAKE_EH_AT = 0x2E00      # unused .rdata in every fixture layout
+FAKE_EH_CODE = 0x1F00    # unused .text, int3 filled
+
+
+def fake_funcinfo(actions, chained=False, handler='__CxxFrameHandler3'):
+    """(patches, extra .pdata) adding a FuncInfo whose unwind map names `actions` (RVAs).
+
+    Its unwind info is primary with `handler`, or, with `chained`, a chained unwind info whose
+    RUNTIME_FUNCTION words happen to read as that handler and FuncInfo. That one also sets the
+    handler flags (a combination the comparator never accepts in compared unwind info), so only
+    the chain test keeps a scan from taking the FuncInfo.
+    """
+    unwind_map = FAKE_EH_AT + 0x40
+    unwind = FAKE_EH_AT + 0x80
+    patches = {FAKE_EH_AT: dwords(0x19930522, len(actions), unwind_map, 0, 0, 0, 0, 0, 0, 1),
+               unwind_map: b''.join(dwords(-1, a) for a in actions)}
+    if chained:
+        patches[unwind] = bytes([0x39, 0, 0, 0]) + dwords(HANDLER_THUNKS[handler], FAKE_EH_AT, 0)
+    else:
+        patches[unwind] = bytes([0x19, 0, 0, 0]) + dwords(HANDLER_THUNKS[handler], FAKE_EH_AT)
+    return patches, ((FAKE_EH_CODE, FAKE_EH_CODE + 0x10, unwind),)
+
+
+# --- Nested FuncInfo: a funclet bound only through a later funclet's own exception data ------
+
+NESTED_FUNCTION = 'SyntheticNested'
+
+
+def nested_unit():
+    """A parent whose FuncInfo names leaf funclet x1 and frame funclet x3; x3's own unwind info
+    has a FuncInfo naming leaf funclet x2. nested_placement packs x2 right after x1, so x1's end
+    is a compared start only once x3's exception data has been compared."""
+    u = Unit()
+    f = u.section('.text$mn', PACKED_CODE, SCN_TEXT)
+    x1 = u.section('.text$x', LEAF_FUNCLET, SCN_TEXT)
+    x2 = u.section('.text$x', NEIGHBOR_FUNCLET, SCN_TEXT)
+    x3 = u.section('.text$x', FRAME_FUNCLET, SCN_TEXT)
+    u.define(NESTED_FUNCTION, f, storage=STORAGE_EXTERNAL, function=True)
+    u.define('$LNnest', f, 0, STORAGE_LABEL)
+    syms = {x: u.define(f'?dtor${i}@?0??{NESTED_FUNCTION}@@4HA', x, 0) for i, x in enumerate((x1, x2, x3))}
+    for ext in (CALLEE, '__CxxFrameHandler3'):
+        u.external(ext)
+    u.reloc(f, 0x05, CALLEE, REL32)
+    u.reloc(x1, 0x08, CALLEE, REL32)
+    u.reloc(x2, 0x08, CALLEE, REL32)
+    u.reloc(x3, 0x13, CALLEE, REL32)
+
+    def funcinfo(tag, targets):
+        fi = u.section('.rdata', dwords(0x19930522, len(targets), 0, 0, 0, 0, 0, 0x20, 0, 1), SCN_RDATA8)
+        u.define(f'$cppxdata${tag}', fi)
+        um = u.section('.xdata', b''.join(dwords(-1, 0) for _ in targets), SCN_XDATA)
+        u.define(f'$stateUnwindMap${tag}', um)
+        u.reloc(fi, 0x08, f'$stateUnwindMap${tag}', ADDR32NB)
+        for i, x in enumerate(targets):
+            u.reloc(um, 8 * i + 4, syms[x], ADDR32NB)
+        return f'$cppxdata${tag}'
+
+    def unwind(tag, codes, info, label, length):
+        xd = u.section('.xdata', codes + dwords(0, 0), SCN_XDATA)
+        u.define(f'$unwind${tag}', xd)
+        u.reloc(xd, len(codes), '__CxxFrameHandler3', ADDR32NB)
+        u.reloc(xd, len(codes) + 4, info, ADDR32NB)
+        pd = u.section('.pdata', dwords(0, length, 0), SCN_XDATA)
+        for k, sym in ((0, label), (4, label), (8, f'$unwind${tag}')):
+            u.reloc(pd, k, sym, ADDR32NB)
+
+    unwind('nest', PACKED_UNWIND, funcinfo('nest', (x1, x3)), '$LNnest', len(PACKED_CODE))
+    # x3: push rbp, alloc 0x20, with a handler
+    unwind('nest3', bytes.fromhex('19060200' '06320250'), funcinfo('nest3', (x2,)), syms[x3], len(FRAME_FUNCLET))
+    u.nested = (x1, x2, x3)
+    return u
+
+
+def nested_placement(unit):
+    x1, x2, x3 = unit.nested
+    placement = unit.default_placement()
+    placement.update({x1: PACKED_FUNCLET_AT, x2: PACKED_FUNCLET_AT + len(LEAF_FUNCLET), x3: PACKED_FUNCLET_AT + 0x40})
+    return placement
+
+
+def nested_inputs():
+    unit = nested_unit()
+    return unit_inputs(unit, NESTED_FUNCTION, image_externals(),
+                       image=unit.link(image_externals(), nested_placement(unit)))
 
 
 def packed_inputs(candidate, image, extra_map=None):
