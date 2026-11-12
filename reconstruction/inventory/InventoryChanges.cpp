@@ -4,13 +4,16 @@
 //     pointer and returns.
 //   RVA 0x233f90, 44 bytes: InitOutfitItems.
 //   RVA 0x2372c0, 58 bytes: VisitInventory.
-// InitOutfitItems, VisitInventory: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+//   RVA 0x237300, 262 bytes: VisitWornItems.
+// InitOutfitItems, VisitInventory, VisitWornItems: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// GetWeaponSlotMask, OccupiesWornSlot: GUESS; file-local helpers with no address of their own
 // InventoryUtils::ItemFilter::~ItemFilter: GUESS(low)
 //
 // Labels: v2
 // Evidence: findings/third-batch-selection.md.
 // Source exposure: mixed. Drafted by claude-sonnet-5-5 from a local instruction listing and
 // decompiler output of the pinned image, with types from the header beside this file.
+// VisitWornItems was finished by claude-opus-5-5 from the Drafter's near-miss.
 // A byte match shows that this source and recipe produce the checked code; it does not verify the
 // community method names or that the original source looked like this.
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone, /Gy required).
@@ -45,5 +48,74 @@ void InventoryChanges::VisitInventory(IItemChangeVisitor& visitor)
         }
         node = node->next;
         result = visitor.Visit(entry);
+    } while (result == 1);
+}
+
+namespace {
+    constexpr std::uint32_t kLight  = 0x1F;
+    constexpr std::uint32_t kWeapon = 0x29;
+    constexpr std::uint32_t kAmmo   = 0x2A;
+
+    // The biped slots a weapon's animation type maps to, -1 (every slot) when it has none.
+    std::int32_t GetWeaponSlotMask(TESObjectWEAP* a_weapon)
+    {
+        std::int32_t       mask = -1;
+        const std::int32_t slot = a_weapon->weaponData.animationType;
+        if (slot != -1 && slot < 10) {
+            mask = gWeaponSlotMasks[slot];
+        }
+        return mask;
+    }
+
+    // Whether a worn entry occupies an equipment slot: armor through its biped slots, weapons
+    // through their animation type, ammunition always, and lights (held torches) without a slot.
+    bool OccupiesWornSlot(InventoryEntryData* a_entry)
+    {
+        std::int32_t mask;
+        if (BGSBipedObjectForm* biped = GetBipedObjectForm(a_entry->object)) {
+            mask = biped->bipedModelData.bipedObjectSlots;
+        } else {
+            TESBoundObject* object = a_entry->object;
+            if (!object) {
+                return false;
+            }
+            switch (static_cast<std::uint32_t>(object->formType)) {
+            case kLight:
+                mask = 0;
+                break;
+            case kWeapon:
+                mask = GetWeaponSlotMask(static_cast<TESObjectWEAP*>(object));
+                break;
+            case kAmmo:
+                return true;
+            default:
+                mask = 0;
+                break;
+            }
+        }
+        return mask != 0 || (a_entry->object && a_entry->object->formType == kLight);
+    }
+}
+
+void InventoryChanges::VisitWornItems(IItemChangeVisitor& visitor)
+{
+    auto*         node = entryList;
+    std::uint32_t result = 1;
+    do {
+        if (!node) {
+            return;
+        }
+        InventoryEntryData* entry = node->item;
+        if (!entry) {
+            return;
+        }
+        node = node->next;
+        bool worn = false;
+        for (auto* lists = entry->extraLists; lists && lists->item && !worn; lists = lists->next) {
+            worn = lists->item->IsWorn(true, false);
+        }
+        if (worn && OccupiesWornSlot(entry)) {
+            result = visitor.Visit(entry);
+        }
     } while (result == 1);
 }

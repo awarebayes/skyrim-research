@@ -10,6 +10,10 @@
       "rva": 1382272,
       "size": null
     },
+    "?GetOwner@ExtraDataList@@QEAAPEAVTESForm@@XZ": {
+      "rva": 1459568,
+      "size": null
+    },
     "?IsWorn@ExtraDataList@@QEAA_N_N0@Z": {
       "rva": 1459760,
       "size": null
@@ -18,16 +22,60 @@
       "rva": 1460400,
       "size": null
     },
+    "?GetEncounterZone@ExtraDataList@@QEBAPEAVBGSEncounterZone@@XZ": {
+      "rva": 1482912,
+      "size": null
+    },
     "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ": {
       "rva": 1483248,
+      "size": null
+    },
+    "?GetbhkWorld@ExtraDataList@@QEBAPEAVbhkWorld@@XZ": {
+      "rva": 1503552,
+      "size": null
+    },
+    "?AddFactionChanges@ExtraDataList@@QEAAXXZ": {
+      "rva": 1511184,
+      "size": null
+    },
+    "?GetFactionChanges@ExtraDataList@@QEAAPEAVExtraFactionChanges@@XZ": {
+      "rva": 1511680,
+      "size": null
+    },
+    "?RemoveFactionChange@ExtraDataList@@QEAAXPEAVTESFaction@@@Z": {
+      "rva": 1511808,
+      "size": null
+    },
+    "?GetEnchantment@ExtraDataList@@QEAAPEAVEnchantmentItem@@XZ": {
+      "rva": 1520304,
       "size": null
     },
     "?CreateRefHandle@@YAXAEAU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z": {
       "rva": 1566272,
       "size": null
     },
+    "?SetFactionRank@ExtraFactionChanges@@QEAAXPEAVTESFaction@@H@Z": {
+      "rva": 1595632,
+      "size": null
+    },
+    "?CellAtCoordinates@TESWorldSpace@@QEBAPEAVTESObjectCELL@@HH@Z": {
+      "rva": 1788752,
+      "size": null
+    },
+    "?Lock@BSSpinLock@@QEAAXI@Z": {
+      "rva": 1789312,
+      "size": null
+    },
     "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z": {
       "rva": 1848960,
+      "size": null
+    },
+    "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z": {
+      "rva": 1848960,
+      "size": null
+    },
+    "??1BSLightingShaderMaterialLockGuard@@QEAA@XZ": {
+      "rva": 1860112,
       "size": null
     },
     "?OpenTES@TESFile@@QEAA_NW4OpenMode@NiFile@@_N@Z": {
@@ -53,6 +101,10 @@
     "?SeekNextSubrecord@TESFile@@QEAA_NXZ": {
       "rva": 1891424,
       "size": 167
+    },
+    "?IsRecordFileLoaded@TESFile@@QEAA_NXZ": {
+      "rva": 1893344,
+      "size": null
     },
     "?Duplicate@TESFile@@QEAAPEAV1@I@Z": {
       "rva": 1894368,
@@ -82,13 +134,57 @@
       "rva": 1954736,
       "size": null
     },
+    "?AddFaction@TESActorBaseData@@QEAAXPEAVTESFaction@@C@Z": {
+      "rva": 1955584,
+      "size": null
+    },
+    "?GetEnchantment@TESForm@@QEAAPEAVEnchantmentItem@@PEAVExtraDataList@@@Z": {
+      "rva": 1974224,
+      "size": 91
+    },
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": 3
+    },
+    "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": 91
+    },
+    "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988464,
+      "size": 185
+    },
+    "?LookupByID@TESForm@@SAPEAV1@I@Z": {
+      "rva": 1988704,
+      "size": null
+    },
+    "?GetFile@TESForm@@QEBAPEAVTESFile@@H@Z": {
+      "rva": 1989344,
+      "size": null
+    },
     "?ConvertFormType@@YA?AW4FormType@@I@Z": {
       "rva": 1989648,
+      "size": null
+    },
+    "?IsTemporaryFormID@TESForm@@QEBA_NXZ": {
+      "rva": 1990672,
+      "size": 15
+    },
+    "?AddCompileIndex@TESForm@@SAXAEAIPEAVTESFile@@@Z": {
+      "rva": 1993984,
+      "size": null
+    },
+    "??1TESModel@@UEAA@XZ": {
+      "rva": 2009568,
       "size": null
     },
     "?HasShout@TESSpellList@@QEBA_NPEAVTESShout@@@Z": {
       "rva": 2040032,
       "size": null
+    },
+    "?GetGoldValue@TESForm@@QEBAHXZ": {
+      "rva": 2045280,
+      "size": 157
     },
     "?GetArmorFinalRating@@YAMPEAVInventoryEntryData@@MM@Z": {
       "rva": 2266592,
@@ -130,6 +226,38 @@
       "rva": 2363216,
       "size": 54
     },
+    "??_GTESGrass@@UEAAPEAXI@Z": {
+      "rva": 2558096,
+      "size": 84
+    },
+    "?GetDensity@TESGrass@@UEBAEXZ": {
+      "rva": 2558208,
+      "size": 5
+    },
+    "?GetDistanceFromWaterLevel@TESGrass@@UEBAGXZ": {
+      "rva": 2558224,
+      "size": 5
+    },
+    "?GetMaxSlopeDegrees@TESGrass@@UEBAEXZ": {
+      "rva": 2558304,
+      "size": 5
+    },
+    "?GetMinSlopeDegrees@TESGrass@@UEBAEXZ": {
+      "rva": 2558352,
+      "size": 5
+    },
+    "?GetUnderwaterState@TESGrass@@UEBA?AW4GRASS_WATER_STATE@1@XZ": {
+      "rva": 2558384,
+      "size": 4
+    },
+    "?SetUnderwaterState@TESGrass@@UEAAXW4GRASS_WATER_STATE@1@@Z": {
+      "rva": 2558512,
+      "size": 4
+    },
+    "??1TESBoundObject@@UEAA@XZ": {
+      "rva": 2582912,
+      "size": null
+    },
     "?GetArmorKind@@YAHPEAVTESObjectARMO@@@Z": {
       "rva": 2616816,
       "size": null
@@ -141,6 +269,38 @@
     "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ": {
       "rva": 2863488,
       "size": null
+    },
+    "?GetCoordinates@TESObjectCELL@@QEAAXAEAH0@Z": {
+      "rva": 2868832,
+      "size": 34
+    },
+    "?GetOwner@TESObjectCELL@@QEAAPEAVTESForm@@XZ": {
+      "rva": 2876720,
+      "size": 148
+    },
+    "?GetEncounterZone@TESObjectCELL@@QEBAPEAVBGSEncounterZone@@XZ": {
+      "rva": 2877184,
+      "size": 79
+    },
+    "?GetbhkWorld@TESObjectCELL@@QEBAPEAVbhkWorld@@XZ": {
+      "rva": 2877872,
+      "size": 26
+    },
+    "?EnterReferenceListLock@TESObjectCELL@@QEAAXXZ": {
+      "rva": 2932432,
+      "size": 14
+    },
+    "?ExitReferenceListLock@TESObjectCELL@@QEAAXXZ": {
+      "rva": 2932464,
+      "size": 78
+    },
+    "?SetArraySize@@YAXAEAV?$NiTObjectArray@PEAVNiAVObject@@@@I@Z": {
+      "rva": 2974080,
+      "size": null
+    },
+    "?IsPersistent@TESForm@@QEBA_NXZ": {
+      "rva": 3033792,
+      "size": 9
     },
     "?HasQuestObject@TESObjectREFR@@QEBA_NXZ": {
       "rva": 3037792,
@@ -174,9 +334,37 @@
       "rva": 3148688,
       "size": 143
     },
+    "??1TESWorldSpace@@UEAA@XZ": {
+      "rva": 3190752,
+      "size": null
+    },
+    "?GetFormEditorID@TESWorldSpace@@UEBAPEBDXZ": {
+      "rva": 3192592,
+      "size": 22
+    },
+    "?FindInFileFast@TESWorldSpace@@UEAA_NPEAVTESFile@@@Z": {
+      "rva": 3199056,
+      "size": 136
+    },
+    "?GetLocation@TESWorldSpace@@QEAAPEAVBGSLocation@@XZ": {
+      "rva": 3204016,
+      "size": null
+    },
+    "?GetCellByPosition@TESWorldSpace@@QEBAPEAVTESObjectCELL@@AEBUNiPoint3@@@Z": {
+      "rva": 3205328,
+      "size": 129
+    },
     "?LookupLocation@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z": {
       "rva": 3215344,
       "size": null
+    },
+    "?GetOffsetData@TESWorldSpace@@QEBAPEAUOffsetData@@XZ": {
+      "rva": 3223584,
+      "size": null
+    },
+    "??_GTESWorldSpace@@UEAAPEAXI@Z": {
+      "rva": 3230000,
+      "size": 52
     },
     "?HandleEntryPoint@@YAXIPEAVActor@@PEAVTESObjectARMO@@PEAM@Z": {
       "rva": 3723248,
@@ -186,9 +374,33 @@
       "rva": 3723248,
       "size": null
     },
+    "?GetRelationshipRankIndex@TESNPC@@SAHPEAV1@0@Z": {
+      "rva": 3821056,
+      "size": 36
+    },
+    "?GetRelationship@BGSRelationship@@SAPEAV1@PEAVTESNPC@@0@Z": {
+      "rva": 3822224,
+      "size": null
+    },
+    "?IsFemale@TESNPC@@QEAAHXZ": {
+      "rva": 3866288,
+      "size": 20
+    },
     "?GetHeightScale@TESNPC@@QEBAMXZ": {
       "rva": 3958208,
       "size": null
+    },
+    "?GetScale@TESNPC@@QEAAMXZ": {
+      "rva": 3958208,
+      "size": 95
+    },
+    "?HasOverlays@TESNPC@@QEAA_NXZ": {
+      "rva": 3968000,
+      "size": 238
+    },
+    "?SetObjectVoiceType@TESNPC@@UEAAXPEAVBGSVoiceType@@@Z": {
+      "rva": 3987664,
+      "size": 5
     },
     "?GetCollisionObject@NiAVObject@@QEBAPEAVbhkCollisionObject@@XZ": {
       "rva": 4217424,
@@ -201,6 +413,10 @@
     "?GetSoundLevelValue@AIFormulas@@YAHW4SOUND_LEVEL@@@Z": {
       "rva": 4314096,
       "size": null
+    },
+    "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ": {
+      "rva": 4934352,
+      "size": 6
     },
     "?GetCurrentSpellCost@MagicCaster@@QEAAMXZ": {
       "rva": 6040768,
@@ -226,6 +442,18 @@
       "rva": 6090688,
       "size": null
     },
+    "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z": {
+      "rva": 6520432,
+      "size": null
+    },
+    "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z": {
+      "rva": 6528768,
+      "size": null
+    },
+    "??1Character@@UEAA@XZ": {
+      "rva": 6753824,
+      "size": null
+    },
     "?GetLevel@Actor@@QEBAGXZ": {
       "rva": 6789024,
       "size": 13
@@ -234,12 +462,36 @@
       "rva": 6789024,
       "size": null
     },
+    "?SetCrimeFaction@Character@@QEAAXPEAVTESFaction@@@Z": {
+      "rva": 6810288,
+      "size": 234
+    },
     "?IsInRagdollState@Actor@@QEBA_NXZ": {
       "rva": 6847520,
       "size": 102
     },
+    "?GetRotationX@Character@@QEBAMXZ": {
+      "rva": 6893216,
+      "size": 6
+    },
+    "?Revert@Actor@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 6927808,
+      "size": null
+    },
+    "?UpdateFactionsA@Actor@@QEAAX_N@Z": {
+      "rva": 6934272,
+      "size": null
+    },
+    "?GetPlayerBaseNPC@@YAPEBXPEAVPlayerCharacter@@@Z": {
+      "rva": 6937808,
+      "size": null
+    },
     "?ApplySoundEvent@@YAXPEAVActor@@H@Z": {
       "rva": 6946384,
+      "size": null
+    },
+    "?UpdateFactionsB@Actor@@QEAAXXZ": {
+      "rva": 6999184,
       "size": null
     },
     "?GetMoveDirectionRelativeToFacing@Actor@@QEAAMXZ": {
@@ -253,6 +505,10 @@
     "?IsAttacking@Actor@@QEBA_NXZ": {
       "rva": 7125280,
       "size": 14
+    },
+    "?StartDeferredKill@Character@@QEAAXXZ": {
+      "rva": 7129360,
+      "size": 17
     },
     "?HasShout@Actor@@QEBA_NPEAVTESShout@@@Z": {
       "rva": 7173968,
@@ -278,9 +534,29 @@
       "rva": 7484368,
       "size": null
     },
+    "?StartDeferredKill@AIProcess@@QEAAXXZ": {
+      "rva": 7505312,
+      "size": null
+    },
+    "?GetBiped2@Character@@UEBAAEBV?$BSTSmartPointer@VBipedAnim@@@@XZ": {
+      "rva": 7579488,
+      "size": 8
+    },
+    "?Revert@Character@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 7579824,
+      "size": 49
+    },
+    "??_GCharacter@@UEAAPEAXI@Z": {
+      "rva": 7580608,
+      "size": 52
+    },
     "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z": {
       "rva": 7580928,
       "size": 95
+    },
+    "?Unk_C4@Character@@UEAAXE@Z": {
+      "rva": 7581040,
+      "size": 7
     },
     "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z": {
       "rva": 7581072,
@@ -292,6 +568,10 @@
     },
     "?Stop@BSSoundHandle@@QEAA_NXZ": {
       "rva": 13407904,
+      "size": null
+    },
+    "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z": {
+      "rva": 13510128,
       "size": null
     },
     "?UnlockForRead@BSReadWriteLock@@QEAAXXZ": {
@@ -322,17 +602,169 @@
       "rva": 13610848,
       "size": 126
     },
+    "?CreateClone@NiObject@@UEAAPEAV1@AEAVNiCloningProcess@@@Z": {
+      "rva": 15583040,
+      "size": 4
+    },
+    "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15583120,
+      "size": null
+    },
+    "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15583136,
+      "size": null
+    },
+    "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 15583152,
+      "size": null
+    },
+    "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15583184,
+      "size": null
+    },
+    "?IsEqual@NiObject@@UEAA_NPEAV1@@Z": {
+      "rva": 15583200,
+      "size": 91
+    },
+    "?Clone@NiObject@@QEAAPEAV1@AEAVNiCloningProcess@@@Z": {
+      "rva": 15583520,
+      "size": 68
+    },
     "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z": {
       "rva": 15583744,
       "size": null
+    },
+    "?StreamCanSkip@NiObject@@UEAA_NXZ": {
+      "rva": 15584096,
+      "size": 3
+    },
+    "?GetGroup@NiObject@@UEBAPEAVNiObjectGroup@@XZ": {
+      "rva": 15584144,
+      "size": 3
+    },
+    "??0NiObject@@QEAA@XZ": {
+      "rva": 15584192,
+      "size": 38
     },
     "?SetEulerAngles@NiMatrix3@@QEAAXMMM@Z": {
       "rva": 15590016,
       "size": null
     },
+    "?LoadBinary@NiAVObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15599008,
+      "size": null
+    },
+    "?LinkObject@NiAVObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15599232,
+      "size": null
+    },
+    "?RegisterStreamables@NiAVObject@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 15599360,
+      "size": null
+    },
+    "?SaveBinary@NiAVObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15599440,
+      "size": null
+    },
+    "?IsEqual@NiAVObject@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 15599632,
+      "size": null
+    },
+    "?Cull@NiAVObject@@QEAAXPEAVNiCullingProcess@@H@Z": {
+      "rva": 15601456,
+      "size": null
+    },
+    "?LoadBinary@NiNode@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15603040,
+      "size": 58
+    },
+    "?LinkObject@NiNode@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15603104,
+      "size": 168
+    },
+    "?RegisterStreamables@NiNode@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 15603280,
+      "size": 123
+    },
+    "?SaveBinary@NiNode@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15603424,
+      "size": 189
+    },
+    "?IsEqual@NiNode@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 15603632,
+      "size": 161
+    },
+    "?OnVisible@NiNode@@UEAAXAEAVNiCullingProcess@@H@Z": {
+      "rva": 15609024,
+      "size": 144
+    },
+    "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z": {
+      "rva": 15616400,
+      "size": null
+    },
+    "?SaveFixedString@NiStream@@QEAAXAEBVBSFixedString@@@Z": {
+      "rva": 15616592,
+      "size": null
+    },
+    "?LoadFixedStringLegacy@NiStream@@QEAAXAEAVBSFixedString@@@Z": {
+      "rva": 15616752,
+      "size": null
+    },
+    "?LoadLinkID@NiStream@@QEAAXXZ": {
+      "rva": 15618288,
+      "size": null
+    },
+    "?SkipLinkIDs@NiStream@@QEAAXXZ": {
+      "rva": 15618464,
+      "size": null
+    },
+    "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ": {
+      "rva": 15618960,
+      "size": null
+    },
+    "?ReadLinkIDCount@NiStream@@QEAAIXZ": {
+      "rva": 15619056,
+      "size": null
+    },
+    "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z": {
+      "rva": 15675152,
+      "size": null
+    },
+    "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z": {
+      "rva": 15675344,
+      "size": null
+    },
     "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z": {
       "rva": 15698176,
       "size": 53
+    },
+    "?LoadBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16387904,
+      "size": 187
+    },
+    "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16388112,
+      "size": 27
+    },
+    "?RegisterStreamables@NiPSysModifier@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 16388160,
+      "size": 62
+    },
+    "?SaveBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16388240,
+      "size": 170
+    },
+    "?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 16388416,
+      "size": 78
+    },
+    "?SetSystemPointer@NiPSysModifier@@UEAAXPEAVNiParticleSystem@@@Z": {
+      "rva": 16388544,
+      "size": 5
+    },
+    "?ProcessClone@NiPSysModifier@@UEAAXAEAVNiCloningProcess@@@Z": {
+      "rva": 16388560,
+      "size": 210
     },
     "?SetCollisionLayer@NiAVObject@@QEAAXW4COL_LAYER@@@Z": {
       "rva": 17117824,
@@ -362,6 +794,46 @@
       "rva": 17154704,
       "size": null
     },
+    "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z": {
+      "rva": 22165472,
+      "size": 384
+    },
+    "?GetDefault@BSLightingShaderMaterialBase@@UEAAPEAVBSShaderMaterial@@XZ": {
+      "rva": 22166800,
+      "size": 8
+    },
+    "?OnLoadTextureSet@BSLightingShaderMaterialBase@@UEAAX_KPEAVBSTextureSet@@@Z": {
+      "rva": 22166816,
+      "size": 286
+    },
+    "?ClearTextures@BSLightingShaderMaterialBase@@UEAAXXZ": {
+      "rva": 22167120,
+      "size": 163
+    },
+    "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialBase@@UEAAX_N0000@Z": {
+      "rva": 22167296,
+      "size": 191
+    },
+    "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22167600,
+      "size": 396
+    },
+    "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22168016,
+      "size": 396
+    },
+    "?CopyMembers@BSShaderMaterial@@UEAAXPEAV1@@Z": {
+      "rva": 22501120,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "__RTDynamicCast": {
+      "rva": 22714330,
+      "size": null
+    },
     "memset": {
       "rva": 22714360,
       "size": null
@@ -382,12 +854,36 @@
       "rva": 24937536,
       "size": null
     },
+    "__imp_Sleep": {
+      "rva": 24937544,
+      "size": null
+    },
+    "??_7NiRefObject@@6B@": {
+      "rva": 25165752,
+      "size": null
+    },
     "??_7ItemFilter@InventoryUtils@@6B@": {
       "rva": 25188480,
       "size": null
     },
+    "??_7TESGrass@@6BTESBoundObject@@@": {
+      "rva": 25239072,
+      "size": null
+    },
+    "??_7TESGrass@@6BTESModel@@@": {
+      "rva": 25239952,
+      "size": null
+    },
     "?g_seekOrigin@@3IB": {
       "rva": 27530240,
+      "size": null
+    },
+    "??_7NiObject@@6B@": {
+      "rva": 27549000,
+      "size": null
+    },
+    "?kEmptyString@@3QBDB": {
+      "rva": 28672032,
       "size": null
     },
     "__real@3c23d70a": {
@@ -406,6 +902,10 @@
       "rva": 34046544,
       "size": null
     },
+    "?kRecordFormType@@3EA": {
+      "rva": 34048184,
+      "size": null
+    },
     "?gWeaponSlotMasks@@3QBHB": {
       "rva": 34058672,
       "size": null
@@ -418,6 +918,18 @@
       "rva": 34061536,
       "size": null
     },
+    "?g_overlayCapacity@@3IA": {
+      "rva": 34195652,
+      "size": null
+    },
+    "?g_overlaySentinel@@3PEAUOverlayEntry@@EA": {
+      "rva": 34195664,
+      "size": null
+    },
+    "?g_overlayEntries@@3PEAUOverlayEntry@@EA": {
+      "rva": 34195680,
+      "size": null
+    },
     "?QGlobalTimeMultiplier@BSTimer@@2MA": {
       "rva": 34392776,
       "size": null
@@ -426,12 +938,44 @@
       "rva": 34392780,
       "size": null
     },
+    "??_R0?AVTESForm@@@8": {
+      "rva": 34454008,
+      "size": null
+    },
+    "??_R0?AVAlchemyItem@@@8": {
+      "rva": 34454072,
+      "size": null
+    },
+    "??_R0?AVMagicItem@@@8": {
+      "rva": 34454112,
+      "size": null
+    },
+    "??_R0?AVTESEnchantableForm@@@8": {
+      "rva": 34456360,
+      "size": null
+    },
+    "??_R0?AVTESValueForm@@@8": {
+      "rva": 34456688,
+      "size": null
+    },
+    "??_R0?AVBGSEncounterZone@@@8": {
+      "rva": 34464416,
+      "size": null
+    },
+    "??_R0?AVBGSLocation@@@8": {
+      "rva": 34489112,
+      "size": null
+    },
     "?singleton@TESDataHandler@@2PEAV1@EA": {
       "rva": 35249880,
       "size": null
     },
     "?kNullHandle@@3IA": {
       "rva": 35251548,
+      "size": null
+    },
+    "?gExteriorbhkWorld@@3PEAPEAVbhkWorld@@EA": {
+      "rva": 35259800,
       "size": null
     },
     "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA": {
@@ -449,12 +993,36 @@
     "?singleton@PlayerCharacter@@2PEAV1@EA": {
       "rva": 52627320,
       "size": null
+    },
+    "?ms_totalObjects@NiRefObject@@2JC": {
+      "rva": 53593632,
+      "size": null
+    },
+    "?g_defaultBackLightingTexture@@3V?$NiPointer@VNiSourceTexture@@@@A": {
+      "rva": 53699624,
+      "size": null
+    },
+    "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A": {
+      "rva": 53699656,
+      "size": null
+    },
+    "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA": {
+      "rva": 54349232,
+      "size": null
     }
   },
   "folds": [
     [
       "?GetLevel@Actor@@QEBAGXZ",
       "?GetLevel@PlayerCharacter@@QEAAGXZ"
+    ],
+    [
+      "?GetHeightScale@TESNPC@@QEBAMXZ",
+      "?GetScale@TESNPC@@QEAAMXZ"
+    ],
+    [
+      "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z",
+      "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z"
     ]
   ],
   "_provenance": {
@@ -476,6 +1044,13 @@
         "community_name": "Offset::MagicItem::CalculateCost"
       },
       {
+        "name": "?GetOwner@ExtraDataList@@QEAAPEAVTESForm@@XZ",
+        "rva": "0x164570",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?IsWorn@ExtraDataList@@QEAA_N_N0@Z",
         "ae_id": 11696,
         "rva": "0x164630",
@@ -492,12 +1067,54 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?GetEncounterZone@ExtraDataList@@QEBAPEAVBGSEncounterZone@@XZ",
+        "rva": "0x16a0a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ",
         "ae_id": 11830,
         "rva": "0x16a1f0",
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetbhkWorld@ExtraDataList@@QEBAPEAVbhkWorld@@XZ",
+        "rva": "0x16f140",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AddFactionChanges@ExtraDataList@@QEAAXXZ",
+        "rva": "0x170f10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFactionChanges@ExtraDataList@@QEAAPEAVExtraFactionChanges@@XZ",
+        "rva": "0x171100",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemoveFactionChange@ExtraDataList@@QEAAXPEAVTESFaction@@@Z",
+        "rva": "0x171180",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEnchantment@ExtraDataList@@QEAAPEAVEnchantmentItem@@XZ",
+        "rva": "0x1732b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?CreateRefHandle@@YAXAEAU?$BSPointerHandle@VActor@@@@PEAVActor@@@Z",
@@ -507,12 +1124,48 @@
         "community_name": "Offset::CreateRefHandle"
       },
       {
+        "name": "?SetFactionRank@ExtraFactionChanges@@QEAAXPEAVTESFaction@@H@Z",
+        "rva": "0x1858f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CellAtCoordinates@TESWorldSpace@@QEBAPEAVTESObjectCELL@@HH@Z",
+        "rva": "0x1b4b50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Lock@BSSpinLock@@QEAAXI@Z",
+        "rva": "0x1b4d80",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?IsMovableFormID@TESDataHandler@@QEAA_NI@Z",
         "ae_id": 13783,
         "rva": "0x1c3680",
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
+        "ae_id": 13783,
+        "rva": "0x1c3680",
+        "size_from": null,
+        "community_name": "TESDataHandler::IsTemporaryFormID",
+        "note": "meh321 AddressLibraryDatabase 0379cb6 name; the TESObjectREFR unit calls the same address as IsMovableFormID, so both names are one fold group"
+      },
+      {
+        "name": "??1BSLightingShaderMaterialLockGuard@@QEAA@XZ",
+        "rva": "0x1c6210",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (object lifetime position) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?OpenTES@TESFile@@QEAA_NW4OpenMode@NiFile@@_N@Z",
@@ -556,6 +1209,13 @@
         "rva": "0x1cdc60",
         "size_from": ".pdata",
         "community_name": "TESFile::SeekNextSubrecord"
+      },
+      {
+        "name": "?IsRecordFileLoaded@TESFile@@QEAA_NXZ",
+        "rva": "0x1ce3e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?Duplicate@TESFile@@QEAAPEAV1@I@Z",
@@ -612,6 +1272,55 @@
         "community_name": "TESActorBaseData::GetLevel"
       },
       {
+        "name": "?AddFaction@TESActorBaseData@@QEAAXPEAVTESFaction@@C@Z",
+        "rva": "0x1dd700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEnchantment@TESForm@@QEAAPEAVEnchantmentItem@@PEAVExtraDataList@@@Z",
+        "rva": "0x1e1fd0",
+        "size_from": "task",
+        "community_name": "TESForm::GetEnchantment",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": "task",
+        "community_name": "TESForm::ClearData",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": "task",
+        "community_name": "TESForm::SaveGame",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5770",
+        "size_from": "task",
+        "community_name": "TESForm::LoadGame",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LookupByID@TESForm@@SAPEAV1@I@Z",
+        "rva": "0x1e5860",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFile@TESForm@@QEBAPEAVTESFile@@H@Z",
+        "rva": "0x1e5ae0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?ConvertFormType@@YA?AW4FormType@@I@Z",
         "ae_id": 14624,
         "rva": "0x1e5c10",
@@ -620,12 +1329,40 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?IsTemporaryFormID@TESForm@@QEBA_NXZ",
+        "rva": "0x1e6010",
+        "size_from": "task",
+        "community_name": "TESForm::IsTemporaryFormID",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AddCompileIndex@TESForm@@SAXAEAIPEAVTESFile@@@Z",
+        "rva": "0x1e6d00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESModel@@UEAA@XZ",
+        "rva": "0x1ea9e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?HasShout@TESSpellList@@QEBA_NPEAVTESShout@@@Z",
         "ae_id": 14940,
         "rva": "0x1f20e0",
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetGoldValue@TESForm@@QEBAHXZ",
+        "rva": "0x1f3560",
+        "size_from": "task",
+        "community_name": "TESForm::GetGoldValue",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?GetArmorFinalRating@@YAMPEAVInventoryEntryData@@MM@Z",
@@ -702,6 +1439,62 @@
         "community_name": "BSPointerHandleManagerInterface::GetHandle"
       },
       {
+        "name": "??_GTESGrass@@UEAAPEAXI@Z",
+        "rva": "0x270890",
+        "size_from": "task",
+        "community_name": "TESGrass::~TESGrass",
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDensity@TESGrass@@UEBAEXZ",
+        "rva": "0x270900",
+        "size_from": "task",
+        "community_name": "TESGrass::GetDensity",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDistanceFromWaterLevel@TESGrass@@UEBAGXZ",
+        "rva": "0x270910",
+        "size_from": "task",
+        "community_name": "TESGrass::GetDistanceFromWaterLevel",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetMaxSlopeDegrees@TESGrass@@UEBAEXZ",
+        "rva": "0x270960",
+        "size_from": "task",
+        "community_name": "TESGrass::GetMaxSlopeDegrees",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetMinSlopeDegrees@TESGrass@@UEBAEXZ",
+        "rva": "0x270990",
+        "size_from": "task",
+        "community_name": "TESGrass::GetMinSlopeDegrees",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetUnderwaterState@TESGrass@@UEBA?AW4GRASS_WATER_STATE@1@XZ",
+        "rva": "0x2709b0",
+        "size_from": "task",
+        "community_name": "TESGrass::GetUnderwaterState",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetUnderwaterState@TESGrass@@UEAAXW4GRASS_WATER_STATE@1@@Z",
+        "rva": "0x270a30",
+        "size_from": "task",
+        "community_name": "TESGrass::SetUnderwaterState",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESBoundObject@@UEAA@XZ",
+        "rva": "0x276980",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?GetArmorKind@@YAHPEAVTESObjectARMO@@@Z",
         "ae_id": 17797,
         "rva": "0x27edf0",
@@ -723,6 +1516,62 @@
         "rva": "0x2bb180",
         "size_from": null,
         "community_name": "TESObjectCELL::GetLocation"
+      },
+      {
+        "name": "?GetCoordinates@TESObjectCELL@@QEAAXAEAH0@Z",
+        "rva": "0x2bc660",
+        "size_from": "task",
+        "community_name": "TESObjectCELL::GetCoordinates",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetOwner@TESObjectCELL@@QEAAPEAVTESForm@@XZ",
+        "rva": "0x2be530",
+        "size_from": "task",
+        "community_name": "TESObjectCELL::GetOwner",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEncounterZone@TESObjectCELL@@QEBAPEAVBGSEncounterZone@@XZ",
+        "rva": "0x2be700",
+        "size_from": "task",
+        "community_name": "TESObjectCELL::GetEncounterZone",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetbhkWorld@TESObjectCELL@@QEBAPEAVbhkWorld@@XZ",
+        "rva": "0x2be9b0",
+        "size_from": "task",
+        "community_name": "TESObjectCELL::GetbhkWorld",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?EnterReferenceListLock@TESObjectCELL@@QEAAXXZ",
+        "rva": "0x2cbed0",
+        "size_from": "task",
+        "community_name": "TESObjectCELL::EnterReferenceListLock",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ExitReferenceListLock@TESObjectCELL@@QEAAXXZ",
+        "rva": "0x2cbef0",
+        "size_from": "task",
+        "community_name": "TESObjectCELL::ExitReferenceListLock",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetArraySize@@YAXAEAV?$NiTObjectArray@PEAVNiAVObject@@@@I@Z",
+        "rva": "0x2d6180",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsPersistent@TESForm@@QEBA_NXZ",
+        "rva": "0x2e4ac0",
+        "size_from": "task",
+        "community_name": "TESForm::IsPersistent",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?HasQuestObject@TESObjectREFR@@QEBA_NXZ",
@@ -782,12 +1631,61 @@
         "community_name": "TESObjectREFR::GetCalcLevel"
       },
       {
+        "name": "??1TESWorldSpace@@UEAA@XZ",
+        "rva": "0x30afe0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFormEditorID@TESWorldSpace@@UEBAPEBDXZ",
+        "rva": "0x30b710",
+        "size_from": "task",
+        "community_name": "TESWorldSpace::GetFormEditorID",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FindInFileFast@TESWorldSpace@@UEAA_NPEAVTESFile@@@Z",
+        "rva": "0x30d050",
+        "size_from": "task",
+        "community_name": "TESWorldSpace::FindInFileFast",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetLocation@TESWorldSpace@@QEAAPEAVBGSLocation@@XZ",
+        "rva": "0x30e3b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCellByPosition@TESWorldSpace@@QEBAPEAVTESObjectCELL@@AEBUNiPoint3@@@Z",
+        "rva": "0x30e8d0",
+        "size_from": "task",
+        "community_name": "TESWorldSpace::GetCellByPosition",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?LookupLocation@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z",
         "ae_id": 20539,
         "rva": "0x310ff0",
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetOffsetData@TESWorldSpace@@QEBAPEAUOffsetData@@XZ",
+        "rva": "0x313020",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GTESWorldSpace@@UEAAPEAXI@Z",
+        "rva": "0x314930",
+        "size_from": "task",
+        "community_name": "TESWorldSpace::~TESWorldSpace",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?HandleEntryPoint@@YAXIPEAVActor@@PEAVTESObjectARMO@@PEAM@Z",
@@ -804,12 +1702,54 @@
         "community_name": "BGSEntryPoint::HandleEntryPoint"
       },
       {
+        "name": "?GetRelationshipRankIndex@TESNPC@@SAHPEAV1@0@Z",
+        "rva": "0x3a4e00",
+        "size_from": "task",
+        "community_name": "TESNPC::GetRelationshipRankIndex",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetRelationship@BGSRelationship@@SAPEAV1@PEAVTESNPC@@0@Z",
+        "rva": "0x3a5290",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsFemale@TESNPC@@QEAAHXZ",
+        "rva": "0x3afeb0",
+        "size_from": "task",
+        "community_name": "TESNPC::IsFemale",
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?GetHeightScale@TESNPC@@QEBAMXZ",
         "ae_id": 24763,
         "rva": "0x3c65c0",
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?GetScale@TESNPC@@QEAAMXZ",
+        "rva": "0x3c65c0",
+        "size_from": "task",
+        "community_name": "TESNPC::GetScale",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HasOverlays@TESNPC@@QEAA_NXZ",
+        "rva": "0x3c8c00",
+        "size_from": "task",
+        "community_name": "TESNPC::HasOverlays",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetObjectVoiceType@TESNPC@@UEAAXPEAVBGSVoiceType@@@Z",
+        "rva": "0x3cd8d0",
+        "size_from": "task",
+        "community_name": "TESNPC::SetObjectVoiceType",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?GetCollisionObject@NiAVObject@@QEBAPEAVbhkCollisionObject@@XZ",
@@ -833,6 +1773,13 @@
         "size_from": null,
         "community_name": "AIFormulas::GetSoundLevelValue",
         "note": "community name from powerof3/CommonLibSSE 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0)"
+      },
+      {
+        "name": "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ",
+        "rva": "0x4b4ad0",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::GetType",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?GetCurrentSpellCost@MagicCaster@@QEAAMXZ",
@@ -878,6 +1825,27 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "rva": "0x637e70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "rva": "0x639f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1Character@@UEAA@XZ",
+        "rva": "0x670e20",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?GetLevel@Actor@@QEBAGXZ",
         "ae_id": 37334,
         "rva": "0x6797a0",
@@ -893,11 +1861,46 @@
         "note": "second declaration of Actor::GetLevel (same Address Library id) on the PlayerCharacter stand-in in reconstruction/forms/TESObjectREFR.h; listed in folds as an alias of one target function, not as a claim of identical-code folding"
       },
       {
+        "name": "?SetCrimeFaction@Character@@QEAAXPEAVTESFaction@@@Z",
+        "rva": "0x67eab0",
+        "size_from": "task",
+        "community_name": "Character::SetCrimeFaction",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?IsInRagdollState@Actor@@QEBA_NXZ",
         "ae_id": 37491,
         "rva": "0x687c20",
         "size_from": ".pdata",
         "community_name": "Actor::IsInRagdollState"
+      },
+      {
+        "name": "?GetRotationX@Character@@QEBAMXZ",
+        "rva": "0x692ea0",
+        "size_from": "task",
+        "community_name": "Character::GetRotationX",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@Actor@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x69b5c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateFactionsA@Actor@@QEAAX_N@Z",
+        "rva": "0x69cf00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetPlayerBaseNPC@@YAPEBXPEAVPlayerCharacter@@@Z",
+        "rva": "0x69dcd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?ApplySoundEvent@@YAXPEAVActor@@H@Z",
@@ -906,6 +1909,13 @@
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?UpdateFactionsB@Actor@@QEAAXXZ",
+        "rva": "0x6acc90",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?GetMoveDirectionRelativeToFacing@Actor@@QEAAMXZ",
@@ -927,6 +1937,13 @@
         "rva": "0x6cb920",
         "size_from": "analysis body",
         "community_name": "Actor::IsAttacking"
+      },
+      {
+        "name": "?StartDeferredKill@Character@@QEAAXXZ",
+        "rva": "0x6cc910",
+        "size_from": "task",
+        "community_name": "Character::StartDeferredKill",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?HasShout@Actor@@QEBA_NPEAVTESShout@@@Z",
@@ -974,11 +1991,46 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?StartDeferredKill@AIProcess@@QEAAXXZ",
+        "rva": "0x7285a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetBiped2@Character@@UEBAAEBV?$BSTSmartPointer@VBipedAnim@@@@XZ",
+        "rva": "0x73a760",
+        "size_from": "task",
+        "community_name": "Character::GetBiped2",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@Character@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x73a8b0",
+        "size_from": "task",
+        "community_name": "Character::Revert",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GCharacter@@UEAAPEAXI@Z",
+        "rva": "0x73abc0",
+        "size_from": "task",
+        "community_name": "Character::~Character",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?VisitArmor@ArmorRatingVisitor@@UEAAXPEAVTESObjectARMO@@@Z",
         "ae_id": 40293,
         "rva": "0x73ad00",
         "size_from": ".pdata",
         "community_name": "ArmorRatingVisitor::VisitArmor"
+      },
+      {
+        "name": "?Unk_C4@Character@@UEAAXE@Z",
+        "rva": "0x73ad70",
+        "size_from": "task",
+        "community_name": "Character::Unk_C4",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?HaveNotVisitedArmor@ArmorRatingVisitor@@UEAA_NPEAVTESObjectARMO@@@Z",
@@ -1000,6 +2052,13 @@
         "rva": "0xcc96a0",
         "size_from": null,
         "community_name": "BSSoundHandle::Stop"
+      },
+      {
+        "name": "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z",
+        "rva": "0xce25f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?UnlockForRead@BSReadWriteLock@@QEAAXXZ",
@@ -1051,11 +2110,81 @@
         "community_name": "BSDirectInputManager::GetDeviceData"
       },
       {
+        "name": "?CreateClone@NiObject@@UEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "rva": "0xedc740",
+        "size_from": "task",
+        "community_name": "NiObject::CreateClone",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xedc790",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xedc7a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xedc7b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xedc7d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiObject@@UEAA_NPEAV1@@Z",
+        "rva": "0xedc7e0",
+        "size_from": "task",
+        "community_name": "NiObject::IsEqual",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Clone@NiObject@@QEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "rva": "0xedc920",
+        "size_from": "task",
+        "community_name": "NiObject::Clone",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
         "ae_id": 70190,
         "rva": "0xedca00",
         "size_from": null,
         "community_name": "NiObject::ProcessClone"
+      },
+      {
+        "name": "?StreamCanSkip@NiObject@@UEAA_NXZ",
+        "rva": "0xedcb60",
+        "size_from": "task",
+        "community_name": "NiObject::StreamCanSkip",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetGroup@NiObject@@UEBAPEAVNiObjectGroup@@XZ",
+        "rva": "0xedcb90",
+        "size_from": "task",
+        "community_name": "NiObject::GetGroup",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0NiObject@@QEAA@XZ",
+        "rva": "0xedcbc0",
+        "size_from": "task",
+        "community_name": "NiObject::ctor",
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?SetEulerAngles@NiMatrix3@@QEAAXMMM@Z",
@@ -1066,11 +2195,207 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?LoadBinary@NiAVObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xee05a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@NiAVObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xee0680",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@NiAVObject@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xee0700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@NiAVObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xee0750",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiAVObject@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xee0810",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Cull@NiAVObject@@QEAAXPEAVNiCullingProcess@@H@Z",
+        "rva": "0xee0f30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@NiNode@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xee1560",
+        "size_from": "task",
+        "community_name": "NiNode::LoadBinary",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@NiNode@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xee15a0",
+        "size_from": "task",
+        "community_name": "NiNode::LinkObject",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@NiNode@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xee1650",
+        "size_from": "task",
+        "community_name": "NiNode::RegisterStreamables",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@NiNode@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xee16e0",
+        "size_from": "task",
+        "community_name": "NiNode::SaveBinary",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiNode@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xee17b0",
+        "size_from": "task",
+        "community_name": "NiNode::IsEqual",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?OnVisible@NiNode@@UEAAXAEAVNiCullingProcess@@H@Z",
+        "rva": "0xee2cc0",
+        "size_from": "task",
+        "community_name": "NiNode::OnVisible",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "rva": "0xee4990",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveFixedString@NiStream@@QEAAXAEBVBSFixedString@@@Z",
+        "rva": "0xee4a50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadFixedStringLegacy@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "rva": "0xee4af0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadLinkID@NiStream@@QEAAXXZ",
+        "rva": "0xee50f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SkipLinkIDs@NiStream@@QEAAXXZ",
+        "rva": "0xee51a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ",
+        "rva": "0xee5390",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadLinkIDCount@NiStream@@QEAAIXZ",
+        "rva": "0xee53f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z",
+        "rva": "0xef2f10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z",
+        "rva": "0xef2fd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z",
         "ae_id": 70826,
         "rva": "0xef8900",
         "size_from": ".pdata",
         "community_name": "NiTimeController::ProcessClone"
+      },
+      {
+        "name": "?LoadBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfa0f40",
+        "size_from": "task",
+        "community_name": "NiPSysModifier::LoadBinary",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfa1010",
+        "size_from": "task",
+        "community_name": "NiPSysModifier::LinkObject",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@NiPSysModifier@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xfa1040",
+        "size_from": "task",
+        "community_name": "NiPSysModifier::RegisterStreamables",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfa1090",
+        "size_from": "task",
+        "community_name": "NiPSysModifier::SaveBinary",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xfa1140",
+        "size_from": "task",
+        "community_name": "NiPSysModifier::IsEqual",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetSystemPointer@NiPSysModifier@@UEAAXPEAVNiParticleSystem@@@Z",
+        "rva": "0xfa11c0",
+        "size_from": "task",
+        "community_name": "NiPSysModifier::SetSystemPointer",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProcessClone@NiPSysModifier@@UEAAXAEAVNiCloningProcess@@@Z",
+        "rva": "0xfa11d0",
+        "size_from": "task",
+        "community_name": "NiPSysModifier::ProcessClone",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?SetCollisionLayer@NiAVObject@@QEAAXW4COL_LAYER@@@Z",
@@ -1126,6 +2451,76 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "rva": "0x15237e0",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::CopyMembers",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDefault@BSLightingShaderMaterialBase@@UEAAPEAVBSShaderMaterial@@XZ",
+        "rva": "0x1523d10",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::GetDefault",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?OnLoadTextureSet@BSLightingShaderMaterialBase@@UEAAX_KPEAVBSTextureSet@@@Z",
+        "rva": "0x1523d20",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::OnLoadTextureSet",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearTextures@BSLightingShaderMaterialBase@@UEAAXXZ",
+        "rva": "0x1523e50",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::ClearTextures",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialBase@@UEAAX_N0000@Z",
+        "rva": "0x1523f00",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::ReceiveValuesFromRootMaterial",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1524030",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::SaveBinary",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x15241d0",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialBase::LoadBinary",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopyMembers@BSShaderMaterial@@UEAAXPEAV1@@Z",
+        "rva": "0x1575700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__RTDynamicCast",
+        "rva": "0x15a97da",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "memset",
         "ae_id": 109694,
         "rva": "0x15a97f8",
@@ -1166,11 +2561,39 @@
         "note": "Address Library id of the import address table slot for KERNEL32.dll!GetCurrentThreadId; the name is the linker's import symbol"
       },
       {
+        "name": "__imp_Sleep",
+        "rva": "0x17c8448",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiRefObject@@6B@",
+        "rva": "0x17fffb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "??_7ItemFilter@InventoryUtils@@6B@",
         "ae_id": 188597,
         "rva": "0x1805880",
         "size_from": null,
         "community_name": "VTABLE_InventoryUtils__ItemFilter[0]"
+      },
+      {
+        "name": "??_7TESGrass@@6BTESBoundObject@@@",
+        "rva": "0x1811e20",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7TESGrass@@6BTESModel@@@",
+        "rva": "0x1812190",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?g_seekOrigin@@3IB",
@@ -1179,6 +2602,20 @@
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "??_7NiObject@@6B@",
+        "rva": "0x1a45d48",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?kEmptyString@@3QBDB",
+        "rva": "0x1b58020",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "__real@3c23d70a",
@@ -1213,6 +2650,13 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?kRecordFormType@@3EA",
+        "rva": "0x20788b8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?gWeaponSlotMasks@@3QBHB",
         "ae_id": 360260,
         "rva": "0x207b1b0",
@@ -1237,6 +2681,27 @@
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
       },
       {
+        "name": "?g_overlayCapacity@@3IA",
+        "rva": "0x209c8c4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_overlaySentinel@@3PEAUOverlayEntry@@EA",
+        "rva": "0x209c8d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_overlayEntries@@3PEAUOverlayEntry@@EA",
+        "rva": "0x209c8e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?QGlobalTimeMultiplier@BSTimer@@2MA",
         "ae_id": 388442,
         "rva": "0x20ccac8",
@@ -1249,6 +2714,55 @@
         "rva": "0x20ccacc",
         "size_from": null,
         "community_name": "BSTimer::QGlobalTimeMultiplierTarget"
+      },
+      {
+        "name": "??_R0?AVTESForm@@@8",
+        "rva": "0x20db9f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVAlchemyItem@@@8",
+        "rva": "0x20dba38",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVMagicItem@@@8",
+        "rva": "0x20dba60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESEnchantableForm@@@8",
+        "rva": "0x20dc328",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESValueForm@@@8",
+        "rva": "0x20dc470",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVBGSEncounterZone@@@8",
+        "rva": "0x20de2a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVBGSLocation@@@8",
+        "rva": "0x20e4318",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?singleton@TESDataHandler@@2PEAV1@EA",
@@ -1265,6 +2779,13 @@
         "size_from": null,
         "community_name": null,
         "note": "Address Library id, no community name; the decorated name is the reconstruction's GUESS"
+      },
+      {
+        "name": "?gExteriorbhkWorld@@3PEAPEAVbhkWorld@@EA",
+        "rva": "0x21a0598",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA",
@@ -1296,6 +2817,34 @@
         "rva": "0x3230778",
         "size_from": null,
         "community_name": "Offset::PlayerCharacter::Singleton"
+      },
+      {
+        "name": "?ms_totalObjects@NiRefObject@@2JC",
+        "rva": "0x331c620",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultBackLightingTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "rva": "0x3336428",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "rva": "0x3336448",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA",
+        "rva": "0x33d4db0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       }
     ]
   }

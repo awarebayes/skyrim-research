@@ -48,7 +48,43 @@ public:
 };
 
 // ExtraDataList: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-class ExtraDataList;
+// ExtraDataList::IsWorn: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); Address Library id 11696, the callee at RVA 0x164630 takes two flags and decides
+// whether the list marks the item as worn.
+class ExtraDataList {
+public:
+    bool IsWorn(bool a_eitherHand, bool a_noLeft);
+};
+
+// BGSBipedObjectForm, BIPED_MODEL: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only the slot mask.
+// BGSBipedObjectForm::bipedModelData, BIPED_MODEL::bipedObjectSlots: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+struct BIPED_MODEL {
+    std::uint32_t bipedObjectSlots;  // 0x00
+};
+
+struct BGSBipedObjectForm {
+    void*       vtable;          // 0x00
+    BIPED_MODEL bipedModelData;  // 0x08
+};
+
+// GetBipedObjectForm: GUESS(medium); the callee at RVA 0x1d21c0 returns the biped component of a
+// form, or null.
+BGSBipedObjectForm* GetBipedObjectForm(TESForm* a_form);
+
+// TESObjectWEAP, TESObjectWEAP::Data: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// TESObjectWEAP::weaponData, Data::animationType: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) OBSERVED; NG declares a WEAPON_TYPE byte, read here as a signed index below 10 into gWeaponSlotMasks, -1 for none
+class TESObjectWEAP : public TESBoundObject {
+public:
+    struct Data {
+        std::uint8_t pad00[0x35];    // 0x00
+        std::int8_t  animationType;  // 0x35
+    };
+
+    std::uint8_t pad1b[0x168 - 0x1b];
+    Data         weaponData;  // 0x168
+};
+
+// gWeaponSlotMasks: GUESS(low); a table of ten 32-bit masks at RVA 0x207b1b0.
+extern const std::int32_t gWeaponSlotMasks[10];
 
 // InventoryEntryData: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 class InventoryEntryData {
@@ -82,6 +118,8 @@ public:
     };
 
     void VisitInventory(IItemChangeVisitor& visitor);
+    // VisitWornItems: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    void VisitWornItems(IItemChangeVisitor& visitor);
     void InitOutfitItems(BGSOutfit* a_outfit, std::uint16_t a_npcLevel);
 
     BSSimpleList<InventoryEntryData*>* entryList;  // 0x00
