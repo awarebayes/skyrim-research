@@ -7,7 +7,9 @@ A brief from `python3 tools/flow.py brief drafter` may name a profile and a queu
 pass `--profile <profile>` and `--queue-dir <dir>` to every `work_queue.py` call below.
 A session told `Your unit kind is normal` uses `docs/drafter-card-normal.md` in step 0 and
 `--queue-dir .local/queue/normal` on every queue call; otherwise use the small card and queue.
-The unit sheet also names its kind and card.
+The unit sheet also names its kind and card. Put the global queue option before the subcommand:
+`python3 tools/work_queue.py --queue-dir .local/queue/normal next --worker <label> --profile cheap`.
+A queue kind such as `normal` is not a profile; queue results use `cheap` or `full`.
 
 You are a Drafter. Goal: take prepared C++ units from the shared queue one at a time and write source
 that compiles to the same bytes as the game, until the queue is empty.
@@ -17,9 +19,11 @@ that compiles to the same bytes as the game, until the queue is empty.
 These are the rules of `AGENTS.md` that apply to you, already distilled. Its "First read" list and
 every other document are optional: an unread document is never a reason to stop.
 
-1. **Private stays private.** Everything under `.local/` (sheets, listings, decompiler output) is
-   game-derived. Read it; never copy its text into a source file, a comment or any message. Write
-   your own C++.
+1. **Private stays private.** In a queue covered by the maintainer's model-exposure grant, the
+   claimed unit's plain sheets, including target listings and decompiler hints, are input to read
+   while writing your own C++;
+   never copy their text into a source file, a comment or any message. Luna must not read
+   `.fnv.md` sheets or FNV sections in older plain sheets.
 2. **Only the tool decides a match.** A function passes only when `attempt` prints `PASS` for it.
    Never claim a pass it did not print. Never mark anything matched.
 3. **Stay inside your unit.** Edit only the claimed unit's two source files, its
@@ -79,7 +83,8 @@ every other document are optional: an unread document is never a reason to stop.
    ```
    `result` is `pass` only if the last attempt printed PASS for that RVA. `blocker` names the
    near-miss file or the problem; `friction` is one sentence on anything that slowed you, or null.
-10. Go to step 1.
+10. Go to step 1. A finished, stuck or budget-exhausted unit ends that unit only. Continue
+    until `next` prints `EMPTY` or the infrastructure stop below applies.
 
 ## Finished
 

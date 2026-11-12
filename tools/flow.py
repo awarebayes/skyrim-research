@@ -42,6 +42,7 @@ from pathlib import Path
 import random
 import re
 import shutil
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -66,7 +67,7 @@ DEFAULT_GROUP_MAX = 18
 # A claim this old is listed for a look: the worker may have asked `next` once too often.
 CLAIM_LOOK_SECONDS = 45 * 60
 BLOCKING_ESCALATIONS = ('provenance', 'legal', 'systemic')
-QUEUE_PROFILE = {'small': 'cheap', 'full': 'full'}
+QUEUE_PROFILE = {'small': 'cheap', 'normal': 'cheap', 'full': 'full'}
 STATES = ('queued', 'drafting', 'draft-failed', 'drafted-pass', 'confirm-stale', 'confirmed', 'review-pending',
           'review-missing', 'review-malformed', 'approved', 'rejected', 'escalated', 'accepted', 'pushed')
 
@@ -139,7 +140,7 @@ def queue_units(root):
     for qdir in sorted(base.iterdir()) if base.is_dir() else []:
         if not (qdir / 'queue.tsv').is_file():
             continue
-        profile = QUEUE_PROFILE.get(qdir.name, qdir.name)
+        profile = QUEUE_PROFILE.get(qdir.name, qdir.name if qdir.name in profiles.PROFILES else profiles.DEFAULT)
         for state, who, u in wq.status(qdir):
             lock = qdir / 'claims' / f'{u["key"]}.lock'
             claim = wq.read_claim(lock) if lock.exists() else None
@@ -157,7 +158,7 @@ def queue_results(root):
             for line in path.read_text().splitlines():
                 if line.strip():
                     r = json.loads(line)
-                    r.setdefault('profile', QUEUE_PROFILE.get(qdir.name, qdir.name))
+                    r.setdefault('profile', QUEUE_PROFILE.get(qdir.name, qdir.name if qdir.name in profiles.PROFILES else profiles.DEFAULT))
                     r['queue'] = qdir.name
                     recs.append(r)
     return recs
@@ -343,6 +344,8 @@ def component_values(root, rva, row, data, model='opus'):
         return hashlib.sha256(p.read_bytes()).hexdigest()[:12] if p.is_file() else 'absent'
     profile = row.get('profile') or 'unrecorded'
     card = profiles.PROFILES.get(profile, {}).get('project_docs', ['unrecorded'])[-1]
+    if Path(row.get('queue') or '').name == 'normal':
+        card = 'docs/drafter-card-normal.md'
     return {'recipe': rec['recipe']['sha256'][:12], 'compiler': rec['toolchain_pin']['sha256'][:12],
             'drafter_prompt': f'{profile}:{file_hash(card) if card.startswith("docs/") else card}',
             'reviewer_prompt': file_hash('.claude/agents/reviewer.md') + file_hash('docs/reviewer-runbook.md'),
@@ -746,15 +749,17 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
         elif not any(e.get('event') == 'triage-brief' and unit in e.get('units', []) for e in events(fdir)):
             acts.append(('run', f'python3 tools/flow.py brief triage --units {unit}    # failed under {s.get("profile")}; '
                          f'then start {strong} with the brief'))
-    by_profile = {}
+    by_queue = {}
     for qdir, profile, u, state, *_ in units:
-        by_profile.setdefault(profile, {'open': 0, 'live': 0})
-        by_profile[profile]['open'] += state == 'open'
-        by_profile[profile]['live'] += state == 'claimed'
-    for profile, c in sorted(by_profile.items()):
+        c = by_queue.setdefault((qdir, profile), {'open': 0, 'live': 0})
+        c['open'] += state == 'open'
+        c['live'] += state == 'claimed'
+    for (qdir, profile), c in sorted(by_queue.items()):
         if c['open'] and not c['live']:
             n = min(c['open'], 3)
-            acts.append(('run', f'python3 tools/flow.py brief drafter --profile {profile} --count {n}    '
+            queue_arg = qdir.relative_to(root) if qdir.is_relative_to(root) else qdir
+            acts.append(('run', f'python3 tools/flow.py brief drafter --profile {profile} '
+                         f'--queue-dir {shlex.quote(str(queue_arg))} --count {n}    '
                          f'# {c["open"]} open unit(s); then dispatch one Drafter per brief it prints'))
     # Reports.
     ev = events(fdir)
@@ -787,21 +792,29 @@ def dispatch_line(g):
 
 # ------------------------------------------------------------------ other briefs
 
-def brief_drafter(root, fdir, profile, count=1):
+def brief_drafter(root, fdir, profile, count=1, queue_dir=None):
     p = profiles.get(profile)
+    queue_dir = queue_dir or p['queue_dir']
+    kind = 'normal' if Path(queue_dir).name == 'normal' else 'small'
+    queue_profile = 'full' if profile == 'full' else 'cheap'
+    docs = [d.replace('drafter-card-small.md', 'drafter-card-normal.md') if kind == 'normal' else d
+            for d in p['project_docs']]
     paths = []
     stamp = dt.datetime.now(dt.timezone.utc).strftime('%Y%m%d%H%M')
     for i in range(1, count + 1):
-        label = f'{profile}-{stamp}-{i}'
+        label = f'{profile}-{Path(queue_dir).name}-{stamp}-{i}'
         text = f"""# Brief drafter-{label}
 
 Role: Drafter, profile `{profile}` ({profiles.model_label(p['roles']['drafter'])}). Gates: G2 for Claude models (sheets with FNV
-text); Luna-class models read only the non-`.fnv.md` sheets. No Boat, no git, no network.
+text); Luna-class models read only plain sheets for queues covered by the maintainer's exposure
+grant. Those sheets' target listing and decompiler hints are input for writing original C++;
+never copy their text. Skip FNV sections in older plain sheets and never read `.fnv.md`.
+This brief does not expand an exposure grant. No Boat, no git, no network.
 
 Read `docs/drafter-runbook.md` and follow it exactly. Your worker label is `<model>-{stamp}-{i}`
-(for example `haiku-{stamp}-{i}`); pass `--profile {profile}` to `next`. Queue directory:
-`{p['queue_dir']}` (pass `--queue-dir {p['queue_dir']}` to every work_queue.py call).
-Documents: {', '.join(p['project_docs'])}. Stop on a function after {p['stuck_after']} counted
+(for example `haiku-{stamp}-{i}`). Your unit kind is {kind}. Pass `--profile {queue_profile}` to `next`. Queue directory:
+`{queue_dir}` (put `--queue-dir {queue_dir}` before the subcommand on every work_queue.py call).
+Documents: {', '.join(docs)}. Stop on a function after {p['stuck_after']} counted
 attempts with no change in its first mismatch; the unit budget is what `attempt` prints.
 
 Return only the short table from the runbook ("Return message"); full details go to the queue.
@@ -1246,7 +1259,7 @@ def status_table(root, fdir, online=True):
     return lines, states
 
 
-def main(argv=None):
+def parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--flow-dir')
     p.add_argument('--root', type=Path, default=ROOT, help=argparse.SUPPRESS)
@@ -1278,6 +1291,7 @@ def main(argv=None):
     s.add_argument('kind', choices=('drafter', 'confirm', 'triage', 'rerun', 'direction'))
     s.add_argument('--profile', default=profiles.DEFAULT, choices=sorted(profiles.PROFILES))
     s.add_argument('--count', type=int, default=1)
+    s.add_argument('--queue-dir', help='drafter queue kind, independent of the drafting profile')
     s.add_argument('--group')
     s.add_argument('--units', nargs='+')
     s.add_argument('--manifests', nargs='+', help='generator selection manifests (confirm only)')
@@ -1291,7 +1305,11 @@ def main(argv=None):
     s = sub.add_parser('event')
     s.add_argument('kind', choices=('friction', 'direction-check'))
     s.add_argument('--note', default='')
-    a = p.parse_args(argv)
+    return p
+
+
+def main(argv=None):
+    a = parser().parse_args(argv)
     root = a.root
     fdir = flow_dir(root, a.flow_dir)
     try:
@@ -1344,7 +1362,7 @@ def main(argv=None):
             print(f'checkout at origin/{a.branch}; {len(dropped)} identical local cop(ies) replaced by the integrated files')
         elif a.cmd == 'brief':
             if a.kind == 'drafter':
-                for path in brief_drafter(root, fdir, a.profile, a.count):
+                for path in brief_drafter(root, fdir, a.profile, a.count, a.queue_dir):
                     print(path)
             elif a.kind == 'confirm':
                 print(brief_confirm(root, fdir, a.manifests, a.tasks))

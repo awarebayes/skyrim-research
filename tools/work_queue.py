@@ -348,7 +348,7 @@ def stats(qdir):
     return result
 
 
-def main(argv=None):
+def parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--queue-dir', help='default $SKYRIM_QUEUE_DIR or .local/queue/small')
     sub = p.add_subparsers(dest='cmd', required=True)
@@ -366,7 +366,14 @@ def main(argv=None):
     sub.add_parser('stats')
     ad = sub.add_parser('add', help='append unit or group task dirs to the queue (queue order = order given)')
     ad.add_argument('dirs', nargs='+')
-    a = p.parse_args(argv)
+    for command in sub.choices.values():
+        command.add_argument('--queue-dir', default=argparse.SUPPRESS,
+                             help='queue directory (also accepted before the subcommand)')
+    return p
+
+
+def main(argv=None):
+    a = parser().parse_args(argv)
     qdir = queue_dir(a.queue_dir)
     try:
         if a.cmd == 'next':

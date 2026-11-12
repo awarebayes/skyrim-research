@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -563,6 +564,60 @@ class QueueStates(unittest.TestCase):
         acts = [t for _, t in flow.next_actions(self.root, self.fdir)]
         self.assertTrue(any('brief confirm' in t for t in acts))
         self.assertTrue(any('--queue-dir .local/queue/full add .local/tasks/g/g-foo' in t for t in acts))
+
+    def test_every_queue_action_parses_and_keeps_its_queue(self):
+        for name in ('normal', 'full', 'custom'):
+            q = self.q.parent / name
+            q.mkdir()
+            (q / 'queue.tsv').write_text((self.q / 'queue.tsv').read_text())
+        flow.log_event(self.fdir, 'session-start')
+        actions = flow.next_actions(self.root, self.fdir, online=False)
+        queues = set()
+        for kind, text in actions:
+            command = shlex.split(text.split('#', 1)[0])
+            if kind != 'run':
+                continue
+            if command[:2] == ['python3', 'tools/work_queue.py']:
+                wq.parser().parse_args(command[2:])
+                continue
+            if command[:2] != ['python3', 'tools/flow.py']:
+                continue
+            args = flow.parser().parse_args(command[2:])
+            if args.cmd == 'brief' and args.kind == 'drafter':
+                queues.add(args.queue_dir)
+                self.assertIn(args.profile, flow.profiles.PROFILES)
+        self.assertEqual(queues, {'.local/queue/' + n for n in ('small', 'normal', 'full', 'custom')})
+        wq.claim(self.q, 'haiku-1', profile='cheap')
+        actions = [text for kind, text in flow.next_actions(self.root, self.fdir, online=False)]
+        self.assertTrue(any('brief drafter' in t and '--queue-dir .local/queue/normal' in t for t in actions))
+
+    def test_normal_brief_routes_card_queue_and_profile_separately(self):
+        small = flow.brief_drafter(self.root, self.fdir, 'cheap')[0]
+        normal = flow.brief_drafter(self.root, self.fdir, 'cheap', queue_dir='.local/queue/normal')[0]
+        self.assertNotEqual(small, normal)
+        text = (self.root / normal).read_text()
+        self.assertIn('Your unit kind is normal', text)
+        self.assertIn('docs/drafter-card-normal.md', text)
+        self.assertIn('--profile cheap', text)
+        self.assertIn('--queue-dir .local/queue/normal', text)
+        self.assertNotIn('--profile normal', text)
+        args = wq.parser().parse_args(['--queue-dir', '.local/queue/normal', 'next',
+                                      '--worker', 'luna-high-1', '--profile', 'cheap'])
+        self.assertEqual(args.queue_dir, '.local/queue/normal')
+        args = wq.parser().parse_args(['next', '--worker', 'luna-high-1', '--queue-dir',
+                                      '.local/queue/normal', '--profile', 'cheap'])
+        self.assertEqual(args.queue_dir, '.local/queue/normal')
+
+    def test_normal_queue_results_use_the_normal_prompt_version(self):
+        repo = Repo(self.tmp / 'prompt', confirmed=(0x1000,))
+        for name in ('small', 'normal'):
+            (repo.root / f'docs/drafter-card-{name}.md').write_text(name)
+        data = flow.inventory(repo.root)
+        small = flow.component_values(repo.root, '0x1000',
+                                      {'profile': 'cheap', 'queue': '.local/queue/small'}, data)
+        normal = flow.component_values(repo.root, '0x1000',
+                                       {'profile': 'cheap', 'queue': '.local/queue/normal'}, data)
+        self.assertNotEqual(small['drafter_prompt'], normal['drafter_prompt'])
 
     def test_old_claim_is_listed_for_release(self):
         flow.log_event(self.fdir, 'session-start')

@@ -312,13 +312,22 @@ class Sheets(Fixture):
         page = pages[0]
         self.assertLessEqual(len(page), us.SHEET_CAP)
         for needle in ('# 0x1000 FancyWidget::GetFlag (8 bytes)', 'Community declaration', '| 0x4 | call CALL',
-                       '| 0x18 | RCX | byte', '14, 18:', 'src/fancy.cpp:3', '+0x000  RET\n', 'return;'):
+                       '| 0x18 | RCX | byte', '14, 18:', '+0x000  RET\n', 'return;'):
             self.assertIn(needle, page)
         self.assertNotIn('RET   ', page)  # column padding dropped
-        self.assertNotIn('return flag;', page)  # the sibling body only on request
+        self.assertNotIn('return flag;', page)  # no sibling text in plain sheets
+        self.assertNotIn('src/fancy.cpp', page)
+        self.assertNotIn('## Sibling', page)
         with_snippet = us.sheet_pages(self.unit, '0x1000', sibling=True, repo=self.root)[0]
         self.assertIn('return flag;', with_snippet)
+        self.assertIn('src/fancy.cpp:3', with_snippet)
         self.assertNotIn('After()', with_snippet)
+
+    def test_sheet_commands_stay_relative_to_the_generation_checkout(self):
+        index = us.overview(self.unit, repo=self.root)
+        self.assertNotIn(str(self.root), index)
+        self.assertNotIn(str(self.root), us.sheet_pages(self.unit, '0x1000', repo=self.root)[0])
+        self.assertIn('python3 tools/sheet.py .local/tasks/', index)
 
     def test_destructor_kind_and_unknown_function(self):
         self.assertIn('Kind: scalar deleting destructor', us.sheet_pages(self.unit, '0x1100', repo=self.root)[0])

@@ -795,7 +795,7 @@ def function_sheet(unit, fn, sibling=False, repo=None):
     kind = (fn.get('destructor') or {}).get('kind')
     symbol = fn.get('symbol') or ''
     out = [f'# 0x{rva:x} {fn.get("community_name")} ({fn["size"]} bytes)', '',
-           f'Unit: {unit["compiled"]} (+ .h). Task dir: {Path(unit["dir"]).as_posix()}.',
+           f'Unit: {unit["compiled"]} (+ .h). Task dir: {display_task_dir(unit["dir"], repo)}.',
            f'Compared symbol: {"not bound yet (attempt binds it from your object)" if symbol.startswith("unbound:") else symbol}.']
     if kind:
         out.append(f'Kind: {kind} (the slot-0 body, `??_G`; cookbook rules 14 and 18).')
@@ -816,7 +816,7 @@ def function_sheet(unit, fn, sibling=False, repo=None):
     if rules:
         out += ['', '## Cookbook rules the brief names for this unit', rules]
     sib = brief_sibling(unit['brief'])
-    if sib:
+    if sib and sibling:
         out += ['', '## Sibling (FNV; shape and names only, never offsets; label SIBLING if you take a name)', sib]
         snippet = sibling_snippet(unit['brief'], rva, repo) if sibling else ''
         if snippet:
@@ -872,13 +872,18 @@ def sheet_pages(task_dir, rva_text, sibling=False, cap=SHEET_CAP, repo=None):
     return paginate(function_sheet(unit, fn, sibling, repo), cap - FOOTER_ROOM)
 
 
+def display_task_dir(task_dir, repo):
+    path = Path(task_dir)
+    return (path.relative_to(repo) if path.is_absolute() and path.is_relative_to(repo) else path).as_posix()
+
+
 def overview(task_dir, cap=SHEET_CAP, repo=None):
     """The unit's one-page index: files, functions and the command for each function's sheet."""
     repo = Path(repo or REPO)
     unit = load_unit(task_dir, repo)
     kind = unit['task'].get('drafter_kind') or ('normal' if any(
         f['size'] > 64 for f in unit['functions']) else 'small')
-    d = Path(task_dir).as_posix()
+    d = display_task_dir(task_dir, repo)
     lines = [f'# Unit {unit["cls"]} ({unit["task"].get("task_id")})', '',
              f'Files: {unit["header"]} and {unit["compiled"]}. Budget: {unit["task"].get("max_attempts")} counted attempts.',
              f'Unit kind: {kind}. Card: docs/drafter-card-{kind}.md.',
