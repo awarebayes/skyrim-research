@@ -71,13 +71,13 @@ unwind coverage. The comparator's `acceptance: not-evaluated` stays as written.
 A change to `tools/compare.py` or `tools/pecoff.py` makes every record stale until its runs are
 repeated. This is deliberate: a record vouches only for the comparator that produced it.
 
-## Reviewer record (`review_record_schema` 1 or 2)
+## Reviewer record (`review_record_schema` 1, 2 or 3)
 
 The public trace of the Reviewer step of the acceptance rule in `docs/verification.md`. Schema 1
 fields, and no others: `function_id`, `build_id`, `rva`, `size`, `source_digest_method`,
 `source_digest`, `reviewer_model`, `review_task_id`, `verdict`, `escalation_category`,
 `review_sha256` (of the private review `.local/reviews/<review_task_id>.md`) and `review_date`.
-Schema 1 records are full reviews. `tools/accept_function.py` writes schema 2, which adds exactly:
+Schema 1 records are full reviews. Schema 2 adds exactly:
 
 - `review_kind`: `full` or `delta`;
 - `code_section_sha256`: the match record's per-function code-section hash (below), or `null`
@@ -86,6 +86,15 @@ Schema 1 records are full reviews. `tools/accept_function.py` writes schema 2, w
   `previous_review_sha256` (that approval's review hash) and `previous_code_section_sha256`
   (the code-section hash of the match record at that digest), which must equal
   `code_section_sha256`; all three are `null` for a full review.
+
+`tools/accept_function.py` writes schema 3, which adds `naming_findings`: the Reviewer's
+non-blocking findings on names, labels and wording (tier 2, `docs/verification.md`), a list of
+short single-line strings held to a mechanical filter (no braces, code fences, private paths,
+long hex runs or byte lists), empty when none are open. Schema 3 also allows `review_kind:
+label-only`, written with no Reviewer pass when a re-confirmed record's code-section hash equals
+the approved one ("Label-only re-acceptance"): it carries the earlier approval's reviewer model,
+task id, review hash, date and naming findings (`null` if that approval predates the field), and
+its `previous_review_sha256` equals its `review_sha256`.
 `tools/check.py` requires one for every `matched` entry, with verdict `approve`, the entry's
 identity and the match record's source digest. An entry is `matched` only when both records
 pass; a match record alone means a reproduced pass awaiting review, not an accepted match.

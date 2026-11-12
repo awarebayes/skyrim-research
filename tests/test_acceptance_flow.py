@@ -49,8 +49,23 @@ def review_text(task, blocks, preamble=''):
         for key in ('review_kind', 'previous_source_digest', 'code_section_unchanged'):
             if key in b:
                 body += f'{key}: {b[key]}\n'
-        body += f'source_paths: {CPP} {HDR}\nsource_digest: {b["digest"]}\nreport_path: {RECORD}\nreasons: synthetic\n'
+        body += f'source_paths: {CPP} {HDR}\nsource_digest: {b["digest"]}\nreport_path: {RECORD}\n'
+        body += block_tail(b)
     return head + body
+
+
+def block_tail(b):
+    """Binding, checks and findings of a block in reviewer.md format; `b` may override each."""
+    text = f'report_binding: {b.get("binding", "agree, synthetic")}\nchecks:\n'
+    checks = dict({'plausible_source': 'pass', 'provenance': 'pass', 'claim_scope': 'pass',
+                   'publication_hygiene': 'pass'}, **b.get('checks', {}))
+    text += ''.join(f'  {k}: {v}, synthetic\n' for k, v in checks.items() if v is not None)
+    for key in ('blocking_findings', 'naming_findings'):
+        value = b.get(key, [])
+        if value is None:
+            continue
+        text += f'{key}: none\n' if not value else f'{key}:\n' + ''.join(f'  - {item}\n' for item in value)
+    return text + 'reasons: synthetic\n'
 
 
 class FlowFixture(GateFixture):
@@ -376,7 +391,7 @@ class GitHistoryTests(FlowFixture, unittest.TestCase):
         review = json.loads((self.root / REVIEW).read_text())
         legacy = {k: v for k, v in review.items() if k not in
                   {'review_kind', 'previous_source_digest', 'previous_review_sha256',
-                   'previous_code_section_sha256', 'code_section_sha256'}}
+                   'previous_code_section_sha256', 'code_section_sha256', 'naming_findings'}}
         self.write(REVIEW, json.dumps(dict(legacy, review_record_schema=1), indent=2))
         build_index.write_index(self.progress(), self.root)
         self.validate()

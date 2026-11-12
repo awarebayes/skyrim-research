@@ -179,6 +179,14 @@ def function_view(root, fn, record, shown):
         return out
     out.append(f'review record: {review.get("review_kind", "full")} by {review.get("reviewer_model")} '
                f'({review.get("review_task_id")}, {review.get("review_date")}) on digest {review.get("source_digest")}')
+    # A new review restates the open naming findings (tier 2), so it needs the current ones.
+    naming = review.get('naming_findings')
+    named = {True: 'checked', False: 'open'}.get(fn.get('named'), 'not assessed')
+    if naming is None:
+        out.append(f'naming findings: not recorded (record predates them); names: {named}')
+    else:
+        out.append(f'naming findings: {len(naming) or "none"}; names: {named}')
+        out += [f'  - {item}' for item in naming]
     current = record['source']['digest']
     if review.get('source_digest') == current and state != STALE_UNIT:
         out.append('needs: nothing (review binds the current record)')
@@ -193,6 +201,9 @@ def function_view(root, fn, record, shown):
                'CHANGED: delta review not possible, full review needed' if old is not None else
                f'unavailable ({where}): delta review not possible, full review needed')
     out.append(f'code section since approval: {verdict}' + (f' (approved {short(old)} from {where})' if old else ''))
+    if old is not None and old == section:
+        out.append('or: label-only re-acceptance with no review (tools/accept_function.py --label-only); '
+                   'a review is then only for closing naming findings')
     found = approved_commit(root, fn, record['source']['translation_unit'], previous)
     if found is None:
         out.append('diff: no commit found where the approved digest was current')

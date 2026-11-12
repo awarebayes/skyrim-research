@@ -44,12 +44,30 @@ REVIEW_FIELDS = {'review_record_schema', 'function_id', 'build_id', 'rva', 'size
                  'source_digest', 'reviewer_model', 'review_task_id', 'verdict', 'escalation_category',
                  'review_sha256', 'review_date'}
 # Schema 2 adds the delta-review binding (docs/verification.md, "Stale acceptances and delta reviews").
-# Schema 1 records stay valid as full reviews; tools/accept_function.py writes schema 2.
+# Schema 1 records stay valid as full reviews; tools/accept_function.py writes schema 3 (below).
 REVIEW_DELTA_FIELDS = {'review_kind', 'previous_source_digest', 'previous_review_sha256',
                        'previous_code_section_sha256', 'code_section_sha256'}
-REVIEW_SCHEMA_FIELDS = {1: REVIEW_FIELDS, 2: REVIEW_FIELDS | REVIEW_DELTA_FIELDS}
-REVIEW_RECORD_SCHEMA = 2
+# Schema 3 adds the naming tier (docs/verification.md, "Tier 2"): the Reviewer's non-blocking
+# naming findings, and the `label-only` kind written without a Reviewer pass when the compared
+# code section is unchanged ("Label-only re-acceptance").
+REVIEW_NAMING_FIELDS = {'naming_findings'}
+REVIEW_SCHEMA_FIELDS = {1: REVIEW_FIELDS, 2: REVIEW_FIELDS | REVIEW_DELTA_FIELDS,
+                        3: REVIEW_FIELDS | REVIEW_DELTA_FIELDS | REVIEW_NAMING_FIELDS}
+REVIEW_RECORD_SCHEMA = 3
 REVIEW_KINDS = {'full', 'delta'}
+LABEL_ONLY = 'label-only'
+REVIEW_KINDS_BY_SCHEMA = {2: REVIEW_KINDS, 3: REVIEW_KINDS | {LABEL_ONLY}}
+# Naming findings are the one free-text field published in a Reviewer record, so they are held to
+# a mechanical filter against code, bytes and private paths; the Reviewer is told they are public.
+MAX_NAMING_FINDINGS = 20
+MAX_NAMING_FINDING_LEN = 300
+NAMING_FINDING_BANNED = (
+    (re.compile(r'[{}]'), 'a brace (code)'),
+    (re.compile(r'```'), 'a code fence'),
+    (re.compile(r'\.local\b|/Users/|/home/|(?<![A-Za-z])[A-Za-z]:[\\/]'), 'a private or absolute path'),
+    (re.compile(r'[0-9A-Fa-f]{16}'), 'a run of 16 or more hex digits'),
+    (re.compile(r'(?<![0-9A-Za-z])[0-9A-Fa-f]{2}(?: [0-9A-Fa-f]{2}){3}(?![0-9A-Za-z])'), 'hex byte pairs'),
+)
 # Per-function hash of the candidate's compared code sections, written by the comparator into each
 # report's `candidate` block (docs/comparator-contract.md, "Report"). Records made before comparator
 # version 2 lack it, so it stays optional; a delta review requires it.
@@ -371,6 +389,32 @@ def validate_review(fn, record, root=None):
     return review
 
 
+def naming_finding_problem(item):
+    """Why one naming finding may not be published, or None (docs/verification.md, Reviewer record)."""
+    if not isinstance(item, str) or not item.strip():
+        return 'a naming finding must be a non-empty string'
+    if len(item) > MAX_NAMING_FINDING_LEN:
+        return f'a naming finding is longer than {MAX_NAMING_FINDING_LEN} characters'
+    if not all(' ' <= c <= '~' for c in item):
+        return 'a naming finding must be one line of printable ASCII'
+    for pattern, what in NAMING_FINDING_BANNED:
+        if pattern.search(item):
+            return f'a naming finding holds {what}'
+    return None
+
+
+def check_naming_findings(findings, allow_unknown):
+    """A list of publishable naming findings; `None` (not recorded) only where `allow_unknown`."""
+    if findings is None:
+        require(allow_unknown, 'Review record: naming_findings must be a list (empty when none are open)')
+        return
+    require(isinstance(findings, list) and len(findings) <= MAX_NAMING_FINDINGS,
+            f'Review record: naming_findings must be a list of at most {MAX_NAMING_FINDINGS} items')
+    for item in findings:
+        problem = naming_finding_problem(item)
+        require(problem is None, f'Review record: {problem}')
+
+
 def check_review_kind(review, record):
     """Schema 2: a full review binds the record's code-section hash if it has one; a delta review
     re-approves an earlier approval from the unit diff and is valid only while the compared code
@@ -383,7 +427,12 @@ def check_review_kind(review, record):
     current record.
     """
     kind = review['review_kind']
-    require(kind in REVIEW_KINDS, f'Review record: review_kind must be one of {sorted(REVIEW_KINDS)}')
+    kinds = REVIEW_KINDS_BY_SCHEMA[review['review_record_schema']]
+    require(kind in kinds, f'Review record: review_kind must be one of {sorted(kinds)}')
+    if review['review_record_schema'] >= 3:
+        # A label-only record carries the findings of the approval it extends, which predate the
+        # field when that approval was a schema 1 or 2 record.
+        check_naming_findings(review['naming_findings'], allow_unknown=kind == LABEL_ONLY)
     current = record_code_section(record)
     if kind == 'full':
         require(review['previous_source_digest'] is None and review['previous_review_sha256'] is None
@@ -402,6 +451,12 @@ def check_review_kind(review, record):
     require(review['previous_code_section_sha256'] == current,
             'Review record: the compared code section changed since the approved digest; a delta review '
             'does not cover that, a full review is needed')
+    if kind == LABEL_ONLY:
+        # No Reviewer read this digest: the record extends the approval it names, so it carries that
+        # approval's review hash rather than one of its own.
+        require(review['previous_review_sha256'] == review['review_sha256'],
+                'Review record: a label-only record carries the review hash of the approval it extends '
+                '(previous_review_sha256 equals review_sha256)')
 
 
 STALE_UNIT = 'unit changed'
@@ -463,9 +518,24 @@ def stale_message(fn, root=None):
             f'[entry {fn["id"]}, record {fn.get("report")}, unit {compiled or "unknown"}]')
 
 
+def check_named(fn, review):
+    """Tier 2 (docs/verification.md, "Tier 2"): `named` is a boolean on a `matched` entry, and
+    `true` needs a schema 3 Reviewer record with no open naming finding. The label-check half needs
+    private checkouts, so tools/accept_function.py checks it when it sets the field."""
+    if 'named' not in fn:
+        return
+    require(fn['status'] == 'matched', f'Function {fn["id"]}: named is set on an entry that is not matched')
+    require(type(fn['named']) is bool, f'Function {fn["id"]}: named must be true or false')
+    if fn['named'] and review is not None:
+        require(review.get('review_record_schema', 0) >= 3 and review.get('naming_findings') == [],
+                f'Function {fn["id"]}: named is true but its Reviewer record lists open naming findings '
+                'or predates them (schema 3 with naming_findings [] needed)')
+
+
 def validate(data, target, root=None, stale_ok=False):
     """Validate the inventory; `stale_ok` (for tools that are about to clear staleness) skips the
-    `matched` checks of stale entries instead of failing on them. The result is never acceptance."""
+    `matched` checks of stale entries instead of failing on them: True for every entry, or a set of
+    function ids that may be stale. The result is never acceptance."""
     require(data['schema_version'] == target['schema_version'] == 1, 'Unknown schema version')
     require(text(data['phase']), 'Missing phase')
     require(datetime.fromisoformat(data['updated_at'].replace('Z', '+00:00')).utcoffset() is not None,
@@ -509,9 +579,12 @@ def validate(data, target, root=None, stale_ok=False):
             # failing on the first digest check; it still blocks until re-confirmed and re-reviewed.
             if state == STALE_REVIEW:
                 validate_match(fn, target, root)
-            stale.append(stale_message(fn, root))
+            stale.append((fn['id'], stale_message(fn, root)))
+            check_named(fn, None)
         elif fn['status'] == 'matched':
-            validate_review(fn, validate_match(fn, target, root), root)
+            check_named(fn, validate_review(fn, validate_match(fn, target, root), root))
+        elif 'named' in fn:
+            check_named(fn, None)
         elif fn.get('report') is not None:
             # A record awaiting review must still be consistent with the integrated tree.
             validate_match(fn, target, root)
@@ -521,7 +594,9 @@ def validate(data, target, root=None, stale_ok=False):
         name = path.relative_to(reports.parent).as_posix()
         # A leftover approval would read as acceptance of an entry the inventory does not accept.
         require(name in matched, f'Review record: {name} belongs to no matched inventory entry')
-    require(stale_ok or not stale, '; '.join(stale))
+    tolerated = (lambda _: True) if stale_ok is True else (lambda i: bool(stale_ok) and i in stale_ok)
+    blocking = [message for function_id, message in stale if not tolerated(function_id)]
+    require(not blocking, '; '.join(blocking))
     # A history is checked even when no record leans on it, so a forged or broken one fails early.
     for path in sorted(reports.glob('*/*.history.json')) if reports.is_dir() else []:
         name = path.relative_to(reports.parent).as_posix()

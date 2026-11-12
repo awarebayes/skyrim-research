@@ -86,6 +86,8 @@ is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated 
   names the checkout declares in that class, and checks that each `Evidence:` file exists, is
   tracked, and names the unit (its class, a `// Task: <task-id>` header line, or every compared
   RVA). Fix each warning or explain it in your result line.
+  Labels are still expected on every name; they no longer block acceptance (a Reviewer lists
+  label problems as naming findings, `docs/verification.md`, "Tier 2"), but they decide `named`.
 - Before you draft, read `docs/matching-cookbook.md` once. A flag bit the target tests as a load,
   `shr`, `test al,1` goes through a by-value bit-index helper (rule 16) from the first draft.
 - No decompiler output pasted as source, no code from unlicensed projects (FNV repositories),

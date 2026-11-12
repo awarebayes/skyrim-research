@@ -55,6 +55,14 @@ escalation_category: {category}
 source_paths: {CPP} {HDR}
 source_digest: {digest}
 report_path: {RECORD}
+report_binding: agree, synthetic
+checks:
+  plausible_source: pass, synthetic
+  provenance: pass, synthetic
+  claim_scope: pass, synthetic
+  publication_hygiene: pass, synthetic
+blocking_findings: none
+naming_findings: none
 reasons: synthetic
 ''')
 
