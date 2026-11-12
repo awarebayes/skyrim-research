@@ -106,6 +106,49 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.unsampled = sorted(set(self.later) - set(self.batch['sample']))
         self.assertEqual(len(self.unsampled), 1)
 
+    def test_generator_record_family_plan_roundtrip(self):
+        from types import SimpleNamespace
+        import stamp
+        from verifier import match_record
+        template = ROOT / 'tools/stamp_template_v2.py'
+        self.write('tools/stamp_template_v2.py', template.read_text())
+        params = {'family': 'constant', 'width': 4, 'value': 1, 'virtual': False}
+        metadata = stamp.family_metadata('const-return', params, 'GUESS(low)')
+        header, source = stamp.template_v2.emit_leaf('Example', 'Read', family='constant',
+                                                     width=4, value=1, virtual=False, name_label='GUESS(low)')
+        self.assertIn('return 0x1;', source)
+        self.assertIn('GUESS(low)', header)
+        sample = self.records[self.first[0]]
+        run_args = []
+        for i, run in enumerate(sample['runs']):
+            path = self.root / f'run-{i}.json'
+            path.write_text(json.dumps(run['report']))
+            run_args.append((run['compiled_on'], run['compared_on'], str(path)))
+        build = self.root / 'build.json'
+        build.write_text(json.dumps(sample['build']))
+        for fid in self.first:
+            fn = next(fn for fn in self.data['functions'] if fn['id'] == fid)
+            args = SimpleNamespace(run=run_args, function_id=fid, unit=[CPP, HDR], compiled=CPP,
+                                   recipe=sample['recipe']['path'], symbols=MAP, reproduction=sample['reproduction'],
+                                   build=str(build), note=sample['notes'], family_metadata=json.dumps(metadata))
+            record = match_record.build(args, self.root)
+            # Keep each function's actual comparator reports from the synthetic fixture.
+            record['runs'] = self.records[fid]['runs']
+            fr.write(self.root, fn['report'], record)
+        spec = dict(origin=metadata['origin'], binding=fr.binding(self.data['functions'][0], self.records[self.first[0]]),
+                    template_source={'path': 'tools/stamp_template_v2.py', 'sha256': metadata['origin']['template_digest']},
+                    parameter_source={'path': 'tools/stamp_template_v2.py', 'sha256': metadata['origin']['template_digest']},
+                    parameter_ranges={k: {'values': [v]} for k, v in params.items()}, first_members=self.first)
+        fr.write(self.root, '.local/generator-spec.json', spec)
+        path = flow.plan_family(self.root, '.local/generator-spec.json')
+        self.assertTrue((self.root / path).is_file())
+        fn = self.data['functions'][0]
+        record = fr.read(self.root, fn['report'])
+        record['origin']['template_digest'] = 'f' * 64
+        fr.write(self.root, fn['report'], record)
+        with self.assertRaisesRegex(ValueError, 'family version or template digest mismatch'):
+            flow.plan_family(self.root, '.local/generator-spec.json')
+
     def git(self, *args):
         return subprocess.check_output(['git', *args], cwd=self.root, stderr=subprocess.PIPE, text=True).strip()
 

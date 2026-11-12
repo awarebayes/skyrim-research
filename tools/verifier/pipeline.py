@@ -154,8 +154,22 @@ def load_task(task_dir, repo=REPO):
     for i, fn in enumerate(raw.get('functions') or []):
         if not isinstance(fn, dict) or not isinstance(fn.get('symbol'), str) or not fn['symbol']:
             raise PipelineError(f'task.json: functions[{i}] needs rva, size and symbol')
-        functions.append({'rva': parse_int(fn.get('rva'), f'functions[{i}].rva'),
-                          'size': parse_int(fn.get('size'), f'functions[{i}].size'), 'symbol': fn['symbol']})
+        entry = {'rva': parse_int(fn.get('rva'), f'functions[{i}].rva'),
+                 'size': parse_int(fn.get('size'), f'functions[{i}].size'), 'symbol': fn['symbol']}
+        if 'family_metadata' in fn:
+            metadata = fn['family_metadata']
+            from family_review import origin_valid, name_source_valid, require
+            try:
+                require(isinstance(metadata, dict) and set(metadata) == {'origin', 'family_parameters', 'name_source'},
+                        'invalid family metadata')
+                origin_valid(metadata['origin'])
+                name_source_valid(metadata['name_source'])
+                require(isinstance(metadata['family_parameters'], dict) and metadata['family_parameters'],
+                        'invalid family parameters')
+            except (ValueError, KeyError, TypeError) as exc:
+                raise PipelineError(f'task.json: {exc}') from exc
+            entry['family_metadata'] = metadata
+        functions.append(entry)
     if not functions:
         raise PipelineError('task.json: functions must list at least one function')
     if len({f['rva'] for f in functions}) != len(functions):

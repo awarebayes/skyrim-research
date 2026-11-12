@@ -57,6 +57,17 @@ class TaskFiles(unittest.TestCase):
             self.assertIn(name, files)
         self.assertFalse(any(name.startswith(('.local', 'data/', 'findings/')) for name in files))
 
+    def test_family_metadata_survives_task_loading_and_is_validated(self):
+        metadata = {'origin': {'family': 'const-return', 'version': '2', 'template_digest': 'a' * 64},
+                    'family_parameters': {'width': 4}, 'name_source': 'GUESS(low)'}
+        self.write(functions=[{'rva': '0x73ad90', 'size': 84, 'symbol': '?F@@YAXXZ', 'family_metadata': metadata}])
+        task = pipeline.load_task(self.task_dir)
+        self.assertEqual(task['functions'][0]['family_metadata'], metadata)
+        metadata['origin']['template_digest'] = 'bad'
+        self.write(functions=[{'rva': '0x73ad90', 'size': 84, 'symbol': '?F@@YAXXZ', 'family_metadata': metadata}])
+        with self.assertRaises(pipeline.PipelineError):
+            pipeline.load_task(self.task_dir)
+
     def test_public_symbol_map_is_a_repository_path(self):
         self.write(symbols='reports/sse-steam-1-7-104/symbol-map.json')
         task = pipeline.load_task(self.task_dir)

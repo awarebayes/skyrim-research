@@ -34,7 +34,7 @@ def build(args, root=ROOT):
     for compiled_on, compared_on, report in args.run:
         runs.append({'compiled_on': compiled_on, 'compared_on': compared_on,
                      'report': json.loads(Path(report).read_text())})
-    return {
+    record = {
         'match_record_schema': MATCH_RECORD_SCHEMA,
         'function_id': args.function_id,
         'source': {'translation_unit': sorted(args.unit), 'compiled': args.compiled,
@@ -47,6 +47,12 @@ def build(args, root=ROOT):
         'notes': args.note or [],
         'runs': runs,
     }
+    if getattr(args, 'family_metadata', None):
+        metadata = json.loads(args.family_metadata)
+        if not isinstance(metadata, dict) or set(metadata) != {'origin', 'family_parameters', 'name_source'}:
+            raise ValueError('invalid family metadata')
+        record.update(metadata)
+    return record
 
 
 def main():
@@ -61,6 +67,7 @@ def main():
     p.add_argument('--reproduction', required=True)
     p.add_argument('--build', required=True, help='JSON file with the build block')
     p.add_argument('--note', action='append')
+    p.add_argument('--family-metadata')
     p.add_argument('--out', required=True, type=Path)
     args = p.parse_args()
     record = build(args)

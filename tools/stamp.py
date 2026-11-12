@@ -14,6 +14,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from source_digest import include_closure, tu_digest
+import stamp_template_v2 as template_v2
 
 
 IDENT = re.compile(r'[A-Za-z_][A-Za-z_0-9]*\Z')
@@ -205,6 +206,13 @@ def decode_leaf(data):
     return None
 
 
+def family_metadata(family, parameters, label):
+    """Bind generated parameters to the historical template that emits the unit."""
+    return dict(origin=dict(family=family, version=GENERATOR_VERSION,
+                            template_digest=hashlib.sha256(Path(template_v2.__file__).read_bytes()).hexdigest()),
+                family_parameters=parameters, name_source=label)
+
+
 def generate(args):
     import collections
     import csv
@@ -305,14 +313,14 @@ def generate(args):
         if not area:
             counts['no-area-rule'] += 1; continue
         code = next((data[ro + r - va:ro + r - va + 16] for va, size, ro in sections if va <= r < va + size), b'')
-        decoded = decode_leaf(code)
+        decoded = template_v2.decode_leaf(code)
         if not decoded or decoded[0] != ('constant' if args.family == 'const-return' else 'member'):
             counts['undecodable'] += 1; continue
         kind, width, value = decoded
         try:
-            h, cpp = emit_leaf(cls, method, family=kind, width=width, value=value,
+            h, cpp = template_v2.emit_leaf(cls, method, family=kind, width=width, value=value,
                                virtual=bool(owner_info), name_label=label)
-        except UnsafeCandidate:
+        except template_v2.UnsafeCandidate:
             counts['undecodable'] += 1; continue
         unit = f'stamp-{r:x}'
         name_source = (dict(kind='public', source=name['source'],
@@ -333,7 +341,7 @@ def generate(args):
             clone, revision, _ = COMMUNITY_SOURCES['CharmedBaryon/CommonLibSSE-NG']
             notice = subprocess.check_output(['git', '-C', str(Path(cfg['main']) / clone),
                                              'show', f'{revision}:LICENSE'], text=True)
-        prefix = publication_header(cls, method, rva=r, size=int(row['size']), origin=origin,
+        prefix = template_v2.publication_header(cls, method, rva=r, size=int(row['size']), origin=origin,
                                     name_label=label,
                                     class_label='EXE_RTTI' if cls == owner else label, notice=notice)
         compiled = f'reconstruction/{area}/{cls}.cpp'
@@ -346,7 +354,9 @@ def generate(args):
         symbol = f'?{method}@{cls}@@{"U" if owner_info else "Q"}EBA{mangling}XZ'
         fn = dict(rva=hex(r), size=int(row['size']), symbol=symbol,
                   function_id=f'sse-steam-1-7-104-{hex(r)}', community_name=f'{cls}::{method}',
-                  name_origin='GUESS' if label == 'GUESS(low)' else 'COMMUNITY', verdict='generated', pack=None)
+                  name_origin='GUESS' if label == 'GUESS(low)' else 'COMMUNITY', verdict='generated', pack=None,
+                  family_metadata=family_metadata(args.family, dict(family=kind, width=width, value=value,
+                                                                    virtual=bool(owner_info)), label))
         task = dict(task_id=unit.lower().replace('_', '-'), build_id='sse-steam-1-7-104',
                     compiled=compiled,
                     recipe=RECIPE, symbols='symbols.json',

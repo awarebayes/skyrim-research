@@ -72,6 +72,8 @@ def write_records(base, task, closure, recipe, runs, build_path, out, notes=None
                    '--compiled', task['compiled'], '--recipe', task['recipe'], '--symbols', task['symbols_repo'],
                    '--reproduction', reproduction(task, fn, closure, recipe), '--build', str(build_path),
                    '--out', str(target.relative_to(REPO))]
+            if fn.get('family_metadata'):
+                cmd += ['--family-metadata', json.dumps(fn['family_metadata'], sort_keys=True)]
             for compiled_on, compared_on, report in runs[fn['rva']]:
                 cmd += ['--run', compiled_on, compared_on, str(report)]
             for note in (notes if notes is not None else session_notes(base, task, recipe)):
