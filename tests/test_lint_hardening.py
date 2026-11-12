@@ -65,6 +65,34 @@ class LintLicenceTests(unittest.TestCase):
         problems = self.lint(HEAD + f'// names from COMMUNITY({NG}, GPL-3.0) here\nstruct Thing {{}};\n')
         self.assertTrue(any('licensed "MIT"' in p for p in problems), problems)
 
+    def test_malformed_community_labels_are_refused_in_every_file(self):
+        # None of these fits the label grammar, so the table could not see them; each is refused
+        # without `Labels: v2` (HEAD) as well as with it.
+        for label in ('COMMUNITY(powerof3/CommonLibSSE@main, MIT)', 'COMMUNITY(powerof3/CommonLibSSE@654E55F, MIT)',
+                      'COMMUNITY(powerof3/CommonLibSSE, MIT)', 'COMMUNITY(powerof3/CommonLibSSE@654e55f, MIT licence)',
+                      'COMMUNITY(powerof3/CommonLibSSE@654e55f,MIT)', 'community(someone/lib@1234567, MIT)',
+                      'Community(powerof3/CommonLibSSE@654e55f, GPL-3.0)', 'COMMUNITY(unverified)'):
+            for head in (HEAD, HEAD + '// Labels: v2\n'):
+                with self.subTest(label=label, v2='Labels' in head):
+                    problems = self.lint(head + '// GPL-3.0 stated here.\n' + self.body(label))
+                    self.assertTrue(any('is not "COMMUNITY(<owner>/<repo>@<rev>, <licence>)"' in p for p in problems),
+                                    problems)
+
+    def test_known_repository_matched_without_case(self):
+        for label, want in (('COMMUNITY(POWEROF3/CommonLibSSE@654e55f, MIT)', 'licensed "GPL-3.0"'),
+                            ('COMMUNITY(powerof3/commonlibsse@654e55f, GPL-3.0)', 'write the repository as'),
+                            ('COMMUNITY(charmedbaryon/commonlibsse-ng@b93280e, GPL-3.0)', 'licensed "MIT"')):
+            with self.subTest(label=label):
+                problems = self.lint(HEAD + '// GPL-3.0 stated here.\n' + self.body(label))
+                self.assertTrue(any(want in p for p in problems), problems)
+        # A different repository that merely shares a prefix is not a known one.
+        self.assertEqual(self.lint(HEAD + self.body('COMMUNITY(powerof3/CommonLibSSE-fork@654e55f, MIT)')), [])
+
+    def test_spaced_legacy_prose_is_not_a_label(self):
+        # Older units describe origins in prose as "COMMUNITY (NG b93280e, MIT)"; that is not the
+        # label token and stays outside this rule.
+        self.assertEqual(self.lint(HEAD + '// Get: COMMUNITY (CommonLibSSE-NG b93280e, MIT)\nstruct Thing {};\n'), [])
+
 
 class LintSiblingTests(unittest.TestCase):
     lint = LintLicenceTests.lint
@@ -156,6 +184,17 @@ namespace EX
     {
         void* _entries;
     };
+
+    struct Holder : public Base<struct Tag>
+    {
+        int held;
+    };
+
+    template <class K, class V = Pair<K, struct Tag>>
+    class Map : public Base<std::pair<K, V>>
+    {
+        V* _root;
+    };
 }
 '''
 
@@ -182,7 +221,8 @@ class TemplateScopeTests(unittest.TestCase):
         return check_labels.check([h], self.checkouts, root=self.root)
 
     def test_template_template_parameter_does_not_take_the_class_body(self):
-        names = 'ScatterTable::_capacity, ScatterTable::_sentinel, Box::value, HeapAllocator::_entries'
+        names = ('ScatterTable::_capacity, ScatterTable::_sentinel, Box::value, HeapAllocator::_entries, '
+                 'Holder::held, Map::_root')
         self.assertEqual(self.run_on(f'// {names}: {self.label}'), [])
 
     def test_names_the_class_lacks_are_still_found(self):
@@ -192,7 +232,7 @@ class TemplateScopeTests(unittest.TestCase):
 
     def test_scope_parser_names(self):
         names = [s[3] for s in check_labels.unit_scopes(TEMPLATE_HEADER)]
-        self.assertEqual(names, ['EX', 'ScatterTable', 'Box', 'HeapAllocator'])
+        self.assertEqual(names, ['EX', 'ScatterTable', 'Box', 'HeapAllocator', 'Holder', 'Map'])
 
 
 if __name__ == '__main__':

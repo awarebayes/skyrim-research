@@ -58,8 +58,10 @@ A function is accepted only when ALL of these hold:
      `noinline`, `[[msvc::...]]` attributes and codegen intrinsics (`INTRINSICS` there) each
      carry a justification comment on the same or the previous line. A file holding a
      `COMMUNITY(..., GPL...)` label (or LGPL, AGPL, in any case) names GPL in its leading
-     comment, as `docs/authorizations.md` requires, and a label for a known community repository
-     states that repository's licence (`COMMUNITY_LICENCES` in the lint). A `SIBLING(...)` label,
+     comment, as `docs/authorizations.md` requires, and every `COMMUNITY(` (any case,
+     any file) is a well-formed label, and a label for a known community repository (owner and
+     repository compared without case) spells it as listed and states its licence
+     (`COMMUNITY_LICENCES` in the lint). A `SIBLING(...)` label,
      in any file, or a `Sibling source:` line names only an allowed sibling at its pin with its
      licence word, and a `Sibling source:` line sits in the leading comment with no `..` in its
      path; `tools/check_labels.py` (private clone) checks the cited path and
@@ -352,8 +354,10 @@ Reviewer record, `reports/<build id>/<rva>.review.json` (RVA as in the inventory
 - schema 3: `naming_findings` is a list of at most 20 single-line strings of at most 300
   printable ASCII characters, none holding a brace, a backtick fence, a private path (`.local`,
   `/Users/`, `/home/`, `~/`, a drive letter), a run of 16 or more hex digits, four or more
-  space-, comma-, semicolon- or colon-separated hex byte pairs, three or more `0x`-prefixed
-  bytes, two or more `\x`-escaped bytes, a bracketed register operand or a `ptr` operand; a `full` or `delta`
+  space-, comma-, semicolon-, colon- or dash-separated hex byte pairs, a run of 10 or more hex
+  digits mixing digits and letters (unless right after `@`, a commit pin), four or more two-digit
+  `0x` values in a row (unless fewer than eight and strictly ascending, as field offsets are), two
+  or more `\x`-escaped bytes, a bracketed register operand or a `ptr` operand; a `full` or `delta`
   record has a list, a `label-only` record a
   list or `null` (carried from a record that predates the field). The filter is mechanical; the
   Reviewer writing them is responsible for the rest of their hygiene;
@@ -488,12 +492,25 @@ also refreshes `updated_at` and `reconstruction/INDEX.md` and prints the files t
 An `approve` block must also give `report_binding: agree`, `pass` for the four blocking checks
 (`plausible_source`, `provenance`, `claim_scope`, `publication_hygiene`), `blocking_findings:
 none` and a `naming_findings` field (`none` or a list), or it is refused as inconsistent.
-The block parser fails closed: in the header and in every block whose heading names a build of
-the inventory (accepted or not), it refuses unknown keys, a key or check given twice, a line that
-is not a field, a check sub-line, a `  - ` item or an indented continuation (of an item or of
-`reasons`), a list field with any value other than the literal `none` or with an empty value and
-no items, and a block missing any of its fields through `reasons`. So a finding written without
-its dash, or a second `checks:` section, refuses the review instead of being dropped.
+The block parser fails closed. The saved review must start at its `# Review <task-id>` title,
+hold no second title (in any case, in any section) and no unseen characters (control or format
+characters other than tab and CRLF, line separators, spaces other than U+0020). A section is a
+function block if its heading's first word is an inventory build id in any case, or if any of its
+lines starts with "verdict"; its heading must then be exactly `<build id> 0x<lowercase hex RVA>
+<size>` for an inventory function and that function's size, so a reject block with a heading such
+as `0x1010:` or an upper-case build id refuses the review instead of being dropped. In the header
+and in every function block (accepted or not) the parser refuses unknown keys, a key, check or
+list item given twice, a line that is not a field, a check sub-line, a `- ` item or a continuation
+(of `reasons`, or of an item indented at least to the item's text), items of one list at different
+indents, a list field with any value other than the literal `none` or with an empty value and no
+items, a closed-word field (verdict, escalation category, review kind, yes/no fields, report
+binding, the four checks) with another word or spelling, a block without all four checks, and a
+block missing any of its fields through `reasons`. The full grammar, and a mutation test that
+changes every structural token of a valid review one at a time, are in
+`tests/test_review_mutations.py`. A review refused for its format is remedied by a new Reviewer
+run under a new task id, never by editing the saved review: the saved file is what the record's
+hash binds, and an edit by anyone but the Reviewer would make the record vouch for text no
+Reviewer wrote.
 `--functions` (inventory ids or `0x<rva>`) and `--units` (compiled file, or `<area>/<Class>`)
 restrict `--all-approved`, `--label-only` and `--refresh-named` to a subset; a selected function
 without an `approve` block is refused. Entries outside the selection that were already stale
@@ -505,7 +522,8 @@ of the Reviewer's list: no inline assembly, `__emit`, raw byte arrays or `\x` by
 universal character names (`\u`, `\U`) anywhere, pragma operators, codegen-only `#pragma` or
 `__declspec`; a justification comment beside `__forceinline`, `noinline`, `[[msvc::...]]` and
 codegen intrinsics; GPL (any case) named in the leading comment of a file with a GPL-licensed
-`COMMUNITY` label, and the listed licence word on any label for a known community repository
+`COMMUNITY` label, every `COMMUNITY(` (any case) written as a well-formed label, and the listed
+spelling and licence word on any label for a known community repository, compared without case
 (`COMMUNITY_LICENCES`); the name-origin label grammar in files that declare `Labels: v2`;
 `SIBLING(...)` labels in every file and `Sibling source:` lines limited to an allowed sibling at
 its pin, the latter with no `..` path component; the header comment fields of
@@ -520,7 +538,7 @@ covers stale acceptances, delta reviews, batch acceptance and the generated inde
 and label-only re-acceptance, and `tests/test_merged_rules.py` probes the two-tier rule together
 with the sibling source (lint, label check against a synthetic clone, sibling-label naming
 findings, undeclared reuse blocking) and the packet's re-review options,
-`tests/test_review_parser.py` covers the fail-closed review parser, the naming-findings filter
+`tests/test_review_parser.py` and `tests/test_review_mutations.py` cover the fail-closed review parser, the naming-findings filter
 and the legacy-record list, and `tests/test_lint_hardening.py` the licence table, sibling
 citations in every file, `..` paths and the label check's template parsing. They use
 reports that the comparator produced from synthetic fixtures. The comparator itself is tested

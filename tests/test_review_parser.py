@@ -128,13 +128,39 @@ class FieldsUnitTests(unittest.TestCase):
                 text = GOOD.replace('verdict: approve\n', line + '\n')
                 self.assertTrue(parse(text)['_problems'])
 
+    def test_closed_word_values_are_refused_in_other_spellings(self):
+        for old, new in (('verdict: approve', 'verdict: Approve'), ('verdict: approve', 'verdict: approve.'),
+                         ('verdict: approve', 'verdict: аpprove'), ('escalation_category: none', 'escalation_category: None'),
+                         ('report_binding: agree, synthetic', 'report_binding: agreed, synthetic'),
+                         ('report_binding: agree, synthetic', 'report_binding: agree; disagree'),
+                         ('  provenance: pass, synthetic', '  provenance: Pass, synthetic'),
+                         ('  provenance: pass, synthetic', '  provenance: pass synthetic')):
+            with self.subTest(new=new):
+                self.assertProblem(GOOD.replace(old, new), 'must be')
+        self.assertEqual(parse(GOOD.replace('agree, synthetic', 'agree , synthetic'))['_problems'], [])
+
+    def test_every_check_is_required(self):
+        self.assertProblem(GOOD.replace('  provenance: pass, synthetic\n', ''), 'checks lacks provenance')
+
+    def test_item_shape_is_strict(self):
+        lists = 'naming_findings:\n  - first\n    wrapped\n  - second\n'
+        self.assertEqual(parse(GOOD.replace('naming_findings: none\n', lists))['_naming_findings'],
+                         ['first wrapped', 'second'])
+        for bad, pattern in (('-    wrapped', 'share one indent'), ('   wrapped', 'not a field'),
+                             ('  - second\n  - second', 'given twice'), ('  - - second', 'one space after the dash'),
+                             ('  -  second', 'one space after the dash'), ('    reasons: x', 'reads as a field')):
+            old = '    wrapped' if 'wrapped' in bad or 'reasons' in bad else '  - second'
+            with self.subTest(bad=bad):
+                self.assertProblem(GOOD.replace('naming_findings: none\n', lists.replace(old, bad)), pattern)
+
     def test_check_sub_line_outside_checks_is_refused(self):
         self.assertProblem(GOOD.replace('reasons:', 'reasons: x\n  provenance: pass, y\nzz:'), 'unknown field|under')
 
 
 class NamingFilterTests(unittest.TestCase):
     def test_byte_and_disassembly_forms_are_refused(self):
-        for bad in ('0x48 0x8b 0x05 0xc3 0x90 0x90', '0x48,0x8b,0x05', '48,8b,05,c3,90,90,cc,cc',
+        for bad in ('0x48 0x8b 0x05 0xc3 0x90 0x90', '0x48,0x8b,0x05,0xc3', '48-8b-05-c3-90', '488b05c390cc', 'see 488B05C390',
+                    '0x10, 0x18, 0x20, 0x28, 0x30, 0x38, 0x40, 0x48', '0x48-0x8b-0x05-0xc3', '48,8b,05,c3,90,90,cc,cc',
                     '48;8b;05;c3', '48:8b:05:c3', r'\x48\x8b\x05\xc3', r'see \x48 \x8b',
                     'mov rax, qword ptr [rcx+8]; call qword ptr [rax+0x18]', 'load from [rcx + 8]',
                     'read [R14D]', 'via dword ptr', 'ptr [x]', 'see ~/private/dump', 'see ~\\dump'):
@@ -145,7 +171,11 @@ class NamingFilterTests(unittest.TestCase):
         for good in ('unk020 at offset 0x20 is an NG name without a label line',
                      'unk020 and unk028 are NG names (CharmedBaryon/CommonLibSSE-NG@b93280e)',
                      'members 0x10, 0x18 named from the community header', 'the pointer name is a guess',
-                     'SIBLING label for value lacks the path note', 'fields a, b, c are guesses'):
+                     'SIBLING label for value lacks the path note', 'fields a, b, c are guesses',
+                     'fields at 0x10, 0x18, 0x20 are guesses', 'members 0x10, 0x18, 0x20, 0x28 are NG names',
+                     'offsets 0x8, 0x10, 0x18, 0x20, 0x100 hold pointers', 'the name dates from 2026-11-12',
+                     'pinned at CharmedBaryon/CommonLibSSE-NG@b93280e1a2', 'id 1234567890 is decimal',
+                     'deadbeefcafe is a placeholder word run'):
             with self.subTest(good=good):
                 self.assertIsNone(naming_finding_problem(good))
 
@@ -160,8 +190,21 @@ class HeaderTests(unittest.TestCase):
                 _, header, _ = af.review_blocks(head + extra)
                 self.assertTrue(header['_problems'])
 
-    def test_text_before_title_is_not_header(self):
+    def test_unseen_characters_are_refused(self):
+        head = '# Review t\n\nreviewer_model: m\n'
+        for ch in ('​', '\xa0', ' ', '\x0c', '﻿', '\r'):
+            with self.subTest(ch=hex(ord(ch))):
+                _, header, _ = af.review_blocks(head + f'## Notes\n\nfree{ch}text\n')
+                self.assertTrue(header['_problems'])
+        _, header, _ = af.review_blocks(head.replace('\n', '\r\n'))
+        self.assertEqual(header['_problems'], [])
+
+    def test_text_before_title_is_refused(self):
+        # A saved review starts at its title (extract_review cuts a transcript there); anything before
+        # it in the saved file was added by hand and could hold a block the parser would not see.
         _, header, _ = af.review_blocks('chatter\n## x\n# Review t\n\nreviewer_model: m\n')
+        self.assertEqual(header['_problems'], ['text before the "# Review <task-id>" title'])
+        _, header, _ = af.review_blocks('\n\n# Review t\n\nreviewer_model: m\n')
         self.assertEqual(header['_problems'], [])
 
 

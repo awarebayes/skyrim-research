@@ -75,11 +75,14 @@ NAMING_FINDING_BANNED = (
     (re.compile(r'\.local\b|/Users/|/home/|(?<![A-Za-z])[A-Za-z]:[\\/]'), 'a private or absolute path'),
     (re.compile(r'[0-9A-Fa-f]{16}'), 'a run of 16 or more hex digits'),
     (re.compile(r'(?<![0-9A-Za-z])[0-9A-Fa-f]{2}(?: [0-9A-Fa-f]{2}){3}(?![0-9A-Za-z])'), 'hex byte pairs'),
-    # A single offset such as 0x20 is ordinary naming prose; three or more in a row are a byte run.
-    (re.compile(r'(?<![0-9A-Za-z])0[xX][0-9A-Fa-f]{1,2}(?:\s*[ ,;]\s*0[xX][0-9A-Fa-f]{1,2}){2}(?![0-9A-Za-z])'),
-     '0x-prefixed byte runs'),
-    (re.compile(r'(?<![0-9A-Za-z])[0-9A-Fa-f]{2}(?:\s*[,;:]\s*[0-9A-Fa-f]{2}){3}(?![0-9A-Za-z])'),
+    # The 0x-prefixed run is checked in naming_finding_problem: field offsets such as 0x10, 0x18, 0x20
+    # read like bytes but ascend, so the run needs more than a pattern.
+    (re.compile(r'(?<![0-9A-Za-z])[0-9A-Fa-f]{2}(?:\s*[,;:-]\s*[0-9A-Fa-f]{2}){3}(?![0-9A-Za-z])'),
      'separated hex byte pairs'),
+    # Shorter than the 16-digit rule, but mixing digits and letters, as packed bytes do; a run right
+    # after `@` is a short commit pin in a community label citation.
+    (re.compile(r'(?<![0-9A-Za-z@])(?=[0-9A-Fa-f]*[0-9])(?=[0-9A-Fa-f]*[A-Fa-f])[0-9A-Fa-f]{10,}(?![0-9A-Za-z])'),
+     'a packed run of 10 or more hex digits'),
     (re.compile(r'\\[xX][0-9A-Fa-f]{2}(?:\s*\\[xX][0-9A-Fa-f]{2})'), 'escaped bytes'),
     (re.compile(r'(?<![0-9A-Za-z])~[/\\]'), 'a private or absolute path'),
     (re.compile(r'\[\s*(?:[re]?(?:ax|bx|cx|dx|si|di|bp|sp|ip)|r(?:[89]|1[0-5])[dwb]?|[xy]mm\d+)\b', re.I),
@@ -441,7 +444,23 @@ def naming_finding_problem(item):
     for pattern, what in NAMING_FINDING_BANNED:
         if pattern.search(item):
             return f'a naming finding holds {what}'
+    if byte_run(item):
+        return 'a naming finding holds 0x-prefixed byte runs'
     return None
+
+
+BYTE_RUN = re.compile(r'(?<![0-9A-Za-z])0[xX][0-9A-Fa-f]{2}(?:\s*[ ,;:-]\s*0[xX][0-9A-Fa-f]{2}){3,}(?![0-9A-Za-z])')
+
+
+def byte_run(item):
+    """Four or more byte-sized (two-digit) `0x` values in a row, unless they strictly ascend and are
+    fewer than eight: a short ascending list is field offsets, and a byte sequence that happens to
+    ascend leaks at most seven bytes. One- or three-digit values are offsets or sizes, not bytes."""
+    for match in BYTE_RUN.finditer(item):
+        values = [int(v, 16) for v in re.findall(r'0[xX]([0-9A-Fa-f]{2})', match.group())]
+        if len(values) >= 8 or any(b <= a for a, b in zip(values, values[1:])):
+            return True
+    return False
 
 
 def check_naming_findings(findings, allow_unknown):

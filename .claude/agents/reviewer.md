@@ -169,11 +169,16 @@ reasons: <short prose; no code, bytes or disassembly>
 ```
 
 Omit the two delta-only lines in a full review, and `prior_review` unless the packet gave one. A list field with items is written as the key
-alone followed by one `  - <item>` line per item (a wrapped item continues on lines indented
-deeper than its dash); an empty list is the literal `none`. Put nothing else in a function block:
-no prose, sub-headings or extra keys after `reasons` (which may wrap on indented lines), no key
-twice. The tool refuses the whole review if any function block or the header strays from this
-format. Free commentary goes in a separate `## ` section whose heading is not a build id. The integrating Engineer accepts the `approve`
+alone followed by one `  - <item>` line per item, all at the same indent, one space after the dash
+(a wrapped item continues on lines indented at least to the item's text); an empty list is the
+literal `none`. Words in angle brackets with `|` are the only allowed values, in lower case. Write
+the heading exactly as `## <build id> 0x<lowercase hex RVA> <size>` with the inventory's build id
+and size, start the document with the title and write it once, and use only plain spaces. Put
+nothing else in a function block: no prose, sub-headings or extra keys after `reasons` (which may
+wrap on indented lines), no key twice. The tool refuses the whole review if any function block or
+the header strays from this format. Free commentary goes in a separate `## ` section whose heading
+is not a build id and in which no line starts with "verdict". A review the tool refuses for its
+format is remedied by a new Reviewer run under a new task id, never by editing the saved review. The integrating Engineer accepts the `approve`
 blocks with `python3 tools/accept_function.py --all-approved --review <saved review or ->`
 (or one function with `--build-id <build id> --rva <RVA hex> --review ... --verdict approve`),
 which refuses unless each block says `approve`, `escalation_category: none`,

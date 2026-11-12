@@ -12,9 +12,11 @@ inventory entry must already name a match record that tools/check.py accepts. Th
 Reviewer's output (.claude/agents/reviewer.md); its block for each function must say `approve`
 with no escalation, name the reviewer model, give the translation-unit digest the match record
 binds, `report_binding: agree`, `pass` for the four blocking checks, `blocking_findings: none` and
-a `naming_findings` field. The header and every block for a function of the inventory's builds
-must keep to that format exactly (`fields`): an unknown or repeated key, a stray line, a list
-value other than `none` or items, or a block cut short refuses the whole review. `--all-approved` accepts every `approve` block of the review in one step
+a `naming_findings` field. The header and every function block must keep to that format exactly
+(`fields`, `refuse_malformed`; the grammar is written out in tests/test_review_mutations.py): an
+unknown or repeated key, a stray line, a list value other than `none` or items, a closed-word value
+in another spelling, a block cut short, a function heading other than exactly
+`<build id> 0x<rva> <size>`, a second title or an unseen character refuses the whole review. `--all-approved` accepts every `approve` block of the review in one step
 and lists the blocks it did not accept; `--functions` (inventory ids or 0x<rva>) and `--units`
 (compiled file or <area>/<Class>) restrict it to those functions, each of which must then have an
 approve block. Any refusal leaves everything unchanged. The tool writes the sanitized review
@@ -56,6 +58,7 @@ import json
 from pathlib import Path
 import re
 import sys
+import unicodedata
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check import (ROOT, LABEL_ONLY, MAX_NAMING_FINDINGS, REVIEW_RECORD_SCHEMA,  # noqa: E402
@@ -104,6 +107,27 @@ BLOCK_FIELDS = ('verdict', 'escalation_category', 'review_kind', 'previous_sourc
 # A function block missing any of these is cut short or malformed; `reasons` is the format's last field.
 BLOCK_REQUIRED = ('verdict', 'escalation_category', 'source_paths', 'source_digest', 'report_path',
                   'report_binding', 'checks', 'blocking_findings', 'naming_findings', 'reasons')
+# Fields whose value is a closed word list (reviewer.md output format). A case change or a look-alike
+# letter in a verdict word must refuse the review, not read as some other verdict.
+YES_NO = ('yes', 'no')
+VALUE_WORDS = {
+    'fresh_context': YES_NO, 'drafted_or_triaged_any_reviewed_function': YES_NO,
+    'sampling_second_pass': YES_NO, 'decompiler_output_read': YES_NO,
+    'verdict': ('approve', 'reject', 'escalate'),
+    'escalation_category': ('provenance', 'legal', 'systemic', 'other', 'none'),
+    'review_kind': ('full', 'delta'), 'code_section_unchanged': YES_NO,
+}
+# These take one of their words, optionally followed by a comma and a one-line comment.
+COMMENTED_WORDS = {'report_binding': ('agree', 'disagree', 'missing')}
+CHECK_WORDS = ('pass', 'fail')
+# A list item's text may not itself start with a bullet: `  - - x` is a duplicated dash, not a finding.
+BULLET_START = re.compile(r'[-*+\u2010-\u2015\u2022\u2212\u00b7]')
+TITLE = re.compile(r'# Review \S+\s*')
+
+
+def commented(value, words):
+    """True if `value` is one of `words`, alone or followed by a comma and a comment."""
+    return value.split(',')[0].rstrip() in words and (value in words or re.fullmatch(r'\S+\s*,.*', value) is not None)
 
 
 def fields(lines, known=None, required=()):
@@ -113,18 +137,18 @@ def fields(lines, known=None, required=()):
 
     The parser fails closed: only the literal `none` makes a list empty; a list written with an empty
     value must have items, so a finding written without its dash cannot vanish into an empty list.
-    A line that is neither a field, a `checks` sub-line, a list item, an indented continuation of an
-    item or of `reasons`, nor blank, is a problem, as are unknown keys (when `known` is given),
-    duplicate keys and sub-keys, and a missing required field. Packet tools that only display an old
-    review read the same dict and ignore `_problems`.
+    A line that is neither a field, a `checks` sub-line, a list item, a continuation of an item
+    (indented at least to the item's text) or of `reasons`, nor blank, is a problem, as are unknown
+    keys (when `known` is given), duplicate keys, sub-keys and items, a value outside its word list
+    (VALUE_GRAMMAR), a continuation that reads as a field, and a missing required field. Packet tools
+    that only display an old review read the same dict and ignore `_problems`.
     """
     out, checks, lists, problems = {}, {}, {}, []
     current = None       # field the following indented lines belong to
     item_indent = None   # indent of the last list item's dash, for continuations
+    field_like = re.compile(r'([a-z][a-z_]*)\s*:')
     for number, line in enumerate(lines, 1):
         if not line.strip():
-            continue
-        if re.fullmatch(r'# Review \S+\s*', line):
             continue
         # Keys start with a letter, so no review line can set the parsed `_` entries directly.
         match = re.fullmatch(r'([a-z][a-z_]*):(?:\s+(.*?))?\s*', line)
@@ -150,6 +174,11 @@ def fields(lines, known=None, required=()):
                     problems.append(f'line {number}: checks takes no value, only indented sub-lines')
             elif not value:
                 problems.append(f'line {number}: field {key!r} is empty')
+            elif key in VALUE_WORDS and value not in VALUE_WORDS[key]:
+                problems.append(f'line {number}: {key} must be one of {", ".join(VALUE_WORDS[key])}, not {value!r}')
+            elif key in COMMENTED_WORDS and not commented(value, COMMENTED_WORDS[key]):
+                problems.append(f'line {number}: {key} must be one of {", ".join(COMMENTED_WORDS[key])}'
+                                f' with an optional ", <comment>", not {value!r}')
             continue
         indent = len(line) - len(line.lstrip(' '))
         sub = re.fullmatch(r'\s+([a-z][a-z_]*):\s*(.*?)\s*', line)
@@ -159,21 +188,37 @@ def fields(lines, known=None, required=()):
                 problems.append(f'line {number}: unknown check {name!r}')
             elif name in checks:
                 problems.append(f'line {number}: check {name!r} given twice')
+            elif not commented(sub.group(2), CHECK_WORDS):
+                problems.append(f'line {number}: check {name!r} must be pass or fail, not {sub.group(2)!r}')
             else:
                 checks[name] = sub.group(2)
             continue
         item = re.fullmatch(r'(\s*)- (.*?)\s*', line)
-        if current in LIST_FIELDS and item and out.get(current) == '' and item.group(2):
-            lists[current].append(item.group(2))
+        if current in LIST_FIELDS and item and out.get(current) == '' and item.group(2).strip():
+            text = item.group(2)
+            if text != text.lstrip() or BULLET_START.match(text):
+                problems.append(f'line {number}: a {current} item is "- " and its text, one space after the dash')
+            elif text in lists[current]:
+                problems.append(f'line {number}: {current} item given twice')
+            elif item_indent is not None and len(item.group(1)) != item_indent:
+                # A stray dash before a wrapped line would otherwise split one finding into two.
+                problems.append(f'line {number}: {current} items must share one indent')
+            lists[current].append(text.strip())
             item_indent = len(item.group(1))
             continue
-        if (current in LIST_FIELDS and item_indent is not None and indent > item_indent
-                and not line.lstrip().startswith('- ')):
-            # A wrapped item continues the one before it.
-            lists[current][-1] += ' ' + line.strip()
-            continue
-        if current == 'reasons' and indent > 0 and not line.lstrip().startswith('- '):
-            out['reasons'] += ' ' + line.strip()
+        stripped = line.strip()
+        continues = ((current in LIST_FIELDS and item_indent is not None and indent >= item_indent + 2)
+                     or (current == 'reasons' and indent > 0))
+        if continues and not stripped.startswith('- '):
+            known_key = field_like.match(stripped)
+            if known_key and known_key.group(1) in (known or ()) + BLOCKING_CHECKS:
+                problems.append(f'line {number}: an indented {known_key.group(1)!r} line under {current} '
+                                'reads as a field; write fields at column 0')
+            if current == 'reasons':
+                out['reasons'] += ' ' + stripped
+            else:
+                # A wrapped item continues the one before it.
+                lists[current][-1] += ' ' + stripped
             continue
         problems.append(f'line {number}: not a field, check, list item or continuation'
                         + (f' (under {current})' if current else ''))
@@ -184,6 +229,9 @@ def fields(lines, known=None, required=()):
     for key in required:
         if key not in out:
             problems.append(f'states no {key}')
+    if 'checks' in required and 'checks' in out:
+        problems += [f'checks lacks {name} (each block gives checks {name}: pass or fail)'
+                     for name in BLOCKING_CHECKS if name not in checks]
     out.update({f'_{k}': v for k, v in lists.items()})
     if checks:
         out['_checks'] = checks
@@ -191,51 +239,99 @@ def fields(lines, known=None, required=()):
     return out
 
 
+def forbidden_characters(text):
+    """Problems for characters a reader cannot see or that split lines unseen: control and format
+    characters other than tab and CRLF line ends, line and paragraph separators, private-use and
+    unassigned code points, and spaces other than U+0020 (a no-break space looks like a space but is
+    not one to every pattern here)."""
+    problems = []
+    if '\r' in text.replace('\r\n', ''):
+        problems.append('a carriage return outside a CRLF line end')
+    seen = set()
+    for ch in text:
+        if ch in '\t\n\r' or ch in seen:
+            continue
+        category = unicodedata.category(ch)
+        if category in ('Cc', 'Cf', 'Zl', 'Zp', 'Co', 'Cs', 'Cn') or (category == 'Zs' and ch != ' '):
+            seen.add(ch)
+            problems.append(f'character U+{ord(ch):04X} ({category})')
+    return problems
+
+
+def folded(text):
+    """Compatibility-folded, case-folded text, to recognise a structural word written in another case
+    or with a full-width look-alike."""
+    return unicodedata.normalize('NFKC', text).casefold()
+
+
 def review_blocks(text):
-    """(title, header fields, [(heading words, block fields)]) of a review in reviewer.md format."""
+    """(title, header fields, [(heading words, block fields)]) of a review in reviewer.md format.
+
+    Each block's fields carry `_heading` (the heading text after `## `) and `_verdict_line` (whether
+    any line of the section, folded, starts with "verdict"). Document-level problems go to the
+    header's `_problems`: text before the title, a second title, and unseen characters.
+    """
     lines = text.splitlines()
-    first = next((i for i, l in enumerate(lines) if re.fullmatch(r'# Review \S+\s*', l)), None)
+    first = next((i for i, l in enumerate(lines) if TITLE.fullmatch(l)), None)
     title = None if first is None else lines[first].split()[2]
+    document = []
+    if first is not None and any(l.strip() for l in lines[:first]):
+        document.append('text before the "# Review <task-id>" title')
     # The document starts at its title; anything before it is not part of the review.
     lines = lines[first + 1:] if first is not None else lines
+    if any(re.match(r'\s*#\s*review\b', folded(l)) for l in lines):
+        document.append('a second "# Review" title line')
+    # On the raw text: splitlines would already have turned a lone CR or U+2028 into a line end.
+    document += forbidden_characters(text)
     starts = [i for i, l in enumerate(lines) if l.startswith('## ')]
     header = fields(lines[:starts[0]] if starts else lines, known=HEADER_FIELDS)
+    header['_problems'] = document + header['_problems']
     blocks = []
     for n, i in enumerate(starts):
-        body = fields(lines[i + 1:starts[n + 1] if n + 1 < len(starts) else len(lines)],
-                      known=BLOCK_FIELDS, required=BLOCK_REQUIRED)
+        section = lines[i + 1:starts[n + 1] if n + 1 < len(starts) else len(lines)]
+        body = fields(section, known=BLOCK_FIELDS, required=BLOCK_REQUIRED)
+        body['_heading'] = lines[i][3:]
+        body['_verdict_line'] = any(folded(l).strip().startswith('verdict') for l in section)
         blocks.append((lines[i][3:].split(), body))
     return title, header, blocks
 
 
-def refuse_malformed(header, blocks, build_ids):
-    """Refuse a review whose header, or any block for a function of these builds, breaks the format.
+def refuse_malformed(header, blocks, functions):
+    """Refuse a review whose header or any function block breaks the format.
 
-    Blocks for other functions are checked too, not only the accepted ones: a block that does not
-    parse might be an approve the tool cannot see, and a review with one is not taken on trust.
+    A section is a function block if its heading's first word is an inventory build id in any case
+    (or full-width form), or if any of its lines starts with "verdict". Its heading must then be
+    exactly `<build id> 0x<lowercase hex RVA> <decimal size>` naming an inventory function with that
+    size, and its body must parse without problems. Every block is checked, not only the accepted
+    ones: a block the tool could not place might be a reject or escalate for a function it accepts.
     """
     refuse(not header['_problems'], 'review header breaks the reviewer.md format: ' + '; '.join(header['_problems']))
+    sizes = {(fn['build_id'], fn['rva']): fn['size'] for fn in functions}
+    builds = {folded(fn['build_id']) for fn in functions}
     for parts, body in blocks:
-        if parts and parts[0] in build_ids:
-            refuse(not body['_problems'], f'review block "## {" ".join(parts)}" breaks the reviewer.md format: '
-                   + '; '.join(body['_problems']))
+        heading = body['_heading']
+        if not (parts and folded(parts[0]) in builds) and not body['_verdict_line']:
+            continue  # commentary
+        exact = re.fullmatch(r'(\S+) 0x([0-9a-f]+) ([0-9]+)', heading)
+        key = exact and (exact.group(1), int(exact.group(2), 16))
+        refuse(exact is not None and key in sizes and heading == f'{key[0]} 0x{key[1]:x} {sizes[key]}',
+               f'review section "## {heading}" is a function block but its heading is not '
+               '"<build id> 0x<lowercase hex RVA> <size>" for an inventory function and its size; '
+               'commentary sections may not start a line with "verdict"')
+        refuse(not body['_problems'], f'review block "## {heading}" breaks the reviewer.md format: '
+               + '; '.join(body['_problems']))
 
 
 def parse_review(text, build_id, rva, size):
     """Header fields and this function's block from a review in the reviewer.md output format.
 
-    The block heading is `## <build id> 0x<rva> <size>`; the size must equal the inventory's, so a
-    review of a differently sized range at the same address is not taken for this function.
+    The block heading is exactly `## <build id> 0x<rva> <size>` (refuse_malformed has refused any
+    other heading for a function block); the size must equal the inventory's, so a review of a
+    differently sized range at the same address is not taken for this function.
     """
     title, header, all_blocks = review_blocks(text)
-    blocks = []
-    for parts, body in all_blocks:
-        if len(parts) >= 2 and parts[0] == build_id:
-            try:
-                if int(parts[1], 16) == rva:
-                    blocks.append((parts[2:], body))
-            except ValueError:
-                continue
+    blocks = [(parts[2:], body) for parts, body in all_blocks
+              if len(parts) >= 2 and parts[0] == build_id and parts[1] == f'0x{rva:x}']
     refuse(len(blocks) == 1, f'review has {len(blocks)} blocks for {build_id} 0x{rva:x}; expected exactly 1')
     rest, block = blocks[0]
     refuse(len(rest) == 1 and rest[0] == str(size),
@@ -246,7 +342,7 @@ def parse_review(text, build_id, rva, size):
 def extract_review(text):
     """The review document from a transcript: from `# Review <id>` on, without an enclosing fence."""
     lines = text.splitlines(keepends=True)
-    start = next((i for i, l in enumerate(lines) if re.fullmatch(r'# Review \S+\s*', l)), None)
+    start = next((i for i, l in enumerate(lines) if TITLE.fullmatch(l)), None)
     refuse(start is not None, 'review has no "# Review <task-id>" title')
     fenced = start > 0 and lines[start - 1].lstrip().startswith('```')
     body = lines[start:]
@@ -509,7 +605,7 @@ def accept_many(root, review_source, targets=None, verdict='approve', when=None,
     title, header, blocks = review_blocks(blob.decode('utf-8'))
     refuse(title is not None and TASK_ID.fullmatch(title),
            'review has no "# Review <task-id>" title with a lowercase task id')
-    refuse_malformed(header, blocks, {fn['build_id'] for fn in data['functions']})
+    refuse_malformed(header, blocks, data['functions'])
     refuse(header.get('fresh_context') == 'yes', 'review does not state fresh_context: yes')
     refuse(header.get('drafted_or_triaged_any_reviewed_function') == 'no',
            'review does not state the Reviewer neither drafted nor triaged the function')

@@ -127,15 +127,15 @@ reasons: synthetic
 
     def test_review_of_other_function_refused(self):
         self.write_review(rva=0x3000)
-        self.assertRefused('0 blocks')
+        self.assertRefused('0 blocks|function block but its heading is not')
 
     def test_review_block_for_other_size_refused(self):
         self.write_review(size=self.fn['size'] + 1)
-        self.assertRefused('not the inventory size')
+        self.assertRefused('not the inventory size|function block but its heading is not')
 
     def test_review_block_without_size_refused(self):
         self.write_review(size='')
-        self.assertRefused('gives size none')
+        self.assertRefused('gives size none|function block but its heading is not')
 
     def assertRolledBack(self, target, error):
         before = (self.root / 'data/progress.json').read_bytes()

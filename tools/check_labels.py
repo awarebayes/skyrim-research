@@ -64,12 +64,13 @@ SIBLING = re.compile(r'SIBLING\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40
 NAME = re.compile(r'~?[A-Za-z_]\w*(?:::~?[A-Za-z_]\w*)*')
 IDENT = re.compile(r'[A-Za-z_]\w*')
 COMMENTS = re.compile(r'//[^\n]*|/\*.*?\*/|"(?:[^"\\\n]|\\.)*"|\'(?:[^\'\\\n]|\\.)*\'', re.S)
-# The text between a scope's name and its `{` (base clause) may not hold another class-key: in
-# `template <..., template <...> class Allocator> class Table {` the template-template parameter
-# `class Allocator` would otherwise take the body of `Table` as its own.
+# The text between a scope's name and its `{` (base clause) may hold a class-key only inside a
+# template argument list: in `template <..., template <...> class Allocator> class Table {` the
+# template-template parameter `class Allocator` would otherwise take the body of `Table` as its own,
+# while `struct A : public B<struct C> {` is a base clause of A (base_clause_ok).
 SCOPE = re.compile(r'\b(class|struct|union|namespace|enum(?:\s+class|\s+struct)?)\s+'
                    r'(?:alignas\s*\([^)]*\)\s*|__declspec\s*\((?:[^()]|\([^()]*\))*\)\s*|\[\[[^\]]*\]\]\s*)*([A-Za-z_]\w*)\b'
-                   r'((?:(?!\b(?:class|struct|union)\b)[^;{}()])*)\{')
+                   r'([^;{}()]*)\{')
 BASE = re.compile(r'\b(?:public|protected|private)\s+(?:virtual\s+)?((?:\w+::)*\w+)')
 # An identifier followed by one of these is being declared (member, method, parameter, enumerator).
 DECLARED = re.compile(r'(?<![\w:.>~])([A-Za-z_]\w*)\s*(?=[;,\[{(=)}]|:(?!:))')
@@ -77,6 +78,36 @@ ENUMERATOR = re.compile(r'([A-Za-z_]\w*)\s*(?:=\s*([^,]+))?')
 RVA = re.compile(r'\bRVA (0x[0-9a-fA-F]+),? \d+ bytes')
 EVIDENCE = re.compile(r'(?:findings|reports)/[\w./-]+\.(?:md|json)')
 SOURCE_SUFFIXES = ('.h', '.hpp', '.inl', '.cpp')
+
+
+def base_clause_ok(clause):
+    """No class-key outside angle brackets and no `>` closing a bracket the clause did not open."""
+    depth = 0
+    for token in re.findall(r'[<>]|\b(?:class|struct|union)\b', clause):
+        if token == '<':
+            depth += 1
+        elif token == '>':
+            depth -= 1
+            if depth < 0:
+                return False
+        elif depth == 0:
+            return False
+    return True
+
+
+def scope_matches(text):
+    """SCOPE matches whose base clause is one (base_clause_ok); after a rejected match the search
+    resumes just past its start, so the class it overran is still found."""
+    pos = 0
+    while True:
+        m = SCOPE.search(text, pos)
+        if m is None:
+            return
+        if base_clause_ok(m.group(3)):
+            yield m
+            pos = m.end()
+        else:
+            pos = m.start() + 1
 
 
 def strip(text):
@@ -188,7 +219,7 @@ class Index:
         match = braces(text)
         self.tokens.update(IDENT.findall(text))
         self.declared.update(DECLARED.findall(text))
-        for m in SCOPE.finditer(text):
+        for m in scope_matches(text):
             open_at = m.end() - 1
             body = text[open_at + 1:match.get(open_at, open_at)]
             entry = self.scopes.setdefault(m.group(2), {'declared': set(), 'bases': set()})
@@ -259,7 +290,7 @@ def unit_scopes(text):
     clean = strip(text)
     match = braces(clean)
     out = []
-    for m in SCOPE.finditer(clean):
+    for m in scope_matches(clean):
         open_at = m.end() - 1
         out.append((clean.count('\n', 0, open_at) + 1, clean.count('\n', 0, match.get(open_at, open_at)) + 1,
                     m.group(1).split()[0], m.group(2), clean[open_at + 1:match.get(open_at, open_at)]))

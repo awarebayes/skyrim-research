@@ -23,8 +23,9 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   intrinsics (`INTRINSICS`) only with a `//` comment of three or more words on the same or
   previous line;
 - licence: a file with a `COMMUNITY(..., GPL...)` label (or LGPL, AGPL, any case) names GPL in
-  its leading comment, and a label for a repository in `COMMUNITY_LICENCES` states that
-  repository's licence word; in every file, labelled v2 or not;
+  its leading comment, every `COMMUNITY(` (any case) is a well-formed label, and a label for a
+  repository in `COMMUNITY_LICENCES` (compared without case) spells it as listed and states its
+  licence word; in every file, labelled v2 or not;
 - name-origin labels: in a file whose leading comment says `Labels: v2`, every label is on a
   `// <names>: <LABEL> [<LABEL>...][; note]` line, LABEL being `COMMUNITY(<owner>/<repo>@<rev>,
   <licence>)`, `SIBLING(<owner>/<repo>@<rev>, <licence>)` (only a sibling decompilation listed in
@@ -273,24 +274,40 @@ COMMUNITY_LICENCES = {
     'powerof3/CommonLibSSE': 'GPL-3.0',
     'meh321/AddressLibraryDatabase': 'permission',
 }
-COMMUNITY_LABEL = re.compile(r'COMMUNITY\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@[0-9a-f]{7,40},\s*([^)\s]+)\s*\)')
+COMMUNITY_LABEL = re.compile(r'COMMUNITY\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40}), ([A-Za-z0-9.+-]+)\)')
+# Any case: a `community(` written in another case is still read as a label by a person.
+COMMUNITY_OPEN = re.compile(r'community\(', re.I)
 
 
 def licence_problems(name, text, header):
     """A file with a GPL-licensed COMMUNITY label states GPL in its header (docs/authorizations.md);
-    the wording of the statement is the Reviewer's to judge, its presence is checked here. A label
-    for a known community repository carries that repository's licence word, spelled as listed.
-    Both apply to every file, labelled v2 or not, since a label anywhere is a provenance claim."""
+    the wording of the statement is the Reviewer's to judge, its presence is checked here. Every
+    `COMMUNITY(` (any case) is a label of the grammar `COMMUNITY(<owner>/<repo>@<rev>, <licence>)`,
+    and a label naming a repository of COMMUNITY_LICENCES (owner and repository compared without
+    case) spells it as listed and carries its licence word. All of this applies to every file,
+    labelled v2 or not, since a label anywhere is a provenance claim; a malformed label would
+    otherwise slip past the table."""
     problems = []
     hit = GPL_LABEL.search(text)
     if hit and not re.search(r'GPL', header, re.I):
         problems.append(f'{name}:{line_of(text, hit.start())}: a GPL-licensed COMMUNITY label needs the file\'s '
                         'leading comment to state the GPL licence')
-    for m in COMMUNITY_LABEL.finditer(text):
-        repo, licence = m.groups()
-        expected = COMMUNITY_LICENCES.get(repo)
-        if expected is not None and licence != expected:
-            problems.append(f'{name}:{line_of(text, m.start())}: {repo} is licensed "{expected}"; '
+    known = {repo.casefold(): repo for repo in COMMUNITY_LICENCES}
+    for opening in COMMUNITY_OPEN.finditer(text):
+        where = f'{name}:{line_of(text, opening.start())}'
+        m = COMMUNITY_LABEL.match(text, opening.start())
+        if not m:
+            problems.append(f'{where}: a COMMUNITY( label is not "COMMUNITY(<owner>/<repo>@<rev>, <licence>)" '
+                            '(upper case, lower-case hex revision, one licence word)')
+            continue
+        repo, _, licence = m.groups()
+        listed = known.get(repo.casefold())
+        if listed is None:
+            continue
+        if repo != listed:
+            problems.append(f'{where}: write the repository as {listed}, not {repo}')
+        if licence != COMMUNITY_LICENCES[listed]:
+            problems.append(f'{where}: {listed} is licensed "{COMMUNITY_LICENCES[listed]}"; '
                             f'the label states "{licence}"')
     return problems
 
