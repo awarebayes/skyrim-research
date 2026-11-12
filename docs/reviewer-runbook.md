@@ -130,7 +130,8 @@ or members. A family review proves no name and grants no new exposure permission
 Check the pinned generator or stamp template as source a programmer could have written, including
 all ordinary blocking grounds. Check its parameter extraction: what each parameter means, where
 it comes from, type/width/sign, allowed values or inclusive ranges, and how it binds a function's
-build, RVA and size. Check the template digest, extraction source digest, target image, recipe,
+build, RVA and size. Parameter ranges may enumerate exact complete rows; preserve correlations between fields and
+verify each permitted row. Check the template digest, extraction source digest, target image, recipe,
 compiler and comparator pins. For a stamp, check that the template is the claimed already-matched
 function. Read every one of the first 20 enrolled members with the ordinary checklist, including
 source plausibility, source digest and report bindings. Check each member's name-source label

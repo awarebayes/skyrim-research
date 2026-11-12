@@ -434,6 +434,8 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.assertEqual(len(g['functions']), 20)
         self.assertEqual(g['family_review_path'], path)
         self.assertIn('in this same pass', (self.root / g['brief']).read_text())
+        self.assertIn(str((self.root / '.local/analysis/fnv_index.jsonl').resolve()), (self.root / g['brief']).read_text())
+        self.assertIn(str((self.root / '.local/packs').resolve()), (self.root / g['brief']).read_text())
         self.assertEqual(flow.review_group(self.root, self.fdir), [])
         actions = flow.family_actions(self.root, self.fdir)
         self.assertEqual(sum(k == 'dispatch' and 'family review needed' in t for k, t in actions), 1)
@@ -486,3 +488,24 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ExactParameterRowsTests(unittest.TestCase):
+    def test_preserves_correlated_rows_and_types(self):
+        a = {'width': 1, 'value': 2, 'virtual': True}
+        b = {'width': 4, 'value': 1000, 'virtual': True}
+        ranges = fr.exact_ranges([a, b, a])
+        self.assertEqual(len(ranges['rows']), 2)
+        for row in (a, b):
+            self.assertTrue(fr.in_ranges(row, ranges))
+        for row in ({'width': 1, 'value': 1000, 'virtual': True},
+                    {'width': 4, 'value': 2, 'virtual': True},
+                    {'width': 1, 'value': 2, 'virtual': 1},
+                    {'width': 1, 'value': 2},
+                    {'width': 1, 'value': 2, 'virtual': True, 'extra': 0}):
+            self.assertFalse(fr.in_ranges(row, ranges))
+
+    def test_refuses_invalid_or_duplicate_rows(self):
+        for rows in ([], [{}], [{'x': 1}, {'y': 1}], [{'x': 1}, {'x': 1}], [{'x': None}]):
+            with self.subTest(rows=rows), self.assertRaises(ValueError):
+                fr.validate_ranges({'rows': rows})

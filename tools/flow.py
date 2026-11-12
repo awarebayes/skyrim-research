@@ -477,7 +477,9 @@ Role: fresh independent admitted Reviewer. Follow docs/reviewer-runbook.md, Fami
 Task: {task}; review scope is the family at `{path}` (spec digest `{fr.digest(fr.spec(family))}`).
 Gates and exposure: docs/authorizations.md. Stop if the model lacks authorization to read an input.
 Allowed inputs: pinned template and parameter source, the manifest and its first 20 members,
-public match records and reconstructed units. Read no other review or handoff.
+public match records and reconstructed units. FNV index: `{(root / ".local/analysis/fnv_index.jsonl").resolve()}`;
+function packs: `{(root / ".local/packs").resolve()}`; source checkouts: `{(root / ".local/sources").resolve()}`.
+Read no other review or handoff.
 Review source plausibility, provenance, extraction, target bindings, labels and all first 20.
 Output: `.local/reviews/{task}.family.json`, exactly the JSON schema in the family-review runbook.
 {members}

@@ -78,6 +78,11 @@ def member_digest(fn, record):
 
 
 def in_ranges(parameters, ranges):
+    if isinstance(ranges, dict) and set(ranges) == {'rows'} and isinstance(ranges['rows'], list):
+        if not isinstance(parameters, dict):
+            return False
+        return any(set(parameters) == set(row) and all(type(parameters[k]) is type(row[k])
+                   and parameters[k] == row[k] for k in row) for row in ranges['rows'] if isinstance(row, dict))
     if not isinstance(parameters, dict) or not isinstance(ranges, dict) or set(parameters) != set(ranges):
         return False
     for key, value in parameters.items():
@@ -93,8 +98,30 @@ def in_ranges(parameters, ranges):
     return True
 
 
+def exact_ranges(rows):
+    """Preserve correlations between observed parameter values."""
+    require(isinstance(rows, list) and rows, 'reviewed parameter rows missing')
+    unique = {json.dumps(row, sort_keys=True, separators=(',', ':'), allow_nan=False): row for row in rows}
+    result = {'rows': [unique[k] for k in sorted(unique)]}
+    validate_ranges(result)
+    return result
+
+
 def validate_ranges(ranges):
     require(isinstance(ranges, dict) and ranges, 'reviewed parameter ranges missing')
+    if set(ranges) == {'rows'} and isinstance(ranges['rows'], list):
+        rows = ranges['rows']
+        require(bool(rows) and all(isinstance(row, dict) and row for row in rows), 'reviewed parameter rows missing')
+        keys = set(rows[0])
+        require(all(isinstance(k, str) and ID.fullmatch(k) for k in keys), 'invalid parameter name')
+        require(all(set(row) == keys and all(type(v) in (str, int, bool) for v in row.values())
+                    for row in rows), 'invalid parameter row')
+        from check import naming_finding_problem
+        require(all(not isinstance(v, str) or naming_finding_problem(v) is None
+                    for row in rows for v in row.values()), 'unsafe parameter enumeration')
+        serial = [json.dumps(row, sort_keys=True, separators=(',', ':')) for row in rows]
+        require(len(set(serial)) == len(serial), 'duplicate parameter row')
+        return
     for key, rule in ranges.items():
         require(isinstance(key, str) and ID.fullmatch(key) and isinstance(rule, dict), 'invalid parameter range')
         numeric = set(rule) == {'min', 'max'} and all(type(rule[k]) is int for k in ('min', 'max'))
