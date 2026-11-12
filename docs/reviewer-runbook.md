@@ -16,8 +16,11 @@ names a model class the rule does not admit, say so in the return table and stop
 
 ## Limits
 
-- You must not review a function you drafted or triaged. If the brief suggests you did, or you
-  have context from drafting it, return `escalate` (category `other`) and stop.
+- You must not review work you drafted, engineered or triaged, including machinery and rule
+  changes. If the brief suggests you did, or you have context from that work, return `escalate`
+  (category `other`) and stop. The header field `drafted_or_triaged_any_reviewed_function`
+  includes engineering: `no` asserts all three exclusions. A sampling second pass under
+  `claude-low` must also use a different model from the first review (Opus aliases count as one).
 - Write exactly one file: your review at `.local/reviews/<task-id>.md`, created once and never
   edited or overwritten (if it exists, stop and report `exists`). Modify nothing else: not the
   reviewed source, the comparator, the validator, reports, `data/progress.json`, gates or git

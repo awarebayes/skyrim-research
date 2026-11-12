@@ -119,6 +119,55 @@ reasons: synthetic
         af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
                   'approve', when=WHEN, profile='claude-low')
 
+    def test_sol_strong_admission_is_exact_and_profile_scoped(self):
+        self.write('docs/verification.md', (ROOT / 'docs/verification.md').read_text())
+        for model, profile, admitted in [('gpt-6.1-sol', 'claude-low', True),
+                                         ('gpt-6.1-sol', 'cheap', False), ('gpt-6.1-sol', 'full', False),
+                                         ('gpt-5.6-sol', 'claude-low', False), ('gpt-6-sol', 'claude-low', False)]:
+            with self.subTest(model=model, profile=profile):
+                self.assertEqual(af.strong_reviewer_admitted(self.root, model, profile), admitted)
+                if not admitted:
+                    self.write_review(model=model)
+                    with self.assertRaisesRegex(af.Refused, 'not admitted'):
+                        af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
+                                  'approve', when=WHEN, profile=profile)
+        self.assertFalse((self.root / REVIEW).exists())
+        self.write_review(model='gpt-6.1-sol')
+        af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
+                  'approve', when=WHEN, profile='claude-low')
+        self.assertEqual(json.loads((self.root / REVIEW).read_text())['reviewer_model'], 'gpt-6.1-sol')
+
+    def test_profile_cannot_override_active_session(self):
+        self.write('docs/verification.md', (ROOT / 'docs/verification.md').read_text())
+        self.write('.local/flow/events.jsonl', json.dumps({'event': 'session-start', 'profile': 'cheap'}) + '\n')
+        self.write_review(model='gpt-6.1-terra')
+        before = (self.root / 'data/progress.json').read_bytes()
+        with self.assertRaisesRegex(af.Refused, '--profile does not match.*active session profile'):
+            af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
+                      'approve', when=WHEN, profile='claude-low')
+        self.assertEqual((self.root / 'data/progress.json').read_bytes(), before)
+        self.assertFalse((self.root / REVIEW).exists())
+
+    def test_profile_cannot_override_recorded_group(self):
+        self.write('docs/verification.md', (ROOT / 'docs/verification.md').read_text())
+        self.write('.local/flow/groups/g001.json', json.dumps({'task_id': 'synthetic-review', 'profile': 'cheap'}))
+        self.write('.local/flow/events.jsonl', json.dumps({'event': 'session-start', 'profile': 'claude-low'}) + '\n')
+        self.write_review(model='gpt-6.1-terra')
+        before = (self.root / 'data/progress.json').read_bytes()
+        with self.assertRaisesRegex(af.Refused, '--profile does not match the recorded review group'):
+            af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
+                      'approve', when=WHEN, profile='claude-low')
+        self.assertEqual((self.root / 'data/progress.json').read_bytes(), before)
+        self.assertFalse((self.root / REVIEW).exists())
+
+    def test_group_profile_survives_a_later_session_profile_change(self):
+        self.write('docs/verification.md', (ROOT / 'docs/verification.md').read_text())
+        self.write('.local/flow/groups/g001.json', json.dumps({'task_id': 'synthetic-review', 'profile': 'claude-low'}))
+        self.write('.local/flow/events.jsonl', json.dumps({'event': 'session-start', 'profile': 'cheap'}) + '\n')
+        self.write_review(model='gpt-6.1-terra')
+        self.accept()
+        self.assertEqual(self.progress()['functions'][0]['status'], 'matched')
+
     def test_reject_refused(self):
         self.write_review(verdict='reject')
         self.assertRefused('only approve', verdict='reject')

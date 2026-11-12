@@ -11,7 +11,7 @@
     python3 tools/flow.py integrate <group> [--no-push]  # accept, check, commit, push, watch CI, in its own worktree; stops at the first failure
     python3 tools/flow.py sync                           # fast-forward the shared checkout after an integration
     python3 tools/flow.py brief drafter|confirm|triage|rerun|direction ...   # write a brief file under .local/briefs/
-    python3 tools/flow.py baseline <component> <value> <count>  # versions already past their first 20 (an Opus call)
+    python3 tools/flow.py baseline <component> <value> <count>  # versions already past their first 20 (a strong-role call)
     python3 tools/flow.py event friction|direction-check [--note ...]   # record that a report was produced
 
 Each function moves through fixed states, derived from the files that already record them, so the
@@ -225,8 +225,12 @@ def read_review(root, g, functions):
         af.refuse(header.get('drafted_or_triaged_any_reviewed_function') == 'no', 'drafted_or_triaged is not no')
         model = header.get('reviewer_model')
         af.refuse(af.reviewer_matches(g['reviewer_model'], model), 'reviewer_model does not match assigned model')
-        af.refuse(g['kind'] != 'sampling' or model in af.OPUS_MODELS, 'sampling reviewer_model must be Opus')
-        af.refuse(af.reviewer_admitted(root, model, g.get('profile', 'cheap')), 'reviewer_model is not admitted for group profile')
+        profile = g.get('profile', profiles.DEFAULT)
+        if g['kind'] == 'sampling':
+            af.refuse(af.strong_reviewer_admitted(root, model, profile),
+                      'sampling reviewer_model must be Opus or profile-admitted Sol')
+        else:
+            af.refuse(af.reviewer_admitted(root, model, profile), 'reviewer_model is not admitted for group profile')
         want = 'yes' if g['kind'] == 'sampling' else 'no'
         af.refuse(header.get('sampling_second_pass') == want, f'sampling_second_pass is not {want}')
     except (af.Refused, UnicodeDecodeError) as exc:
@@ -383,7 +387,18 @@ def choose_sample(name, rvas, comps, counts, seed='flow'):
 def reviewer_class(model):
     if model in af.OPUS_MODELS:
         return 'opus'
-    return {'gpt-6.1-terra': 'terra'}.get(model, model)
+    return {'gpt-6.1-terra': 'terra', af.SOL_MODEL: 'sol'}.get(model, model)
+
+
+def strong_reviewer_entry(root, profile, first_model):
+    """Choose an admitted strong Reviewer, independent of the first model under claude-low."""
+    entry = dict(profiles.role(profile, 'strong'))
+    if (not af.strong_reviewer_admitted(root, entry['model'], profile)
+            or (profile == 'claude-low' and af.reviewer_matches(entry['model'], first_model))):
+        entry = {'model': 'opus', 'harness': 'claude-code'}
+    refuse(profile != 'claude-low' or not af.reviewer_matches(entry['model'], first_model),
+           'no admitted strong Reviewer with a different model from the first review')
+    return entry
 
 
 def session_profile(fdir):
@@ -458,6 +473,7 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
         for r in batch:
             for c, v in comps[r].items():
                 counts.setdefault(c, {})[v] = counts.get(c, {}).get(v, 0) + 1
+        second = strong_reviewer_entry(root, profile, model) if sample else None
         g = {'name': name, 'kind': 'review', 'task_id': f'review-flow-{name}', 'build_id': data['target_build_id'],
              'functions': batch, 'created': utc(), 'source_revision': head, 'reviewer_model': model, 'profile': profile,
              'reviewer_harness': entry.get('harness', 'claude-code'),
@@ -467,7 +483,8 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
         save_group(fdir, g)
         if sample:
             s = dict(g, name=f'{name}-s', kind='sampling', task_id=f'review-flow-{name}-s', functions=sample,
-                     reviewer_model='opus', reviewer_harness='claude-code', pair=name, sampled=sample, components={})
+                     reviewer_model=second['model'], reviewer_harness=second['harness'],
+                     pair=name, sampled=sample, components={})
             s['brief'] = write_review_brief(root, s, by_rva)
             save_group(fdir, s)
             write_rerun_brief(root, g, by_rva)
@@ -600,6 +617,11 @@ def sampling_gate(root, fdir, g, data):
     if not g.get('sampled'):
         return True, None
     s = load_group(fdir, g['pair'])
+    if s.get('profile', profiles.DEFAULT) != g.get('profile', profiles.DEFAULT):
+        return False, 'DISAGREE: sampling profile does not match primary group profile'
+    if (g.get('profile', profiles.DEFAULT) == 'claude-low'
+            and af.reviewer_matches(g['reviewer_model'], s['reviewer_model'])):
+        return False, 'DISAGREE: sampling reviewer_model must differ from first reviewer_model'
     status, second = read_review(root, s, data['functions'])
     if status == 'missing':
         return False, f'waiting: sampling review {s["task_id"]} not saved'
@@ -660,10 +682,12 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
         esc = [(r, b.get('escalation_category')) for r, b in blocks.items() if b.get('verdict') == 'escalate']
         for rva, cat in esc:
             if cat in BLOCKING_ESCALATIONS and reviewer_class(g['reviewer_model']) != 'opus':
-                # docs/verification.md: an Opus Reviewer confirms a non-Opus escalation before the maintainer sees it.
+                # The profile's independent strong Reviewer confirms before the maintainer sees it.
+                confirmation = strong_reviewer_entry(root, g.get('profile', profiles.DEFAULT), g['reviewer_model'])
+                confirmer = 'Opus' if confirmation['model'] in af.OPUS_MODELS else confirmation['model']
                 stops.append(('stop', f'Reviewer ({g["reviewer_model"]}) escalated {rva} in {name} ({cat}): hold group {name} '
-                              'and hand it to the planning orchestrator for an Opus confirmation review; the maintainer '
-                              'gets it only if Opus also escalates'))
+                              f'and hand it to the planning orchestrator for a {confirmer} confirmation review; the maintainer '
+                              f'gets it only if {confirmer} also escalates'))
             elif cat in BLOCKING_ESCALATIONS:
                 stops.append(('stop', f'ESCALATE to the maintainer: Reviewer escalated {rva} in {name} ({cat}); hold group {name}'))
         if any(c in BLOCKING_ESCALATIONS for _, c in esc):
@@ -984,9 +1008,9 @@ Return a five-line summary. Do not push, post publicly, mark `matched`, or start
 
 # ------------------------------------------------------------------ integration
 
-def run(cmd, root, step):
+def run(cmd, root, step, env=None):
     """Run one integration step; raise FlowError with its output on failure."""
-    r = subprocess.run(cmd, cwd=root, capture_output=True, text=True)
+    r = subprocess.run(cmd, cwd=root, capture_output=True, text=True, env=env)
     if r.returncode:
         tail = '\n'.join((r.stderr.strip() + '\n' + r.stdout.strip()).strip().splitlines()[-15:])
         raise FlowError(f'STOPPED at {step} (exit {r.returncode}); nothing after it ran.\n{tail}')
@@ -1082,7 +1106,9 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         done = all(by_rva[r]['status'] == 'matched' for r in approved)
         printed = list(carried)
         if not done:
-            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file, '--profile', g.get('profile', 'cheap')], tree, 'accept_function.py')
+            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file,
+                       '--profile', g.get('profile', profiles.DEFAULT)], tree, 'accept_function.py',
+                      env=dict(os.environ, SKYRIM_FLOW_DIR=str(fdir.resolve())))
             take = False
             for line in out.splitlines():
                 if line.startswith('changed files'):

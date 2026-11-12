@@ -74,7 +74,7 @@ A function is accepted only when ALL of these hold:
      introduced only for matching, or a justification comment that is not a programmer's reason.
 3. **Reviewer approval.** A Reviewer (`docs/reviewer-runbook.md`; in Claude Code the
    `.claude/agents/reviewer.md` subagent) of an admitted class, started with fresh context, which
-   did not draft or triage that function, returns `approve` for it,
+   did not draft, engineer or triage that function, returns `approve` for it,
    for the current source or, under "Label-only re-acceptance" below, for an earlier source whose
    compiled code section is identical. The Reviewer is a necessary sanity and provenance check,
    not match evidence: it can only veto or approve, cannot substitute for item 1, and cannot edit
@@ -116,11 +116,21 @@ A function is accepted only when ALL of these hold:
    `.local/reviews/review-p26-terra-cal-{1..4}.md` and
    `.local/reviews/review-p19-wave2-{1..4}.md`. This was one wave at one revision, mostly small
    functions, with only 4 reference rejects. Sonnet is prepared, pending blind calibration and a
-   Reviewer-checked rule change. Opus is required for the sampling safeguard's second Reviewer
-   pass, confirmation of a non-Opus `escalate` before the maintainer, and reviews of comparator,
-   validator or acceptance-rule changes. A non-Opus `reject` needs no confirmation. A new
-   Reviewer model or class counts as a new Reviewer version for sampling. The acceptance and
-   flow tools refuse models not admitted for the profile in use.
+   Reviewer-checked rule change.
+
+   The Sol class as the strong Reviewer is admitted only as `gpt-6.1-sol` under `claude-low`
+   for sampling second passes, confirmation of a non-Opus `escalate` before the maintainer,
+   and reviews of comparator, validator, verifier or acceptance-rule changes. Unlike Terra,
+   Sol was admitted by maintainer decision WITHOUT a calibration:
+   "sol is goood enough dont waste time" (`docs/authorizations.md`, Notes). Terra remains the
+   default first function Reviewer; Sol may give a fresh function review when confirming an
+   escalation. Under `claude-low`, every second pass must use a different model from the first review (Opus
+   aliases count as one model); if the first review was Sol, use an independent Opus Reviewer.
+   Outside `claude-low`, Opus remains required for these strong review duties and the existing
+   sampling policy is unchanged. A Reviewer must never review work it drafted, engineered or
+   triaged, including machinery and rule changes. A non-Opus `reject` needs no confirmation.
+   A new Reviewer model or class counts as a new Reviewer version for sampling. The acceptance
+   and flow tools refuse models not admitted for the profile and review role in use.
 
    Verdicts are `approve`, `reject` (on a blocking ground, back to the Drafter or Engineer with
    reasons) or `escalate` (with a category: `provenance`, `legal`, `systemic` or `other`). The
@@ -171,7 +181,9 @@ version, every new Reviewer prompt version (`.claude/agents/reviewer.md`, `docs/
 or Reviewer model, and every new version of
 the acceptance rule (this section and `tools/accept_function.py`), and the first 20 label-only
 re-acceptances under each acceptance-rule version, get a second independent Reviewer pass (fresh context, a different
-Reviewer run, Opus class) and a from-scratch comparator re-run on a clean checkout. Any disagreement, with
+Reviewer run, Opus class outside `claude-low`; under `claude-low`, an admitted strong Reviewer
+using a different model from the first review) and a from-scratch comparator re-run on a clean
+checkout. Any disagreement, with
 either Reviewer or with the earlier comparator result, pauses acceptance for that batch and is
 escalated to the maintainer.
 
@@ -190,9 +202,10 @@ reason; the earlier report stays in git history and is not cited as current evid
 `tools/accept_function.py --revoke` makes the data change (status, `report`, review and match
 records) and prints the note to add.
 
-**Changes to the machinery.** Changes to the comparator, the validator's gate logic or this rule
+**Changes to the machinery.** Changes to the comparator, the validator's gate logic, verifier or this rule
 are not covered by automated acceptance of functions. They need an Engineer change with tests and
-a separate Reviewer pass on that change, and are listed in the maintainer's summary report; they
+a separate strong Reviewer pass on that change (Sol under `claude-low`, Opus otherwise,
+independent of the Engineer), and are listed in the maintainer's summary report; they
 are not blocked waiting for the maintainer, except changes to this rule itself, which escalate.
 
 ## Match gate
@@ -555,6 +568,9 @@ also refreshes `updated_at` and `reconstruction/INDEX.md` and prints the files t
 An `approve` block must also give `report_binding: agree`, `pass` for the four blocking checks
 (`plausible_source`, `provenance`, `claim_scope`, `publication_hygiene`), `blocking_findings:
 none` and a `naming_findings` field (`none` or a list), or it is refused as inconsistent.
+The saved review group's profile governs admission even if the active session later changes.
+A caller-supplied `--profile` must agree with that group, or with the active session when no
+group records the task; with neither, it defaults to the configured default unless supplied.
 The block parser fails closed. The saved review must start at its `# Review <task-id>` title,
 hold no second title (in any case, in any section) and no unseen characters (control or format
 characters other than tab and CRLF, line separators, spaces other than U+0020). A section is a

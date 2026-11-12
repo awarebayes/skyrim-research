@@ -589,11 +589,14 @@ def apply(root, data, new, target, prepared, tolerated, when):
 # Explicit model IDs and the Opus harness alias; unknown versions are not admitted.
 OPUS_MODELS = frozenset(('opus', 'claude-opus-5-5'))
 ADMITTING_PHRASES = {'gpt-6.1-terra': 'Terra class as the Reviewer'}
+SOL_MODEL = 'gpt-6.1-sol'
 
 
 def reviewer_admitted(root, model, profile):
     if model in OPUS_MODELS:
         return True
+    if model == SOL_MODEL:
+        return strong_reviewer_admitted(root, model, profile)
     phrase = ADMITTING_PHRASES.get(model)
     path = Path(root) / 'docs/verification.md'
     return bool(model == 'gpt-6.1-terra' and profile == 'claude-low' and phrase
@@ -604,16 +607,47 @@ def reviewer_matches(assigned, actual):
     return actual == assigned or (assigned in OPUS_MODELS and actual in OPUS_MODELS)
 
 
-def active_profile(root):
+def strong_reviewer_admitted(root, model, profile):
+    if model in OPUS_MODELS:
+        return True
+    path = Path(root) / 'docs/verification.md'
+    return bool(model == SOL_MODEL and profile == 'claude-low' and path.is_file()
+                and 'Sol class as the strong Reviewer' in path.read_text())
+
+
+def active_flow_dir(root):
     import os
-    flow_dir = Path(os.environ.get('SKYRIM_FLOW_DIR') or Path(root) / '.local/flow')
-    path = flow_dir / 'events.jsonl'
+    return Path(os.environ.get('SKYRIM_FLOW_DIR') or Path(root) / '.local/flow')
+
+
+def active_profile(root, default=None):
+    path = active_flow_dir(root) / 'events.jsonl'
     if path.is_file():
         for line in reversed(path.read_text().splitlines()):
+            if not line.strip():
+                continue
             event = json.loads(line)
             if event.get('event') == 'session-start':
-                return event.get('profile') or 'cheap'
-    return 'cheap'
+                import profiles
+                return event.get('profile') or profiles.DEFAULT
+    return default
+
+
+def review_profile(root, task_id, requested):
+    """A saved group's profile takes precedence over a later session; overrides must agree."""
+    import profiles
+    recorded = set()
+    for path in (active_flow_dir(root) / 'groups').glob('*.json'):
+        group = json.loads(path.read_text())
+        if group.get('task_id') == task_id:
+            recorded.add(group.get('profile') or profiles.DEFAULT)
+    refuse(len(recorded) <= 1, 'review groups record conflicting profiles for this task')
+    assigned = next(iter(recorded)) if recorded else active_profile(root)
+    refuse(not requested or not assigned or requested == assigned,
+           '--profile does not match the recorded review group or active session profile')
+    profile = assigned or requested or profiles.DEFAULT
+    profiles.get(profile)
+    return profile
 
 
 def accept_many(root, review_source, targets=None, verdict='approve', when=None, select=None, profile=None):
@@ -641,7 +675,8 @@ def accept_many(root, review_source, targets=None, verdict='approve', when=None,
            'review does not state the Reviewer neither drafted nor triaged the function')
     model = header.get('reviewer_model')
     refuse(bool(model), 'review names no reviewer_model')
-    refuse(reviewer_admitted(root, model, profile or active_profile(root)),
+    profile = review_profile(root, title, profile)
+    refuse(reviewer_admitted(root, model, profile),
            f'reviewer_model {model!r} is not admitted for this profile')
     skipped = []
     if targets is None:

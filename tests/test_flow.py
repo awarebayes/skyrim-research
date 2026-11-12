@@ -225,6 +225,7 @@ class FlowTests(unittest.TestCase):
         self.assertGreaterEqual(len(flow.choose_sample('g', list(comps), comps, counts)), 20)
 
     def test_claude_low_profile_falls_back_to_opus_until_admitted(self):
+        (self.root / 'docs/verification.md').write_text('Sol class as the strong Reviewer\n')
         flow.log_event(self.fdir, 'session-start', profile='claude-low')
         made = flow.review_group(self.root, self.fdir)
         self.assertEqual(flow.load_group(self.fdir, made[0])['reviewer_model'], 'opus')
@@ -237,6 +238,80 @@ class FlowTests(unittest.TestCase):
         line = [t for k, t in self.actions() if k == 'dispatch' and f'Reviewer for {g["name"]}:' in t][0]
         self.assertIn('Codex session', line)
         self.assertIn('docs/reviewer-runbook.md', line)
+
+    def test_claude_low_uses_exact_sol_model_for_strong_reviews(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        name = flow.review_group(self.root, self.fdir, max_size=3)[0]
+        g = flow.load_group(self.fdir, name)
+        sample = flow.load_group(self.fdir, g['pair'])
+        self.assertEqual(g['reviewer_model'], 'gpt-6.1-terra')
+        self.assertEqual((sample['reviewer_model'], sample['reviewer_harness']), ('gpt-6.1-sol', 'codex'))
+        blocks = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
+        self.repo.save_review(g['task_id'], blocks, model='gpt-6.1-terra')
+        self.repo.save_review(sample['task_id'], blocks, 'yes', model='gpt-6.1-sol')
+        g['rerun'] = {'not_agree': []}
+        self.assertEqual(flow.sampling_gate(self.root, self.fdir, g, flow.inventory(self.root)), (True, None))
+        line = flow.dispatch_line(sample)[1]
+        self.assertIn('model gpt-6.1-sol', line)
+        self.assertIn('Codex session', line)
+        for model, profile in [('gpt-6.1-sol', 'cheap'), ('gpt-6.1-sol', 'full'),
+                               ('gpt-5.6-sol', 'claude-low'), ('gpt-6-sol', 'claude-low')]:
+            with self.subTest(model=model, profile=profile):
+                sample.update(reviewer_model=model, profile=profile)
+                self.repo.save_review(sample['task_id'], blocks, 'yes', model=model)
+                self.assertEqual(flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0],
+                                 'malformed: sampling reviewer_model must be Opus or profile-admitted Sol')
+
+    def test_sol_strong_first_review_requires_an_opus_second_pass(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        g = flow.load_group(self.fdir, flow.review_group(self.root, self.fdir, reviewer_model='gpt-6.1-sol')[0])
+        self.assertEqual(g['reviewer_model'], 'gpt-6.1-sol')
+        sample = flow.load_group(self.fdir, g['pair'])
+        self.assertEqual((sample['reviewer_model'], sample['reviewer_harness']), ('opus', 'claude-code'))
+
+    def test_no_group_is_saved_without_an_independent_strong_model(self):
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        with self.assertRaisesRegex(flow.FlowError, 'no admitted strong Reviewer with a different model'):
+            flow.review_group(self.root, self.fdir, reviewer_model='opus')
+        self.assertEqual(flow.groups(self.fdir), {})
+
+    def test_sol_second_pass_cannot_review_a_sol_first_pass(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        name = flow.review_group(self.root, self.fdir, max_size=3, reviewer_model='gpt-6.1-sol')[0]
+        g = flow.load_group(self.fdir, name)
+        sample = flow.load_group(self.fdir, g['pair'])
+        sample['reviewer_model'] = 'gpt-6.1-sol'
+        flow.save_group(self.fdir, sample)
+        blocks = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
+        self.repo.save_review(g['task_id'], blocks, model='gpt-6.1-sol')
+        self.repo.save_review(sample['task_id'], blocks, 'yes', model='gpt-6.1-sol')
+        g['rerun'] = {'not_agree': []}
+        self.assertEqual(flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0], 'ok')
+        self.assertEqual(flow.sampling_gate(self.root, self.fdir, g, flow.inventory(self.root)),
+                         (False, 'DISAGREE: sampling reviewer_model must differ from first reviewer_model'))
+        self.assertEqual(flow.strong_reviewer_entry(self.root, 'claude-low', 'gpt-6.1-sol')['model'], 'opus')
+
+    def test_opus_aliases_are_the_same_model_for_claude_low_sampling(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        g = flow.load_group(self.fdir, flow.review_group(self.root, self.fdir, reviewer_model='opus')[0])
+        sample = flow.load_group(self.fdir, g['pair'])
+        sample['reviewer_model'] = 'claude-opus-5-5'
+        flow.save_group(self.fdir, sample)
+        self.assertEqual(flow.sampling_gate(self.root, self.fdir, g, flow.inventory(self.root)),
+                         (False, 'DISAGREE: sampling reviewer_model must differ from first reviewer_model'))
+
+    def test_sampling_profile_must_match_primary_group(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        g = self.grouped()
+        sample = flow.load_group(self.fdir, g['pair'])
+        sample.update(profile='claude-low', reviewer_model='gpt-6.1-sol')
+        flow.save_group(self.fdir, sample)
+        self.assertEqual(flow.sampling_gate(self.root, self.fdir, g, flow.inventory(self.root)),
+                         (False, 'DISAGREE: sampling profile does not match primary group profile'))
 
     def grouped(self):
         flow.log_event(self.fdir, 'session-start')
@@ -305,6 +380,17 @@ class FlowTests(unittest.TestCase):
         self.assertTrue(any('Opus confirmation' in t for t in stops), stops)
         self.assertFalse(any(t.startswith('ESCALATE to the maintainer') for t in stops))
 
+    def test_claude_low_escalation_goes_to_sol_confirmation(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        g = flow.load_group(self.fdir, flow.review_group(self.root, self.fdir, max_size=3)[0])
+        blocks = [(r, s, self.repo.digest(r), 'escalate', 'provenance') for r, s, _ in FUNCS]
+        self.repo.save_review(g['task_id'], blocks, model='gpt-6.1-terra')
+        stops = [t for k, t in self.actions() if k == 'stop']
+        self.assertTrue(any('gpt-6.1-sol confirmation review' in t for t in stops), stops)
+        self.assertFalse(any(t.startswith('ESCALATE to the maintainer') for t in stops))
+        self.assertFalse(any('flow.py integrate' in t for _, t in self.actions()))
+
     def test_malformed_review_asks_for_a_new_reviewer_never_an_edit(self):
         g = self.grouped()
         path = self.repo.save_review(g['task_id'], [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS])
@@ -359,6 +445,22 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(states['0x2000']['state'], 'rejected')
         self.assertFalse(any('integrate' in t for _, t in self.actions()))
         self.assertTrue(any('brief triage --group' in t for _, t in self.actions()))
+
+    def test_integration_passes_recorded_group_to_acceptance(self):
+        probe = '''import os, json
+from pathlib import Path
+group_dir = Path(os.environ['SKYRIM_FLOW_DIR'])
+assert group_dir.is_absolute()
+group = json.loads((group_dir / 'groups/g001.json').read_text())
+assert group['task_id'] == 'review-flow-g001'
+assert group['profile'] == 'cheap'
+'''
+        (self.root / 'tools/accept_function.py').write_text(probe + STUB_ACCEPT)
+        git(self.root, 'commit', '--quiet', '-am', 'check integration group context')
+        git(self.root, 'push', '--quiet', 'origin', 'main')
+        g = self.integrate_ready()
+        flow.integrate(self.root, self.fdir, g['name'], push=False, python=sys.executable)
+        self.assertIsNotNone(flow.load_group(self.fdir, g['name'])['integrated']['commit'])
 
     def test_integrate_stops_at_failed_check_and_commits_nothing(self):
         g = self.integrate_ready()

@@ -86,9 +86,9 @@ must be recorded in `docs/authorizations.md` by the human maintainer before work
 | Maintainer | awarebayes (human) | grants gates, sets budgets, decides licence and policy questions, handles escalations, reads summary reports, may audit and revoke any accepted function | reviews individual functions (not asked to) |
 | Orchestrator (planning) | Claude Fable, latest available (`claude-fable-5-1` today) via `.claude/agents/orchestrator.md` | plans, splits work into tasks, chooses profiles and batch scope, decides the exceptions the routine orchestrator hands up, writes briefs for new kinds of work, triages failures, tracks spend against the cap, reports to the maintainer | writes reconstructions or tooling, judges a match, edits gates, posts publicly |
 | Orchestrator (routine) | Claude Sonnet via `.claude/agents/orchestrator-routine.md`, or the profile's orchestrator model through `docs/orchestrator-runbook.md` | runs `tools/flow.py next-actions` and does what it lists: starts Drafters and Reviewers with generated briefs, runs `flow.py integrate` (accept, checks, commit, push, CI), produces the friction report, stops on every exception the runbook lists | decides ordering or sampling, writes briefs by hand, edits files, judges a match, works around a refusal |
-| Direction check | the profile's strong model (Opus today) via `.claude/agents/direction-check.md`, fresh context | reads the friction report, pipeline status, recent handoffs and the census; writes `.local/handoffs/direction-check-<n>.md` with what to change | edits anything else, starts agents |
-| Engineer | Claude Opus 5.5 (`claude-opus-5-5`) subagent | tooling, comparator, Ghidra/import work, failure analysis on near-misses, integration of worker branches, recording `matched` once the acceptance rule is met, commit and push | marks `matched` without a reproduced pass and a Reviewer `approve` |
-| Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) by default via `.claude/agents/reviewer.md`; OpenAI `gpt-6.1-terra` under `claude-low`; Sonnet pending calibration (any model: `docs/reviewer-runbook.md`; admitted classes are set by `docs/verification.md`), fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
+| Direction check | the profile's strong model (Sol under `claude-low`, Opus otherwise) via `.claude/agents/direction-check.md`, fresh context | reads the friction report, pipeline status, recent handoffs and the census; writes `.local/handoffs/direction-check-<n>.md` with what to change | edits anything else, starts agents |
+| Engineer | Claude Opus 5.5 (`claude-opus-5-5`); under `claude-low`, Terra or Sol through Codex within the recorded Engineer scope | tooling, comparator, Ghidra/import work, failure analysis on near-misses, integration of worker branches, recording `matched` once the acceptance rule is met, commit and push | marks `matched` without a reproduced pass and a Reviewer `approve` |
+| Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) by default via `.claude/agents/reviewer.md`; OpenAI `gpt-6.1-terra` for routine first reviews and `gpt-6.1-sol` for strong review duties under `claude-low`; Sonnet pending calibration (any model: `docs/reviewer-runbook.md`; admitted classes are set by `docs/verification.md`), fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews work it drafted, engineered or triaged, edits source, comparator, validator or reports, counts as match evidence |
 | Drafter | Claude Sonnet 5.5 (`claude-sonnet-5-5`) subagent | bounded high-volume tasks: reconstruction drafts, synthetic fixtures, report formatting, doc updates | decides scope or accepts its own output |
 | Verifier | deterministic job on a runner host from the private runner config (the maintainer's Mac under Wine and Windows PC natively; Boat is retired) | compiles a pinned source revision with the pinned recipe and runs the comparator; emits a sanitized report | involves a model in the pass/fail decision |
 
@@ -106,8 +106,13 @@ because weak-model drafting passes the same comparator gate; it stays default on
 friction report shows its pass rate at or above the threshold in `tools/profiles.json`. A profile
 never changes what counts as a match, and a Reviewer model the acceptance rule does not admit is
 refused whatever a profile says. The rule admits Opus by default and `gpt-6.1-terra` under
-`claude-low`. Sonnet is pending calibration and a Reviewer-checked rule change. Sampling second
-passes, confirmations of a non-Opus escalation and machinery reviews stay with Opus.
+`claude-low`. Sonnet is pending calibration and a Reviewer-checked rule change. Under
+`claude-low` the strong Reviewer is exactly `gpt-6.1-sol`: sampling second passes, confirmation
+of non-Opus escalations, and reviews of comparator, validator, verifier and acceptance-rule
+changes. Sol was admitted by maintainer decision WITHOUT a calibration
+("sol is goood enough dont waste time"); Terra was calibrated. A second pass under `claude-low`
+uses a different model from the first review, and no Reviewer reviews work it drafted,
+engineered or triaged. Outside `claude-low` these duties stay with Opus.
 What OpenAI models may read under `claude-low` is recorded in `docs/authorizations.md` (Notes).
 
 **Friction and direction checks.** The routine orchestrator produces the friction report
@@ -179,7 +184,8 @@ orchestrator does not start a phase until the previous one's finish condition fr
   "worktree"`), submits it to a verifier, reads only the sanitized diff summary, and retries within
   an attempt limit set in the brief. Stuck tasks go to an Engineer with the attempt history.
 - **Review**: each function with a reproduced pass goes to a fresh Reviewer (never its Drafter
-  or triaging Engineer), singly or in a batch. `reject` returns it to the draft loop with reasons;
+  or an Engineer who engineered or triaged it), singly or in a batch. `reject` returns it to the
+  draft loop with reasons;
   `escalate` follows `docs/verification.md`. The sampling safeguard there (at least 5% random,
   plus the first 20 per new recipe, compiler, Drafter or Reviewer prompt version or acceptance-rule
   version, and the first 20 label-only re-acceptances under each acceptance-rule version) gets a second Reviewer and a

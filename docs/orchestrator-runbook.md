@@ -37,8 +37,14 @@ your harness does:
 
 **Reviewer model.** The acceptance rule (`docs/verification.md`, "Admitted Reviewer classes")
 admits Opus by default and `gpt-6.1-terra` under `claude-low`; Sonnet is pending calibration and
-a Reviewer-checked rule change. Sampling second passes use Opus; non-Opus escalations are held
-for an Opus confirmation. A profile Reviewer the rule does not admit is replaced by Opus with a note.
+a Reviewer-checked rule change. Under `claude-low`, exactly `gpt-6.1-sol` is the strong Reviewer
+for sampling second passes, confirmation of non-Opus escalations and reviews of comparator,
+validator, verifier and acceptance-rule changes. Sol was admitted by maintainer decision WITHOUT
+a calibration ("sol is goood enough dont waste time"); Terra's admission followed calibration.
+Every second pass under `claude-low` uses a different model from the first review; an initial
+Sol review therefore needs Opus. Opus keeps these duties outside `claude-low`. No Reviewer may
+review work it drafted, engineered or triaged. A profile Reviewer the rule does not admit is
+replaced by Opus with a note; a sampling pass with no admitted independent model is refused.
 
 A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`; Drafter
@@ -94,6 +100,8 @@ Stop that group (or everything, where it says so) and report to the maintainer, 
 line, for:
 
 1. A Reviewer `escalate` with category `provenance`, `legal` or `systemic` (`[stop]` line).
+   A non-Opus escalation stays held for independent strong Reviewer confirmation (Sol under
+   `claude-low`, Opus otherwise); report to the maintainer only if the confirmer also escalates.
 2. A sampling disagreement: a second Reviewer differs, or a re-run is not AGREE (`[stop]` line).
 3. CI `RED` after a push: stop everything that would push until main is green again.
 4. A pass that does not reproduce on the second host, or any sign that an accepted function is
@@ -136,6 +144,6 @@ started you.
 ## Never
 
 Commit or push except through `flow.py integrate`; run `accept_function.py` directly; edit a
-saved review; start a Reviewer on a function its Drafter or triager would review; give a worker
+saved review; start a Reviewer on work it drafted, engineered or triaged; give a worker
 material its model is not cleared to read; start a Boat machine (Boat is retired; confirm briefs
 use the runner hosts); post anything publicly.
