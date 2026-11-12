@@ -13,10 +13,19 @@ target was built with.
 ## Per-function commands
 
 ```sh
+tools/verifier/session up | status | extend | down     # verifier session: machines A and B (Engineers/orchestrator)
 tools/verifier/attempt .local/tasks/<task-id>          # one attempt: compile the unit, compare each function
-tools/verifier/attempt --stop [.local/tasks/<task-id>] # Engineers only: stop the standing machine
-tools/verifier/confirm .local/tasks/<task-id>          # acceptance evidence: fork, 2 compile hosts, 3 compare hosts, records
+tools/verifier/attempt --clean .local/tasks/<task-id>  # remove the task's files on the machine
+tools/verifier/confirm .local/tasks/<task-id>          # acceptance evidence: A and B compile, 3 compare hosts, records
+tools/verifier/confirm --session <task-dir>... [--out DIR] # many units on A then B, no starts, one table
+tools/verifier/confirm --fork .local/tasks/<task-id>   # old path: one fork (one start) per unit
 ```
+
+A session (`session`, `vsession.py`) brings up the standing machine A and the separately
+installed B once per work period, at most one start each, and checks their toolchain and image
+hashes; `attempt` and `confirm` then never start or stop a machine (`confirm_session.py`). Every
+start by any tool goes through `starts.py` (budget from `boat limits`, a daily reserve, a log in
+`.local/verifier/starts.jsonl`). Rules: `docs/boat-agent-guidelines.md`.
 
 `<task-id>/task.json` (private) names the build id, compiled file, recipe, symbol map and the
 functions (RVA, size, symbol); the format is in `pipeline.py`. Sources come from the checkout the
@@ -38,6 +47,8 @@ repository symbol map, and refuses to overwrite a record without `--replace`. Bo
 
 ## Files
 
+- `session`, `vsession.py`, `confirm_session.py`, `starts.py`: verifier sessions, session-mode
+  confirm and the starts budget (tests in `tests/test_session.py` use a fake `boat` CLI).
 - `attempt`, `confirm`: the commands above; `pipeline.py` holds their shared logic, `boatctl.py`
   the Boat CLI calls, `disasm.py` the local side-by-side disassembly, `bind.py` the binding of
   decorated names to target RVAs (rules and hint format in its docstring).

@@ -18,6 +18,11 @@ set -euo pipefail
 TTL=${BOAT_TTL:-3600}
 compute_line >&2
 
+# Starts budget check and log (tools/verifier/starts.py); exit 5 when the reserve would be used.
+take_start() {
+    python3 "$(dirname "$0")/starts.py" take --reason "$1" --machine "$BOAT_VERIFIER_NAME" || exit 5
+}
+
 LOOK=$(verifier_lookup)
 read -r ID STATE <<<"$LOOK" || true
 case "${STATE:-missing}" in
@@ -25,6 +30,7 @@ case "${STATE:-missing}" in
         say "$BOAT_VERIFIER_NAME ($ID) already running; auto-stop at $(sandbox_field "$ID" archiveAfter)"
         ;;
     stopped|stopping|error)
+        take_start "boat_up.sh resume"
         say "resuming $BOAT_VERIFIER_NAME ($ID) with auto-stop ${TTL}s"
         "$BOAT" resume "$ID" --ttl "$TTL" --json >/dev/null
         say "ready; auto-stop at $(sandbox_field "$ID" archiveAfter)"
@@ -35,6 +41,7 @@ case "${STATE:-missing}" in
         ;;
     missing)
         [ "${BOAT_ALLOW_CREATE:-0}" = 1 ] || die "no machine named $BOAT_VERIFIER_NAME. Check \`boat list --all\`; to build a new one from the recipe set BOAT_ALLOW_CREATE=1"
+        take_start "boat_up.sh create"
         say "creating $BOAT_VERIFIER_NAME (no account secrets, auto-stop ${TTL}s)"
         ID=$("$BOAT" new --no-env --type default --ttl "$TTL" --name "$BOAT_VERIFIER_NAME" --json \
             | python3 -I -c '

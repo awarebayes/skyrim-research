@@ -37,6 +37,7 @@ sys.path.insert(0, str(HERE))
 from source_digest import include_closure, recipe_flag_problem  # noqa: E402
 import boatctl  # noqa: E402
 import disasm  # noqa: E402
+import vsession  # noqa: E402
 try:
     import cost_hooks  # noqa: E402  (optional: the cost ledger may not be installed)
 except ImportError:
@@ -95,6 +96,8 @@ def record_cost(task, stage, seconds, wall):
         cost_hooks.record_boat(task['task_id'], stage, seconds, wall, cost_targets(task))
     except Exception:  # cost bookkeeping must never change a verifier result
         pass
+    # Session overhead booked by `session down` excludes what was attributed here.
+    vsession.note_attributed(seconds, task['task_id'], stage)
 
 
 def parse_int(value, what):
@@ -339,6 +342,9 @@ def wait_state(machine, wanted, limit=180):
 
 def ensure_standing(ttl=DEFAULT_TTL, log=print):
     """Bring the standing verifier up (resume or reuse) with an auto-stop deadline; returns (id, how)."""
+    in_session = vsession.machine_for_attempt(ttl)
+    if in_session is not None:
+        return in_session
     machine, state = boatctl.lookup()
     if machine is None:
         raise PipelineError(f'no machine named {boatctl.STANDING}; it is rebuilt only by an Engineer '
@@ -354,7 +360,7 @@ def ensure_standing(ttl=DEFAULT_TTL, log=print):
             return machine, f'warm, deadline extended to {ttl // 60} min'
         return machine, 'warm' + (f', auto-stop in {left // 60} min' if left is not None else '')
     if state in {'stopped', 'error'}:
-        boatctl.resume(machine, ttl)
+        boatctl.resume(machine, ttl, reason='ensure_standing (no session)')
         return machine, f'resumed, auto-stop in {ttl // 60} min'
     raise PipelineError(f'{boatctl.STANDING} is in state {state}')
 

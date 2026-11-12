@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 """Acceptance evidence for a passing unit in one command: two Boat compile hosts, three compare hosts.
 
-    tools/verifier/confirm <task-dir> [--replace] [--stop]
+    tools/verifier/confirm <task-dir> [--replace] [--out DIR]          # session mode (default)
+    tools/verifier/confirm --session <task-dir>... | --list FILE [--replace] [--out DIR]   # batch (--all is the same)
+    tools/verifier/confirm --fork <task-dir> [--replace] [--stop]      # old per-unit fork
+
+Session mode (confirm_session.py) needs a verifier session (tools/verifier/session up): it
+compiles on machines A and B, compares on A, B and this Mac, starts no machine, and labels the
+records `independence: separate-machine`. --all or --list (one task directory per line) confirm
+many units in one run with one summary table. --out writes records under DIR/<build id>/ instead
+of reports/. The rest of this text describes the --fork path, which costs one start per unit.
 
 Runs on the checkout's working tree. A record binds the unit's tu-sha256-v1 digest and the recipe
 and symbol-map hashes, never a commit, so a unit may be confirmed before it is committed: that is
@@ -56,7 +64,7 @@ def notes(task, recipe):
         'Comparator reports are embedded verbatim. Their acceptance field is the comparator\'s own and stays '
         'not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized '
         'Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.',
-        'Host independence: the fork is a copy of the standing verifier machine\'s disk, so it shares that '
+        'independence: fork. The fork is a copy of the standing verifier machine\'s disk, so it shares that '
         'toolchain install and Ubuntu image; each Boat host checked its compiler binaries against pinned.sha256 '
         'and its image against builds/target.json before compiling. The macOS host only compared; it did not compile.',
         'Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed '
@@ -326,12 +334,32 @@ def confirm(task_dir, replace, stop_after):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('task_dir')
+    p.add_argument('task_dirs', nargs='*')
     p.add_argument('--replace', action='store_true', help='rewrite existing match records from the new runs')
-    p.add_argument('--stop', action='store_true', help='stop the standing machine at the end')
+    p.add_argument('--stop', action='store_true', help='with --fork: stop the standing machine at the end')
+    p.add_argument('--fork', action='store_true', help='old path: fork the standing machine for this unit')
+    p.add_argument('--all', '--session', dest='all', action='store_true',
+                   help='session mode, several units: every task directory given, first pass on A, second on B')
+    p.add_argument('--list', type=Path, help='session mode: file with one task directory per line')
+    p.add_argument('--out', type=Path, help='session mode: write records under OUT/<build id>/, not reports/')
     a = p.parse_args()
+    dirs = list(a.task_dirs)
+    if a.list:
+        dirs += [x.strip() for x in a.list.read_text().splitlines() if x.strip() and not x.startswith('#')]
+    if not dirs:
+        p.error('a task directory is required')
     try:
-        return confirm(a.task_dir, a.replace, a.stop)
+        if a.fork:
+            if len(dirs) != 1 or a.out:
+                p.error('--fork confirms one unit and writes to reports/')
+            return confirm(dirs[0], a.replace, a.stop)
+        if len(dirs) > 1 and not (a.all or a.list):
+            p.error('several task directories need --all')
+        if a.stop:
+            p.error('--stop is for --fork; a session ends with tools/verifier/session down')
+        import confirm_session
+        return confirm_session.run(sys.modules[__name__], dirs, a.replace,
+                                   a.out.resolve() if a.out else None)
     except (PipelineError, boatctl.BoatError) as exc:
         print(f'confirm: {exc}', file=sys.stderr)
         return 2
