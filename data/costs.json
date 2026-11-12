@@ -5721,6 +5721,34 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a065073d94220e9aa",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p15-sampling",
+   "stage": "review",
+   "tokens": {
+    "input": 98,
+    "cache_creation": 164989,
+    "cache_read": 5026872,
+    "output": 39019
+   },
+   "messages": 49,
+   "tool_uses": 56,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 421,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfa11d0",
+     "share": 1.0
+    }
+   ],
+   "estimated": true,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a0d948316c4bceb89",
    "date": "2026-11-12",
    "role": "engineer",
@@ -7093,6 +7121,34 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-a6a66c7968ba7f107",
+   "date": "2026-11-12",
+   "role": "engineer",
+   "model": "claude-opus-5-5",
+   "task": "p16-origin-sweep",
+   "stage": "integrate",
+   "tokens": {
+    "input": 220,
+    "cache_creation": 781408,
+    "cache_read": 19305247,
+    "output": 86385
+   },
+   "messages": 109,
+   "tool_uses": 115,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 4103,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": false,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-a6fac13e84adf452c",
    "date": "2026-11-12",
    "role": "drafter",
@@ -7585,6 +7641,34 @@
     }
    ],
    "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
+   "id": "agent-a84643577ae70cf4c",
+   "date": "2026-11-12",
+   "role": "reviewer",
+   "model": "claude-opus-5-5",
+   "task": "review-p15-bslsmb",
+   "stage": "review",
+   "tokens": {
+    "input": 70,
+    "cache_creation": 113619,
+    "cache_read": 2974718,
+    "output": 21504
+   },
+   "messages": 35,
+   "tool_uses": 40,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 237,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x15241d0",
+     "share": 1.0
+    }
+   ],
+   "estimated": true,
    "complete": true,
    "source": "session transcript"
   },
@@ -8317,6 +8401,34 @@
    "source": "session transcript"
   },
   {
+   "id": "agent-accf145dc017f7ac3",
+   "date": "2026-11-12",
+   "role": "engineer",
+   "model": "claude-opus-5-5",
+   "task": "p15-accept-rereview",
+   "stage": "integrate",
+   "tokens": {
+    "input": 168,
+    "cache_creation": 141486,
+    "cache_read": 6455697,
+    "output": 47950
+   },
+   "messages": 84,
+   "tool_uses": 91,
+   "boat_seconds": null,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": 816,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "session transcript"
+  },
+  {
    "id": "agent-acf03a66706e94ccd",
    "date": "2026-11-12",
    "role": "drafter",
@@ -8598,6 +8710,34 @@
     {
      "target": "sse-steam-1-7-104:0x2bb180",
      "share": 0.1
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-01f66d5647c9",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-b",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 26.655,
+   "boat_wall_seconds": 13.328,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x240f50",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -8905,6 +9045,46 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-05c5c2ab71fb",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-bsdirectinputmanager",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 39.936,
+   "boat_wall_seconds": 19.968,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xcfaeb0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfae70",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfaee0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfaf60",
+     "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-05e022827180",
    "date": "2026-11-12",
    "role": "verifier",
@@ -8938,6 +9118,54 @@
     {
      "target": "sse-steam-1-7-104:0x2eee20",
      "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-06352ff33845",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-tesfile",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 54.834,
+   "boat_wall_seconds": 27.417,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1ca460",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cdc10",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cd7d0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cdc60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1ce7e0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cd860",
+     "share": 0.16666666666666666
     }
    ],
    "estimated": false,
@@ -9802,6 +10030,54 @@
     {
      "target": "sse-steam-1-7-104:0x270890",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-139592a846f5",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-niobject",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 23.723,
+   "boat_wall_seconds": 23.723,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xedcb60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcb90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc740",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcbc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc920",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc7e0",
+     "share": 0.16666666666666666
     }
    ],
    "estimated": false,
@@ -10730,6 +11006,58 @@
     {
      "target": "sse-steam-1-7-104:0x1e5b30",
      "share": 0.1111111111111111
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-1cf6d56d82e2",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesform",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 23.719,
+   "boat_wall_seconds": 23.719,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1e36b0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e4ac0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e6010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e1fd0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5700",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1f3560",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5770",
+     "share": 0.14285714285714285
     }
    ],
    "estimated": false,
@@ -12029,6 +12357,98 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-315bbae975f1",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesobjectcell",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 90.165,
+   "boat_wall_seconds": 45.082,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2cbed0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be9b0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2bc660",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2cbef0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be700",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be530",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2bb180",
+     "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-32d72543c7df",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-inventorychanges",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 28.119,
+   "boat_wall_seconds": 28.119,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x22b710",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x233f90",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2372c0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x237300",
+     "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-32e7b3b79b79",
    "date": "2026-11-12",
    "role": "verifier",
@@ -12226,6 +12646,54 @@
     {
      "target": "sse-steam-1-7-104:0xfa11d0",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-357ba102b606",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-tesobjectrefr",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 82.063,
+   "boat_wall_seconds": 41.032,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2e6f30",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f3b70",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x300b90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2eee20",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e73a0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e5a60",
+     "share": 0.16666666666666666
     }
    ],
    "estimated": false,
@@ -12905,6 +13373,50 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-3f9a7e08e1fd",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-bslightingshadermaterialbase",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 33.282,
+   "boat_wall_seconds": 33.282,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b4ad0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523d10",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523f00",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1524030",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x15241d0",
+     "share": 0.2
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-403e9117f4cf",
    "date": "2026-11-12",
    "role": "verifier",
@@ -13269,6 +13781,46 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-4455a4c888f5",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-magiccaster",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 22.385,
+   "boat_wall_seconds": 22.385,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x5c2cc0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x5caae0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x5cef10",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x5cdf50",
+     "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-44b284a274b4",
    "date": "2026-11-12",
    "role": "verifier",
@@ -13458,6 +14010,38 @@
     {
      "target": "sse-steam-1-7-104:0xfa11d0",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-4545b6b0a26c",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-bsreadwritelock",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 10.835,
+   "boat_wall_seconds": 10.835,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xce3510",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xce3520",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -14345,6 +14929,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-4fef3bb855d5",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-d",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.515,
+   "boat_wall_seconds": 7.515,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xce3970",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-50be8c27b763",
    "date": "2026-11-12",
    "role": "verifier",
@@ -14577,6 +15189,54 @@
     },
     {
      "target": "sse-steam-1-7-104:0xedc7e0",
+     "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-52b35edf99d3",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-tesfile",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 21.641,
+   "boat_wall_seconds": 21.641,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1ca460",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cdc10",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cd7d0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cdc60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1ce7e0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1cd860",
      "share": 0.16666666666666666
     }
    ],
@@ -15101,6 +15761,62 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-598e997d2230",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-actor",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 24.516,
+   "boat_wall_seconds": 24.516,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x6797a0",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6cb920",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6d7750",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6af1b0",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6d92b0",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x687c20",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6c5440",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e7fc0",
+     "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-59ba0941c26a",
    "date": "2026-11-12",
    "role": "verifier",
@@ -15274,6 +15990,34 @@
     {
      "target": "sse-steam-1-7-104:0x3121d0",
      "share": 0.1111111111111111
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-5b609c650abc",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-b",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 7.127,
+   "boat_wall_seconds": 7.127,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x240f50",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -15594,6 +16338,38 @@
     {
      "target": "sse-steam-1-7-104:0x1cd860",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-5fd4b23c4cd0",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-bsreadwritelock",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 34.288,
+   "boat_wall_seconds": 17.144,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xce3510",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0xce3520",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -16165,6 +16941,38 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-68567f613242",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-c",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 6.503,
+   "boat_wall_seconds": 6.503,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x73ae00",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73ad90",
+     "share": 0.5
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-698e38f0acc1",
    "date": "2026-11-12",
    "role": "verifier",
@@ -16429,6 +17237,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-6c8a16ac43d8",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "verifier-session",
+   "stage": "orchestration",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 5059.678,
+   "boat_wall_seconds": null,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "overhead",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-6d44817458f8",
    "date": "2026-11-12",
    "role": "verifier",
@@ -16638,6 +17474,46 @@
     {
      "target": "sse-steam-1-7-104:0x1e5b30",
      "share": 0.1111111111111111
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-6fcfe2bd3b34",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-magiccaster",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 37.638,
+   "boat_wall_seconds": 18.819,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x5c2cc0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x5caae0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x5cef10",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x5cdf50",
+     "share": 0.25
     }
    ],
    "estimated": false,
@@ -17710,6 +18586,58 @@
     {
      "target": "sse-steam-1-7-104:0x2e5a60",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-7bca309f1f2f",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-nipsysmodifier",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 27.286,
+   "boat_wall_seconds": 27.286,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfa11c0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1040",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1140",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1090",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa0f40",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa11d0",
+     "share": 0.14285714285714285
     }
    ],
    "estimated": false,
@@ -19429,6 +20357,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-9462a40f7a1b",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-a",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 6.206,
+   "boat_wall_seconds": 6.206,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xef8900",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-946fd1921e00",
    "date": "2026-11-12",
    "role": "verifier",
@@ -19450,6 +20406,46 @@
     {
      "target": "overhead",
      "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-94709063bfcf",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-bsdirectinputmanager",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 25.013,
+   "boat_wall_seconds": 25.013,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xcfaeb0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfae70",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfaee0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0xcfaf60",
+     "share": 0.25
     }
    ],
    "estimated": false,
@@ -19929,6 +20925,46 @@
     },
     {
      "target": "sse-steam-1-7-104:0x30d050",
+     "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-9b550e6dcee1",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-inventorychanges",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 37.017,
+   "boat_wall_seconds": 18.508,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x22b710",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x233f90",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2372c0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x237300",
      "share": 0.25
     }
    ],
@@ -20465,6 +21501,58 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-a2f3ff0f5cee",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesobjectcell",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 23.701,
+   "boat_wall_seconds": 23.701,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2cbed0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be9b0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2bc660",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2cbef0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be700",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2be530",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2bb180",
+     "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-a3252bccdbe5",
    "date": "2026-11-12",
    "role": "verifier",
@@ -20849,6 +21937,46 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-a98088a93bd5",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesworldspace",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 60.418,
+   "boat_wall_seconds": 30.209,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x30b710",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x314930",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x30e8d0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x30d050",
+     "share": 0.25
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-aa31cd9598f7",
    "date": "2026-11-12",
    "role": "verifier",
@@ -21030,6 +22158,50 @@
     {
      "target": "sse-steam-1-7-104:0x3bbf50",
      "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-ab820c3cf1ee",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-bslightingshadermaterialbase",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 46.038,
+   "boat_wall_seconds": 23.019,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x4b4ad0",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523d10",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1523f00",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1524030",
+     "share": 0.2
+    },
+    {
+     "target": "sse-steam-1-7-104:0x15241d0",
+     "share": 0.2
     }
    ],
    "estimated": false,
@@ -22417,6 +23589,62 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-c2059c2a90a8",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-actor",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 62.66,
+   "boat_wall_seconds": 31.33,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x6797a0",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6cb920",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6d7750",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6af1b0",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6d92b0",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x687c20",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x6c5440",
+     "share": 0.125
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e7fc0",
+     "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-c26c44c4df89",
    "date": "2026-11-12",
    "role": "verifier",
@@ -23413,6 +24641,54 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-cd78257eb3a1",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch3-tesobjectrefr",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 28.717,
+   "boat_wall_seconds": 28.717,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x2e6f30",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2f3b70",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x300b90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2eee20",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e73a0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e5a60",
+     "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-ce342162b09a",
    "date": "2026-11-12",
    "role": "verifier",
@@ -23462,6 +24738,46 @@
     {
      "target": "sse-steam-1-7-104:0x3bbf50",
      "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-ceecb9ac600d",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesworldspace",
+   "stage": "draft",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 21.194,
+   "boat_wall_seconds": 21.194,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x30b710",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x314930",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x30e8d0",
+     "share": 0.25
+    },
+    {
+     "target": "sse-steam-1-7-104:0x30d050",
+     "share": 0.25
     }
    ],
    "estimated": false,
@@ -23606,6 +24922,58 @@
     {
      "target": "sse-steam-1-7-104:0x1cd860",
      "share": 0.16666666666666666
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-cf8fa2eb7454",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-tesform",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 51.664,
+   "boat_wall_seconds": 25.832,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x1e36b0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x2e4ac0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e6010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e1fd0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5700",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1f3560",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0x1e5770",
+     "share": 0.14285714285714285
     }
    ],
    "estimated": false,
@@ -23778,6 +25146,54 @@
     {
      "target": "sse-steam-1-7-104:0x240f50",
      "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-d3a9e67b407e",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-niobject",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 46.741,
+   "boat_wall_seconds": 23.371,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xedcb60",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcb90",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc740",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedcbc0",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc920",
+     "share": 0.16666666666666666
+    },
+    {
+     "target": "sse-steam-1-7-104:0xedc7e0",
+     "share": 0.16666666666666666
     }
    ],
    "estimated": false,
@@ -24678,6 +26094,38 @@
     {
      "target": "sse-steam-1-7-104:0x67eab0",
      "share": 0.14285714285714285
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-e32591899e13",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-c",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 44.762,
+   "boat_wall_seconds": 22.381,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0x73ae00",
+     "share": 0.5
+    },
+    {
+     "target": "sse-steam-1-7-104:0x73ad90",
+     "share": 0.5
     }
    ],
    "estimated": false,
@@ -25913,6 +27361,34 @@
    "source": "verifier hook"
   },
   {
+   "id": "compute-f4c156f916f6",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-d",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 25.436,
+   "boat_wall_seconds": 12.718,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xce3970",
+     "share": 1.0
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
    "id": "compute-f546b8facddb",
    "date": "2026-11-12",
    "role": "verifier",
@@ -26074,6 +27550,34 @@
     {
      "target": "sse-steam-1-7-104:0x3bbf50",
      "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-f5f104ed581b",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "second-batch-a",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 20.548,
+   "boat_wall_seconds": 10.274,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xef8900",
+     "share": 1.0
     }
    ],
    "estimated": false,
@@ -26662,6 +28166,58 @@
     {
      "target": "sse-steam-1-7-104:0xee24d0",
      "share": 0.125
+    }
+   ],
+   "estimated": false,
+   "complete": true,
+   "source": "verifier hook"
+  },
+  {
+   "id": "compute-fc773d5dcb9c",
+   "date": "2026-11-12",
+   "role": "verifier",
+   "model": null,
+   "task": "batch4-nipsysmodifier",
+   "stage": "confirm",
+   "tokens": {
+    "input": 0,
+    "cache_creation": 0,
+    "cache_read": 0,
+    "output": 0
+   },
+   "messages": null,
+   "tool_uses": null,
+   "boat_seconds": 55.977,
+   "boat_wall_seconds": 27.989,
+   "agent_wall_seconds": null,
+   "allocations": [
+    {
+     "target": "sse-steam-1-7-104:0xfa11c0",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1010",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1040",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1140",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa1090",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa0f40",
+     "share": 0.14285714285714285
+    },
+    {
+     "target": "sse-steam-1-7-104:0xfa11d0",
+     "share": 0.14285714285714285
     }
    ],
    "estimated": false,
