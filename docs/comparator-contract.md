@@ -204,11 +204,45 @@ analysis), is a provenance question for the task, not something the comparator c
 wrong map produces `relocation-target-mismatch`, never a silent pass.
 
 The comparator reads the whole map: the names it resolves, and also the absence of entries at or
-inside the function and funclet ranges, `__ImageBase` and the EH handler names. A result
+inside the function and funclet ranges, of an entry naming the task symbol elsewhere, of
+`__ImageBase`, of `_tls_index` (checked against the TLS directory's slot whenever present), of
+any thread-local entry (each is checked against the image's TLS template, and the first makes a
+TLS directory required), and of the EH handler names. A result
 therefore depends on more than the resolved entries, which is why the matching gate
 (`docs/verification.md`, "Symbol map") carries a record across map additions only when none of
 them could have touched those checks, and never across a change to an entry the pinned version
 held. The repository map is changed only with `tools/symbol_map.py`.
+
+### Symbol map dependences
+
+Every place `tools/compare.py` reads the map, the rule in `carry_forward_problem`
+(`tools/symbol_map.py`) or elsewhere in the gate that covers it, and the tests showing it.
+`MapReadingGuardTests` in `tests/test_symbol_map.py` fingerprints the functions named here and
+fails when they change or another function reads the map; a failure means re-checking this
+table against the new code before updating the fingerprint. Tests are in `test_symbol_map.py`
+unless named otherwise.
+
+| where | what the result depends on | covering rule | tests |
+|---|---|---|---|
+| `compare()`, map handling | map bytes hashed into `symbol_map_sha256`; non-JSON fails | the record pin must equal every run's hash (check.py); versions rebuild from the current map | `test_match_gate`: `test_report_from_another_map_rejected`, `test_report_without_map_hash_rejected`, `test_stale_symbol_map_rejected` |
+| `load_symbol_map`, top level | `schema`, `build_id`, `symbols` object | top-level keys are copied verbatim when a version is rebuilt, so any change breaks the rebuild; `check_map` runs on every map written | `ForgedHistoryTests`, `test_whitespace_change_fails` |
+| `load_symbol_map`, entries | size null or positive; RVA entry needs an unsigned `rva`; only kind `thread-local`, with unsigned `tls_offset`, no `rva`, not named `_tls_index` | `check_map` on every map; `incoming_entry`; one spelling per entry (`{rva, size}` or `{kind, tls_offset, size}`, in that order); an added entry of unknown kind stales | `test_malformed_thread_local_entry_is_refused`, `test_rva_entry_needs_exactly_rva_and_size`, `test_unknown_entry_kind_is_not_carried`, `test_every_entry_kind_has_a_rule` |
+| `load_symbol_map`, folds | groups list RVA entries sharing an RVA | a new fold group naming existing names is a change; `check_map` | `test_extended_fold_group_supersedes`, `test_added_entries_sharing_rva_need_a_fold` |
+| `check_tls`, trigger | runs if any thread-local entry or `_tls_index` is present, and then needs a TLS directory | any thread-local addition stales; a `_tls_index` addition stales | `test_thread_local_addition_makes_record_stale`, `test_tls_index_addition_makes_record_stale` |
+| `check_tls`, template bound | every thread-local entry lies inside the TLS template | any thread-local addition stales; a change or removal supersedes | `test_second_thread_local_entry_stales`, `test_changed_thread_local_entry_stales`, `test_resized_thread_local_entry_stales`, `test_removed_thread_local_entry_stales` |
+| `check_tls`, `_tls_index` | its RVA equals the directory's index slot | a `_tls_index` addition stales and `add` refuses it without `--allow-change` | `test_tls_index_addition_is_refused_and_lists_the_record`, `test_tls_index_addition_is_refused_without_any_record` |
+| `check_placement`, kind | the task symbol is not thread-local | thread-local additions stale; an addition named as the function stales | `test_function_name_added_elsewhere_is_not_carried` |
+| `check_placement`, `__ImageBase` | absent or at RVA 0 | an `__ImageBase` addition stales and `add` refuses it without `--allow-change` | `test_image_base_addition_makes_record_stale`, `test_each_presence_name_is_not_carried` |
+| `check_placement`, task entry | an entry for the task symbol has the task RVA and size | addition named as the function stales; check.py requires the current entry to match the inventory range | `test_function_name_added_elsewhere_is_not_carried`, `test_addition_at_function_makes_record_stale_even_when_forced` |
+| `check_placement`, aliases and overlap | an entry at the start needs a fold; none may start inside or intersect the range | an addition at or in the range stales (`overlaps`, a superset of the comparator's test) | `test_addition_at_function_makes_record_stale_even_when_forced`, `test_addition_overlapping_function_makes_record_stale` |
+| `Function.resolve` | `_tls_index` comes from the image and undefined `__ImageBase` is 0, not from the map; a name in the thread-local entries is `tls-reference-kind`; any other name must be an RVA entry | a pass resolved no name its version lacked (`unresolved-symbol`); a change supersedes | `test_changed_entry_with_flag_makes_record_stale` |
+| `Function.secrel_field` | the name is thread-local and not an RVA entry; offset plus addend inside the variable and template | as `resolve`; a thread-local change supersedes | `test_changed_thread_local_entry_stales` |
+| `Function.bind` | no RVA entry starts in or intersects a funclet it binds | an addition at or in a funclet range the reports give stales; reports whose ranges are not identical across runs, integer-counted, complete and disjoint carry across nothing | `FuncletCarryForwardTests` |
+| `Function.check_target_closure` | which RVA entries name a FuncInfo-based EH handler | an EH handler addition stales when the function has handler data | `test_eh_handler_addition_with_handler_data_is_not_carried`, `test_each_presence_name_is_not_carried` |
+
+Other references (handler names in exception data, type descriptors) go through
+`Function.resolve`. `check_funclet_end` takes boundaries from `.pdata` and the compared code
+ranges, never from map entries.
 
 ## Aliases, folds and overlaps
 

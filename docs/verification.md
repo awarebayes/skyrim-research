@@ -203,17 +203,31 @@ Match record, recomputed from the tree:
   version's SHA-256; a version that does not rebuild fails the check unless the history marks it
   `superseded`, and a record pinned to a superseded or unlisted version is stale. The second part
   exists because a pass also depended on what the map lacked (`docs/comparator-contract.md`,
-  "Aliases, folds and overlaps"): the record is stale if an added entry lies at or in the
-  function range, `__ImageBase` was added, an EH handler name was added and the function has
-  handler data, or an added entry lies at or in a funclet range the runs' reports give
-  (`coverage.funclet_ranges`; reports of a function with funclets that give no consistent ranges
-  covering every compared funclet byte carry across no addition). Every run's report must name
+  "Aliases, folds and overlaps" and "Thread-local variables"): the record is stale if an added
+  entry lies at or in the function range or is named as the function, `__ImageBase` or
+  `_tls_index` was added, any thread-local entry was added (the comparator checks every
+  thread-local entry against the image's TLS template, and the first one makes it require a TLS
+  directory; reports carry no template bounds, so no record can show an entry its runs did not
+  read to be harmless), an EH handler name was added and the function has handler data, or an
+  added entry lies at or in a funclet range the runs' reports give (`coverage.funclet_ranges`;
+  reports of a function with funclets whose ranges are not identical across runs, integer-counted,
+  covering every compared funclet byte, and disjoint from each other and the function, in any
+  order, carry across no addition). Names a pass referenced need no rule: the comparator fails a reference
+  to a name its map lacks (`unresolved-symbol`), so a pass referenced none of the added names. Tests
+  in `tests/test_symbol_map.py` fail if the comparator comes to name a symbol-like string literal
+  or an entry kind without a rule here, if a function other than the audited ones in
+  `docs/comparator-contract.md` ("Symbol map dependences") refers to map data by its names in
+  `compare.py`, or if the comment- and docstring-free syntax tree of an audited function changes
+  (with the `compare.py` functions, `Function` methods and module constants they use). They do
+  not see a change in `pecoff.py` or a map read under another name, and passing them is not an
+  audit; a failure calls for one. Every run's report must name
   the pinned map in `symbol_map_sha256`, the comparator's hash of the bytes it read, so the pin
   cannot be moved without new runs. Changing or removing an entry
   therefore makes exactly the records pinned to versions holding it stale. The map is written
   only by `tools/symbol_map.py add` (bind uses it too): additions only, refusing changes,
-  removals, entries sharing an address or range with an existing one and anything that would
-  make a valid record stale, unless `--allow-change` is given, which applies them, supersedes the
+  removals, entries sharing an address, TLS offset or range with an existing one, `__ImageBase`
+  and `_tls_index` additions and anything that would make a valid record stale, unless
+  `--allow-change` is given, which applies them, supersedes the
   affected versions and lists the records made stale. The map must be canonical JSON and may not
   repeat a key. `--history` imports a worktree branch's versions that still rebuild after the
   merge, so records confirmed on the branch survive integration.
