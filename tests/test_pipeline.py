@@ -253,10 +253,33 @@ class AttemptCharge(unittest.TestCase):
     def test_binding_only_runs_never_count(self):
         self.assertEqual(self.attempt.charge(1, True, self.log), (False, False))
 
+    def test_host_refusals_never_count_and_use_no_free_failure(self):
+        for code in (42, 43, 44, 45):
+            self.assertEqual(self.log_run(code), (False, False))
+        self.assertEqual(self.attempt.counted_attempts(self.log), 0)
+        self.assertEqual(self.log_run(3), (False, True))
+        # Comparator errors (2) and anything unknown still count.
+        self.assertEqual(self.log_run(2), (True, False))
+        self.assertEqual(self.log_run(7), (True, False))
+
     def test_old_logs_without_the_field(self):
         self.log.write_text(json.dumps({'exit': 3, 'counted': True}) + '\n')
         self.assertEqual(self.attempt.charge(3, False, self.log), (False, True))
         self.assertEqual(self.attempt.counted_attempts(self.log), 1)
+
+
+class ReproduceSummaries(unittest.TestCase):
+    def test_each_run_keeps_its_own_summary(self):
+        sys.path.insert(0, str(ROOT / 'tools' / 'verifier'))
+        import reproduce_records
+        with tempfile.TemporaryDirectory() as tmp:
+            first = reproduce_records.save_summary(tmp, {'records': 247}, now=0)
+            second = reproduce_records.save_summary(tmp, {'records': 8}, now=0)
+            self.assertNotEqual(first, second)
+            self.assertEqual(json.loads(first.read_text()), {'records': 247})
+            self.assertEqual(json.loads(second.read_text()), {'records': 8})
+            self.assertEqual(json.loads((Path(tmp) / 'summary.json').read_text()), {'records': 8})
+            self.assertEqual(len(list((Path(tmp) / 'summaries').iterdir())), 2)
 
 
 if __name__ == '__main__':

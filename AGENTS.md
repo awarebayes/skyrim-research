@@ -88,7 +88,7 @@ must be recorded in `docs/authorizations.md` by the human maintainer before work
 | Engineer | Claude Opus 5.5 (`claude-opus-5-5`) subagent | tooling, comparator, Ghidra/import work, failure analysis on near-misses, integration of worker branches, recording `matched` once the acceptance rule is met, commit and push | marks `matched` without a reproduced pass and a Reviewer `approve` |
 | Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) subagent via `.claude/agents/reviewer.md`, fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
 | Drafter | Claude Sonnet 5.5 (`claude-sonnet-5-5`) subagent | bounded high-volume tasks: reconstruction drafts, synthetic fixtures, report formatting, doc updates | decides scope or accepts its own output |
-| Verifier | deterministic job on a worker host (local Mac first, Boat VMs later) | compiles a pinned source revision with the pinned recipe and runs the comparator; emits a sanitized report | involves a model in the pass/fail decision |
+| Verifier | deterministic job on a runner host from the private runner config (the maintainer's Mac under Wine and Windows PC natively; Boat is retired) | compiles a pinned source revision with the pinned recipe and runs the comparator; emits a sanitized report | involves a model in the pass/fail decision |
 
 The orchestrator's agent definition can only read files and start or message subagents, so "no
 code from the orchestrator" is enforced; file changes, including `data/progress.json`, go to a
@@ -151,15 +151,19 @@ orchestrator does not start a phase until the previous one's finish condition fr
   plus the first 20 per new recipe, compiler, Drafter or Reviewer prompt version or acceptance-rule
   version, and the first 20 label-only re-acceptances under each acceptance-rule version) gets a second Reviewer and a
   from-scratch comparator re-run; a disagreement pauses that batch and escalates.
-- **Verifier fleet**: machines cloned from the phase 2 snapshot, all at the same comparator commit
-  and recipe. Every pass is re-run on a different machine before it is reported. Machines carry
-  only the inputs their gate allows, auto-stop at their deadline, and never run untrusted PR code.
-- **Boat use**: every agent that touches a Boat machine follows `docs/boat-agent-guidelines.md`
-  (one verifier session per work period, `tools/verifier/session up`/`down`, run by the
-  orchestrator or an Engineer told to; no per-unit forks; keep the starts reserve; buy nothing;
-  record compute and starts in the handoff).
-- **Budget**: the orchestrator tallies machine-hours and subagent runs against the G3 cap from
-  worker reports and stops dispatching at the cap; workers stop their machines on completion.
+- **Verifier hosts**: the runner hosts in `.local/verifier/runners.json`
+  (`tools/verifier/runners.py`), all at the same comparator commit and recipe, each with its own
+  hash-checked toolchain and image. Every pass is reproduced on two hosts that are different
+  machines with different OS loaders (`docs/verification.md`, Runner hosts) before it is
+  reported. Hosts carry only the inputs their gate allows and never run untrusted PR code.
+- **Boat use**: Boat is retired; its verifier machines were deleted (`docs/authorizations.md`,
+  Notes). Bringing it back is a maintainer decision. Until then no agent starts a Boat machine;
+  if it returns, every agent that touches one follows `docs/boat-agent-guidelines.md`
+  (`session up --boat`/`down`, no per-unit forks, keep the starts reserve, buy nothing, record
+  compute and starts in the handoff).
+- **Budget**: the orchestrator tallies subagent runs, and machine-hours of any paid compute,
+  against the caps from worker reports and stops dispatching at a cap. Runner hosts cost no
+  machine-hours; the G3 cap applies to Boat use only.
 - **Integration**: an Engineer merges passing, Reviewer-approved worktree branches, reruns the
   full checks and the verifier on the integrated tree, records `matched` with
   `tools/accept_function.py` (which writes the sanitized Reviewer record), then commits and pushes.

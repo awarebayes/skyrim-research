@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -23,6 +24,8 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import synthetic_pecoff as sp  # noqa: E402
 import runners  # noqa: E402
 import unit_build as ub  # noqa: E402
+import confirm_runners  # noqa: E402
+import pipeline  # noqa: E402
 from test_unit_build import FAKE_CL, sha  # noqa: E402
 
 
@@ -119,6 +122,201 @@ class Independence(unittest.TestCase):
                                     attempt='mac', confirm=['mac', 'mac2']), root='/repo')
         with self.assertRaises(runners.RunnerError):
             runners.for_confirm(c)
+
+
+class ReportedFacts(unittest.TestCase):
+    """The hosts' own reports, not the config, decide loader and OS."""
+
+    def facts(self, **over):
+        f = {'mac-wine': {'os': 'macos', 'loader': 'wine', 'toolchain_check': 'checked'},
+             'winpc-native': {'os': 'windows', 'loader': 'native', 'toolchain_check': 'checked'}}
+        for k, v in over.items():
+            f[k.replace('_', '-')] = dict(f[k.replace('_', '-')], **v)
+        return f
+
+    def test_os_and_loader_cross_checks(self):
+        hosts = [host(), ssh_host()]
+        self.assertIsNone(runners.independence_problem(hosts, self.facts()))
+        self.assertIn('not windows', runners.independence_problem(hosts, self.facts(winpc_native={'os': 'macos'})))
+        self.assertIn('two different operating systems',
+                      runners.independence_problem(hosts, self.facts(mac_wine={'os': 'windows'})))
+        self.assertIn('two different operating systems',
+                      runners.independence_problem(hosts, self.facts(mac_wine={'os': None})))
+        # A config naming a loader the host does not report is refused even if the pair still differs.
+        swapped = [host(loader='native'), ssh_host(loader='wine')]
+        self.assertIn('its config names', runners.independence_problem(swapped, self.facts()))
+
+    def test_record_needs_a_toolchain_check_made_in_this_run(self):
+        hosts = [host(), ssh_host()]
+        self.assertIsNone(confirm_runners.facts_problem(hosts, self.facts()))
+        for state in ('cached', None):
+            with self.subTest(state=state):
+                problem = confirm_runners.facts_problem(hosts, self.facts(winpc_native={'toolchain_check': state}))
+                self.assertIn('toolchain check made in this run', problem)
+
+
+class PrepCache(unittest.TestCase):
+    def test_use_cache_false_ignores_the_marker(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            (tmp / 'repo/tools/verifier').mkdir(parents=True)
+            (tmp / 'bin').mkdir()
+            (tmp / 'bin/cl.exe').write_bytes(b'compiler')
+            (tmp / 'repo/tools/verifier/pinned.sha256').write_text(f'{sha(tmp / "bin/cl.exe")}  cl.exe\n')
+            (tmp / 'image').write_bytes(b'image')
+            wrapper = {'BINDIR': str(tmp / 'bin')}
+            args = (tmp / 'repo', tmp, tmp / 'image', wrapper, sha(tmp / 'image'))
+            with mock.patch.object(ub, 'boot_id', return_value='boot-1'):
+                self.assertEqual(ub.prepare_host(*args, marker_dir=tmp)[0], 'checked')
+                self.assertEqual(ub.prepare_host(*args, marker_dir=tmp)[0], 'cached')
+                (tmp / 'bin/cl.exe').write_bytes(b'another compiler')
+                # The cached path would trust the marker; a record-writing run must not.
+                self.assertEqual(ub.prepare_host(*args, marker_dir=tmp)[0], 'cached')
+                with self.assertRaises(ub.UnitError) as cm:
+                    ub.prepare_host(*args, marker_dir=tmp, use_cache=False)
+                self.assertEqual(cm.exception.code, ub.EXIT_TOOLCHAIN)
+
+
+class HostAgentRefusal(unittest.TestCase):
+    def test_bad_inputs_exit_with_the_agent_code(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            proc = subprocess.run([sys.executable, '-I', str(runners.AGENT), 'clean', '--run', str(Path(tmp) / 'Bad Name')],
+                                  capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 45)
+        self.assertIn('agent-error bad run directory name', proc.stdout)
+
+
+class FakeAgentHost:
+    """runners.AgentHost for confirm_runners: writes passing reports and the facts given."""
+    made = []
+    facts_by_host = {}
+
+    def __init__(self, h, task, log=None, fresh_prep=False):
+        self.h, self.task, self.fresh_prep = h, task, fresh_prep
+        self.facts = None
+        FakeAgentHost.made.append(self)
+
+    def run(self, files, stage):
+        return 0, ''
+
+    def fetch(self, dest):
+        for fn in self.task['functions']:
+            d = Path(dest) / f'0x{fn["rva"]:x}'
+            d.mkdir(parents=True, exist_ok=True)
+            (d / 'report.json').write_text('{}')
+        self.facts = FakeAgentHost.facts_by_host[self.h['host_id']]
+        return Path(dest)
+
+
+class ConfirmRunnersRun(unittest.TestCase):
+    """confirm_runners.run: when records may go into reports/, and what reaches write_records."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp()).resolve()
+        self.task = {'task_id': 'unit-a', 'dir': self.tmp / 'task', 'compiled': 'reconstruction/x/A.cpp',
+                     'recipe': 'reconstruction/recipes/msvc-19.16.27054-o2.json', 'build_id': 'b',
+                     'symbols_repo': 'reports/b/symbols.json',
+                     'functions': [{'rva': 0x1000, 'size': 16, 'symbol': '?f@@YAXXZ'}]}
+        self.task['dir'].mkdir()
+        self.base = mock.Mock()
+        self.base.source_state.return_value = ('base', [])
+        self.base.result_of.return_value = ('pass', None)
+        self.base.mac_compare.side_effect = lambda task, fn, host_dir, dest: (None, Path(dest) / 'report.json')
+        self.base.build_block.return_value = {}
+        self.base.notes.return_value = ['first', 'independence: fork', 'last']
+        self.base.source_note.return_value = 'source'
+        self.base.compare_steps.return_value = 'COMPARE'
+        FakeAgentHost.made = []
+        FakeAgentHost.facts_by_host = {
+            'mac-wine': {'os': 'macos', 'machine': 'arm64', 'loader': 'wine', 'toolchain_check': 'checked',
+                         'compiler_sha256': {'cl.exe': 'aa'}},
+            'winpc-native': {'os': 'windows', 'machine': 'amd64', 'loader': 'native', 'toolchain_check': 'checked',
+                             'compiler_sha256': {'cl.exe': 'aa'}}}
+        self.written = []
+        patches = [
+            mock.patch.object(confirm_runners.confirm_session, 'prepare',
+                              side_effect=lambda base, d, replace, out: (self.task, {}, ['reconstruction/x/A.cpp'])),
+            mock.patch.object(confirm_runners.confirm_session, 'write_records', side_effect=self.write_records),
+            mock.patch.object(confirm_runners.runners, 'AgentHost', FakeAgentHost),
+            mock.patch.object(confirm_runners.pipeline, 'lock', return_value=mock.Mock()),
+            mock.patch.object(confirm_runners.subprocess, 'run',
+                              return_value=subprocess.CompletedProcess([], 0, 'check: PASS\n', '')),
+        ]
+        for p in patches:
+            p.start()
+            self.addCleanup(p.stop)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp)
+
+    def write_records(self, base, task, closure, recipe, runs, build_path, out, notes=None, reproduction=None):
+        self.written.append({'out': out, 'runs': runs, 'notes': notes, 'reproduction': reproduction})
+        return ['  record written'], False
+
+    def run_confirm(self, hosts, out=None, allowed=True):
+        lines = []
+        with mock.patch.object(confirm_runners, 'RUNNER_RECORDS_ALLOWED', allowed):
+            code = confirm_runners.run(self.base, ['task'], out=out, log=lines.append, hosts=hosts)
+        return code, lines
+
+    def test_flag_false_refuses_reports_without_out(self):
+        with self.assertRaises(pipeline.PipelineError) as cm:
+            self.run_confirm([host(), ssh_host()], allowed=False)
+        self.assertIn('--out', str(cm.exception))
+        self.assertEqual((FakeAgentHost.made, self.written), ([], []))
+
+    def test_flag_false_still_writes_inspection_records_with_out(self):
+        code, _ = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', allowed=False)
+        self.assertEqual(code, 0)
+        self.assertEqual([w['out'] for w in self.written], [self.tmp / 'out'])
+
+    def test_flag_true_writes_records_into_reports(self):
+        code, lines = self.run_confirm([host(), ssh_host()])
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(self.written), 1)
+        w = self.written[0]
+        self.assertIsNone(w['out'])
+        # Own compares on both hosts plus the local cross-compare of the Windows object.
+        self.assertEqual(sorted((a, b) for a, b, _ in w['runs'][0x1000]),
+                         [('mac-wine', 'mac-wine'), ('winpc-native', 'mac-wine'), ('winpc-native', 'winpc-native')])
+        self.assertTrue(w['notes'][1].startswith('independence: separate-machine, different-loader'))
+        self.assertTrue(all(h.fresh_prep for h in FakeAgentHost.made))
+
+    def test_reports_need_a_local_host(self):
+        remote = ssh_host(host_id='winpc-wine', machine='other-pc', loader='wine')
+        with self.assertRaises(pipeline.PipelineError) as cm:
+            self.run_confirm([remote, ssh_host()])
+        self.assertIn('local host', str(cm.exception))
+        self.assertEqual((FakeAgentHost.made, self.written), ([], []))
+        # Inspection records under --out are still possible without one.
+        FakeAgentHost.facts_by_host['winpc-wine'] = dict(FakeAgentHost.facts_by_host['mac-wine'], os='linux')
+        code, _ = self.run_confirm([remote, ssh_host()], out=self.tmp / 'out')
+        self.assertEqual(code, 0)
+
+    def test_reported_facts_that_fail_the_rule_write_nothing(self):
+        cases = {'cached toolchain': ('winpc-native', {'toolchain_check': 'cached'}),
+                 'native not on windows': ('winpc-native', {'os': 'macos'}),
+                 'wrong loader': ('mac-wine', {'loader': 'native'})}
+        for name, (hid, change) in cases.items():
+            with self.subTest(name):
+                saved = dict(FakeAgentHost.facts_by_host[hid])
+                FakeAgentHost.facts_by_host[hid] = dict(saved, **change)
+                try:
+                    code, lines = self.run_confirm([host(), ssh_host()])
+                finally:
+                    FakeAgentHost.facts_by_host[hid] = saved
+                self.assertEqual(code, 1)
+                self.assertEqual(self.written, [])
+                self.assertTrue(any('not independent' in line for line in lines), lines)
+
+    def test_reproduction_names_both_loaders(self):
+        self.run_confirm([host(), ssh_host()])
+        recipe = json.loads((ROOT / self.task['recipe']).read_text())
+        text = self.written[0]['reproduction'](self.task, self.task['functions'][0], ['reconstruction/x/A.cpp'], recipe)
+        self.assertIn('<msvc>/bin/x64/cl ', text)
+        self.assertIn('bin/Hostx64/x64/cl.exe', text)
+        self.assertIn('INCLUDE', text)
+        self.assertTrue(text.endswith('COMPARE'))
 
 
 class Slots(unittest.TestCase):
@@ -263,6 +461,10 @@ class AgentEndToEnd(unittest.TestCase):
         for c in commands:
             self.assertNotIn(self.MARKER, c)
             self.assertNotIn('SyntheticSum', c)
+        # The agent runs isolated (-I), so a module left in the work directory cannot shadow a standard one.
+        for argv in transport.commands:
+            if argv[0] == sys.executable:
+                self.assertEqual(argv[1], '-I')
         self.assertEqual([p.name for p in (self.tmp / 'work').iterdir() if p.name != '.prep'], [])
 
     def test_compile_failure_is_fetched_and_counted_by_exit_code(self):
@@ -279,6 +481,21 @@ class AgentEndToEnd(unittest.TestCase):
         self.assertEqual(code, ub.EXIT_TOOLCHAIN)
         dest = worker.fetch(self.tmp / 'dest')
         self.assertEqual(json.loads((dest / 'error.json').read_text())['status'], 'toolchain-mismatch')
+
+    def test_fresh_prep_hashes_the_toolchain_every_run(self):
+        worker, _ = self.make('local')
+        worker.run(self.files, self.tmp / 'stage')
+        worker.fetch(self.tmp / 'd1')
+        if ub.boot_id() is not None:
+            worker.run(self.files, self.tmp / 'stage')
+            worker.fetch(self.tmp / 'd2')
+            self.assertEqual(worker.facts['toolchain_check'], 'cached')
+        fresh, _ = self.make('local')
+        fresh.fresh_prep = True
+        code, _ = fresh.run(self.files, self.tmp / 'stage')
+        self.assertEqual(code, 0)
+        fresh.fetch(self.tmp / 'd3')
+        self.assertEqual(fresh.facts['toolchain_check'], 'checked')
 
     def test_probe(self):
         h = host(msvc=str(self.tmp / 'nomsvc'), work=str(self.tmp / 'work'), image=str(self.image))

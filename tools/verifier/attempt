@@ -23,7 +23,8 @@ pack); when that changes a binding (`unbound:` symbols, a renamed declaration, a
 hint, a plain destructor bound where the target is a deleting one) it compares again in the same
 invocation. A hint at a compared function's RVA that ends up unused is printed as a WARNING. A run in which nothing
 could be compared because of binding does not count against max_attempts, nor do the first three
-compile failures of a unit (later ones count). A repository include the compiler would not find
+compile failures of a unit (later ones count), nor does a host refusal before compiling (wrong
+image or toolchain, copy not matching its spec, host agent refusing its inputs). A repository include the compiler would not find
 with the recipe's include roots is refused locally before any upload, uncounted; so is a unit
 whose .cpp does not exist yet (exit 2), with the tools/skeleton.py command that writes starting
 files. It prints one line per function with the reason code, first mismatch offset and
@@ -60,6 +61,10 @@ LABEL = 'standing'
 # about the target, so the first few per unit are free; the cap keeps a unit that never compiles
 # from looping on the machine forever.
 FREE_COMPILE_FAILURES = 3
+# Host refusals before any compile: image missing or wrong (42), copy not matching the spec (43),
+# toolchain not matching the pins (44), host agent refusing its inputs (45). They say nothing about
+# the candidate and give the Drafter no result, so they never count against the budget.
+INFRASTRUCTURE_EXITS = (42, 43, 44, 45)
 
 
 def log_rows(log):
@@ -75,9 +80,10 @@ def counted_attempts(log):
 
 
 def charge(code, binding_only, log):
-    """(counted, free_compile_failure) for a finished run: binding-only runs never count, and a
-    compile failure (exit 3) is free while fewer than FREE_COMPILE_FAILURES were free before."""
-    if binding_only:
+    """(counted, free_compile_failure) for a finished run: binding-only runs and host refusals
+    (INFRASTRUCTURE_EXITS) never count, and a compile failure (exit 3) is free while fewer than
+    FREE_COMPILE_FAILURES were free before."""
+    if binding_only or code in INFRASTRUCTURE_EXITS:
         return False, False
     if code == 3 and sum(1 for r in log_rows(log) if r.get('free_compile_failure')) < FREE_COMPILE_FAILURES:
         return False, True
@@ -185,6 +191,8 @@ def attempt(task_dir):
     why_free = ''
     if binding_only:
         why_free = ' (binding only, not counted)'
+    elif code in INFRASTRUCTURE_EXITS:
+        why_free = ' (host refusal, not counted)'
     elif free_compile:
         n = sum(1 for r in log_rows(task_dir / 'attempts.jsonl') if r.get('free_compile_failure')) + 1
         why_free = f' (compile failure {n}/{FREE_COMPILE_FAILURES} free, not counted)'
@@ -198,6 +206,8 @@ def attempt(task_dir):
     elif error is not None:
         lines.append(f'{head}: REFUSED {error["status"]}')
         lines.append(f'    {error["detail"][:300]}')
+    elif code in INFRASTRUCTURE_EXITS:
+        lines.append(f'{head}: REFUSED by the host (exit {code}); see {dest / "remote.txt"}')
     else:
         objdump = disasm.find_objdump(config.get('objdump'))
         rows, outcome = [], []

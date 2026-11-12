@@ -44,8 +44,13 @@ python3 tools/verifier/runners.py status                    # each host: toolcha
 python3 tools/verifier/reproduce_records.py --host <name>   # recompile every recorded unit there; equal/different
 ```
 
-A runner confirm writes records only with `--out` until `docs/verification.md` admits these
-hosts (`confirm_runners.RUNNER_RECORDS_ALLOWED`); `confirm --boat` keeps the Boat session path.
+A runner confirm writes records under the "Runner hosts" condition of `docs/verification.md`:
+into `reports/` only with a `local` host among the confirm hosts (it cross-compares the other
+hosts' objects), after every host hashed its toolchain during that run and reported the loader
+its config names, Windows for a native compile, and two operating systems between them. `--out`
+writes inspection records under the same checks except the `local` host requirement. `reproduce_records.py` keeps each
+run's summary under `summaries/` of its output directory. `confirm --boat` keeps the Boat
+session path.
 
 A session (`session`, `vsession.py`) brings up the standing machine A and the separately
 installed B once per work period, at most one start each, and checks their toolchain and image
@@ -62,7 +67,8 @@ disassembly per function (`llvm-objdump`; G2 material, never printed; rows that 
 relocated fields are not marked). It binds unbound or renamed symbols from the compiled object
 itself (`bind.py`, hints in `<task-id>/bind-hints.json`) and compares again in the same run; a run
 that compared nothing because of binding is not counted against `max_attempts`, nor are a unit's
-first three compile failures; a repository include the compiler would not find with the recipe's
+first three compile failures, nor a host refusal before compiling (exit 42 to 45: image,
+copy, toolchain or host agent); a repository include the compiler would not find with the recipe's
 include roots is refused locally before upload, also uncounted. `confirm` runs on the
 working tree (records bind the unit digest, recipe and map hashes and, per report, the comparator
 source hash, not a commit; a note in each record names the base commit, the comparator source hash

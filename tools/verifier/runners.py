@@ -335,8 +335,11 @@ def describe(host):
 class AgentHost:
     """pipeline.Host's interface (run, fetch) for a local or ssh host, one fresh copy per run."""
 
-    def __init__(self, host, task, label=None, transport=None, log=None, timeout=DEFAULT_TIMEOUT):
+    def __init__(self, host, task, label=None, transport=None, log=None, timeout=DEFAULT_TIMEOUT, fresh_prep=False):
         self.host, self.task = host, task
+        # A run whose host facts go into a record hashes the toolchain itself instead of trusting
+        # the per-boot marker, so the hashes the record names were measured during that run.
+        self.fresh_prep = fresh_prep
         self.label = label or host['host_id']
         self.machine = host['host_id']
         self.transport = transport or transport_for(host)
@@ -356,6 +359,8 @@ class AgentHost:
         stage = Path(stage_root)
         stage.mkdir(parents=True, exist_ok=True)
         spec = pipeline.unit_spec(self.task, files, self.label)
+        if self.fresh_prep:
+            spec['fresh_prep'] = True
         return make_bundle(stage, name, {f'repo/{rel}': src for rel, src in files.items()},
                            {'repo/.unit/spec.json': json.dumps(spec, sort_keys=True).encode()})
 
@@ -391,7 +396,9 @@ class AgentHost:
         return self.transport.join(self.host['work'], *parts)
 
     def _agent(self, name, command, *args):
-        return self._python() + [self._remote(name + '.py'), command, '--run', self._remote(name), *args]
+        # -I: the agent runs from the work directory, where an uploaded or left-over module named
+        # like a standard one must not be imported in its place.
+        return self._python() + ['-I', self._remote(name + '.py'), command, '--run', self._remote(name), *args]
 
     def fetch(self, dest):
         """Unpack work/<label> of the last run into `dest` (replaced), then remove the run on the host."""
@@ -467,7 +474,7 @@ def probe(host, transport=None, timeout=300):
                                         'target.json': REPO / 'builds' / 'target.json'})
         transport.prepare()
         transport.put(paths, host['work'])
-    agent = [*python, remote + '.py']
+    agent = [*python, '-I', remote + '.py']
     try:
         code, out, err = transport.run(agent + ['probe', '--run', remote, '--bundle', remote + '.tar', '--msvc',
                                                 host['msvc'], '--image', host['image'], '--loader', host['loader']],
@@ -526,7 +533,10 @@ def independence_problem(hosts, facts=None):
 
     Two compile hosts at least, on two different machines, with two different loaders (one runs
     the pinned compiler natively, one under Wine). `facts` ({host id: host_facts}) are what the
-    hosts reported after compiling; when given, their loaders are what is checked.
+    hosts reported after compiling; when given, their loaders and operating systems are what is
+    checked: each host must report the loader its config names, a `native` host must report
+    Windows, and the hosts must report at least two operating systems, so a second Wine host
+    relabelled `native`, or two hosts on one OS, do not pass on the config's word alone.
     """
     if len(hosts) < 2:
         return 'needs at least two compile hosts'
@@ -538,6 +548,16 @@ def independence_problem(hosts, facts=None):
         loaders = {h['loader'] for h in hosts}
     if len(loaders) < 2 or None in loaders:
         return 'the compile hosts do not use two different loaders (native and wine)'
+    if facts is not None:
+        for h in hosts:
+            f = facts.get(h['host_id']) or {}
+            if f.get('loader') != h['loader']:
+                return f'{h["host_id"]} reported loader {f.get("loader")!r}, its config names {h["loader"]!r}'
+            if f.get('loader') == 'native' and f.get('os') != 'windows':
+                return f'{h["host_id"]} reported a native compile on {f.get("os")!r}, not windows'
+        systems = {(facts.get(h['host_id']) or {}).get('os') for h in hosts}
+        if len(systems) < 2 or None in systems:
+            return 'the compile hosts do not report two different operating systems'
     return None
 
 

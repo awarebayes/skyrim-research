@@ -57,8 +57,9 @@ def prepare(base, task_dir, replace, out):
     return task, files, closure
 
 
-def write_records(base, task, closure, recipe, runs, build_path, out, notes=None):
+def write_records(base, task, closure, recipe, runs, build_path, out, notes=None, reproduction=None):
     lines, failed = [], False
+    reproduction = reproduction or base.reproduction
     scratch = None
     if out:
         scratch = REPO / 'reports' / task['build_id'] / f'.scratch-{uuid.uuid4().hex[:12]}'
@@ -69,7 +70,7 @@ def write_records(base, task, closure, recipe, runs, build_path, out, notes=None
             fid = f'{task["build_id"]}-0x{fn["rva"]:x}'
             cmd = [sys.executable, str(base.HERE / 'match_record.py'), '--function-id', fid, '--unit', *closure,
                    '--compiled', task['compiled'], '--recipe', task['recipe'], '--symbols', task['symbols_repo'],
-                   '--reproduction', base.reproduction(task, fn, closure, recipe), '--build', str(build_path),
+                   '--reproduction', reproduction(task, fn, closure, recipe), '--build', str(build_path),
                    '--out', str(target.relative_to(REPO))]
             for compiled_on, compared_on, report in runs[fn['rva']]:
                 cmd += ['--run', compiled_on, compared_on, str(report)]
