@@ -15,6 +15,7 @@ ROOT = gen.ROOT
 class ProgressSvgTests(unittest.TestCase):
     def setUp(self):
         self.svg = gen.render(ROOT)
+        self.map = gen.render_map(ROOT)
         self.progress = json.loads((ROOT / 'data/progress.json').read_text())
         self.scope = json.loads((ROOT / 'data/scope.json').read_text())
 
@@ -29,14 +30,20 @@ class ProgressSvgTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / 'docs').mkdir()
-            (root / 'docs/progress.svg').write_text('<svg/>')
-            with mock.patch.object(gen, 'render', return_value='<svg/>'):
+            for name in ('progress.svg', 'progress-map.svg'):
+                (root / 'docs' / name).write_text('<svg/>')
+            current = mock.patch.object(gen, 'render', return_value='<svg/>')
+            current_map = mock.patch.object(gen, 'render_map', return_value='<svg/>')
+            with current, current_map:
                 check.check_progress_svg(root)
-            with mock.patch.object(gen, 'render', return_value='<svg>new</svg>'):
+            with mock.patch.object(gen, 'render', return_value='<svg>new</svg>'), current_map:
                 with self.assertRaisesRegex(ValueError, 'progress.svg is out of date'):
                     check.check_progress_svg(root)
+            with current, mock.patch.object(gen, 'render_map', return_value='<svg>new</svg>'):
+                with self.assertRaisesRegex(ValueError, 'progress-map.svg is out of date'):
+                    check.check_progress_svg(root)
             (root / 'docs/progress.svg').unlink()
-            with mock.patch.object(gen, 'render', return_value='<svg/>'):
+            with current, current_map:
                 with self.assertRaisesRegex(ValueError, 'progress.svg is out of date'):
                     check.check_progress_svg(root)
 
@@ -72,20 +79,46 @@ class ProgressSvgTests(unittest.TestCase):
             self.assertIn('(measured', t)
         self.assertIsNone(self.progress['scope']['functions'])
 
-    def test_area_panel_labels_classes(self):
-        areas = self.scope.get('areas')
-        if not areas:
-            self.skipTest('scope has no area breakdown')
-        self.assertIn('Ordinary code by area and class', self.svg)
-        drawn = [c['name'] for b in areas['blocks'] for c in b['classes']]
-        self.assertGreaterEqual(sum(1 for n in drawn if f'>{escape(n)}</text>' in self.svg), 20)
-        total = sum(b['functions'] for b in areas['blocks'])
-        self.assertEqual(total, areas['population']['functions'])
+    def test_every_scope_category_is_drawn_and_named(self):
+        groups = gen.scope_groups(self.scope)
+        self.assertEqual(sum(g['functions'] for g in groups), sum(c['functions'] for c in self.scope['categories']))
+        self.assertEqual(sum(g['bytes'] for g in groups), sum(c['bytes'] for c in self.scope['categories']))
+        text = ' '.join(re.findall(r'<text[^>]*>([^<]*)</text>', self.svg))
+        for c in self.scope['categories']:
+            self.assertIn(escape(c['label']), text)
 
     def test_estimates_are_labelled(self):
-        for c in self.scope['categories']:
-            if c['basis'] == 'estimated' and c['label'] in self.svg:
-                self.assertIn(f'{c["functions"]:,} fns est.', self.svg)
+        for g in gen.scope_groups(self.scope):
+            suffix = ' est.' if g['estimated'] else ' ·'
+            self.assertIn(f'{g["functions"]:,} functions{suffix}', self.svg)
+
+    def test_no_text_is_clipped_or_small(self):
+        for svg in (self.svg, self.map):
+            self.assertNotIn('clip-path', svg)
+            sizes = [float(v) for v in re.findall(r'font-size:([\d.]+)px', svg)]
+            self.assertGreaterEqual(min(sizes), 12)
+
+    def test_map_is_current_and_self_contained(self):
+        self.assertEqual(self.map, (ROOT / 'docs/progress-map.svg').read_text(), 'run tools/build_progress_svg.py')
+        self.assertLess(len(self.map.encode()), 600_000)
+        for forbidden in ('<script', '<image', '@import', 'href=', '%'):
+            self.assertNotIn(forbidden, self.map)
+        self.assertEqual(self.map.count('http://'), 1)
+
+    def test_map_names_every_listed_class_once_per_tile(self):
+        st = gen.stats(self.progress, ROOT)
+        areas = gen.map_areas(self.scope, st)
+        labels = re.findall(r'<text[^>]*class="bl">([^<]*)</text>', self.map)
+        classes = [c for a in areas for c in a['classes']]
+        others = [a for a in areas if a['other'] and a['other']['functions'] > 0]
+        self.assertEqual(len(labels), len(classes) + len(others))
+        for c in classes:
+            self.assertLessEqual(c['done'], c['functions'])
+            expect = f'{c["name"]}  {c["done"]}/{c["functions"]:,}' if c['done'] else c['name']
+            self.assertIn(escape(expect), labels)
+        shown = sum(c['done'] for c in classes)
+        self.assertIn(f'{shown} of the {st["matched"]} accepted functions', self.map)
+        self.assertLessEqual(shown, st['matched'])
 
 
 if __name__ == '__main__':

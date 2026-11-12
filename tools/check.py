@@ -695,11 +695,13 @@ def check_index(root, data):
 
 
 def check_progress_svg(root):
-    """The README picture must be what tools/build_progress_svg.py (its --check) renders from this tree."""
+    """The README pictures must be what tools/build_progress_svg.py (its --check) renders from this tree."""
     import build_progress_svg  # here, not at the top: it reads the same data files and is optional to load
-    path = root / 'docs/progress.svg'
-    require(path.is_file() and path.read_text() == build_progress_svg.render(root),
-            'docs/progress.svg is out of date with the tracked data; run python3 tools/build_progress_svg.py')
+    for name, render in (('docs/progress.svg', build_progress_svg.render),
+                         ('docs/progress-map.svg', build_progress_svg.render_map)):
+        path = root / name
+        require(path.is_file() and path.read_text() == render(root),
+                f'{name} is out of date with the tracked data; run python3 tools/build_progress_svg.py')
 
 
 COST_LEDGER = 'data/costs.json'

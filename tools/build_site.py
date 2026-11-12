@@ -121,9 +121,10 @@ def main():
     (output / 'index.html').write_text(render(data, revision, costs))
     (output / 'join.html').write_text(render_join(data, revision))
     (output / 'style.css').write_text((ROOT / 'site/style.css').read_text())
-    graphic = ROOT / 'docs/progress.svg'
-    if graphic.exists():
-        (output / 'progress.svg').write_text(graphic.read_text())
+    for name in ('progress.svg', 'progress-map.svg'):
+        graphic = ROOT / 'docs' / name
+        if graphic.exists():
+            (output / name).write_text(graphic.read_text())
     (output / 'progress.json').write_text(json.dumps(data, indent=2) + '\n')
     (output / '.nojekyll').touch()
     print(f'Built {output / "index.html"}; source {revision}; no game data included.')

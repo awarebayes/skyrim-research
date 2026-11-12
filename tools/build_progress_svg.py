@@ -1,82 +1,73 @@
-"""Render docs/progress.svg, the README progress picture, from tracked data only.
+"""Render the README progress pictures, docs/progress.svg and docs/progress-map.svg, from tracked data only.
 
-Inputs: data/progress.json, data/scope.json, data/costs.json (optional), and the match records
-referenced by accepted functions. The output is deterministic and self-contained: no timestamps,
-fonts, scripts or images. Fine cell grids come from <pattern> fills, so the file stays small
-regardless of how many functions a block stands for.
+Inputs: data/progress.json, data/scope.json and the match records referenced by accepted
+functions. The output is deterministic and self-contained: no timestamps, fonts, scripts or images.
 
-    python3 tools/build_progress_svg.py            write docs/progress.svg
-    python3 tools/build_progress_svg.py --check    fail if docs/progress.svg is out of date
+The picture is drawn at the width GitHub shows a README image, so its text is never scaled down,
+and no text is clipped to a shape: anything that needs a label gets a row or a column of its own.
+
+progress.svg is the summary. progress-map.svg is the class map: one cell per function, grouped by
+area and class, with every class name written out above its cells instead of fitted inside them.
+
+    python3 tools/build_progress_svg.py            write both pictures
+    python3 tools/build_progress_svg.py --check    fail if either picture is out of date
 """
 import argparse
 from collections import Counter
 from html import escape
 import json
+import math
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / 'docs/progress.svg'
-W, BASE_H = 1000, 640
+MAP_OUTPUT = ROOT / 'docs/progress-map.svg'
+W, PAD = 840, 20
 FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
-BG, TEXT, MUTED = '#0d1117', '#e6edf3', '#8b949e'
-GREEN, AMBER, GREY, TRACK = '#2ea043', '#d29922', '#6e7681', '#6e7681'
-MIN_MARK = 2.0       # progress too small to see is still drawn this tall, and the footnote says so
-MIN_BLOCK_AREA = 500  # blocks below this many px^2 are listed in a footnote instead of drawn
+BG, TEXT, MUTED, TRACK = '#0d1117', '#e6edf3', '#9ba3ad', '#21262d'
+GREEN, AMBER, GREY, DARK = '#3fb950', '#d29922', '#6e7681', '#30363d'
+MIN_MARK = 2.0  # a nonzero count is never drawn thinner than this
+
+# Scope categories are drawn as one segment per treatment, in this order.
+GROUPS = (('in_scope', None, GREY),
+          ('out_of_scope', 'Middleware and runtime', 'url(#hx)'),
+          ('separate', 'Compiler-generated code', DARK))
+TREATMENT_NOTE = {'out_of_scope': 'Out of scope', 'separate': 'Tracked separately'}
 
 
 def fmt(v):
     return f'{v:.1f}'.rstrip('0').rstrip('.')
 
 
-def squarify(items, x, y, w, h):
-    """Squarified treemap. items: (key, size) sorted descending; returns {key: (x, y, w, h)}."""
-    total = sum(size for _, size in items)
-    scale = w * h / total
-    rest = [(k, size * scale) for k, size in items]
-    out = {}
-
-    def worst(row, side):
-        s = sum(a for _, a in row)
-        return max(max(side * side * a / (s * s), s * s / (side * side * a)) for _, a in row)
-
-    while rest:
-        side = min(w, h)
-        row = [rest.pop(0)]
-        while rest and worst(row + [rest[0]], side) <= worst(row, side):
-            row.append(rest.pop(0))
-        s = sum(a for _, a in row)
-        if w >= h:  # lay the row as a column on the left
-            col = s / h
-            cy = y
-            for k, a in row:
-                out[k] = (x, cy, col, a / col)
-                cy += a / col
-            x, w = x + col, w - col
-        else:
-            rowh = s / w
-            cx = x
-            for k, a in row:
-                out[k] = (cx, y, a / rowh, rowh)
-                cx += a / rowh
-            y, h = y + rowh, h - rowh
-    return out
-
-
 def thousands(n):
     return f'{n:,}'
 
 
-def compact(n):
-    return f'{n / 1e6:.2f}M' if n >= 1e6 else f'{n / 1e3:.0f}k' if n >= 1e4 else thousands(n)
+def megabytes(n):
+    return f'{n / 1e6:.1f} MB'
+
+
+def pct(part, whole):
+    return f'{100 * part / whole:.3f}%' if part else '0%'
+
+
+def wrap(text, width):
+    """Greedy word wrap by character count; the SVG has no font metrics to measure with."""
+    lines, line = [], ''
+    for word in text.split():
+        if line and len(line) + 1 + len(word) > width:
+            lines.append(line)
+            line = word
+        else:
+            line = f'{line} {word}'.strip()
+    return lines + [line] if line else lines
 
 
 def load(root):
     progress = json.loads((root / 'data/progress.json').read_text())
     scope = json.loads((root / 'data/scope.json').read_text())
-    costs_file = root / 'data/costs.json'
-    costs = json.loads(costs_file.read_text()) if costs_file.exists() else None
-    return progress, scope, costs
+    return progress, scope
 
 
 def unit_of(fn, root):
@@ -91,278 +82,285 @@ def unit_of(fn, root):
     return 'unknown', None
 
 
-def area_of(fn, root):
-    """Reconstruction area of an accepted function, read from its match record."""
-    return unit_of(fn, root)[0]
-
-
 def stats(progress, root):
     fns = progress['functions']
     counts = Counter(fn['status'] for fn in fns)
     matched = [fn for fn in fns if fn['status'] == 'matched']
     units = [unit_of(fn, root) for fn in matched]
-    areas = Counter(a for a, _ in units)
     return dict(counts=counts, matched=len(matched), matched_bytes=sum(fn['size'] for fn in matched),
                 named=sum(1 for fn in matched if fn.get('named') is True),
-                tracked=len(fns), areas=areas, classes=Counter(c for _, c in units if c))
+                tracked=len(fns), areas=Counter(a for a, _ in units), classes=Counter(c for _, c in units if c))
 
 
-def defs():
-    return (
-        f'<pattern id="cg" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="{GREY}"/></pattern>'
-        f'<pattern id="cn" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="{GREEN}"/></pattern>'
-        f'<pattern id="ca" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="{AMBER}"/></pattern>'
-        f'<pattern id="cd" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="11" height="11" fill="#2ea043"/>'
-        f'<rect x="11" width="1" height="12" fill="#12331b"/><rect y="11" width="12" height="1" fill="#12331b"/></pattern>'
-        '<pattern id="hx" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'
-        '<rect width="7" height="7" fill="#11161d"/><rect width="2" height="7" fill="#262d37"/></pattern>'
-        '<pattern id="hs" width="6" height="6" patternUnits="userSpaceOnUse">'
-        '<rect width="6" height="6" fill="#11161d"/><rect width="6" height="1.5" fill="#2d3541"/></pattern>'
-    )
-
-
-def block(key, rect, label, sub, fill, mark=None, fraction=0.0, light=False):
-    """One treemap block: fill pattern, optional progress from the top, label clipped to the block."""
-    x, y, w, h = rect
-    g = [f'<clipPath id="k-{key}"><rect x="{fmt(x)}" y="{fmt(y)}" width="{fmt(w)}" height="{fmt(h)}"/></clipPath>',
-         f'<g clip-path="url(#k-{key})">',
-         f'<rect x="{fmt(x)}" y="{fmt(y)}" width="{fmt(w)}" height="{fmt(h)}" fill="{fill}"/>']
-    if mark:
-        top = y
-        for pattern, share in mark:
-            height = max(MIN_MARK, share * h)
-            g.append(f'<rect x="{fmt(x)}" y="{fmt(top)}" width="{fmt(w)}" height="{fmt(height)}" fill="url(#{pattern})"/>')
-            top += height
-    g.append(f'<rect x="{fmt(x)}" y="{fmt(y)}" width="{fmt(w)}" height="{fmt(h)}" fill="none" stroke="{BG}" stroke-width="1.5"/>')
-    if w > 34 and h > 18:
-        g.append(f'<text x="{fmt(x + 5)}" y="{fmt(y + 14)}" class="bl">{escape(label)}</text>')
-        if sub and h > 32:
-            g.append(f'<text x="{fmt(x + 5)}" y="{fmt(y + 27)}" class="bs">{escape(sub)}</text>')
-    g.append('</g>')
-    return ''.join(g)
-
-
-def game_treemap(scope, stats_, x, y, w, h):
-    cats = sorted(scope['categories'], key=lambda c: -c['bytes'])
-    area_px = w * h
-    total = sum(c['bytes'] for c in cats)
-    drawn = [c for c in cats if c['bytes'] / total * area_px >= MIN_BLOCK_AREA]
-    skipped = [c for c in cats if c not in drawn]
-    layout = squarify([(c['id'], c['bytes']) for c in drawn], x, y, w, h)
+def scope_groups(scope):
+    """[(title, fill, functions, bytes, estimated, member labels)] for the treatments that have code."""
     out = []
-    game = next(c for c in cats if c['id'] == 'game')
-    for c in drawn:
-        est = ' est.' if c['basis'] == 'estimated' else ''
-        sub = f'{thousands(c["functions"])} fns{est}, {compact(c["bytes"])} B'
-        if c['id'] == 'game':
-            denominator = game['functions']
-            mark = [('cn', stats_['counts']['matched'] / denominator),
-                    ('ca', (stats_['counts']['mapped'] + stats_['counts']['analyzed'] + stats_['counts']['reconstructed']) / denominator)]
-            out.append(block(c['id'], layout[c['id']], c['label'], sub, 'url(#cg)', mark))
-        else:
-            fill = 'url(#hx)' if c['treatment'] == 'out_of_scope' else 'url(#hs)'
-            out.append(block(c['id'], layout[c['id']], c['label'], sub, fill))
-    return ''.join(out), skipped
-
-
-def census_treemap(scope, x, y, w, h):
-    blocks = sorted(scope['structure_census']['blocks'], key=lambda b: -b['functions'])
-    layout = squarify([(b['id'], b['functions']) for b in blocks], x, y, w, h)
-    return ''.join(block('s-' + b['id'], layout[b['id']], b['label'],
-                         f'{thousands(b["functions"])} fns, {compact(b["bytes"])} B', 'url(#cd)') for b in blocks)
-
-
-AREA_PANEL_H = 430
-
-
-def area_panel(scope, stats_, x, y, w, h):
-    """Nested treemap: one block per area (area = bytes), inside it one labelled block per large
-    class plus one for the remaining classes. Marks show accepted functions of a class's unit."""
-    areas = scope['areas']
-    # Functions with no known class are stated in the heading rather than drawn: at their true
-    # share they would leave the class blocks too small to label.
-    blocks = sorted((b for b in areas['blocks'] if b['bytes'] > 0 and b['id'] != 'unattributed'),
-                    key=lambda b: (-b['bytes'], b['id']))
-    un = next((b for b in areas['blocks'] if b['id'] == 'unattributed'), {'functions': 0, 'bytes': 0})
-    pop = areas['population']
-    shown = sum(b['functions'] for b in blocks)
-    out = [f'<text x="{x}" y="{fmt(y - 26)}" class="st">Ordinary code by area and class: {thousands(shown)} of '
-           f'{thousands(pop["functions"])} functions have a known class</text>',
-           f'<text x="{x}" y="{fmt(y - 10)}" class="hs">Area = bytes (measured). Class from the image RTTI vftables or an '
-           f'approved id name; not drawn: {thousands(un["functions"])} functions ({compact(un["bytes"])} B) with no class '
-           f'known. {thousands(areas["classes_passing_checks"]["value"])} of '
-           f'{thousands(areas["classes_with_primary_vftable"]["value"])} vftable classes pass the community checks.</text>']
-    layout = squarify([(b['id'], b['bytes']) for b in blocks], x, y, w, h)
-    for b in blocks:
-        bx, by, bw, bh = layout[b['id']]
-        fill = 'url(#hx)' if b['treatment'] == 'out_of_scope' else ('url(#hs)' if b['id'] == 'unattributed' else 'url(#cg)')
-        out.append(f'<rect x="{fmt(bx)}" y="{fmt(by)}" width="{fmt(bw)}" height="{fmt(bh)}" fill="#161b22" '
-                   f'stroke="{BG}" stroke-width="2"/>')
-        head = 15 if bh > 40 and bw > 60 else 0
-        if head:
-            out.append(f'<clipPath id="ah-{b["id"]}"><rect x="{fmt(bx)}" y="{fmt(by)}" width="{fmt(bw)}" height="{head}"/>'
-                       f'</clipPath><text x="{fmt(bx + 4)}" y="{fmt(by + 11)}" class="bs" clip-path="url(#ah-{b["id"]})">'
-                       f'{escape(b["label"])} · {thousands(b["functions"])} fns · {compact(b["bytes"])} B</text>')
-        items = [(c['name'], c) for c in b['classes'] if c['bytes'] > 0]
-        if b.get('other_classes') and b['other_classes']['bytes'] > 0:
-            oc = b['other_classes']
-            items.append((f'{thousands(oc["classes"])} other classes', oc))
-        if not items:
-            est = b.get('adjacent_estimate')
-            items = [('no class known', b)]
-            if est:
-                items = [('no class known', {'functions': b['functions'] - est['functions'],
-                                             'bytes': b['bytes'] - est['bytes']}),
-                         ('between two methods of one class (est.)', est)]
-        items = [(k, v) for k, v in items if v['bytes'] > 0]
-        inner = (bx + 1, by + head + 1, bw - 2, bh - head - 2)
-        if inner[2] <= 2 or inner[3] <= 2 or not items:
+    for treatment, title, fill in GROUPS:
+        cats = sorted((c for c in scope['categories'] if c['treatment'] == treatment), key=lambda c: -c['bytes'])
+        if not cats:
             continue
-        sub = squarify([(str(i), v['bytes']) for i, (_, v) in enumerate(items)], *inner)
-        for i, (name, v) in enumerate(items):
-            done = stats_['classes'].get(name, 0) if v.get('functions') else 0
-            mark = [('cn', done / v['functions'])] if done else None
-            out.append(block(f'a-{b["id"]}-{i}', sub[str(i)], name,
-                             f'{thousands(v["functions"])} fns, {compact(v["bytes"])} B', fill, mark))
-    return ''.join(out)
+        out.append(dict(treatment=treatment, title=title or cats[0]['label'], fill=fill,
+                        functions=sum(c['functions'] for c in cats), bytes=sum(c['bytes'] for c in cats),
+                        estimated=any(c['basis'] == 'estimated' for c in cats),
+                        members=[c['label'] for c in cats] if title else []))
+    return out
 
 
-def pct(part, whole):
-    return f'{100 * part / whole:.3f}%' if part else '0%'
+def scope_bar(scope, st, x, y, w):
+    """One stacked bar of the executable's code by bytes, and under it a column of text per segment."""
+    groups = scope_groups(scope)
+    total = sum(g['bytes'] for g in groups)
+    gap, bar_h = 2, 30
+    out = [f'<text x="{x}" y="{y}" class="st">Code in the executable, by size</text>']
+    by = y + 12
+    sx = x
+    usable = w - gap * (len(groups) - 1)
+    for g in groups:
+        sw = usable * g['bytes'] / total
+        out.append(f'<rect x="{fmt(sx)}" y="{by}" width="{fmt(sw)}" height="{bar_h}" rx="3" fill="{g["fill"]}"/>')
+        if g['treatment'] == 'in_scope':
+            mx = sx
+            in_progress = st['counts']['mapped'] + st['counts']['analyzed'] + st['counts']['reconstructed']
+            for color, n in ((GREEN, st['counts']['matched']), (AMBER, in_progress)):
+                if n:
+                    mw = max(MIN_MARK, sw * n / g['functions'])
+                    out.append(f'<rect x="{fmt(mx)}" y="{by}" width="{fmt(mw)}" height="{bar_h}" fill="{color}"/>')
+                    mx += mw
+        sx += sw + gap
+
+    col_w = w / len(groups)
+    ty = by + bar_h + 24
+    lines = 0
+    for i, g in enumerate(groups):
+        cx = x + i * col_w
+        est = ' est.' if g['estimated'] else ''
+        out.append(f'<rect x="{fmt(cx)}" y="{ty - 11}" width="12" height="12" rx="2" fill="{g["fill"]}"/>')
+        out.append(f'<text x="{fmt(cx + 19)}" y="{ty}" class="lb">{escape(g["title"])}</text>')
+        out.append(f'<text x="{fmt(cx)}" y="{ty + 20}" class="rl">{thousands(g["functions"])} functions{est} · '
+                   f'{megabytes(g["bytes"])}</text>')
+        if g['treatment'] == 'in_scope':
+            detail = [f'{thousands(st["counts"]["matched"])} accepted, {thousands(st["counts"]["mapped"])} mapped so far']
+        else:
+            detail = wrap(f'{TREATMENT_NOTE[g["treatment"]]}: ' + ', '.join(g['members']), int((col_w - 16) / 6.4))
+        for j, line in enumerate(detail):
+            out.append(f'<text x="{fmt(cx)}" y="{ty + 38 + j * 16}" class="fn">{escape(line)}</text>')
+        lines = max(lines, len(detail))
+    return ''.join(out), ty + 38 + (lines - 1) * 16
 
 
-def bars(title, rows, x, y, w, total=None, colors=None):
-    """Horizontal bars in the reference's style: label, grey track with a coloured fill, count at the right edge."""
+def bars(title, rows, x, y, w, total):
+    """Horizontal bars: label, track with a coloured fill, count at the right edge. rows: (label, value, color)."""
     out = [f'<text x="{x}" y="{y}" class="st">{escape(title)}</text>']
-    top = max([v for _, v, _ in rows] + [1]) if total is None else total
-    track_x, track_w = x + 138, w - 138 - 70
-    for i, (label, value, shown) in enumerate(rows):
-        ry = y + 10 + i * 20
-        fill = (colors or {}).get(label, AMBER)
-        out.append(f'<text x="{x}" y="{ry + 12}" class="rl">{escape(label)}</text>')
-        out.append(f'<rect x="{track_x}" y="{ry}" width="{track_w}" height="14" fill="{TRACK}"/>')
+    track_x, track_w = x + 170, w - 170 - 48
+    for i, (label, value, color) in enumerate(rows):
+        ry = y + 16 + i * 26
+        out.append(f'<text x="{x}" y="{ry + 11}" class="rl">{escape(label)}</text>')
+        out.append(f'<rect x="{track_x}" y="{ry}" width="{track_w}" height="12" rx="3" fill="{TRACK}"/>')
         if value:
-            out.append(f'<rect x="{track_x}" y="{ry}" width="{fmt(max(2, track_w * value / top))}" height="14" fill="{fill}"/>')
-        out.append(f'<text x="{x + w}" y="{ry + 12}" class="rl" text-anchor="end">{escape(shown)}</text>')
-    return ''.join(out)
+            out.append(f'<rect x="{track_x}" y="{ry}" width="{fmt(max(MIN_MARK, track_w * value / total))}" height="12" rx="3" fill="{color}"/>')
+        out.append(f'<text x="{x + w}" y="{ry + 11}" class="rl" text-anchor="end">{thousands(value)}</text>')
+    return ''.join(out), y + 16 + len(rows) * 26 - 14
 
 
-def cost_rows(costs):
-    if not costs or not costs.get('records'):
-        return [], 0.0, 0
-    out_tokens, boat, n = Counter(), 0.0, 0
-    for r in costs['records']:
-        out_tokens[r['role']] += r['tokens']['output']
-        boat += r.get('boat_seconds') or 0
-        n += 1
-    rows = [(role, v, compact(v)) for role, v in sorted(out_tokens.items(), key=lambda kv: (-kv[1], kv[0]))]
-    return rows, boat / 3600, n
+CELL = 4          # smallest cell pitch; a tile is never so small that its cells would be finer
+TILE_H = 24       # height of a class tile: room for one label line
+TILE_GAP = 2
+NAME_PX = 7.4     # generous per-character width of the 12 px label font; nothing is clipped to a tile
+
+
+def tile(key, x, y, w, h, n, done, label):
+    """One class: a w*h rectangle divided into n cells, the first `done` of them green, with the label
+    written over the cells. Cells are solid rectangles under a grid of background-coloured lines, so a
+    tile costs a handful of elements whatever n is."""
+    # Rows are chosen for near-square cells with few empty places in the last row.
+    def cost(rows):
+        cols = -(-n // rows)
+        return 3 * (rows * cols - n) / n + abs(math.log((w / cols) / (h / rows)))
+    rows = min(range(1, max(1, int(h // CELL)) + 1), key=cost)
+    cols = -(-n // rows)
+    cw, ch = w / cols, h / rows
+
+    def fill(count, color):
+        full, rest = divmod(count, cols)
+        out = ''
+        if full:
+            out += f'<rect x="{fmt(x)}" y="{fmt(y)}" width="{fmt(w)}" height="{fmt(full * ch)}" fill="{color}"/>'
+        if rest:
+            out += f'<rect x="{fmt(x)}" y="{fmt(y + full * ch)}" width="{fmt(rest * cw)}" height="{fmt(ch)}" fill="{color}"/>'
+        return out
+
+    grid = (f'<pattern id="g{key}" x="{fmt(x)}" y="{fmt(y)}" width="{cw:.3f}" height="{ch:.3f}" patternUnits="userSpaceOnUse">'
+            f'<path d="M{cw - 0.5:.3f} 0V{ch:.3f}M0 {ch - 0.5:.3f}H{cw:.3f}" stroke="{BG}" stroke-width="1"/></pattern>'
+            f'<rect x="{fmt(x)}" y="{fmt(y)}" width="{fmt(w)}" height="{fmt(h)}" fill="url(#g{key})"/>')
+    text = f'<text x="{fmt(x + 5)}" y="{fmt(y + 16.5)}" class="bl">{escape(label)}</text>'
+    return fill(n, GREY) + fill(done, GREEN) + grid + text
+
+
+def flow(items, width):
+    """Pack (min_width, payload) items into rows left to right; rows that are mostly full are
+    stretched to the full width so the tiles form a wall. Returns [[(x_offset, w, payload)]]."""
+    rows, row, used = [], [], 0
+    for min_w, payload in items:
+        if row and used + TILE_GAP + min_w > width:
+            rows.append(row)
+            row, used = [], 0
+        used += (TILE_GAP if row else 0) + min_w
+        row.append((min_w, payload))
+    if row:
+        rows.append(row)
+    out = []
+    for row in rows:
+        free = width - TILE_GAP * (len(row) - 1)
+        total = sum(w for w, _ in row)
+        scale = free / total if total >= 0.6 * free else 1
+        placed, x = [], 0
+        for w, payload in row:
+            placed.append((x, w * scale, payload))
+            x += w * scale + TILE_GAP
+        out.append(placed)
+    return out
+
+
+def map_areas(scope, st):
+    """In-scope areas with a known class, largest first and the catch-all area last; each class
+    carries how many of its functions are accepted."""
+    out = []
+    for b in scope['areas']['blocks']:
+        if b['treatment'] != 'in_scope' or not b['classes']:
+            continue
+        classes = [dict(name=c['name'], functions=c['functions'], done=min(st['classes'].get(c['name'], 0), c['functions']))
+                   for c in sorted(b['classes'], key=lambda c: (-c['functions'], c['name'])) if c['functions'] > 0]
+        out.append(dict(id=b['id'], label=b['label'], functions=b['functions'], classes=classes,
+                        other=b.get('other_classes')))
+    return sorted(out, key=lambda a: (a['id'] == 'other', -a['functions'], a['id']))
+
+
+def render_map(root=ROOT):
+    progress, scope = load(root)
+    st = stats(progress, root)
+    build = progress['target_build_id']
+    areas = map_areas(scope, st)
+    pop = scope['areas']['population']
+    drawn = sum(a['functions'] for a in areas)
+    shown = sum(c['done'] for a in areas for c in a['classes'])
+    inner = W - 2 * PAD
+    body = [f'<text x="{PAD}" y="42" class="h">Class map</text>',
+            f'<text x="{W - PAD}" y="42" class="rl mu" text-anchor="end">Skyrim Special Edition · build {escape(build)}</text>',
+            f'<text x="{PAD}" y="68" class="rl mu">One cell is one function, whatever its size. In-scope code with a known class: '
+            f'{thousands(drawn)} of {thousands(pop["functions"])} functions (measured).</text>',
+            f'<rect x="{PAD}" y="79" width="11" height="11" fill="{GREEN}"/>'
+            f'<text x="{PAD + 18}" y="89" class="rl mu">accepted byte match; {shown} of the {st["matched"]} accepted functions are in a '
+            f'class named here</text>']
+    y = 128
+    key = 0
+    for a in areas:
+        body.append(f'<text x="{PAD}" y="{y}" class="st">{escape(a["label"])}</text>'
+                    f'<text x="{W - PAD}" y="{y}" class="rl mu" text-anchor="end">{thousands(a["functions"])} functions</text>')
+        y += 10
+        items = []
+        for c in a['classes']:
+            label = f'{c["name"]}  {c["done"]}/{thousands(c["functions"])}' if c['done'] else c['name']
+            min_w = max(len(label) * NAME_PX + 10, c['functions'] * CELL * CELL / TILE_H)
+            items.append((min(min_w, inner), (label, c)))
+        for row in flow(items, inner):
+            for dx, w, (label, c) in row:
+                body.append(tile(key, PAD + dx, y, w, TILE_H, c['functions'], c['done'], label))
+                key += 1
+            y += TILE_H + TILE_GAP
+        other = a['other']
+        if other and other['functions'] > 0:
+            h = max(TILE_H, CELL * -(-other['functions'] // (inner // CELL)))
+            body.append(tile(key, PAD, y, inner, h, other['functions'], 0,
+                             f'{thousands(other["classes"])} other classes  {thousands(other["functions"])}'))
+            key += 1
+            y += h + TILE_GAP
+        y += 34
+
+    not_classed = next((b['functions'] for b in scope['areas']['blocks'] if b['id'] == 'unattributed'), 0)
+    out_of_scope = sum(b['functions'] for b in scope['areas']['blocks'] if b['treatment'] == 'out_of_scope')
+    body.append(f'<text x="{PAD}" y="{y}" class="fn">Not drawn: {thousands(not_classed)} functions with no known class and '
+                f'{thousands(out_of_scope)} in out-of-scope middleware · generated from tracked data · no game data</text>')
+    H = y + PAD
+
+    head = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" '
+            f'aria-label="Class map of the Skyrim Special Edition byte-matching reconstruction, build {escape(build)}">',
+            f'<title>Class map, build {escape(build)}</title>',
+            style(),
+            f'<rect width="{W}" height="{H}" rx="6" fill="{BG}"/>']
+    return '\n'.join(head + body + ['</svg>']) + '\n'
+
+
+def style():
+    return ('<style>'
+            f'text{{font-family:{FONT};fill:{TEXT};white-space:pre}}'
+            '.h{font-size:26px;font-weight:600}.st{font-size:15px;font-weight:600}.lb{font-size:13px;font-weight:600}'
+            f'.bl{{font-size:12px;font-weight:600;stroke:{BG};stroke-width:3px;paint-order:stroke;stroke-linejoin:round}}'
+            f'.rl{{font-size:13px}}.fn{{font-size:12px;fill:{MUTED}}}.mu{{fill:{MUTED}}}</style>')
 
 
 def render(root=ROOT):
-    progress, scope, costs = load(root)
+    progress, scope = load(root)
     st = stats(progress, root)
     den = scope['denominators']['functions_excluding_funclets_and_thunks']
-    census = scope['structure_census']['primary_unwind_entries']
     build = progress['target_build_id']
-    panel = AREA_PANEL_H if scope.get('areas') else 0
-    H = BASE_H + panel
-    LX, LW, RX, RW = 8, 585, 605, 387
-    TY, TH = 76, 270
+    inner = W - 2 * PAD
+    body = []
 
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" '
-             f'aria-label="Progress of the Skyrim Special Edition byte-matching reconstruction, build {escape(build)}">',
-             f'<title>Reconstruction progress, build {escape(build)}</title>',
-             '<style>'
-             f'text{{font-family:{FONT};fill:{TEXT}}}'
-             '.h{font-size:17px}.hs{font-size:11px;fill:#8b949e}.st{font-size:15px}.rl{font-size:12.5px}'
-             '.bl{font-size:12px;font-weight:600;stroke:#0d1117;stroke-width:2.5px;paint-order:stroke;fill:#fff}'
-             '.bs{font-size:10px;stroke:#0d1117;stroke-width:2.5px;paint-order:stroke;fill:#e6edf3}'
-             '.fn{font-size:10.5px;fill:#8b949e}</style>',
-             f'<defs>{defs()}</defs>',
-             f'<rect width="{W}" height="{H}" fill="{BG}"/>']
-
+    body.append(f'<text x="{PAD}" y="42" class="h">{st["matched"]} accepted byte-matches</text>')
+    body.append(f'<text x="{W - PAD}" y="42" class="rl mu" text-anchor="end">Skyrim Special Edition · build {escape(build)}</text>')
     mb = st['matched_bytes']
-    parts.append(f'<text x="{LX}" y="22" class="h">Game code: {st["matched"]} accepted byte-matches</text>')
-    parts.append(f'<text x="{LX}" y="40" class="hs">{st["matched"]} of {thousands(den["functions"])} functions = '
-                 f'{pct(st["matched"], den["functions"])} (measured: image functions excl. EH funclets, thunks)</text>')
-    parts.append(f'<text x="{LX}" y="54" class="hs">{thousands(mb)} of {thousands(den["bytes"])} bytes = '
-                 f'{pct(mb, den["bytes"])} (measured, same denominator; includes middleware)</text>')
-    game = next(c for c in scope['categories'] if c['id'] == 'game')
-    parts.append(f'<text x="{LX}" y="68" class="hs">Ordinary game code: {thousands(game["functions"])} functions est.; '
-                 f'no percentage for an estimate</text>')
+    body.append(f'<text x="{PAD}" y="68" class="rl mu">{st["matched"]} of {thousands(den["functions"])} functions = '
+                f'{pct(st["matched"], den["functions"])} (measured: every function in the image except EH funclets and thunks)</text>')
+    body.append(f'<text x="{PAD}" y="88" class="rl mu">{thousands(mb)} of {thousands(den["bytes"])} bytes = '
+                f'{pct(mb, den["bytes"])} (measured, same denominator)</text>')
 
-    tm, skipped = game_treemap(scope, st, LX, TY, LW, TH)
-    parts.append(tm)
+    svg, bottom = scope_bar(scope, st, PAD, 128, inner)
+    body.append(svg)
 
-    parts.append(f'<text x="{RX}" y="22" class="h">Unwind data decoded: {thousands(census["decoded"])} of {thousands(census["value"])}</text>')
-    parts.append(f'<text x="{RX}" y="40" class="hs">primary unwind entries the comparator decodes (measured census)</text>')
-    parts.append(f'<text x="{RX}" y="54" class="hs">Decodable by the comparator, not matched. Area = functions.</text>')
-    jt = scope['structure_census']['jump_table_candidates']
-    parts.append(f'<text x="{RX}" y="68" class="hs">Jump-table candidates: {thousands(jt["value"])} est., inside the blocks</text>')
-    parts.append(census_treemap(scope, RX, TY, RW, TH))
-
-    # legend
-    ly = TY + TH + 14
-    legend = [('url(#cn)', 'accepted'), ('url(#ca)', 'in progress (mapped)'), ('url(#cg)', 'not started'),
-              ('url(#hx)', 'out of scope'), ('url(#hs)', 'tracked separately')]
-    lx = LX
-    for fill, text in legend:
-        parts.append(f'<rect x="{lx}" y="{ly - 9}" width="12" height="10" fill="{fill}" stroke="#30363d" stroke-width="0.5"/>'
-                     f'<text x="{lx + 17}" y="{ly}" class="fn">{text}</text>')
-        lx += 17 + len(text) * 5.6 + 14
-
-    # lower sections
-    sy = ly + 30
+    sy = bottom + 44
+    col_w = (inner - 40) / 2
     counts = st['counts']
-    review_pending = 0
-    status_rows = [('Accepted (matched)', counts['matched'], thousands(counts['matched'])),
-                   ('Names checked', st['named'], thousands(st['named'])),
-                   ('Awaiting review', review_pending, thousands(review_pending)),
-                   ('Mapped, no match yet', counts['mapped'], thousands(counts['mapped']))]
-    parts.append(bars(f'Functions by status ({st["tracked"]} tracked)', status_rows, LX, sy, LW, total=max(st['tracked'], 1),
-                      colors={'Accepted (matched)': GREEN}))
+    status_rows = [('Accepted', counts['matched'], GREEN),
+                   ('Accepted, names checked', st['named'], GREEN),
+                   ('Mapped, no match yet', counts['mapped'], AMBER)]
+    svg, b1 = bars(f'Functions by status ({st["tracked"]} tracked)', status_rows, PAD, sy, col_w, max(st['tracked'], 1))
+    body.append(svg)
     area_dirs = sorted(p.name for p in (root / 'reconstruction').iterdir() if p.is_dir() and any(p.glob('*.cpp')))
-    area_rows = [(a, st['areas'].get(a, 0), thousands(st['areas'].get(a, 0))) for a in area_dirs]
-    parts.append(bars('Units by area (functions accepted)', area_rows, LX, sy + 100, LW, total=max(max(st['areas'].values(), default=1), 1),
-                      colors={a: GREEN for a, _, _ in area_rows}))
+    area_rows = sorted(((a, st['areas'].get(a, 0), GREEN) for a in area_dirs), key=lambda r: (-r[1], r[0]))
+    svg, b2 = bars('Accepted functions by area', area_rows, PAD + col_w + 40, sy, col_w,
+                   max(max(st['areas'].values(), default=1), 1))
+    body.append(svg)
 
-    rows, boat_h, n = cost_rows(costs)
-    if rows:
-        parts.append(bars(f'Cost so far: output tokens by role ({n} runs)', rows, RX, sy, RW, total=max(v for _, v, _ in rows)))
-        by = sy + 10 + len(rows) * 20 + 14
-        parts.append(f'<text x="{RX}" y="{by + 12}" class="rl">Boat compute</text>'
-                     f'<text x="{RX + RW}" y="{by + 12}" class="rl" text-anchor="end">{boat_h:.2f} h</text>')
-        parts.append(f'<text x="{RX}" y="{by + 30}" class="fn">Counts from the cost ledger; shares of shared work are partly estimated.</text>')
-    else:
-        parts.append(f'<text x="{RX}" y="{sy}" class="st">Cost so far</text><text x="{RX}" y="{sy + 20}" class="rl">No cost ledger recorded.</text>')
+    fy = max(b1, b2) + 40
+    body.append(f'<text x="{PAD}" y="{fy}" class="fn">est. = heuristic estimate · measured = counted on the pinned image · '
+                'generated from data/progress.json and data/scope.json · no game data</text>')
+    H = fy + PAD
 
-    if panel:
-        parts.append(area_panel(scope, st, LX, BASE_H + 20, W - 2 * LX, panel - 75))
-    skipped_text = ', '.join(c['label'] + ' ' + thousands(c['functions']) for c in skipped)
-    notes = ['Marks show the share of a block from the top; progress under 2 px is drawn 2 px tall.',
-             f'est. = estimated by a heuristic; measured = counted on the pinned image. Not drawn (too small): {skipped_text} functions.']
-    for i, line in enumerate(notes):
-        parts.append(f'<text x="{LX}" y="{H - 36 + i * 13}" class="fn">{escape(line)}</text>')
-    parts.append(f'<text x="{LX}" y="{H - 10}" class="fn">Build {escape(build)} · generated from data/progress.json, '
-                 'data/scope.json, data/costs.json · no game data</text>')
-    parts.append('</svg>')
-    return '\n'.join(parts) + '\n'
+    head = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" '
+            f'aria-label="Progress of the Skyrim Special Edition byte-matching reconstruction, build {escape(build)}">',
+            f'<title>Reconstruction progress, build {escape(build)}</title>',
+            style(),
+            '<defs><pattern id="hx" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'
+            f'<rect width="6" height="6" fill="{TRACK}"/><rect width="2" height="6" fill="#484f58"/></pattern></defs>',
+            f'<rect width="{W}" height="{H}" rx="6" fill="{BG}"/>']
+    return '\n'.join(head + body + ['</svg>']) + '\n'
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('--check', action='store_true', help='fail when docs/progress.svg is out of date')
+    ap.add_argument('--check', action='store_true', help='fail when a picture is out of date')
     args = ap.parse_args(argv)
-    svg = render()
+    pictures = ((OUTPUT, render()), (MAP_OUTPUT, render_map()))
     if args.check:
-        if not OUTPUT.exists() or OUTPUT.read_text() != svg:
-            print('FAIL: docs/progress.svg is out of date; run python3 tools/build_progress_svg.py', file=sys.stderr)
+        stale = [path.relative_to(ROOT) for path, svg in pictures if not path.exists() or path.read_text() != svg]
+        if stale:
+            print(f'FAIL: {", ".join(map(str, stale))} out of date; run python3 tools/build_progress_svg.py', file=sys.stderr)
             return 1
-        print('PASS: docs/progress.svg is current')
+        print('PASS: progress pictures are current')
         return 0
-    OUTPUT.write_text(svg)
-    print(f'Wrote {OUTPUT} ({len(svg.encode()):,} bytes)')
+    for path, svg in pictures:
+        path.write_text(svg)
+        print(f'Wrote {path} ({len(svg.encode()):,} bytes)')
     return 0
 
 
