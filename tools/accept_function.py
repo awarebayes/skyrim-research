@@ -586,7 +586,37 @@ def apply(root, data, new, target, prepared, tolerated, when):
     return changed
 
 
-def accept_many(root, review_source, targets=None, verdict='approve', when=None, select=None):
+# Explicit model IDs and the Opus harness alias; unknown versions are not admitted.
+OPUS_MODELS = frozenset(('opus', 'claude-opus-5-5'))
+ADMITTING_PHRASES = {'gpt-6.1-terra': 'Terra class as the Reviewer'}
+
+
+def reviewer_admitted(root, model, profile):
+    if model in OPUS_MODELS:
+        return True
+    phrase = ADMITTING_PHRASES.get(model)
+    path = Path(root) / 'docs/verification.md'
+    return bool(model == 'gpt-6.1-terra' and profile == 'claude-low' and phrase
+                and path.is_file() and phrase in path.read_text())
+
+
+def reviewer_matches(assigned, actual):
+    return actual == assigned or (assigned in OPUS_MODELS and actual in OPUS_MODELS)
+
+
+def active_profile(root):
+    import os
+    flow_dir = Path(os.environ.get('SKYRIM_FLOW_DIR') or Path(root) / '.local/flow')
+    path = flow_dir / 'events.jsonl'
+    if path.is_file():
+        for line in reversed(path.read_text().splitlines()):
+            event = json.loads(line)
+            if event.get('event') == 'session-start':
+                return event.get('profile') or 'cheap'
+    return 'cheap'
+
+
+def accept_many(root, review_source, targets=None, verdict='approve', when=None, select=None, profile=None):
     """Accept the approve blocks of one review: `targets` [(build id, rva)], or the approve blocks of
     the functions in `select` (inventory ids), or None for all of them.
 
@@ -609,7 +639,10 @@ def accept_many(root, review_source, targets=None, verdict='approve', when=None,
     refuse(header.get('fresh_context') == 'yes', 'review does not state fresh_context: yes')
     refuse(header.get('drafted_or_triaged_any_reviewed_function') == 'no',
            'review does not state the Reviewer neither drafted nor triaged the function')
-    refuse(bool(header.get('reviewer_model')), 'review names no reviewer_model')
+    model = header.get('reviewer_model')
+    refuse(bool(model), 'review names no reviewer_model')
+    refuse(reviewer_admitted(root, model, profile or active_profile(root)),
+           f'reviewer_model {model!r} is not admitted for this profile')
     skipped = []
     if targets is None:
         targets = []
@@ -645,9 +678,9 @@ def accept_many(root, review_source, targets=None, verdict='approve', when=None,
     return apply(root, data, new, target, prepared, stale_before - selected, when), skipped
 
 
-def accept(root, build_id, rva, review_file, verdict, when=None):
+def accept(root, build_id, rva, review_file, verdict, when=None, profile=None):
     """Accept one function from a review file; returns the changed files."""
-    return accept_many(root, review_file, [(build_id, rva)], verdict, when)[0]
+    return accept_many(root, review_file, [(build_id, rva)], verdict, when, profile=profile)[0]
 
 
 def superseded_approval(fn, record, previous):
@@ -792,6 +825,7 @@ def main(argv=None):
     p.add_argument('--units', nargs='+', metavar='UNIT', help='Restrict to functions compiled from these units')
     p.add_argument('--revoke', action='store_true', help='Revoke an accepted function')
     p.add_argument('--reason', help='Why the acceptance is revoked (with --revoke)')
+    p.add_argument('--profile', choices=['cheap', 'full', 'claude-low'], help='Profile in use (defaults to active session)')
     p.add_argument('--root', type=Path, default=ROOT, help=argparse.SUPPRESS)
     args = p.parse_args(argv)
     skipped = []
@@ -812,7 +846,7 @@ def main(argv=None):
             refuse(args.review is not None, '--all-approved needs --review')
             refuse(args.build_id is None and args.rva is None, '--all-approved takes no --build-id or --rva')
             refuse(args.verdict in (None, 'approve'), '--all-approved accepts approve blocks only')
-            changed, skipped = accept_many(args.root, args.review, select=select)
+            changed, skipped = accept_many(args.root, args.review, select=select, profile=args.profile)
             print(f'accepted {sum(n.endswith(".review.json") for n in changed)} function(s): status matched, Reviewer records written')
         elif args.label_only or args.refresh_named:
             refuse(args.review is None and args.verdict is None and args.build_id is None and args.rva is None,
@@ -829,7 +863,7 @@ def main(argv=None):
         else:
             refuse(args.review is not None and args.verdict is not None, 'accepting needs --review and --verdict')
             refuse(args.build_id is not None and args.rva is not None, 'accepting one function needs --build-id and --rva')
-            changed = accept(args.root, args.build_id, args.rva, args.review, args.verdict)
+            changed = accept(args.root, args.build_id, args.rva, args.review, args.verdict, profile=args.profile)
             print(f'accepted {args.build_id} 0x{args.rva:x}: status matched, Reviewer record written')
     except Refused as exc:
         print(f'REFUSED: {exc}', file=sys.stderr)

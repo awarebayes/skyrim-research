@@ -108,17 +108,19 @@ A function is accepted only when ALL of these hold:
    The Reviewer lists these as `naming_findings` for the function and still approves if no blocking ground holds.
    They are published (next item), so they hold no code, bytes, disassembly or private paths.
 
-   **Admitted Reviewer classes.** Function reviews use the Sonnet class by default (Claude
-   Sonnet); the Terra class as the Reviewer (OpenAI Terra through the maintainer's Codex
-   subscription) is admitted for the `claude-low` profile, within the exposure recorded in
-   `docs/authorizations.md`. Each class was admitted on a blind calibration against Opus reviews
-   of the same functions at the same source revision (`tools/review_compare.py`), with no missed
-   reject. The Opus class is always admitted and is required for: the sampling safeguard's second
-   Reviewer pass; confirming an `escalate` from a non-Opus Reviewer before it reaches the
-   maintainer (a non-Opus `reject` needs no confirmation: it only sends the function back); and
-   every review of a comparator, validator or acceptance-rule change. A new Reviewer model or
-   class counts as a new Reviewer version for the sampling safeguard. `tools/flow.py` refuses a
-   Reviewer class this paragraph does not admit.
+   **Admitted Reviewer classes.** The Opus class is admitted. The Terra class as the Reviewer
+   is admitted only as `gpt-6.1-terra` under the `claude-low` profile, through the maintainer's
+   Codex subscription and within the exposure in `docs/authorizations.md`. Its blind calibration
+   against Opus at revision `2209f4b` covered 67 functions: 60 agreed, 7 were stricter, none
+   were laxer and all 4 reference rejects were caught. The reviews were
+   `.local/reviews/review-p26-terra-cal-{1..4}.md` and
+   `.local/reviews/review-p19-wave2-{1..4}.md`. This was one wave at one revision, mostly small
+   functions, with only 4 reference rejects. Sonnet is prepared, pending blind calibration and a
+   Reviewer-checked rule change. Opus is required for the sampling safeguard's second Reviewer
+   pass, confirmation of a non-Opus `escalate` before the maintainer, and reviews of comparator,
+   validator or acceptance-rule changes. A non-Opus `reject` needs no confirmation. A new
+   Reviewer model or class counts as a new Reviewer version for sampling. The acceptance and
+   flow tools refuse models not admitted for the profile in use.
 
    Verdicts are `approve`, `reject` (on a blocking ground, back to the Drafter or Engineer with
    reasons) or `escalate` (with a category: `provenance`, `legal`, `systemic` or `other`). The

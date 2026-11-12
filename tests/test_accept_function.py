@@ -105,6 +105,20 @@ reasons: synthetic
         with self.assertRaisesRegex(ValueError, 'matched needs a Reviewer approve'):
             validate(self.progress(), self.target, root=self.root)
 
+    def test_unadmitted_model_and_profile_are_refused(self):
+        self.write('docs/verification.md', (ROOT / 'docs/verification.md').read_text())
+        for model in ('sonnet', 'gpt-5.6-terra', 'gpt-6.1-terra'):
+            with self.subTest(model=model):
+                self.write_review(model=model)
+                self.assertRefused('not admitted')
+        self.write_review(model='gpt-5.6-terra')
+        with self.assertRaisesRegex(af.Refused, 'not admitted'):
+            af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
+                      'approve', when=WHEN, profile='claude-low')
+        self.write_review(model='gpt-6.1-terra')
+        af.accept(self.root, 'synthetic-fixture', self.fn['rva'], self.root / REVIEW_FILE,
+                  'approve', when=WHEN, profile='claude-low')
+
     def test_reject_refused(self):
         self.write_review(verdict='reject')
         self.assertRefused('only approve', verdict='reject')

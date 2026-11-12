@@ -223,7 +223,10 @@ def read_review(root, g, functions):
         af.refuse_malformed(header, blocks, functions)
         af.refuse(header.get('fresh_context') == 'yes', 'fresh_context is not yes')
         af.refuse(header.get('drafted_or_triaged_any_reviewed_function') == 'no', 'drafted_or_triaged is not no')
-        af.refuse(bool(header.get('reviewer_model')), 'no reviewer_model')
+        model = header.get('reviewer_model')
+        af.refuse(af.reviewer_matches(g['reviewer_model'], model), 'reviewer_model does not match assigned model')
+        af.refuse(g['kind'] != 'sampling' or model in af.OPUS_MODELS, 'sampling reviewer_model must be Opus')
+        af.refuse(af.reviewer_admitted(root, model, g.get('profile', 'cheap')), 'reviewer_model is not admitted for group profile')
         want = 'yes' if g['kind'] == 'sampling' else 'no'
         af.refuse(header.get('sampling_second_pass') == want, f'sampling_second_pass is not {want}')
     except (af.Refused, UnicodeDecodeError) as exc:
@@ -339,7 +342,7 @@ def component_values(root, rva, row, data, model='opus'):
     return {'recipe': rec['recipe']['sha256'][:12], 'compiler': rec['toolchain_pin']['sha256'][:12],
             'drafter_prompt': f'{profile}:{file_hash(card) if card.startswith("docs/") else card}',
             'reviewer_prompt': file_hash('.claude/agents/reviewer.md') + file_hash('docs/reviewer-runbook.md'),
-            'reviewer_model': reviewer_class(model),
+            'reviewer_model': model,
             'acceptance_rule': hashlib.sha256((file_hash('docs/verification.md') + file_hash('tools/accept_function.py'))
                                               .encode()).hexdigest()[:12]}
 
@@ -377,20 +380,10 @@ def choose_sample(name, rvas, comps, counts, seed='flow'):
 
 # ------------------------------------------------------------------ reviewer model
 
-# Phrases by which the acceptance rule admits a Reviewer class besides Opus. Until docs/verification.md
-# holds one, that class is refused, so a profile cannot enable a Reviewer the rule does not admit.
-ADMITTING_PHRASES = {'sonnet': 'Sonnet class by default', 'terra': 'Terra class as the Reviewer'}
-
-
 def reviewer_class(model):
-    m = (model or '').lower()
-    return next((c for c in ('opus', 'sonnet', 'terra', 'sol', 'haiku', 'luna', 'fable') if c in m), m)
-
-
-def allowed_reviewer_models(root):
-    """Reviewer classes the acceptance rule admits: Opus, plus each class whose phrase it contains."""
-    text = (Path(root) / 'docs/verification.md').read_text()
-    return tuple(c for c, phrase in ADMITTING_PHRASES.items() if phrase in text) + ('opus',)
+    if model in af.OPUS_MODELS:
+        return 'opus'
+    return {'gpt-6.1-terra': 'terra'}.get(model, model)
 
 
 def session_profile(fdir):
@@ -422,14 +415,14 @@ def next_group_name(fdir):
 def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, seed='flow'):
     """Group every confirmed function not yet in a review group, unit by unit; returns new group names."""
     root = Path(root)
-    allowed = allowed_reviewer_models(root)
+    profile = session_profile(fdir)
     if reviewer_model:
-        refuse(reviewer_class(reviewer_model) in allowed,
-               f'reviewer model {reviewer_model} is not admitted by docs/verification.md (admitted: {", ".join(allowed)})')
+        refuse(af.reviewer_admitted(root, reviewer_model, profile),
+               f'reviewer model {reviewer_model} is not admitted for profile {profile}')
         entry = {'model': reviewer_model, 'harness': 'codex' if reviewer_class(reviewer_model) in ('terra', 'sol') else 'claude-code'}
     else:
-        entry = dict(profiles.role(session_profile(fdir), 'reviewer'))
-        if reviewer_class(entry['model']) not in allowed:
+        entry = dict(profiles.role(profile, 'reviewer'))
+        if not af.reviewer_admitted(root, entry['model'], profile):
             # The stricter Reviewer stands in until the rule admits the profile's one.
             print(f'note: the rule does not admit a {entry["model"]} Reviewer yet; using opus', file=sys.stderr)
             entry = {'model': 'opus', 'harness': 'claude-code'}
@@ -466,7 +459,7 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
             for c, v in comps[r].items():
                 counts.setdefault(c, {})[v] = counts.get(c, {}).get(v, 0) + 1
         g = {'name': name, 'kind': 'review', 'task_id': f'review-flow-{name}', 'build_id': data['target_build_id'],
-             'functions': batch, 'created': utc(), 'source_revision': head, 'reviewer_model': model,
+             'functions': batch, 'created': utc(), 'source_revision': head, 'reviewer_model': model, 'profile': profile,
              'reviewer_harness': entry.get('harness', 'claude-code'),
              'components': comps, 'sampled': sample, 'pair': f'{name}-s' if sample else None,
              'dispatched': None, 'rerun': None, 'integrated': None}
@@ -1002,7 +995,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         done = all(by_rva[r]['status'] == 'matched' for r in approved)
         printed = list(carried)
         if not done:
-            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file], tree, 'accept_function.py')
+            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file, '--profile', g.get('profile', 'cheap')], tree, 'accept_function.py')
             take = False
             for line in out.splitlines():
                 if line.startswith('changed files'):

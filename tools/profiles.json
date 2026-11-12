@@ -9,7 +9,7 @@
         "orchestrator": {"provider": "claude", "model": "sonnet", "effort": null, "harness": "claude-code"},
         "drafter": {"provider": "claude", "model": "haiku", "effort": null, "harness": "claude-code",
                     "alternatives": [{"provider": "openai", "model": "gpt-5.6-luna", "effort": "medium", "harness": "codex"}]},
-        "reviewer": {"provider": "claude", "model": "sonnet", "effort": null, "harness": "claude-code"},
+        "reviewer": {"provider": "claude", "model": "opus", "effort": null, "harness": "claude-code"},
         "strong": {"provider": "claude", "model": "opus", "effort": null, "harness": "claude-code"}
       },
       "project_docs": ["docs/drafter-runbook.md", "docs/drafter-card-small.md"],
@@ -45,7 +45,7 @@
                     "alternatives": [{"provider": "openai", "model": "gpt-5.6-luna", "effort": "medium", "harness": "codex",
                                       "note": "uses no Claude subscription at all"}]},
         "reviewer": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "high", "harness": "codex",
-                     "requires": "acceptance rule admitting a Terra Reviewer (prepared, not enabled) and the calibration"},
+                     "requires": "admitted as gpt-6.1-terra under claude-low; sampling second passes use Opus"},
         "strong": {"provider": "openai", "model": "gpt-6.1-sol", "effort": "high", "harness": "codex",
                    "alternatives": [{"provider": "openai", "model": "gpt-6-sol", "effort": "high", "harness": "codex"},
                                     {"provider": "openai", "model": "gpt-5.6-sol", "effort": "high", "harness": "codex"}]}

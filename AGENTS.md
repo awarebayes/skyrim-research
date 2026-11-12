@@ -88,7 +88,7 @@ must be recorded in `docs/authorizations.md` by the human maintainer before work
 | Orchestrator (routine) | Claude Sonnet via `.claude/agents/orchestrator-routine.md`, or the profile's orchestrator model through `docs/orchestrator-runbook.md` | runs `tools/flow.py next-actions` and does what it lists: starts Drafters and Reviewers with generated briefs, runs `flow.py integrate` (accept, checks, commit, push, CI), produces the friction report, stops on every exception the runbook lists | decides ordering or sampling, writes briefs by hand, edits files, judges a match, works around a refusal |
 | Direction check | the profile's strong model (Opus today) via `.claude/agents/direction-check.md`, fresh context | reads the friction report, pipeline status, recent handoffs and the census; writes `.local/handoffs/direction-check-<n>.md` with what to change | edits anything else, starts agents |
 | Engineer | Claude Opus 5.5 (`claude-opus-5-5`) subagent | tooling, comparator, Ghidra/import work, failure analysis on near-misses, integration of worker branches, recording `matched` once the acceptance rule is met, commit and push | marks `matched` without a reproduced pass and a Reviewer `approve` |
-| Reviewer | Claude Sonnet subagent by default via `.claude/agents/reviewer.md`; Claude Opus 5.5 (`claude-opus-5-5`) for sampling second passes, confirming non-Opus escalations and machinery reviews; OpenAI Terra under the `claude-low` profile (any model: `docs/reviewer-runbook.md`; admitted classes are set by `docs/verification.md`), fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
+| Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) by default via `.claude/agents/reviewer.md`; OpenAI `gpt-6.1-terra` under `claude-low`; Sonnet pending calibration (any model: `docs/reviewer-runbook.md`; admitted classes are set by `docs/verification.md`), fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
 | Drafter | Claude Sonnet 5.5 (`claude-sonnet-5-5`) subagent | bounded high-volume tasks: reconstruction drafts, synthetic fixtures, report formatting, doc updates | decides scope or accepts its own output |
 | Verifier | deterministic job on a runner host from the private runner config (the maintainer's Mac under Wine and Windows PC natively; Boat is retired) | compiles a pinned source revision with the pinned recipe and runs the comparator; emits a sanitized report | involves a model in the pass/fail decision |
 
@@ -105,8 +105,8 @@ Codex for orchestration, review and strong work, Haiku or Luna drafting). `cheap
 because weak-model drafting passes the same comparator gate; it stays default only while the
 friction report shows its pass rate at or above the threshold in `tools/profiles.json`. A profile
 never changes what counts as a match, and a Reviewer model the acceptance rule does not admit is
-refused whatever a profile says. The rule admits Sonnet Reviewers by default and Terra Reviewers
-under `claude-low`, each on its blind calibration against the Opus reviews; sampling second
+refused whatever a profile says. The rule admits Opus by default and `gpt-6.1-terra` under
+`claude-low`. Sonnet is pending calibration and a Reviewer-checked rule change. Sampling second
 passes, confirmations of a non-Opus escalation and machinery reviews stay with Opus.
 What OpenAI models may read under `claude-low` is recorded in `docs/authorizations.md` (Notes).
 

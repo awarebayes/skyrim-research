@@ -36,9 +36,9 @@ your harness does:
 | any other (two terminals) | open a second terminal in this repository, start the named model's CLI there (Claude Code, Codex) with the model and effort given, and paste the prompt line. Wait for its return table. |
 
 **Reviewer model.** The acceptance rule (`docs/verification.md`, "Admitted Reviewer classes")
-admits Sonnet Reviewers by default and Terra Reviewers under `claude-low`; `flow.py` gives sampling
-second passes and confirmations of a non-Opus escalation to Opus by itself. A profile Reviewer the
-rule does not admit is replaced by Opus with a note.
+admits Opus by default and `gpt-6.1-terra` under `claude-low`; Sonnet is pending calibration and
+a Reviewer-checked rule change. Sampling second passes use Opus; non-Opus escalations are held
+for an Opus confirmation. A profile Reviewer the rule does not admit is replaced by Opus with a note.
 
 A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`; Drafter

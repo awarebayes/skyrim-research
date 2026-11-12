@@ -45,8 +45,8 @@ def git(cwd, *args):
     return subprocess.run(['git', *args], cwd=cwd, check=True, capture_output=True, text=True).stdout.strip()
 
 
-def review_text(task, blocks, sampling='no'):
-    out = [f'# Review {task}', '', 'reviewer_model: test-model', 'fresh_context: yes',
+def review_text(task, blocks, sampling='no', model='claude-opus-5-5'):
+    out = [f'# Review {task}', '', f'reviewer_model: {model}', 'fresh_context: yes',
            'drafted_or_triaged_any_reviewed_function: no', 'gates_in_force: G2', 'source_revision: abc',
            f'sampling_second_pass: {sampling}', 'decompiler_output_read: no', '']
     for (rva, size, digest, verdict, cat) in blocks:
@@ -109,10 +109,10 @@ class Repo:
     def digest(self, rva):
         return json.loads((self.root / f'reports/{BUILD}/0x{rva:x}.json').read_text())['source']['digest']
 
-    def save_review(self, task, blocks, sampling='no'):
+    def save_review(self, task, blocks, sampling='no', model='claude-opus-5-5'):
         path = self.root / '.local/reviews' / f'{task}.md'
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(review_text(task, blocks, sampling))
+        path.write_text(review_text(task, blocks, sampling, model))
         return path
 
 
@@ -176,13 +176,40 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(len(g['sampled']), 1)
 
     def test_reviewer_model_must_be_admitted_by_the_rule(self):
-        with self.assertRaises(flow.FlowError):
-            flow.review_group(self.root, self.fdir, reviewer_model='sonnet')
-        with self.assertRaises(flow.FlowError):
-            flow.review_group(self.root, self.fdir, reviewer_model='gpt-6.1-terra')
-        (self.root / 'docs/verification.md').write_text('a Reviewer of Sonnet class by default\n')
-        made = flow.review_group(self.root, self.fdir, reviewer_model='sonnet')
-        self.assertEqual(flow.load_group(self.fdir, made[0])['reviewer_model'], 'sonnet')
+        # Exercise the real rule, including its explicit Sonnet pending language.
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        for model in ('sonnet', 'gpt-6.1-terra', 'gpt-5.6-terra'):
+            with self.subTest(model=model), self.assertRaises(flow.FlowError):
+                flow.review_group(self.root, self.fdir, reviewer_model=model)
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        for model in ('sonnet', 'gpt-5.6-terra'):
+            with self.subTest(model=model), self.assertRaises(flow.FlowError):
+                flow.review_group(self.root, self.fdir, reviewer_model=model)
+        made = flow.review_group(self.root, self.fdir, reviewer_model='gpt-6.1-terra')
+        self.assertEqual(flow.load_group(self.fdir, made[0])['reviewer_model'], 'gpt-6.1-terra')
+
+    def test_review_model_must_match_assignment_including_sampling(self):
+        g = self.grouped()
+        blocks = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
+        self.repo.save_review(g['task_id'], blocks, model='sonnet')
+        self.assertIn('reviewer_model', flow.read_review(self.root, g, flow.inventory(self.root)['functions'])[0])
+        sample = flow.load_group(self.fdir, g['pair'])
+        self.repo.save_review(sample['task_id'], blocks, 'yes', model='gpt-6.1-terra')
+        self.assertIn('reviewer_model', flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0])
+        sample.update(reviewer_model='gpt-6.1-terra', profile='claude-low')
+        self.assertIn('sampling reviewer_model must be Opus',
+                      flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0])
+
+    def test_first_twenty_counts_each_model_id(self):
+        data = flow.inventory(self.root)
+        row = flow.function_states(self.root, self.fdir)['0x1000']
+        opus = flow.component_values(self.root, '0x1000', row, data, 'opus')
+        terra = flow.component_values(self.root, '0x1000', row, data, 'gpt-6.1-terra')
+        self.assertEqual(terra['reviewer_model'], 'gpt-6.1-terra')
+        counts = {c: {v: 20} for c, v in opus.items()}
+        counts['reviewer_model']['gpt-6.1-terra'] = 0
+        comps = {f'0x{i:x}': terra for i in range(21)}
+        self.assertGreaterEqual(len(flow.choose_sample('g', list(comps), comps, counts)), 20)
 
     def test_claude_low_profile_falls_back_to_opus_until_admitted(self):
         flow.log_event(self.fdir, 'session-start', profile='claude-low')
@@ -255,12 +282,12 @@ class FlowTests(unittest.TestCase):
             flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
 
     def test_non_opus_escalation_goes_to_an_opus_confirmation_first(self):
-        (self.root / 'docs/verification.md').write_text('the Sonnet class by default\n')
-        flow.log_event(self.fdir, 'session-start')
-        g = flow.load_group(self.fdir, flow.review_group(self.root, self.fdir, max_size=3, reviewer_model='sonnet')[0])
+        (self.root / 'docs/verification.md').write_text('the Terra class as the Reviewer\n')
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        g = flow.load_group(self.fdir, flow.review_group(self.root, self.fdir, max_size=3, reviewer_model='gpt-6.1-terra')[0])
         blocks = [(r, s, self.repo.digest(r), 'escalate' if r == 0x2000 else 'approve',
                    'provenance' if r == 0x2000 else 'none') for r, s, _ in FUNCS]
-        self.repo.save_review(g['task_id'], blocks)
+        self.repo.save_review(g['task_id'], blocks, model='gpt-6.1-terra')
         stops = [t for k, t in self.actions() if k == 'stop']
         self.assertTrue(any('Opus confirmation' in t for t in stops), stops)
         self.assertFalse(any(t.startswith('ESCALATE to the maintainer') for t in stops))

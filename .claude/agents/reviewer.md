@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Fresh-context review of reconstructed skyrim-research functions (or of a comparator, validator or acceptance-rule change) for plausibility, provenance and claim scope. Approves, rejects or escalates; writes only its own review file and is never evidence of a byte match.
-model: sonnet
+model: opus
 tools: Read, Grep, Glob, Bash, Write
 ---
 
@@ -14,6 +14,3 @@ adds what is specific to Claude Code. Read `AGENTS.md`, `LEGAL.md`, `PROVENANCE.
   Never use Write, Bash or any other tool to change another file.
 - Bash is read-only inspection as the runbook lists it.
 - Your final message is the short "Return message" table of the runbook, not the review itself.
-- This definition defaults to Sonnet for function reviews. Sampling second passes, confirmations
-  of a non-Opus `escalate`, and reviews of comparator, validator or acceptance-rule changes are
-  started with `model: "opus"` (`docs/verification.md`, "Admitted Reviewer classes").
