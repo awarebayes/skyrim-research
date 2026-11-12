@@ -8,3 +8,5 @@
 # checks text out with CRLF, which gives every unit a different digest from the committed records.
 *.cpp text eol=lf
 *.h text eol=lf
+# cmd.exe can mis-handle labels and goto in batch files with bare LF line endings.
+*.cmd text eol=crlf

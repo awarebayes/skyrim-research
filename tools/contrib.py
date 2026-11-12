@@ -125,6 +125,9 @@ class Ctx:
 
     @property
     def cli(self):
+        # sr.cmd names itself: a newcomer it bootstrapped has no `py` launcher on PATH.
+        if self.windows and self.env.get('SR_LAUNCHER') == '.\\sr.cmd':
+            return '.\\sr.cmd'
         return 'py tools\\contrib.py' if self.windows else 'python3 tools/contrib.py'
 
     def which(self, name):

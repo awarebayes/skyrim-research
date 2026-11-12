@@ -15,7 +15,7 @@ installed for you.
 ```sh
 git clone https://github.com/awarebayes/skyrim-research.git
 cd skyrim-research
-python3 tools/contrib.py go            # Windows: py tools\contrib.py go
+python3 tools/contrib.py go            # Windows (cmd or PowerShell): .\sr.cmd go
 ```
 
 `go` checks your machine, installs what is missing (Wine on macOS and Linux, LLVM, the pinned
