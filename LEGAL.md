@@ -25,7 +25,9 @@ This includes Git history, LFS, issues, comments, screenshots, releases, logs an
 Do not acquire or use leaked/confidential source, unofficial proprietary debug symbols or
 unlawfully obtained development material. Do not assume a public URL establishes authorization.
 No copy-protection removal tools or instructions belong here. A reference link is not adoption
-of the linked project's practices or a license to reproduce its contents.
+of the linked project's practices or a license to reproduce its contents. The one exception the
+maintainer has made concerns a published third-party project, not material this project obtains
+itself: see "Sibling decompilation (FNV)" below.
 
 ## Research publication and source reconstruction
 
@@ -39,15 +41,32 @@ organized by engine area (`reconstruction/<area>/`, see `reconstruction/README.m
 the maintainer's policy decision; it is not a legal opinion, and no further conclusion is drawn
 from it here. It changes no other rule in this file or in `PROVENANCE.md`: only reconstructed
 source and its sanitized records are published, never game files, binary bytes, disassembly,
-decompiler output, objects, or leaked, proprietary or unlicensed material, and no FNV code is
-copied. Following FNV's manner of publication is not a licence to reuse FNV's material.
+decompiler output, objects, or leaked or proprietary material. Following FNV's manner of
+publication is not by itself a licence to reuse FNV's material; reuse rests on the separate
+decision below.
+
+**Sibling decompilation (FNV): maintainer decision.** The maintainer (awarebayes) has decided
+that the Fallout: New Vegas decompilation `momusdigital/fnv_decomp` at revision `91e1b6e8` may be
+read by Engineers and Drafters and that its names, declarations and code may be reused in
+reconstructions, including published ones, where they fit the Skyrim target
+(`docs/authorizations.md`, Notes). The facts the maintainer weighed are stated plainly here: that
+repository's `LICENSE` says no licence is granted, its contributors grant none for their own
+contributions, and its README tags some names as coming from an Xbox 360 development-build PDB and
+from Havok and Gamebryo source. The decision is the maintainer's policy choice, not a legal
+opinion. Everything taken is labelled with its origin (`SIBLING(...)`, `docs/drafter-card.md`)
+and a reused body is cited in the unit header, so it can be found and removed if a rights holder
+objects. The decision does not cover any other repository or revision, does not make FNV
+material evidence about the Skyrim binary, and changes no other rule here: game files, binary
+bytes and decompiler output stay private, and this project still never acquires leaked code,
+PDBs or middleware source itself.
 
 Each function is published only once accepted under the acceptance rule in
 `docs/verification.md`, which includes a per-function provenance review by a Reviewer subagent,
 with provenance or legal doubt escalated to the maintainer. The copyright status of reconstructed
 implementations is not settled by matching bytes or withholding binaries.
 Nothing in this repository grants third-party rights. See `LICENSE` for the narrow infrastructure
-license; do not label the entire repository MIT or copy FNV code, which has no license grant.
+license; do not label the entire repository MIT. Material reused from FNV under the decision
+above carries no licence from its authors and is not covered by this repository's licence.
 Contributor authorship alone does not establish rights to all underlying material.
 
 US law distinguishes ideas/methods from protected expression in [17 USC 102(b)](https://www.law.cornell.edu/uscode/text/17/102).

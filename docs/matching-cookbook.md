@@ -6,6 +6,12 @@ compiler reacts to source shapes, not what the original said, and are starting h
 evidence. Spellings must still meet `docs/drafter-card.md`. Confidence: **high** = closed a
 function and the counter-variants failed; **medium** = closed one function; **low** = unsettled.
 
+**Before the first draft, read the sibling.** Open the FNV method and the class's small accessors
+that the pack's "Sibling source" section lists; their helper boundaries, argument order and
+accessor forms are a cheap first hypothesis. Adapt, do not assume: FNV is a 32-bit VC++ 2008 build
+of an older engine and most of its game units are `/Od`, so layouts, offsets, slots and
+unoptimised shapes do not carry over. Label what you take (`SIBLING`, `docs/drafter-card.md`).
+
 ## Control flow and redundancy
 
 **1. A null test the candidate lacks: re-read the pointer.** (high)

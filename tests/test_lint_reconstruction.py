@@ -209,6 +209,44 @@ class ReviewerFollowUpTests(LintTests):
     def test_unknown_labels_version_refused(self):
         self.assert_problem('unknown "Labels: v3"', header=V2_HEADER.replace('Labels: v2', 'Labels: v3'))
 
+    def test_sibling_label_and_source_line_accepted(self):
+        header = V2_HEADER.replace('#pragma once', '// Widget::Tick: SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence)\n'
+                                   '// Widget::Peek: SIBLING(momusdigital/fnv_decomp@91e1b6e8d8bb, no-licence) OBSERVED; '
+                                   'returns int here\n#pragma once')
+        source = SOURCE.replace('#include', '// Sibling source: momusdigital/fnv_decomp@91e1b6e8 '
+                                'src/gamebryo2.2/corelibs/nimain/widget.cpp:12 (body adapted)\n#include')
+        self.write(header, source)
+        self.assertEqual(self.problems(), [])
+
+    def test_sibling_citations_must_name_the_allowed_sibling_at_its_pin(self):
+        cases = {
+            'SIBLING(other/decomp@91e1b6e8, no-licence)': 'not an allowed sibling source',
+            'SIBLING(momusdigital/fnv_decomp@1234567, no-licence)': 'pinned at 91e1b6e8',
+            'SIBLING(momusdigital/fnv_decomp@91e1b6e8, MIT)': 'licence word "no-licence"',
+            'SIBLING (momusdigital/fnv_decomp@91e1b6e8, no-licence)': 'label outside the v2 grammar',
+            'SIBLING(momusdigital/fnv_decomp, no-licence)': 'label outside the v2 grammar',
+            'STANDIN': 'STANDIN also needs the origin',
+        }
+        for label, needle in cases.items():
+            with self.subTest(label):
+                self.assert_problem(needle, header=V2_HEADER.replace('#pragma once', f'// Widget::Tick: {label}\n#pragma once'))
+        self.write(header=V2_HEADER.replace('#pragma once', '// Widget::Tick: STANDIN SIBLING(momusdigital/fnv_decomp'
+                                            '@91e1b6e8, no-licence)\n#pragma once'))
+        self.assertEqual(self.problems(), [])
+
+    def test_sibling_source_line_form_and_place(self):
+        bad = {
+            '// Sibling source: fnv ninode.cpp': 'write "Sibling source:',
+            '// Sibling source: other/decomp@91e1b6e8 src/a.cpp': 'not an allowed sibling source',
+            '// Sibling source: momusdigital/fnv_decomp@abcdef0 src/a.cpp': 'pinned at 91e1b6e8',
+            '// Sibling source: momusdigital/fnv_decomp@91e1b6e8 build/units.json': 'write "Sibling source:',
+        }
+        for line, needle in bad.items():
+            with self.subTest(line):
+                self.assert_problem(needle, source=SOURCE.replace('#include', line + '\n#include'))
+        self.assert_problem('belong in the leading comment', source=SOURCE + '// Sibling source: momusdigital/'
+                            'fnv_decomp@91e1b6e8 src/a.cpp\n')
+
     def test_free_form_labels_still_pass_without_v2(self):
         self.write(header=HEADER.replace('Names are GUESS.', 'Names are GUESS names; COMMUNITY (NG b93280e, MIT).'))
         self.assertEqual(self.problems(), [])

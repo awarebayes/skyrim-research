@@ -71,9 +71,17 @@ blocks; you list what you find as `naming_findings` and still approve.
      there); reject one whose only plausible reason is forcing bytes;
    - nothing that cannot be what it claims: an unreachable branch or impossible type use that
      signals a wrong binding or a wrong class is a blocking ground, not a naming one.
-2. **Provenance.** No code from unlicensed projects such as the FNV repositories, no leaked or
-   proprietary material. The source header states provenance and source exposure. (A file with
-   GPL-licensed labels names GPL in its header: the lint checks that.)
+2. **Provenance.** No code from unlicensed projects other than the FNV decompilation
+   `momusdigital/fnv_decomp@91e1b6e8` (allowed by maintainer decision, `docs/authorizations.md`,
+   Notes), no leaked or proprietary material. The source header states provenance and source
+   exposure, and what it says about origin and licence is true. (A file with GPL-licensed labels
+   names GPL in its header: the lint checks that.) FNV material must be declared: open the FNV
+   function the pack or `.local/analysis/fnv_index.jsonl` lists for each reviewed function (by
+   our RVA in `ours`) and compare; if the body or a substantial part of it is reused, the unit
+   needs a `Sibling source: <repo>@<rev> <path>[:<line>]` header line. Reuse of a sibling body
+   without that line, or a false origin or licence statement (for example a header that calls
+   reused FNV code original, or gives it a licence it does not have), is a blocking provenance
+   ground: `reject`. FNV material is never evidence for the match claim.
 3. **Report binding.** The report's source revision (the translation-unit digest you computed
    with `tools/source_digest.py`), recipe, compiler hash and target image hash agree with the
    files you hashed and with `builds/target.json`; the second-host reproduction is present;
@@ -83,12 +91,18 @@ blocks; you list what you find as `naming_findings` and still approve.
 5. **Publication hygiene.** Nothing staged for publication contains game bytes, disassembly,
    dumps, proprietary symbols, secrets or private paths, per `PROVENANCE.md` and `LEGAL.md`.
 6. **Names and labels (not blocking).** Each name and type is labelled by origin (`COMMUNITY`
-   with source and immutable revision, `EXE_RTTI`, `OBSERVED`, or `GUESS` with confidence) and
-   each label is true; unknowns are preserved rather than filled plausibly. In a file with
-   `Labels: v2` the lint has checked the label syntax. Unlabelled community names, `GUESS` where a
-   community name exists, placeholder versus community naming, dead or leftover declarations
-   that compile to nothing, header or comment wording and missing notes go in `naming_findings`,
-   one short line each. They are published in the sanitized record: no code, braces, bytes,
+   with source and immutable revision, `SIBLING` for the FNV decompilation, `EXE_RTTI`,
+   `OBSERVED`, or `GUESS` with confidence) and each label is true; unknowns are preserved rather
+   than filled plausibly. In a file with `Labels: v2` the lint has checked the label syntax
+   (`// <names>: COMMUNITY(<owner>/<repo>@<rev>, <licence>) |
+   SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence) | GUESS | EXE_RTTI | STANDIN | OBSERVED`);
+   you check that a community name is `COMMUNITY`, a name taken from FNV is `SIBLING`, and
+   neither is `GUESS` (`tools/check_labels.py` flags GUESS names that either has in that class).
+   Unlabelled community names, a missing or imperfect `SIBLING` label on a name or declaration
+   taken from FNV (a reused body is declared by its `Sibling source:` line, whose absence is
+   item 2), `GUESS` where a community or sibling name exists, placeholder versus community
+   naming, dead or leftover declarations that compile to nothing, header or comment wording and
+   missing notes go in `naming_findings`, one short line each. They are published in the sanitized record: no code, braces, bytes,
    disassembly, digests or private paths (the tool refuses those), at most 20 per function. For
    a delta review, restate the earlier findings the packet lists that are still open.
 

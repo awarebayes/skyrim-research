@@ -10,7 +10,10 @@ reconstruction (`LEGAL.md`, "Publication of reconstructed source"). Changes to t
 follow the acceptance rule's machinery-change path. Source is pushed only together with its
 acceptance (`CONTRIBUTING.md`, "Publication"); a branch that holds integrated source still
 awaiting a Reviewer approve stays local.
-Do not copy FNV code, raw decompiler output, proprietary middleware or unlicensed implementations.
+Do not copy raw decompiler output, proprietary middleware or unlicensed implementations. The one
+exception is the FNV decompilation `momusdigital/fnv_decomp@91e1b6e8`, whose names, declarations
+and code the maintainer allowed (`docs/authorizations.md`, Notes; `LEGAL.md`): label what is taken
+`SIBLING(...)` and cite a reused body in a `Sibling source:` header line.
 Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source.
 
 ## Layout

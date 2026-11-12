@@ -26,11 +26,16 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   leading comment;
 - name-origin labels: in a file whose leading comment says `Labels: v2`, every label is on a
   `// <names>: <LABEL> [<LABEL>...][; note]` line, LABEL being `COMMUNITY(<owner>/<repo>@<rev>,
-  <licence>)`, `GUESS`, `GUESS(low|medium|high)`, `EXE_RTTI`, `STANDIN` or `OBSERVED`;
+  <licence>)`, `SIBLING(<owner>/<repo>@<rev>, <licence>)` (only a sibling decompilation listed in
+  `SIBLING_SOURCES`, at its pin, with its licence word), `GUESS`, `GUESS(low|medium|high)`,
+  `EXE_RTTI`, `STANDIN` or `OBSERVED`;
+- sibling bodies: a `Sibling source: <owner>/<repo>@<rev> <path>[:<line>]` line, required by the
+  Reviewer when a unit reuses a body or a substantial part of one, sits in the leading comment and
+  cites an allowed sibling at its pin (tools/check_labels.py checks the path in the clone);
 - header comment fields: the leading comment block names the pinned build id and a `Source
   exposure:` category from PROVENANCE.md; a .cpp also gives `RVA 0x...`, `<n> bytes`,
   `Evidence:` with an existing findings/ or reports/ path, `Drafted by` and `Recipe:` with an
-  existing recipe; a .h labels name origin (COMMUNITY, GUESS, EXE_RTTI or OBSERVED);
+  existing recipe; a .h labels name origin (COMMUNITY, SIBLING, GUESS, EXE_RTTI or OBSERVED);
 - include style: the include-closure scan of tools/source_digest.py accepts the file, every
   include of a repository file is quoted, and no include sits inside a block comment or a
   conditional block (other than the header guard), because the verifier requires the compiler's
@@ -52,7 +57,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from source_digest import INCLUDE_ROOTS, STRICT_INCLUDE, logical_lines, quoted_includes  # noqa: E402
 
 EXPOSURE = ('black-box', 'community-headers', 'binary-analysis', 'mixed')
-NAME_ORIGINS = ('COMMUNITY', 'GUESS', 'EXE_RTTI', 'OBSERVED')
+NAME_ORIGINS = ('COMMUNITY', 'SIBLING', 'GUESS', 'EXE_RTTI', 'OBSERVED')
 ALLOWED_PRAGMAS = {'once', 'pack', 'warning'}
 SOURCE = re.compile(r'reconstruction/([a-z][a-z0-9_]*)/([A-Z][A-Za-z0-9_]*)\.(h|cpp)')
 CODEGEN_DECLSPEC = r'naked|code_seg|allocate|safebuffers'
@@ -96,12 +101,23 @@ DECLSPEC = re.compile(r'(?<![A-Za-z0-9_])__declspec\s*\(')
 # digests and reopen accepted matches.
 LABELS_VERSION = re.compile(r'\bLabels:\s*v(\d+)\b')
 LABEL = (r'(?:COMMUNITY\([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{7,40}, [A-Za-z0-9.+-]+\)'
+         r'|SIBLING\([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{7,40}, [A-Za-z0-9.+-]+\)'
          r'|GUESS(?:\((?:low|medium|high)\))?|EXE_RTTI|STANDIN|OBSERVED)')
+# Decompilations of other games of the engine family that the maintainer allowed as a source of
+# names, declarations and code (docs/authorizations.md, Notes): repository -> (pinned revision
+# prefix, the licence word its labels must carry). A SIBLING label or `Sibling source:` line
+# citing anything else is refused, so a new sibling needs a recorded decision and an entry here.
+SIBLING_SOURCES = {'momusdigital/fnv_decomp': ('91e1b6e8', 'no-licence')}
+SIBLING_LABEL = re.compile(r'SIBLING\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40}), ([A-Za-z0-9.+-]+)\)')
+# Header line of a unit that reuses a body, or a substantial part of one, from a sibling:
+# `Sibling source: <owner>/<repo>@<rev> <path>[:<line>]` (several lines for several bodies).
+SIBLING_HEADER = re.compile(r'Sibling source:\s*([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40})\s+'
+                            r'((?:src|include)/[^\s:]+)(?::(\d+))?')
 LABEL_LINE = re.compile(rf'^\s*//\s*(?P<names>\S(?:.*?\S)?)\s*:\s*(?P<labels>{LABEL}(?:\s+{LABEL})*)'
                         r'\s*(?:;\s*(?P<note>.*))?$')
-LABEL_WORD = re.compile(r'(?<![A-Za-z0-9_])(?:COMMUNITY|GUESS|EXE_RTTI|STANDIN|OBSERVED)[A-Za-z0-9_]*'
+LABEL_WORD = re.compile(r'(?<![A-Za-z0-9_])(?:COMMUNITY|SIBLING|GUESS|EXE_RTTI|STANDIN|OBSERVED)[A-Za-z0-9_]*'
                         r'|(?<![A-Za-z0-9_])(?:EXE[- ]RTTI|STAND[- _]IN)(?![A-Za-z0-9_])')
-ORIGIN_LABEL = re.compile(r'COMMUNITY\(|GUESS|EXE_RTTI|OBSERVED')
+ORIGIN_LABEL = re.compile(r'COMMUNITY\(|SIBLING\(|GUESS|EXE_RTTI|OBSERVED')
 DEFINE = re.compile(r'^[ \t]*#[ \t]*define\b(.*)$', re.M)
 DEFINE_BANNED = re.compile(rf'(?<![A-Za-z0-9_])(?:__declspec|__pragma|_Pragma|{ASM}|__emit|{CODEGEN_DECLSPEC})'
                            r'(?![A-Za-z0-9_])')
@@ -184,6 +200,36 @@ def construct_problems(name, text):
     return problems
 
 
+def sibling_problems(where, repo, rev, licence=None):
+    """A SIBLING citation must name an allowed sibling at its pinned revision, with its licence word."""
+    allowed = SIBLING_SOURCES.get(repo)
+    if allowed is None:
+        return [f'{where}: {repo} is not an allowed sibling source (allowed: {", ".join(sorted(SIBLING_SOURCES))}; '
+                'a new one needs a maintainer decision in docs/authorizations.md)']
+    pin, word = allowed
+    out = []
+    if not (rev.startswith(pin) or pin.startswith(rev)):
+        out.append(f'{where}: {repo} is pinned at {pin}, the citation gives {rev}')
+    if licence is not None and licence != word:
+        out.append(f'{where}: a {repo} label carries the licence word "{word}" (its LICENSE grants none), not "{licence}"')
+    return out
+
+
+def sibling_header_problems(name, header):
+    """`Sibling source:` lines in the leading comment are well formed and cite an allowed sibling;
+    one outside the leading comment is refused, since readers and tools look for it there."""
+    problems = []
+    for line in header.splitlines():
+        if 'Sibling source:' not in line:
+            continue
+        m = SIBLING_HEADER.search(line)
+        if not m:
+            problems.append(f'{name}: write "Sibling source: <owner>/<repo>@<rev> <src/ or include/ path>[:<line>]"')
+            continue
+        problems += sibling_problems(name, m.group(1), m.group(2))
+    return problems
+
+
 def label_problems(name, text, header, ext):
     """`Labels: v2` grammar: a label line is `// <names>: <LABEL> [<LABEL>...][; note]`, and no
     label word appears anywhere else, so every label is attached to the names it describes."""
@@ -200,12 +246,15 @@ def label_problems(name, text, header, ext):
         rest = m and (m.group('names') + ' ' + (m.group('note') or ''))
         if not m or LABEL_WORD.search(rest):
             problems.append(f'{name}:{number}: label outside the v2 grammar; write "// <names>: <LABEL> ...[; note]" '
-                            'with LABEL one of COMMUNITY(<owner>/<repo>@<rev>, <licence>), GUESS, '
+                            'with LABEL one of COMMUNITY(<owner>/<repo>@<rev>, <licence>), '
+                            'SIBLING(<owner>/<repo>@<rev>, <licence>), GUESS, '
                             'GUESS(low|medium|high), EXE_RTTI, STANDIN, OBSERVED')
             continue
         if not ORIGIN_LABEL.search(m.group('labels')):
-            problems.append(f'{name}:{number}: STANDIN also needs the origin of the name (COMMUNITY(...), GUESS, '
-                            'EXE_RTTI or OBSERVED)')
+            problems.append(f'{name}:{number}: STANDIN also needs the origin of the name (COMMUNITY(...), SIBLING(...), '
+                            'GUESS, EXE_RTTI or OBSERVED)')
+        for repo, rev, licence in SIBLING_LABEL.findall(m.group('labels')):
+            problems += sibling_problems(f'{name}:{number}', repo, rev, licence)
         labelled += 1
     if ext == 'h' and not labelled:
         problems.append(f'{name}: a "Labels: v2" header needs at least one "// <names>: <LABEL>" line')
@@ -313,6 +362,9 @@ def lint_file(root, name, target_build):
         problems.append(f'{name}: header comment must name the build id {target_build}')
     problems += label_problems(name, spliced, header, ext)
     problems += licence_problems(name, spliced, header)
+    problems += sibling_header_problems(name, header)
+    if 'Sibling source:' in spliced and spliced.count('Sibling source:') != header.count('Sibling source:'):
+        problems.append(f'{name}: "Sibling source:" lines belong in the leading comment')
     exposure = re.search(r'Source exposure:\s*([a-z-]+)', header)
     if not exposure or exposure.group(1) not in EXPOSURE:
         problems.append(f'{name}: header comment needs "Source exposure: <{"|".join(EXPOSURE)}>"')

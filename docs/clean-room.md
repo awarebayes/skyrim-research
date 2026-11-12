@@ -5,7 +5,11 @@ its existence does not certify Mudcrab or any contributor as clean-room independ
 
 A strict separated workflow assigns binary/source inspection to researchers and independent
 implementation to people who work from reviewed behavior specifications and test observations.
-Track access/exposure rather than relying on repository names. An agent that has read recovered
+Track access/exposure rather than relying on repository names. Reading the FNV decompilation,
+which the maintainer allowed for reconstruction work (`docs/authorizations.md`, Notes), is
+exposure to another game's reconstructed implementation and to names its README attributes to a
+development-build PDB and middleware source. Record it like any other exposure; units carrying
+`SIBLING` labels or a `Sibling source:` line show it. An agent that has read recovered
 implementation code must not claim to be an unexposed implementer. A fresh chat does not erase
 prior access, shared files or retrieved context.
 

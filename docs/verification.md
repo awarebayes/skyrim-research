@@ -58,7 +58,10 @@ A function is accepted only when ALL of these hold:
      `noinline`, `[[msvc::...]]` attributes and codegen intrinsics (`INTRINSICS` there) each
      carry a justification comment on the same or the previous line. A file holding a
      `COMMUNITY(..., GPL...)` label (or LGPL, AGPL) names GPL in its leading comment, as
-     `docs/authorizations.md` requires.
+     `docs/authorizations.md` requires. A `SIBLING(...)` label or `Sibling source:` line names
+     only an allowed sibling at its pin with its licence word, and a `Sibling source:` line sits
+     in the leading comment; `tools/check_labels.py` (private clone) checks the cited path and
+     line. Whether a body was reused at all is not machine-checked; that is the Reviewer's.
    - The unit compiles from tracked files only: the match record's translation unit is the
      include closure of repository files, and `tools/check.py --staged` (the pre-commit check)
      recomputes it from the index, so a closure file that is not staged fails the commit.
@@ -78,9 +81,13 @@ A function is accepted only when ALL of these hold:
      bytes (a lint-required justification that is not a reason a programmer had counts here);
    - code that cannot be what it claims, such as an unreachable branch or impossible type use
      that signals a wrong binding or a wrong class;
-   - provenance: code from unlicensed projects (such as the FNV repositories), leaked or
-     proprietary material, or a source header that does not state provenance and source
-     exposure;
+   - provenance: code from unlicensed projects other than the FNV decompilation
+     `momusdigital/fnv_decomp@91e1b6e8`, which the maintainer allowed (`docs/authorizations.md`,
+     Notes); leaked or proprietary material; a source header that does not state provenance and
+     source exposure, or whose origin or licence statement is false; and undeclared reuse of
+     sibling code, meaning a unit that reuses an FNV body or a substantial part of one without a
+     `Sibling source: <repo>@<rev> <path>[:<line>]` header line. FNV material is never evidence
+     for the match claim;
    - claim scope beyond a byte match of the checked code (a claim of behaviour, or of a name
      being right);
    - publication hygiene per `PROVENANCE.md` and `LEGAL.md`;
@@ -88,9 +95,11 @@ A function is accepted only when ALL of these hold:
      the second-host run is missing).
 
    Not blocking: names, name-origin labels (missing, unlabelled community names, `GUESS` where a
-   community name exists), placeholder versus community naming, dead or leftover declarations
-   that compile to nothing, header and comment wording, and missing notes. The Reviewer lists
-   these as `naming_findings` for the function and still approves if no blocking ground holds.
+   community or sibling name exists, a missing or imperfect `SIBLING(...)` label on a name or
+   declaration taken from FNV; a reused body is declared by its `Sibling source:` line, whose
+   absence is the blocking ground above), placeholder versus community naming, dead or
+   leftover declarations that compile to nothing, header and comment wording, and missing notes.
+   The Reviewer lists these as `naming_findings` for the function and still approves if no blocking ground holds.
    They are published (next item), so they hold no code, bytes, disassembly or private paths.
 
    Verdicts are `approve`, `reject` (on a blocking ground, back to the Drafter or Engineer with
@@ -449,7 +458,8 @@ of the Reviewer's list: no inline assembly, `__emit`, raw byte arrays or `\x` by
 universal character names (`\u`, `\U`) anywhere, pragma operators, codegen-only `#pragma` or
 `__declspec`; a justification comment beside `__forceinline`, `noinline`, `[[msvc::...]]` and
 codegen intrinsics; GPL named in the leading comment of a file with a GPL-licensed `COMMUNITY`
-label; the name-origin label grammar in files that declare `Labels: v2`; the header comment fields of
+label; the name-origin label grammar in files that declare `Labels: v2`, with `SIBLING(...)`
+labels and `Sibling source:` lines limited to an allowed sibling at its pin; the header comment fields of
 `reconstruction/README.md`; the one-class-per-pair layout; and include style (quoted repository
 headers, no include in a block comment or conditional block). Passing the lint does not replace
 the Reviewer; it only spares the Reviewer those checks. Tests: `tests/test_lint_reconstruction.py`.
@@ -479,8 +489,8 @@ untrusted PR code on a self-hosted machine that has private game inputs or accou
 ## Behavior and names
 
 Behavior claims require controlled original-game observations, test conditions and alternative
-explanations. Header declarations, AI comments and similar FNV code can suggest hypotheses but
-cannot establish Skyrim behavior. Separate measured observations from inferred algorithms.
+explanations. Header declarations, AI comments and similar FNV code (usable as source by the
+maintainer's decision) can suggest hypotheses but cannot establish Skyrim behavior. Separate measured observations from inferred algorithms.
 
 ## Progress and history
 
