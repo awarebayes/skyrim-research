@@ -160,6 +160,24 @@ public:
         header = f'// Gadgets Gadgets::Filter: STANDIN EXE_RTTI {self.label()}\n'
         self.assertEqual(self.run_on(header), [])
 
+    def test_names_from_a_name_list_at_the_checkout_root(self):
+        names = Path(self.tmp.name) / 'names'
+        names.mkdir()
+        (names / 'skyrimae.rename').write_text('1\n11 Gizmo::Spin_*\n12 Gizmo::Inner::Turn_*\n13 sub_140001000\n')
+        git(names, 'init', '-q')
+        git(names, 'add', '.')
+        git(names, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'fixture')
+        rev = git(names, 'rev-parse', 'HEAD')[:7]
+        label = f'COMMUNITY(Example/Names@{rev}, permission)'
+        checkouts = {**self.checkouts, 'Example/Names': str(names)}
+        header = f'// Gizmo, Gizmo::Spin, Gizmo::Inner::Turn: STANDIN {label}\n// Gizmo::Stop: {label}\n// Gizmo::Spin2: GUESS\n'
+        findings = self.run_on(header, checkouts=checkouts)
+        self.assertEqual(len(findings), 1, findings)
+        self.assertIn('Gizmo::Stop is labelled COMMUNITY(Example/Names)', findings[0])
+        findings = self.run_on('// Gizmo::Spin: GUESS(low)\n', checkouts=checkouts)
+        self.assertEqual(len(findings), 1, findings)
+        self.assertIn('Gizmo::Spin is labelled GUESS but Example/Names declares it in Gizmo', findings[0])
+
     def test_checkout_at_another_revision(self):
         findings = self.run_on(f'// Widget: {self.label("0123abc")}\n')
         self.assertEqual(len(findings), 1)

@@ -67,7 +67,10 @@ is `extern __declspec(thread) T name;` in your source, bound with `{"<decorated 
 - **Search before you label.** The pinned community checkouts are local clones:
   `.local/sources/CommonLibSSE-NG` (CharmedBaryon/CommonLibSSE-NG at `b93280e`, MIT) and
   `.local/sources/CommonLibSSE-po3` (powerof3/CommonLibSSE at `654e55f`, GPL-3.0; a file using
-  its names states GPL-3.0 in its header). Before giving any class, member, method, enum or
+  its names states GPL-3.0 in its header), and `.local/sources/AddressLibraryDatabase`
+  (meh321/AddressLibraryDatabase at `0379cb6`, its `skyrimae.rename` name list; no licence file,
+  used with the author's permission as reported by the maintainer, `docs/authorizations.md`;
+  label `COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)`). Before giving any class, member, method, enum or
   enumerator a name, search them (`grep -rn '<name or offset>' .local/sources/CommonLibSSE-NG/include`)
   for the class and the member at that place (offset, virtual slot, bit range, value; NG's
   offsets are SE ones, so check how this build differs). If the community has a name there, use

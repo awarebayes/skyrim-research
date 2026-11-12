@@ -7,7 +7,9 @@ checkouts are private clones under `.local/`, so CI does not run it. It reports,
   in the enum of that name, a member or method within the named class (or one of its bases), or,
   for a name with no scope, a declared identifier, class, enum or namespace anywhere. A class name
   also counts when it appears only in the checkout's RTTI/VTABLE offset lists
-  (`RTTI_<Scope>__<Name>`), which is where NG keeps classes it does not declare;
+  (`RTTI_<Scope>__<Name>`), which is where NG keeps classes it does not declare. A checkout with
+  a name list at its root (meh321's `skyrimae.rename`, `<id> <Scope::Name>_*` per line) declares
+  each listed name in its scope;
 - every enum the unit defines whose name or enumerators carry a COMMUNITY label: each enumerator
   must be spelled as in the community enum of that name, and a value the unit assigns must equal
   the community value;
@@ -40,7 +42,10 @@ from lint_reconstruction import LABEL_LINE, LABELS_VERSION  # noqa: E402
 DEFAULT_CHECKOUTS = {
     'CharmedBaryon/CommonLibSSE-NG': '.local/sources/CommonLibSSE-NG',
     'powerof3/CommonLibSSE': '.local/sources/CommonLibSSE-po3',
+    'meh321/AddressLibraryDatabase': '.local/sources/AddressLibraryDatabase',
 }
+# Name lists at a checkout's root, read as declarations (meh321's has no headers).
+NAME_LISTS = ('skyrimae.rename',)
 COMMUNITY = re.compile(r'COMMUNITY\(([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@([0-9a-f]{7,40}), [^)]*\)')
 NAME = re.compile(r'~?[A-Za-z_]\w*(?:::~?[A-Za-z_]\w*)*')
 IDENT = re.compile(r'[A-Za-z_]\w*')
@@ -114,6 +119,32 @@ class Index:
             rel = path.relative_to(self.root).as_posix()
             self.lines[rel] = raw.splitlines()
             self.add(strip(raw), rel)
+        for name in NAME_LISTS:
+            if (self.root / name).is_file():
+                self.add_name_list(self.root / name)
+
+    def add_name_list(self, path):
+        """A `<id> <Scope::Name>_*` list (meh321's AddressLibraryDatabase): each qualified name
+        declares its last component in its scope, so labels are checked like header names."""
+        rel = path.relative_to(self.root).as_posix()
+        lines = path.read_text(errors='replace').splitlines()
+        self.lines[rel] = lines
+        for number, line in enumerate(lines, 1):
+            parts = line.split(None, 1)
+            if len(parts) != 2:
+                continue
+            name = parts[1].strip()
+            name = name[:-2] if name.endswith('_*') else name
+            if not NAME.fullmatch(name):
+                continue
+            components = name.split('::')
+            ident = components[-1]
+            self.tokens.update(components)
+            self.declared.add(ident)
+            for i, scope in enumerate(components[:-1]):
+                entry = self.scopes.setdefault(scope, {'declared': set(), 'bases': set()})
+                entry['declared'].add(components[i + 1])
+                self.where.setdefault(scope, []).append((rel, number, number))
 
     def add(self, text, rel=None):
         match = braces(text)
