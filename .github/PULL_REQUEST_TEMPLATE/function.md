@@ -33,6 +33,8 @@ reason codes only; no bytes, listings or decompiler output.
   disassembly, decompiler output, dumps, proprietary symbols or secrets, here or in comments.
 - [ ] Every name carries its origin label (`docs/drafter-card.md`); a body adapted from a community
   source is declared in the unit header with its licence.
-- [ ] No material from the FNV decompilation (its use by external contributors awaits a maintainer decision).
+- [ ] Anything taken from the FNV decompilation (`momusdigital/fnv_decomp@91e1b6e8`) is labelled
+  `SIBLING(...)`, and a reused body has a `Sibling source:` header line; it is never evidence about the
+  Skyrim binary.
 - [ ] AI assistance and source exposure are stated above and in the unit header.
 - [ ] `python3 tools/check.py` and `python3 tools/contrib.py submit --dry-run` ran clean.

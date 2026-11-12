@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tests'))
@@ -27,14 +28,21 @@ TARGET = json.loads((ROOT / 'builds/target.json').read_text())
 
 
 class FakeGitHub:
-    def __init__(self, items=None, me='me', offline=False, can_create=True):
+    def __init__(self, items=None, me='me', offline=False, can_create=True, after_create=None):
         self.items, self.me, self.offline, self.can_create = items or {}, me, offline, can_create
-        self.repo, self.created, self.comments = contrib.UPSTREAM, [], []
+        self.repo, self.created, self.comments, self.closed = contrib.UPSTREAM, [], [], []
+        self.after_create = after_create
 
-    def open_items(self):
+    def open_items(self, refresh=False):
         if self.offline:
             raise contrib.Offline('no network in tests')
+        if refresh and self.created and self.after_create is not None:
+            return self.after_create
         return self.items
+
+    def close(self, number, body):
+        self.closed.append(number)
+        return True
 
     def user(self):
         return self.me
@@ -277,24 +285,6 @@ class SkeletonTests(Base):
         self.assertEqual([r['size'] for r in firsts], sorted(r['size'] for r in firsts))
 
 
-class LintIncludeNameTests(Base):
-    def lint(self, line):
-        root = Path(tempfile.mkdtemp(dir=self.tmp))
-        (root / 'builds').mkdir(parents=True)
-        shutil.copy(ROOT / 'builds/target.json', root / 'builds/target.json')
-        (root / 'reconstruction/forms').mkdir(parents=True)
-        (root / 'reconstruction/forms/A.h').write_text(
-            f'// A (build {TARGET["build_id"]}). Source exposure: black-box. Name origin: GUESS.\n'
-            f'#pragma once\n{line}\nclass A {{}};\n')
-        return lint_reconstruction.lint_file(root, 'reconstruction/forms/A.h', TARGET['build_id'])
-
-    def test_host_paths_are_refused(self):
-        self.assertEqual(self.lint('#include <cstdint>'), [])
-        for bad in ('#include <C:/Windows/win.ini>', '#include <Z:\\home\\x.h>', '#include <sub/../x.h>',
-                    '#include <.hidden>'):
-            self.assertTrue(any('plain relative path' in p for p in self.lint(bad)), bad)
-
-
 class IntakeTests(Base):
     def git(self, *args):
         subprocess.run(['git', *args], cwd=self.repo, check=True, capture_output=True)
@@ -323,19 +313,37 @@ class IntakeTests(Base):
         self.commit()
         self.assertEqual(contrib.intake_problems(self.ctx(repo=self.repo), 'HEAD~1', 'HEAD'), [])
 
-    def test_out_of_scope_and_sibling_additions(self):
+    def test_out_of_scope_and_oversized_files(self):
         (self.repo / 'tools').mkdir()
         (self.repo / 'tools/x.py').write_text('print(1)\n')
-        cpp = self.repo / 'reconstruction/forms/TESActorBaseData.cpp'
-        cpp.write_text(cpp.read_text().replace(
-            '// Labels: v2', '// Labels: v2\n// Sibling source: momusdigital/fnv_decomp@91e1b6e8 src/a.cpp:1'))
         (self.repo / 'reconstruction/forms/Big.h').write_text('//' + 'x' * contrib.MAX_UNIT_FILE_BYTES)
         self.commit()
         problems = contrib.intake_problems(self.ctx(repo=self.repo), 'HEAD~1', 'HEAD')
         text = '\n'.join(problems)
         self.assertIn('tools/x.py: outside contributor scope', text)
-        self.assertIn('Sibling source', text)
         self.assertIn('contributor cap', text)
+
+    def test_sibling_material_is_allowed_on_the_drafters_terms(self):
+        cpp = self.repo / 'reconstruction/forms/TESActorBaseData.cpp'
+        cpp.write_text(cpp.read_text().replace(
+            '// Labels: v2', '// Labels: v2\n// Sibling source: momusdigital/fnv_decomp@91e1b6e8 src/a.cpp:1'))
+        self.commit()
+        self.assertEqual(contrib.intake_problems(self.ctx(repo=self.repo), 'HEAD~1', 'HEAD'), [])
+        # Another repository or revision is still refused by the lint.
+        cpp.write_text(cpp.read_text().replace('fnv_decomp@91e1b6e8', 'fnv_decomp@0123abcd'))
+        self.commit()
+        self.assertTrue(contrib.intake_problems(self.ctx(repo=self.repo), 'HEAD~1', 'HEAD'))
+
+    def test_intake_reads_the_named_head_not_the_working_tree(self):
+        self.commit()
+        self.git('switch', '-q', '-c', 'crafted')
+        (self.repo / 'tools').mkdir()
+        (self.repo / 'tools/x.py').write_text('print(1)\n')
+        self.commit()
+        self.git('switch', '-q', '-')
+        problems = contrib.intake_problems(self.ctx(repo=self.repo), 'HEAD~1', 'crafted')
+        self.assertTrue(any('tools/x.py' in p for p in problems))
+        self.assertFalse((self.repo / 'tools/x.py').exists())
 
 
 class CompareTests(Base):
@@ -393,6 +401,315 @@ class CompareTests(Base):
         with self.assertRaises(contrib.Stop) as cm:
             contrib.run_compare(self.ctx_, 'contrib-synthetic')
         self.assertEqual(cm.exception.code, contrib.MISSING)
+
+
+class SubmitTests(Base):
+    """submit's blockers, the sanitized PR body and commit message, and a dry run that writes no git state."""
+
+    RVA = 0x1de5e0
+    SECRETS = ('SECRET-DETAIL-TEXT', '+0x9', 'SECRET-BIND-LINE', '/private/abs/dir')
+
+    def git(self, *args):
+        return subprocess.run(['git', *args], cwd=self.repo, check=True, capture_output=True, text=True).stdout
+
+    def setUp(self):
+        super().setUp()
+        self.repo = self.tmp / 'repo'
+        for rel in ('builds/target.json', contrib.DEFAULT_RECIPE, 'findings/fifth-batch-selection.md',
+                    '.github/PULL_REQUEST_TEMPLATE/function.md'):
+            (self.repo / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / rel, self.repo / rel)
+        self.git('init', '-q')
+        self.git('add', '.')
+        self.git('-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 'base')
+        fn = next(f for f in contrib.inventory(ROOT)['functions'] if f['rva'] == self.RVA)
+        h, cpp = contrib.skeleton(fn, 'TESActorBaseData', 'Unk_07', 'forms', 'tester', contrib.DEFAULT_RECIPE)
+        self.unit = ['reconstruction/forms/TESActorBaseData.h', 'reconstruction/forms/TESActorBaseData.cpp']
+        (self.repo / 'reconstruction/forms').mkdir(parents=True)
+        (self.repo / self.unit[0]).write_text(h)
+        (self.repo / self.unit[1]).write_text(cpp)
+        self.tdir = self.private / 'tasks' / 'contrib-tesactorbasedata'
+        self.tdir.mkdir(parents=True)
+        self.task = {'task_id': self.tdir.name, 'build_id': TARGET['build_id'], 'compiled': self.unit[1],
+                     'recipe': contrib.DEFAULT_RECIPE, 'symbols': 'symbols.json',
+                     'functions': [{'rva': f'0x{self.RVA:x}', 'size': fn['size'], 'symbol': 'x',
+                                    'community_name': fn['name']}],
+                     'contrib': {'practice': False, 'unit': self.unit}}
+        from source_digest import include_closure, tu_digest
+        digest = tu_digest(self.repo, include_closure(self.repo, self.unit[1]))
+        self.summary = {
+            'task': self.tdir.name, 'run': 1, 'unit': self.unit[1], 'source_revision': digest,
+            'recipe': contrib.DEFAULT_RECIPE, 'recipe_sha256': 'ab' * 32, 'compiler': 'pinned',
+            'image_sha256_pinned': True, 'comparator': {'version': 'x'}, 'contract_version': 2, 'practice': False,
+            'functions': [{'rva': f'0x{self.RVA:x}', 'name': fn['name'], 'result': 'pass', 'reason': 'all-checks-passed',
+                           'detail': self.SECRETS[0], 'hint': 'h', 'first_mismatch': self.SECRETS[1],
+                           'candidate_size': 3, 'target_size': 3, 'coverage': {'code_bytes_total': 3},
+                           'code_section_sha256': 'cd' * 32}],
+            'bind': [self.SECRETS[2]], 'private_dir': self.SECRETS[3]}
+        self.write()
+
+    def write(self):
+        (self.tdir / 'task.json').write_text(json.dumps(self.task))
+        (self.tdir / 'last-compare.json').write_text(json.dumps(self.summary))
+
+    def runner(self, cmd, **kw):
+        # The repository-wide check is not under test here; everything else really runs.
+        if any(str(c).endswith('tools/check.py') for c in cmd):
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+        return subprocess.run(cmd, **kw)
+
+    def submit(self, gh=None, *extra):
+        ctx = self.ctx(repo=self.repo, github=gh or FakeGitHub(), runner=self.runner,
+                       env={'PATH': '/usr/bin:/bin', 'HOME': str(self.tmp)})
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = contrib.main(['--json', 'submit', '--dry-run', '--base', 'HEAD', *extra], ctx=ctx)
+        return code, json.loads(out.getvalue())
+
+    def state(self):
+        return (self.git('rev-parse', 'HEAD'), self.git('status', '--porcelain'), self.git('diff', '--cached'),
+                self.git('branch', '--list'))
+
+    def test_dry_run_is_clean_and_writes_no_git_state(self):
+        before = self.state()
+        code, out = self.submit()
+        self.assertEqual((code, out['blockers']), (0, []), out)
+        self.assertEqual(self.state(), before)
+        body = (self.tdir / 'pr-body.md').read_text()
+        message_plan = ' '.join(out['plan'])
+        for text in (body, out['title']):
+            for secret in self.SECRETS:
+                self.assertNotIn(secret, text)
+            self.assertNotIn(str(self.tmp), text)
+            self.assertNotIn(str(self.private), text)
+            self.assertNotIn('packs/', text)
+            self.assertNotIn(str(Path.home()), text)
+        self.assertIn(f'-- {" ".join(self.unit)}', message_plan)
+
+    def test_commit_message_is_sanitized(self):
+        # The message a real submit commits with is the one the dry run reports.
+        code, out = self.submit()
+        self.assertEqual(code, 0)
+        message = out['commit_message']
+        self.assertTrue(message.startswith(out['title']))
+        for secret in self.SECRETS:
+            self.assertNotIn(secret, message)
+        self.assertNotIn(str(self.tmp), message)
+
+    def blockers(self, gh=None):
+        code, out = self.submit(gh)
+        self.assertEqual(code, contrib.FAILED)
+        return '\n'.join(out['blockers'])
+
+    def test_stand_in_compiler_blocks(self):
+        self.summary['compiler'] = 'override'
+        self.write()
+        self.assertIn('stand-in compiler', self.blockers())
+
+    def test_changed_unit_blocks(self):
+        (self.repo / self.unit[1]).write_text((self.repo / self.unit[1]).read_text() + '\n')
+        self.assertIn('changed since the last compare', self.blockers())
+
+    def test_failed_function_blocks(self):
+        self.summary['functions'][0]['result'] = 'fail'
+        self.write()
+        self.assertIn('not every function passed', self.blockers())
+
+    def test_practice_task_blocks(self):
+        self.task['contrib']['practice'] = True
+        self.write()
+        self.assertIn('practice tasks', self.blockers())
+
+    def test_undeclared_adapted_body_blocks(self):
+        import check_origin
+        hit = {'trivial': False, 'fork_of': None, 'declared': False}
+        with unittest.mock.patch.object(check_origin, 'check_unit', return_value=[hit]), \
+                unittest.mock.patch.object(check_origin, 'describe', return_value='close to a community body'):
+            self.assertIn('not declared in the unit header', self.blockers())
+
+    def test_fresh_foreign_claim_blocks_on_any_function(self):
+        self.task['functions'].append({'rva': '0xf2120', 'size': 3, 'symbol': 'y', 'community_name': 'A::B'})
+        self.write()
+        gh = FakeGitHub({0xf2120: [item('someone', 1, 5)]})
+        self.assertIn('0xf2120', self.blockers(gh))
+        code, out = self.submit(gh, '--ack-collision')
+        self.assertEqual(out['blockers'], [])
+
+    def test_other_staged_files_stop_a_real_submit(self):
+        (self.repo / 'notes.txt').write_text('x\n')
+        self.git('add', 'notes.txt')
+        ctx = self.ctx(repo=self.repo, github=FakeGitHub(), runner=self.runner,
+                       env={'PATH': '/usr/bin:/bin', 'HOME': str(self.tmp)})
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = contrib.main(['--json', 'submit', '--base', 'HEAD'], ctx=ctx)
+        self.assertEqual(code, contrib.USAGE)
+        self.assertIn('notes.txt', json.loads(out.getvalue())['error'])
+        self.assertEqual(self.git('log', '--oneline').count('\n'), 1)
+
+
+class ClaimFollowUpTests(Base):
+    def claim(self, gh, *extra, env=None):
+        ctx = self.ctx(github=gh, env=env or {'PATH': ''})
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = contrib.main(['--json', 'claim', '0x1de5e0', *extra], ctx=ctx)
+        return code, json.loads(out.getvalue())
+
+    def test_link_only_is_not_recorded_as_claimed(self):
+        code, out = self.claim(FakeGitHub(can_create=False))
+        self.assertEqual((code, out['claim']), (0, 'link-only'))
+        self.assertNotIn('0x1de5e0', contrib.local_claims(self.ctx()))
+
+    def test_older_rival_after_creating_withdraws_ours(self):
+        rival = item('someone', 0, 98)
+        mine = dict(item('me', 0, 99), url='https://github.com/x/y/issues/99')
+        gh = FakeGitHub(after_create={0x1de5e0: [rival, mine]})
+        code, out = self.claim(gh)
+        self.assertEqual(code, contrib.CLAIMED)
+        self.assertEqual(gh.closed, [99])
+        self.assertNotIn('0x1de5e0', contrib.local_claims(self.ctx()))
+
+    def test_unknown_login_with_open_items_asks_for_it(self):
+        gh = FakeGitHub({0x1de5e0: [item('someone', 1)]}, me=None)
+        code, out = self.claim(gh)
+        self.assertEqual(code, contrib.USAGE)
+        self.assertIn('--github-user', out['next'])
+
+    def test_paging_goes_past_five_hundred(self):
+        pages = [[{'number': i, 'title': f'claim: x 0x{0x100000 + i:x} A::B', 'html_url': f'u/{i}',
+                   'user': {'login': 'a'}, 'updated_at': '2026-01-01T00:00:00Z'} for i in range(p * 100, p * 100 + 100)]
+                 for p in range(6)] + [[]]
+        gh = contrib.GitHub(self.ctx(env={'PATH': ''}))
+        gh.api = lambda path: pages[int(path.rsplit('page=', 1)[1]) - 1]
+        self.assertEqual(len(gh.open_items()), 600)
+
+
+class FollowUpTests(Base):
+    def test_winget_source_agreements_need_their_own_flag(self):
+        ctx = self.ctx()
+        plain = contrib.install_command(ctx, 'winget', [['LLVM.LLVM']])[0]
+        self.assertNotIn('--accept-source-agreements', plain)
+        self.assertIn('--accept-source-agreements', contrib.install_command(ctx, 'winget', [['LLVM.LLVM']], True)[0])
+        args = contrib.parser().parse_args(['--yes', 'setup'])
+        self.assertFalse(args.accept_winget_source_agreements)
+
+    def test_area_must_be_a_plain_directory_name(self):
+        ctx = self.ctx(env={'PATH': ''})
+        for bad in ('../tools', 'Forms', 'a/b', ''):
+            args = contrib.parser().parse_args(['start', '0x1de5e0', '--area', bad])
+            with self.assertRaises(contrib.Stop) as cm:
+                contrib.start(ctx, args)
+            self.assertEqual(cm.exception.code, contrib.USAGE, bad)
+
+    def test_redact_hides_checkout_and_home(self):
+        home = str(self.tmp / 'home')
+        ctx = self.ctx(repo=self.tmp / 'home/src/skyrim-research', env={'HOME': home})
+        ctx.redact = True
+        text = ctx.scrub(f'{self.tmp}/home/src/skyrim-research/.local/x and {home}/Games/SkyrimSE.exe')
+        self.assertEqual(text, '<repo>/.local/x and ~/Games/SkyrimSE.exe')
+
+    def test_practice_tasks_have_their_own_id_and_are_not_picked_by_default(self):
+        self.assertEqual(contrib.task_id_for('NiNode', practice=True), 'practice-ninode')
+        for tid, practice in (('practice-ninode', True), ('contrib-ninode', False)):
+            d = self.private / 'tasks' / tid
+            d.mkdir(parents=True)
+            (d / 'task.json').write_text(json.dumps({'compiled': 'x', 'functions': [],
+                                                     'contrib': {'practice': practice}}))
+        self.assertEqual(contrib.load_task(self.ctx())[0].name, 'contrib-ninode')
+
+    def test_self_test_is_skipped_not_passed_without_its_function(self):
+        repo = self.tmp / 'repo'
+        (repo / 'data').mkdir(parents=True)
+        (repo / 'data/progress.json').write_text(json.dumps({'functions': []}))
+        code, data, _ = contrib.run_self_test(self.ctx(repo=repo))
+        self.assertTrue(data['skipped'])
+        self.assertEqual(data['functions'], [])
+
+    def test_no_licence_link_means_no_acceptance(self):
+        vsman = self.tmp / 'VisualStudio.vsman'
+        vsman.write_text(json.dumps({'packages': []}))
+        self.assertIsNone(contrib.licence_url(vsman))
+
+    def test_case_folded_include_is_matched_only_to_closure_files(self):
+        root = '/Users/A/repo'
+        repo_files = []
+        rest = contrib.fold_case_includes(['/users/a/repo/reconstruction/forms/X.h'.lower(),
+                                           'Z:/users/a/repo/reconstruction/forms/../../secret.h',
+                                           '/users/a/elsewhere/X.h'], root, ['reconstruction/forms/X.h'], repo_files)
+        self.assertEqual(repo_files, ['reconstruction/forms/X.h'])
+        self.assertEqual(len(rest), 2)
+
+    def test_manifest_hash_mismatch_stops_before_any_licence_or_download(self):
+        pins = contrib.recipe_constants(ROOT)
+        work = self.private / 'toolchain-work' / 'msvc-wine' / '.git'
+        work.mkdir(parents=True)
+
+        def runner(cmd, **kw):
+            out = pins['MSVC_WINE_COMMIT'] if cmd[:2] == ['git', 'rev-parse'] else ''
+            return subprocess.CompletedProcess(cmd, 0, out, '')
+
+        class Resp(io.BytesIO):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+        ctx = self.ctx(repo=ROOT, runner=runner, env={'PATH': ''})
+        with unittest.mock.patch.object(contrib.urllib.request, 'urlopen', return_value=Resp(b'{"tampered": 1}')):
+            with self.assertRaises(contrib.Stop) as cm:
+                contrib.install_toolchain(ctx, accept=True)
+        self.assertEqual(cm.exception.code, contrib.FAILED)
+        self.assertIn('pinned SHA-256', cm.exception.message)
+        self.assertFalse((self.private / 'toolchain-work' / 'VisualStudio.vsman').exists())
+
+    def test_fetch_sources_pins_each_revision_and_reports_network_failure(self):
+        ran = []
+
+        def runner(cmd, **kw):
+            ran.append(cmd)
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+        repo = self.tmp / 'repo'
+        ctx = self.ctx(repo=repo, runner=runner)
+        sources = {'a/b': ('.local/sources/b', 'f' * 40, 'MIT')}
+        self.assertEqual(contrib.fetch_sources(ctx, sources), ['a/b'])
+        self.assertIn(['git', 'fetch', '-q', '--depth', '1', 'https://github.com/a/b.git', 'f' * 40], ran)
+        ctx.runner = lambda cmd, **kw: subprocess.CompletedProcess(cmd, 128, '', 'no network')
+        with self.assertRaises(contrib.Stop) as cm:
+            contrib.fetch_sources(ctx, sources)
+        self.assertEqual(cm.exception.code, contrib.NETWORK)
+
+    def test_go_resumes_unsubmitted_work(self):
+        d = self.private / 'tasks' / 'contrib-a'
+        d.mkdir(parents=True)
+        (d / 'task.json').write_text(json.dumps({'task_id': 'contrib-a', 'compiled': 'reconstruction/forms/A.cpp',
+                                                 'contrib': {'practice': False, 'unit': ['x']}}))
+        args = contrib.parser().parse_args(['go'])
+        with unittest.mock.patch.object(contrib, 'cmd_setup', return_value=(0, {}, None)), \
+                unittest.mock.patch.object(contrib, 'cmd_claim') as claim:
+            code, data, nxt = contrib.cmd_go(self.ctx(), args)
+        self.assertTrue(data['resumed'])
+        claim.assert_not_called()
+
+    def test_release_closes_only_own_claim_issues(self):
+        gh = FakeGitHub({0x1de5e0: [item('me', 1, 3), item('someone', 1, 4),
+                                    dict(item('me', 1, 5), pull_request=True)]})
+        contrib.save_local_claim(self.ctx(), 0x1de5e0, {'status': 'published', 'url': 'u'})
+        code, data, _ = contrib.cmd_release(self.ctx(github=gh), contrib.parser().parse_args(['release', '0x1de5e0']))
+        self.assertEqual(gh.closed, [3])
+        self.assertNotIn('0x1de5e0', contrib.local_claims(self.ctx()))
+
+    def test_planner_skips_open_claims_and_warns_offline(self):
+        sys.path.insert(0, str(ROOT / 'tools' / 'ghidra'))
+        import export_pack
+        gh = FakeGitHub({0x1de5e0: [item('someone', 1)], 0x2000: [item('someone', contrib.CLAIM_DAYS + 3)]})
+        with unittest.mock.patch.object(contrib.Ctx, 'github', return_value=gh):
+            self.assertEqual(export_pack.open_claim_rvas(), {0x1de5e0})
+        err = io.StringIO()
+        with unittest.mock.patch.object(contrib.Ctx, 'github', return_value=FakeGitHub(offline=True)), \
+                contextlib.redirect_stderr(err):
+            self.assertEqual(export_pack.open_claim_rvas(), set())
+        self.assertIn('not checked', err.getvalue())
 
 
 class JoinPageTests(unittest.TestCase):

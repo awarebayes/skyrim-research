@@ -16,7 +16,13 @@ rule, not a legal opinion or guarantee.
 ## Inputs and prohibited publication
 
 Researchers must have a legally obtained copy and comply with relevant law and agreements.
-Keep proprietary inputs and all raw game-derived analysis private under `.local/`.
+Fetching your own purchased copy with your own account through Valve's Steam client or SteamCMD is
+such a copy; third-party downloaders, cracks and DRM removal are not, and this project distributes
+no game file. Keep proprietary inputs and all raw game-derived analysis private under `.local/`.
+A contributor may let their own coding agent read listings made locally from their own copy, under
+their own account and their AI provider's terms; that is the contributor's decision and
+responsibility, not a right granted by this project, and nothing game-derived may enter the
+repository, pull requests, issues or CI.
 Do not distribute executables (original, modified or rebuilt), binary sections, machine-code
 listings, raw disassembly/decompiler exports, object files, libraries, memory dumps, save files,
 assets, extracted data tables, PDBs, proprietary SDKs or compiler packages through this project.

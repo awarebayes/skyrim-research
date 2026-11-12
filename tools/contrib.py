@@ -64,19 +64,31 @@ UNIT_PATH = re.compile(r'reconstruction/([a-z][a-z0-9_]*)/([A-Z][A-Za-z0-9_]*)\.
 PLAIN_NAME = re.compile(r'([A-Z][A-Za-z0-9_]*)::(~?[A-Za-z_][A-Za-z0-9_]*)')
 RVA_TOKEN = re.compile(r'(?<![0-9A-Za-z])0x([0-9a-fA-F]{3,8})(?![0-9A-Za-z])')
 # Pinned community naming sources (SOURCES.md) that tools/check_labels.py and check_origin.py read
-# from .local/sources/. The FNV decompilation is not fetched for contributors: whether its reuse
-# permission extends to external contributors is a maintainer decision not yet recorded.
+# from .local/sources/.
 COMMUNITY_SOURCES = {
     'CharmedBaryon/CommonLibSSE-NG': ('.local/sources/CommonLibSSE-NG', 'b93280e832f263dbef44e44cbe2936622a02f91a', 'MIT'),
     'powerof3/CommonLibSSE': ('.local/sources/CommonLibSSE-po3', '654e55f7979c1733033d5dbef176e43827bac944', 'GPL-3.0'),
     'meh321/AddressLibraryDatabase': ('.local/sources/AddressLibraryDatabase', '0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91',
                                       'permission'),
 }
-# The Steam app id comes from the repository's own provenance note for the pinned image
-# (findings/target-pin.md: app 489830, Steam build 24914197). No depot or manifest id is recorded
-# there, so none is given; whether Steam still delivers that build is not known here.
+# The FNV decompilation, readable and reusable by contributors on the same terms as the project's
+# Drafters (docs/authorizations.md, Notes; LEGAL.md): SIBLING(...) labels, a `Sibling source:` line
+# for a reused body, never evidence about the Skyrim binary. Optional: setup skips it with
+# --no-sibling, and nothing else depends on it.
+SIBLING_SOURCE = ('momusdigital/fnv_decomp', '.local/sources/fnv_decomp', '91e1b6e8d8bb0f9a33e8cf88e77268757449e0a6')
+# Steam ids. The app and build ids come from findings/target-pin.md; the depot and manifest of the
+# executable are recorded from the maintainer's own install (its appmanifest lists them, and its
+# build id equals the pin). Steam may move the app to a newer build at any time, which is why the
+# executable is always checked against the pinned SHA-256 after a download.
 STEAM_APP_ID = '489830'
 STEAM_BUILD_ID = '24914197'
+STEAM_EXE_DEPOT = '489833'
+STEAM_EXE_MANIFEST = '4886117324142477814'
+# Homebrew disabled its Wine casks (they fail Gatekeeper), so on macOS this tool fetches WineHQ's
+# build as packaged by Gcenx, the same archive and hash his tap's wine-stable cask names.
+MAC_WINE = {'version': '11.0_1', 'app': 'Wine Stable.app',
+            'url': 'https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.0_1/wine-stable-11.0_1-osx64.tar.xz',
+            'sha256': 'b50dc50ec7f41d58b115a6b685d4d1315ba3c797bd3aa0f49213f2703cb82388'}
 
 
 class Stop(Exception):
@@ -105,6 +117,7 @@ class Ctx:
         self.runner = runner or subprocess.run
         self._github = github
         self.log = []
+        self.redact = False
 
     @property
     def windows(self):
@@ -121,7 +134,20 @@ class Ctx:
         kw.setdefault('env', self.env)
         return self.runner(cmd, **kw)
 
+    def scrub(self, text):
+        """With --redact, the checkout and home paths replaced, for output meant to be posted."""
+        if not self.redact:
+            return text
+        home = self.env.get('USERPROFILE' if self.windows else 'HOME') or str(Path.home())
+        for path, mark in ((str(self.repo), '<repo>'), (home, '~')):
+            if path and len(path) > 1:
+                text = text.replace(path, mark).replace(path.replace('\\', '\\\\'), mark)
+                if self.windows or self.platform == 'darwin':
+                    text = re.sub(re.escape(path), mark, text, flags=re.I)
+        return text
+
     def say(self, line):
+        line = self.scrub(line)
         self.log.append(line)
         if not self.as_json:
             print(line, flush=True)
@@ -505,8 +531,12 @@ def compile_unit(ctx, root, compiled, recipe_rel, out_dir, tool):
     else:
         repo_files, tool_count, outside = unit_build.classify_includes(opened, root, Path(roots[0]) if roots
                                                                        else Path('/nonexistent-toolchain'))
+    if outside and ctx.platform == 'darwin':
+        outside = fold_case_includes(outside, root, closure, repo_files)
     if outside:
-        raise Stop(UNIT, f'{len(outside)} included file(s) outside the repository and the toolchain')
+        raise Stop(UNIT, f'{len(outside)} included file(s) outside the repository and the toolchain: '
+                   + ', '.join(outside[:3]), 'include only reconstruction/ headers and the toolchain\'s own',
+                   outside=outside[:20])
     diff = unit_build.closure_difference(repo_files, compiled, closure)
     if diff:
         raise Stop(UNIT, diff, 'move or remove the include named above')
@@ -519,6 +549,29 @@ def compile_unit(ctx, root, compiled, recipe_rel, out_dir, tool):
     (out_dir / 'build-record.json').write_text(json.dumps(record, indent=2) + '\n')
     return {'object': obj, 'closure': closure, 'digest': digest, 'recipe_sha256': recipe_sha,
             'build_record': out_dir / 'build-record.json', 'compiler': flavour}
+
+
+def fold_case_includes(outside, root, closure, repo_files):
+    """Entries of `outside` that are closure files spelled in another case, moved into repo_files.
+
+    macOS volumes are usually case-insensitive and Wine there may report an opened header in lower
+    case. Only an exact case-insensitive match to a file of the derived closure is accepted, so a
+    file outside the repository still fails."""
+    prefix = str(root).rstrip('/').lower() + '/'
+    by_lower = {c.lower(): c for c in closure}
+    rest = []
+    for raw in outside:
+        path = raw.replace('\\', '/')
+        if len(path) > 2 and path[1] == ':':
+            path = path[2:]
+        hit = by_lower.get(path.lower()[len(prefix):]) if path.lower().startswith(prefix) else None
+        if hit and '/../' not in path:
+            if hit not in repo_files:
+                repo_files.append(hit)
+        else:
+            rest.append(raw)
+    repo_files.sort()
+    return rest
 
 
 # ------------------------------------------------------------------ the local pack
@@ -658,11 +711,19 @@ class GitHub:
         except (urllib.error.URLError, OSError, ValueError) as exc:
             raise Offline(str(exc)) from None
 
-    def open_items(self):
+    # Enough pages for any plausible number of open items; past it the list is reported incomplete
+    # rather than silently treated as complete.
+    MAX_PAGES = 100
+
+    def open_items(self, refresh=False):
         """Open issues and pull requests whose title names an RVA: {rva: [item]}."""
+        if getattr(self, '_items', None) is not None and not refresh:
+            return self._items
         out = {}
-        for page in range(1, 6):
+        for page in range(1, self.MAX_PAGES + 1):
             batch = self.api(f'repos/{self.repo}/issues?state=open&per_page=100&page={page}')
+            if page == self.MAX_PAGES and len(batch) == 100:
+                raise Offline(f'more than {100 * self.MAX_PAGES} open items; claims cannot all be checked')
             for it in batch:
                 for m in RVA_TOKEN.finditer(it.get('title') or ''):
                     out.setdefault(int(m.group(1), 16), []).append({
@@ -671,12 +732,13 @@ class GitHub:
                         'pull_request': 'pull_request' in it})
             if len(batch) < 100:
                 break
+        self._items = out
         return out
 
     def user(self):
         cfg = load_config(self.ctx)
-        if cfg.get('github_user'):
-            return cfg['github_user']
+        if self.ctx.env.get('SR_GITHUB_USER') or cfg.get('github_user'):
+            return self.ctx.env.get('SR_GITHUB_USER') or cfg['github_user']
         gh = self.gh()
         if gh:
             proc = self.ctx.run([gh, 'api', 'user', '-q', '.login'], capture_output=True, text=True)
@@ -714,6 +776,11 @@ class GitHub:
                          capture_output=True, text=True)
             return True
         return False
+
+
+def issue_number(url):
+    m = re.search(r'/(?:issues|pull)/(\d+)', url or '')
+    return int(m.group(1)) if m else 1 << 62
 
 
 def claim_state(items, me, now=None, days=CLAIM_DAYS):
@@ -787,15 +854,17 @@ def skeleton(fn, cls, method, area, drafted_by, recipe):
         f'// Only {method} is compared.',
         f'#include "{cls}.h"',
         '',
-        f'{cls}::{method}()',
+        f'{cls}::{method}()' if is_dtor else f'void {cls}::{method}()',
         '{',
         '}',
         ''])
     return h, cpp
 
 
-def task_id_for(cls):
-    return 'contrib-' + re.sub(r'[^a-z0-9]+', '-', cls.lower()).strip('-')
+def task_id_for(cls, practice=False):
+    # A practice run of an accepted unit gets its own directory, so it never mixes its runs or
+    # functions into a real task on the same class and is never picked as "the" task to submit.
+    return ('practice-' if practice else 'contrib-') + re.sub(r'[^a-z0-9]+', '-', cls.lower()).strip('-')
 
 
 def task_dir(ctx, tid):
@@ -815,7 +884,8 @@ def load_task(ctx, ident=None):
         pick = [(d, t) for d, t in loaded if d.name == ident or ident in (t['compiled'],)
                 or (rva is not None and any(parse_rva(f['rva']) == rva for f in t['functions']))]
     else:
-        pick = loaded
+        real = [(d, t) for d, t in loaded if not t.get('contrib', {}).get('practice')]
+        pick = real or loaded
     if not pick:
         raise Stop(USAGE, 'no contributor task' + (f' for {ident}' if ident else ''), f'{ctx.cli} start 0x<rva>')
     if len(pick) > 1:
@@ -864,7 +934,12 @@ def cmd_doctor(ctx, args):
         add('game executable', True, f'{info["path"]} ({how}) is {target["version"]}, hash pinned')
     tool = check_toolchain(ctx)
     if not ctx.windows:
-        wine = ctx.which('wine64') or ctx.which('wine')
+        if ctx.platform == 'darwin':
+            # Only this project's unpacked Wine counts on macOS: a cask install in /Applications
+            # carries a quarantine flag and blocks on a Gatekeeper dialog when run headless.
+            wine = str(Path(ctx.env.get('SR_WINE_BIN') or private_wine_bin(ctx)) / 'wine') if mac_wine_ready(ctx) else None
+        else:
+            wine = ctx.which('wine64') or ctx.which('wine')
         add('wine', bool(wine), wine or 'not found', f'{ctx.cli} setup --yes', required=tool['status'] != 'override')
     detail = {'ok': f'cl 19.16.27054 at {tool.get("bin")} matches tools/verifier/pinned.sha256',
               'override': 'SR_CONTRIB_COMPILER stand-in (not the pinned compiler; results cannot be submitted)',
@@ -881,6 +956,10 @@ def cmd_doctor(ctx, args):
     missing_src = [r for r, (p, _rev, _l) in COMMUNITY_SOURCES.items() if not (ctx.repo / p).is_dir()]
     add('community sources (label checks)', not missing_src,
         'present' if not missing_src else 'missing: ' + ', '.join(missing_src), f'{ctx.cli} setup --yes', required=False)
+    index = sibling_analysis_dir(ctx) / 'fnv_index.jsonl'
+    add('sibling source (FNV decompilation, optional)', index.is_file(),
+        f'index at {index}' if index.is_file() else 'not fetched; packs carry no sibling pointers',
+        f'{ctx.cli} setup --yes', required=False)
     ok = all(c['ok'] for c in checks if c['required'])
     if ok and nxt is None:
         tasks = list((ctx.private / 'tasks').glob('*/task.json')) if (ctx.private / 'tasks').is_dir() else []
@@ -917,7 +996,7 @@ PACKAGES = {
 }
 
 
-def install_command(ctx, pm, names):
+def install_command(ctx, pm, names, accept_sources=False):
     if pm == 'brew':
         casks = [n for n in names if n[:1] == ['--cask']]
         out = []
@@ -937,16 +1016,70 @@ def install_command(ctx, pm, names):
     if pm == 'zypper':
         return [sudo + ['zypper', '--non-interactive', 'install', *flat]]
     if pm == 'winget':
-        return [['winget', 'install', '-e', '--silent', '--accept-source-agreements', '--id', p] for p in flat]
+        # The source agreements are terms of Microsoft's package sources, so they ride on their own
+        # flag, never on --yes; without it winget asks on its first run (or fails without a terminal).
+        agree = ['--accept-source-agreements'] if accept_sources else []
+        return [['winget', 'install', '-e', '--silent', '--source', 'winget', *agree, '--id', p] for p in flat]
     if pm == 'choco':
         return [['choco', 'install', '-y', *flat]]
     return []
 
 
+def private_wine_bin(ctx):
+    return ctx.private / 'wine' / MAC_WINE['app'] / 'Contents' / 'Resources' / 'wine' / 'bin'
+
+
+def apply_wine_env(ctx):
+    """Put this project's Wine first on PATH (macOS) and keep its prefix under .local/, so the
+    contributor's own ~/.wine is never touched."""
+    if ctx.windows:
+        return
+    if ctx.platform == 'darwin':
+        b = Path(ctx.env.get('SR_WINE_BIN') or private_wine_bin(ctx))
+        path = ctx.env.get('PATH', '')
+        if (b / 'wine').is_file() and not path.startswith(str(b)):
+            ctx.env['PATH'] = f'{b}{os.pathsep}{path}'
+    ctx.env.setdefault('WINEPREFIX', str(ctx.private / 'wineprefix'))
+    ctx.env.setdefault('WINEDEBUG', '-all')
+
+
+def mac_wine_ready(ctx):
+    b = Path(ctx.env.get('SR_WINE_BIN') or private_wine_bin(ctx))
+    return (b / 'wine').is_file()
+
+
+def install_mac_wine(ctx):
+    """WineHQ's macOS build (packaged by Gcenx, the source of the former Homebrew cask), pinned by
+    SHA-256 and unpacked under .local/. Downloaded by this tool rather than by a browser or a cask,
+    so it carries no quarantine flag and Gatekeeper never asks; nothing goes to /Applications."""
+    import tarfile
+    dest = ctx.private / 'wine'
+    dest.mkdir(parents=True, exist_ok=True)
+    archive = dest / 'wine.tar.xz'
+    if not archive.is_file() or sha256_file(archive) != MAC_WINE['sha256']:
+        ctx.say(f'downloading Wine {MAC_WINE["version"]} for macOS (about 185 MB)')
+        try:
+            with urllib.request.urlopen(MAC_WINE['url'], timeout=900) as resp, open(archive, 'wb') as out:
+                shutil.copyfileobj(resp, out)
+        except (urllib.error.URLError, OSError) as exc:
+            raise Stop(NETWORK, f'cannot download Wine: {exc}', f'{ctx.cli} setup --yes (when online)')
+        if sha256_file(archive) != MAC_WINE['sha256']:
+            archive.unlink()
+            raise Stop(FAILED, 'the Wine download does not match its pinned SHA-256')
+    with tarfile.open(archive) as tar:
+        try:
+            tar.extractall(dest, filter='data')
+        except TypeError:  # Python without extraction filters
+            tar.extractall(dest)
+    archive.unlink()
+    apply_wine_env(ctx)
+    save_config(ctx, wine=str(private_wine_bin(ctx)))
+
+
 def wanted_packages(ctx, tool):
     want = []
     if not ctx.windows and tool['status'] != 'override':
-        if not (ctx.which('wine64') or ctx.which('wine')):
+        if ctx.platform != 'darwin' and not (ctx.which('wine64') or ctx.which('wine')):
             want.append('wine')
         if not ctx.which('msiextract') and tool['status'] != 'ok':
             want.append('msitools')
@@ -957,10 +1090,10 @@ def wanted_packages(ctx, tool):
     return want
 
 
-def fetch_sources(ctx):
+def fetch_sources(ctx, sources=None):
     """Shallow clones of the pinned community naming sources, for the label and origin checks."""
     done = []
-    for repo, (rel, rev, _lic) in COMMUNITY_SOURCES.items():
+    for repo, (rel, rev, _lic) in (COMMUNITY_SOURCES if sources is None else sources).items():
         dest = ctx.repo / rel
         if (dest / '.git').is_dir():
             head = git(ctx, 'rev-parse', 'HEAD', check=False, cwd=dest)
@@ -975,6 +1108,42 @@ def fetch_sources(ctx):
                            f'{ctx.cli} setup --yes   (retry when online)')
         done.append(repo)
     return done
+
+
+def sibling_analysis_dir(ctx):
+    return ctx.private / 'analysis'
+
+
+def build_sibling_index(ctx):
+    """The private FNV lookup index (tools/build_fnv_index.py) joined by name to the public
+    inventory, since a contributor has no Ghidra tables: `start` then lists the same-named FNV
+    method and the class's small methods. Returns the number of our functions joined, or None."""
+    repo, rel, _rev = SIBLING_SOURCE
+    clone = ctx.repo / rel
+    if not (clone / 'build/units.json').is_file():
+        return None
+    out = sibling_analysis_dir(ctx)
+    out.mkdir(parents=True, exist_ok=True)
+    with open(out / 'functions.jsonl', 'w') as fh:
+        for fn in inventory(ctx.repo)['functions']:
+            if PLAIN_NAME.fullmatch(fn.get('name') or ''):
+                fh.write(json.dumps({'rva': fn['rva'], 'names': [{'name': fn['name'], 'how': 'community',
+                                                                    'source': 'data/progress.json'}]}) + '\n')
+    proc = ctx.run([sys.executable, str(ctx.repo / 'tools/build_fnv_index.py'), '--fnv', str(clone),
+                    '--analysis', str(out)], cwd=ctx.repo, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise Stop(FAILED, f'building the {repo} index failed: {(proc.stderr or proc.stdout).strip()[-200:]}')
+    m = re.search(r'our functions joined by name: (\d+)', proc.stdout)
+    return int(m.group(1)) if m else 0
+
+
+def sibling_section(ctx, cls, rvas):
+    """Lines of the "Sibling source" section for a task, [] without the index or a match."""
+    try:
+        from export_pack import sibling_lines
+    except Exception:  # noqa: BLE001 - the section is optional help, never required
+        return []
+    return sibling_lines(cls, rvas, root=sibling_analysis_dir(ctx))
 
 
 def licence_url(vsman):
@@ -1018,8 +1187,15 @@ def install_toolchain(ctx, accept):
             vsman.unlink()
             raise Stop(FAILED, 'the installer manifest does not match its pinned SHA-256; the recipe stops here '
                        '(tools/verifier/README.md, "Known limits of the recipe")')
-    url = licence_url(vsman) or 'the licence link vsdownload.py prints'
-    if not accept:
+    url = licence_url(vsman)
+    if not url:
+        # Acceptance needs a licence a person can read; without a concrete link nothing is accepted.
+        raise Stop(FAILED, 'the pinned installer manifest names no licence link, so no licence can be shown '
+                   'for acceptance; nothing was installed', 'report this in an issue (tools/verifier/README.md)')
+    if accept:
+        ctx.say(f'Microsoft Build Tools for Visual Studio 2017 licence, accepted by the person who passed '
+                f'--accept-microsoft-license: {url}')
+    else:
         ctx.say(f'Microsoft Build Tools for Visual Studio 2017 licence: {url}')
         if not ctx.interactive:
             raise Stop(CONSENT, f'installing the compiler accepts Microsoft\'s licence ({url})',
@@ -1064,7 +1240,7 @@ def cmd_setup(ctx, args):
     if want:
         table = PACKAGES.get(pm or '', {})
         names = [table[w] for w in want if table.get(w)]
-        cmds = install_command(ctx, pm, names) if pm else []
+        cmds = install_command(ctx, pm, names, getattr(args, 'accept_winget_source_agreements', False)) if pm else []
         shown = ' && '.join(' '.join(shlex.quote(c) for c in cmd) for cmd in cmds)
         if not cmds:
             step('packages', 'needs-person', f'install {", ".join(want)} with your package manager')
@@ -1074,6 +1250,11 @@ def cmd_setup(ctx, args):
             for cmd in cmds:
                 proc = ctx.run(cmd)
                 if proc.returncode != 0:
+                    if pm == 'winget' and '--accept-source-agreements' not in cmd:
+                        raise Stop(CONSENT, f'package install failed: {" ".join(cmd)}; winget may be waiting for '
+                                   'you to accept the terms of its package source',
+                                   f'run it yourself in a terminal, or after reading the terms: {ctx.cli} setup '
+                                   '--yes --accept-winget-source-agreements', steps=steps)
                     raise Stop(MISSING, f'package install failed: {" ".join(cmd)}',
                                f'run it yourself (it may need your password): {shown}', steps=steps)
             step('packages', 'installed', ', '.join(want))
@@ -1085,8 +1266,19 @@ def cmd_setup(ctx, args):
         rosetta = ctx.run(['arch', '-x86_64', '/usr/bin/true'], capture_output=True).returncode == 0 \
             if os.uname().machine == 'arm64' else True
         if not rosetta:
-            step('rosetta', 'needs-person', 'Wine on Apple silicon needs Rosetta 2, which has its own Apple licence: '
-                 'run `softwareupdate --install-rosetta` yourself')
+            step('rosetta', 'needs-person', 'Wine on Apple silicon needs Rosetta 2, which has its own Apple licence')
+            raise Stop(CONSENT, 'Rosetta 2 is not installed; installing it accepts Apple\'s licence',
+                       'a person runs: softwareupdate --install-rosetta   (then rerun setup)', steps=steps)
+        if mac_wine_ready(ctx):
+            step('wine', 'present', str(Path(ctx.env.get('SR_WINE_BIN') or private_wine_bin(ctx))))
+        elif args.no_install:
+            step('wine', 'skipped', f'would download {MAC_WINE["url"]}')
+        elif ctx.ask(f'Download Wine {MAC_WINE["version"]} (WineHQ build, about 185 MB) into {ctx.private / "wine"}?',
+                     '--yes'):
+            install_mac_wine(ctx)
+            step('wine', 'installed', str(private_wine_bin(ctx)))
+        else:
+            raise Stop(CONSENT, 'Wine is needed to run the compiler on macOS', f'{ctx.cli} setup --yes', steps=steps)
     # 2. The game executable.
     info, how = resolve_exe(ctx, target, args.exe)
     if info is not None and info['status'] == 'ok':
@@ -1105,6 +1297,16 @@ def cmd_setup(ctx, args):
             step('community sources', 'ok', ('fetched ' + ', '.join(fetched)) if fetched else 'present at their pins')
         except Stop as exc:
             step('community sources', 'skipped', exc.message)
+    # 3b. The FNV decompilation (optional): read for shape and names, never evidence.
+    if not args.no_sources and not getattr(args, 'no_sibling', False):
+        repo, rel, rev = SIBLING_SOURCE
+        try:
+            fetched = fetch_sources(ctx, {repo: (rel, rev, 'no-licence')})
+            joined = build_sibling_index(ctx)
+            step('sibling source', 'ok', f'{repo}@{rev[:8]} ' + ('fetched' if fetched else 'present')
+                 + f'; index joins {joined} inventory functions by name')
+        except Stop as exc:
+            step('sibling source', 'skipped', exc.message)
     # 4. The compiler.
     if tool['status'] in ('ok', 'override'):
         step('compiler', tool['status'], tool.get('bin') or 'SR_CONTRIB_COMPILER')
@@ -1116,10 +1318,18 @@ def cmd_setup(ctx, args):
         step('compiler', 'installed', tool['bin'])
     # 5. Self-test: a function the project already matched must pass here too.
     if not args.no_self_test:
-        code, data, _n = run_self_test(ctx)
-        step('self-test', 'pass' if code == OK else 'fail',
-             f'0x{SELF_TEST_RVA:x} compiled and compared: ' + ', '.join(
-                 f'{f["rva"]} {f["result"]} {f["reason"]}' for f in data.get('functions', [])))
+        try:
+            code, data, _n = run_self_test(ctx)
+        except Stop as exc:
+            step('self-test', 'fail', exc.message)
+            raise Stop(exc.code, f'self-test: {exc.message}', exc.next_action or f'{ctx.cli} doctor',
+                       steps=steps, **exc.data)
+        if data.get('skipped'):
+            step('self-test', 'skipped', data['note'])
+        else:
+            step('self-test', 'pass' if code == OK else 'fail',
+                 f'0x{SELF_TEST_RVA:x} compiled and compared: ' + ', '.join(
+                     f'{f["rva"]} {f["result"]} {f["reason"]}' for f in data.get('functions', [])))
         if code != OK:
             raise Stop(code, 'self-test failed: the local toolchain does not reproduce an accepted match',
                        f'{ctx.cli} doctor', steps=steps, self_test=data)
@@ -1130,11 +1340,12 @@ def run_self_test(ctx):
     data = inventory(ctx.repo)
     fn = find_function(data, SELF_TEST_RVA)
     if fn is None or fn['status'] != 'matched':
-        return OK, {'functions': [], 'note': 'self-test function not in the inventory'}, None
+        return OK, {'functions': [], 'skipped': True,
+                    'note': f'0x{SELF_TEST_RVA:x} is not a matched function in data/progress.json; nothing proven'}, None
     args = argparse.Namespace(rva=[f'0x{SELF_TEST_RVA:x}'], practice=True, drafted_by='self-test', area=None,
                               no_branch=True, recipe=None, force=False)
     start(ctx, args, quiet=True)
-    return run_compare(ctx, task_id_for(PLAIN_NAME.fullmatch(fn['name']).group(1)))
+    return run_compare(ctx, task_id_for(PLAIN_NAME.fullmatch(fn['name']).group(1), practice=True))
 
 
 def cmd_next(ctx, args):
@@ -1186,7 +1397,13 @@ def cmd_claim(ctx, args):
         save_local_claim(ctx, rva, {'status': 'unpublished', 'url': None})
         ctx.say('WARNING: claim recorded locally only; others cannot see it. Run claim again when online.')
         return OK, {'rva': f'0x{rva:x}', 'claim': 'unpublished'}, f'{ctx.cli} start 0x{rva:x}'
+    if getattr(args, 'github_user', None):
+        save_config(ctx, github_user=args.github_user)
     me = gh.user()
+    if me is None and items:
+        raise Stop(USAGE, f'0x{rva:x} has open claims or pull requests and your GitHub login is unknown, so it '
+                   'cannot tell whether one is yours', f'{ctx.cli} claim 0x{rva:x} --github-user <your-login>',
+                   claims=items)
     mine, fresh, stale = claim_state(items, me)
     if mine:
         save_local_claim(ctx, rva, {'status': 'published', 'url': mine[0]['url']})
@@ -1204,13 +1421,29 @@ def cmd_claim(ctx, args):
     url = gh.create_issue(title, body)
     if url:
         save_local_claim(ctx, rva, {'status': 'published', 'url': url})
+        # Two people can file in the same minute; the older open claim by someone else wins.
+        try:
+            after = gh.open_items(refresh=True).get(rva, [])
+        except Offline:
+            after = []
+        rivals = [i for i in after if i['url'] != url and i.get('author') != me and not i['pull_request']
+                  and i in claim_state(after, me)[1] and int(i['number']) < issue_number(url)]
+        if rivals:
+            gh.close(issue_number(url), f'Withdrawn: {rivals[0]["url"]} claimed 0x{rva:x} first.')
+            claims = local_claims(ctx)
+            claims.pop(f'0x{rva:x}', None)
+            (ctx.private / 'claims.json').write_text(json.dumps(claims, indent=2, sort_keys=True) + '\n')
+            raise Stop(CLAIMED, f'0x{rva:x} was claimed first by {rivals[0]["author"]}: {rivals[0]["url"]}; '
+                       'your claim issue was withdrawn', f'{ctx.cli} next', claims=rivals)
         ctx.say(f'claimed: {url}')
         return OK, {'rva': f'0x{rva:x}', 'claim': url}, f'{ctx.cli} start 0x{rva:x}'
+    # Without gh nothing is filed yet: the link only prefills an issue. It is not recorded as a claim
+    # until the issue exists, which `claim` finds on its next run (it is then "already yours").
     link = gh.new_issue_link(title, body)
-    save_local_claim(ctx, rva, {'status': 'link-only', 'url': link})
-    ctx.say('gh is not signed in; open this link to file the claim (one click):')
+    ctx.say('gh is not signed in; open this link to file the claim, then run claim again to confirm it:')
     ctx.say(link)
-    return OK, {'rva': f'0x{rva:x}', 'claim': 'link-only', 'link': link}, f'{ctx.cli} start 0x{rva:x}'
+    return OK, {'rva': f'0x{rva:x}', 'claim': 'link-only', 'link': link}, \
+        f'open the link, file the issue, then {ctx.cli} claim 0x{rva:x}'
 
 
 def cmd_release(ctx, args):
@@ -1251,12 +1484,15 @@ def start(ctx, args, quiet=False):
     if len(classes) != 1:
         raise Stop(USAGE, 'one unit per task: give functions of one class')
     cls = classes.pop()
+    if args.area is not None and not re.fullmatch(r'[a-z][a-z0-9_]*', args.area):
+        raise Stop(USAGE, f'--area must be one lower-case directory name under reconstruction/ ([a-z][a-z0-9_]*), '
+                   f'not {args.area!r}')
     area, header, cpp = unit_files(ctx.repo, cls, args.area)
     if area is None:
         raise Stop(USAGE, f'no area rule for class {cls} (reconstruction/README.md, "Layout")',
                    f'{ctx.cli} start {" ".join(args.rva)} --area <area>  (ask in your claim issue which area)')
     exe = require_exe(ctx, target)['path']
-    tdir = task_dir(ctx, task_id_for(cls))
+    tdir = task_dir(ctx, task_id_for(cls, args.practice))
     tdir.mkdir(parents=True, exist_ok=True)
     names = public_names(ctx.repo, data)
     smap = json.loads((ctx.repo / 'reports' / target['build_id'] / 'symbol-map.json').read_text())['symbols']
@@ -1273,6 +1509,10 @@ def start(ctx, args, quiet=False):
             'symbol': by_rva.get(fn['rva']) or f'unbound:{fn["name"]}',
             'function_id': fn['id'], 'community_name': fn['name'], 'pack': str(dest)})
     recipe = args.recipe or old.get('recipe') or DEFAULT_RECIPE
+    sibling = sibling_section(ctx, cls, sorted(functions))
+    if sibling:
+        (tdir / 'sibling.md').write_text(f'# {cls}: pointers into the FNV decompilation (private)\n'
+                                         + '\n'.join(sibling) + '\n')
     created = []
     if not (ctx.repo / cpp).exists():
         if args.practice:
@@ -1308,9 +1548,12 @@ def start(ctx, args, quiet=False):
         for p in packs:
             ctx.say(f'pack (private, read it locally, never paste it anywhere): {p}/bytes.txt'
                     + (' and listing.txt' if (Path(p) / 'listing.txt').is_file() else ''))
+        if sibling:
+            ctx.say(f'sibling source pointers (FNV; shape and names only, never evidence): {tdir / "sibling.md"}')
         ctx.say(f'unit: {header} and {cpp}' + (' (skeleton created)' if created else ''))
     return OK, {'task': tdir.name, 'unit': [header, cpp], 'created': created, 'packs': packs, 'branch': branch,
-                'practice': bool(args.practice)}, f'edit {cpp}, then {ctx.cli} compare'
+                'practice': bool(args.practice), 'sibling': str(tdir / 'sibling.md') if sibling else None}, \
+        f'edit {cpp}, then {ctx.cli} compare'
 
 
 def cmd_start(ctx, args):
@@ -1395,7 +1638,8 @@ def run_compare(ctx, ident=None, root=None):
     for line in bind_lines:
         ctx.say(line)
     if objdump:
-        ctx.say(f'private side-by-side: {out}/0x<rva>/side-by-side.txt (read locally; never paste it anywhere)')
+        for r in results:
+            ctx.say(f'private side-by-side: {out / r["rva"] / "side-by-side.txt"} (read locally; never paste it anywhere)')
     nxt = f'{ctx.cli} submit' if passed == len(results) else f'revise the source, then {ctx.cli} compare'
     if summary['practice'] and passed == len(results):
         nxt = f'{ctx.cli} next'
@@ -1424,8 +1668,9 @@ def git_blob(ctx, ref, name):
 
 def intake_problems(ctx, base, head='HEAD', files=None):
     """Contributor-scope rules on a diff, reading file contents from git (never executing them):
-    only reconstruction unit files, a size cap, the source lint, and no newly added sibling
-    (FNV) material while its use by external contributors is undecided."""
+    only reconstruction unit files, a size cap and the source lint. Sibling (FNV) material is
+    allowed on the Drafters' terms; the lint checks its SIBLING(...) labels and `Sibling source:`
+    lines, and submit's label and origin checks read the clone when it is present."""
     import lint_reconstruction as lint
     problems = []
     rows = files if files is not None else changed_files(ctx, base, head)
@@ -1443,11 +1688,6 @@ def intake_problems(ctx, base, head='HEAD', files=None):
             continue
         if len(blob) > MAX_UNIT_FILE_BYTES:
             problems.append(f'{name}: {len(blob)} bytes, over the {MAX_UNIT_FILE_BYTES}-byte contributor cap')
-        old = git_blob(ctx, base, name) or b''
-        for word in ('SIBLING(', 'Sibling source:'):
-            if blob.count(word.encode()) > old.count(word.encode()):
-                problems.append(f'{name}: adds {word.rstrip("(:")} material; reuse of the FNV decompilation by '
-                                'external contributors awaits a maintainer decision')
     # Lint the files as they would be integrated, in a temporary tree holding the head versions of
     # what the lint reads (sources, recipes, evidence files), so the working tree is never trusted.
     names = [n for s, n in rows if UNIT_PATH.fullmatch(n) and s != 'D']
@@ -1541,7 +1781,10 @@ def cmd_submit(ctx, args):
     base = args.base or (f'{up}/main' if up else 'origin/main')
     if ctx.run(['git', 'rev-parse', '--verify', '--quiet', base], cwd=ctx.repo, capture_output=True).returncode != 0:
         base = 'HEAD'
-    files = [('M', n) for n in unit]
+    # Everything the branch would bring, not only the unit: committed changes since the base plus
+    # the unit as it is on disk now.
+    branch_rows = changed_files(ctx, base, 'HEAD') if base != 'HEAD' else []
+    files = list(dict.fromkeys([(s, n) for s, n in branch_rows if n not in unit] + [('M', n) for n in unit]))
     problems = intake_problems(ctx, base, head=None, files=files)
     blockers += problems
     import check_labels
@@ -1559,13 +1802,17 @@ def cmd_submit(ctx, args):
     full = ctx.run([sys.executable, str(ctx.repo / 'tools/check.py')], cwd=ctx.repo, capture_output=True, text=True)
     if full.returncode != 0:
         blockers.append('tools/check.py: ' + (full.stderr or full.stdout).strip()[-300:])
-    rva0 = parse_rva(task['functions'][0]['rva'])
     try:
-        items = ctx.github().open_items().get(rva0, [])
-        _mine, fresh, _stale = claim_state(items, ctx.github().user())
-        if fresh and not args.ack_collision:
-            blockers.append('another open claim or pull request names this function: '
-                            + ', '.join(i['url'] for i in fresh) + ' (talk to them, or pass --ack-collision)')
+        open_items = ctx.github().open_items()
+        me = ctx.github().user()
+        own_urls = {c.get('url') for c in local_claims(ctx).values()}
+        for fn in task['functions']:
+            items = [i for i in open_items.get(parse_rva(fn['rva']), []) if i['url'] not in own_urls]
+            _mine, fresh, _stale = claim_state(items, me)
+            if fresh and not args.ack_collision:
+                blockers.append(f'another open claim or pull request names {fn["rva"]}: '
+                                + ', '.join(i['url'] for i in fresh) + ' (talk to them, or pass --ack-collision)'
+                                + ('' if me else '; if it is yours, give claim --github-user <your-login>'))
     except Offline:
         warnings.append('GitHub not reachable: claims not checked')
     body = pr_body(ctx, task, summary, args, labels, origin)
@@ -1576,13 +1823,16 @@ def cmd_submit(ctx, args):
         ctx.say(f'warning: {w}')
     for b in blockers:
         ctx.say(f'BLOCKED: {b}')
+    drafted = args.drafted_by or load_config(ctx).get('drafted_by') or 'not stated'
     data = {'title': title, 'body_file': str(tdir / 'pr-body.md'), 'files': unit, 'blockers': blockers,
-            'warnings': warnings, 'dry_run': bool(args.dry_run), 'base': base}
+            'warnings': warnings, 'dry_run': bool(args.dry_run), 'base': base,
+            'commit_message': f'{title}\n\nDrafted by {drafted}. Local comparator pass with the pinned recipe; '
+                              'not yet confirmed by the project.'}
     ctx.say('A local pass is not acceptance: the project re-runs the comparison on two of its own hosts and a '
             'Reviewer checks the source before the function is recorded as matched.')
     if args.dry_run:
         plan = [f'git add {" ".join(unit)}', 'python3 tools/check.py --staged',
-                f'git commit -m "{title}"', f'git push {push or "<your fork remote>"} HEAD',
+                f'git commit -m "{title}" -- {" ".join(unit)}',f'git push {push or "<your fork remote>"} HEAD',
                 f'gh pr create --repo {ctx.github().repo} --title "{title}" --body-file {tdir / "pr-body.md"}']
         for p in plan:
             ctx.say(f'would run: {p}')
@@ -1590,15 +1840,16 @@ def cmd_submit(ctx, args):
             ('fix the blockers listed' if blockers else f'{ctx.cli} submit')
     if blockers:
         raise Stop(FAILED, f'{len(blockers)} blocker(s); nothing committed or pushed', 'fix the blockers listed', **data)
+    other = [n for n in git(ctx, 'diff', '--cached', '--name-only').splitlines() if n and n not in unit]
+    if other:
+        raise Stop(USAGE, 'other files are staged: ' + ', '.join(other[:5]) + '; submit commits only the unit',
+                   'git restore --staged <those files>, then submit again', **data)
     git(ctx, 'add', '--', *unit)
     staged = ctx.run([sys.executable, str(ctx.repo / 'tools/check.py'), '--staged'], cwd=ctx.repo,
                      capture_output=True, text=True)
     if staged.returncode != 0:
         raise Stop(FAILED, 'tools/check.py --staged: ' + (staged.stderr or staged.stdout).strip()[-300:])
-    drafted = args.drafted_by or load_config(ctx).get('drafted_by') or 'not stated'
-    message = (f'{title}\n\nDrafted by {drafted}. Local comparator pass with the pinned recipe; '
-               'not yet confirmed by the project.')
-    git(ctx, 'commit', '-m', message)
+    git(ctx, 'commit', '-m', data['commit_message'], '--', *unit)
     if not push:
         raise Stop(USAGE, 'no fork remote to push to', 'fork the repository on GitHub, then '
                    'git remote add fork https://github.com/<you>/skyrim-research.git and run submit again', **data)
@@ -1626,7 +1877,8 @@ def cmd_go(ctx, args):
     """setup -> next -> claim -> start, stopping at the first step that needs a person."""
     setup_args = argparse.Namespace(exe=args.exe, accept_microsoft_license=args.accept_microsoft_license,
                                     no_install=False, no_sources=False, no_self_test=args.no_self_test,
-                                    steamcmd=False)
+                                    steamcmd=False, no_sibling=args.no_sibling,
+                                    accept_winget_source_agreements=args.accept_winget_source_agreements)
     try:
         cmd_setup(ctx, setup_args)
     except Stop as exc:
@@ -1662,6 +1914,8 @@ def parser():
     p = argparse.ArgumentParser(prog='contrib.py', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--json', action='store_true', help='one JSON object on stdout; never prompts')
     p.add_argument('--yes', action='store_true', help='agree to package installs (never to a licence)')
+    p.add_argument('--redact', action='store_true',
+                   help='replace the checkout and home paths in all output; use it for anything you post publicly')
     sub = p.add_subparsers(dest='command', required=True)
     s = sub.add_parser('doctor')
     s.add_argument('--exe')
@@ -1671,8 +1925,11 @@ def parser():
                    help='a person has read and accepted the VS 2017 Build Tools licence')
     s.add_argument('--no-install', action='store_true', help='print package commands instead of running them')
     s.add_argument('--no-sources', action='store_true')
+    s.add_argument('--no-sibling', action='store_true', help='skip the optional FNV decompilation clone (about 175 MB)')
     s.add_argument('--no-self-test', action='store_true')
     s.add_argument('--steamcmd', action='store_true', help="also install Valve's SteamCMD")
+    s.add_argument('--accept-winget-source-agreements', action='store_true',
+                   help="Windows: a person has accepted the terms of winget's package source")
     s = sub.add_parser('next')
     s.add_argument('--count', type=int, default=5)
     s.add_argument('--max-size', type=int, default=64)
@@ -1680,6 +1937,7 @@ def parser():
     s.add_argument('rva')
     s.add_argument('--take-over', action='store_true')
     s.add_argument('--offline-ok', action='store_true')
+    s.add_argument('--github-user', help='your GitHub login, when gh is not signed in')
     s = sub.add_parser('release')
     s.add_argument('rva')
     s.add_argument('--reason')
@@ -1707,6 +1965,8 @@ def parser():
     s.add_argument('--exe')
     s.add_argument('--drafted-by')
     s.add_argument('--accept-microsoft-license', action='store_true')
+    s.add_argument('--accept-winget-source-agreements', action='store_true')
+    s.add_argument('--no-sibling', action='store_true')
     s.add_argument('--no-self-test', action='store_true')
     s.add_argument('--no-branch', action='store_true')
     s.add_argument('--offline-ok', action='store_true')
@@ -1724,24 +1984,26 @@ def main(argv=None, ctx=None):
     ctx.as_json = ctx.as_json or args.json
     ctx.interactive = ctx.interactive and not ctx.as_json
     ctx.assume_yes = ctx.assume_yes or args.yes
+    ctx.redact = ctx.redact or args.redact
+    apply_wine_env(ctx)
     try:
         code, data, nxt = COMMANDS[args.command](ctx, args)
         message = None
     except Stop as exc:
         code, data, nxt, message = exc.code, exc.data, exc.next_action, exc.message
         if not ctx.as_json:
-            print(f'{"error" if code else "note"}: {message}', file=sys.stderr)
+            print(ctx.scrub(f'{"error" if code else "note"}: {message}'), file=sys.stderr)
             for line in data.get('steamcmd_route') or []:
-                print(f'  {line}', file=sys.stderr)
+                print(ctx.scrub(f'  {line}'), file=sys.stderr)
             for line in data.get('errors') or []:
-                print(f'  {line}', file=sys.stderr)
+                print(ctx.scrub(f'  {line}'), file=sys.stderr)
     if ctx.as_json:
         out = {'command': args.command, 'ok': code == OK, 'exit_code': code, 'error': message, 'next': nxt}
         out.update({k: v for k, v in (data or {}).items() if k not in out})
         out['messages'] = ctx.log
-        print(json.dumps(out, indent=2, default=str))
+        print(ctx.scrub(json.dumps(out, indent=2, default=str)))
     elif nxt:
-        print(f'next: {nxt}')
+        print(ctx.scrub(f'next: {nxt}'))
     return code
 
 

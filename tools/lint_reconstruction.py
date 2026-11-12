@@ -130,6 +130,9 @@ INT_LITERAL = re.compile(r'(?<![\w.])(0[xX][0-9A-Fa-f]+|\d+)[uUlL]*(?![\w.])')
 CHAR_LITERAL = re.compile(r"(?:u8|u|U|L)?'(\\x[0-9A-Fa-f]+|\\[0-7]{1,3}|\\.|[^'\\\n])'")
 BRACED = re.compile(r'\{([^{}]*)\}', re.S)
 INCLUDE_NAME = re.compile(r'[A-Za-z0-9_][A-Za-z0-9_.+-]*(?:/[A-Za-z0-9_][A-Za-z0-9_.+-]*)*')
+# The one parent step allowed: a header of another area, `"../<area>/<Class>.h"` (docs/drafter-card.md),
+# which from reconstruction/<area>/ stays inside reconstruction/.
+SHARED_HEADER = re.compile(r'\.\./[a-z][a-z0-9_]*/[A-Z][A-Za-z0-9_]*\.h')
 PRAGMA_LINE = re.compile(r'^[ \t]*#[ \t]*pragma\b(.*)$', re.M)
 PRAGMA_WORD = re.compile(r'[ \t]+([A-Za-z_]\w*)\b(?![ \t]*[^ \t(\n])|[ \t]+([A-Za-z_]\w*)[ \t]*\(')
 
@@ -402,9 +405,11 @@ def lint_file(root, name, target_build):
         # The compiler opens an include before the verifier's /showIncludes check can refuse it, so a
         # name that could reach a host file (drive letter, backslash, absolute or parent path) is
         # refused here, before any compile of contributed source.
-        if not INCLUDE_NAME.fullmatch(target) or '..' in target.split('/'):
+        shared = kind == '"' and SHARED_HEADER.fullmatch(target)
+        if not shared and (not INCLUDE_NAME.fullmatch(target) or '..' in target.split('/')):
             problems.append(f'{name}: include name {target!r} must be a plain relative path '
-                            '(letters, digits, _ . + - and /; no drive, backslash, leading / or ..)')
+                            '(letters, digits, _ . + - and /; no drive, backslash, leading / or ..), '
+                            'or "../<area>/<Class>.h" for another area\'s header')
         if kind == '<':
             for base in INCLUDE_ROOTS:
                 if (root / base / target).exists():
