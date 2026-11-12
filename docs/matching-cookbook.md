@@ -149,6 +149,24 @@ and offset for every function that uses it. Compared from comparator 0.5.0 on (e
 `unsupported-relocation` SECREL); measured on synthetic code only. Seen in TESForm 0x1e6930 and
 0x1e5b30, not yet closed.
 
+**22. A callee's out-parameter below an 8-byte temporary in the home slots is a small type.**
+(medium)
+Symptom: the target passes the addresses of two locals to a call and the one the callee writes
+sits in a lower home slot than an 8-byte key temporary; the candidate swaps them. Cause: locals
+passed by address are packed by size, 1 to 4 byte locals in lower slots before 8-byte ones,
+whatever the declaration order. Fix: make the out-parameter `bool` or `std::uint32_t` (here an
+`inserted` flag), not a pointer or an 8-byte value; declaration order, wrappers and by-reference
+or by-value spellings do not move the slots. Fixed NiObject::ProcessClone 0xedca00 in a one-host
+attempt (not yet confirmed on two hosts).
+
+**23. A member the target loads after a null test is read after the test.** (medium)
+Symptom: the candidate loads a field into a register before a null test of another value; the
+target loads it only on the path after the test. Fix: read the member inside the `&&` or the
+block that follows the test instead of caching it in a local first (`if (!result &&
+encounterZone) { auto* zone = encounterZone; ... }`). The same family as rule 1, seen from the
+other side. Fixed TESWorldSpace::GetLocationFromPosition 0x310ff0 in a one-host attempt (not yet
+confirmed on two hosts).
+
 ## Unsolved patterns
 
 **12. A pure callee-saved register swap with the same instructions.** (low)

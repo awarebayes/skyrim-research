@@ -79,6 +79,19 @@ destructor of each, the code offsets in each state). `plan --order fanin` reads 
 the survey: see `findings/fourth-batch-selection.md` for the criteria; it writes `list.txt`,
 `plan.json` and `inventory-rows.json` (rows ready for `data/progress.json`).
 
+`plan --order cheap [--parked <census.json>] [--catalogue <inline-candidates.json>]
+[--normal-functions 60]` (`plan_cheap.py`; criteria in `findings/fifth-batch-selection.md`) adds
+no exception data, no thread-local read (scanned in the image bytes), not in the parked census
+families, a verified skeleton, and no class with a unit or an open task, ranks by FNV counterpart,
+catalogue class, size and fan-in, and writes **small** tasks (15 to 25 functions of at most 64
+bytes, one unit per class of one RTTI family) and **normal** tasks (one class, 6 to 10 functions).
+A small task's lines carry `group=<task dir>`: `packs` writes one ordinary task directory per unit
+below `.local/tasks/<group>/`, plus `group.json` and a combined `BRIEF.md` there; each unit is
+attempted, budgeted and reported on its own (`attempt <group dir>` prints every unit's state).
+`budget=<n>` on a line sets that task's `max_attempts`. Briefs list existing repository headers of
+the class's bases and referenced classes (include them rather than declaring a stand-in), the
+cookbook rules the listings point to, and the FNV sibling pointers.
+
 ### plan: class units from the survey
 
 `plan` reads the latest `survey --named` output (no Ghidra run) and keeps a function when its v1

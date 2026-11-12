@@ -1444,6 +1444,8 @@ def sibling_lines(cls, rvas, root=None, limit=12):
     out, listed = [], set()
     for rva in rvas:
         for r, o in index['by_rva'].get(rva, []):
+            if r['symbol'] in listed:
+                continue  # joined both by name and by slot: one line is enough
             how = 'same name' if o['how'] == 'name' else f'same slot {o["slot"]} (positional guess; our slot is unnamed)'
             out.append(f'- `0x{rva:x}`: `{r["class"]}::{r["method"]}` {_sibling_ref(r)}; {how}.')
             listed.add(r['symbol'])
@@ -1755,7 +1757,7 @@ def class_material(cls, packs, listings, img, addrlib, comms):
     return files, facts
 
 
-def write_class_material(task_dirs, target, img, addrlib, comms):
+def write_class_material(task_dirs, target, img, addrlib, comms, shared_name='_shared-classes.json'):
     """Write .local/packs/<build>/class/<Class>/ for every class owning a function of the given tasks.
 
     One directory per class even when its functions are split over several tasks (one per recipe),
@@ -1829,7 +1831,7 @@ def write_class_material(task_dirs, target, img, addrlib, comms):
         print(f'class {cls}: {len(packs)} functions, {", ".join(sorted(files))}')
     shared = {c: sorted(u) for c, u in sorted(users.items()) if len(u) > 1}
     root.mkdir(parents=True, exist_ok=True)
-    (root / '_shared-classes.json').write_text(json.dumps({
+    (root / shared_name).write_text(json.dumps({
         'units': sorted(by_class), 'used_by_more_than_one_unit': shared,
         'note': 'Candidates for a shared header in their own area; moving a class there changes the digest '
                 'of every unit that includes it.'}, indent=2) + '\n')
@@ -1886,7 +1888,183 @@ def render_brief(task, packs):
     risks.append('- Class and member names are COMMUNITY (unverified); enclosing-definition names may be wrong.')
     risks.append('- Declare other classes as minimal stand-ins in your header; do not edit other units.')
     lines += risks
-    return '\n'.join(lines[:25]) + '\n'
+    extra = brief_sections(cls, packs, compared)
+    return '\n'.join(lines[:25] + extra) + '\n'
+
+
+# ---------------------------------------------------------------------------------------------
+# Brief sections shared by unit and group briefs: existing headers to include, the cookbook rules
+# the listings point to, and the FNV sibling pointers.
+
+COOKBOOK = 'docs/matching-cookbook.md'
+COOKBOOK_RULES = {
+    'flag-test': '16: a flag bit tested as load, `shr`, `test al,1` goes through a by-value bit-index '
+                 'helper (`TestBit(word, n)`) from the first draft.',
+    'out-param': '15: an inlined lookup that leaves the caller\'s local untouched on a miss is '
+                 '`bool Find(key, T& out)` writing `out` only on a hit.',
+    'small-out-param': '22: a callee\'s out-parameter placed below an 8-byte temporary in the home '
+                       'slots is a small type (`bool`, `uint32_t`), not a pointer.',
+    'deleting-dtor': '14, 18, 10: a slot-0 destructor is the deleting `??_G` (define a constructor so the '
+                     'vftable is emitted); if it calls the plain one, declare `~X();` without a body; '
+                     'a call with edx = 1 means class-scope operator new/delete.',
+    'null-test': '1, 23: a null test the candidate drops means the source re-read the member; a field the '
+                 'target loads after a null test is read after the test, not into a local before it.',
+    'virtual-call': '11: a call through slot N needs every earlier slot declared (placeholders labelled '
+                    'GUESS), inherited TESForm/NiObject slots included.',
+}
+_FLAG_TEST = re.compile(r'\bSHR (E?\w+),0x[0-9a-f]+\s*\n[^\n]*\b(?:TEST|AND) \w+,0x1\b', re.I)
+_STACK_ARG = re.compile(r'\bLEA (?:RDX|R8|R9|RCX|EDX|R8D|R9D),\[R(?:SP|BP) [+-] [^\]]+\]', re.I)
+_NULL_TEST = re.compile(r'\bTEST (R\w+),\1\b', re.I)
+_VCALL = re.compile(r'\bCALL qword ptr \[R\w+ \+ 0x[0-9a-f]+\]', re.I)
+
+
+def listing_traits(listing, function):
+    """Cookbook-rule keys a function's listing (and its task entry) points to."""
+    traits = []
+    if _FLAG_TEST.search(listing):
+        traits.append('flag-test')
+    if _STACK_ARG.search(listing) and 'CALL' in listing.upper():
+        traits += ['out-param', 'small-out-param']
+    if function.get('destructor') or '~' in (function.get('community_name') or ''):
+        traits.append('deleting-dtor')
+    if _NULL_TEST.search(listing):
+        traits.append('null-test')
+    if _VCALL.search(listing):
+        traits.append('virtual-call')
+    return traits
+
+
+def repository_headers(root=None):
+    """{class: 'area/Class.h'} for every header under reconstruction/."""
+    root = Path(root or REPO)
+    return {p.stem: p.relative_to(root / 'reconstruction').as_posix() for p in (root / 'reconstruction').glob('*/*.h')}
+
+
+def shared_headers(cls, packs, headers, classes=None):
+    """(class, header) pairs a unit of `cls` may include instead of declaring a stand-in: existing
+    repository headers of its RTTI ancestors and of the classes its functions reference."""
+    wanted = list((classes or {}).get(cls, {}).get('ancestors') or [])
+    build = packs[0]['build_id'] if packs else None
+    material = REPO / '.local/packs' / (build or '-') / 'class' / cls / 'class.json'
+    if material.is_file():
+        # Signature and reference types found by the class material (write_class_material).
+        wanted += json.loads(material.read_text()).get('referenced_classes', [])
+    for p in packs:
+        for r in p.get('references', []):
+            for cn in r.get('community_names', [])[:1]:
+                owner = owning_class(cn['name'])
+                if owner:
+                    wanted.append(owner.split('::')[-1])
+    out = []
+    for c in dict.fromkeys(wanted):
+        if c != cls and c in headers:
+            out.append((c, headers[c]))
+    return out
+
+
+def brief_sections(cls, packs, functions, root=None):
+    """Shared headers, cookbook rules and sibling pointers for one class's functions."""
+    root = Path(root or REPO)
+    t = analysis_tables()
+    classes = t[2] if t else {}
+    lines = []
+    hdrs = shared_headers(cls, packs, repository_headers(root), classes)
+    if hdrs:
+        lines += ['', 'Shared headers (existing; include with `#include "<area>/<Class>.h"` instead of declaring '
+                  'a stand-in, never edit them; if one lacks a member or virtual slot you need, declare your own '
+                  'stand-in instead and say `header-gap <Class>` in your result line):']
+        lines += [f'- `{c}`: `reconstruction/{h}`' for c, h in hdrs]
+    by_rva = {p['rva_hex']: p for p in packs}
+    rules = []
+    for f in functions:
+        listing = REPO / f.get('pack', '') / 'listing.txt' if f.get('pack') else None
+        text = listing.read_text() if listing and listing.is_file() else ''
+        for k in listing_traits(text, dict(f, **{'community_name': f.get('community_name')
+                                                  or (by_rva.get(f['rva'], {}).get('identity') or {}).get(
+                                                      'community_name')})):
+            if k not in rules:
+                rules.append(k)
+    if rules:
+        lines += ['', f'Cookbook rules these listings point to (`{COOKBOOK}`):']
+        lines += [f'- {COOKBOOK_RULES[k]}' for k in rules]
+    sib = sibling_lines(cls, [int(f['rva'], 16) if isinstance(f['rva'], str) else f['rva'] for f in functions],
+                        limit=6)
+    lines += sib
+    return lines
+
+
+def parse_list_line(line, build_id):
+    """(rva, task id, unit, recipe, group, budget) from one list-file line."""
+    parts = line.split()
+    build, rva, task_id = parts[0], int(parts[1], 0), parts[2]
+    if build != build_id:
+        raise SystemExit(f'{build}: only the pinned build {build_id} has packs; addresses never transfer between builds')
+    if not re.fullmatch(r'[a-z0-9][a-z0-9.-]*', task_id):
+        raise SystemExit(f'task id {task_id}: attempt accepts only [a-z0-9][a-z0-9.-]*')
+    unit = recipe = group = budget = None
+    for tok in parts[3:]:
+        if tok.startswith('recipe='):
+            recipe = tok[len('recipe='):]
+        elif tok.startswith('group='):
+            group = tok[len('group='):]
+            if not re.fullmatch(r'[a-z0-9][a-z0-9.-]*', group):
+                raise SystemExit(f'group {group}: task directories are [a-z0-9][a-z0-9.-]*')
+        elif tok.startswith('budget='):
+            budget = int(tok[len('budget='):])
+        else:
+            unit = tok
+    return rva, task_id, unit, recipe, group, budget
+
+
+GROUP_SCHEMA = 1
+
+
+def write_group(gdir, unit_dirs):
+    """group.json and BRIEF.md of a multi-unit task: one task directory per unit below `gdir`, each
+    attempted and reported on its own, one Drafter for all of them."""
+    units = []
+    for d in unit_dirs:
+        task = json.loads((Path(d) / 'task.json').read_text())
+        units.append({'dir': Path(d).name, 'task_id': task['task_id'], 'compiled': task['compiled'],
+                      'functions': [f['rva'] for f in task['functions'] if f.get('role') != 'regression'],
+                      'bytes': sum(f['size'] or 0 for f in task['functions'] if f.get('role') != 'regression'),
+                      'max_attempts': task['max_attempts']})
+    group = {'group_schema': GROUP_SCHEMA, 'group_id': Path(gdir).name, 'units': units,
+             'functions': sum(len(u['functions']) for u in units),
+             'max_attempts': sum(u['max_attempts'] or 0 for u in units)}
+    (Path(gdir) / 'group.json').write_text(json.dumps(group, indent=2) + '\n')
+    (Path(gdir) / 'BRIEF.md').write_text(render_group_brief(group, Path(gdir)))
+    return group
+
+
+def render_group_brief(group, gdir):
+    gid = group['group_id']
+    lines = [f'# Brief: {gid} (small task: {len(group["units"])} units, {group["functions"]} functions)', '',
+             'One translation unit per class, each in its own task directory below this one. Attempt and report',
+             'each unit separately: `tools/verifier/attempt .local/tasks/' + gid + '/<dir>`; the budget printed as',
+             '`counted N/M` is per unit. `tools/verifier/attempt .local/tasks/' + gid + '` prints every unit\'s state.',
+             'Work through the units in the order below (smallest first). The units share a family base: declare',
+             'the same stand-in for it, with the same names and labels, in every unit that needs it, or include its',
+             'existing header where one is listed. Result lines go to `.local/handoffs/' + gid + '.jsonl` (one per',
+             'function, then one task line per unit with its `task` id).', '',
+             '| dir | unit | functions | bytes | budget |', '|---|---|---|---|---|']
+    for u in sorted(group['units'], key=lambda u: (u['bytes'], u['dir'])):
+        lines.append(f'| `{u["dir"]}` | `{u["compiled"]}` | {len(u["functions"])} | {u["bytes"]} | {u["max_attempts"]} |')
+    lines += ['', f'Total budget {group["max_attempts"]} counted attempts over all units.',
+              'Class and member names are COMMUNITY (unverified); do not edit other units or the listed shared headers.',
+              '']
+    # The per-unit briefs repeat the same generic lines; the group brief keeps them once (above).
+    generic = ('Known risks:', 'Order (smallest first)', '- Class and member names', '- Declare other classes')
+    for u in sorted(group['units'], key=lambda u: (u['bytes'], u['dir'])):
+        text = (gdir / u['dir'] / 'BRIEF.md').read_text().splitlines()
+        lines += [f'## {u["dir"]}', '']
+        for ln in text[2:]:
+            if ln.startswith(generic) or (not ln.strip() and (not lines[-1].strip())):
+                continue
+            # Unit sections are level 2 here, so a unit brief's own level-2 headings move down one.
+            lines.append('#' + ln if ln.startswith('## ') else ln)
+        lines.append('')
+    return '\n'.join(lines) + '\n'
 
 
 # ---------------------------------------------------------------------------------------------
@@ -2397,6 +2575,95 @@ def cmd_plan_table(args):
           'plan.json, inventory-rows.json')
 
 
+def open_task_classes(task_root):
+    """Classes whose unit some task directory under `task_root` (one or two levels deep) compiles."""
+    out = set()
+    for tj in list(Path(task_root).glob('*/task.json')) + list(Path(task_root).glob('*/*/task.json')):
+        try:
+            out.add(Path(json.loads(tj.read_text())['compiled']).stem)
+        except (OSError, ValueError, KeyError):
+            continue
+    return out
+
+
+def cmd_plan_cheap(args):
+    import plan_cheap
+    cfg = load_config(args.config)
+    target = json.loads((REPO / 'builds/target.json').read_text())
+    t0 = time.monotonic()
+    t = analysis_tables(args.table)
+    if not t:
+        raise SystemExit(f'no function table under {args.table or ANALYSIS}; run tools/ghidra/build_function_table.py')
+    fns, _, classes, meta = t
+    progress = json.loads((REPO / 'data/progress.json').read_text())
+    claimed = {fn['rva'] for fn in progress['functions'] if fn['build_id'] == target['build_id']}
+    blob = Path(cfg['image']).read_bytes()
+    if sha256_bytes(blob) != target['image_sha256']:
+        raise SystemExit('image SHA-256 differs from builds/target.json')
+    pe = PeImage(blob)
+    parked = set()
+    for path in args.parked or []:
+        census = json.loads(Path(path).read_text())
+        for key in ('skip', 'm2_noh'):
+            parked.update(census.get(key, []))
+    units = {p.stem for p in (REPO / 'reconstruction').glob('*/*.cpp')}
+    material = {p.name for p in (REPO / '.local/packs' / target['build_id'] / 'class').glob('*') if p.is_dir()}
+    skip = units | open_task_classes(REPO / '.local/tasks') | material | set(args.exclude or [])
+    sib = sibling_index(args.table) or {'by_rva': {}}
+    fnv_rvas = set(sib['by_rva'])
+    fnv_o2 = {rva for rva, hits in sib['by_rva'].items() if any(r.get('opt') == '/O2' for r, _ in hits)}
+    catalogue = set(json.loads(Path(args.catalogue).read_text())) if args.catalogue else set()
+    headers = {p.stem for p in (REPO / 'reconstruction').glob('*/*.h')}
+    rows = list(fns.values())
+    # Only rows that pass the cheaper checks are scanned for thread-local reads.
+    pre = [r for r in rows if not table_eligibility(r, classes, claimed, args.max_function_bytes)]
+    tls = plan_cheap.tls_rvas(lambda rva, n: pe.read(rva, n, 'function')[1], pre)
+    opts = {'total': args.total or 232, 'max_function_bytes': args.max_function_bytes, 'parked': parked,
+            'tls': tls, 'skip_classes': skip, 'fnv_rvas': fnv_rvas, 'fnv_o2_rvas': fnv_o2,
+            'catalogue': catalogue, 'headers': headers, 'task_prefix': args.task_prefix}
+    if args.normal_functions is not None:
+        opts['normal_functions'] = args.normal_functions
+    tasks, stats = plan_cheap.plan(rows, classes, claimed, opts, table_eligibility)
+    stats['tls_scanned'], stats['tls_found'], stats['parked_rvas'] = len(pre), len(tls), len(parked)
+    target = dict(target, ng_revision=cfg['ng_revision'], po3_revision=cfg.get('po3_revision', ''))
+    out_dir = REPO / '.local/packs/_plan' / args.label
+    out_dir.mkdir(parents=True, exist_ok=True)
+    lines = ['# build id         rva        task id                         unit  [group=<task dir>] budget=<n>',
+             f'# generated by export_pack.py plan --order cheap ({args.label}); review before running packs']
+    inventory, plan_tasks = [], []
+    for tk in tasks:
+        entry = {'id': tk['id'], 'kind': tk['kind'], 'family': tk['family'], 'budget': tk['budget'],
+                 'score': round(tk['score'], 2), 'units': []}
+        for u in tk['units']:
+            c = u['class']
+            unit = f'reconstruction/{area_for(c)}/{c}.cpp'
+            group = f' group={tk["id"]}' if tk['kind'] == 'small' else ''
+            for r in u['functions']:
+                lines.append(f'{target["build_id"]}  0x{r["rva"]:x}  {u["task_id"]}  {unit}{group} budget={u["budget"]}')
+                inventory.append(inventory_row(r, target, args.evidence))
+            entry['units'].append({'class': c, 'task_id': u['task_id'], 'unit': unit, 'budget': u['budget'],
+                                   'functions': [{'rva': hex(r['rva']), 'size': r['size'], 'callers': r['callers'],
+                                                  'name': usable_names(r)[0]['name'],
+                                                  'name_source': usable_names(r)[0]['source'],
+                                                  'fnv': r['rva'] in fnv_rvas, 'cluster_size': r.get('cluster_size'),
+                                                  'score': round(r['_score'], 2)} for r in u['functions']]})
+        plan_tasks.append(entry)
+    comp = plan_cheap.composition(tasks, classes, fnv_rvas, area_for)
+    (out_dir / 'list.txt').write_text('\n'.join(lines) + '\n')
+    (out_dir / 'inventory-rows.json').write_text(json.dumps(inventory, indent=2) + '\n')
+    plan = {'build_id': target['build_id'], 'order': 'cheap', 'table': meta.get('inputs'),
+            'criteria': {k: (sorted(v) if isinstance(v, set) and len(v) < 50 else
+                             (f'{len(v)} entries' if isinstance(v, set) else v)) for k, v in opts.items()},
+            'tasks': plan_tasks, 'stats': stats, 'composition': comp,
+            'python_s': round(time.monotonic() - t0, 1)}
+    (out_dir / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
+    for e in plan_tasks:
+        print(f'{e["id"]:44s} {e["kind"]:6s} units {len(e["units"]):2d} functions '
+              f'{sum(len(u["functions"]) for u in e["units"]):2d} budget {e["budget"]}')
+    print(json.dumps({'stats': {k: v for k, v in stats.items() if k != 'rejections'}, 'composition': comp}))
+    print(f'wrote {out_dir.relative_to(REPO)}/list.txt, plan.json, inventory-rows.json')
+
+
 # ---------------------------------------------------------------------------------------------
 # bind: the shared implementation is tools/verifier/bind.py, which attempt runs on every compile.
 
@@ -2414,25 +2681,17 @@ def cmd_packs(args):
     t_setup = time.monotonic()
     target, img, addrlib, comms = setup(cfg)
     t_setup = time.monotonic() - t_setup
-    rows = []
+    rows, groups, budgets = [], {}, {}
     for line in Path(args.list).read_text().splitlines():
         line = line.split('#', 1)[0].strip()
         if not line:
             continue
-        parts = line.split()
-        build, rva, task_id = parts[0], int(parts[1], 0), parts[2]
-        if build != target['build_id']:
-            raise SystemExit(f'{build}: only the pinned build {target["build_id"]} has packs; '
-                             'addresses never transfer between builds')
-        if not re.fullmatch(r'[a-z0-9][a-z0-9.-]*', task_id):
-            raise SystemExit(f'task id {task_id}: attempt accepts only [a-z0-9][a-z0-9.-]*')
-        unit, recipe = None, None
-        for tok in parts[3:]:
-            if tok.startswith('recipe='):
-                recipe = tok[len('recipe='):]
-            else:
-                unit = tok
+        rva, task_id, unit, recipe, group, budget = parse_list_line(line, target['build_id'])
         rows.append((rva, task_id, unit, recipe))
+        if group and task_id not in groups.setdefault(group, []):
+            groups[group].append(task_id)
+        if budget is not None:
+            budgets[task_id] = budget
     run = REPO / '.local/packs/_runs' / time.strftime('%Y%m%dT%H%M%S')
     run.mkdir(parents=True, exist_ok=True)
     (run / 'rvas.txt').write_text(''.join('0x%x\n' % r for r, *_ in rows))
@@ -2489,13 +2748,24 @@ def cmd_packs(args):
                              '(reconstruction/README.md, "<area>")')
         unit = units.pop() if units else (existing[0].relative_to(REPO).as_posix() if existing
                                           else f'reconstruction/{area_for(cls)}/{cls}.cpp')
-        task_dirs.append(write_task(task_id, unit, recipes[task_id], [p for p, _ in items], target,
-                                    REPO / '.local/tasks', args.max_attempts, args.attempts_per_function))
+        group = next((g for g, ids in groups.items() if task_id in ids), None)
+        root = REPO / '.local/tasks' / group if group else REPO / '.local/tasks'
+        task_dirs.append(write_task(task_id, unit, recipes[task_id], [p for p, _ in items], target, root,
+                                    budgets.get(task_id, args.max_attempts),
+                                    None if task_id in budgets else args.attempts_per_function))
     if args.class_material:
-        shared = write_class_material(task_dirs, target, img, addrlib, comms)
+        shared = write_class_material(task_dirs, target, img, addrlib, comms, args.shared_classes_name)
         for rva in packs:
             refresh_pack(REPO / '.local/packs' / target['build_id'] / hex(rva), target, img, addrlib, comms)
         print('classes used by more than one unit:', json.dumps(shared))
+        for d in task_dirs:
+            # The class material names the signature and reference types, which the brief's shared
+            # header list reads, so briefs are written again once it exists.
+            task = json.loads((d / 'task.json').read_text())
+            mine = [packs[int(f['rva'], 16)] for f in task['functions'] if int(f['rva'], 16) in packs]
+            (d / 'BRIEF.md').write_text(render_brief(task, mine))
+    for group, ids in groups.items():
+        write_group(REPO / '.local/tasks' / group, [REPO / '.local/tasks' / group / i for i in ids])
     if moved:
         (run / 'fpfast.json').write_text(json.dumps(moved, indent=2) + '\n')
     t_py = time.monotonic() - t0
@@ -2638,6 +2908,8 @@ def main():
     a.add_argument('--fpfast-recipe', default='o2-fpfast')
     a.add_argument('--class-material', action='store_true',
                    help='Also write .local/packs/<build>/class/<Class>/ for the classes of these tasks')
+    a.add_argument('--shared-classes-name', default='_shared-classes.json',
+                   help='File name of the shared-class summary under class/ (a new name keeps an earlier batch\'s)')
     pl = sub.add_parser('plan', help='Propose class-grouped units from the community-named survey')
     pl.add_argument('--survey', default=None, help='Default: .local/packs/_survey/<build>-named')
     pl.add_argument('--label', default='plan')
@@ -2653,9 +2925,14 @@ def main():
     pl.add_argument('--task-prefix', default='batch-')
     pl.add_argument('--reuse-evidence', action='append',
                     help='Inventory entries citing this findings/ file stay selectable (reproduce a recorded plan)')
-    pl.add_argument('--order', choices=('survey', 'fanin'), default='survey',
+    pl.add_argument('--order', choices=('survey', 'fanin', 'cheap'), default='survey',
                     help='fanin: plan from the whole-image table of build_function_table.py, high fan-in small '
-                         'functions of classes that pass the per-class checks first')
+                         'functions of classes that pass the per-class checks first; cheap: small and normal '
+                         'tasks of functions expected to pass in few attempts (tools/ghidra/plan_cheap.py)')
+    pl.add_argument('--parked', action='append',
+                    help='cheap: census JSON whose "skip" and "m2_noh" RVA lists are parked families')
+    pl.add_argument('--catalogue', default=None, help='cheap: FNV inline-helper catalogue (JSON keyed by class)')
+    pl.add_argument('--normal-functions', type=int, default=None, help='cheap: functions reserved for normal tasks')
     pl.add_argument('--table', default=None, help='Default: .local/analysis')
     pl.add_argument('--eh', type=int, default=20, help='fanin: C++ EH functions with few states to mix in')
     pl.add_argument('--max-eh-states', type=int, default=3)
@@ -2680,7 +2957,7 @@ def main():
     elif args.cmd == 'refresh':
         cmd_refresh(args)
     elif args.cmd == 'plan':
-        cmd_plan_table(args) if args.order == 'fanin' else cmd_plan(args)
+        {'fanin': cmd_plan_table, 'cheap': cmd_plan_cheap}.get(args.order, cmd_plan)(args)
     else:
         sys.exit(bind(args.task, args.object))
 
