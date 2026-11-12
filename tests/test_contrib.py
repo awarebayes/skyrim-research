@@ -801,3 +801,26 @@ class CommandLineTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ProfileTests(Base):
+    def test_default_remembered_and_refused(self):
+        ctx = self.ctx()
+        self.assertEqual(contrib.contrib_profile(ctx)['name'], 'cheap')
+        contrib.save_config(ctx, profile='full')
+        self.assertEqual(contrib.contrib_profile(ctx)['name'], 'full')
+        self.assertEqual(contrib.contrib_profile(ctx, 'cheap')['contrib_max_tries'], 6)
+        with self.assertRaises(contrib.Stop):
+            contrib.contrib_profile(ctx, 'claude-low')
+
+    def test_go_and_start_accept_profile(self):
+        p = contrib.parser()
+        self.assertEqual(p.parse_args(['go', '--profile', 'full']).profile, 'full')
+        self.assertEqual(p.parse_args(['start', '0x10', '--profile', 'cheap']).profile, 'cheap')
+        self.assertIsNone(p.parse_args(['start', '0x10']).profile)
+
+
+class CompareProfileTests(CompareTests):
+    def test_summary_names_profile_and_limit(self):
+        code, data, nxt = contrib.run_compare(self.ctx_, 'contrib-synthetic')
+        self.assertEqual((data['profile'], data['max_tries']), ('cheap', 6))

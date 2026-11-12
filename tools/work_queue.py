@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """A work queue of prepared Drafter units that several sessions can drain at once.
 
-    python3 tools/work_queue.py next --worker <label>       # claim the next unit; prints its unit dir, or EMPTY
+    python3 tools/work_queue.py next --worker <label> [--profile cheap|full]  # claim the next unit, or EMPTY
     python3 tools/work_queue.py done <unit dir> --result '<json line>' [--result ...]
+    python3 tools/work_queue.py release <unit dir> [--worker <label>]   # give back a claim you will not work
     python3 tools/work_queue.py status                      # open, claimed, stale and done units
     python3 tools/work_queue.py stats                       # pass rate and attempts per worker label and model
     python3 tools/work_queue.py add <unit or group dir>...  # append units (with skeleton and sheets) to the queue
@@ -16,7 +17,13 @@ The queue lives in `.local/queue/small/` (or `--queue-dir`, or $SKYRIM_QUEUE_DIR
   result is taken over (the session that held it is assumed dead): the stale lock is renamed away
   first, and a rename succeeds for one caller only, so a takeover is atomic too.
 - `done/<unit>.json` marks a unit finished; `results.jsonl` gets every result line, stamped with
-  the worker label, the unit and the time, so pass rates can be compared per model afterwards.
+  the worker label, the profile, the unit, the claim time and the time, so pass rates and wall time
+  can be compared per model and profile afterwards (tools/friction.py).
+- `releases.jsonl` lists claims given back with `release` (a session that asked `next` once too
+  often), so the friction report can count them.
+- On a claim, near-miss files left in `<unit dir>/near-miss/` by an earlier session are moved to
+  `near-miss/earlier-<time>/`: they were written against an older unit source and confused later
+  sessions when left beside the new run's files. They stay readable there.
 
 A worker label names model and effort and ends in a session number (`luna56-medium-1`,
 `haiku-1`); `stats` groups by the label and by the label without its trailing `-<n>`.
@@ -91,22 +98,45 @@ def read_claim(path):
             return None
 
 
-def try_create(path, worker, t):
+def try_create(path, worker, t, profile=None):
     try:
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
     except FileExistsError:
         return False
     with os.fdopen(fd, 'w') as out:
-        json.dump({'worker': worker, 'time': t, 'claimed': iso(t), 'pid': os.getpid()}, out)
+        json.dump({'worker': worker, 'time': t, 'claimed': iso(t), 'pid': os.getpid(), 'profile': profile}, out)
     return True
 
 
-def claim(qdir, worker, t=None):
+def set_aside_near_misses(unit_dir, t, repo=REPO):
+    """Move near-miss files of an earlier session into near-miss/earlier-<time>/; returns that dir."""
+    d = Path(unit_dir)
+    nm = (d if d.is_absolute() else repo / d) / 'near-miss'
+    if not nm.is_dir():
+        return None
+    loose = [f for f in nm.iterdir() if f.is_file()]
+    if not loose:
+        return None
+    dest = nm / f'earlier-{dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")}'
+    dest.mkdir(exist_ok=True)
+    for f in loose:
+        os.replace(f, dest / f.name)
+    return dest
+
+
+def claim(qdir, worker, t=None, profile=None, repo=REPO):
     """Claim a unit for `worker`: its own unfinished claim first, then the first unclaimed unit,
     then the first stale claim. Returns the unit dict, or None when nothing is left to claim."""
     if not LABEL.fullmatch(worker or ''):
         raise QueueError('--worker must be a label like luna56-medium-1 (letters, digits, . _ -)')
     t = now() if t is None else t
+    u = _claim(qdir, worker, t, profile)
+    if u is not None and not u.get('resumed'):
+        u['earlier_near_misses'] = set_aside_near_misses(u['dir'], t, repo)
+    return u
+
+
+def _claim(qdir, worker, t, profile):
     units = read_queue(qdir)
     claims, done = qdir / 'claims', qdir / 'done'
     claims.mkdir(parents=True, exist_ok=True)
@@ -115,9 +145,9 @@ def claim(qdir, worker, t=None):
     for u in open_units:  # a restarted session resumes its own unit
         c = read_claim(claims / f'{u["key"]}.lock')
         if c and c.get('worker') == worker:
-            return u
+            return dict(u, resumed=True)
     for u in open_units:
-        if try_create(claims / f'{u["key"]}.lock', worker, t):
+        if try_create(claims / f'{u["key"]}.lock', worker, t, profile):
             return u
     for u in open_units:
         lock = claims / f'{u["key"]}.lock'
@@ -130,7 +160,7 @@ def claim(qdir, worker, t=None):
         except FileNotFoundError:
             continue
         tomb.unlink(missing_ok=True)
-        if try_create(lock, worker, t):
+        if try_create(lock, worker, t, profile):
             return u
     return None
 
@@ -162,6 +192,9 @@ def finish(qdir, unit_dir, lines, worker=None, t=None):
     worker = worker or (c or {}).get('worker')
     if not worker:
         raise QueueError(f'{u["dir"]} is not claimed; pass --worker <label> to record a result anyway')
+    stamp = {'profile': (c or {}).get('profile')}
+    if c and c.get('time') is not None:
+        stamp['claimed'] = iso(float(c['time']))
     if not lines:
         raise QueueError('give at least one --result line (one per function, then one for the unit)')
     records = []
@@ -172,7 +205,7 @@ def finish(qdir, unit_dir, lines, worker=None, t=None):
             raise QueueError(f'--result is not one JSON object: {exc}: {raw[:120]}') from None
         if not isinstance(rec, dict) or not ({'rva', 'result'} <= rec.keys() or 'unit' in rec or 'task' in rec):
             raise QueueError('each --result needs "rva" and "result" (a function line) or "unit" (the unit line)')
-        records.append(dict(rec, worker=worker, queue_unit=u['dir'], recorded=iso(t)))
+        records.append(dict(rec, worker=worker, queue_unit=u['dir'], recorded=iso(t), **stamp))
     (qdir / 'done').mkdir(parents=True, exist_ok=True)
     with locked(qdir / 'results.lock'):
         with open(qdir / 'results.jsonl', 'a') as out:
@@ -181,6 +214,29 @@ def finish(qdir, unit_dir, lines, worker=None, t=None):
         (qdir / 'done' / f'{u["key"]}.json').write_text(json.dumps({'worker': worker, 'done': iso(t)}) + '\n')
         lock.unlink(missing_ok=True)
     return records
+
+
+def release(qdir, unit_dir, worker=None, t=None):
+    """Give back a claim without a result, so another session can take the unit at once.
+
+    With `worker`, refuses a claim held by another label: a session releases only its own claim
+    (or names the holder deliberately)."""
+    t = now() if t is None else t
+    u = find_unit(qdir, unit_dir)
+    lock = qdir / 'claims' / f'{u["key"]}.lock'
+    if (qdir / 'done' / f'{u["key"]}.json').exists():
+        raise QueueError(f'{u["dir"]} is already done; nothing to release')
+    c = read_claim(lock) if lock.exists() else None
+    if c is None:
+        raise QueueError(f'{u["dir"]} is not claimed')
+    if worker and c.get('worker') not in (None, worker):
+        raise QueueError(f'{u["dir"]} is claimed by {c.get("worker")}, not {worker}')
+    with locked(qdir / 'results.lock'):
+        with open(qdir / 'releases.jsonl', 'a') as out:
+            out.write(json.dumps({'queue_unit': u['dir'], 'worker': c.get('worker'), 'profile': c.get('profile'),
+                                  'claimed': iso(float(c.get('time', t))), 'released': iso(t)}, sort_keys=True) + '\n')
+        lock.unlink(missing_ok=True)
+    return c.get('worker')
 
 
 def unit_line(unit_dir, repo=REPO):
@@ -255,9 +311,10 @@ def stats(qdir):
     """{'worker': {label: summary}, 'model': {model: summary}} from results.jsonl."""
     path = qdir / 'results.jsonl'
     recs = [json.loads(line) for line in path.read_text().splitlines() if line.strip()] if path.exists() else []
-    out = {'worker': defaultdict(lambda: defaultdict(int)), 'model': defaultdict(lambda: defaultdict(int))}
+    out = {kind: defaultdict(lambda: defaultdict(int)) for kind in ('worker', 'model', 'profile')}
     for r in recs:
-        for kind, key in (('worker', r.get('worker')), ('model', model_of(r.get('worker')))):
+        for kind, key in (('worker', r.get('worker')), ('model', model_of(r.get('worker'))),
+                          ('profile', r.get('profile') or 'unrecorded')):
             s = out[kind][key]
             if 'rva' in r:
                 s['functions'] += 1
@@ -282,6 +339,10 @@ def main(argv=None):
     sub = p.add_subparsers(dest='cmd', required=True)
     n = sub.add_parser('next', help='claim the next unit and print its unit dir (EMPTY when none is left)')
     n.add_argument('--worker', required=True, help='model, effort and session number, e.g. luna56-medium-1')
+    n.add_argument('--profile', choices=('cheap', 'full'), help='drafting profile (tools/profiles.py); recorded with the results')
+    r = sub.add_parser('release', help='give back a claimed unit you will not work on')
+    r.add_argument('unit_dir')
+    r.add_argument('--worker', help='your label; refuses a claim held by another label')
     d = sub.add_parser('done', help='record result lines for a unit and release it')
     d.add_argument('unit_dir')
     d.add_argument('--result', action='append', default=[], help='one JSON line; repeat for each line')
@@ -294,12 +355,15 @@ def main(argv=None):
     qdir = queue_dir(a.queue_dir)
     try:
         if a.cmd == 'next':
-            u = claim(qdir, a.worker)
+            u = claim(qdir, a.worker, profile=a.profile)
             if u is None:
                 busy = sum(1 for state, _, _ in status(qdir) if state == 'claimed')
                 print('EMPTY' + (f' ({busy} unit(s) still claimed by other sessions)' if busy else ''))
                 return 0
             print(u['dir'])
+            if u.get('earlier_near_misses'):
+                print(f'# near-miss files of an earlier session moved to {u["earlier_near_misses"]}; they may not '
+                      'match the current unit source', file=sys.stderr)
             print(f'# sources: {" ".join(u["sources"])}; functions: {" ".join(u["functions"])}; '
                   f'budget: {u["budget"]} counted attempts', file=sys.stderr)
             return 0
@@ -307,6 +371,10 @@ def main(argv=None):
             recs = finish(qdir, a.unit_dir, a.result, a.worker)
             print(f'recorded {len(recs)} line(s) for {recs[0]["queue_unit"]} as {recs[0]["worker"]}; '
                   'next: python3 tools/work_queue.py next --worker ' + recs[0]['worker'])
+            return 0
+        if a.cmd == 'release':
+            holder = release(qdir, a.unit_dir, a.worker)
+            print(f'released {a.unit_dir} (was claimed by {holder})')
             return 0
         if a.cmd == 'status':
             rows = status(qdir)

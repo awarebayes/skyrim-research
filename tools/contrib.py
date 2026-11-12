@@ -2,7 +2,7 @@
 """Contributor helper: set up, claim a function, get its bytes from your own game, write C++,
 compare locally and open a pull request. Python 3.11+ standard library only; Linux, macOS, Windows.
 
-    python3 tools/contrib.py go                 # one command: setup, pick, claim and start a function
+    python3 tools/contrib.py go [--profile cheap|full]   # one command: setup, pick, claim and start a function
     python3 tools/contrib.py doctor             # what is present, what is missing, the one next step
     python3 tools/contrib.py setup [--yes] [--exe PATH] [--accept-microsoft-license]
     python3 tools/contrib.py next               # easy unclaimed functions
@@ -25,6 +25,11 @@ objects, listings and reports stay under the ignored `.local/contrib/`. A pull r
 source files and a sanitized comparator summary only. A local pass is not acceptance: the project
 re-runs the comparison on two of its own hosts and a Reviewer checks the source before anything is
 recorded as `matched` (docs/verification.md).
+
+`--profile` (on `go` and `start`; remembered in the private config) chooses what your coding agent
+reads and how many compare runs it tries before stopping: `cheap` (default; small card, for
+Haiku- or Luna-class models) or `full` (full card and cookbook, for Sonnet-class models). It never
+changes what counts as a match. `python3 tools/profiles.py` prints a rough cost line for each.
 """
 import argparse
 from datetime import datetime, timedelta, timezone
@@ -42,6 +47,8 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+
+import profiles
 
 REPO = Path(__file__).resolve().parents[1]
 TOOLS = REPO / 'tools'
@@ -86,6 +93,7 @@ STEAM_EXE_DEPOT = '489833'
 STEAM_EXE_MANIFEST = '4886117324142477814'
 # Homebrew disabled its Wine casks (they fail Gatekeeper), so on macOS this tool fetches WineHQ's
 # build as packaged by Gcenx, the same archive and hash his tap's wine-stable cask names.
+CONTRIB_PROFILES = ('cheap', 'full')
 MAC_WINE = {'version': '11.0_1', 'app': 'Wine Stable.app',
             'url': 'https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.0_1/wine-stable-11.0_1-osx64.tar.xz',
             'sha256': 'b50dc50ec7f41d58b115a6b685d4d1315ba3c797bd3aa0f49213f2703cb82388'}
@@ -885,6 +893,14 @@ def skeleton(fn, cls, method, area, drafted_by, recipe):
     return h, cpp
 
 
+def contrib_profile(ctx, given=None):
+    """The profile for this contributor: the flag, else the remembered one, else the default."""
+    name = given or load_config(ctx).get('profile') or profiles.DEFAULT
+    if name not in CONTRIB_PROFILES:
+        raise Stop(USAGE, f'--profile must be one of {", ".join(CONTRIB_PROFILES)}, not {name!r}')
+    return profiles.get(name)
+
+
 def task_id_for(cls, practice=False):
     # A practice run of an accepted unit gets its own directory, so it never mixes its runs or
     # functions into a real task on the same class and is never picked as "the" task to submit.
@@ -1591,9 +1607,11 @@ def start(ctx, args, quiet=False):
     elif not args.practice:
         ctx.say(f'{cpp} exists: add each new function and its "RVA 0x<rva>, <n> bytes" header line yourself. '
                 'Editing an accepted unit makes its accepted functions stale until the project re-confirms them.')
+    prof = contrib_profile(ctx, getattr(args, 'profile', None))
+    save_config(ctx, profile=prof['name'])
     task = {'task_id': tdir.name, 'build_id': target['build_id'], 'compiled': cpp, 'recipe': recipe,
             'symbols': 'symbols.json', 'functions': sorted(functions.values(), key=lambda f: parse_rva(f['rva'])),
-            'contrib': {'practice': bool(args.practice), 'unit': [header, cpp]}}
+            'contrib': {'practice': bool(args.practice), 'unit': [header, cpp], 'profile': prof['name']}}
     (tdir / 'task.json').write_text(json.dumps(task, indent=2) + '\n')
     refresh_symbols(ctx, tdir, target['build_id'])
     branch = None
@@ -1610,8 +1628,12 @@ def start(ctx, args, quiet=False):
         if sibling:
             ctx.say(f'sibling source pointers (FNV; shape and names only, never evidence): {tdir / "sibling.md"}')
         ctx.say(f'unit: {header} and {cpp}' + (' (skeleton created)' if created else ''))
+        ctx.say(f'profile {prof["name"]}: read {"; ".join(prof["contrib_docs"])}; stop after '
+                f'{prof["contrib_max_tries"]} compare runs without a pass. {prof["cost"]}')
     return OK, {'task': tdir.name, 'unit': [header, cpp], 'created': created, 'packs': packs, 'branch': branch,
-                'practice': bool(args.practice), 'sibling': str(tdir / 'sibling.md') if sibling else None}, \
+                'practice': bool(args.practice), 'sibling': str(tdir / 'sibling.md') if sibling else None,
+                'profile': prof['name'], 'read': prof['contrib_docs'], 'max_tries': prof['contrib_max_tries'],
+                'cost': prof['cost']}, \
         f'edit {cpp}, then {ctx.cli} compare'
 
 
@@ -1700,6 +1722,15 @@ def run_compare(ctx, ident=None, root=None):
         for r in results:
             ctx.say(f'private side-by-side: {out / r["rva"] / "side-by-side.txt"} (read locally; never paste it anywhere)')
     nxt = f'{ctx.cli} submit' if passed == len(results) else f'revise the source, then {ctx.cli} compare'
+    prof = contrib_profile(ctx, task.get('contrib', {}).get('profile'))
+    summary['profile'], summary['max_tries'] = prof['name'], prof['contrib_max_tries']
+    if passed < len(results) and number >= prof['contrib_max_tries'] and not summary['practice']:
+        # Advice only: a contributor may go on, but a weak model rarely recovers past this point.
+        first_rva = task['functions'][0]['rva']
+        nxt = (f'stop: {number} compare runs under profile {prof["name"]} without a full pass; tell the person, then '
+               f'{ctx.cli} release {first_rva} --reason "<one line>"'
+               + (f', or continue with a stronger model ({ctx.cli} start {first_rva} --profile full)'
+                  if prof['name'] == 'cheap' else ''))
     if summary['practice'] and passed == len(results):
         nxt = f'{ctx.cli} next'
     return (OK if passed == len(results) else FAILED), summary, nxt
@@ -1964,7 +1995,7 @@ def cmd_go(ctx, args):
         rva = data['candidates'][0]['rva']
     cmd_claim(ctx, argparse.Namespace(rva=rva, take_over=False, offline_ok=args.offline_ok))
     return start(ctx, argparse.Namespace(rva=[rva], practice=False, drafted_by=args.drafted_by, area=None,
-                                         no_branch=args.no_branch, recipe=None, force=False))
+                                         no_branch=args.no_branch, recipe=None, force=False, profile=args.profile))
 
 
 # ------------------------------------------------------------------ main
@@ -2006,6 +2037,8 @@ def parser():
     s.add_argument('--area')
     s.add_argument('--recipe')
     s.add_argument('--practice', action='store_true', help='try an already matched function as an exercise')
+    s.add_argument('--profile', choices=CONTRIB_PROFILES,
+                   help='cheap (default: small card, Haiku/Luna-class) or full (full card, Sonnet-class); never changes the gate')
     s.add_argument('--no-branch', action='store_true')
     s.add_argument('--force', action='store_true', help=argparse.SUPPRESS)
     s = sub.add_parser('compare')
@@ -2030,6 +2063,8 @@ def parser():
     s.add_argument('--no-branch', action='store_true')
     s.add_argument('--offline-ok', action='store_true')
     s.add_argument('--max-size', type=int, default=64)
+    s.add_argument('--profile', choices=CONTRIB_PROFILES,
+                   help='cheap (default: small card, Haiku/Luna-class) or full (full card, Sonnet-class); never changes the gate')
     return p
 
 

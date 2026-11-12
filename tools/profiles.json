@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "default": "cheap",
+  "cheap_min_pass_rate": 0.75,
+  "profiles": {
+    "cheap": {
+      "summary": "small card, skeleton and sheet kit, runbook; weak-model drafting",
+      "roles": {
+        "orchestrator": {"provider": "claude", "model": "sonnet", "effort": null, "harness": "claude-code"},
+        "drafter": {"provider": "claude", "model": "haiku", "effort": null, "harness": "claude-code",
+                    "alternatives": [{"provider": "openai", "model": "gpt-5.6-luna", "effort": "medium", "harness": "codex"}]},
+        "reviewer": {"provider": "claude", "model": "opus", "effort": null, "harness": "claude-code"},
+        "strong": {"provider": "claude", "model": "opus", "effort": null, "harness": "claude-code"}
+      },
+      "project_docs": ["docs/drafter-runbook.md", "docs/drafter-card-small.md"],
+      "contrib_docs": ["docs/contributing-agent.md", "docs/drafter-card-small.md (sections \"Rules for small functions\" and \"Result lines\")"],
+      "kit": "unit skeleton (tools/skeleton.py) and paged sheets (tools/sheet.py); the queue hands out one unit at a time",
+      "queue_dir": ".local/queue/small",
+      "stuck_after": 3,
+      "contrib_max_tries": 6,
+      "cost": "cheap: Haiku/Luna-class drafting, roughly $0.01-0.03 of model usage per passing function (estimate from about 17k tokens per passing Haiku function; not a ledger figure)"
+    },
+    "full": {
+      "summary": "what ran for the first 243 matches: Sonnet Drafter with the full card and brief",
+      "roles": {
+        "orchestrator": {"provider": "claude", "model": "fable", "effort": null, "harness": "claude-code"},
+        "drafter": {"provider": "claude", "model": "sonnet", "effort": null, "harness": "claude-code"},
+        "reviewer": {"provider": "claude", "model": "opus", "effort": null, "harness": "claude-code"},
+        "strong": {"provider": "claude", "model": "opus", "effort": null, "harness": "claude-code"}
+      },
+      "project_docs": ["docs/drafter-card.md", "docs/matching-cookbook.md", "the unit BRIEF.md and packs"],
+      "contrib_docs": ["docs/contributing-agent.md", "docs/drafter-card.md", "docs/matching-cookbook.md"],
+      "kit": "class pack skeleton.h, per-function packs and the full brief; skeleton and sheets optional",
+      "queue_dir": ".local/queue/full",
+      "stuck_after": 4,
+      "contrib_max_tries": 10,
+      "cost": "full: Sonnet-class drafting, about $0.18 per matched function for drafting alone (measured over 243 matched functions; the whole pipeline then was about $1.14)"
+    },
+    "claude-low": {
+      "summary": "for when the Claude subscription runs low: OpenAI models through Codex for orchestration, review and strong work",
+      "roles": {
+        "orchestrator": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "medium", "harness": "codex",
+                         "alternatives": [{"provider": "openai", "model": "gpt-5.6-terra", "effort": "medium", "harness": "codex"}]},
+        "drafter": {"provider": "claude", "model": "haiku", "effort": null, "harness": "claude-code",
+                    "alternatives": [{"provider": "openai", "model": "gpt-5.6-luna", "effort": "medium", "harness": "codex",
+                                      "note": "uses no Claude subscription at all"}]},
+        "reviewer": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "high", "harness": "codex",
+                     "requires": "acceptance rule admitting a Terra Reviewer (prepared, not enabled) and the calibration"},
+        "strong": {"provider": "openai", "model": "gpt-6.1-sol", "effort": "high", "harness": "codex",
+                   "alternatives": [{"provider": "openai", "model": "gpt-6-sol", "effort": "high", "harness": "codex"},
+                                    {"provider": "openai", "model": "gpt-5.6-sol", "effort": "high", "harness": "codex"}]}
+      },
+      "project_docs": ["docs/drafter-runbook.md", "docs/drafter-card-small.md"],
+      "contrib_docs": ["docs/contributing-agent.md", "docs/drafter-card-small.md (sections \"Rules for small functions\" and \"Result lines\")"],
+      "kit": "same kit as cheap",
+      "queue_dir": ".local/queue/small",
+      "stuck_after": 3,
+      "contrib_max_tries": 6,
+      "cost": "claude-low: drafting as cheap; orchestration, review and strong work on the Codex subscription instead of Claude (no measured cost yet)"
+    }
+  }
+}

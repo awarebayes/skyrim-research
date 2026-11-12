@@ -266,7 +266,7 @@ def sibling_view(fn, analysis):
 
 def template_view(fn, record, prior):
     """A blank block in the reviewer.md output format for this function."""
-    out = ['', 'review block to fill (reviewer.md "Output"; compute source_digest yourself):', '```text',
+    out = ['', 'review block to fill (docs/reviewer-runbook.md "Output file"; compute source_digest yourself):', '```text',
            f'## {fn["build_id"]} 0x{fn["rva"]:x} {fn["size"]}', '',
            'verdict: <approve|reject|escalate>',
            'escalation_category: <provenance|legal|systemic|other|none>',
@@ -452,7 +452,7 @@ def main(argv=None):
     if without:
         out.append(f'skipped (no readable match record): {", ".join(without)}')
     if extras['template']:
-        out += ['', 'review document header (reviewer.md "Output"):', '```text', '# Review <task-id>', '',
+        out += ['', 'review document header (docs/reviewer-runbook.md "Output file"):', '```text', '# Review <task-id>', '',
                 'reviewer_model: <model id>', 'fresh_context: yes', 'drafted_or_triaged_any_reviewed_function: no',
                 'gates_in_force: <list>', 'source_revision: <git commit>', 'sampling_second_pass: <yes|no>',
                 'decompiler_output_read: <yes|no>', '```']

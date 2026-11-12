@@ -1,4 +1,4 @@
-# Small-function Drafter card (version `small-2`)
+# Small-function Drafter card (version `small-3`)
 
 For small functions (accessors, initialisers, flag tests, forwarders, empty or deleting destructors).
 This card is all you need; `docs/drafter-card.md` and `docs/matching-cookbook.md` are optional, for hard cases.
@@ -28,9 +28,12 @@ compares its bytes with the game. Everything under `.local/` is private: never p
 2. **Accessors and forwarders** are one line: `return data;`, `return 3;`, `return a_other->Get();`.
 3. **Store order follows the target.** Write assignments in the order the listing stores them.
 4. **Deleting destructor** (sheet "Kind: scalar deleting destructor"): keep the skeleton's constructor (it
-   makes the compiler emit the compared body). Listing stores the vftable, then calls: `X::~X() {}`. Listing
-   only calls one function, then tests `EDX` bit 0: delete the definition, keep `virtual ~X();`. A header
-   saying `Base form: inline stand-ins` already has the right destructor: leave it as written.
+   makes the compiler emit the compared body). Pick the destructor form from the listing:
+   - the target **inlines** the complete destructor (it stores the vftable, then calls the base or frees
+     members itself): give it an **empty inline body**, `X::~X() {}`;
+   - the target **calls out** to the complete destructor (one call, then a test of `EDX` bit 0): **declare
+     only**, `virtual ~X();`, and delete any definition, so attempt binds the call.
+   A header saying `Base form: inline stand-ins` already has the right destructor: leave it as written.
 5. **Declare, don't define, a function the target calls:** `void Reset();`, no body; attempt binds it.
 6. **Flag test** (`shr eax,3; test al,1`): `inline bool TestBit(std::uint32_t a_flags, std::uint32_t a_bit)
    { return ((a_flags >> a_bit) & 1) != 0; }`, call `TestBit(flags, 3)`, label `// TestBit: GUESS(low)`.
@@ -39,7 +42,8 @@ compares its bytes with the game. Everything under `.local/` is private: never p
 9. **Includes:** own header `#include "X.h"`; others only as the skeleton gives them (`"../area/Y.h"`).
 10. **Labels.** A label line is `// <names>: <LABEL>`; LABEL is `COMMUNITY(<owner>/<repo>@<rev>, <licence>)`,
     `GUESS(low)`, `EXE_RTTI`, `OBSERVED`, or `STANDIN` plus one of those. Copy the skeleton's labels;
-    add one for every name you add. Never write the label words anywhere else.
+    add one for every name you add. Never write the label words anywhere else. One label per line:
+    the lint rejects a second label clause after `;`, so write a second label line instead.
 11. **Tail jump** (the listing ends in `JMP <function>`, not `CALL` then `RET`): make that call the last
     statement, `return Callee(...);` when it returns a value; keep no local alive after it.
 

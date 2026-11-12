@@ -21,4 +21,8 @@ create Boat machines, and never run `tools/verifier/confirm`, `tools/accept_func
 commit or git push. If a function resists after about four focused attempts, remove its code from
 the unit, record why, and move on.
 
-Return only the JSON lines the card specifies, plus one `{"friction": [...]}` line.
+Write the JSON lines the card specifies, plus one `{"friction": [...]}` line, to the handoff file
+the card names. When your brief points you at `docs/drafter-runbook.md` (queue work), follow it
+instead of the card's loop. Either way your final message is only the short table
+`| unit | functions passed | attempts | result line file |`, one row per unit; everything else is
+in the files.

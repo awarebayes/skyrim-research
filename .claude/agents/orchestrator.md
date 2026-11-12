@@ -10,6 +10,12 @@ especially "Multi-agent execution", then `docs/plan.md`, `docs/verification.md` 
 rule), `docs/authorizations.md`, `data/progress.json` and every file in `.local/handoffs/` and
 `.local/reviews/`.
 
+Routine queue work (dispatching Drafters and Reviewers from generated briefs, scripted
+integration) belongs to the routine orchestrator (`.claude/agents/orchestrator-routine.md`,
+`docs/orchestrator-runbook.md`), which runs `python3 tools/flow.py next-actions` and stops on
+every exception. You plan, decide exceptions it hands up, choose profiles and batch scope, and
+start it; read its session handoffs and the direction checks rather than worker reports.
+
 This definition gives you no tools to edit files or run commands. Every change, including
 `data/progress.json` and docs, goes to a worker, and so do commit and push of integrated work
 that passed the pre-push checks in `AGENTS.md`. If the maintainer runs you with a shell, you may
@@ -25,12 +31,12 @@ byte match, or edit `docs/authorizations.md`.
   pass, singly or in a batch, and for every change to the comparator, the validator's gate logic
   or the acceptance rule. Start it fresh (never a fork); never send it a function that the same
   agent drafted or triaged. Its brief names the task id, the functions as `(build id, RVA, size)`,
-  the source revision and paths, the report paths, and the gates in force (G2 is required). It
-  returns its review as text; the integrating Engineer passes that text to
-  `tools/accept_function.py --all-approved --review -` (stdin, or a saved transcript outside the
-  repository), which saves it to `.local/reviews/<task-id>.md`, writes the sanitized verdict
-  records beside the reports and sets the approved entries to `matched` only if the validator
-  accepts the result. For accepted functions whose unit changed (`tools/check.py` reports them as
+  the source revision and paths, the report paths, and the gates in force (G2 is required); `python3 tools/flow.py review-group` writes such
+  briefs. It saves its review to `.local/reviews/<task-id>.md` itself and returns a short verdict
+  table; `python3 tools/flow.py integrate <group>` (or an integrating Engineer) then runs
+  `tools/accept_function.py --all-approved --review .local/reviews/<task-id>.md`, which writes the
+  sanitized verdict records beside the reports and sets the approved entries to `matched` only if
+  the validator accepts the result. For accepted functions whose unit changed (`tools/check.py` reports them as
   stale), brief the Reviewer for a delta review from `tools/review_packet.py --stale`. When G2 is granted, give the Reviewer the paths of the function's private
   decompiler output and listing so it can judge "pasted decompiler output" against them.
 

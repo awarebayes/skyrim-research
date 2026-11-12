@@ -38,8 +38,20 @@ decision: pass `--yes`.
 
 ```sh
 python3 tools/contrib.py --json --yes go [--exe "<path>"] [--accept-microsoft-license] \
-    --drafted-by "<person>, assisted by <your model id>"
+    [--profile cheap|full] --drafted-by "<person>, assisted by <your model id>"
 ```
+
+**Profiles.** `cheap` (the default) is for small, cheap models (Haiku- or Luna-class): read
+`docs/drafter-card-small.md`, sections "Rules for small functions" and "Result lines" (where it
+says `attempt`, run `contrib.py compare`; its queue, budget and handoff parts do not apply to
+you), and stop after 6 compare runs without a pass. `full` is for Sonnet-class models: read
+`docs/drafter-card.md` and `docs/matching-cookbook.md` (step 2 below), and stop after about 10.
+`start` prints the documents, the limit and a rough cost line; `python3 tools/profiles.py` prints
+them all. Rough cost: `cheap` about $0.01-0.03 of model usage per passing function (an estimate),
+`full` about $0.18 per function for drafting (measured on the project's own runs). `cheap` is
+the default because small models pass the same comparator gate on small functions; a profile
+never changes what counts as a match. If `compare` says to stop under `cheap`, the function may
+still be within reach with `--profile full`.
 
 `go` = `setup` (idempotent; installs Wine and msitools off Windows, LLVM, the community headers,
 the FNV decompilation and its index, the pinned MSVC 19.16.27054 toolset and SDK from Microsoft's
@@ -52,7 +64,8 @@ Then:
    fields as `..`, and each call or data target with its public name) and `listing.txt`
    (disassembly, when LLVM is installed). These files never leave the machine: do not paste them
    into issues, pull requests, commit messages or any public place.
-2. Read `docs/matching-cookbook.md` once, and `docs/drafter-card.md` for the source and label rules
+2. Read the documents your profile names (`start` prints them under `read`). Under `full`:
+   `docs/matching-cookbook.md` once, and `docs/drafter-card.md` for the source and label rules
    (its Boat and attempt-budget parts do not apply to you; its sibling rules do).
 3. Edit the unit the skeleton created (`reconstruction/<area>/<Class>.h` and `.cpp`). Declare only
    the members the function needs, at the offsets the listing uses. Names come from the community
@@ -65,8 +78,8 @@ Then:
 4. `python3 tools/contrib.py --json compare`. Read `functions[].reason`, `first_mismatch`, sizes and
    `hint`; the private `side-by-side.txt` under `private_dir` shows target and candidate together.
    If `bind` lists `UNBOUND`, add the hint it names to the task's `bind-hints.json` with an RVA from
-   the pack. Revise and repeat. Stop after about ten tries without progress on the first mismatch
-   and tell the person; `release 0x<rva> --reason "<one line>"` gives the function back.
+   the pack. Revise and repeat. Stop when `next` says to (your profile's limit), or after about ten
+   tries without progress on the first mismatch, and tell the person; `release 0x<rva> --reason "<one line>"` gives the function back.
 5. On PASS: `python3 tools/contrib.py --json submit --dry-run`, fix any `blockers`, then
    `submit`. It needs a fork remote; if it reports none, ask the person to fork the repository on
    GitHub and add it (`git remote add fork https://github.com/<them>/skyrim-research.git`).

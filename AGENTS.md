@@ -84,15 +84,41 @@ must be recorded in `docs/authorizations.md` by the human maintainer before work
 | role | who | does | never does |
 |---|---|---|---|
 | Maintainer | awarebayes (human) | grants gates, sets budgets, decides licence and policy questions, handles escalations, reads summary reports, may audit and revoke any accepted function | reviews individual functions (not asked to) |
-| Orchestrator | Claude Fable, latest available (`claude-fable-5-1` today) via `.claude/agents/orchestrator.md` | plans, splits work into tasks, writes worker briefs, dispatches workers and Reviewers, reads handoffs, triages failures, picks the sampling set, tracks spend against the cap, directs (or, when run with a shell, performs) commit and push of integrated checked work, reports to the maintainer | writes reconstructions or tooling, judges a match, edits gates, posts publicly |
+| Orchestrator (planning) | Claude Fable, latest available (`claude-fable-5-1` today) via `.claude/agents/orchestrator.md` | plans, splits work into tasks, chooses profiles and batch scope, decides the exceptions the routine orchestrator hands up, writes briefs for new kinds of work, triages failures, tracks spend against the cap, reports to the maintainer | writes reconstructions or tooling, judges a match, edits gates, posts publicly |
+| Orchestrator (routine) | Claude Sonnet via `.claude/agents/orchestrator-routine.md`, or the profile's orchestrator model through `docs/orchestrator-runbook.md` | runs `tools/flow.py next-actions` and does what it lists: starts Drafters and Reviewers with generated briefs, runs `flow.py integrate` (accept, checks, commit, push, CI), produces the friction report, stops on every exception the runbook lists | decides ordering or sampling, writes briefs by hand, edits files, judges a match, works around a refusal |
+| Direction check | the profile's strong model (Opus today) via `.claude/agents/direction-check.md`, fresh context | reads the friction report, pipeline status, recent handoffs and the census; writes `.local/handoffs/direction-check-<n>.md` with what to change | edits anything else, starts agents |
 | Engineer | Claude Opus 5.5 (`claude-opus-5-5`) subagent | tooling, comparator, Ghidra/import work, failure analysis on near-misses, integration of worker branches, recording `matched` once the acceptance rule is met, commit and push | marks `matched` without a reproduced pass and a Reviewer `approve` |
-| Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) subagent via `.claude/agents/reviewer.md`, fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
+| Reviewer | Claude Opus 5.5 (`claude-opus-5-5`) subagent via `.claude/agents/reviewer.md` (any model: `docs/reviewer-runbook.md`; which models may review is set by the acceptance rule), fresh context | approves, rejects or escalates reconstructed source per the checklist in `docs/verification.md`; rejects only on its blocking grounds and lists names, labels and wording as non-blocking naming findings | reviews a function it drafted or triaged, edits source, comparator, validator or reports, counts as match evidence |
 | Drafter | Claude Sonnet 5.5 (`claude-sonnet-5-5`) subagent | bounded high-volume tasks: reconstruction drafts, synthetic fixtures, report formatting, doc updates | decides scope or accepts its own output |
 | Verifier | deterministic job on a runner host from the private runner config (the maintainer's Mac under Wine and Windows PC natively; Boat is retired) | compiles a pinned source revision with the pinned recipe and runs the comparator; emits a sanitized report | involves a model in the pass/fail decision |
 
-The orchestrator's agent definition can only read files and start or message subagents, so "no
-code from the orchestrator" is enforced; file changes, including `data/progress.json`, go to a
-worker, and so does commit and push unless the maintainer runs the orchestrator with a shell. A model saying a reconstruction "looks right" is never evidence of
+Pipeline state lives on disk, not in an orchestrator's context: `tools/flow.py` derives each
+function's state (queued, drafting, drafted, confirmed, review pending, approved or rejected,
+accepted, pushed) from the queue, records, saved reviews and git, and `next-actions` prints the
+steps in order. Workers save full output to files and return a short fixed table.
+
+**Profiles.** `tools/profiles.json` maps each role (orchestrator, drafter, reviewer, strong) to a
+provider, model and effort, plus the Drafter's documents, kit and attempt limits:
+`cheap` (default: Haiku- or Luna-class Drafters on the small card, skeleton and sheets),
+`full` (Sonnet Drafters with the full card and brief) and `claude-low` (OpenAI models through
+Codex for orchestration, review and strong work, Haiku or Luna drafting). `cheap` is the default
+because weak-model drafting passes the same comparator gate; it stays default only while the
+friction report shows its pass rate at or above the threshold in `tools/profiles.json`. A profile
+never changes what counts as a match, and a Reviewer model the acceptance rule does not admit is
+refused whatever a profile says.
+
+**Friction and direction checks.** The routine orchestrator produces the friction report
+(`python3 tools/friction.py --write`) every work session. A direction check (strong model, fresh
+context, `.claude/agents/direction-check.md`) runs after every 200 accepted functions and at
+least once per work session, reads the friction report, recent handoffs and the census, and
+writes `.local/handoffs/direction-check-<n>.md`; it edits nothing. The planning orchestrator
+reads it and acts or escalates.
+
+The planning orchestrator's agent definition can only read files and start or message subagents,
+so "no code from the orchestrator" is enforced; the routine orchestrator's shell is for the
+commands its runbook and `tools/flow.py` list, and its only commit and push is `flow.py
+integrate`; other file changes, including `data/progress.json`, go to a worker, and so does commit
+and push unless the maintainer runs the orchestrator with a shell. A model saying a reconstruction "looks right" is never evidence of
 a match; only a comparator report counts. The Reviewer is a required sanity and provenance check
 on top of that evidence, not a substitute for it. Acceptance of `matched` is automated under the
 rule in `docs/verification.md`. Do not ask the maintainer to review individual functions.
@@ -100,8 +126,12 @@ rule in `docs/verification.md`. Do not ask the maintainer to review individual f
 Start the orchestrator from the repository root:
 
 ```sh
-claude --agent orchestrator
+claude --agent orchestrator            # planning and exceptions
+claude --agent orchestrator-routine    # routine queue work (docs/orchestrator-runbook.md)
 ```
+
+Any other harness (Codex, T3) runs the routine loop by pasting the line at the top of
+`docs/orchestrator-runbook.md` with the profile name.
 
 ### Authorization gates
 
@@ -167,7 +197,8 @@ orchestrator does not start a phase until the previous one's finish condition fr
 - **Integration**: an Engineer merges passing, Reviewer-approved worktree branches, reruns the
   full checks and the verifier on the integrated tree, records `matched` with
   `tools/accept_function.py` (which writes the sanitized Reviewer record), then commits and pushes.
-  Claims refer to integrated source only. The maintainer gets periodic summaries, not commits.
+  For a review group of `tools/flow.py`, `python3 tools/flow.py integrate <group>` is that step as
+  one command that stops at the first failure. Claims refer to integrated source only. The maintainer gets periodic summaries, not commits.
 
 ### Worker briefs and handoffs
 

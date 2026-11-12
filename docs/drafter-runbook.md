@@ -1,7 +1,10 @@
 # Drafter runbook (queue sessions)
 
-Paste into a fresh session, with your own worker label:
+Paste into a fresh session, with your own worker label (and the profile, if not `cheap`):
 `Read docs/drafter-runbook.md in this repository and follow it exactly. Your worker label is <label>.`
+
+A brief from `python3 tools/flow.py brief drafter` may name a profile and a queue directory; then
+pass `--profile <profile>` and `--queue-dir <dir>` to every `work_queue.py` call below.
 
 You are a Drafter. Goal: take small C++ units from the shared queue one at a time and write source
 that compiles to the same bytes as the game, until the queue is empty.
@@ -34,18 +37,20 @@ every other document are optional: an unread document is never a reason to stop.
 | `COMPILE FAILED` | read the first `error` line, fix that line, run `attempt` again (first 3 compile failures are free) |
 | `// TODO type X` in the header | declare `X` before the class (`enum class X : std::uint32_t {};` or `class X;`) |
 | `budget exhausted` / unit stuck | save near-misses (step 7), report the unit (step 9), take the next |
+| you claimed a unit you will not work (asked `next` once too often) | `python3 tools/work_queue.py release <unit dir> --worker <label>` |
 
 ## The loop
 
-0. Read `docs/drafter-card-small.md` once (87 lines). Its "Rules" and "Result lines" tables are the
+0. Read `docs/drafter-card-small.md` once (91 lines). Its "Rules" and "Result lines" tables are the
    fixes you will need. Ignore its step 1 (skeletons already exist) and its handoff section (step 9
    here replaces it).
-1. `python3 tools/work_queue.py next --worker <label>` prints a unit dir, e.g.
+1. `python3 tools/work_queue.py next --worker <label> --profile cheap` prints a unit dir, e.g.
    `.local/tasks/q1-s02-niobject/q1-s02-niobject-bsxflags`. If it prints `EMPTY`, go to "Finished".
 2. `cat <unit dir>/sheet.md` (Claude models: `sheet.fnv.md`). It names the two source files, the
    budget and each function. Read each function's page: `cat <unit dir>/sheet-0x<rva>.md`
-   (Claude: `sheet-0x<rva>.fnv.md`; `-p1`, `-p2` when split). If `<unit dir>/near-miss/` has files,
-   they are earlier tries of this unit: read them, reuse what is right, keep them where they are.
+   (Claude: `sheet-0x<rva>.fnv.md`; `-p1`, `-p2` when split). If `next` said it moved near-miss
+   files to `near-miss/earlier-<time>/`, those are an earlier session's tries against an older
+   unit source: read them as hints only, reuse what is right, and leave them there.
 3. Open `reconstruction/<area>/<Class>.h` and `.cpp`. Replace every `SKELETON_TODO_BODY;` with the
    body, `SKELETON_TODO_MODEL` with your model name, every `// TODO type` with a declaration, and
    split padding into the members the bodies read (card rule 1).
@@ -78,8 +83,20 @@ every other document are optional: an unread document is never a reason to stop.
 Stop when `next` prints `EMPTY`, or when `attempt` failed three times in a row for an infrastructure
 reason (no function line, no `COMPILE FAILED`, no budget line: a connection, toolchain, machine or
 timeout message). In the second case do not run `done` for that unit (another session will take it
-over later) and report the exact message. Either way, end with the output of
-`python3 tools/work_queue.py stats` and one line per unit you finished.
+over later) and report the exact message. Either way, end with the return message below.
+
+## Return message
+
+Everything is already in the queue's `results.jsonl`. Return only this table, one row per unit you
+finished or stopped on, and nothing else:
+
+```text
+| unit | functions passed | attempts | result line file |
+|---|---|---|---|
+| .local/tasks/<group>/<unit> | 2/3 | 4 | .local/queue/small/results.jsonl |
+```
+
+For an infrastructure stop, add one line: `stopped: <the exact message>`.
 
 ## Worked example (an accepted public unit)
 

@@ -22,4 +22,6 @@ Standing rules:
 - Start no further agents.
 
 Write a handoff to `.local/handoffs/<task-id>.md` and return a short summary: what changed, what
-was measured, what is untested, and anything that needs a decision.
+was measured, what is untested, and anything that needs a decision. For routine work started from
+a generated brief (`.local/briefs/`: confirm, triage, re-run), return only the table the brief
+names (`| item | outcome | attempts | file |`); the details are in the handoff.
