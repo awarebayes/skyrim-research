@@ -210,6 +210,37 @@ a separate strong Reviewer pass on that change (Sol under `claude-low`, Opus oth
 independent of the Engineer), and are listed in the maintainer's summary report; they
 are not blocked waiting for the maintainer, except changes to this rule itself, which escalate.
 
+### Proposed family review rule (not enabled)
+
+This proposal requires Reviewer review and maintainer confirmation of its exact wording. Until
+then the existing per-function acceptance rule applies, and the acceptance tool does not accept a
+family review in place of an individual review.
+
+A family identifies one generator or stamping template by version and template digest, together
+with the target build, recipe, compiler and comparator version. A change to any of these starts a
+new family. Each member records its parameter row and target binding. Every member independently
+passes the unchanged comparator on two independent approved hosts with different OS loaders,
+against the integrated source and pinned recipe.
+
+A fresh admitted Reviewer reviews the generator or template, parameter extraction and binding,
+and the first 20 members. For every subsequent batch, record the seed and complete population
+before selection, then draw a reproducible random sample of the greater of 20 or 5% of members,
+rounding up; review all members if there are fewer than 20. Review individually every member with
+parameters outside the reviewed ranges. The existing sampling safeguard, including a second Opus
+pass and a from-scratch comparator re-run for the first 20 per new Reviewer or rule version and at
+least 5% random, applies to reviewed members as well as its other existing triggers.
+
+A comparator pass proves no name. Each function records its name source as a public symbol source
+or a labelled guess, with its confidence. A family review does not substitute for the existing
+provenance and publication requirements.
+
+Pause the family on a Reviewer rejection of a sampled member, wrong parameter or target binding,
+non-reproduction, provenance doubt, Reviewer disagreement or another material defect. Quarantine
+affected members and assess the entire affected population. If a family is invalidated, revoke
+any accepted member whose supporting evidence is invalidated; do not silently retain it. Correct
+the cause and repeat the required comparisons and reviews before re-acceptance; escalate policy or
+provenance uncertainty to the maintainer before resuming.
+
 ## Match gate
 
 This is how `tools/check.py` enforces items 1 to 3 of tier 1 of the acceptance rule on the committed tree.
