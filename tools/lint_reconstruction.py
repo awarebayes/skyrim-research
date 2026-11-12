@@ -19,8 +19,11 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   literals; `#pragma` other than `once`, `pack` and `warning` (the rest steer code generation
   only), and any `#pragma` line whose first word is not plainly one of those; universal
   character names (`\\u`, `\\U`) anywhere;
-- justified constructs: `__forceinline`, `[[msvc::...]]` attributes and codegen intrinsics
-  (`INTRINSICS`) only with a `//` comment of three or more words on the same or previous line;
+- justified constructs: `__forceinline`, `noinline`, `[[msvc::...]]` attributes and codegen
+  intrinsics (`INTRINSICS`) only with a `//` comment of three or more words on the same or
+  previous line;
+- licence: a file with a `COMMUNITY(..., GPL...)` label (or LGPL, AGPL) names GPL in its
+  leading comment;
 - name-origin labels: in a file whose leading comment says `Labels: v2`, every label is on a
   `// <names>: <LABEL> [<LABEL>...][; note]` line, LABEL being `COMMUNITY(<owner>/<repo>@<rev>,
   <licence>)`, `GUESS`, `GUESS(low|medium|high)`, `EXE_RTTI`, `STANDIN` or `OBSERVED`;
@@ -82,6 +85,7 @@ INTRINSICS = (r'__builtin_\w+|_mm\d*_\w+|_Interlocked\w+|_BitScan\w+|_bittest\w*
               r'|__faststorefence|_ReadWriteBarrier|_ReadBarrier|_WriteBarrier|__prefetch\w*')
 JUSTIFIED = (
     (re.compile(r'(?<![A-Za-z0-9_])__forceinline(?![A-Za-z0-9_])'), '__forceinline'),
+    (re.compile(r'(?<![A-Za-z0-9_])noinline(?![A-Za-z0-9_])'), 'noinline'),
     (re.compile(r'\[\[\s*msvc\s*::'), '[[msvc::...]] attribute'),
     (re.compile(rf'(?<![A-Za-z0-9_])(?:{INTRINSICS})(?![A-Za-z0-9_])'), 'codegen intrinsic'),
 )
@@ -208,6 +212,19 @@ def label_problems(name, text, header, ext):
     return problems
 
 
+GPL_LABEL = re.compile(r'COMMUNITY\([^)]*,\s*(?:A|L)?GPL')
+
+
+def licence_problems(name, text, header):
+    """A file with a GPL-licensed COMMUNITY label states GPL in its header (docs/authorizations.md);
+    the wording of the statement is the Reviewer's to judge, its presence is checked here."""
+    hit = GPL_LABEL.search(text)
+    if hit and 'GPL' not in header:
+        return [f'{name}:{line_of(text, hit.start())}: a GPL-licensed COMMUNITY label needs the file\'s '
+                'leading comment to state the GPL licence']
+    return []
+
+
 def leading_comment(text):
     """The comment block at the top of the file (before the first code line)."""
     lines = []
@@ -295,6 +312,7 @@ def lint_file(root, name, target_build):
     if target_build and target_build not in header:
         problems.append(f'{name}: header comment must name the build id {target_build}')
     problems += label_problems(name, spliced, header, ext)
+    problems += licence_problems(name, spliced, header)
     exposure = re.search(r'Source exposure:\s*([a-z-]+)', header)
     if not exposure or exposure.group(1) not in EXPOSURE:
         problems.append(f'{name}: header comment needs "Source exposure: <{"|".join(EXPOSURE)}>"')
