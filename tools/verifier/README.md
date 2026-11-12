@@ -36,7 +36,7 @@ A local or ssh run uploads one archive (the unit's include closure, the comparat
 scripts, the spec) and `host_agent.py`; the command line holds only paths and fixed options. The
 host compiles and compares with `unit_build.py` (`--loader wine|native`), packs its work directory
 for one fetch and deletes the run. `result.json` carries the host's OS, loader and the hashes of
-the compiler binaries it ran. Each host has `max_parallel` slots (file locks under
+the compiler binaries it ran, and the seconds each phase took. Each host has `max_parallel` slots (file locks under
 `.local/verifier/runner-slots/`); attempts beyond that wait in turn.
 
 ```sh
@@ -51,6 +51,23 @@ its config names, Windows for a native compile, and two operating systems betwee
 writes inspection records under the same checks except the `local` host requirement. `reproduce_records.py` keeps each
 run's summary under `summaries/` of its output directory. `confirm --boat` keeps the Boat
 session path.
+
+Speed and restarts of a runner confirm. Each host takes the units in list order: the local host
+one unit per slot, an ssh host in batches of `batch` units (default twice `max_parallel`) with
+one upload, one `host_agent.py batch` command running up to `max_parallel` units at once, one
+fetch and one clean per batch, two batches in flight so one transfers while the other compiles.
+Archives are xz-compressed. Every unit is still a fresh copy checked against its own spec, with
+its own toolchain and image hash measured in that run (`fresh_prep`; the check costs well under
+a second). As soon as all hosts have a unit, it is cross-compared, its records are written and
+its lines go to the console and to `.local/verifier/confirm-logs/<UTC>-<id>.log`; a unit whose
+records were written gets a line in `.local/verifier/confirm-journal/` (one file per output:
+`reports` or the `--out` directory). `confirm --resume` (with `--replace` for the units it must
+redo) first probes every host's toolchain afresh, then skips a unit only when its journal entry
+has the same input key (every shipped file, the record tools and validator, the base commit and
+uncommitted inputs, the comparator source hash, the hosts and the output), the same compiler
+hashes on every host as just measured, and records still unchanged on disk; anything else runs
+again. A run into `reports/` needs no prior `--out` pass: records are validated before they are
+written, `check.py` runs at the end, and `git diff` shows every change before it is committed.
 
 A session (`session`, `vsession.py`) brings up the standing machine A and the separately
 installed B once per work period, at most one start each, and checks their toolchain and image

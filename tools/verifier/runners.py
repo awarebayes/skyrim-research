@@ -41,6 +41,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import threading
 import time
 import uuid
 
@@ -117,6 +118,12 @@ def validate(raw, root=None):
         if not isinstance(limit, int) or isinstance(limit, bool) or not 1 <= limit <= 64:
             raise RunnerError(f'{where}.max_parallel must be an integer from 1 to 64')
         host['max_parallel'] = limit
+        # Units per upload in a runner confirm: an ssh host pays several seconds of session setup per
+        # transfer and command, so it gets units in batches; a local host gains nothing from batching.
+        batch = h.get('batch', 2 * limit if backend == 'ssh' else 1)
+        if not isinstance(batch, int) or isinstance(batch, bool) or not 1 <= batch <= 256:
+            raise RunnerError(f'{where}.batch must be an integer from 1 to 256')
+        host['batch'] = batch
         if backend == 'local':
             for key in ('msvc', 'work', 'wine_bin', 'wineprefix', 'image'):
                 if h.get(key):
@@ -209,6 +216,34 @@ def slot(host_id, limit, wait=DEFAULT_SLOT_WAIT, log=None, directory=None, poll=
         time.sleep(poll)
 
 
+@contextmanager
+def slots(host_id, limit, want, wait=DEFAULT_SLOT_WAIT, log=None, directory=None, poll=0.5):
+    """Hold one slot (waiting for it like `slot`) plus up to want-1 more that are free right now.
+
+    Yields how many are held. Extra slots are taken only without waiting, so two callers that
+    each want several can never hold part of a set and wait on each other.
+    """
+    directory = Path(directory) if directory else slot_dir()
+    with slot(host_id, limit, wait=wait, log=log, directory=directory, poll=poll):
+        extra = []
+        try:
+            for i in range(limit):
+                if len(extra) >= want - 1:
+                    break
+                handle = open(directory / f'{host_id}.{i}.lock', 'w')
+                try:
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError:
+                    handle.close()
+                    continue
+                extra.append(handle)
+            yield 1 + len(extra)
+        finally:
+            for handle in extra:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+                handle.close()
+
+
 def slots_busy(host_id, limit, directory=None):
     """How many of a host's slots are held right now."""
     directory = Path(directory) if directory else slot_dir()
@@ -279,6 +314,7 @@ class SshTransport:
         self.base = ['-F', host['ssh_config'], '-o', 'BatchMode=yes', '-o', 'ControlMaster=auto',
                      '-o', f'ControlPath={host.get("control_dir", "/tmp")}/sr-cm-%C', '-o', 'ControlPersist=120']
         self.prepared = False
+        self._lock = threading.Lock()
 
     def prepare(self):
         """Create the work root once (scp needs the parent of a run directory to exist).
@@ -286,7 +322,9 @@ class SshTransport:
         `mkdir <path>` with backslashes means the same in PowerShell, cmd and (as one odd name)
         nowhere else that matters; an existing directory makes it fail harmlessly.
         """
-        if not self.prepared:
+        with self._lock:
+            if self.prepared:
+                return
             self.run(['mkdir', self.host['work'].replace('/', '\\') if ':' in self.host['work']
                       else self.host['work']], 60)
             self.prepared = True
@@ -440,11 +478,123 @@ class AgentHost:
         self._run = None
 
 
+class BatchHost:
+    """Several units on one local or ssh host in one upload, one agent command and one fetch.
+
+    Each unit is still a fresh copy checked against its own spec and compiled and compared by
+    unit_build.py on its own, with the same host facts per unit as AgentHost gives; only the
+    transport is shared, which on an ssh host saves four sessions per unit.
+    """
+
+    def __init__(self, host, transport=None, log=None, timeout=DEFAULT_TIMEOUT, fresh_prep=False):
+        self.host = host
+        self.fresh_prep = fresh_prep
+        self.label = host['host_id']
+        self.transport = transport or transport_for(host)
+        self.log = log or (lambda msg: None)
+        self.timeout = timeout
+        self.timings = {}
+
+    def _remote(self, *parts):
+        return self.transport.join(self.host['work'], *parts)
+
+    def _python(self):
+        return list(self.host['python']) if self.host['backend'] == 'ssh' else [sys.executable]
+
+    def run(self, units, stage_root, dests):
+        """{task id: (exit code, unit directory, host facts) or RunnerError} for `units`, a list of
+        (task, files); unit results are unpacked into dests[task id] (replaced)."""
+        import pipeline
+        ids = [task['task_id'] for task, _ in units]
+        if len(set(ids)) != len(ids):
+            raise RunnerError(f'{self.label}: a unit is listed twice in one batch')
+        name = f'batch-{uuid.uuid4().hex[:12]}'
+        stage = Path(stage_root)
+        stage.mkdir(parents=True, exist_ok=True)
+        files, blobs = {}, {'units.json': json.dumps(ids).encode()}
+        for task, unit_files in units:
+            spec = pipeline.unit_spec(task, unit_files, self.label)
+            if self.fresh_prep:
+                spec['fresh_prep'] = True
+            files.update({f'{task["task_id"]}/repo/{rel}': src for rel, src in unit_files.items()})
+            blobs[f'{task["task_id"]}/repo/.unit/spec.json'] = json.dumps(spec, sort_keys=True).encode()
+        start = time.monotonic()
+        paths = make_bundle(stage, name, files, blobs)
+        launched = False
+        try:
+            self.transport.prepare()
+            launched = True
+            self.transport.put(paths, self.host['work'])
+            self.timings['upload'] = self.timings.get('upload', 0) + time.monotonic() - start
+            # Slots cover only the compile and compare, so another batch's transfer overlaps them.
+            with slots(self.host['host_id'], self.host['max_parallel'], self.host['max_parallel'],
+                       log=self.log) as jobs:
+                t0 = time.monotonic()
+                # A batch runs ceil(units / jobs) units one after another per job.
+                timeout = self.timeout * -(-len(units) // jobs)
+                code, out, err = self.transport.run(
+                    self._python() + ['-I', self._remote(name + '.py'), 'batch', '--run', self._remote(name),
+                                      '--bundle', self._remote(name + '.tar'), '--msvc', self.host['msvc'],
+                                      '--image', self.host['image'], '--loader', self.host['loader'],
+                                      '--label', self.label, '--jobs', str(jobs)], timeout)
+                self.timings['run'] = self.timings.get('run', 0) + time.monotonic() - t0
+            if code != 0:
+                raise RunnerError(f'{self.label}: batch agent exit {code}' + (' (timeout)' if code == 124 else '')
+                                  + f' {(out or "").strip()[-200:]}')
+            t0 = time.monotonic()
+            archive = stage / f'{name}.out.tar'
+            part = stage / f'{name}.out'
+            try:
+                self.transport.get(self._remote(name + '.out.tar'), archive)
+                unpack(archive, part)
+            except (OSError, RunnerError, tarfile.TarError):
+                shutil.rmtree(part, ignore_errors=True)
+                raise RunnerError(f'{self.label}: no batch results to fetch') from None
+            finally:
+                archive.unlink(missing_ok=True)
+            self.timings['fetch'] = self.timings.get('fetch', 0) + time.monotonic() - t0
+            results = {}
+            for tid in ids:
+                try:
+                    agent = json.loads((part / f'{tid}.agent.json').read_text())
+                except (OSError, ValueError):
+                    results[tid] = RunnerError(f'{self.label}: no result for {tid} in the batch')
+                    continue
+                dest = Path(dests[tid])
+                shutil.rmtree(dest, ignore_errors=True)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                src = part / tid
+                if src.is_dir():
+                    src.rename(dest)
+                else:
+                    dest.mkdir()
+                try:
+                    facts = json.loads((dest / 'result.json').read_text()).get('host_facts')
+                except (OSError, ValueError):
+                    facts = None
+                results[tid] = (agent.get('exit'), dest, facts)
+            shutil.rmtree(part, ignore_errors=True)
+            return results
+        finally:
+            for path in paths:
+                Path(path).unlink(missing_ok=True)
+            if launched:
+                try:
+                    self.transport.run(self._python() + ['-I', self._remote(name + '.py'), 'clean', '--run',
+                                                         self._remote(name)], 120)
+                except (RunnerError, OSError, subprocess.SubprocessError):
+                    pass
+
+
 def make_bundle(stage, name, files, blobs=None):
     """Write <stage>/<name>.tar (files {archive name: local path} and blobs {archive name: bytes})
-    and <stage>/<name>.py (the agent); returns both paths."""
+    and <stage>/<name>.py (the agent); returns both paths.
+
+    xz-compressed (readers detect it): every unit of a batch carries the same tools and symbol map,
+    which xz's large window stores once, and over a slow link to an ssh host the transfer, not the
+    compile, is the largest cost of a run."""
     archive = Path(stage) / f'{name}.tar'
-    with tarfile.open(archive, 'w', format=tarfile.PAX_FORMAT) as tar:
+    with tarfile.open(archive, 'w:xz', format=tarfile.PAX_FORMAT) as tar:
         for arc, src in sorted(files.items()):
             tar.add(str(src), arcname=arc, recursive=False)
         for arc, data in sorted((blobs or {}).items()):

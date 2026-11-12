@@ -26,7 +26,8 @@
       "msvc": "C:/sr-test/msvc",
       "image": "C:/sr-test/private/SkyrimSE.exe",
       "work": "C:/sr-test/work",
-      "max_parallel": 4
+      "max_parallel": 8,
+      "batch": 16
     }
   }
 }

@@ -9,7 +9,9 @@
 When .local/verifier/runners.json lists `confirm` hosts, confirm runs on them instead of Boat
 (confirm_runners.py: the maintainer's Mac under Wine and Windows PC natively; every unit compiled
 on each, compared on each and cross-compared on this Mac; docs/verification.md, "Runner hosts").
---boat keeps the Boat session path.
+--boat keeps the Boat session path. On runner hosts each unit's lines are logged as it finishes
+(also to .local/verifier/confirm-logs/), and --resume skips units an earlier run completed for
+the same inputs and freshly measured toolchains (tools/verifier/README.md).
 
 Session mode (confirm_session.py) needs a verifier session (tools/verifier/session up): it
 compiles on machines A and B, compares on A, B and this Mac, starts no machine, and labels the
@@ -354,6 +356,9 @@ def main():
     p.add_argument('--list', type=Path, help='session mode: file with one task directory per line')
     p.add_argument('--out', type=Path, help='session mode: write records under OUT/<build id>/, not reports/')
     p.add_argument('--boat', action='store_true', help='use the Boat session even when runner confirm hosts are set')
+    p.add_argument('--resume', action='store_true',
+                   help='runner hosts: skip units whose records an earlier run wrote for the same inputs and toolchains '
+                        '(journal under .local/verifier/confirm-journal/)')
     a = p.parse_args()
     dirs = list(a.task_dirs)
     if a.list:
@@ -362,8 +367,8 @@ def main():
         p.error('a task directory is required')
     try:
         if a.fork:
-            if len(dirs) != 1 or a.out:
-                p.error('--fork confirms one unit and writes to reports/')
+            if len(dirs) != 1 or a.out or a.resume:
+                p.error('--fork confirms one unit and writes to reports/ (no --out, no --resume)')
             return confirm(dirs[0], a.replace, a.stop)
         if len(dirs) > 1 and not (a.all or a.list):
             p.error('several task directories need --all')
@@ -374,7 +379,9 @@ def main():
         if hosts:
             import confirm_runners
             return confirm_runners.run(sys.modules[__name__], dirs, a.replace, a.out.resolve() if a.out else None,
-                                       hosts=hosts)
+                                       hosts=hosts, resume=a.resume)
+        if a.resume:
+            p.error('--resume is for runner hosts')
         import confirm_session
         return confirm_session.run(sys.modules[__name__], dirs, a.replace,
                                    a.out.resolve() if a.out else None)

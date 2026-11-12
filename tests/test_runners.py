@@ -61,6 +61,8 @@ class Config(unittest.TestCase):
         self.assertEqual(c['hosts']['winpc']['ssh_config'], '/repo/.local/winpc/ssh_config')
         self.assertEqual(c['hosts']['winpc']['msvc'], 'C:/sr-test/msvc')
         self.assertEqual(c['attempt'], 'mac')
+        # An ssh host gets units in batches by default; a local host one at a time.
+        self.assertEqual((c['hosts']['mac']['batch'], c['hosts']['winpc']['batch']), (1, 8))
 
     def test_rejections(self):
         cases = [
@@ -71,6 +73,8 @@ class Config(unittest.TestCase):
             (dict(hosts={'mac': host(machine=None)}), 'machine'),
             (dict(hosts={'mac': host(loader='rosetta')}), 'loader'),
             (dict(hosts={'mac': host(max_parallel=0)}), 'max_parallel'),
+            (dict(hosts={'mac': host(batch=0)}), 'batch'),
+            (dict(hosts={'mac': host(), 'winpc': ssh_host(batch=True)}), 'batch'),
             (dict(hosts={'mac': host(), 'winpc': ssh_host(msvc='C:/Program Files/msvc')}), 'quoting'),
             (dict(hosts={'mac': host(), 'winpc': ssh_host(image='C:/x;rm -rf')}), 'quoting'),
             (dict(hosts={'mac': host(), 'winpc': ssh_host(ssh_host=None)}), 'ssh_host'),
@@ -218,6 +222,8 @@ class ConfirmRunnersRun(unittest.TestCase):
                      'symbols_repo': 'reports/b/symbols.json',
                      'functions': [{'rva': 0x1000, 'size': 16, 'symbol': '?f@@YAXXZ'}]}
         self.task['dir'].mkdir()
+        self.source = self.tmp / 'A.cpp'
+        self.source.write_text('int a;\n')
         self.base = mock.Mock()
         self.base.source_state.return_value = ('base', [])
         self.base.result_of.return_value = ('pass', None)
@@ -234,8 +240,9 @@ class ConfirmRunnersRun(unittest.TestCase):
                              'compiler_sha256': {'cl.exe': 'aa'}}}
         self.written = []
         patches = [
-            mock.patch.object(confirm_runners.confirm_session, 'prepare',
-                              side_effect=lambda base, d, replace, out: (self.task, {}, ['reconstruction/x/A.cpp'])),
+            mock.patch.object(confirm_runners.confirm_session, 'prepare', side_effect=lambda base, d, replace, out: (
+                self.task, {'reconstruction/x/A.cpp': self.source}, ['reconstruction/x/A.cpp'])),
+            mock.patch.dict(os.environ, {'SR_VERIFIER_STATE': str(self.tmp / 'state')}),
             mock.patch.object(confirm_runners.confirm_session, 'write_records', side_effect=self.write_records),
             mock.patch.object(confirm_runners.runners, 'AgentHost', FakeAgentHost),
             mock.patch.object(confirm_runners.pipeline, 'lock', return_value=mock.Mock()),
@@ -251,12 +258,17 @@ class ConfirmRunnersRun(unittest.TestCase):
 
     def write_records(self, base, task, closure, recipe, runs, build_path, out, notes=None, reproduction=None):
         self.written.append({'out': out, 'runs': runs, 'notes': notes, 'reproduction': reproduction})
+        for fn in task['functions']:
+            path = confirm_runners.confirm_session.record_path(task, fn, out)
+            if out is not None:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(json.dumps({'runs': len(runs[fn['rva']])}))
         return ['  record written'], False
 
-    def run_confirm(self, hosts, out=None, allowed=True):
+    def run_confirm(self, hosts, out=None, allowed=True, **kw):
         lines = []
         with mock.patch.object(confirm_runners, 'RUNNER_RECORDS_ALLOWED', allowed):
-            code = confirm_runners.run(self.base, ['task'], out=out, log=lines.append, hosts=hosts)
+            code = confirm_runners.run(self.base, ['task'], out=out, log=lines.append, hosts=hosts, **kw)
         return code, lines
 
     def test_flag_false_refuses_reports_without_out(self):
@@ -318,6 +330,117 @@ class ConfirmRunnersRun(unittest.TestCase):
         self.assertIn('INCLUDE', text)
         self.assertTrue(text.endswith('COMPARE'))
 
+    # ---- journal and --resume
+
+    def probe_with(self, **toolchain):
+        def probe(h):
+            found = toolchain.get(h['host_id'].replace('-', '_'), {'cl.exe': 'aa'})
+            return {'toolchain': 'ok' if found else 'bad', 'image': 'ok', 'compiler_sha256': found or {}}
+        return probe
+
+    def first_run(self):
+        code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out')
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(self.written), 1)
+        FakeAgentHost.made = []
+        self.written = []
+
+    def test_log_and_journal_are_written_as_each_unit_finishes(self):
+        self.first_run()
+        state = self.tmp / 'state'
+        logs = list((state / 'confirm-logs').iterdir())
+        self.assertEqual(len(logs), 1)
+        self.assertIn('unit-a (reconstruction/x/A.cpp): records written', logs[0].read_text())
+        journal = list((state / 'confirm-journal').iterdir())
+        entries = [json.loads(line) for line in journal[0].read_text().splitlines()]
+        self.assertEqual([e['task_id'] for e in entries], ['unit-a'])
+        self.assertEqual(entries[0]['compiler_sha256'], {'mac-wine': {'cl.exe': 'aa'}, 'winpc-native': {'cl.exe': 'aa'}})
+
+    def test_resume_skips_a_unit_complete_for_the_same_inputs_and_toolchains(self):
+        self.first_run()
+        code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', resume=True,
+                                       probe_fn=self.probe_with())
+        self.assertEqual(code, 0, lines)
+        self.assertEqual((FakeAgentHost.made, self.written), ([], []))
+        self.assertTrue(any('skipped' in line and 'unit-a' in line for line in lines), lines)
+
+    def test_resume_reruns_when_a_toolchain_changed_between_runs(self):
+        self.first_run()
+        code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', resume=True, replace=True,
+                                       probe_fn=self.probe_with(winpc_native={'cl.exe': 'bb'}))
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(self.written), 1)
+        self.assertTrue(all(h.fresh_prep for h in FakeAgentHost.made))
+
+    def test_resume_reruns_when_a_host_check_fails_now(self):
+        self.first_run()
+        code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', resume=True, replace=True,
+                                       probe_fn=self.probe_with(mac_wine=None))
+        self.assertEqual(len(self.written), 1, lines)
+
+    def test_resume_never_reuses_a_result_whose_inputs_differ(self):
+        self.first_run()
+        self.source.write_text('int b;\n')
+        code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', resume=True, replace=True,
+                                       probe_fn=self.probe_with())
+        self.assertEqual(len(self.written), 1, lines)
+        self.assertTrue(any('resume: 0 unit(s)' in line for line in lines), lines)
+
+    def test_resume_reruns_when_a_record_changed_on_disk(self):
+        self.first_run()
+        record = self.tmp / 'out' / 'b' / '0x1000.json'
+        record.write_text('{"edited": true}')
+        self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', resume=True, replace=True, probe_fn=self.probe_with())
+        self.assertEqual(len(self.written), 1)
+
+    def test_resume_without_replace_keeps_records_it_would_rewrite(self):
+        self.first_run()
+        self.source.write_text('int c;\n')
+        with self.assertRaises(pipeline.PipelineError) as cm:
+            self.run_confirm([host(), ssh_host()], out=self.tmp / 'out', resume=True, probe_fn=self.probe_with())
+        self.assertIn('--replace', str(cm.exception))
+        self.assertEqual(self.written, [])
+
+    def test_host_refusal_writes_no_record_and_no_journal_entry(self):
+        with mock.patch.object(FakeAgentHost, 'run', return_value=(44, '')):
+            code, lines = self.run_confirm([host(), ssh_host()], out=self.tmp / 'out')
+        self.assertEqual(code, 1)
+        self.assertEqual(self.written, [])
+        self.assertTrue(any('exit 44' in line for line in lines), lines)
+        self.assertFalse((self.tmp / 'state' / 'confirm-journal').exists()
+                         and any(p.read_text() for p in (self.tmp / 'state' / 'confirm-journal').iterdir()))
+
+    def test_batched_host_gives_the_same_runs_and_facts_check(self):
+        batches = []
+
+        class FakeBatchHost:
+            def __init__(self, h, log=None, fresh_prep=False):
+                self.h, self.fresh_prep = h, fresh_prep
+
+            def run(self, units, stage, dests):
+                batches.append(([t['task_id'] for t, _ in units], self.fresh_prep))
+                out = {}
+                for task, _ in units:
+                    dest = Path(dests[task['task_id']])
+                    for fn in task['functions']:
+                        (dest / f'0x{fn["rva"]:x}').mkdir(parents=True, exist_ok=True)
+                    out[task['task_id']] = (0, dest, FakeAgentHost.facts_by_host[self.h['host_id']])
+                return out
+
+        with mock.patch.object(confirm_runners.runners, 'BatchHost', FakeBatchHost):
+            code, lines = self.run_confirm([host(), ssh_host(batch=8)])
+            self.assertEqual(code, 0, lines)
+            self.assertEqual(batches, [(['unit-a'], True)])
+            self.assertEqual(sorted((a, b) for a, b, _ in self.written[0]['runs'][0x1000]),
+                             [('mac-wine', 'mac-wine'), ('winpc-native', 'mac-wine'),
+                              ('winpc-native', 'winpc-native')])
+            # A batch whose host reports a cached toolchain check still writes nothing.
+            self.written = []
+            FakeAgentHost.facts_by_host['winpc-native'] = dict(FakeAgentHost.facts_by_host['winpc-native'],
+                                                               toolchain_check='cached')
+            code, lines = self.run_confirm([host(), ssh_host(batch=8)])
+            self.assertEqual((code, self.written), (1, []))
+
 
 class Slots(unittest.TestCase):
     def test_second_holder_waits_and_busy_count(self):
@@ -338,6 +461,16 @@ class Slots(unittest.TestCase):
             self.assertEqual([o[0] for o in order], ['first-done', 'second'])
             self.assertGreater(order[1][1], 0.1)
             self.assertEqual(runners.slots_busy('h', 1, directory=tmp), 0)
+
+    def test_several_slots_take_only_free_ones_beyond_the_first(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with runners.slots('h', 4, 8, directory=tmp, poll=0.01) as held:
+                self.assertEqual(held, 4)
+                self.assertEqual(runners.slots_busy('h', 4, directory=tmp), 4)
+            with runners.slot('h', 4, directory=tmp), runners.slot('h', 4, directory=tmp):
+                with runners.slots('h', 4, 4, directory=tmp, poll=0.01) as held:
+                    self.assertEqual(held, 2)
+            self.assertEqual(runners.slots_busy('h', 4, directory=tmp), 0)
 
     def test_parallel_limit_and_timeout(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -496,6 +629,52 @@ class AgentEndToEnd(unittest.TestCase):
         self.assertEqual(code, 0)
         fresh.fetch(self.tmp / 'd3')
         self.assertEqual(fresh.facts['toolchain_check'], 'checked')
+
+    def batch(self, ids=('unit-a', 'unit-b')):
+        h = dict(host(msvc=str(self.msvc), work=str(self.tmp / 'work'), image=str(self.image), wine_bin=None,
+                      wineprefix=None, max_parallel=2), backend='ssh', python=[sys.executable])
+        transport = StubSsh(h)
+        worker = runners.BatchHost(h, transport=transport, fresh_prep=True)
+        units = [(dict(self.task, task_id=tid), self.files) for tid in ids]
+        results = worker.run(units, self.tmp / 'stage', {tid: self.tmp / 'dest' / tid for tid in ids})
+        return results, transport
+
+    def test_batch_runs_each_unit_with_its_own_fresh_check(self):
+        results, transport = self.batch()
+        self.assertEqual(sorted(results), ['unit-a', 'unit-b'])
+        for tid, (code, dest, facts) in results.items():
+            self.assertEqual(code, 0, tid)
+            report = json.loads((dest / f'0x{self.rva:x}' / 'report.json').read_text())
+            self.assertEqual(report['result'], 'pass')
+            self.assertEqual(facts['toolchain_check'], 'checked')
+            self.assertEqual(facts['compiler_sha256'], {'cl.exe': sha(self.msvc / 'bin/x64/cl.exe')})
+            self.assertTrue((dest / 'candidate.obj').is_file())
+        # One agent command for the batch and one clean; nothing but plain tokens, no source.
+        self.assertEqual([c[c.index('-I') + 2] for c in transport.commands], ['batch', 'clean'])
+        for c in transport.commands:
+            self.assertNotIn(self.MARKER, ' '.join(c))
+        self.assertEqual([p.name for p in (self.tmp / 'work').iterdir() if p.name != '.prep'], [])
+        self.assertEqual(list((self.tmp / 'stage').iterdir()), [])
+
+    def test_batch_refuses_a_changed_toolchain_per_unit(self):
+        (self.msvc / 'bin/x64/cl.exe').write_bytes(b'another compiler')
+        results, _ = self.batch()
+        for tid, (code, dest, facts) in results.items():
+            self.assertEqual(code, ub.EXIT_TOOLCHAIN, tid)
+            self.assertEqual(json.loads((dest / 'error.json').read_text())['status'], 'toolchain-mismatch')
+            self.assertIsNone(facts)
+
+    def test_batch_agent_refuses_unsafe_unit_names(self):
+        work = self.tmp / 'work'
+        work.mkdir()
+        name = 'batch-0123456789ab'
+        runners.make_bundle(work, name, {}, {'units.json': json.dumps(['../escape']).encode()})
+        proc = subprocess.run([sys.executable, '-I', str(work / f'{name}.py'), 'batch', '--run', str(work / name),
+                               '--bundle', str(work / f'{name}.tar'), '--msvc', str(self.msvc), '--image',
+                               str(self.image), '--loader', 'wine', '--label', 'mac-wine', '--jobs', '2'],
+                              capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 45, proc.stdout + proc.stderr)
+        self.assertIn('bad unit list', proc.stdout)
 
     def test_probe(self):
         h = host(msvc=str(self.tmp / 'nomsvc'), work=str(self.tmp / 'work'), image=str(self.image))

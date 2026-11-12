@@ -48,6 +48,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 
 TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
@@ -336,6 +337,15 @@ def mismatch_offset(detail):
 
 
 def run(args):
+    clock = time.monotonic()
+    timings = {}
+
+    def lap(phase):
+        nonlocal clock
+        now = time.monotonic()
+        timings[phase] = round(timings.get(phase, 0) + now - clock, 3)
+        clock = now
+
     spec = json.loads(Path(args.spec).read_text())
     if spec.get('unit_spec_schema') != SPEC_SCHEMA:
         raise UnitError(4, 'invalid-spec', f'unit spec needs unit_spec_schema {SPEC_SCHEMA}')
@@ -344,6 +354,7 @@ def run(args):
         shutil.rmtree(work)
     work.mkdir(parents=True)
     sync_copy(repo, spec['files'])
+    lap('sync')
     env = clean_env(os.environ)
     # English /showIncludes notes whatever the host's language; it changes messages, not objects.
     env['VSLANG'] = '1033'
@@ -362,6 +373,7 @@ def run(args):
     spec['image_sha256'] = target['image_sha256']
     prep, compiler_hashes = prepare_host(repo, msvc, args.image, wrapper, target['image_sha256'],
                                          use_cache=not spec.get('fresh_prep'))
+    lap('prep')
     host = host_facts(loader, compiler_hashes, prep)
     print(f'host {spec["host"]} prep {prep} {host["os"]} {loader}')
 
@@ -378,6 +390,7 @@ def run(args):
     digest = tu_digest(repo, closure)
     recipe_sha = sha256_file(recipe_path)
 
+    lap('closure')
     obj = work / 'candidate.obj'
     cl = str(Path(wrapper['BINDIR']) / 'cl.exe') if loader == 'native' else str(msvc / 'bin/x64/cl')
     cmd = [cl] + recipe['flags'] + [SHOW_INCLUDES, f'/Fo{obj}', compiled]
@@ -407,6 +420,7 @@ def run(args):
                    'show_includes': {'repository_files': sorted(set(repo_files) | {compiled}),
                                      'toolchain_files': tool_count, 'equals_closure': True}}
     obj_sha = sha256_file(obj)
+    lap('compile')
     print(f'compile ok object {obj_sha[:16]} includes repo {len(closure)} toolchain {tool_count} closure-equal')
 
     worst = 0
@@ -442,9 +456,11 @@ def run(args):
         status = {0: 0, 1: 1}.get(proc.returncode, 2)
         worst = max(worst, status)
         results.append({'rva': fn['rva'], 'result': report.get('result'), 'reason': report.get('reason')})
+        lap('compare')
         print(f'0x{fn["rva"]:x} {report.get("result")} {report.get("reason")} {mismatch_offset(report.get("detail"))}')
     (work / 'result.json').write_text(json.dumps({'host': spec['host'], 'host_facts': host, 'object_sha256': obj_sha,
-                                                  'source_revision': digest, 'functions': results}, indent=2) + '\n')
+                                                  'source_revision': digest, 'functions': results,
+                                                  'timings': timings}, indent=2) + '\n')
     return worst
 
 
