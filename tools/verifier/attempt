@@ -20,7 +20,9 @@ hint, a plain destructor bound where the target is a deleting one) it compares a
 invocation. A hint at a compared function's RVA that ends up unused is printed as a WARNING. A run in which nothing
 could be compared because of binding does not count against max_attempts, nor do the first three
 compile failures of a unit (later ones count). A repository include the compiler would not find
-with the recipe's include roots is refused locally before any upload, uncounted. It prints one line per function with the reason code, first mismatch offset and
+with the recipe's include roots is refused locally before any upload, uncounted; so is a unit
+whose .cpp does not exist yet (exit 2), with the tools/skeleton.py command that writes starting
+files. It prints one line per function with the reason code, first mismatch offset and
 candidate/target sizes, what was bound or is still missing, and where to read the side-by-side
 disassembly, then the findings of tools/check_labels.py on the unit's sources as warnings and the
 bodies tools/check_origin.py finds close to a same-named community or FNV body. The
@@ -77,6 +79,23 @@ def charge(code, binding_only, log):
     return True, False
 
 
+def missing_source_message(task, repo=None):
+    """Plain words and the next step when the unit's .cpp does not exist yet (the case the include
+    scan reports as "not a repository-relative regular file"); None otherwise, so every other
+    path through attempt is unchanged. Nothing has been compiled or counted at that point."""
+    repo = Path(repo or pipeline.REPO)
+    cpp = task['compiled']
+    if (repo / cpp).exists():
+        return None
+    header = cpp[:-len('.cpp')] + '.h'
+    tdir = Path(task['dir'])
+    shown = tdir.relative_to(repo) if tdir.is_relative_to(repo) else tdir
+    also = '' if (repo / header).exists() else f' (nor does {header})'
+    return (f'{cpp} does not exist yet{also}, so there is nothing to compile; this run was not counted. '
+            f'Create {cpp} and {header} first. To get starting files with every header line, the labels and '
+            f'one stub per function, run: python3 tools/skeleton.py {shown}')
+
+
 def results_of(task, dest):
     out = {}
     for fn in task['functions']:
@@ -112,6 +131,11 @@ def attempt(task_dir):
     if budget is not None and used >= budget:
         print(f'attempt budget exhausted: {budget} of {budget} used. Write your result lines and stop.')
         return 5
+    missing = missing_source_message(task)
+    if missing:
+        # Same exit and stream as the include-closure error this replaces; only the words differ.
+        print(f'attempt: {missing}', file=sys.stderr)
+        return 2
     files, closure = pipeline.unit_manifest(task)
     problem = pipeline.compiler_include_problem(task)
     if problem:

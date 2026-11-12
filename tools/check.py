@@ -679,9 +679,9 @@ def validate(data, target, root=None, stale_ok=False):
     return data
 
 
-def lint(root, names=None):
+def lint(root, names=None, skeleton_ok=()):
     """The mechanical source rules of tools/lint_reconstruction.py, as a validation failure."""
-    problems = lint_tree(root, names)
+    problems = lint_tree(root, names, skeleton_ok)
     require(not problems, 'Reconstruction lint: ' + '; '.join(problems[:5])
             + (f' (and {len(problems) - 5} more)' if len(problems) > 5 else ''))
 
@@ -727,7 +727,11 @@ def load(staged=False):
         # Tracked and not-yet-added files alike, so a Drafter's new source is linted before staging.
         names = subprocess.check_output(['git', 'ls-files', '--cached', '--others', '--exclude-standard', '-z',
                                          '--', 'reconstruction'], cwd=ROOT).decode('utf-8').split('\0')
-        lint(ROOT, sorted({n for n in names if n and (ROOT / n).is_file()}))
+        # A skeleton placeholder marks a Drafter's unfinished unit; it is tolerated only while git
+        # does not track the file, so --staged, a CI checkout and acceptance still refuse it.
+        untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z',
+                                             '--', 'reconstruction'], cwd=ROOT).decode('utf-8').split('\0')
+        lint(ROOT, sorted({n for n in names if n and (ROOT / n).is_file()}), skeleton_ok=set(untracked) - {''})
         check_index(ROOT, data)
         check_costs(ROOT, data)
         check_progress_svg(ROOT)

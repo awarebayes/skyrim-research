@@ -39,6 +39,12 @@ rule item 2), so a Reviewer pass is not spent on them and a Drafter learns them 
   exposure:` category from PROVENANCE.md; a .cpp also gives `RVA 0x...`, `<n> bytes`,
   `Evidence:` with an existing findings/ or reports/ path, `Drafted by` and `Recipe:` with an
   existing recipe; a .h labels name origin (COMMUNITY, SIBLING, GUESS, EXE_RTTI or OBSERVED);
+- skeleton not filled: a `SKELETON_TODO...` word (the stub body and paperwork placeholders that
+  tools/skeleton.py writes) is refused in every file, except in a working-tree file git does not
+  track yet when the whole tree is checked (`tools/check.py` without `--staged`, which lints a
+  Drafter's unfinished files beside finished ones). The per-file command, `--staged`, CI on a
+  checkout and the acceptance tool all refuse it, and the stub body is an undeclared name, so an
+  unfilled stub can neither compile nor be committed or accepted;
 - include style: the include-closure scan of tools/source_digest.py accepts the file, every
   include of a repository file is quoted, and no include sits inside a block comment or a
   conditional block (other than the header guard), because the verifier requires the compiler's
@@ -49,6 +55,7 @@ smuggling code or data bytes into source, not every way. The Reviewer remains re
 rejecting source whose content is raw bytes in any spelling (docs/verification.md).
 
     python3 tools/lint_reconstruction.py [files...]   # default: every file under reconstruction/
+    python3 tools/lint_reconstruction.py --skeleton-ok [files...]   # a fresh skeleton: all else must pass
 """
 import json
 from pathlib import Path, PurePosixPath
@@ -128,6 +135,10 @@ INT_LITERAL = re.compile(r'(?<![\w.])(0[xX][0-9A-Fa-f]+|\d+)[uUlL]*(?![\w.])')
 CHAR_LITERAL = re.compile(r"(?:u8|u|U|L)?'(\\x[0-9A-Fa-f]+|\\[0-7]{1,3}|\\.|[^'\\\n])'")
 BRACED = re.compile(r'\{([^{}]*)\}', re.S)
 PRAGMA_LINE = re.compile(r'^[ \t]*#[ \t]*pragma\b(.*)$', re.M)
+# Placeholders of tools/skeleton.py (unit_skeleton.py): the stub body and the header fields the
+# Drafter has to fill. Any spelling that starts with the prefix counts, so a new placeholder is
+# covered without a lint change.
+SKELETON_MARKER = re.compile(r'(?<![A-Za-z0-9_])SKELETON_TODO\w*')
 PRAGMA_WORD = re.compile(r'[ \t]+([A-Za-z_]\w*)\b(?![ \t]*[^ \t(\n])|[ \t]+([A-Za-z_]\w*)[ \t]*\(')
 
 
@@ -370,7 +381,19 @@ def include_layout_problems(name, text):
     return problems
 
 
-def lint_file(root, name, target_build):
+def skeleton_problems(name, text):
+    """One finding per line that still holds a skeleton placeholder."""
+    problems = []
+    for number, line in enumerate(text.split('\n'), 1):
+        hit = SKELETON_MARKER.search(line)
+        if hit:
+            problems.append(f'{name}:{number}: skeleton not filled: replace {hit.group(0)} '
+                            '(a stub body or a header placeholder from tools/skeleton.py)')
+    return problems
+
+
+def lint_file(root, name, target_build, skeleton_ok=False):
+    """Findings for one file; `skeleton_ok` skips only the skeleton-placeholder rule."""
     root = Path(root)
     problems = []
     path = PurePosixPath(name)
@@ -406,6 +429,8 @@ def lint_file(root, name, target_build):
         problems.append(str(exc))
         spliced = text
     problems += construct_problems(name, spliced)
+    if not skeleton_ok:
+        problems += skeleton_problems(name, spliced)
     header = leading_comment(text)
     if target_build and target_build not in header:
         problems.append(f'{name}: header comment must name the build id {target_build}')
@@ -446,20 +471,25 @@ def lint_file(root, name, target_build):
     return problems
 
 
-def lint_tree(root=ROOT, names=None):
+def lint_tree(root=ROOT, names=None, skeleton_ok=()):
+    """Findings for `names` (default: every file under reconstruction/); files in `skeleton_ok`
+    may still hold skeleton placeholders."""
     root = Path(root)
+    skeleton_ok = set(skeleton_ok)
     target = json.loads((root / 'builds/target.json').read_text())
     if names is None:
         base = root / 'reconstruction'
         names = sorted(p.relative_to(root).as_posix() for p in base.rglob('*') if p.is_file()) if base.is_dir() else []
     problems = []
     for name in names:
-        problems += lint_file(root, name, target.get('build_id'))
+        problems += lint_file(root, name, target.get('build_id'), name in skeleton_ok)
     return problems
 
 
 def main(argv):
-    problems = lint_tree(ROOT, argv or None)
+    skeleton_ok = '--skeleton-ok' in argv
+    names = [a for a in argv if a != '--skeleton-ok']
+    problems = lint_tree(ROOT, names or None, names if skeleton_ok else ())
     for p in problems:
         print(p)
     print(f'lint_reconstruction: {"FAIL" if problems else "PASS"} ({len(problems)} problem(s))')

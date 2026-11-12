@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -62,7 +63,10 @@ class LintTests(unittest.TestCase):
 
     def test_good_unit_and_repository_sources_pass(self):
         self.assertEqual(self.problems(), [])
-        self.assertEqual(lint.lint_tree(ROOT), [])
+        # As tools/check.py does: a Drafter's untracked skeleton may still hold its placeholders.
+        untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z', '--',
+                                             'reconstruction'], cwd=ROOT).decode('utf-8').split('\0')
+        self.assertEqual(lint.lint_tree(ROOT, skeleton_ok=set(untracked) - {''}), [])
 
     def test_banned_constructs(self):
         body = SOURCE.replace('{ return value; }', '{{ {} return value; }}')
