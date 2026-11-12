@@ -185,6 +185,9 @@ give the counted form. Not closed: TESNPC::ClearData 0x3bbf50.
 
 ## Method and permuter recommendations
 
+The permuter that mechanises rules 1, 2 (inversions only), 6 and 9 is
+`tools/verifier/permute.py`; see [permuter.md](permuter.md) for its rules and measured yield.
+
 - Compile many variants per attempt: temporary `LabNN` members with candidate bodies in the same
   unit, one `attempt`, then score each variant locally against the normalised pack listing
   (relocations masked, branch targets as `T`). Strip lab code before the final attempt; only a
