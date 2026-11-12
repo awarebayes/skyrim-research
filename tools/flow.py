@@ -68,7 +68,7 @@ DEFAULT_GROUP_MAX = 18
 # A claim this old is listed for a look: the worker may have asked `next` once too often.
 CLAIM_LOOK_SECONDS = 45 * 60
 BLOCKING_ESCALATIONS = ('provenance', 'legal', 'systemic')
-QUEUE_PROFILE = {'small': 'cheap', 'normal': 'cheap', 'full': 'full'}
+QUEUE_PROFILE = {'small': 'cheap', 'normal': 'cheap', 'mid': 'cheap', 'full': 'full'}
 STATES = ('queued', 'drafting', 'draft-failed', 'drafted-pass', 'confirm-stale', 'confirmed', 'review-pending',
           'review-missing', 'review-malformed', 'approved', 'rejected', 'escalated', 'accepted', 'pushed')
 
@@ -345,7 +345,7 @@ def component_values(root, rva, row, data, model='opus'):
         return hashlib.sha256(p.read_bytes()).hexdigest()[:12] if p.is_file() else 'absent'
     profile = row.get('profile') or 'unrecorded'
     card = profiles.PROFILES.get(profile, {}).get('project_docs', ['unrecorded'])[-1]
-    if Path(row.get('queue') or '').name == 'normal':
+    if Path(row.get('queue') or '').name in ('normal', 'mid'):
         card = 'docs/drafter-card-normal.md'
     return {'recipe': rec['recipe']['sha256'][:12], 'compiler': rec['toolchain_pin']['sha256'][:12],
             'drafter_prompt': f'{profile}:{file_hash(card) if card.startswith("docs/") else card}',
@@ -1250,7 +1250,7 @@ def dispatch_line(g):
 def brief_drafter(root, fdir, profile, count=1, queue_dir=None):
     p = profiles.get(profile)
     queue_dir = queue_dir or p['queue_dir']
-    kind = 'normal' if Path(queue_dir).name == 'normal' else 'small'
+    kind = 'normal' if Path(queue_dir).name in ('normal', 'mid') else 'small'
     queue_profile = 'full' if profile == 'full' else 'cheap'
     docs = [d.replace('drafter-card-small.md', 'drafter-card-normal.md') if kind == 'normal' else d
             for d in p['project_docs']]

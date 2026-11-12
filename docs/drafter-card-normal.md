@@ -1,7 +1,7 @@
 # Drafter card: normal functions
 
 One class per unit; usually 6–10 functions, mostly 65–512 bytes. Use this card with
-`docs/drafter-runbook.md`, passing `--queue-dir .local/queue/normal` to every queue command.
+`docs/drafter-runbook.md`, passing the queue directory from the brief to every queue command.
 Read `sheet.md` and one function's numbered pages at a time. Luna reads only plain `.md`
 sheets, never `.fnv.md`. All five binding rules of the runbook apply.
 

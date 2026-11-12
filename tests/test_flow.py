@@ -580,7 +580,7 @@ class QueueStates(unittest.TestCase):
         self.assertTrue(any('--queue-dir .local/queue/full add .local/tasks/g/g-foo' in t for t in acts))
 
     def test_every_queue_action_parses_and_keeps_its_queue(self):
-        for name in ('normal', 'full', 'custom'):
+        for name in ('normal', 'mid', 'full', 'custom'):
             q = self.q.parent / name
             q.mkdir()
             (q / 'queue.tsv').write_text((self.q / 'queue.tsv').read_text())
@@ -600,7 +600,7 @@ class QueueStates(unittest.TestCase):
             if args.cmd == 'brief' and args.kind == 'drafter':
                 queues.add(args.queue_dir)
                 self.assertIn(args.profile, flow.profiles.PROFILES)
-        self.assertEqual(queues, {'.local/queue/' + n for n in ('small', 'normal', 'full', 'custom')})
+        self.assertEqual(queues, {'.local/queue/' + n for n in ('small', 'normal', 'mid', 'full', 'custom')})
         wq.claim(self.q, 'haiku-1', profile='cheap')
         actions = [text for kind, text in flow.next_actions(self.root, self.fdir, online=False)]
         self.assertTrue(any('brief drafter' in t and '--queue-dir .local/queue/normal' in t for t in actions))
@@ -615,6 +615,11 @@ class QueueStates(unittest.TestCase):
         self.assertIn('--profile cheap', text)
         self.assertIn('--queue-dir .local/queue/normal', text)
         self.assertNotIn('--profile normal', text)
+        mid = flow.brief_drafter(self.root, self.fdir, 'cheap', queue_dir='.local/queue/mid')[0]
+        mid_text = (self.root / mid).read_text()
+        self.assertIn('Your unit kind is normal', mid_text)
+        self.assertIn('docs/drafter-card-normal.md', mid_text)
+        self.assertIn('--queue-dir .local/queue/mid', mid_text)
         args = wq.parser().parse_args(['--queue-dir', '.local/queue/normal', 'next',
                                       '--worker', 'luna-high-1', '--profile', 'cheap'])
         self.assertEqual(args.queue_dir, '.local/queue/normal')
@@ -631,7 +636,10 @@ class QueueStates(unittest.TestCase):
                                       {'profile': 'cheap', 'queue': '.local/queue/small'}, data)
         normal = flow.component_values(repo.root, '0x1000',
                                        {'profile': 'cheap', 'queue': '.local/queue/normal'}, data)
+        mid = flow.component_values(repo.root, '0x1000',
+                                    {'profile': 'cheap', 'queue': '.local/queue/mid'}, data)
         self.assertNotEqual(small['drafter_prompt'], normal['drafter_prompt'])
+        self.assertEqual(mid['drafter_prompt'], normal['drafter_prompt'])
 
     def test_old_claim_is_listed_for_release(self):
         flow.log_event(self.fdir, 'session-start')
