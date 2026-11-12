@@ -1,6 +1,8 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import json
+import tempfile
 
 spec = importlib.util.spec_from_file_location('stamp_lane', Path(__file__).resolve().parents[1] / 'tools/stamp.py')
 stamp = importlib.util.module_from_spec(spec)
@@ -8,6 +10,25 @@ spec.loader.exec_module(stamp)
 
 
 class StampSafetyTests(unittest.TestCase):
+    def test_resume_requires_current_translation_unit_digest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            unit = root / 'reconstruction' / 'example'
+            unit.mkdir(parents=True)
+            (unit / 'unit.cpp').write_text('#include "unit.h"\n')
+            header = unit / 'unit.h'
+            header.write_text('#pragma once\n')
+            task = root / 'task'
+            task.mkdir()
+            (task / 'task.json').write_text(json.dumps({'compiled': 'reconstruction/example/unit.cpp'}))
+            record = {'task': str(task), 'source_digest': stamp.task_digest(root, task)}
+            stamp.check_resume([record], root)
+            with self.assertRaisesRegex(ValueError, 'missing source digest'):
+                stamp.check_resume([{'task': str(task)}], root)
+            header.write_text('#pragma once\n// changed\n')
+            with self.assertRaisesRegex(ValueError, 'source changed'):
+                stamp.check_resume([record], root)
+
     def test_zero_padding_after_vptr(self):
         header, _ = stamp.emit_leaf('Example', 'Read', family='member', width=8,
                                     value=8, virtual=True, name_label='COMMUNITY(example@revision, licence)')

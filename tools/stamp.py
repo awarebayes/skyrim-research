@@ -6,6 +6,12 @@ separate checkout must be inside the main checkout private directory. Local pass
 are preliminary evidence only; they do not confer match status.
 """
 import re
+import json
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from source_digest import include_closure, tu_digest
 
 
 IDENT = re.compile(r'[A-Za-z_][A-Za-z_0-9]*\Z')
@@ -14,6 +20,18 @@ GENERATOR_VERSION = '1'
 
 class UnsafeCandidate(ValueError):
     """The candidate cannot be emitted safely by this generator."""
+
+
+def task_digest(worktree, task_dir):
+    task = json.loads((Path(task_dir) / 'task.json').read_text())
+    paths = include_closure(worktree, task['compiled'])
+    return tu_digest(worktree, paths)
+
+
+def check_resume(records, worktree):
+    for record in records:
+        if not record.get('source_digest') or record['source_digest'] != task_digest(worktree, record['task']):
+            raise ValueError('resume record missing source digest or source changed; use a new output directory')
 
 
 def validate_identity(owner, method, *, existing_classes, names, name_rva, rva):
@@ -149,6 +167,7 @@ def generate(args):
     out.mkdir(parents=True, exist_ok=True)
     index = out / (args.family + '.jsonl')
     prior = [json.loads(x) for x in index.read_text().splitlines()] if args.resume and index.exists() else []
+    check_resume(prior, wt)
     if index.exists() and not args.resume:
         raise ValueError('index exists; use --resume or a new output directory')
     selected = {x['rva'] for x in prior}
@@ -220,7 +239,8 @@ def generate(args):
         (task_dir / 'symbols.json').write_text(json.dumps(dict(schema=1, build_id=task['build_id'],
                                                      symbols={symbol: dict(rva=r, size=fn['size'])}), indent=2))
         with index.open('a') as f:
-            f.write(json.dumps(dict(rva=r, owner=cls, task=str(task_dir), family=args.family)) + '\n')
+            f.write(json.dumps(dict(rva=r, owner=cls, task=str(task_dir), family=args.family,
+                                    source_digest=task_digest(wt, task_dir))) + '\n')
         seen.add(cls); emitted += 1
         if args.limit and emitted >= args.limit:
             break
@@ -255,11 +275,15 @@ def attempt_all(args):
                                         hosts={raw['attempt']: host}, confirm=[])))
     env = dict(os.environ, SR_RUNNERS_CONFIG=str(snapshot))
     tasks = [json.loads(line) for p in sorted(out.glob('*-return.jsonl')) for line in p.read_text().splitlines()]
+    check_resume(tasks, wt)
     log = out / 'results.jsonl'
-    done = {x['task'] for x in map(json.loads, log.read_text().splitlines())} if args.resume and log.exists() else set()
+    records = list(map(json.loads, log.read_text().splitlines())) if args.resume and log.exists() else []
+    check_resume(records, wt)
+    done = {x['task'] for x in records}
     if log.exists() and not args.resume:
         raise ValueError('result log exists; use --resume')
     def run(task):
+        digest = task_digest(wt, task['task'])
         t = time.monotonic()
         proc = subprocess.run([str(wt / 'tools/verifier/attempt'), task['task']], cwd=wt, env=env,
                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -268,7 +292,9 @@ def attempt_all(args):
         result = m.group(1).lower() if m else 'error'
         reason = m.group(2) if m else ('compile-failed' if 'COMPILE FAILED' in text else 'infrastructure')
         Path(task['task'], 'output.txt').write_text(text)
-        return dict(task=task['task'], rva=task['rva'], family=task['family'], result=result,
+        if task_digest(wt, task['task']) != digest:
+            result, reason = 'error', 'source-changed-during-attempt'
+        return dict(task=task['task'], rva=task['rva'], family=task['family'], source_digest=digest, result=result,
                     reason=reason, exit=proc.returncode, seconds=round(time.monotonic()-t, 2))
     pending = [t for t in tasks if t['task'] not in done]
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool, log.open('a') as f:
