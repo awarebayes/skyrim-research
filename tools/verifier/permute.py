@@ -17,7 +17,8 @@ code is closer to the target:
    Reviewer still reads the winner against the target.
 2. Every candidate must pass tools/lint_reconstruction.py before it is compiled.
 3. Candidates go to the standing verifier in batches: the candidate bodies (compressed) are
-   uploaded as one file (or, with `--transport inline`, carried in the command line), and ONE
+   uploaded as one file (`--transport inline` carries them in the command line and is not to be
+   used: the provider keeps command lines), and ONE
    `boat exec` per batch returns one sanitized line per candidate (distance from
    align.py, its components, instruction counts, a hash of the function's object code, seconds).
    The machine compiles them in parallel (`--jobs`, default 4 = its vCPUs), each worker in its
@@ -1708,7 +1709,8 @@ def main(argv=None):
     rm.add_argument('--payload')
     rm.add_argument('--payload-file')
     r.add_argument('--transport', choices=('scp', 'inline'), default='scp',
-                   help='scp: bodies uploaded as a file (default); inline: in the exec command line')
+                   help='scp: bodies uploaded as a file (default, the one to use); inline: in the exec '
+                        'command line, not to be used (candidate source would sit in the provider\'s command log)')
     a = p.parse_args(argv)
     if a.cmd == 'remote':
         if a.payload_file:

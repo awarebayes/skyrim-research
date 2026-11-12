@@ -59,10 +59,10 @@ tidy its spelling, and run `attempt`; the Reviewer sees the mutation list from `
    seconds, error codes on failure. The machine compiles `--jobs` candidates at once (default 4,
    its vCPUs), each worker in its own hard-linked copy of the synced unit, with the recipe's flags
    and the environment `unit_build.py` uses. Compiler output and listings stay on the machine.
-   `--transport inline` saves the upload by putting the compressed bodies in the exec command
-   line instead; Boat may keep command lines as it keeps exec output, so use it only where
-   reconstructed source in Boat's records is acceptable (G5 covers placing it on the machine,
-   not necessarily in Boat's logs; a maintainer question).
+   File upload is the transport to use. `--transport inline` exists but is not to be used: it
+   puts the compressed candidate source in the exec command line, so reconstructed source would
+   sit in the provider's command log (G5 covers placing it on the machine, not in Boat's
+   records). Its throughput below is kept as a measurement only.
 4. **Search.** Greedy hill-climb on (distance, exact edits, instruction-count difference), with
    sideways moves to new objects of equal score, a random restart from the best after
    `--restart-after` batches without progress, and a seen-set of object hashes, so a spelling
