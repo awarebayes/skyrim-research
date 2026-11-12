@@ -6,11 +6,20 @@
     "findings/ghidra-import.md",
     "findings/community-resources.md",
     "docs/resource-guidelines.md",
-    "docs/ideas-next.md"
+    "docs/ideas-next.md",
+    "findings/fourth-batch-selection.md"
   ],
   "image": {
-    "ghidra_functions": {"value": 176587, "basis": "measured", "method": "Ghidra headless import of the pinned image, findings/ghidra-import.md."},
-    "exported_function_entries": {"value": 176001, "basis": "measured", "method": "Function entries in the local export used by the later census scripts, docs/resource-guidelines.md."}
+    "ghidra_functions": {
+      "value": 176587,
+      "basis": "measured",
+      "method": "Ghidra headless import of the pinned image, findings/ghidra-import.md."
+    },
+    "exported_function_entries": {
+      "value": 176001,
+      "basis": "measured",
+      "method": "Function entries in the local export used by the later census scripts, docs/resource-guidelines.md."
+    }
   },
   "denominators": {
     "functions_excluding_funclets_and_thunks": {
@@ -27,38 +36,1727 @@
     }
   },
   "categories": [
-    {"id": "game", "label": "Ordinary game code", "functions": 70156, "bytes": 15809731, "basis": "estimated", "treatment": "in_scope",
-     "method": "Nearest vftable-labelled neighbour in .text$mn is an engine class; neighbourhood heuristic, upper end counts some std-labelled neighbourhoods."},
-    {"id": "havok", "label": "Havok", "functions": 9398, "bytes": 2580317, "basis": "estimated", "treatment": "out_of_scope",
-     "method": "Nearest vftable-labelled neighbour is an hk* class. A 256 KiB window method gives about 7,600 functions, findings/community-resources.md."},
-    {"id": "scaleform", "label": "Scaleform", "functions": 2058, "bytes": 661641, "basis": "estimated", "treatment": "out_of_scope",
-     "method": "Nearest vftable-labelled neighbour is a GFx class; most Scaleform code has no RTTI so this is a lower bound of at least 800 by the window method."},
-    {"id": "bnet", "label": "Bethesda.net client", "functions": 2651, "bytes": 363152, "basis": "estimated", "treatment": "out_of_scope",
-     "method": "Nearest vftable-labelled neighbour is a bnet class. Window method: about 2,900 functions."},
-    {"id": "std", "label": "std and CRT", "functions": 5883, "bytes": 1078377, "basis": "estimated", "treatment": "out_of_scope",
-     "method": "Nearest vftable-labelled neighbour is a std or Concurrency class."},
-    {"id": "init", "label": "Static initializers", "functions": 9762, "bytes": 916145, "basis": "measured", "treatment": "separate",
-     "method": "POGO section group .text$di of the image."},
-    {"id": "teardown", "label": "Static teardown", "functions": 6508, "bytes": 436625, "basis": "measured", "treatment": "separate",
-     "method": "POGO section group .text$yd of the image."},
-    {"id": "funclets", "label": "EH funclets", "functions": 67896, "bytes": 989869, "basis": "measured", "treatment": "separate",
-     "method": "Functions named Unwind@ or Catch@, emitted with their parent function."},
-    {"id": "thunks", "label": "Import and jump thunks", "functions": 1616, "bytes": 8145, "basis": "measured", "treatment": "out_of_scope",
-     "method": "Ghidra thunk and import-name classification."},
-    {"id": "other", "label": "Other", "functions": 70, "bytes": 24469, "basis": "measured", "treatment": "separate",
-     "method": "Remainder of the 106,486-function denominator after the groups above (.text, .text$mn$00 and unclassified)."}
+    {
+      "id": "game",
+      "label": "Ordinary game code",
+      "functions": 70156,
+      "bytes": 15809731,
+      "basis": "estimated",
+      "treatment": "in_scope",
+      "method": "Nearest vftable-labelled neighbour in .text$mn is an engine class; neighbourhood heuristic, upper end counts some std-labelled neighbourhoods."
+    },
+    {
+      "id": "havok",
+      "label": "Havok",
+      "functions": 9398,
+      "bytes": 2580317,
+      "basis": "estimated",
+      "treatment": "out_of_scope",
+      "method": "Nearest vftable-labelled neighbour is an hk* class. A 256 KiB window method gives about 7,600 functions, findings/community-resources.md."
+    },
+    {
+      "id": "scaleform",
+      "label": "Scaleform",
+      "functions": 2058,
+      "bytes": 661641,
+      "basis": "estimated",
+      "treatment": "out_of_scope",
+      "method": "Nearest vftable-labelled neighbour is a GFx class; most Scaleform code has no RTTI so this is a lower bound of at least 800 by the window method."
+    },
+    {
+      "id": "bnet",
+      "label": "Bethesda.net client",
+      "functions": 2651,
+      "bytes": 363152,
+      "basis": "estimated",
+      "treatment": "out_of_scope",
+      "method": "Nearest vftable-labelled neighbour is a bnet class. Window method: about 2,900 functions."
+    },
+    {
+      "id": "std",
+      "label": "std and CRT",
+      "functions": 5883,
+      "bytes": 1078377,
+      "basis": "estimated",
+      "treatment": "out_of_scope",
+      "method": "Nearest vftable-labelled neighbour is a std or Concurrency class."
+    },
+    {
+      "id": "init",
+      "label": "Static initializers",
+      "functions": 9762,
+      "bytes": 916145,
+      "basis": "measured",
+      "treatment": "separate",
+      "method": "POGO section group .text$di of the image."
+    },
+    {
+      "id": "teardown",
+      "label": "Static teardown",
+      "functions": 6508,
+      "bytes": 436625,
+      "basis": "measured",
+      "treatment": "separate",
+      "method": "POGO section group .text$yd of the image."
+    },
+    {
+      "id": "funclets",
+      "label": "EH funclets",
+      "functions": 67896,
+      "bytes": 989869,
+      "basis": "measured",
+      "treatment": "separate",
+      "method": "Functions named Unwind@ or Catch@, emitted with their parent function."
+    },
+    {
+      "id": "thunks",
+      "label": "Import and jump thunks",
+      "functions": 1616,
+      "bytes": 8145,
+      "basis": "measured",
+      "treatment": "out_of_scope",
+      "method": "Ghidra thunk and import-name classification."
+    },
+    {
+      "id": "other",
+      "label": "Other",
+      "functions": 70,
+      "bytes": 24469,
+      "basis": "measured",
+      "treatment": "separate",
+      "method": "Remainder of the 106,486-function denominator after the groups above (.text, .text$mn$00 and unclassified)."
+    }
   ],
   "structure_census": {
     "note": "Decodable by the comparator is a structure census, not a match claim.",
-    "primary_unwind_entries": {"value": 93770, "decoded": 93770, "basis": "measured", "method": "Comparator census over the .pdata entries that begin in code; supplied by the orchestrator and not re-run here."},
+    "primary_unwind_entries": {
+      "value": 93770,
+      "decoded": 93770,
+      "basis": "measured",
+      "method": "Comparator census over the .pdata entries that begin in code; supplied by the orchestrator and not re-run here."
+    },
     "blocks": [
-      {"id": "handler", "label": "C++ exception handler", "functions": 39848, "bytes": 11675239, "basis": "measured",
-       "method": "Non-funclet functions with a language handler, 95,395 unwind-map entries and 714 try blocks, docs/resource-guidelines.md."},
-      {"id": "plain", "label": "No language handler", "functions": 66641, "bytes": 10209102, "basis": "measured",
-       "method": "Remaining non-funclet functions: 106,489 minus 39,848 with a handler."},
-      {"id": "funclets", "label": "EH funclets", "functions": 67896, "bytes": 989869, "basis": "measured",
-       "method": "Decoded through their parent's unwind data."}
+      {
+        "id": "handler",
+        "label": "C++ exception handler",
+        "functions": 39848,
+        "bytes": 11675239,
+        "basis": "measured",
+        "method": "Non-funclet functions with a language handler, 95,395 unwind-map entries and 714 try blocks, docs/resource-guidelines.md."
+      },
+      {
+        "id": "plain",
+        "label": "No language handler",
+        "functions": 66641,
+        "bytes": 10209102,
+        "basis": "measured",
+        "method": "Remaining non-funclet functions: 106,489 minus 39,848 with a handler."
+      },
+      {
+        "id": "funclets",
+        "label": "EH funclets",
+        "functions": 67896,
+        "bytes": 989869,
+        "basis": "measured",
+        "method": "Decoded through their parent's unwind data."
+      }
     ],
-    "jump_table_candidates": {"value": 969, "basis": "estimated", "method": "Functions with a register-indirect jump, docs/ideas-next.md."}
+    "jump_table_candidates": {
+      "value": 969,
+      "basis": "estimated",
+      "method": "Functions with a register-indirect jump, docs/ideas-next.md."
+    }
+  },
+  "areas": {
+    "note": "Sanitized aggregates of the private function table (tools/ghidra/build_function_table.py): area and class names with function counts and byte totals; no addresses, bytes or disassembly. Class names come from the image RTTI or an approved naming source; template instantiations are folded into their family.",
+    "population": {
+      "functions": 89973,
+      "bytes": 20613329,
+      "basis": "measured",
+      "method": "Ghidra function entries that are not EH funclets, thunks, import thunks, static initializers or teardown functions (POGO .text$di, .text$yd). Size is the comparator v2 extent (.pdata with chained entries and switch tables), or the analysis body where v2 refuses the range."
+    },
+    "classes_with_primary_vftable": {
+      "value": 7390,
+      "basis": "measured",
+      "method": "CompleteObjectLocators reached through relocated pointers."
+    },
+    "classes_passing_checks": {
+      "value": 1104,
+      "basis": "measured",
+      "method": "Checks C1 to C4, RTTI name and base chain of docs/resource-guidelines.md for at least one community header (CommonLibSSE-NG or the powerof3 fork)."
+    },
+    "blocks": [
+      {
+        "id": "netimmerse",
+        "label": "NetImmerse (Ni*)",
+        "functions": 2501,
+        "bytes": 380519,
+        "basis": "measured",
+        "treatment": "in_scope",
+        "classes": [
+          {
+            "name": "NiAVObject",
+            "functions": 116,
+            "bytes": 24283,
+            "basis": "measured"
+          },
+          {
+            "name": "NiNode",
+            "functions": 68,
+            "bytes": 15561,
+            "basis": "measured"
+          },
+          {
+            "name": "NiControllerSequence",
+            "functions": 27,
+            "bytes": 13718,
+            "basis": "measured"
+          },
+          {
+            "name": "NiCamera",
+            "functions": 21,
+            "bytes": 9751,
+            "basis": "measured"
+          },
+          {
+            "name": "NiStream",
+            "functions": 29,
+            "bytes": 9507,
+            "basis": "measured"
+          },
+          {
+            "name": "NiPSysEmitterCtlr",
+            "functions": 28,
+            "bytes": 6716,
+            "basis": "measured"
+          },
+          {
+            "name": "NiControllerManager",
+            "functions": 21,
+            "bytes": 5419,
+            "basis": "measured"
+          },
+          {
+            "name": "NiBillboardNode",
+            "functions": 11,
+            "bytes": 5396,
+            "basis": "measured"
+          },
+          {
+            "name": "NiPSysPlanarCollider",
+            "functions": 12,
+            "bytes": 5277,
+            "basis": "measured"
+          },
+          {
+            "name": "NiBlendInterpolator",
+            "functions": 16,
+            "bytes": 5276,
+            "basis": "measured"
+          },
+          {
+            "name": "NiTransformController",
+            "functions": 14,
+            "bytes": 5003,
+            "basis": "measured"
+          },
+          {
+            "name": "NiPathInterpolator",
+            "functions": 25,
+            "bytes": 4708,
+            "basis": "measured"
+          },
+          {
+            "name": "NiPSysGravityModifier",
+            "functions": 9,
+            "bytes": 4654,
+            "basis": "measured"
+          },
+          {
+            "name": "NiSkinPartition",
+            "functions": 13,
+            "bytes": 4651,
+            "basis": "measured"
+          },
+          {
+            "name": "NiParticleSystem",
+            "functions": 24,
+            "bytes": 4650,
+            "basis": "measured"
+          },
+          {
+            "name": "NiGeometry",
+            "functions": 22,
+            "bytes": 4501,
+            "basis": "measured"
+          },
+          {
+            "name": "NiLookAtInterpolator",
+            "functions": 19,
+            "bytes": 4451,
+            "basis": "measured"
+          },
+          {
+            "name": "NiObject",
+            "functions": 73,
+            "bytes": 4107,
+            "basis": "measured"
+          },
+          {
+            "name": "NiParticlesData",
+            "functions": 11,
+            "bytes": 4041,
+            "basis": "measured"
+          },
+          {
+            "name": "NiTransformInterpolator",
+            "functions": 22,
+            "bytes": 3781,
+            "basis": "measured"
+          },
+          {
+            "name": "NiMultiTargetTransformController",
+            "functions": 25,
+            "bytes": 3424,
+            "basis": "measured"
+          },
+          {
+            "name": "NiTimeController",
+            "functions": 22,
+            "bytes": 3397,
+            "basis": "measured"
+          },
+          {
+            "name": "NiPSysData",
+            "functions": 18,
+            "bytes": 3393,
+            "basis": "measured"
+          },
+          {
+            "name": "NiTMap<>",
+            "functions": 48,
+            "bytes": 3343,
+            "basis": "measured"
+          },
+          {
+            "name": "NiSwitchNode",
+            "functions": 20,
+            "bytes": 3329,
+            "basis": "measured"
+          },
+          {
+            "name": "NiTMapBase<>",
+            "functions": 125,
+            "bytes": 3233,
+            "basis": "measured"
+          },
+          {
+            "name": "NiGeometryData",
+            "functions": 11,
+            "bytes": 3213,
+            "basis": "measured"
+          },
+          {
+            "name": "NiSkinInstance",
+            "functions": 17,
+            "bytes": 3160,
+            "basis": "measured"
+          },
+          {
+            "name": "NiTArray<>",
+            "functions": 33,
+            "bytes": 3124,
+            "basis": "measured"
+          },
+          {
+            "name": "NiDefaultAVObjectPalette",
+            "functions": 13,
+            "bytes": 3119,
+            "basis": "measured"
+          }
+        ],
+        "other_classes": {
+          "classes": 204,
+          "functions": 1588,
+          "bytes": 202333,
+          "basis": "measured"
+        },
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "bsengine",
+        "label": "Bethesda engine (BS*)",
+        "functions": 6948,
+        "bytes": 984265,
+        "basis": "measured",
+        "treatment": "in_scope",
+        "classes": [
+          {
+            "name": "BSTDerivedCreator<>",
+            "functions": 1296,
+            "bytes": 85491,
+            "basis": "measured"
+          },
+          {
+            "name": "NativeFunction1<>",
+            "functions": 342,
+            "bytes": 40801,
+            "basis": "measured"
+          },
+          {
+            "name": "BSScript::Internal::VirtualMachine",
+            "functions": 75,
+            "bytes": 35638,
+            "basis": "measured"
+          },
+          {
+            "name": "NativeFunction2<>",
+            "functions": 189,
+            "bytes": 29033,
+            "basis": "measured"
+          },
+          {
+            "name": "NativeFunction0<>",
+            "functions": 270,
+            "bytes": 22948,
+            "basis": "measured"
+          },
+          {
+            "name": "BSPathBuilder",
+            "functions": 23,
+            "bytes": 18342,
+            "basis": "measured"
+          },
+          {
+            "name": "BSPathSmootherPOVSearch",
+            "functions": 19,
+            "bytes": 16345,
+            "basis": "measured"
+          },
+          {
+            "name": "BSLightingShader",
+            "functions": 17,
+            "bytes": 16175,
+            "basis": "measured"
+          },
+          {
+            "name": "EntryDB<>",
+            "functions": 66,
+            "bytes": 14824,
+            "basis": "measured"
+          },
+          {
+            "name": "BSNavmesh",
+            "functions": 38,
+            "bytes": 14719,
+            "basis": "measured"
+          },
+          {
+            "name": "BSLightingShaderProperty",
+            "functions": 33,
+            "bytes": 14520,
+            "basis": "measured"
+          },
+          {
+            "name": "BSShadowDirectionalLight",
+            "functions": 15,
+            "bytes": 14232,
+            "basis": "measured"
+          },
+          {
+            "name": "BSPlatform::BSUserContentSearcherAgent",
+            "functions": 16,
+            "bytes": 11885,
+            "basis": "measured"
+          },
+          {
+            "name": "BSTempEffectSimpleDecal",
+            "functions": 16,
+            "bytes": 11330,
+            "basis": "measured"
+          },
+          {
+            "name": "BSStream",
+            "functions": 39,
+            "bytes": 11072,
+            "basis": "measured"
+          },
+          {
+            "name": "BSShaderAccumulator",
+            "functions": 35,
+            "bytes": 10340,
+            "basis": "measured"
+          },
+          {
+            "name": "BSFadeNode",
+            "functions": 59,
+            "bytes": 10306,
+            "basis": "measured"
+          },
+          {
+            "name": "NativeFunction3<>",
+            "functions": 54,
+            "bytes": 10193,
+            "basis": "measured"
+          },
+          {
+            "name": "BSXAudio2GameSound",
+            "functions": 45,
+            "bytes": 10060,
+            "basis": "measured"
+          },
+          {
+            "name": "BSWaterShader",
+            "functions": 10,
+            "bytes": 9711,
+            "basis": "measured"
+          },
+          {
+            "name": "BSImagespaceShader",
+            "functions": 17,
+            "bytes": 8092,
+            "basis": "measured"
+          },
+          {
+            "name": "BSEffectShader",
+            "functions": 10,
+            "bytes": 7796,
+            "basis": "measured"
+          },
+          {
+            "name": "BSTempEffectGeometryDecal",
+            "functions": 9,
+            "bytes": 7449,
+            "basis": "measured"
+          },
+          {
+            "name": "BSUtilityShader",
+            "functions": 8,
+            "bytes": 7241,
+            "basis": "measured"
+          },
+          {
+            "name": "BSOcclusionBox",
+            "functions": 10,
+            "bytes": 7224,
+            "basis": "measured"
+          },
+          {
+            "name": "BSAnimationGraphManager",
+            "functions": 25,
+            "bytes": 7039,
+            "basis": "measured"
+          },
+          {
+            "name": "BSLookAtModifier",
+            "functions": 10,
+            "bytes": 6461,
+            "basis": "measured"
+          },
+          {
+            "name": "BSTEventSink<>",
+            "functions": 139,
+            "bytes": 5977,
+            "basis": "measured"
+          },
+          {
+            "name": "BSBatchRenderer",
+            "functions": 16,
+            "bytes": 5882,
+            "basis": "measured"
+          },
+          {
+            "name": "NativeFunction5<>",
+            "functions": 24,
+            "bytes": 5764,
+            "basis": "measured"
+          }
+        ],
+        "other_classes": {
+          "classes": 649,
+          "functions": 4023,
+          "bytes": 507375,
+          "basis": "measured"
+        },
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "forms",
+        "label": "Forms (TES*, BGS*)",
+        "functions": 5346,
+        "bytes": 1213505,
+        "basis": "measured",
+        "treatment": "in_scope",
+        "classes": [
+          {
+            "name": "TESObjectREFR",
+            "functions": 506,
+            "bytes": 146566,
+            "basis": "measured"
+          },
+          {
+            "name": "TESObjectCELL",
+            "functions": 213,
+            "bytes": 71135,
+            "basis": "measured"
+          },
+          {
+            "name": "TESNPC",
+            "functions": 118,
+            "bytes": 45184,
+            "basis": "measured"
+          },
+          {
+            "name": "TESQuest",
+            "functions": 88,
+            "bytes": 43843,
+            "basis": "measured"
+          },
+          {
+            "name": "TESObjectLAND",
+            "functions": 44,
+            "bytes": 27607,
+            "basis": "measured"
+          },
+          {
+            "name": "TESWorldSpace",
+            "functions": 81,
+            "bytes": 25027,
+            "basis": "measured"
+          },
+          {
+            "name": "Projectile",
+            "functions": 71,
+            "bytes": 23996,
+            "basis": "measured"
+          },
+          {
+            "name": "TESPackage",
+            "functions": 65,
+            "bytes": 23292,
+            "basis": "measured"
+          },
+          {
+            "name": "TESRace",
+            "functions": 41,
+            "bytes": 19658,
+            "basis": "measured"
+          },
+          {
+            "name": "Explosion",
+            "functions": 36,
+            "bytes": 18761,
+            "basis": "measured"
+          },
+          {
+            "name": "FlameProjectile",
+            "functions": 43,
+            "bytes": 17781,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSSaveLoadManager",
+            "functions": 44,
+            "bytes": 17315,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSProcedureSandboxExecState",
+            "functions": 20,
+            "bytes": 15270,
+            "basis": "measured"
+          },
+          {
+            "name": "TESObjectWEAP",
+            "functions": 35,
+            "bytes": 14431,
+            "basis": "measured"
+          },
+          {
+            "name": "TESForm",
+            "functions": 90,
+            "bytes": 13551,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSProcedureFollowExecState",
+            "functions": 10,
+            "bytes": 10974,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSRefAlias",
+            "functions": 10,
+            "bytes": 10445,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSLocation",
+            "functions": 21,
+            "bytes": 10207,
+            "basis": "measured"
+          },
+          {
+            "name": "NavMeshInfoMap",
+            "functions": 19,
+            "bytes": 10159,
+            "basis": "measured"
+          },
+          {
+            "name": "NavMesh",
+            "functions": 32,
+            "bytes": 9271,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSScene",
+            "functions": 25,
+            "bytes": 8810,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSLoadGameBuffer",
+            "functions": 39,
+            "bytes": 8024,
+            "basis": "measured"
+          },
+          {
+            "name": "TESTopicInfo",
+            "functions": 23,
+            "bytes": 7739,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSProcedurePatrol",
+            "functions": 14,
+            "bytes": 7735,
+            "basis": "measured"
+          },
+          {
+            "name": "TESBoundObject",
+            "functions": 34,
+            "bytes": 7701,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSSynchronizedAnimationInstance",
+            "functions": 14,
+            "bytes": 7408,
+            "basis": "measured"
+          },
+          {
+            "name": "TESTopic",
+            "functions": 26,
+            "bytes": 7357,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSGrassManager",
+            "functions": 4,
+            "bytes": 7272,
+            "basis": "measured"
+          },
+          {
+            "name": "ConeProjectile",
+            "functions": 20,
+            "bytes": 6981,
+            "basis": "measured"
+          },
+          {
+            "name": "TESEffectShader",
+            "functions": 15,
+            "bytes": 6750,
+            "basis": "measured"
+          }
+        ],
+        "other_classes": {
+          "classes": 424,
+          "functions": 3545,
+          "bytes": 563255,
+          "basis": "measured"
+        },
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "actors",
+        "label": "Actors",
+        "functions": 1524,
+        "bytes": 453926,
+        "basis": "measured",
+        "treatment": "in_scope",
+        "classes": [
+          {
+            "name": "Actor",
+            "functions": 658,
+            "bytes": 203257,
+            "basis": "measured"
+          },
+          {
+            "name": "Character",
+            "functions": 459,
+            "bytes": 123975,
+            "basis": "measured"
+          },
+          {
+            "name": "PlayerCharacter",
+            "functions": 319,
+            "bytes": 114404,
+            "basis": "measured"
+          },
+          {
+            "name": "AIProcess",
+            "functions": 16,
+            "bytes": 6352,
+            "basis": "measured"
+          },
+          {
+            "name": "ActorProcess",
+            "functions": 69,
+            "bytes": 5814,
+            "basis": "measured"
+          },
+          {
+            "name": "BGSVisitProceduresProcess",
+            "functions": 2,
+            "bytes": 81,
+            "basis": "measured"
+          },
+          {
+            "name": "Actor::ForEachSpellVisitor",
+            "functions": 1,
+            "bytes": 43,
+            "basis": "measured"
+          }
+        ],
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "magic",
+        "label": "Magic",
+        "functions": 744,
+        "bytes": 116043,
+        "basis": "measured",
+        "treatment": "in_scope",
+        "classes": [
+          {
+            "name": "ActorMagicCaster",
+            "functions": 58,
+            "bytes": 15602,
+            "basis": "measured"
+          },
+          {
+            "name": "ActiveEffect",
+            "functions": 56,
+            "bytes": 12588,
+            "basis": "measured"
+          },
+          {
+            "name": "MagicCaster",
+            "functions": 42,
+            "bytes": 10553,
+            "basis": "measured"
+          },
+          {
+            "name": "MagicTarget",
+            "functions": 39,
+            "bytes": 8156,
+            "basis": "measured"
+          },
+          {
+            "name": "MagicMenu",
+            "functions": 10,
+            "bytes": 8055,
+            "basis": "measured"
+          },
+          {
+            "name": "MagicItem",
+            "functions": 45,
+            "bytes": 4679,
+            "basis": "measured"
+          },
+          {
+            "name": "ValueModifierEffect",
+            "functions": 29,
+            "bytes": 4403,
+            "basis": "measured"
+          },
+          {
+            "name": "SummonCreatureEffect",
+            "functions": 10,
+            "bytes": 3544,
+            "basis": "measured"
+          },
+          {
+            "name": "SpellItem",
+            "functions": 43,
+            "bytes": 2930,
+            "basis": "measured"
+          },
+          {
+            "name": "EnchantmentItem",
+            "functions": 28,
+            "bytes": 2789,
+            "basis": "measured"
+          },
+          {
+            "name": "AlchemyItem",
+            "functions": 31,
+            "bytes": 2430,
+            "basis": "measured"
+          },
+          {
+            "name": "IngredientItem",
+            "functions": 36,
+            "bytes": 2323,
+            "basis": "measured"
+          },
+          {
+            "name": "ReanimateEffect",
+            "functions": 9,
+            "bytes": 1911,
+            "basis": "measured"
+          },
+          {
+            "name": "(anonymous)::MagicMenuAddActiveEffectVisitor",
+            "functions": 2,
+            "bytes": 1887,
+            "basis": "measured"
+          },
+          {
+            "name": "BoundItemEffect",
+            "functions": 12,
+            "bytes": 1812,
+            "basis": "measured"
+          },
+          {
+            "name": "CommandEffect",
+            "functions": 11,
+            "bytes": 1721,
+            "basis": "measured"
+          },
+          {
+            "name": "GrabActorEffect",
+            "functions": 7,
+            "bytes": 1711,
+            "basis": "measured"
+          },
+          {
+            "name": "LightEffect",
+            "functions": 11,
+            "bytes": 1423,
+            "basis": "measured"
+          },
+          {
+            "name": "EnhanceWeaponEffect",
+            "functions": 12,
+            "bytes": 1389,
+            "basis": "measured"
+          },
+          {
+            "name": "TelekinesisEffect",
+            "functions": 5,
+            "bytes": 1237,
+            "basis": "measured"
+          },
+          {
+            "name": "PeakValueModifierEffect",
+            "functions": 9,
+            "bytes": 1230,
+            "basis": "measured"
+          },
+          {
+            "name": "AccumulatingValueModifierEffect",
+            "functions": 10,
+            "bytes": 1134,
+            "basis": "measured"
+          },
+          {
+            "name": "ActiveEffectReferenceEffectController",
+            "functions": 23,
+            "bytes": 1081,
+            "basis": "measured"
+          },
+          {
+            "name": "GuideEffect",
+            "functions": 5,
+            "bytes": 1071,
+            "basis": "measured"
+          },
+          {
+            "name": "ScriptEffect",
+            "functions": 9,
+            "bytes": 1017,
+            "basis": "measured"
+          },
+          {
+            "name": "InvisibilityEffect",
+            "functions": 6,
+            "bytes": 997,
+            "basis": "measured"
+          },
+          {
+            "name": "DisguiseEffect",
+            "functions": 9,
+            "bytes": 874,
+            "basis": "measured"
+          },
+          {
+            "name": "SoulTrapEffect",
+            "functions": 5,
+            "bytes": 857,
+            "basis": "measured"
+          },
+          {
+            "name": "ScrollItem",
+            "functions": 18,
+            "bytes": 816,
+            "basis": "measured"
+          },
+          {
+            "name": "DualValueModifierEffect",
+            "functions": 9,
+            "bytes": 743,
+            "basis": "measured"
+          }
+        ],
+        "other_classes": {
+          "classes": 46,
+          "functions": 145,
+          "bytes": 15080,
+          "basis": "measured"
+        },
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "other",
+        "label": "Other engine classes",
+        "functions": 15869,
+        "bytes": 2715857,
+        "basis": "measured",
+        "treatment": "in_scope",
+        "classes": [
+          {
+            "name": "handler",
+            "functions": 787,
+            "bytes": 179651,
+            "basis": "measured"
+          },
+          {
+            "name": "SkyrimVM",
+            "functions": 176,
+            "bytes": 62955,
+            "basis": "measured"
+          },
+          {
+            "name": "native",
+            "functions": 380,
+            "bytes": 62724,
+            "basis": "measured"
+          },
+          {
+            "name": "CombatBehaviorTreeNodeObjectBase<>",
+            "functions": 688,
+            "bytes": 47427,
+            "basis": "measured"
+          },
+          {
+            "name": "CombatNavmeshSearchT<>",
+            "functions": 112,
+            "bytes": 43047,
+            "basis": "measured"
+          },
+          {
+            "name": "BShkbAnimationGraph",
+            "functions": 57,
+            "bytes": 42105,
+            "basis": "measured"
+          },
+          {
+            "name": "Pathing",
+            "functions": 89,
+            "bytes": 40677,
+            "basis": "measured"
+          },
+          {
+            "name": "StatsMenu",
+            "functions": 35,
+            "bytes": 39397,
+            "basis": "measured"
+          },
+          {
+            "name": "TES",
+            "functions": 100,
+            "bytes": 36550,
+            "basis": "measured"
+          },
+          {
+            "name": "ConcreteFormFactory<>",
+            "functions": 460,
+            "bytes": 36479,
+            "basis": "measured"
+          },
+          {
+            "name": "CombatInventoryItemMagicT<>",
+            "functions": 525,
+            "bytes": 32240,
+            "basis": "measured"
+          },
+          {
+            "name": "Sky",
+            "functions": 53,
+            "bytes": 32142,
+            "basis": "measured"
+          },
+          {
+            "name": "RaceSexMenu",
+            "functions": 28,
+            "bytes": 30111,
+            "basis": "measured"
+          },
+          {
+            "name": "ahkpWorld",
+            "functions": 95,
+            "bytes": 27729,
+            "basis": "measured"
+          },
+          {
+            "name": "CombatPathT<>",
+            "functions": 287,
+            "bytes": 25974,
+            "basis": "measured"
+          },
+          {
+            "name": "InventoryChanges",
+            "functions": 28,
+            "bytes": 25712,
+            "basis": "measured"
+          },
+          {
+            "name": "MovementControllerNPC",
+            "functions": 73,
+            "bytes": 24641,
+            "basis": "measured"
+          },
+          {
+            "name": "NavMeshObstacleManager",
+            "functions": 39,
+            "bytes": 23657,
+            "basis": "measured"
+          },
+          {
+            "name": "ObjectReference",
+            "functions": 88,
+            "bytes": 22143,
+            "basis": "measured"
+          },
+          {
+            "name": "MovementAgentPathFollowerStandard",
+            "functions": 72,
+            "bytes": 20458,
+            "basis": "measured"
+          },
+          {
+            "name": "CopyableCallable<>",
+            "functions": 264,
+            "bytes": 20130,
+            "basis": "measured"
+          },
+          {
+            "name": "AutoRegisterFactory<>",
+            "functions": 433,
+            "bytes": 18619,
+            "basis": "measured"
+          },
+          {
+            "name": "AutoRegisterCreator<>",
+            "functions": 432,
+            "bytes": 18576,
+            "basis": "measured"
+          },
+          {
+            "name": "Main",
+            "functions": 25,
+            "bytes": 18556,
+            "basis": "measured"
+          },
+          {
+            "name": "CallableBase<>",
+            "functions": 176,
+            "bytes": 16503,
+            "basis": "measured"
+          },
+          {
+            "name": "bhkWorld",
+            "functions": 42,
+            "bytes": 16084,
+            "basis": "measured"
+          },
+          {
+            "name": "PlayerCamera",
+            "functions": 67,
+            "bytes": 16060,
+            "basis": "measured"
+          },
+          {
+            "name": "ShadowSceneNode",
+            "functions": 32,
+            "bytes": 15828,
+            "basis": "measured"
+          },
+          {
+            "name": "bhkCharacterController",
+            "functions": 31,
+            "bytes": 14546,
+            "basis": "measured"
+          },
+          {
+            "name": "ahkpCharacterProxy",
+            "functions": 30,
+            "bytes": 14375,
+            "basis": "measured"
+          }
+        ],
+        "other_classes": {
+          "classes": 1876,
+          "functions": 10165,
+          "bytes": 1690761,
+          "basis": "measured"
+        },
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "havok",
+        "label": "Havok (hk*)",
+        "functions": 3796,
+        "bytes": 767253,
+        "basis": "measured",
+        "treatment": "out_of_scope",
+        "classes": [
+          {
+            "name": "hkp3AxisSweep",
+            "functions": 37,
+            "bytes": 37006,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbBehaviorGraph",
+            "functions": 67,
+            "bytes": 27876,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbStateMachine",
+            "functions": 57,
+            "bytes": 26937,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbFootIkModifier",
+            "functions": 14,
+            "bytes": 17924,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbFootIkDriver",
+            "functions": 19,
+            "bytes": 17119,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpRigidBody",
+            "functions": 55,
+            "bytes": 16442,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbRagdollDriver",
+            "functions": 20,
+            "bytes": 15298,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpConvexVerticesShape",
+            "functions": 26,
+            "bytes": 14671,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbClipGenerator",
+            "functions": 31,
+            "bytes": 14469,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbCharacter",
+            "functions": 28,
+            "bytes": 14293,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpContinuousSimulation",
+            "functions": 23,
+            "bytes": 12766,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpWorld",
+            "functions": 26,
+            "bytes": 12378,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpCollisionDispatcher",
+            "functions": 59,
+            "bytes": 12174,
+            "basis": "measured"
+          },
+          {
+            "name": "hkOArchive",
+            "functions": 24,
+            "bytes": 9732,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpSymmetricAgentLinearCast<>",
+            "functions": 80,
+            "bytes": 9710,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpSimulationIsland",
+            "functions": 18,
+            "bytes": 8474,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbCompiledExpressionSet",
+            "functions": 10,
+            "bytes": 8421,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpMultiThreadedSimulation",
+            "functions": 9,
+            "bytes": 6674,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpStorageExtendedMeshShape",
+            "functions": 10,
+            "bytes": 6077,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpBvTreeAgent",
+            "functions": 12,
+            "bytes": 5990,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpTriangleShape",
+            "functions": 16,
+            "bytes": 5787,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbBlenderGenerator",
+            "functions": 20,
+            "bytes": 5565,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpCompressedSampledHeightFieldShape",
+            "functions": 6,
+            "bytes": 5348,
+            "basis": "measured"
+          },
+          {
+            "name": "hkBufferedStreamReader",
+            "functions": 20,
+            "bytes": 5200,
+            "basis": "measured"
+          },
+          {
+            "name": "hkaSkeleton",
+            "functions": 11,
+            "bytes": 5152,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpConstraintInstance",
+            "functions": 25,
+            "bytes": 5064,
+            "basis": "measured"
+          },
+          {
+            "name": "hkaRagdollInstance",
+            "functions": 14,
+            "bytes": 4859,
+            "basis": "measured"
+          },
+          {
+            "name": "hkaFootPlacementIkSolver",
+            "functions": 3,
+            "bytes": 4593,
+            "basis": "measured"
+          },
+          {
+            "name": "hkbHandIkModifier",
+            "functions": 7,
+            "bytes": 4533,
+            "basis": "measured"
+          },
+          {
+            "name": "hkpCharacterRigidBodyListener",
+            "functions": 8,
+            "bytes": 4390,
+            "basis": "measured"
+          }
+        ],
+        "other_classes": {
+          "classes": 651,
+          "functions": 3041,
+          "bytes": 422331,
+          "basis": "measured"
+        },
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "scaleform",
+        "label": "Scaleform (GFx)",
+        "functions": 676,
+        "bytes": 233521,
+        "basis": "measured",
+        "treatment": "out_of_scope",
+        "classes": [
+          {
+            "name": "GFxEditTextCharacter",
+            "functions": 44,
+            "bytes": 30666,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxMovieRoot",
+            "functions": 39,
+            "bytes": 26329,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxSprite",
+            "functions": 53,
+            "bytes": 19535,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxASCharacter",
+            "functions": 35,
+            "bytes": 19005,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxButtonCharacter",
+            "functions": 26,
+            "bytes": 9352,
+            "basis": "measured"
+          },
+          {
+            "name": "GASGlobalContext",
+            "functions": 3,
+            "bytes": 9171,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxMovieDefImpl",
+            "functions": 15,
+            "bytes": 6754,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxDrawTextImpl",
+            "functions": 26,
+            "bytes": 6511,
+            "basis": "measured"
+          },
+          {
+            "name": "GASObject",
+            "functions": 18,
+            "bytes": 5678,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxMorphCharacterDef",
+            "functions": 8,
+            "bytes": 5574,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxMovieBindProcess",
+            "functions": 5,
+            "bytes": 3754,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxStaticTextCharacter",
+            "functions": 4,
+            "bytes": 3537,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxIMEManager",
+            "functions": 14,
+            "bytes": 3214,
+            "basis": "measured"
+          },
+          {
+            "name": "GASCapabilitiesCtorFunction",
+            "functions": 1,
+            "bytes": 2751,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxPlaceObject3",
+            "functions": 5,
+            "bytes": 2697,
+            "basis": "measured"
+          },
+          {
+            "name": "GASKeyCtorFunction",
+            "functions": 1,
+            "bytes": 2265,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxSpriteDef",
+            "functions": 5,
+            "bytes": 2153,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxButtonCharacterDef",
+            "functions": 2,
+            "bytes": 2076,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxStream",
+            "functions": 15,
+            "bytes": 2011,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxLoaderImpl",
+            "functions": 4,
+            "bytes": 1985,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxDrawText",
+            "functions": 1,
+            "bytes": 1582,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxFontLib",
+            "functions": 4,
+            "bytes": 1540,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxResourceWeakLib",
+            "functions": 5,
+            "bytes": 1513,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxFontData",
+            "functions": 7,
+            "bytes": 1408,
+            "basis": "measured"
+          },
+          {
+            "name": "GASUserDefinedFunctionObject",
+            "functions": 4,
+            "bytes": 1370,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxMovieView",
+            "functions": 4,
+            "bytes": 1284,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxFontDataCompactedSwf",
+            "functions": 8,
+            "bytes": 1247,
+            "basis": "measured"
+          },
+          {
+            "name": "GASSharedObjectProto",
+            "functions": 4,
+            "bytes": 1240,
+            "basis": "measured"
+          },
+          {
+            "name": "GFxStateBagImpl",
+            "functions": 4,
+            "bytes": 1197,
+            "basis": "measured"
+          },
+          {
+            "name": "GASStyleSheetProto",
+            "functions": 3,
+            "bytes": 1192,
+            "basis": "measured"
+          }
+        ],
+        "other_classes": {
+          "classes": 159,
+          "functions": 309,
+          "bytes": 54930,
+          "basis": "measured"
+        },
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "bnet",
+        "label": "Bethesda.net client",
+        "functions": 264,
+        "bytes": 30608,
+        "basis": "measured",
+        "treatment": "out_of_scope",
+        "classes": [
+          {
+            "name": "Callback<>",
+            "functions": 93,
+            "bytes": 23153,
+            "basis": "measured"
+          },
+          {
+            "name": "CallbackImpl<>",
+            "functions": 93,
+            "bytes": 4233,
+            "basis": "measured"
+          },
+          {
+            "name": "bnet_std::...",
+            "functions": 68,
+            "bytes": 2244,
+            "basis": "measured"
+          },
+          {
+            "name": "bnet__ListRequiredLegalDocumentsRequest",
+            "functions": 1,
+            "bytes": 598,
+            "basis": "measured"
+          },
+          {
+            "name": "bnet::AsyncOperationProxy",
+            "functions": 3,
+            "bytes": 220,
+            "basis": "measured"
+          },
+          {
+            "name": "bnet::Mods::BaseUpdatePreferenceInfo",
+            "functions": 1,
+            "bytes": 43,
+            "basis": "measured"
+          },
+          {
+            "name": "bnet::Mods::UpdateContentPreferenceInfo",
+            "functions": 1,
+            "bytes": 43,
+            "basis": "measured"
+          },
+          {
+            "name": "bnet::impl::AsyncOperation",
+            "functions": 2,
+            "bytes": 38,
+            "basis": "measured"
+          },
+          {
+            "name": "bnet::BaseCallback",
+            "functions": 2,
+            "bytes": 36,
+            "basis": "measured"
+          }
+        ],
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "std",
+        "label": "std and CRT",
+        "functions": 1011,
+        "bytes": 29382,
+        "basis": "measured",
+        "treatment": "out_of_scope",
+        "classes": [
+          {
+            "name": "_Func_impl_no_alloc<>",
+            "functions": 887,
+            "bytes": 21450,
+            "basis": "measured"
+          },
+          {
+            "name": "_Ref_count_obj<>",
+            "functions": 82,
+            "bytes": 3025,
+            "basis": "measured"
+          },
+          {
+            "name": "basic_filebuf<>",
+            "functions": 14,
+            "bytes": 2811,
+            "basis": "measured"
+          },
+          {
+            "name": "basic_stringbuf<>",
+            "functions": 6,
+            "bytes": 1213,
+            "basis": "measured"
+          },
+          {
+            "name": "_Ref_count_resource<>",
+            "functions": 16,
+            "bytes": 684,
+            "basis": "measured"
+          },
+          {
+            "name": "std::exception",
+            "functions": 2,
+            "bytes": 85,
+            "basis": "measured"
+          },
+          {
+            "name": "_Ref_count<>",
+            "functions": 3,
+            "bytes": 71,
+            "basis": "measured"
+          },
+          {
+            "name": "type_info",
+            "functions": 1,
+            "bytes": 43,
+            "basis": "measured"
+          }
+        ],
+        "method": "Ordinary functions whose class is known from the image RTTI vftables (the most basic class holding the implementation) or an approved Address Library id name; area by reconstruction/README.md, owning system then prefix."
+      },
+      {
+        "id": "unattributed",
+        "label": "No class known",
+        "functions": 51294,
+        "bytes": 13688450,
+        "basis": "measured",
+        "treatment": "in_scope",
+        "classes": [],
+        "method": "Ordinary functions no vftable slot or approved id name ties to a class. Of them, 7,282 (1,587,240 bytes) lie within 4 KiB between two functions of one class: an address-neighbourhood estimate, not an attribution.",
+        "adjacent_estimate": {
+          "functions": 7282,
+          "bytes": 1587240,
+          "basis": "estimated"
+        }
+      }
+    ]
   }
 }

@@ -3,7 +3,7 @@
 // Everything this script writes is derived from the program under analysis and must stay in a
 // private directory.
 //
-// Script args: <rva list file | @random:N:SEED> <output dir> <mode: full | refs>
+// Script args: <rva list file | @random:N:SEED | @all> <output dir> <mode: full | refs>
 //   meta.tsv   rva found name entry_count body_ranges n_instr computed_jumps computed_targets thunk
 //              fp_arith cond_branches indirect_calls
 //   refs.tsv   rva from_offset ref_type target_rva mnemonic operand_index target_names target_func_entry
@@ -39,6 +39,12 @@ public class ExportPack extends GhidraScript {
 
     private List<Long> selectRvas(String spec, FunctionManager fm) throws IOException {
         List<Long> rvas = new ArrayList<>();
+        if (spec.equals("@all")) {
+            // Every function entry in every block: the whole-image table classifies kinds itself.
+            for (Function f : fm.getFunctions(true)) rvas.add(f.getEntryPoint().getOffset() - base);
+            Collections.sort(rvas);
+            return rvas;
+        }
         if (spec.startsWith("@random:")) {
             String[] p = spec.split(":");
             int n = Integer.parseInt(p[1]);
