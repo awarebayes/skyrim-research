@@ -107,6 +107,9 @@ def main():
     costs = json.loads(ledger.read_text()) if ledger.exists() else None
     (output / 'index.html').write_text(render(data, revision, costs))
     (output / 'style.css').write_text((ROOT / 'site/style.css').read_text())
+    graphic = ROOT / 'docs/progress.svg'
+    if graphic.exists():
+        (output / 'progress.svg').write_text(graphic.read_text())
     (output / 'progress.json').write_text(json.dumps(data, indent=2) + '\n')
     (output / '.nojekyll').touch()
     print(f'Built {output / "index.html"}; source {revision}; no game data included.')

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "build_id": "sse-steam-1-7-104",
+  "note": "Sanitized aggregates only: category names, function counts and byte totals. No addresses, bytes or disassembly. Every figure carries a basis, 'measured' (counted on the pinned image by a local script) or 'estimated' (a stated heuristic). This file feeds the progress image; it does not change the scope totals in data/progress.json, which stay null.",
+  "sources": [
+    "findings/ghidra-import.md",
+    "findings/community-resources.md",
+    "docs/resource-guidelines.md",
+    "docs/ideas-next.md"
+  ],
+  "image": {
+    "ghidra_functions": {"value": 176587, "basis": "measured", "method": "Ghidra headless import of the pinned image, findings/ghidra-import.md."},
+    "exported_function_entries": {"value": 176001, "basis": "measured", "method": "Function entries in the local export used by the later census scripts, docs/resource-guidelines.md."}
+  },
+  "denominators": {
+    "functions_excluding_funclets_and_thunks": {
+      "functions": 106486,
+      "bytes": 21870457,
+      "basis": "measured",
+      "method": "Export entries minus 67,896 exception-handling cleanup funclets and 1,616 import thunks, docs/resource-guidelines.md. Includes middleware and generated initializers."
+    },
+    "ordinary_game_code": {
+      "functions": 70156,
+      "bytes": 15809731,
+      "basis": "estimated",
+      "method": "Functions in .text$mn whose nearest vftable-labelled neighbour is an engine class. Other estimates: 68,000 to 78,000 functions, 15.4 to 17.2 MB, docs/resource-guidelines.md."
+    }
+  },
+  "categories": [
+    {"id": "game", "label": "Ordinary game code", "functions": 70156, "bytes": 15809731, "basis": "estimated", "treatment": "in_scope",
+     "method": "Nearest vftable-labelled neighbour in .text$mn is an engine class; neighbourhood heuristic, upper end counts some std-labelled neighbourhoods."},
+    {"id": "havok", "label": "Havok", "functions": 9398, "bytes": 2580317, "basis": "estimated", "treatment": "out_of_scope",
+     "method": "Nearest vftable-labelled neighbour is an hk* class. A 256 KiB window method gives about 7,600 functions, findings/community-resources.md."},
+    {"id": "scaleform", "label": "Scaleform", "functions": 2058, "bytes": 661641, "basis": "estimated", "treatment": "out_of_scope",
+     "method": "Nearest vftable-labelled neighbour is a GFx class; most Scaleform code has no RTTI so this is a lower bound of at least 800 by the window method."},
+    {"id": "bnet", "label": "Bethesda.net client", "functions": 2651, "bytes": 363152, "basis": "estimated", "treatment": "out_of_scope",
+     "method": "Nearest vftable-labelled neighbour is a bnet class. Window method: about 2,900 functions."},
+    {"id": "std", "label": "std and CRT", "functions": 5883, "bytes": 1078377, "basis": "estimated", "treatment": "out_of_scope",
+     "method": "Nearest vftable-labelled neighbour is a std or Concurrency class."},
+    {"id": "init", "label": "Static initializers", "functions": 9762, "bytes": 916145, "basis": "measured", "treatment": "separate",
+     "method": "POGO section group .text$di of the image."},
+    {"id": "teardown", "label": "Static teardown", "functions": 6508, "bytes": 436625, "basis": "measured", "treatment": "separate",
+     "method": "POGO section group .text$yd of the image."},
+    {"id": "funclets", "label": "EH funclets", "functions": 67896, "bytes": 989869, "basis": "measured", "treatment": "separate",
+     "method": "Functions named Unwind@ or Catch@, emitted with their parent function."},
+    {"id": "thunks", "label": "Import and jump thunks", "functions": 1616, "bytes": 8145, "basis": "measured", "treatment": "out_of_scope",
+     "method": "Ghidra thunk and import-name classification."},
+    {"id": "other", "label": "Other", "functions": 70, "bytes": 24469, "basis": "measured", "treatment": "separate",
+     "method": "Remainder of the 106,486-function denominator after the groups above (.text, .text$mn$00 and unclassified)."}
+  ],
+  "structure_census": {
+    "note": "Decodable by the comparator is a structure census, not a match claim.",
+    "primary_unwind_entries": {"value": 93770, "decoded": 93770, "basis": "measured", "method": "Comparator census over the .pdata entries that begin in code; supplied by the orchestrator and not re-run here."},
+    "blocks": [
+      {"id": "handler", "label": "C++ exception handler", "functions": 39848, "bytes": 11675239, "basis": "measured",
+       "method": "Non-funclet functions with a language handler, 95,395 unwind-map entries and 714 try blocks, docs/resource-guidelines.md."},
+      {"id": "plain", "label": "No language handler", "functions": 66641, "bytes": 10209102, "basis": "measured",
+       "method": "Remaining non-funclet functions: 106,489 minus 39,848 with a handler."},
+      {"id": "funclets", "label": "EH funclets", "functions": 67896, "bytes": 989869, "basis": "measured",
+       "method": "Decoded through their parent's unwind data."}
+    ],
+    "jump_table_candidates": {"value": 969, "basis": "estimated", "method": "Functions with a register-indirect jump, docs/ideas-next.md."}
+  }
+}
