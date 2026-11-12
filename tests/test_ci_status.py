@@ -4,6 +4,7 @@ import io
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -125,6 +126,28 @@ class CiStatusTests(unittest.TestCase):
         self.assertEqual(out, '')
         with mock.patch.dict(os.environ, {'CI_STATUS_GH': str(self.dir / 'absent')}):
             self.assertEqual(self.main()[0], ci_status.UNAVAILABLE)
+
+    def test_short_sha_is_expanded_before_asking_gh(self):
+        # A short SHA never equals a run's headSha, so unexpanded it read as "no workflow runs yet".
+        repo = self.dir / 'repo'
+        repo.mkdir()
+        git = ['git', '-C', str(repo), '-c', 'user.name=t', '-c', 'user.email=t@example.invalid']
+        subprocess.run([*git[:3], 'init', '-q'], check=True)
+        subprocess.run([*git, 'commit', '-q', '--allow-empty', '-m', 'x'], check=True)
+        full = subprocess.run([*git[:3], 'rev-parse', 'HEAD'], capture_output=True, text=True,
+                              check=True).stdout.strip()
+        self.runs(run(1, 'A', sha=full))
+        with mock.patch.object(ci_status.resolve_commit, '__defaults__', ('HEAD', repo)):
+            for ref in (full[:7], full[:7].upper(), 'HEAD', full.upper()):
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    code = ci_status.main(['--commit', ref])
+                self.assertEqual(code, ci_status.GREEN, ref)
+                self.assertEqual(out.getvalue().splitlines()[0], f'GREEN: {full}')
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(ci_status.main(['--commit', 'fffffff']), ci_status.UNAVAILABLE)
+            self.assertIn('names no commit', err.getvalue())
 
 
 if __name__ == '__main__':
