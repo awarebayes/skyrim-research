@@ -75,6 +75,17 @@ class SkeletonError(Exception):
 INLINE_BASE_REFS = ('VTABLE_NiRefObject', 'NiRefObject::TotalObjectCount')
 INLINE_BASE_ROOTS = ('NiRefObject', 'NiObject')
 _NG = 'COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)'
+# Opaque declarations from the pinned NG headers: no object layout or enum values inferred.
+# BSTEvent.h, NiPointer.h, NiAllocator.h, BSStorage.h and BSIMusicTrack.h.
+SUPPORT_DECLARATIONS = {
+    'BSTEventSource': 'template <class Event> class BSTEventSource;',
+    'NiPointer': 'template <class T> class NiPointer;',
+    'BSEventNotifyControl': 'enum class BSEventNotifyControl : int;',
+    'NiMemEventType': 'enum class NiMemEventType : int;',
+    'BSStorageDefs::ErrorCode': 'namespace BSStorageDefs { enum class ErrorCode : int; }',
+    'BSStorageDefs::SeekMode': 'namespace BSStorageDefs { enum class SeekMode : int; }',
+    'TrackType': 'enum class TrackType : std::uint32_t;',
+}
 _NI_SLOTS = [
     ('const NiRTTI*', 'GetRTTI() const'), ('NiNode*', 'AsNode()'), ('NiSwitchNode*', 'AsSwitchNode()'),
     ('BSFadeNode*', 'AsFadeNode()'), ('BSMultiBoundNode*', 'AsMultiBoundNode()'), ('BSGeometry*', 'AsGeometry()'),
@@ -326,6 +337,8 @@ def split_declaration(decl):
     code = re.sub(r'\[\[[^\]]*\]\]', ' ', decl.split('//', 1)[0])
     code = re.sub(r'\{.*\}\s*;?\s*$', '', code).strip().rstrip(';').strip()
     code = re.sub(r'\bRE::', '', code)
+    # The pinned recipe is C++14; use byte-sized storage for C++17 byte pointer declarations.
+    code = code.replace('std::byte', 'std::uint8_t')
     open_ = code.find('(')
     if open_ < 0:
         return None
@@ -543,10 +556,10 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
             decls.append(f'{prefix}{ret} {method}({params}){" " + quals if quals else ""};  // compared: 0x{rva:x}')
             head = f'{ret} {cls}::{method}({without_defaults(params)}){" " + quals if quals else ""}'
             by_ref, by_value = type_names(f'{ret} ({params})')
-            for t in ('BSTEventSource', 'BSEventNotifyControl'):
+            for t in SUPPORT_DECLARATIONS:
                 if t in by_ref + by_value and not defined_in(p['included_text'], t):
                     event_types.add(t)
-                    add(t, 'STANDIN ' + (m['label'] or _NG))
+                    add(t, 'STANDIN ' + _NG)
             for t in by_ref:
                 if t in event_types:
                     continue
@@ -635,10 +648,8 @@ def skeleton_files(task_dir, drafted_by=None, repo=None):
         header += [f'class {t};' for t in INLINE_BASE_FORWARD] + ['']
     if forward:
         header += [f'class {t};' for t in forward] + ['']
-    if 'BSTEventSource' in event_types:
-        header += ['template <class Event> class BSTEventSource;', '']
-    if 'BSEventNotifyControl' in event_types:
-        header += ['enum class BSEventNotifyControl : int;', '']
+    for t in sorted(event_types):
+        header += [SUPPORT_DECLARATIONS[t], '']
     for t, why in todo_types:
         header.append(f'// TODO type {t}: {why}.')
     if todo_types:
@@ -865,9 +876,12 @@ def overview(task_dir, cap=SHEET_CAP, repo=None):
     """The unit's one-page index: files, functions and the command for each function's sheet."""
     repo = Path(repo or REPO)
     unit = load_unit(task_dir, repo)
+    kind = unit['task'].get('drafter_kind') or ('normal' if any(
+        f['size'] > 64 for f in unit['functions']) else 'small')
     d = Path(task_dir).as_posix()
     lines = [f'# Unit {unit["cls"]} ({unit["task"].get("task_id")})', '',
              f'Files: {unit["header"]} and {unit["compiled"]}. Budget: {unit["task"].get("max_attempts")} counted attempts.',
+             f'Unit kind: {kind}. Card: docs/drafter-card-{kind}.md.',
              '', '| RVA | bytes | name | sheet pages |', '|---|---|---|---|']
     for f in unit['functions']:
         n = len(paginate(function_sheet(unit, f, repo=repo), cap - FOOTER_ROOM))

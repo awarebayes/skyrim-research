@@ -5,8 +5,11 @@ Paste into a fresh session, with your own worker label (and the profile, if not 
 
 A brief from `python3 tools/flow.py brief drafter` may name a profile and a queue directory; then
 pass `--profile <profile>` and `--queue-dir <dir>` to every `work_queue.py` call below.
+A session told `Your unit kind is normal` uses `docs/drafter-card-normal.md` in step 0 and
+`--queue-dir .local/queue/normal` on every queue call; otherwise use the small card and queue.
+The unit sheet also names its kind and card.
 
-You are a Drafter. Goal: take small C++ units from the shared queue one at a time and write source
+You are a Drafter. Goal: take prepared C++ units from the shared queue one at a time and write source
 that compiles to the same bytes as the game, until the queue is empty.
 
 ## Five binding rules
@@ -41,9 +44,9 @@ every other document are optional: an unread document is never a reason to stop.
 
 ## The loop
 
-0. Read `docs/drafter-card-small.md` once (91 lines). Its "Rules" and "Result lines" tables are the
-   fixes you will need. Ignore its step 1 (skeletons already exist) and its handoff section (step 9
-   here replaces it).
+0. Read the card for your unit kind once (`docs/drafter-card-small.md` by default). Use its rules
+   and result guidance. The small card's skeleton creation and handoff steps are replaced by this
+   runbook: skeletons already exist, and step 9 here reports the results.
 1. `python3 tools/work_queue.py next --worker <label> --profile cheap` prints a unit dir, e.g.
    `.local/tasks/q1-s02-niobject/q1-s02-niobject-bsxflags`. If it prints `EMPTY`, go to "Finished".
 2. `cat <unit dir>/sheet.md` (Claude models: `sheet.fnv.md`). It names the two source files, the

@@ -269,6 +269,8 @@ class SkeletonText(Fixture):
         self.assertEqual(us.split_declaration('virtual void Set(int a_x) = 0;'), ('void', 'int a_x', '', True, False))
         self.assertEqual(us.split_declaration('bool IsEqual(NiObject* a_object) override;'),
                          ('bool', 'NiObject* a_object', '', True, False))
+        self.assertEqual(us.split_declaration('void Read(std::byte* a_bytes);')[1],
+                         'std::uint8_t* a_bytes')
         self.assertIsNone(us.split_declaration('int value;'))
         self.assertEqual(us.without_defaults('int a = 0, float b = f(1, 2)'), 'int a, float b')
 
@@ -281,6 +283,29 @@ class SkeletonText(Fixture):
 
 
 class Sheets(Fixture):
+    def test_normal_support_types_are_opaque_declarations(self):
+        pack = self.root / '.local/packs' / BUILD / '0x1000/README.md'
+        pack.write_text(pack_readme('virtual BSStorageDefs::ErrorCode Seek(NiPointer<Cell>& a_cell, '
+                                    'BSStorageDefs::SeekMode a_mode, NiMemEventType a_event);'))
+        _hr, h, _cr, _cpp = self.files()
+        self.assertIn('template <class T> class NiPointer;', h)
+        self.assertIn('namespace BSStorageDefs { enum class ErrorCode : int; }', h)
+        self.assertIn('namespace BSStorageDefs { enum class SeekMode : int; }', h)
+        self.assertIn('enum class NiMemEventType : int;', h)
+        self.assertNotIn('// TODO type ', h)
+
+    def test_normal_unit_names_its_card_and_preserves_pagination(self):
+        task = json.loads((self.unit / 'task.json').read_text())
+        task['functions'][0]['size'] = 128
+        task['max_attempts'] = 13
+        (self.unit / 'task.json').write_text(json.dumps(task))
+        self.assertIn('Unit kind: normal. Card: docs/drafter-card-normal.md.',
+                      us.overview(self.unit, repo=self.root))
+        self.assertIn('Budget: 13 counted attempts.', us.overview(self.unit, repo=self.root))
+        us.write_sheet_variants(self.unit, which=False, repo=self.root)
+        self.assertTrue((self.unit / 'sheet.md').is_file())
+        self.assertFalse((self.unit / 'sheet.fnv.md').exists())
+
     def test_function_sheet_has_the_facts_and_fits_the_cap(self):
         pages = us.sheet_pages(self.unit, '0x1000', repo=self.root)
         self.assertEqual(len(pages), 1)
