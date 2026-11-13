@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__real@3f800000": {
+      "rva": 28687912,
+      "size": null
+    },
+    "?ShouldBeLimited@ArrowProjectile@@UEAA_NXZ": {
+      "rva": 8249312,
+      "size": 12
+    },
+    "?GetPowerSpeedMult@ArrowProjectile@@UEBAMXZ": {
+      "rva": 8249216,
+      "size": 18
+    },
+    "?Update3D@ArrowProjectile@@UEAAXXZ": {
+      "rva": 8249584,
+      "size": 18
+    },
+    "?GetWeaponSpeedMult@ArrowProjectile@@UEBAMXZ": {
+      "rva": 8249248,
+      "size": 34
+    },
+    "?GetGravity@ArrowProjectile@@UEAAMXZ": {
+      "rva": 8249152,
+      "size": 50
+    },
+    "?ResolveAttachedNodes@ArrowProjectile@@QEAAXXZ": {
+      "rva": 8367952,
+      "size": null
+    },
+    "?ScaleAmmoSpeed@@YAMM@Z": {
+      "rva": 4324256,
+      "size": null
+    },
+    "?GetBaseGravity@ArrowProjectile@@QEAAMXZ": {
+      "rva": 8373824,
+      "size": null
+    },
+    "?g_gravityOne@@3MA": {
+      "rva": 34239608,
+      "size": null
+    },
+    "?PrepareSpeedQuery@@YAXXZ": {
+      "rva": 8372224,
+      "size": null
+    },
+    "?ComputeSpeedMult@@YAMXZ": {
+      "rva": 4324192,
+      "size": null
+    },
+    "?Slot195@ArrowProjectile@@UEBAEXZ": {
+      "rva": 8249296,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__real@3f800000",
+        "rva": "0x1b5be28",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ShouldBeLimited@ArrowProjectile@@UEAA_NXZ",
+        "rva": "0x7ddfe0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetPowerSpeedMult@ArrowProjectile@@UEBAMXZ",
+        "rva": "0x7ddf80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Update3D@ArrowProjectile@@UEAAXXZ",
+        "rva": "0x7de0f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetWeaponSpeedMult@ArrowProjectile@@UEBAMXZ",
+        "rva": "0x7ddfa0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetGravity@ArrowProjectile@@UEAAMXZ",
+        "rva": "0x7ddf40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResolveAttachedNodes@ArrowProjectile@@QEAAXXZ",
+        "rva": "0x7faf50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ScaleAmmoSpeed@@YAMM@Z",
+        "rva": "0x41fba0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetBaseGravity@ArrowProjectile@@QEAAMXZ",
+        "rva": "0x7fc640",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_gravityOne@@3MA",
+        "rva": "0x20a7478",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareSpeedQuery@@YAXXZ",
+        "rva": "0x7fc000",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ComputeSpeedMult@@YAMXZ",
+        "rva": "0x41fb60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot195@ArrowProjectile@@UEBAEXZ",
+        "rva": "0x7ddfd0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/d4b7a0561d7b21466f8c9e47fd159f8611fc992447138fc5ef8432a9dd2cfb4c.json",
+  "versions": [
+    {
+      "sha256": "d4b7a0561d7b21466f8c9e47fd159f8611fc992447138fc5ef8432a9dd2cfb4c",
+      "base": null,
+      "added": [
+        "__real@3f800000",
+        "?ShouldBeLimited@ArrowProjectile@@UEAA_NXZ",
+        "?GetPowerSpeedMult@ArrowProjectile@@UEBAMXZ",
+        "?Update3D@ArrowProjectile@@UEAAXXZ",
+        "?GetWeaponSpeedMult@ArrowProjectile@@UEBAMXZ",
+        "?GetGravity@ArrowProjectile@@UEAAMXZ",
+        "?ResolveAttachedNodes@ArrowProjectile@@QEAAXXZ",
+        "?ScaleAmmoSpeed@@YAMM@Z",
+        "?GetBaseGravity@ArrowProjectile@@QEAAMXZ",
+        "?g_gravityOne@@3MA",
+        "?PrepareSpeedQuery@@YAXXZ",
+        "?ComputeSpeedMult@@YAMXZ",
+        "?Slot195@ArrowProjectile@@UEBAEXZ"
+      ]
+    }
+  ]
+}

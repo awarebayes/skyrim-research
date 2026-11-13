@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/f74a30582550bc824d5a72c5062a6356eed8deed30333fa289ce0c770653fad7.json",
+  "versions": [
+    {
+      "sha256": "f74a30582550bc824d5a72c5062a6356eed8deed30333fa289ce0c770653fad7",
+      "base": null,
+      "added": [
+        "?GetMagicCaster@Explosion@@UEAAPEAVMagicCaster@@W4CastingSource@MagicSystem@@@Z",
+        "?FinishLoadGame@Explosion@@UEAAXXZ",
+        "?SetActorCause@Explosion@@UEAAXPEAVActorCause@@@Z",
+        "??_GExplosion@@UEAAPEAXI@Z",
+        "?PrepareLoadState@Explosion@@QEAAXXZ",
+        "?g_explosionManager@@3PEAVExplosionManager@@EA",
+        "?AddExplosionToManager@@YAXPEAVExplosionManager@@PEAVExplosion@@@Z",
+        "?ReleaseActorCause@@YAXPEAVActorCause@@@Z",
+        "??1Explosion@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "?GetActorCause@Explosion@@UEBAPEAXXZ"
+      ]
+    }
+  ]
+}

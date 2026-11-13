@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetMagicCaster@Explosion@@UEAAPEAVMagicCaster@@W4CastingSource@MagicSystem@@@Z": {
+      "rva": 8293200,
+      "size": 21
+    },
+    "?FinishLoadGame@Explosion@@UEAAXXZ": {
+      "rva": 8279840,
+      "size": 34
+    },
+    "?SetActorCause@Explosion@@UEAAXPEAVActorCause@@@Z": {
+      "rva": 6606496,
+      "size": 41
+    },
+    "??_GExplosion@@UEAAPEAXI@Z": {
+      "rva": 8297632,
+      "size": 52
+    },
+    "?PrepareLoadState@Explosion@@QEAAXXZ": {
+      "rva": 3019136,
+      "size": null
+    },
+    "?g_explosionManager@@3PEAVExplosionManager@@EA": {
+      "rva": 52500808,
+      "size": null
+    },
+    "?AddExplosionToManager@@YAXPEAVExplosionManager@@PEAVExplosion@@@Z": {
+      "rva": 8271376,
+      "size": null
+    },
+    "?ReleaseActorCause@@YAXPEAVActorCause@@@Z": {
+      "rva": 4464432,
+      "size": null
+    },
+    "??1Explosion@@UEAA@XZ": {
+      "rva": 8274064,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?GetActorCause@Explosion@@UEBAPEAXXZ": {
+      "rva": 8280672,
+      "size": 8
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetMagicCaster@Explosion@@UEAAPEAVMagicCaster@@W4CastingSource@MagicSystem@@@Z",
+        "rva": "0x7e8b50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishLoadGame@Explosion@@UEAAXXZ",
+        "rva": "0x7e5720",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetActorCause@Explosion@@UEAAXPEAVActorCause@@@Z",
+        "rva": "0x64cea0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GExplosion@@UEAAPEAXI@Z",
+        "rva": "0x7e9ca0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareLoadState@Explosion@@QEAAXXZ",
+        "rva": "0x2e1180",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_explosionManager@@3PEAVExplosionManager@@EA",
+        "rva": "0x3211948",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AddExplosionToManager@@YAXPEAVExplosionManager@@PEAVExplosion@@@Z",
+        "rva": "0x7e3610",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReleaseActorCause@@YAXPEAVActorCause@@@Z",
+        "rva": "0x441f30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1Explosion@@UEAA@XZ",
+        "rva": "0x7e4090",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetActorCause@Explosion@@UEBAPEAXXZ",
+        "rva": "0x7e5a60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
