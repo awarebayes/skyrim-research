@@ -132,6 +132,94 @@ class FlowTests(unittest.TestCase):
     def actions(self):
         return flow.next_actions(self.root, self.fdir, now=0)
 
+    def test_void_review_preserves_other_findings_and_requires_flag(self):
+        name = flow.review_group(self.root, self.fdir, max_size=10)[0]
+        g = flow.load_group(self.fdir, name)
+        blocks = [(r, size, self.repo.digest(r), 'reject', 'none') for r, size, _ in FUNCS]
+        self.repo.save_review(g['task_id'], blocks)
+        with self.assertRaises(flow.FlowError):
+            flow.void_review(self.root, self.fdir, name, 'setup failure', False, ['0x1000'])
+        result = flow.void_review(self.root, self.fdir, name, 'setup failure', True, ['0x1000'])
+        self.assertEqual(result, ['0x1000'])
+        self.assertTrue((self.root / '.local/reviews/superseded' / (g['task_id'] + '.md')).exists())
+        states = flow.function_states(self.root, self.fdir, online=False)
+        self.assertEqual(states['0x1000']['state'], 'confirmed')
+        self.assertEqual(states['0x1010']['state'], 'rejected')
+        made = flow.review_group(self.root, self.fdir)
+        self.assertIn('0x1000', flow.load_group(self.fdir, made[0])['functions'])
+        self.assertIn('setup failure', (self.root / flow.load_group(self.fdir, made[0])['brief']).read_text())
+
+    def test_void_review_refuses_approval(self):
+        name = flow.review_group(self.root, self.fdir, max_size=10)[0]
+        g = flow.load_group(self.fdir, name)
+        blocks = [(r, size, self.repo.digest(r), 'approve', 'none') for r, size, _ in FUNCS]
+        path = self.repo.save_review(g['task_id'], blocks)
+        with self.assertRaises(flow.FlowError):
+            flow.void_review(self.root, self.fdir, name, 'setup failure', True)
+        self.assertTrue(path.exists())
+
+    def test_void_sampling_dissolves_mixed_groups_without_erasing_other_verdicts(self):
+        name = flow.review_group(self.root, self.fdir, max_size=10)[0]
+        g = flow.load_group(self.fdir, name)
+        sample = flow.load_group(self.fdir, g['pair'])
+        first = [(r, size, self.repo.digest(r), 'reject' if r == 0x2000 else 'approve', 'none')
+                 for r, size, _ in FUNCS]
+        second = [(r, size, self.repo.digest(r), 'escalate' if r == 0x1000 else v, 'other' if r == 0x1000 else c)
+                  for r, size, d, v, c in first]
+        primary_path = self.repo.save_review(g['task_id'], first)
+        primary_bytes = primary_path.read_bytes()
+        self.repo.save_review(sample['task_id'], second, sampling='yes')
+        self.assertIn('DISAGREE', flow.sampling_gate(self.root, self.fdir, g, flow.inventory(self.root))[1])
+        flow.void_review(self.root, self.fdir, sample['name'], 'unrelated check failure', True, ['0x1000'])
+        self.assertEqual((primary_path.parent / 'superseded' / primary_path.name).read_bytes(), primary_bytes)
+        held = flow.prior_holds(self.root)
+        self.assertIn(('0x2000', self.repo.digest(0x2000)), held)
+        self.assertNotIn(('0x1000', self.repo.digest(0x1000)), held)
+        self.assertNotIn('sampling disagreement', str(self.actions()))
+        states = flow.function_states(self.root, self.fdir, online=False)
+        self.assertEqual(states['0x2000']['state'], 'rejected')
+        self.assertEqual(states['0x1010']['state'], 'confirmed')
+        new = flow.review_group(self.root, self.fdir)[0]
+        self.assertEqual(set(flow.load_group(self.fdir, new)['functions']), {'0x1000', '0x1010'})
+        self.assertEqual(flow.function_states(self.root, self.fdir, online=False)['0x1000']['state'], 'review-pending')
+        event = flow.events(self.fdir)[-2]
+        self.assertEqual(event['event'], 'void-review')
+        self.assertEqual(event['reason'], 'unrelated check failure')
+        self.assertEqual(set(event['dissolved_groups']), {name, sample['name']})
+
+    def test_void_review_checks_pair_before_mutation(self):
+        name = flow.review_group(self.root, self.fdir, max_size=10)[0]
+        g = flow.load_group(self.fdir, name)
+        blocks = [(r, size, self.repo.digest(r), 'escalate', 'other') for r, size, _ in FUNCS]
+        path = self.repo.save_review(g['task_id'], blocks)
+        pair = flow.load_group(self.fdir, g['pair'])
+        bad = self.root / '.local/reviews' / (pair['task_id'] + '.md')
+        bad.write_text('incomplete')
+        before = path.read_bytes()
+        with self.assertRaises(flow.FlowError):
+            flow.void_review(self.root, self.fdir, name, 'setup failure', True)
+        self.assertEqual(path.read_bytes(), before)
+        self.assertFalse(flow.load_group(self.fdir, name).get('superseded_by'))
+
+    def test_void_review_preserves_non_reproduction_stop(self):
+        name = flow.review_group(self.root, self.fdir, max_size=10)[0]
+        g = flow.load_group(self.fdir, name)
+        g['rerun'] = {'not_agree': ['0x1000']}
+        flow.save_group(self.fdir, g)
+        path = self.repo.save_review(g['task_id'], [(r, size, self.repo.digest(r), 'reject', 'none')
+                                                  for r, size, _ in FUNCS])
+        with self.assertRaises(flow.FlowError):
+            flow.void_review(self.root, self.fdir, name, 'setup failure', True)
+        self.assertTrue(path.exists())
+
+    def test_reviewer_brief_allows_fnv_index_and_reports_setup_failure(self):
+        name = flow.review_group(self.root, self.fdir)[0]
+        text = (self.root / flow.load_group(self.fdir, name)['brief']).read_text()
+        self.assertIn('.local/analysis/fnv_index.jsonl', text)
+        self.assertIn(f'Review working directory: `{self.root}`', text)
+        self.assertIn('outside the group', text)
+        self.assertIn('instead of writing verdicts', text)
+
     def test_session_start_comes_first_then_grouping(self):
         acts = self.actions()
         self.assertEqual(acts[0], ('run', 'python3 tools/flow.py session-start'))

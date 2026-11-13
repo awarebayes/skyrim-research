@@ -6,6 +6,7 @@
     python3 tools/flow.py status [--functions]           # counts per state, groups, stale claims
     python3 tools/flow.py review-group [--max 18]        # group confirmed functions, pick the sample, write briefs
     python3 tools/flow.py dispatched <group>             # a Reviewer was started on that group's brief
+    python3 tools/flow.py void-review <group> --setup-failure --reason TEXT  # retire specified setup-failure verdicts
     python3 tools/flow.py redo-review <group>            # new task id after a review the parser refused
     python3 tools/flow.py record-rerun <group> --compare FILE   # sampling re-run result (AGREE/DISAGREE rows)
     python3 tools/flow.py integrate <group> [--no-push]  # accept, check, commit, push, watch CI, in its own worktree; stops at the first failure
@@ -958,6 +959,8 @@ context, model {g['reviewer_model']}. Task id:
 Gates in force: G2 (you may read reconstructed source and, where listed, the private packs under
 `.local/packs/`; never quote them). G3/G4/G5 are not needed: run no verifier, no Boat, no network.
 
+Review working directory: `{root}`. Run every review command from this checkout.
+
 ## Functions ({len(g['functions'])})
 
 | build id | RVA | size | name | match record |
@@ -972,17 +975,21 @@ Translation units:
 """ + '\n'.join(f'- `{c}`: {", ".join(f"`{p}`" for p in tu)}' for c, tu in sorted(units.items())) + f"""
 
 Private packs (G2): {', '.join(f'`{p}`' for p in packs) or 'none found'}.
+For the provenance comparison you may read `.local/analysis/fnv_index.jsonl` and the pinned FNV
+source files it identifies, under the maintainer's recorded FNV reuse and model-exposure permissions.
 
 ## Steps
 
-1. Run `python3 tools/review_packet.py --template {' '.join(g['functions'])}` and review every
+1. Run `python3 tools/check.py`. If it fails on a path outside the group's units, stop and report
+   `setup failure` to the orchestrator instead of writing verdicts.
+2. Run `python3 tools/review_packet.py --template {' '.join(g['functions'])}` and review every
    function with the checklist in `docs/reviewer-runbook.md`.
-2. Do not open any other file under `.local/reviews/` or `.local/handoffs/`: this review must be
+3. Do not open any other file under `.local/reviews/` or `.local/handoffs/`: this review must be
    independent.
-3. Write your review document, exactly in the runbook's output format, with the title
+4. Write your review document, exactly in the runbook's output format, with the title
    `# Review {g['task_id']}`, to `.local/reviews/{g['task_id']}.md`. Create it once; never edit or
    overwrite it afterwards. If that file already exists, stop and return `exists` in the table.
-4. Return only the short table from the runbook ("Return message"), nothing else.
+5. Return only the short table from the runbook ("Return message"), nothing else.
 
 Do not push, post publicly, mark `matched`, edit any other file, or start further agents.
 """
@@ -1037,6 +1044,61 @@ def record_rerun(root, fdir, name, compare_file):
     save_group(fdir, g)
     log_event(fdir, 'rerun', group=name, agree=len(agree), not_agree=other)
     return agree, other
+
+
+def void_review(root, fdir, name, reason, setup_failure, selected=None):
+    """Archive setup-failure verdicts and dissolve their groups without losing other findings."""
+    from check import naming_finding_problem
+    refuse(setup_failure, 'explicit --setup-failure is required')
+    refuse(bool(reason.strip()) and naming_finding_problem(reason) is None, 'reason must be short public prose')
+    root = Path(root)
+    g = load_group(fdir, name)
+    refuse(g['kind'] in ('review', 'sampling'), 'only individual review groups may be voided')
+    data = inventory(root)
+    status, blocks = read_review(root, g, data['functions'])
+    refuse(status == 'ok', 'a complete saved review is required')
+    chosen = set(selected if selected is not None else blocks)
+    refuse(bool(chosen) and chosen <= blocks.keys(), 'select verdicts present in the saved review')
+    refuse(all(blocks[r].get('verdict') in ('reject', 'escalate') for r in chosen),
+           'cannot void an approval or unknown verdict')
+    affected = [g]
+    if g.get('pair'):
+        affected.append(load_group(fdir, g['pair']))
+    plans = []
+    for group in affected:
+        refuse(not group.get('superseded_by') and not group.get('integrated'),
+               'group is superseded or integrated')
+        refuse(not (group.get('rerun') or {}).get('not_agree'),
+               'comparator non-reproduction must be resolved independently')
+        path = review_path(root, group['task_id'])
+        if not path.exists():
+            continue
+        status, _ = read_review(root, group, data['functions'])
+        refuse(status == 'ok', 'a paired saved review must also be complete')
+        content = path.read_text(encoding='utf-8')
+        pieces = re.split(r'(?=^## )', content, flags=re.M)
+        keep = [pieces[0]]
+        for piece in pieces[1:]:
+            match = re.match(r'## \S+ (0x[0-9a-f]+)\b', piece)
+            if group['name'] != name or not match or match.group(1) not in chosen:
+                keep.append(piece)
+        archive = path.parent / 'superseded' / path.name
+        residual = path.parent / (group['task_id'] + '-retained.md')
+        refuse(not archive.exists() and not residual.exists(), 'archive or retained review already exists')
+        plans.append((path, archive, residual, ''.join(keep) if len(keep) > 1 else None))
+    # The original reviews stay byte-identical in the archive. Retained subsets are only an
+    # index of their other verdicts for prior_holds, never a new approval or a changed review.
+    for path, archive, residual, retained in plans:
+        archive.parent.mkdir(parents=True, exist_ok=True)
+        path.rename(archive)
+        if retained:
+            residual.write_text(retained, encoding='utf-8')
+    for group in affected:
+        group['superseded_by'] = 'void-review:' + g['task_id']
+        save_group(fdir, group)
+    log_event(fdir, 'void-review', group=name, task_id=g['task_id'], functions=sorted(chosen),
+              dissolved_groups=[group['name'] for group in affected], reason=reason)
+    return sorted(chosen)
 
 
 def redo_review(root, fdir, name):
@@ -1772,6 +1834,11 @@ def parser():
     s = sub.add_parser('dispatched')
     s.add_argument('group')
     s.add_argument('--rerun', action='store_true', help='the sampling re-run, not the Reviewer, was started')
+    s = sub.add_parser('void-review')
+    s.add_argument('group')
+    s.add_argument('--reason', required=True)
+    s.add_argument('--setup-failure', action='store_true')
+    s.add_argument('--functions', nargs='+', help='RVAs to void; preserve the other review blocks')
     s = sub.add_parser('redo-review')
     s.add_argument('group')
     s = sub.add_parser('record-rerun')
@@ -1862,6 +1929,9 @@ def main(argv=None):
             log_event(fdir, 'rerun-dispatched' if a.rerun else 'dispatched', group=a.group, task_id=g['task_id'],
                       reviewer_model=g['reviewer_model'])
             print(f'{a.group} marked {"re-run " if a.rerun else ""}dispatched')
+        elif a.cmd == 'void-review':
+            done = void_review(root, fdir, a.group, a.reason, a.setup_failure, a.functions)
+            print(f'{a.group}: retired {len(done)} verdict(s); regroup for a fresh review')
         elif a.cmd == 'redo-review':
             g = redo_review(root, fdir, a.group)
             print(f'{a.group}: new task id {g["task_id"]}, brief {g["brief"]}; dispatch a fresh Reviewer with it')
