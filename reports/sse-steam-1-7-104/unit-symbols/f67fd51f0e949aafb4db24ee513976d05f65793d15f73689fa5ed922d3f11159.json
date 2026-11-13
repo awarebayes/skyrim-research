@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__real@ff7fffff": {
+      "rva": 27613452,
+      "size": null
+    },
+    "?GetKeyCount@NiFloatInterpolator@@UEBAIG@Z": {
+      "rva": 16127952,
+      "size": 14
+    },
+    "?GetKeyContent@NiFloatInterpolator@@UEBA?AW4KeyContent@@G@Z": {
+      "rva": 16127984,
+      "size": 14
+    },
+    "?GuaranteeTimeRange@NiFloatInterpolator@@UEAAXMM@Z": {
+      "rva": 16128384,
+      "size": 14
+    },
+    "?GetKeyArray@NiFloatInterpolator@@UEBAPEAXG@Z": {
+      "rva": 16128032,
+      "size": 15
+    },
+    "?GetKeyStride@NiFloatInterpolator@@UEBAEG@Z": {
+      "rva": 16128064,
+      "size": 15
+    },
+    "?GetChannelPosed@NiFloatInterpolator@@UEBA_NG@Z": {
+      "rva": 16128096,
+      "size": 27
+    },
+    "?GuaranteeFloatTimeRange@@YAXPEAXMM@Z": {
+      "rva": 16125424,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__real@ff7fffff",
+        "rva": "0x1a5590c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetKeyCount@NiFloatInterpolator@@UEBAIG@Z",
+        "rva": "0xf617d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetKeyContent@NiFloatInterpolator@@UEBA?AW4KeyContent@@G@Z",
+        "rva": "0xf617f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GuaranteeTimeRange@NiFloatInterpolator@@UEAAXMM@Z",
+        "rva": "0xf61980",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetKeyArray@NiFloatInterpolator@@UEBAPEAXG@Z",
+        "rva": "0xf61820",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetKeyStride@NiFloatInterpolator@@UEBAEG@Z",
+        "rva": "0xf61840",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetChannelPosed@NiFloatInterpolator@@UEBA_NG@Z",
+        "rva": "0xf61860",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GuaranteeFloatTimeRange@@YAXPEAXMM@Z",
+        "rva": "0xf60df0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

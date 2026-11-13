@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/f67fd51f0e949aafb4db24ee513976d05f65793d15f73689fa5ed922d3f11159.json",
+  "versions": [
+    {
+      "sha256": "f67fd51f0e949aafb4db24ee513976d05f65793d15f73689fa5ed922d3f11159",
+      "base": null,
+      "added": [
+        "__real@ff7fffff",
+        "?GetKeyCount@NiFloatInterpolator@@UEBAIG@Z",
+        "?GetKeyContent@NiFloatInterpolator@@UEBA?AW4KeyContent@@G@Z",
+        "?GuaranteeTimeRange@NiFloatInterpolator@@UEAAXMM@Z",
+        "?GetKeyArray@NiFloatInterpolator@@UEBAPEAXG@Z",
+        "?GetKeyStride@NiFloatInterpolator@@UEBAEG@Z",
+        "?GetChannelPosed@NiFloatInterpolator@@UEBA_NG@Z",
+        "?GuaranteeFloatTimeRange@@YAXPEAXMM@Z"
+      ]
+    }
+  ]
+}
