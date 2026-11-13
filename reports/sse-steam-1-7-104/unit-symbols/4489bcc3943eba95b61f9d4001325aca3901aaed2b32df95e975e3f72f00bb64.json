@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "local-6qiek5hv-ra4yt25q-motyglq7-63ot3cih-pyxe7smw-xgjsoyug-azyq": {
+      "rva": 910528,
+      "size": 39
+    },
+    "?descriptor@@3UDescriptor@@A": {
+      "rva": 26265912,
+      "size": null
+    },
+    "local-khynhpod-5jmkpbve-itm5mj7s-w7zkxkl6-ekrzbsui-24b5eur2-wgpa": {
+      "rva": 52886408,
+      "size": null
+    },
+    "?construct@@YAXPEAUStaticde4c0@@PEBUDescriptor@@@Z": {
+      "rva": 15404944,
+      "size": null
+    },
+    "atexit": {
+      "rva": 22706480,
+      "size": null
+    },
+    "local-sfsjriqi-cyyq5ulp-scss5nif-kqayt76n-yxfwnx6d-ybc5v7am-3h6a": {
+      "rva": 24840880,
+      "size": null
+    },
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "local-6qiek5hv-ra4yt25q-motyglq7-63ot3cih-pyxe7smw-xgjsoyug-azyq",
+        "rva": "0xde4c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "Per-unit target reference extracted from the pinned image; reconstruction names are guesses."
+      },
+      {
+        "name": "?descriptor@@3UDescriptor@@A",
+        "rva": "0x190c938",
+        "size_from": null,
+        "community_name": null,
+        "note": "Per-unit target reference extracted from the pinned image; reconstruction names are guesses."
+      },
+      {
+        "name": "local-khynhpod-5jmkpbve-itm5mj7s-w7zkxkl6-ekrzbsui-24b5eur2-wgpa",
+        "rva": "0x326fb88",
+        "size_from": null,
+        "community_name": null,
+        "note": "Per-unit target reference extracted from the pinned image; reconstruction names are guesses."
+      },
+      {
+        "name": "?construct@@YAXPEAUStaticde4c0@@PEBUDescriptor@@@Z",
+        "rva": "0xeb0f90",
+        "size_from": null,
+        "community_name": null,
+        "note": "Per-unit target reference extracted from the pinned image; reconstruction names are guesses."
+      },
+      {
+        "name": "atexit",
+        "rva": "0x15a7930",
+        "size_from": null,
+        "community_name": null,
+        "note": "Per-unit target reference extracted from the pinned image; reconstruction names are guesses."
+      },
+      {
+        "name": "local-sfsjriqi-cyyq5ulp-scss5nif-kqayt76n-yxfwnx6d-ybc5v7am-3h6a",
+        "rva": "0x17b0ab0",
+        "size_from": null,
+        "community_name": null,
+        "note": "Per-unit target reference extracted from the pinned image; reconstruction names are guesses."
+      },
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "Per-unit target reference extracted from the pinned image; reconstruction names are guesses."
+      }
+    ],
+    "note": "Per-unit initializer reference bindings"
+  }
+}

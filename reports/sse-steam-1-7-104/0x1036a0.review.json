@@ -1,0 +1,29 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "3af96d874783d061f6244ab046fe7897934f4e924621f7b7645f422e9164f095",
+  "escalation_category": "none",
+  "family_evidence": {
+    "batch_path": "reports/sse-steam-1-7-104/family-batches/p71-static-remaining.json",
+    "batch_sha256": "ef3b83ed95bdcb264dbb8c99c202c0b05b45ef170fb141137b58258e09f74038",
+    "family_path": "reports/sse-steam-1-7-104/families/5adf752c9f30ca21ec5ef9dda6fc6c899b4d95ebf8443da8aef77e0163776793.json",
+    "member_sha256": "d0e34c03ce1659be96e66823f89c28877e960d19c1992e8578aa880aa8dca86c"
+  },
+  "function_id": "sse-steam-1-7-104-0x1036a0",
+  "naming_findings": [
+    "Family approval does not assess individual names."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "family",
+  "review_record_schema": 4,
+  "review_sha256": "6f56ef55be95666e4fafe68c199055c510256c9d611ea678d8ea37e816bd522b",
+  "review_task_id": "review-family-5adf752c9f30ca21ec5e",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 1062560,
+  "size": 39,
+  "source_digest": "402f88f00f8995ef9c95786ed521cae1e3426ca5d48a8bf6566f7a3e4cb19f08",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

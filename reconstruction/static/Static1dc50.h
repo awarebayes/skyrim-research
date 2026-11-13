@@ -1,0 +1,16 @@
+// Build: sse-steam-1-7-104
+// Source exposure: binary-analysis
+// Owning system unknown. Referenced object names are stand-ins unless labelled otherwise.
+// Labels: v2
+// Static1dc50, Descriptor, descriptor, construct, destroy, object: GUESS(low) STANDIN
+#pragma once
+struct Descriptor;
+extern Descriptor descriptor;
+struct Static1dc50;
+extern void construct(Static1dc50*, const Descriptor*);
+extern void destroy(Static1dc50*);
+struct Static1dc50 {
+    void* value;
+    Static1dc50() { construct(this, &descriptor); }
+    ~Static1dc50() { destroy(this); }
+};
