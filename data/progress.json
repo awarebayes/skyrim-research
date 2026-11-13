@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T17:15:40Z",
+  "updated_at": "2026-11-13T17:48:10Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -176356,12 +176356,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1049936,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static100550::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x100550.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1005c0",
@@ -177484,12 +177486,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1085408,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static108fe0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x108fe0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x109250",
@@ -177544,12 +177548,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1090800,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static10a4f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x10a4f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x10ab0",
@@ -178204,12 +178210,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 79664,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static13730::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x13730.json"
     },
     {
       "id": "sse-steam-1-7-104-0x137a0",
@@ -178408,12 +178416,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 81568,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static13ea0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x13ea0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x13f10",
@@ -178492,12 +178502,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 82352,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static141b0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x141b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x14220",
@@ -178528,12 +178540,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 82688,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static14300::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x14300.json"
     },
     {
       "id": "sse-steam-1-7-104-0x14370",
@@ -178950,12 +178964,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 96768,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17a00::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17a00.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17ab0",
@@ -179058,12 +179074,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 102640,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static190f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x190f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x19160",
@@ -179096,12 +179114,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 102976,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static19240::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x19240.json"
     },
     {
       "id": "sse-steam-1-7-104-0x192b0",
@@ -179424,12 +179444,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 108944,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1a990::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1a990.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1aa00",
@@ -179448,12 +179470,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 109168,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1aa70::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1aa70.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1b6a0",
@@ -179520,12 +179544,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 113232,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1ba50::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1ba50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1bb20",
@@ -179832,12 +179858,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 132832,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static206e0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x206e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x20750",
@@ -180012,24 +180040,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 140016,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static222f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x222f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x22360",
       "build_id": "sse-steam-1-7-104",
       "rva": 140128,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static22360::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x22360.json"
     },
     {
       "id": "sse-steam-1-7-104-0x223d0",
@@ -180302,12 +180334,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 204640,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static31f60::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x31f60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x31fd0",
@@ -180868,12 +180902,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 209904,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static333f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x333f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x33460",
@@ -181108,12 +181144,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 271536,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static424b0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x424b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x42520",
@@ -181336,12 +181374,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 347904,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static54f00::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x54f00.json"
     },
     {
       "id": "sse-steam-1-7-104-0x54f70",
@@ -181372,24 +181412,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 348240,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static55050::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x55050.json"
     },
     {
       "id": "sse-steam-1-7-104-0x550c0",
       "build_id": "sse-steam-1-7-104",
       "rva": 348352,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static550c0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x550c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x55130",
@@ -181506,12 +181550,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 349472,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static55520::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x55520.json"
     },
     {
       "id": "sse-steam-1-7-104-0x55590",
@@ -181638,12 +181684,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 350704,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static559f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x559f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x55a60",
@@ -181770,12 +181818,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 351936,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static55ec0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x55ec0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x55f30",
@@ -182010,24 +182060,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 402176,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static62300::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x62300.json"
     },
     {
       "id": "sse-steam-1-7-104-0x62370",
       "build_id": "sse-steam-1-7-104",
       "rva": 402288,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static62370::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x62370.json"
     },
     {
       "id": "sse-steam-1-7-104-0x623e0",
@@ -182082,12 +182136,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 402848,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static625a0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x625a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x62610",
@@ -182166,12 +182222,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 403632,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static628b0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x628b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x62920",
@@ -182370,12 +182428,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 405536,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static63020::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x63020.json"
     },
     {
       "id": "sse-steam-1-7-104-0x63090",
@@ -182466,12 +182526,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 406432,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static633a0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x633a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x63410",
@@ -182694,12 +182756,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 408560,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static63bf0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x63bf0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x63c60",
@@ -183190,12 +183254,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 432736,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static69a60::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x69a60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x69ad0",
@@ -183538,12 +183604,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 442256,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6bf90::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6bf90.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6c000",
@@ -183610,12 +183678,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 442928,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6c230::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6c230.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6c2a0",
@@ -183718,12 +183788,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 443936,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6c620::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6c620.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6c690",
@@ -184006,12 +184078,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 446624,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6d0a0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6d0a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6d110",
@@ -184210,12 +184284,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 448528,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6d810::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6d810.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6d880",
@@ -184812,12 +184888,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 454128,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6edf0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6edf0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6ee60",
@@ -184860,12 +184938,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 454576,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6efb0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6efb0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6f020",
@@ -184908,12 +184988,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 455024,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6f170::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6f170.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6f1e0",
@@ -185196,12 +185278,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 457712,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static6fbf0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6fbf0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6fc60",
@@ -185462,12 +185546,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 460176,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static70590::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x70590.json"
     },
     {
       "id": "sse-steam-1-7-104-0x70600",
@@ -185798,12 +185884,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 463312,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static711d0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x711d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x71240",
@@ -186676,12 +186764,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 471488,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static731c0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x731c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x73230",
@@ -186700,12 +186790,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 471712,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static732a0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x732a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x73310",
@@ -186808,12 +186900,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 472720,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static73690::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x73690.json"
     },
     {
       "id": "sse-steam-1-7-104-0x73700",
@@ -187168,12 +187262,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 476080,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static743b0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x743b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x74420",
@@ -187374,12 +187470,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 477984,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static74b20::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x74b20.json"
     },
     {
       "id": "sse-steam-1-7-104-0x74b90",
@@ -187484,12 +187582,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 478992,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static74f10::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x74f10.json"
     },
     {
       "id": "sse-steam-1-7-104-0x74f80",
@@ -187748,12 +187848,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 481456,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static758b0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x758b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x75920",
@@ -187904,12 +188006,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 482912,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static75e60::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x75e60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x75ed0",
@@ -188060,12 +188164,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 484368,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static76410::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x76410.json"
     },
     {
       "id": "sse-steam-1-7-104-0x76480",
@@ -188170,12 +188276,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 485376,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static76800::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x76800.json"
     },
     {
       "id": "sse-steam-1-7-104-0x76870",
@@ -188290,12 +188398,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 486496,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static76c60::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x76c60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x76cd0",
@@ -188350,12 +188460,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 487056,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static76e90::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x76e90.json"
     },
     {
       "id": "sse-steam-1-7-104-0x76f00",
@@ -188494,12 +188606,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 488400,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static773d0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x773d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x77440",
@@ -188998,12 +189112,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 493104,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static78630::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x78630.json"
     },
     {
       "id": "sse-steam-1-7-104-0x786a0",
@@ -189130,12 +189246,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 494336,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static78b00::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x78b00.json"
     },
     {
       "id": "sse-steam-1-7-104-0x78b70",
@@ -189492,12 +189610,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 497696,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static79820::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x79820.json"
     },
     {
       "id": "sse-steam-1-7-104-0x79890",
@@ -190002,12 +190122,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 502400,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7aa80::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7aa80.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7aaf0",
@@ -190110,12 +190232,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 503408,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7ae70::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7ae70.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7aee0",
@@ -190182,12 +190306,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 504080,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7b110::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7b110.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7b180",
@@ -190688,12 +190814,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 508784,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7c370::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7c370.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7c3e0",
@@ -191036,12 +191164,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 511808,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7cf40::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7cf40.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7cfb0",
@@ -191312,12 +191442,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 514272,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7d8e0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7d8e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7d90",
@@ -191432,12 +191564,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 515280,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7dcd0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7dcd0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7dd40",
@@ -191468,12 +191602,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 515616,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static7de20::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7de20.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7de90",
@@ -191948,12 +192084,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 525104,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static80330::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x80330.json"
     },
     {
       "id": "sse-steam-1-7-104-0x803e0",
@@ -192368,12 +192506,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 546640,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static85750::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x85750.json"
     },
     {
       "id": "sse-steam-1-7-104-0x857c0",
@@ -192584,12 +192724,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 548544,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static85ec0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x85ec0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x85f30",
@@ -192608,12 +192750,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 548768,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static85fa0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x85fa0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x86010",
@@ -192944,24 +193088,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 551904,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static86be0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x86be0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x86c50",
       "build_id": "sse-steam-1-7-104",
       "rva": 552016,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static86c50::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x86c50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x86cc0",
@@ -193196,12 +193344,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 568256,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static8abc0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x8abc0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8ac30",
@@ -193508,12 +193658,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 575648,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static8c8a0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x8c8a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8c910",
@@ -193712,12 +193864,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 590528,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static902c0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x902c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9040",
@@ -193976,12 +194130,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 598336,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static92140::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x92140.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9270",
@@ -194216,12 +194372,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 38496,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static9660::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9660.json"
     },
     {
       "id": "sse-steam-1-7-104-0x96d0",
@@ -194444,12 +194602,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 631136,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static9a160::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9a160.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9a1d0",
@@ -194576,12 +194736,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 632688,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static9a770::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9a770.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9a8b0",
@@ -195056,12 +195218,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 638976,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static9c000::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9c000.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9c070",
@@ -195116,12 +195280,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 639424,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static9c1c0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9c1c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9c230",
@@ -195800,12 +195966,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 647680,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static9e200::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9e200.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9e270",
@@ -196292,12 +196460,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 659856,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statica1190::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xa1190.json"
     },
     {
       "id": "sse-steam-1-7-104-0xa1200",
@@ -196376,12 +196546,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 660640,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statica14a0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xa14a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xa1510",
@@ -196856,12 +197028,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 684416,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statica7180::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xa7180.json"
     },
     {
       "id": "sse-steam-1-7-104-0xa71f0",
@@ -196880,12 +197054,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 687136,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statica7c20::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xa7c20.json"
     },
     {
       "id": "sse-steam-1-7-104-0xa7c90",
@@ -196928,12 +197104,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 689664,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statica8600::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xa8600.json"
     },
     {
       "id": "sse-steam-1-7-104-0xa8670",
@@ -197840,12 +198018,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 731392,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticb2900::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb2900.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb2d70",
@@ -197936,12 +198116,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 739424,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticb4860::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb4860.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb48d0",
@@ -198224,12 +198406,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 47168,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticb840::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb840.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb84f0",
@@ -198872,12 +199056,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 50416,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticc4f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xc4f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xc5e0",
@@ -198980,12 +199166,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 51440,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticc8f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xc8f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xc9310",
@@ -199088,12 +199276,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 52224,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticcc00::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xcc00.json"
     },
     {
       "id": "sse-steam-1-7-104-0xcc70",
@@ -199136,12 +199326,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 52672,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticcdc0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xcdc0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xce30",
@@ -199376,12 +199568,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 911200,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticde760::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xde760.json"
     },
     {
       "id": "sse-steam-1-7-104-0xde800",
@@ -199724,12 +199918,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 937136,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statice4cb0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xe4cb0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xe4d20",
@@ -199916,12 +200112,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 954576,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statice90d0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xe90d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xe9140",
@@ -200060,12 +200258,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 957568,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Statice9c80::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xe9c80.json"
     },
     {
       "id": "sse-steam-1-7-104-0xea290",
@@ -200648,12 +200848,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 985968,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticf0b70::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf0b70.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf0df0",
@@ -200876,12 +201078,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 996864,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticf3600::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf3600.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf3af0",
@@ -200948,12 +201152,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1004752,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticf54d0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf54d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf550",
@@ -201092,12 +201298,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1008880,
       "size": 106,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Staticf64f0::initializer",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf64f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf6560",
