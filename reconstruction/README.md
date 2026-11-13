@@ -51,6 +51,11 @@ Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source
   stand-ins, with the community source of each name. When a class is declared by several units
   (two units already declare their own `Actor`), it moves to one shared header in its own area;
   that move changes every affected unit's digest, so it is done together with their re-confirmation.
+- **Primitive leaf interval units.** Trivial empty and constant-return leaves whose original
+  signature or owner is unknown may use `reconstruction/leaves/Leaf<entry RVA>.h` and `.cpp`.
+  These are explicitly labelled minimal source stand-ins, with no claim of original class
+  ownership. Every method name and placeholder class is `GUESS(low) STANDIN`; public naming
+  evidence is retained separately. The family rule and ordinary comparison/review gates apply.
 - **One recipe per source unit.** A match record binds a translation unit to one recipe in
   `recipes/<compiler>-<flags>.json` (compiler binary hash and version, flags, SDK, host). If a
   class's functions need different recipes, split them into separate units, one per recipe,
