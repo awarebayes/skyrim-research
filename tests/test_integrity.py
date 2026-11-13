@@ -111,6 +111,31 @@ class IntegrityTests(unittest.TestCase):
             with self.subTest(name=name), self.assertRaises(ValueError):
                 inspect_payload(name, payload)
 
+    def test_large_inventory_size_exceptions_keep_other_guards(self):
+        allowed = ('data/progress.json', 'reconstruction/INDEX.md',
+                   'reports/build-1/symbol-map.json', 'reports/build-1/symbol-map.history.json',
+                   'reports/build-1/families/family.json')
+        large_text = b' ' * (1024 * 1024 + 1)
+        for name in allowed:
+            with self.subTest(name=name):
+                valid = (b'{"schema":1,"build_id":"build-1","symbols":{}}' + large_text
+                         if name.endswith('/symbol-map.json') else b'{}' + large_text
+                         if name.endswith('.json') else large_text)
+                inspect_payload(name, valid)
+                if name.endswith('.json'):
+                    with self.assertRaises(ValueError):
+                        inspect_payload(name, b'not json' + large_text)
+                with self.assertRaisesRegex(ValueError, 'exceeds 32 MiB'):
+                    inspect_payload(name, b' ' * (32 * 1024 * 1024 + 1))
+                with self.assertRaisesRegex(ValueError, 'binary content'):
+                    inspect_payload(name, large_text + b'\0')
+                with self.assertRaisesRegex(ValueError, 'LFS prohibited'):
+                    inspect_payload(name, b'version https://git-lfs.github.com/spec/v1' + large_text)
+        for name in ('data/other.json', 'reports/build-1/families/nested/family.json',
+                     'reports/build-1/symbol-map.extra.json', 'reports/BUILD/symbol-map.json'):
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'exceeds 1 MiB'):
+                inspect_payload(name, large_text)
+
     def test_staged_binary_detected_after_worktree_replacement(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

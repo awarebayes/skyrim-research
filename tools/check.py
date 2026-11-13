@@ -815,6 +815,12 @@ def load(staged=False):
         return data
 
 
+# Only generated, validated inventories may grow past the ordinary publication size cap.
+LARGE_INVENTORIES = {'data/progress.json', 'reconstruction/INDEX.md'}
+LARGE_REPORT_INVENTORY = re.compile(
+    r'reports/[a-z0-9][a-z0-9-]*/(?:symbol-map(?:\.history)?\.json|families/[^/]+\.json)')
+
+
 def inspect_payload(name, payload, mode='100644'):
     path = Path(name)
     require(mode in {'100644', '100755'}, f'{name}: symlink/submodule not approved')
@@ -823,13 +829,19 @@ def inspect_payload(name, payload, mode='100644'):
     require(path.suffix.lower() not in BLOCKED, f'{name}: prohibited extension')
     require(path.name.lower() not in {'.env', '.ds_store'} and not path.name.lower().startswith('.env.'),
             f'{name}: private config')
-    require(len(payload) <= 1024 * 1024, f'{name}: exceeds 1 MiB limit')
+    large = name in LARGE_INVENTORIES or LARGE_REPORT_INVENTORY.fullmatch(name) is not None
+    limit_mib = 32 if large else 1
+    require(len(payload) <= limit_mib * 1024 * 1024, f'{name}: exceeds {limit_mib} MiB limit')
     require(b'\0' not in payload, f'{name}: binary content')
     try:
         payload.decode('utf-8')
     except UnicodeDecodeError as exc:
         raise ValueError(f'{name}: non-UTF-8 content') from exc
     require(not payload.startswith(b'version https://git-lfs.github.com/spec/v1'), f'{name}: LFS prohibited')
+    if large and len(payload) > 1024 * 1024 and path.suffix == '.json':
+        data = json.loads(payload)
+        if path.name == 'symbol-map.json':
+            symbol_maps.check_map(data, name)
 
 
 def check_git(root=ROOT, staged=False):

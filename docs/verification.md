@@ -62,6 +62,10 @@ A function is accepted only when ALL of these hold:
    verifier hosts, source/recipe/validator checks and the existing individual or family review
    requirements all remain mandatory. Other internal function kinds or layouts are not admitted.
 2. **Automated hygiene**, enforced by tools, not by a Reviewer:
+   - Tracked files are limited to 1 MiB, except the generated `data/progress.json`,
+     `reconstruction/INDEX.md`, `reports/<build id>/symbol-map.json`, its
+     `symbol-map.history.json`, and `reports/<build id>/families/*.json`, which are limited to
+     32 MiB. The same text, content and existing metadata validation checks still apply.
    - `tools/lint_reconstruction.py` reports nothing for any file under `reconstruction/` (run
      by `tools/check.py`): no inline assembly, `__emit`, raw byte arrays, `\x` byte strings,
      codegen-only pragmas or `__declspec`; header fields present; include style. `__forceinline`,
