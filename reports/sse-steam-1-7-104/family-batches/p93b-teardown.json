@@ -1,0 +1,43 @@
+{
+  "batch_schema": 1,
+  "commitment": "20baf233dd5348d1656b81864b0e90a37049890f",
+  "family_path": "reports/sse-steam-1-7-104/families/e6c86d8f1be96d785e4d8d043090e0eaca703b1ffe4df2be84f235e4db9948f4.json",
+  "family_sha256": "da36c09ce6949a802b9452c61992c68e65272f32b8febd3435fb8619e65e80d7",
+  "members": {
+    "sse-steam-1-7-104-0x17b1a50": "f3eb00e45404fbca108516fbf29ecd27697bc792655da96e38f7a86679543d20",
+    "sse-steam-1-7-104-0x17b1bd0": "1182ded964085041409ccdb460bada6e71bdcaaec7f3484888bc09e03b02c9ce",
+    "sse-steam-1-7-104-0x17b2470": "989893129726265ed9a1c85a38d6d7cc41f22270a339734d5efe6d9d7dd536aa",
+    "sse-steam-1-7-104-0x17b2620": "af962e1ec5ebae832a1da65bbf457f110578a021e14d9726be0e1d98927b2ec1",
+    "sse-steam-1-7-104-0x17b2b00": "9c79affddf20fa651e79536a3a58ad8765b64c845c9b0307e3afb36786f293d6",
+    "sse-steam-1-7-104-0x17b2d70": "c6310e40d32cd3e65c6a8955a9643af332ffcbfaf6afa4df73caa186415607b3",
+    "sse-steam-1-7-104-0x17b4fd0": "b17c9d2714524236826188aa01f00a8c9c86e1647d78e6c4af4afca6257c7316",
+    "sse-steam-1-7-104-0x17b7180": "987e60e6bc2d3328cf38131c5700a5531bd015b4ec85f6d1026bbcd3e3a69a3e",
+    "sse-steam-1-7-104-0x17b7190": "33ab5dbc095c25b35895a89546ee81538fda30a765a7529daf0a5463c997e0a5",
+    "sse-steam-1-7-104-0x17c56f0": "536cfca7c0b9d275a0666661bcb4a06a0286b87cc6d5396d0a99c3553ee3871c"
+  },
+  "population": [
+    "sse-steam-1-7-104-0x17b1a50",
+    "sse-steam-1-7-104-0x17b1bd0",
+    "sse-steam-1-7-104-0x17b2470",
+    "sse-steam-1-7-104-0x17b2620",
+    "sse-steam-1-7-104-0x17b2b00",
+    "sse-steam-1-7-104-0x17b2d70",
+    "sse-steam-1-7-104-0x17b4fd0",
+    "sse-steam-1-7-104-0x17b7180",
+    "sse-steam-1-7-104-0x17b7190",
+    "sse-steam-1-7-104-0x17c56f0"
+  ],
+  "sample": [
+    "sse-steam-1-7-104-0x17b1a50",
+    "sse-steam-1-7-104-0x17b1bd0",
+    "sse-steam-1-7-104-0x17b2470",
+    "sse-steam-1-7-104-0x17b2620",
+    "sse-steam-1-7-104-0x17b2b00",
+    "sse-steam-1-7-104-0x17b2d70",
+    "sse-steam-1-7-104-0x17b4fd0",
+    "sse-steam-1-7-104-0x17b7180",
+    "sse-steam-1-7-104-0x17b7190",
+    "sse-steam-1-7-104-0x17c56f0"
+  ],
+  "seed": "p93b-teardown-20261113-v1"
+}

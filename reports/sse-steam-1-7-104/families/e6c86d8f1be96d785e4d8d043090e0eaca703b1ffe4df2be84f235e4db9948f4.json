@@ -213,7 +213,13 @@
   },
   "pause_reason": "",
   "paused": false,
-  "review": null,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "4b0030f4be37c366ae0991f5450b6659aa06a5dc6860f14cb3af88eac993d122",
+    "review_task_id": "review-family-e6c86d8f1be96d785e4d-confirm-sol",
+    "reviewer_model": "gpt-6.1-sol",
+    "spec_sha256": "da36c09ce6949a802b9452c61992c68e65272f32b8febd3435fb8619e65e80d7"
+  },
   "template_source": {
     "path": "tools/primitive_leaf_template_v1.py",
     "sha256": "812588f0c8a551ef368c518f786a50eb0d5b0c5e404e6b03e69ae0f406bae752"
