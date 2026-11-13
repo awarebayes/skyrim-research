@@ -88,6 +88,85 @@ class CiStatusTests(unittest.TestCase):
         self.assertEqual(code, ci_status.RED)
         self.assertIn('failed: job', out)
 
+    def superseded(self, newer_status='completed', newer_conclusion='success', checks='success'):
+        original = [run(1, 'Infrastructure checks', conclusion=checks),
+                    run(2, 'Publish research report', conclusion='cancelled')]
+        newer = run(3, 'Publish research report', status=newer_status,
+                    conclusion=newer_conclusion, sha=OTHER)
+
+        def api(*args):
+            if args[:2] == ('run', 'list'):
+                return original if '--commit' in args else [newer]
+            if args[:2] == ('run', 'view'):
+                return {'jobs': [{'name': 'build', 'conclusion': 'failure',
+                                  'steps': [{'name': 'build site', 'conclusion': 'failure'}]}]}
+            if args == ('api', 'repos/{owner}/{repo}/commits/main'):
+                return {'sha': OTHER}
+            if args[0] == 'api' and '/compare/' in args[1]:
+                return {'status': 'ahead'}
+            raise AssertionError(args)
+        return mock.patch.object(ci_status, 'gh', side_effect=api)
+
+    def test_superseded_by_successful_descendant(self):
+        with self.superseded():
+            code, out, _ = self.main()
+        self.assertEqual(code, ci_status.GREEN)
+        self.assertIn('pages superseded by bbbbbbb', out)
+
+    def test_superseding_failure_reports_cause(self):
+        with self.superseded(newer_conclusion='failure'):
+            code, out, _ = self.main()
+        self.assertEqual(code, ci_status.RED)
+        self.assertIn('older publish is unverified', out)
+        self.assertIn('build / build site', out)
+        self.assertIn('pages superseded by bbbbbbb', out)
+
+    def test_cancelled_checks_never_superseded(self):
+        with self.superseded(checks='cancelled'):
+            self.assertEqual(self.main()[0], ci_status.RED)
+
+    def test_missing_or_skipped_checks_stay_pending(self):
+        for checks in ('skipped', None):
+            with self.subTest(checks=checks), self.superseded(checks=checks) as gh:
+                original = gh.side_effect
+                def api(*args):
+                    result = original(*args)
+                    if checks is None and args[:2] == ('run', 'list') and '--commit' in args:
+                        return result[1:]
+                    return result
+                gh.side_effect = api
+                self.assertEqual(self.main()[0], ci_status.PENDING)
+
+    def test_newer_cancellation_stays_pending(self):
+        with self.superseded(newer_conclusion='cancelled'):
+            self.assertEqual(self.main()[0], ci_status.PENDING)
+
+    def test_real_pages_failure_is_red(self):
+        self.runs(run(1, 'Infrastructure checks'),
+                  run(2, 'Publish research report', conclusion='failure'))
+        self.jobs(2, {'name': 'build', 'conclusion': 'failure', 'steps': []})
+        self.assertEqual(self.main()[0], ci_status.RED)
+
+    def test_newer_pending_past_wait(self):
+        with self.superseded(newer_status='in_progress'), \
+             mock.patch.object(ci_status.time, 'monotonic', side_effect=[0, 0, 1, 2]), \
+             mock.patch.object(ci_status.time, 'sleep'):
+            code, out, _ = self.main('--wait', '1')
+        self.assertEqual(code, ci_status.PENDING)
+        self.assertIn('pages superseded by bbbbbbb: in_progress', out)
+
+    def test_descendant_must_be_on_main(self):
+        with self.superseded() as gh:
+            original = gh.side_effect
+            def api(*args):
+                if args == ('api', 'repos/{owner}/{repo}/commits/main'):
+                    return {'sha': 'c' * 40}
+                if args[0] == 'api' and ('b' * 40 + '...' + 'c' * 40) in args[1]:
+                    return {'status': 'diverged'}
+                return original(*args)
+            gh.side_effect = api
+            self.assertEqual(self.main()[0], ci_status.PENDING)
+
     def test_pending_and_no_runs(self):
         self.runs(run(1, 'A'), run(2, 'B', status='queued'))
         self.assertEqual(self.main()[0], ci_status.PENDING)
