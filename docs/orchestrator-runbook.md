@@ -102,6 +102,22 @@ commit nor blocks it; the shared checkout is not touched. Afterwards `next-actio
 byte-identical to the integrated files; if any local file differs it refuses and lists it: that
 is a stop for the strong role, never a reason to delete or overwrite a file yourself.
 
+## Approved subsets (Engineer)
+
+When rejected or disputed members hold an individual group, an Engineer may run
+`python3 tools/flow.py split-group <group> --functions <RVA or id> ...` to freeze an explicitly
+approved subset. The original group, saved verdicts and sample draw stay unchanged. The subset
+retains every selected member's original second-pass requirement. If too few original sampled
+members remain to cover 5%, it adds a deterministic random sample and writes new second-review
+and clean-rerun briefs; finish those before integration. A selected disagreement still refuses.
+Integrate the returned subgroup with `--approved-only`. Only its selected inventory entries,
+records and required unit files enter acceptance. Rejected and disputed members stay held.
+
+A shared unit is copied whole, so its changes can stale other acceptances. Re-confirm and
+re-review affected accepted functions under "Stale acceptances and delta reviews" before the
+unit and renewed evidence land together. Splitting never exempts a family member, clears a
+rejection or escalation, or permits a stale unit through the staged check.
+
 ## Family batches
 
 `next-actions` also prints family review needed, draw sample, review sample and accept batch

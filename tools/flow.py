@@ -252,7 +252,8 @@ def read_review(root, g, functions):
         return f'malformed: {exc}', {}
     out = {}
     for parts, body in blocks:
-        if len(parts) == 3 and parts[0] == g['build_id'] and re.fullmatch(r'0x[0-9a-f]+', parts[1]):
+        if (len(parts) == 3 and parts[0] == g['build_id'] and re.fullmatch(r'0x[0-9a-f]+', parts[1])
+                and parts[1] in g['functions']):
             out[parts[1]] = body
     return 'ok', out
 
@@ -1189,9 +1190,64 @@ def sampling_gate(root, fdir, g, data):
                            + ('' if a.get('source_digest') == b.get('source_digest') else ', different digests'))
     if not g.get('rerun'):
         return False, f'waiting: from-scratch re-run not recorded (brief .local/briefs/rerun-{g["name"]}.md)'
-    if g['rerun']['not_agree']:
-        return False, f'DISAGREE: re-run did not agree for {", ".join(g["rerun"]["not_agree"])}'
+    failed = set(g['sampled']) & set(g['rerun']['not_agree'])
+    missing = set(g['sampled']) - set(g['rerun'].get('agree', []))
+    if failed or missing:
+        return False, f'DISAGREE: re-run did not agree for {", ".join(sorted(failed | missing))}'
     return True, None
+
+
+def split_group(root, fdir, name, selected):
+    """Freeze an explicit approved subset without changing any saved verdict or sample draw.
+
+    Rejected or disputed members remain in the parent. Shared unit changes still need the
+    normal re-confirmation, re-review and staged gate; this command edits only flow metadata.
+    """
+    root = Path(root)
+    parent = load_group(fdir, name)
+    refuse(parent['kind'] == 'review' and not parent.get('subset_of'), 'split a primary individual review group')
+    data = inventory(root)
+    by_id = {fn['id']: hexrva(fn['rva']) for fn in data['functions']}
+    chosen = sorted({by_id.get(r, r) for r in selected}, key=lambda r: int(r, 16) if r.startswith('0x') else -1)
+    refuse(chosen and set(chosen) <= set(parent['functions']), 'selection must name functions of the parent group')
+    status, first = read_review(root, parent, data['functions'])
+    refuse(status == 'ok', f'parent review {status}')
+    review = parent
+    for rva in chosen:
+        refuse(first.get(rva, {}).get('verdict') == 'approve', f'{rva}: selected function lacks approval')
+    key = hashlib.sha256(json.dumps([chosen, review['task_id']], sort_keys=True).encode()).hexdigest()[:12]
+    child_name = f'{name}-part-{key}'
+    child = dict(review, name=child_name, functions=chosen, subset_of=name, integrated=None,
+                 sampled=[r for r in parent.get('sampled', []) if r in chosen],
+                 components={r: parent.get('components', {}).get(r, {}) for r in chosen})
+    # Keep the original sample pair and re-run receipt, including held members, for audit.
+    ok, problem = sampling_gate(root, fdir, child, data)
+    refuse(ok, f'selected sampling gate: {problem}')
+    if (Path(fdir) / 'groups' / f'{child_name}.json').exists():
+        existing = load_group(fdir, child_name)
+        refuse(all(existing.get(k) == child.get(k) for k in ('functions', 'task_id', 'subset_of')),
+               'existing subset differs')
+        return existing
+    # A split cannot evade the random safeguard by excluding the original sample.
+    count = math.ceil(len(chosen) * SAMPLE_RATE)
+    extra = max(0, count - len(child['sampled']))
+    if extra:
+        candidates = [r for r in chosen if r not in child['sampled']]
+        random.Random(child_name).shuffle(candidates)
+        child['sampled'] += candidates[:extra]
+        entry = strong_reviewer_entry(root, parent.get('profile', profiles.DEFAULT), parent['reviewer_model'])
+        pair = dict(child, name=child_name + '-s', kind='sampling', pair=child_name,
+                    functions=child['sampled'], reviewer_model=entry['model'],
+                    reviewer_harness=entry['harness'], task_id='review-flow-' + child_name + '-s',
+                    saved_review=None, dispatched=None)
+        by_rva = {hexrva(fn['rva']): fn for fn in data['functions']}
+        pair['brief'] = write_review_brief(root, pair, by_rva)
+        save_group(fdir, pair)
+        child['pair'], child['rerun'], child['rerun_dispatched'] = pair['name'], None, None
+        write_rerun_brief(root, child, by_rva)
+    save_group(fdir, child)
+    log_event(fdir, 'split-group', group=child_name, parent=name, functions=chosen)
+    return child
 
 
 # ------------------------------------------------------------------ next actions
@@ -1733,7 +1789,8 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         refuse(approved_only or not esc, f'blocking escalation for {", ".join(esc)}: escalate to the maintainer; group held')
         ok, problem = sampling_gate(root, fdir, g, data)
         refuse(ok, f'sampling gate: {problem}')
-    approved = sorted((r for r, b in blocks.items() if b.get('verdict') == 'approve'), key=lambda r: int(r, 16))
+    approved = sorted((r for r, b in blocks.items() if b.get('verdict') == 'approve'
+                       and (not g.get('subset_of') or r in g['functions'])), key=lambda r: int(r, 16))
     refuse(approved, 'the review has no approve block; nothing to integrate')
     family_group_hold(root, fdir, [fn['id'] for fn in data['functions'] if hexrva(fn['rva']) in approved])
     integ = g.get('integrated') or {}
@@ -1767,6 +1824,8 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
             else:
                 cmd = [python, 'tools/accept_function.py', '--all-approved', '--review', review_file,
                        '--profile', g.get('profile', profiles.DEFAULT)]
+                if g.get('subset_of'):
+                    cmd += ['--functions', *approved]
             out = run(cmd, tree, 'accept_function.py',
                       env=dict(os.environ, SKYRIM_FLOW_DIR=str(fdir.resolve())))
             take = False
@@ -1962,6 +2021,9 @@ def parser():
     s = sub.add_parser('record-rerun')
     s.add_argument('group')
     s.add_argument('--compare', required=True)
+    s = sub.add_parser('split-group')
+    s.add_argument('group')
+    s.add_argument('--functions', nargs='+', required=True)
     s = sub.add_parser('integrate')
     s.add_argument('group')
     s.add_argument('--approved-only', action='store_true', help='integrate approvals while leaving other functions held')
@@ -2074,6 +2136,10 @@ def execute(a, root, fdir):
             agree, other = record_rerun(root, fdir, a.group, a.compare)
             print(f'{a.group}: {len(agree)} AGREE' + (f'; NOT AGREE {", ".join(other)}: escalate' if other else ''))
             return 1 if other else 0
+        elif a.cmd == 'split-group':
+            g = split_group(root, fdir, a.group, a.functions)
+            print(f'{g["name"]}: {len(g["functions"])} functions; parent and saved reviews unchanged')
+            print(f'next: python3 tools/flow.py integrate {g["name"]} --approved-only')
         elif a.cmd == 'integrate':
             g = integrate(root, fdir, a.group, a.branch, push=not a.no_push, approved_only=a.approved_only)
             integ = g['integrated']

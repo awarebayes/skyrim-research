@@ -31,7 +31,8 @@ changed = ['data/progress.json']
 text = Path(review).read_text()
 for fn in data['functions']:
     block = f"## {fn['build_id']} 0x{fn['rva']:x} {fn['size']}\n\nverdict: approve"
-    if block in text:
+    selection = sys.argv[sys.argv.index('--functions') + 1:] if '--functions' in sys.argv else None
+    if block in text and (selection is None or f'0x{fn["rva"]:x}' in selection):
         fn['status'] = 'matched'
         rec = Path(f"reports/{fn['build_id']}/0x{fn['rva']:x}.review.json")
         rec.write_text(json.dumps({'verdict': 'approve'}) + '\n')
@@ -375,7 +376,7 @@ class FlowTests(unittest.TestCase):
         blocks = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
         self.repo.save_review(g['task_id'], blocks, model='gpt-6.1-terra')
         self.repo.save_review(sample['task_id'], blocks, 'yes', model='gpt-6.1-sol')
-        g['rerun'] = {'not_agree': []}
+        g['rerun'] = {'not_agree': [], 'agree': g['sampled']}
         self.assertEqual(flow.sampling_gate(self.root, self.fdir, g, flow.inventory(self.root)), (True, None))
         line = flow.dispatch_line(sample)[1]
         self.assertIn('model gpt-6.1-sol', line)
@@ -413,7 +414,7 @@ class FlowTests(unittest.TestCase):
         blocks = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
         self.repo.save_review(g['task_id'], blocks, model='gpt-6.1-sol')
         self.repo.save_review(sample['task_id'], blocks, 'yes', model='gpt-6.1-sol')
-        g['rerun'] = {'not_agree': []}
+        g['rerun'] = {'not_agree': [], 'agree': g['sampled']}
         self.assertEqual(flow.read_review(self.root, sample, flow.inventory(self.root)['functions'])[0], 'ok')
         self.assertEqual(flow.sampling_gate(self.root, self.fdir, g, flow.inventory(self.root)),
                          (False, 'DISAGREE: sampling reviewer_model must differ from first reviewer_model'))
@@ -619,6 +620,59 @@ class FlowTests(unittest.TestCase):
         held = next(f for f in data['functions'] if f['rva'] == 0x2000)
         self.assertNotEqual(held['status'], 'matched')
         self.assertFalse((tree / f'reports/{BUILD}/0x2000.review.json').exists())
+
+    def test_split_group_keeps_original_draw_and_disagreement_held(self):
+        g = self.grouped()
+        g['sampled'] = ['0x1000', '0x2000']
+        flow.save_group(self.fdir, g)
+        first = [(r, s, self.repo.digest(r), 'approve', 'none') for r, s, _ in FUNCS]
+        path = self.repo.save_review(g['task_id'], first)
+        before = path.read_bytes()
+        second = [(r, s, d, 'reject' if r == 0x2000 else v, c) for r, s, d, v, c in first]
+        self.repo.save_review(g['task_id'] + '-s', second, 'yes')
+        cmp = self.root / 'cmp.txt'
+        cmp.write_text('0x1000 AGREE\n0x2000 AGREE\n')
+        flow.record_rerun(self.root, self.fdir, g['name'], cmp)
+        with self.assertRaisesRegex(flow.FlowError, 'DISAGREE'):
+            flow.split_group(self.root, self.fdir, g['name'], ['0x2000'])
+        child = flow.split_group(self.root, self.fdir, g['name'], ['0x1000', '0x1010'])
+        self.assertEqual(child['sampled'], ['0x1000'])
+        self.assertEqual(child['pair'], g['pair'])
+        self.assertEqual(flow.load_group(self.fdir, g['name'])['sampled'], ['0x1000', '0x2000'])
+        flow.integrate(self.root, self.fdir, child['name'], push=False, approved_only=True)
+        tree = flow.integration_tree(self.fdir, child['name'])
+        self.assertEqual([f['rva'] for f in flow.inventory(tree)['functions'] if f['status'] == 'matched'], [0x1000, 0x1010])
+        self.assertEqual(path.read_bytes(), before)
+        self.assertEqual(flow.split_group(self.root, self.fdir, g['name'], ['0x1010', '0x1000'])['name'], child['name'])
+
+    def test_split_group_refuses_reject_unknown_and_incomplete_sample(self):
+        g = self.integrate_ready()
+        for selection in (['0x2000'], ['0x3000']):
+            with self.assertRaises(flow.FlowError):
+                flow.split_group(self.root, self.fdir, g['name'], selection)
+        g['sampled'] = ['0x1000']
+        flow.save_group(self.fdir, g)
+        with self.assertRaises(flow.FlowError):
+            flow.split_group(self.root, self.fdir, g['name'], ['0x1000'])
+
+    def test_split_without_original_sample_adds_a_new_safeguard(self):
+        g = self.integrate_ready()
+        child = flow.split_group(self.root, self.fdir, g['name'], ['0x1000', '0x1010'])
+        self.assertEqual(len(child['sampled']), 1)
+        self.assertIsNone(child['rerun'])
+        pair = flow.load_group(self.fdir, child['pair'])
+        self.assertEqual(pair['functions'], child['sampled'])
+        with self.assertRaisesRegex(flow.FlowError, 'sampling gate'):
+            flow.integrate(self.root, self.fdir, child['name'], push=False, approved_only=True)
+
+    def test_split_group_does_not_clear_escalation_with_same_source_confirmation(self):
+        g = self.integrate_ready()
+        first = [(r, size, self.repo.digest(r), 'escalate', 'provenance') for r, size, _ in FUNCS]
+        self.repo.save_review(g['task_id'], first)
+        self.repo.save_review('confirmation', [(r, size, digest, 'approve', 'none')
+                                             for r, size, digest, _, _ in first], 'yes')
+        with self.assertRaisesRegex(flow.FlowError, 'lacks approval'):
+            flow.split_group(self.root, self.fdir, g['name'], ['0x2000'])
 
     def test_integration_passes_recorded_group_to_acceptance(self):
         probe = '''import os, json
