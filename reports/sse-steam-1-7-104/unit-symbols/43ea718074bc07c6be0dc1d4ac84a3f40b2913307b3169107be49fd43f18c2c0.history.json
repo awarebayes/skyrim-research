@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/43ea718074bc07c6be0dc1d4ac84a3f40b2913307b3169107be49fd43f18c2c0.json",
+  "versions": [
+    {
+      "sha256": "43ea718074bc07c6be0dc1d4ac84a3f40b2913307b3169107be49fd43f18c2c0",
+      "base": null,
+      "added": [
+        "?LoadGame@TESLevItem@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?LoadGame@TESLeveledList@@QEAAXPEAVBGSLoadFormBuffer@@@Z"
+      ]
+    }
+  ]
+}

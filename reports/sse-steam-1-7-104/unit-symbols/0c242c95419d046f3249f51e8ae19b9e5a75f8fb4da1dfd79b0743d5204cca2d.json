@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetMaximumTrainingLevel@TESClass@@QEAAEXZ": {
+      "rva": 3877648,
+      "size": 5
+    },
+    "?InitializeData@TESClass@@UEAAXXZ": {
+      "rva": 3877008,
+      "size": 44
+    },
+    "?g_defaultTrainingLevel@@3MA": {
+      "rva": 34214824,
+      "size": null
+    },
+    "?g_defaultTrainingSkill@@3IA": {
+      "rva": 34214560,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetMaximumTrainingLevel@TESClass@@QEAAEXZ",
+        "rva": "0x3b2b10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESClass@@UEAAXXZ",
+        "rva": "0x3b2890",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultTrainingLevel@@3MA",
+        "rva": "0x20a13a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultTrainingSkill@@3IA",
+        "rva": "0x20a12a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

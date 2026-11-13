@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/0c242c95419d046f3249f51e8ae19b9e5a75f8fb4da1dfd79b0743d5204cca2d.json",
+  "versions": [
+    {
+      "sha256": "0c242c95419d046f3249f51e8ae19b9e5a75f8fb4da1dfd79b0743d5204cca2d",
+      "base": null,
+      "added": [
+        "?GetMaximumTrainingLevel@TESClass@@QEAAEXZ",
+        "?InitializeData@TESClass@@UEAAXXZ",
+        "?g_defaultTrainingLevel@@3MA",
+        "?g_defaultTrainingSkill@@3IA"
+      ]
+    }
+  ]
+}

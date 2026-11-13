@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/b5e5233843fa5086e180b372c8480adf57e67d1ee0182e93097ec7d59c029540.json",
+  "versions": [
+    {
+      "sha256": "b5e5233843fa5086e180b372c8480adf57e67d1ee0182e93097ec7d59c029540",
+      "base": null,
+      "added": [
+        "?GetIsPlayerOwner@TESActorBase@@UEBA_NXZ",
+        "?IsAutoCalc@TESActorBase@@UEBA_NXZ",
+        "?SetAutoCalc@TESActorBase@@UEAAX_N@Z",
+        "??_GTESActorBase@@UEAAPEAXI@Z",
+        "?SetFlagBit@TESActorBaseData@@QEAAXI_N0@Z",
+        "??1TESActorBase@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

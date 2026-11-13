@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?InitItemImpl@TESLevCharacter@@UEAAXXZ": {
+      "rva": 2561968,
+      "size": 64
+    },
+    "?InitLeveledListState@@YAXPEAXPEAVTESLevCharacter@@@Z": {
+      "rva": 2006368,
+      "size": null
+    },
+    "?InitModelTextureSwapState@@YAXPEAXPEAVTESLevCharacter@@@Z": {
+      "rva": 2019600,
+      "size": null
+    },
+    "?ResetOwnerState@@YAXPEAVTESLevCharacter@@_N@Z": {
+      "rva": 1990832,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?InitItemImpl@TESLevCharacter@@UEAAXXZ",
+        "rva": "0x2717b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitLeveledListState@@YAXPEAXPEAVTESLevCharacter@@@Z",
+        "rva": "0x1e9d60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitModelTextureSwapState@@YAXPEAXPEAVTESLevCharacter@@@Z",
+        "rva": "0x1ed110",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResetOwnerState@@YAXPEAVTESLevCharacter@@_N@Z",
+        "rva": "0x1e60b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
