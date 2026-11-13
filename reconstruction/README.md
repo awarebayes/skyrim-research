@@ -18,7 +18,7 @@ Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source
 
 ## Layout
 
-- **One pair per class**: `reconstruction/<area>/<Class>.cpp` holds the class's reconstructed
+- **One pair per class** (except the static interval units below): `reconstruction/<area>/<Class>.cpp` holds the class's reconstructed
   member functions, and `reconstruction/<area>/<Class>.h` beside it the type declarations they
   need. The .cpp includes its header by a quoted name, so the unit compiles from the repository
   root with the recipe's flags and no include path. Every repository file a unit reaches through
@@ -40,6 +40,12 @@ Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source
   `tools/ghidra/export_pack.py` proposes the unit path by prefix, then uses an existing class
   table owning area (`magic`, `forms` or `actors`) when known. An `other` area stays unresolved;
   no default area is invented. Other rule 1 choices are given in the list file.
+- **Owner-unknown compiler-generated static initialisers and teardowns.** Use
+  `reconstruction/static/`, grouping entries by the fixed 16-byte RVA interval containing
+  their entry address. Name the unit `Static<lowercase hexadecimal interval start>`, and
+  put its declarations in the corresponding header. Each header states that the owning
+  system is unknown and referenced object names are stand-ins unless otherwise labelled.
+  A member whose owner becomes known may move by a normal source change.
 - **Stand-ins.** A unit may declare the other classes its functions use as minimal per-unit
   stand-ins (only the members and slots the compared code needs). Label them in the header as
   stand-ins, with the community source of each name. When a class is declared by several units

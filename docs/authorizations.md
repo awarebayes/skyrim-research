@@ -15,6 +15,22 @@ and adding a dated note.
 
 ## Notes
 
+### Owner-unknown generated static functions
+
+Maintainer decisions by awarebayes, 2026-11-13, relayed by the planning orchestrator.
+
+Orchestrator: "May owner-unknown static initialisers and teardowns go into a new folder, `reconstruction/static/`, in files grouped by address range and labelled as owner unknown? I recommend yes; otherwise 16,270 functions wait for ownership that mostly cannot be established."
+
+Maintainer: "1, yes, is it not obvious?"
+
+Orchestrator: "For middleware, may I use this rule: leave out a static function when the nearest functions with a known owner on both sides are middleware, and include the rest? The alternative is to include all of them, since these are compiler-generated stubs with no middleware logic in them."
+
+Maintainer: "2. idk you decide whats better" and then "havok is fine, why the scare? idk why are you so afraid of it? Just not the main point of this project".
+
+On that delegation, the planning orchestrator decided to include all members, without a middleware exclusion, for compiler-generated static initialisers and teardowns only. Priorities for handwritten middleware code are unchanged. The normal provenance, comparator and review requirements remain in force.
+
+Reviewers may read the FNV index: the maintainer said "of course thats intended thats why we have fnv source". The FNV source remains subject to its existing exposure and labelling rules.
+
 For microsoft license: individual for my own opensource project
 PL CommonLibSSE for naming and publishing id/offset pairs approved
 Reconstructed source will be published in this repository, similar to the FNV decompilation project (maintainer decision, stated to the orchestrator 2026-11-11 and recorded here by it).

@@ -33,6 +33,8 @@ Use the first source that passes its check (section 2). Labels are the `Labels: 
 | Havok, Scaleform, Bethesda.net client, CRT/STL, import thunks | n/a | n/a | out of scope: do not draft, do not count | n/a |
 | zlib 1.2.7, libpng 1.2.18 | upstream names | upstream source | parked: section 3, "not adopted" | upstream licence notice |
 
+Compiler-generated static initialisers and teardowns are included regardless of middleware ownership under the delegated decision in `docs/authorizations.md`; priorities for handwritten middleware code are unchanged.
+
 ## 2. Rules per approved source
 
 **Checks to run before trusting a community class** (all are local, model-free and take
