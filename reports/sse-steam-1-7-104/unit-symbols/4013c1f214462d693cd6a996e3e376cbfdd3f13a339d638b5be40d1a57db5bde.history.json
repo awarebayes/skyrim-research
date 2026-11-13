@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/4013c1f214462d693cd6a996e3e376cbfdd3f13a339d638b5be40d1a57db5bde.json",
+  "versions": [
+    {
+      "sha256": "4013c1f214462d693cd6a996e3e376cbfdd3f13a339d638b5be40d1a57db5bde",
+      "base": null,
+      "added": [
+        "?UpdateDownwardPass@BSFlattenedBoneTree@@UEAAXAEAVNiUpdateData@@I@Z",
+        "?UpdateDownwardPass@NiNode@@UEAAXAEAVNiUpdateData@@I@Z",
+        "?UpdateBoneRoots@BSFlattenedBoneTree@@QEAAXXZ"
+      ]
+    }
+  ]
+}

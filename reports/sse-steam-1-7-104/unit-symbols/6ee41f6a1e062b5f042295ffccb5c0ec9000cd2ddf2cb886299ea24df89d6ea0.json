@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GBSLightingShaderMaterialFacegen@@UEAAPEAXI@Z": {
+      "rva": 22187648,
+      "size": 52
+    },
+    "?Ctor@BSLightingShaderMaterialFacegen@@QEAAPEAV1@XZ": {
+      "rva": 22177632,
+      "size": 56
+    },
+    "??1BSLightingShaderMaterialFacegen@@UEAA@XZ": {
+      "rva": 22177696,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??0BSLightingShaderMaterial@@QEAA@XZ": {
+      "rva": 22164976,
+      "size": null
+    },
+    "??_7BSLightingShaderMaterialFacegen@@6B@": {
+      "rva": 28573880,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GBSLightingShaderMaterialFacegen@@UEAAPEAXI@Z",
+        "rva": "0x1528e80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Ctor@BSLightingShaderMaterialFacegen@@QEAAPEAV1@XZ",
+        "rva": "0x1526760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSLightingShaderMaterialFacegen@@UEAA@XZ",
+        "rva": "0x15267a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0BSLightingShaderMaterial@@QEAA@XZ",
+        "rva": "0x15235f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSLightingShaderMaterialFacegen@@6B@",
+        "rva": "0x1b400b8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

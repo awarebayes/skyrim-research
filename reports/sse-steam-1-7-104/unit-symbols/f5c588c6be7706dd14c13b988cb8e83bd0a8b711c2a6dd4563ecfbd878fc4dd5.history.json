@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/f5c588c6be7706dd14c13b988cb8e83bd0a8b711c2a6dd4563ecfbd878fc4dd5.json",
+  "versions": [
+    {
+      "sha256": "f5c588c6be7706dd14c13b988cb8e83bd0a8b711c2a6dd4563ecfbd878fc4dd5",
+      "base": null,
+      "added": [
+        "?Shutdown@BSAudio@@UEAAXXZ",
+        "?Init@BSAudio@@UEAA_NPEAUHWND@W32@REX@@@Z",
+        "?GetReceiver@BSAudio@@UEAA?AVReceiver@BSAudioMonitor@@I@Z",
+        "?g_bsAudioDefaultReceiver@@3VReceiver@BSAudioMonitor@@A"
+      ]
+    }
+  ]
+}

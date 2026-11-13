@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "d095ca509a30dc677c620e52fd3c09c018ebcaaa84f35948787d9c69bf820d4e",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1558eb0",
+  "naming_findings": [
+    "The source retains a stale TODO comment."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "a4c995761aa143d8ea0d62e61a15a0e02237253f1f22fac218fa3283a9230c3a",
+  "review_task_id": "review-flow-g017-r2",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 22384304,
+  "size": 8,
+  "source_digest": "8834a32dd351963bae749f825b698d1694b43b1487b0857a03040de14ed8c4a0",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

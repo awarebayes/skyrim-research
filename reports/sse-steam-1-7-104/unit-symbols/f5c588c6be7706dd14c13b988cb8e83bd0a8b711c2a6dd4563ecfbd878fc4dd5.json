@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Shutdown@BSAudio@@UEAAXXZ": {
+      "rva": 13454192,
+      "size": 5
+    },
+    "?Init@BSAudio@@UEAA_NPEAUHWND@W32@REX@@@Z": {
+      "rva": 13454176,
+      "size": 7
+    },
+    "?GetReceiver@BSAudio@@UEAA?AVReceiver@BSAudioMonitor@@I@Z": {
+      "rva": 13454368,
+      "size": 14
+    },
+    "?g_bsAudioDefaultReceiver@@3VReceiver@BSAudioMonitor@@A": {
+      "rva": 34390800,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Shutdown@BSAudio@@UEAAXXZ",
+        "rva": "0xcd4b70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Init@BSAudio@@UEAA_NPEAUHWND@W32@REX@@@Z",
+        "rva": "0xcd4b60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetReceiver@BSAudio@@UEAA?AVReceiver@BSAudioMonitor@@I@Z",
+        "rva": "0xcd4c20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_bsAudioDefaultReceiver@@3VReceiver@BSAudioMonitor@@A",
+        "rva": "0x20cc310",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

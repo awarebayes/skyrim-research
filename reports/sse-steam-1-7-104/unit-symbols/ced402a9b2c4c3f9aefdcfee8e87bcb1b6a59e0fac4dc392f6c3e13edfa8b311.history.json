@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/ced402a9b2c4c3f9aefdcfee8e87bcb1b6a59e0fac4dc392f6c3e13edfa8b311.json",
+  "versions": [
+    {
+      "sha256": "ced402a9b2c4c3f9aefdcfee8e87bcb1b6a59e0fac4dc392f6c3e13edfa8b311",
+      "base": null,
+      "added": [
+        "?QShader@BSBloodSplatterShaderProperty@@UEAAHXZ",
+        "?GetBaseTexture@BSBloodSplatterShaderProperty@@UEAAPEAVNiSourceTexture@@XZ"
+      ]
+    }
+  ]
+}

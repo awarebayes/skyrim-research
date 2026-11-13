@@ -682,7 +682,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSTempEffectParticle::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b04f0` / 6 | - | - | mapped | - | - |
 | - | `BSTempEffectSimpleDecal::Initialize` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b1090` / 35 | - | - | mapped | - | - |
 | - | `BSTempEffectSimpleDecal::Get3D` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b2950` / 5 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterial::~BSLightingShaderMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4a00` / 52 | - | - | mapped | - | - |
+| `bsengine/BSLightingShaderMaterial` | `BSLightingShaderMaterial::~BSLightingShaderMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4a00` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4b4a00.json` | matched | full | open |
 | - | `BSTempEffectSimpleDecal::~BSTempEffectSimpleDecal` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4a40` / 52 | - | - | mapped | - | - |
 | `bsengine/BSLightingShaderMaterialBase` | `BSLightingShaderMaterialBase::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b4ad0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4b4ad0.json` | matched | full | open |
 | - | `BSTempEffectSPG::FinishLoadGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b5250` / 53 | - | - | mapped | - | - |
@@ -833,10 +833,10 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSPassByTargetTriggerModifier::Unk_0A` (COMMUNITY) | `sse-steam-1-7-104` / `0xbbb380` / 3 | - | - | mapped | - | - |
 | - | `BSTweenerModifier::Unk_0A` (COMMUNITY) | `sse-steam-1-7-104` / `0xbbc0b0` / 3 | - | - | mapped | - | - |
 | - | `BSAnimationGraphManager::ProcessEvent` (COMMUNITY) | `sse-steam-1-7-104` / `0xbc15e0` / 16 | - | - | mapped | - | - |
-| - | `BSAudio::Init` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd4b60` / 7 | - | - | mapped | - | - |
-| - | `BSAudio::Shutdown` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd4b70` / 5 | - | - | mapped | - | - |
-| - | `BSAudio::GetReceiver` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd4c20` / 14 | - | - | mapped | - | - |
-| - | `BSAudioListener::Unk_05` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd69f0` / 18 | - | - | mapped | - | - |
+| `bsengine/BSAudio` | `BSAudio::Init` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd4b60` / 7 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xcd4b60.json` | matched | full | open |
+| `bsengine/BSAudio` | `BSAudio::Shutdown` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd4b70` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xcd4b70.json` | matched | full | open |
+| `bsengine/BSAudio` | `BSAudio::GetReceiver` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd4c20` / 14 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xcd4c20.json` | matched | full | open |
+| `bsengine/BSAudioListener` | `BSAudioListener::Unk_05` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd69f0` / 18 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xcd69f0.json` | matched | full | open |
 | - | `BSNullImplGameSound::Unk_08` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd6aa0` / 3 | - | - | mapped | - | - |
 | - | `BSXAudio2Audio::~BSXAudio2Audio` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd85b0` / 43 | - | - | mapped | - | - |
 | - | `BSXAudio2AudioListener::Unk_01` (COMMUNITY) | `sse-steam-1-7-104` / `0xcd8c80` / 10 | - | - | mapped | - | - |
@@ -886,7 +886,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiStandardAllocator::VerifyAddress` (COMMUNITY) | `sse-steam-1-7-104` / `0xeafd30` / 3 | - | - | mapped | - | - |
 | - | `ArchiveFile::Unk_0A` (COMMUNITY) | `sse-steam-1-7-104` / `0xeb9780` / 7 | - | - | mapped | - | - |
 | - | `CompressedArchiveFile::Unk_0A` (COMMUNITY) | `sse-steam-1-7-104` / `0xeb9ee0` / 7 | - | - | mapped | - | - |
-| - | `BSFile::~BSFile` (COMMUNITY) | `sse-steam-1-7-104` / `0xebeb10` / 52 | - | - | mapped | - | - |
+| `bsengine/BSFile` | `BSFile::~BSFile` (COMMUNITY) | `sse-steam-1-7-104` / `0xebeb10` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xebeb10.json` | matched | full | open |
 | - | `BSMemStorage::GetFileSize` (COMMUNITY) | `sse-steam-1-7-104` / `0xec1710` / 4 | - | - | mapped | - | - |
 | - | `BSCounterStorage::ReadFile` (COMMUNITY) | `sse-steam-1-7-104` / `0xec18e0` / 6 | - | - | mapped | - | - |
 | - | `BSSystemFileStorage::GetSize` (COMMUNITY) | `sse-steam-1-7-104` / `0xec3340` / 88 | - | - | mapped | - | - |
@@ -948,7 +948,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSTriShape::IsEqual` (COMMUNITY) | `sse-steam-1-7-104` / `0xef2120` / 3 | - | - | mapped | - | - |
 | - | `NiSourceTexture::Unk_25` (COMMUNITY) | `sse-steam-1-7-104` / `0xef3500` / 24 | - | - | mapped | - | - |
 | - | `NiTexture::~NiTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0xef3ea0` / 52 | - | - | mapped | - | - |
-| - | `BSFlattenedBoneTree::UpdateDownwardPass` (COMMUNITY) | `sse-steam-1-7-104` / `0xef4d10` / 27 | - | - | mapped | - | - |
+| `bsengine/BSFlattenedBoneTree` | `BSFlattenedBoneTree::UpdateDownwardPass` (COMMUNITY) | `sse-steam-1-7-104` / `0xef4d10` / 27 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef4d10.json` | matched | full | open |
 | - | `NiSkinInstance::~NiSkinInstance` (COMMUNITY) | `sse-steam-1-7-104` / `0xef6f50` / 52 | - | - | mapped | - | - |
 | - | `NiStringExtraData::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xef70e0` / 43 | - | - | mapped | - | - |
 | - | `NiStringExtraData::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xef7130` / 62 | - | - | mapped | - | - |
@@ -1167,8 +1167,8 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `bsengine/BSShaderProperty` | `BSShaderProperty::QMaterialAlpha` (COMMUNITY) | `sse-steam-1-7-104` / `0x14e8680` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x14e8680.json` | matched | delta | checked |
 | `bsengine/BSShaderAccumulator` | `BSShaderAccumulator::GetCurrentAccumulator` (COMMUNITY) | `sse-steam-1-7-104` / `0x14ecb90` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x14ecb90.json` | matched | full | open |
 | `bsengine/BSShaderAccumulator` | `BSShaderAccumulator::SetCurrentAccumulator` (COMMUNITY) | `sse-steam-1-7-104` / `0x14ecba0` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x14ecba0.json` | matched | full | open |
-| - | `BSImagespaceShaderBlur3::~BSImagespaceShaderBlur3` (COMMUNITY) | `sse-steam-1-7-104` / `0x1507e00` / 52 | - | - | mapped | - | - |
-| - | `BSImagespaceShaderBlur3::Unk_0D` (COMMUNITY) | `sse-steam-1-7-104` / `0x1509cb0` / 57 | - | - | mapped | - | - |
+| `bsengine/BSImagespaceShaderBlur3` | `BSImagespaceShaderBlur3::~BSImagespaceShaderBlur3` (COMMUNITY) | `sse-steam-1-7-104` / `0x1507e00` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1507e00.json` | matched | full | open |
+| `bsengine/BSImagespaceShaderBlur3` | `BSImagespaceShaderBlur3::Unk_0D` (COMMUNITY) | `sse-steam-1-7-104` / `0x1509cb0` / 57 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1509cb0.json` | matched | full | open |
 | - | `BSLightingShaderProperty::QShader` (COMMUNITY) | `sse-steam-1-7-104` / `0x1519130` / 6 | - | - | mapped | - | - |
 | - | `BSGrassShaderProperty::IsEqual` (COMMUNITY) | `sse-steam-1-7-104` / `0x151d6d0` / 7 | - | - | mapped | - | - |
 | - | `BSGrassShaderProperty::QShader` (COMMUNITY) | `sse-steam-1-7-104` / `0x151d9a0` / 6 | - | - | mapped | - | - |
@@ -1198,7 +1198,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSLightingShaderMaterialParallax::Ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x1525cf0` / 44 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialParallax::GetFeature` (COMMUNITY) | `sse-steam-1-7-104` / `0x1526160` / 6 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialParallaxOcc::Ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x1526170` / 49 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterialFacegen::Ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x1526760` / 56 | - | - | mapped | - | - |
+| `bsengine/BSLightingShaderMaterialFacegen` | `BSLightingShaderMaterialFacegen::Ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x1526760` / 56 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1526760.json` | matched | full | open |
 | - | `BSLightingShaderMaterialFacegenTint::Ctor` (COMMUNITY) | `sse-steam-1-7-104` / `0x1526e30` / 48 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialFacegenTint::CopyMembers` (COMMUNITY) | `sse-steam-1-7-104` / `0x1526f20` / 60 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialFacegenTint::GetFeature` (COMMUNITY) | `sse-steam-1-7-104` / `0x1526fc0` / 6 | - | - | mapped | - | - |
@@ -1216,7 +1216,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSLightingShaderMaterialMultiLayerParallax::GetFeature` (COMMUNITY) | `sse-steam-1-7-104` / `0x15288c0` / 6 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialMultiLayerParallax::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x15288d0` / 292 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialMultiLayerParallax::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0x1528a00` / 324 | - | - | mapped | - | - |
-| - | `BSLightingShaderMaterialFacegen::~BSLightingShaderMaterialFacegen` (COMMUNITY) | `sse-steam-1-7-104` / `0x1528e80` / 52 | - | - | mapped | - | - |
+| `bsengine/BSLightingShaderMaterialFacegen` | `BSLightingShaderMaterialFacegen::~BSLightingShaderMaterialFacegen` (COMMUNITY) | `sse-steam-1-7-104` / `0x1528e80` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1528e80.json` | matched | full | open |
 | - | `BSLightingShaderMaterialFacegenTint::~BSLightingShaderMaterialFacegenTint` (COMMUNITY) | `sse-steam-1-7-104` / `0x1528ec0` / 62 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialHairTint::~BSLightingShaderMaterialHairTint` (COMMUNITY) | `sse-steam-1-7-104` / `0x1528fb0` / 52 | - | - | mapped | - | - |
 | - | `BSLightingShaderMaterialLandscape::~BSLightingShaderMaterialLandscape` (COMMUNITY) | `sse-steam-1-7-104` / `0x1529030` / 52 | - | - | mapped | - | - |
@@ -1228,8 +1228,8 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSWaterShaderProperty::Unk_2C` (COMMUNITY) | `sse-steam-1-7-104` / `0x152cd00` / 215 | - | - | mapped | - | - |
 | - | `BSWaterShaderProperty::ForEachTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0x152ce50` / 98 | - | - | mapped | - | - |
 | - | `BSWaterShaderProperty::DoClearRenderPasses` (COMMUNITY) | `sse-steam-1-7-104` / `0x152d190` / 62 | - | - | mapped | - | - |
-| - | `BSBloodSplatterShaderProperty::QShader` (COMMUNITY) | `sse-steam-1-7-104` / `0x152d8a0` / 6 | - | - | mapped | - | - |
-| - | `BSBloodSplatterShaderProperty::GetBaseTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0x152db70` / 8 | - | - | mapped | - | - |
+| `bsengine/BSBloodSplatterShaderProperty` | `BSBloodSplatterShaderProperty::QShader` (COMMUNITY) | `sse-steam-1-7-104` / `0x152d8a0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x152d8a0.json` | matched | full | open |
+| `bsengine/BSBloodSplatterShaderProperty` | `BSBloodSplatterShaderProperty::GetBaseTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0x152db70` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x152db70.json` | matched | full | open |
 | - | `BSParticleShaderProperty::QShader` (COMMUNITY) | `sse-steam-1-7-104` / `0x1532c90` / 6 | - | - | mapped | - | - |
 | - | `BSParticleShaderProperty::SetupGeometry` (COMMUNITY) | `sse-steam-1-7-104` / `0x1532ca0` / 10 | - | - | mapped | - | - |
 | - | `BSParticleShaderProperty::GetBaseTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0x1533bd0` / 8 | - | - | mapped | - | - |
@@ -1240,11 +1240,11 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSImagespaceShader::DispatchCopySubRegion` (COMMUNITY) | `sse-steam-1-7-104` / `0x1540db0` / 259 | - | - | mapped | - | - |
 | - | `BSSkyShaderProperty::QShader` (COMMUNITY) | `sse-steam-1-7-104` / `0x1553540` / 6 | - | - | mapped | - | - |
 | - | `BSSkyShaderProperty::GetBaseTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0x1553930` / 8 | - | - | mapped | - | - |
-| - | `BSEffectShaderMaterial::~BSEffectShaderMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x1556630` / 52 | - | - | mapped | - | - |
-| - | `BSDistantTreeShaderProperty::GetBaseTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0x1558eb0` / 8 | - | - | mapped | - | - |
+| `bsengine/BSEffectShaderMaterial` | `BSEffectShaderMaterial::~BSEffectShaderMaterial` (COMMUNITY) | `sse-steam-1-7-104` / `0x1556630` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1556630.json` | matched | full | open |
+| `bsengine/BSDistantTreeShaderProperty` | `BSDistantTreeShaderProperty::GetBaseTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0x1558eb0` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1558eb0.json` | matched | full | open |
 | - | `BSCubeMapCamera::RenderCubemap` (COMMUNITY) | `sse-steam-1-7-104` / `0x1559a60` / 14 | - | - | mapped | - | - |
 | - | `BSWaterShaderMaterial::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x155af30` / 6 | - | - | mapped | - | - |
-| - | `BSFogProperty::~BSFogProperty` (COMMUNITY) | `sse-steam-1-7-104` / `0x155c460` / 62 | - | - | mapped | - | - |
+| `bsengine/BSFogProperty` | `BSFogProperty::~BSFogProperty` (COMMUNITY) | `sse-steam-1-7-104` / `0x155c460` / 62 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x155c460.json` | matched | full | open |
 | - | `BSShadowLight::Unk_03` (COMMUNITY) | `sse-steam-1-7-104` / `0x155dbd0` / 3 | - | - | mapped | - | - |
 | - | `BSImagespaceShader::Setup` (COMMUNITY) | `sse-steam-1-7-104` / `0x1564960` / 147 | - | - | mapped | - | - |
 | - | `BSImagespaceShader::ShutDown` (COMMUNITY) | `sse-steam-1-7-104` / `0x1564a00` / 117 | - | - | mapped | - | - |
