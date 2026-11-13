@@ -138793,240 +138793,280 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 24379664,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1740110::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1740110.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1741b50",
       "build_id": "sse-steam-1-7-104",
       "rva": 24386384,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1741b50::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1741b50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1748770",
       "build_id": "sse-steam-1-7-104",
       "rva": 24414064,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1748770::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1748770.json"
     },
     {
       "id": "sse-steam-1-7-104-0x174a310",
       "build_id": "sse-steam-1-7-104",
       "rva": 24421136,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static174a310::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x174a310.json"
     },
     {
       "id": "sse-steam-1-7-104-0x174dfd0",
       "build_id": "sse-steam-1-7-104",
       "rva": 24436688,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static174dfd0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x174dfd0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1789fe0",
       "build_id": "sse-steam-1-7-104",
       "rva": 24682464,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1789fe0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1789fe0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x178a1e0",
       "build_id": "sse-steam-1-7-104",
       "rva": 24682976,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static178a1e0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x178a1e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x178ed20",
       "build_id": "sse-steam-1-7-104",
       "rva": 24702240,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static178ed20::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x178ed20.json"
     },
     {
       "id": "sse-steam-1-7-104-0x178ed30",
       "build_id": "sse-steam-1-7-104",
       "rva": 24702256,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static178ed30::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x178ed30.json"
     },
     {
       "id": "sse-steam-1-7-104-0x178ed40",
       "build_id": "sse-steam-1-7-104",
       "rva": 24702272,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static178ed40::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x178ed40.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1792080",
       "build_id": "sse-steam-1-7-104",
       "rva": 24715392,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1792080::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1792080.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17925c0",
       "build_id": "sse-steam-1-7-104",
       "rva": 24716736,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17925c0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17925c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1793610",
       "build_id": "sse-steam-1-7-104",
       "rva": 24720912,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1793610::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1793610.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1799880",
       "build_id": "sse-steam-1-7-104",
       "rva": 24746112,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static1799880::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1799880.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17a84b0",
       "build_id": "sse-steam-1-7-104",
       "rva": 24806576,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17a84b0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17a84b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b0bc0",
       "build_id": "sse-steam-1-7-104",
       "rva": 24841152,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17b0bc0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b0bc0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b0bd0",
       "build_id": "sse-steam-1-7-104",
       "rva": 24841168,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17b0bd0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b0bd0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b0d60",
       "build_id": "sse-steam-1-7-104",
       "rva": 24841568,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17b0d60::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b0d60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b1a20",
       "build_id": "sse-steam-1-7-104",
       "rva": 24844832,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17b1a20::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b1a20.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b1a30",
       "build_id": "sse-steam-1-7-104",
       "rva": 24844848,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "Static17b1a30::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b1a30.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b1a50",
@@ -139036,9 +139076,10 @@
       "status": "mapped",
       "name": "Static17b1a50::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b1a50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b1bd0",
@@ -139048,9 +139089,10 @@
       "status": "mapped",
       "name": "Static17b1bd0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b1bd0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b2470",
@@ -139060,9 +139102,10 @@
       "status": "mapped",
       "name": "Static17b2470::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b2470.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b2620",
@@ -139072,9 +139115,10 @@
       "status": "mapped",
       "name": "Static17b2620::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b2620.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b2b00",
@@ -139084,9 +139128,10 @@
       "status": "mapped",
       "name": "Static17b2b00::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b2b00.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b2d70",
@@ -139096,9 +139141,10 @@
       "status": "mapped",
       "name": "Static17b2d70::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b2d70.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b4fd0",
@@ -139108,9 +139154,10 @@
       "status": "mapped",
       "name": "Static17b4fd0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b4fd0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b7180",
@@ -139120,9 +139167,10 @@
       "status": "mapped",
       "name": "Static17b7180::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b7180.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17b7190",
@@ -139132,9 +139180,10 @@
       "status": "mapped",
       "name": "Static17b7190::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17b7190.json"
     },
     {
       "id": "sse-steam-1-7-104-0x17c56f0",
@@ -139144,9 +139193,10 @@
       "status": "mapped",
       "name": "Static17c56f0::teardown",
       "name_origin": "GUESS",
-      "name_source": "GUESS(low): trivial leaf stand-in; original signature and owner unknown.",
+      "name_source": "GUESS(low): primitive interval stand-in; original signature and owning system unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x17c56f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x145680",
