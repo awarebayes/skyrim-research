@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "80b8c8c1590af84ddabf97476fb8621faf8ee464b37416436150567f225ff1d7",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x3b7240",
+  "naming_findings": [
+    "The opaque member block is a stand-in for unrecovered members."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "476d74123bb09112b7ea4cd95276d4292af9bf1e95f2ace5b848c0e77c0ef86f",
+  "review_task_id": "review-p85-reconcile-e2",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 3895872,
+  "size": 319,
+  "source_digest": "80e9c9ab0680258ea3328ed9c7d718963134fabbb10a84c4dbb63e3cef346d75",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

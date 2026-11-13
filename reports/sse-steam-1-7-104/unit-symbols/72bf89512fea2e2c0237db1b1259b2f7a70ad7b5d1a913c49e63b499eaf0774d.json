@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?DoGetSupportedInputChannels@BGSSoundOutput@@UEBAIXZ": {
+      "rva": 3323408,
+      "size": 6
+    },
+    "?DoGetAttenuation@BGSSoundOutput@@UEBAPEBVBSIAttenuationCharacteristics@@XZ": {
+      "rva": 3323440,
+      "size": 5
+    },
+    "?DoGetAttenuatesWithDistance@BGSSoundOutput@@UEBA_NXZ": {
+      "rva": 3323424,
+      "size": 7
+    },
+    "?DoGetUsesHRTF@BGSSoundOutput@@UEBA_NXZ": {
+      "rva": 3323376,
+      "size": 8
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?DoGetSupportedInputChannels@BGSSoundOutput@@UEBAIXZ",
+        "rva": "0x32b610",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoGetAttenuation@BGSSoundOutput@@UEBAPEBVBSIAttenuationCharacteristics@@XZ",
+        "rva": "0x32b630",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoGetAttenuatesWithDistance@BGSSoundOutput@@UEBA_NXZ",
+        "rva": "0x32b620",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoGetUsesHRTF@BGSSoundOutput@@UEBA_NXZ",
+        "rva": "0x32b5f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

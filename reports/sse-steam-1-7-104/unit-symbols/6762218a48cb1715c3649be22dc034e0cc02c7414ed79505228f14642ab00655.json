@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Address@LeafAddress108c8c0@@QEAAPEAXXZ": {
+      "rva": 17352896,
+      "size": 8
+    },
+    "?leaf_global@@3EA": {
+      "rva": 53705176,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "note": "Independent per-entry reference; all names and signatures are stand-ins.",
+    "entries": [
+      {
+        "name": "?Address@LeafAddress108c8c0@@QEAAPEAXXZ",
+        "rva": "0x108c8c0",
+        "community_name": null,
+        "note": "Extracted from this pinned-image member."
+      },
+      {
+        "name": "?leaf_global@@3EA",
+        "rva": "0x33379d8",
+        "community_name": null,
+        "note": "Extracted from this pinned-image member."
+      }
+    ]
+  }
+}

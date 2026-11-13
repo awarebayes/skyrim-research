@@ -2,28 +2,22 @@
   "build_id": "sse-steam-1-7-104",
   "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
   "escalation_category": "none",
-  "family_evidence": {
-    "batch_path": "reports/sse-steam-1-7-104/family-batches/p81-const-return-v2-01.json",
-    "batch_sha256": "aa935b2d5750bc0effa9b35568dca41f9c16a927819f247bb5dbadbae9498ff0",
-    "family_path": "reports/sse-steam-1-7-104/families/e5d3f654f509c5398369bf78e9b5a3aeb68cbd4946222f94633f53a55f41d040.json",
-    "member_sha256": "2b8f762f6984eebbe5302cb41a6f4e1437fe46da048fb19a2cbb181f92470baa"
-  },
   "function_id": "sse-steam-1-7-104-0xf0eef0",
   "naming_findings": [
-    "Family approval does not assess individual names."
+    "SetupGeometry uses a stand-in signature that differs from the community declaration."
   ],
   "previous_code_section_sha256": null,
   "previous_review_sha256": null,
   "previous_source_digest": null,
   "review_date": "2026-11-13",
-  "review_kind": "family",
-  "review_record_schema": 4,
-  "review_sha256": "689a7a0686e17d106b0ace5daaa03767ba0017390e807f80c2f000da33e0c58d",
-  "review_task_id": "review-family-e5d3f654f509c5398369",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "dcaf5c3fcf4ad94e378b109089a4fcd4a8820af055a4d263f5ac8d44f023ba94",
+  "review_task_id": "review-p85-haiku-wave1-family-refresh",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 15789808,
   "size": 3,
-  "source_digest": "c503cc2f325a627fe3f0686d238a1745a3e49a510ff30d695e8bcc01e733020e",
+  "source_digest": "735a9472dcd197747f3fa24f9bc24434679e9fc5332e579f0fa34337c51881b0",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

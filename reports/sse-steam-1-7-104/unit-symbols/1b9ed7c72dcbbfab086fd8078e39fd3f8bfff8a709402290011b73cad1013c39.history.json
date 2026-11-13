@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/1b9ed7c72dcbbfab086fd8078e39fd3f8bfff8a709402290011b73cad1013c39.json",
+  "versions": [
+    {
+      "sha256": "1b9ed7c72dcbbfab086fd8078e39fd3f8bfff8a709402290011b73cad1013c39",
+      "base": null,
+      "added": [
+        "__real@3f800000",
+        "?Unk_0E@BSFaceGenKeyframeMultiple@@UEAA_NI@Z",
+        "?Unk_0B@BSFaceGenKeyframeMultiple@@UEAA_NXZ",
+        "?g_expressionNameTable@@3QBQEBDB",
+        "?g_phonemeNameTable@@3QBQEBDB",
+        "?GetExpressionName@BSFaceGenKeyframeMultiple@@SAPEBDI@Z",
+        "?GetPhonemeName@BSFaceGenKeyframeMultiple@@SAPEBDI@Z",
+        "?Unk_0C@BSFaceGenKeyframeMultiple@@UEBAEXZ"
+      ]
+    }
+  ]
+}

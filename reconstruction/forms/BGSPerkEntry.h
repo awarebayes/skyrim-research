@@ -15,8 +15,14 @@
 #pragma once
 #include <cstdint>
 // GetID: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+class BGSPerk;
+
+// BGSPerkEntry::SetParent, BGSPerkEntry::CheckConditionFilters, BGSPerkEntry::ClearData: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); compared at RVA 0x395b10, 0x398460, 0x398470
 class BGSPerkEntry
 {
 public:
     virtual std::uint32_t GetID() const;
+    virtual void SetParent(BGSPerk* a_parent);  // compared: 0x395b10
+    virtual bool CheckConditionFilters(std::uint32_t a_numArgs, void* a_args);  // compared: 0x398460
+    virtual void ClearData();  // compared: 0x398470
 };

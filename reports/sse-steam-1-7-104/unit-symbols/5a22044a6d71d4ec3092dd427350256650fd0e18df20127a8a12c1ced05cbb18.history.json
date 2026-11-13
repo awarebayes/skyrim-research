@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/5a22044a6d71d4ec3092dd427350256650fd0e18df20127a8a12c1ced05cbb18.json",
+  "versions": [
+    {
+      "sha256": "5a22044a6d71d4ec3092dd427350256650fd0e18df20127a8a12c1ced05cbb18",
+      "base": null,
+      "added": [
+        "?SetupGeometry@NiShadeProperty@@UEBAEXZ",
+        "?FinishSetupGeometry@NiShadeProperty@@UEAA_NPEAVBSGeometry@@@Z",
+        "?Unk_29@NiShadeProperty@@UEAAXXZ",
+        "?GetType@NiShadeProperty@@UEBA?AW4Type@1@XZ"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/72bf89512fea2e2c0237db1b1259b2f7a70ad7b5d1a913c49e63b499eaf0774d.json",
+  "versions": [
+    {
+      "sha256": "72bf89512fea2e2c0237db1b1259b2f7a70ad7b5d1a913c49e63b499eaf0774d",
+      "base": null,
+      "added": [
+        "?DoGetSupportedInputChannels@BGSSoundOutput@@UEBAIXZ",
+        "?DoGetAttenuation@BGSSoundOutput@@UEBAPEBVBSIAttenuationCharacteristics@@XZ",
+        "?DoGetAttenuatesWithDistance@BGSSoundOutput@@UEBA_NXZ",
+        "?DoGetUsesHRTF@BGSSoundOutput@@UEBA_NXZ"
+      ]
+    }
+  ]
+}

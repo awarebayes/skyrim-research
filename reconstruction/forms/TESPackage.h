@@ -9,14 +9,33 @@
 // Adapted bodies: none. Body synthesized from the bounded leaf template.
 // A comparator pass verifies code under the recipe, not names or original source form.
 // Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
+// Task p92-s-tespackage: declarations for RVA 0x49e8d0, 0x49e270 and 0x49e890 added beside IsPackageOwner.
+// Base form: shared header ../forms/TESForm.h for TESForm (sizeof 0x20).
 // TESPackage: EXE_RTTI
+// TESPackage::GetRefCount, TESPackage::GetObjectTypeName, TESPackage::~TESPackage: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // IsPackageOwner: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-// member, padding: GUESS(low); storage names invented for the measured member offset
+// objectType, unknown20, unknown25: GUESS(low); measured from the listings, names invented
 #pragma once
 #include <cstdint>
-// IsPackageOwner: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-class TESPackage
+#include "../forms/TESForm.h"
+class TESPackage : public TESForm
 {
 public:
+    TESPackage();
+    // IsPackageOwner: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
     virtual std::uint8_t IsPackageOwner() const;
+    virtual std::uint32_t GetRefCount() const;
+    virtual const char* GetObjectTypeName() const;
+    virtual ~TESPackage();
+
+private:
+    // unknown20: GUESS(low); padding from the base end to the field at 0x24
+    std::uint8_t unknown20[0x4];
+    // objectType: GUESS(low); byte at 0x24, sign-extended and used as the table index
+    std::int8_t objectType;
+    // unknown25: GUESS(low); padding from 0x25 to 0xDB
+    std::uint8_t unknown25[0xb7];
+    // refCount: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); dword at 0xDC
+    std::uint32_t refCount;
 };
+static_assert(sizeof(TESPackage) == 0xe0, "TESPackage size");

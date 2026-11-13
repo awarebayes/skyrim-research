@@ -18,3 +18,15 @@ std::uint32_t TESRegionDataSound::GetType() const
 {
     return 0x7;
 }
+
+bool TESRegionDataSound::IsLoaded() const
+{
+    return member10 == nullptr;
+}
+
+TESRegionDataSoundObj* TESRegionDataSound::Unk_05(void* a_param)
+{
+    TESRegionDataSoundObj* obj = Slot4();
+    obj->Slot6(a_param, 2);
+    return obj;
+}

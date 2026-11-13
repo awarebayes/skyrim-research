@@ -36,9 +36,18 @@
 // SOFTWARE.
 #pragma once
 #include <cstdint>
+
+class BSGeometry;
 // SetupGeometry: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 class NiShadeProperty
 {
 public:
     virtual std::uint8_t SetupGeometry() const;
+    // FinishSetupGeometry, GetType: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); signatures from the sheets, not checked against the community header
+    virtual bool FinishSetupGeometry(BSGeometry* a_geometry);
+    // Unk_29: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 29
+    virtual void Unk_29();
+    // Type: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); a 32-bit enumeration, the return width is all the compared code reads
+    enum class Type : std::uint32_t {};
+    virtual Type GetType() const;
 };

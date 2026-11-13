@@ -18,3 +18,15 @@ std::uint32_t TESRegionDataMap::GetType() const
 {
     return 0x4;
 }
+
+bool TESRegionDataMap::IsLoaded() const
+{
+    return true;
+}
+
+TESRegionDataObj* TESRegionDataMap::Unk_05(void* a_param)
+{
+    TESRegionDataObj* obj = Slot4();
+    obj->Slot6(a_param, 2);
+    return obj;
+}

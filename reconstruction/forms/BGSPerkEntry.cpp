@@ -18,3 +18,16 @@ std::uint32_t BGSPerkEntry::GetID() const
 {
     return 0xffff;
 }
+
+void BGSPerkEntry::SetParent(BGSPerk*)
+{
+}
+
+bool BGSPerkEntry::CheckConditionFilters(std::uint32_t, void*)
+{
+    return false;
+}
+
+void BGSPerkEntry::ClearData()
+{
+}

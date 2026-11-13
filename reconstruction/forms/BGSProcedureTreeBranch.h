@@ -41,4 +41,9 @@ class BGSProcedureTreeBranch
 {
 public:
     virtual std::uint8_t Unk_0A() const;
+    // Unk_0D, Unk_0E, Unk_0F: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    // return types: GUESS(low); the listing returns zero in EAX (Unk_0D) and AL (Unk_0F), nothing for Unk_0E
+    virtual std::uint32_t Unk_0D();
+    virtual void Unk_0E();
+    virtual std::uint8_t Unk_0F();
 };

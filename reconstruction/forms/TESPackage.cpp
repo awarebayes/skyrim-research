@@ -9,12 +9,34 @@
 // Adapted bodies: none. Body synthesized from the bounded leaf template.
 // A comparator pass verifies code under the recipe, not names or original source form.
 // Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// TESPackage: EXE_RTTI
-// IsPackageOwner: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-// member, padding: GUESS(low); storage names invented for the measured member offset
+// Task p92-s-tespackage: bodies for RVA 0x49e8d0 and 0x49e270 and the empty-body constructor added beside IsPackageOwner.
+// Evidence: findings/fifth-batch-selection.md
+// Drafted by claude-haiku-5-5 (Claude Haiku 5.5), drafter label haiku-202611131358-2.
+// Adapted bodies for the new functions: none; each body is written from its listing.
+// TESPackageObjectTypeNames: GUESS(low); a table of pointers indexed by objectType, bound by address through bind-hints.json.
+// TESPackage::TESPackage: GUESS(low); constructor name from the class name, body empty
+// TESPackage::GetRefCount, TESPackage::GetObjectTypeName: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 #include "TESPackage.h"
+
+extern const char* const TESPackageObjectTypeNames[];
+
+// Not compared: defined so that the compiler emits the vftable and the deleting destructor beside it.
+TESPackage::TESPackage()
+{
+}
+
 // IsPackageOwner: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 std::uint8_t TESPackage::IsPackageOwner() const
 {
     return 0x1;
+}
+
+std::uint32_t TESPackage::GetRefCount() const
+{
+    return refCount;
+}
+
+const char* TESPackage::GetObjectTypeName() const
+{
+    return TESPackageObjectTypeNames[objectType];
 }

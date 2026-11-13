@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/f66bb452298bfdc94ac350dc4c242fdc96d95769fa73c435a667d069345e9d4e.json",
+  "versions": [
+    {
+      "sha256": "f66bb452298bfdc94ac350dc4c242fdc96d95769fa73c435a667d069345e9d4e",
+      "base": null,
+      "added": [
+        "?GetType@TESRegionDataMap@@UEBAIXZ",
+        "?IsLoaded@TESRegionDataMap@@UEBA_NXZ",
+        "?Unk_05@TESRegionDataMap@@UEAAPEAVTESRegionDataObj@@PEAX@Z"
+      ]
+    }
+  ]
+}

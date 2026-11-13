@@ -19,3 +19,8 @@ std::uint8_t ConeProjectile::Slot194() const
 {
     return 0x1;
 }
+
+bool ConeProjectile::GetKillOnCollision()
+{
+    return false;
+}

@@ -19,4 +19,13 @@ class BGSSoundOutput
 {
 public:
     virtual std::uint32_t DoGetSupportedInputChannels() const;
+    // DoGetAttenuatesWithDistance, DoGetUsesHRTF, DoGetAttenuation: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+    // member names, types and the stand-in class for the attenuation pointer: GUESS(low); the listing reads a byte at 0x08, a dword at 0x0C and a pointer at 0x10
+    virtual bool DoGetAttenuatesWithDistance() const;
+    virtual bool DoGetUsesHRTF() const;
+    virtual const class BSIAttenuationCharacteristics* DoGetAttenuation() const;
+
+    std::uint8_t flags08;                                       // 08
+    std::uint32_t unk0C;                                        // 0C
+    const class BSIAttenuationCharacteristics* attenuation10;   // 10
 };

@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__real@3f800000": {
+      "rva": 28687912,
+      "size": null
+    },
+    "?Unk_0E@BSFaceGenKeyframeMultiple@@UEAA_NI@Z": {
+      "rva": 4399232,
+      "size": 39
+    },
+    "?Unk_0B@BSFaceGenKeyframeMultiple@@UEAA_NXZ": {
+      "rva": 4399152,
+      "size": 68
+    },
+    "?g_expressionNameTable@@3QBQEBDB": {
+      "rva": 34277424,
+      "size": null
+    },
+    "?g_phonemeNameTable@@3QBQEBDB": {
+      "rva": 34277712,
+      "size": null
+    },
+    "?GetExpressionName@BSFaceGenKeyframeMultiple@@SAPEBDI@Z": {
+      "rva": 4435104,
+      "size": 23
+    },
+    "?GetPhonemeName@BSFaceGenKeyframeMultiple@@SAPEBDI@Z": {
+      "rva": 4435168,
+      "size": 23
+    },
+    "?Unk_0C@BSFaceGenKeyframeMultiple@@UEBAEXZ": {
+      "rva": 4400416,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__real@3f800000",
+        "rva": "0x1b5be28",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0E@BSFaceGenKeyframeMultiple@@UEAA_NI@Z",
+        "rva": "0x432080",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0B@BSFaceGenKeyframeMultiple@@UEAA_NXZ",
+        "rva": "0x432030",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_expressionNameTable@@3QBQEBDB",
+        "rva": "0x20b0830",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_phonemeNameTable@@3QBQEBDB",
+        "rva": "0x20b0950",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetExpressionName@BSFaceGenKeyframeMultiple@@SAPEBDI@Z",
+        "rva": "0x43aca0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetPhonemeName@BSFaceGenKeyframeMultiple@@SAPEBDI@Z",
+        "rva": "0x43ace0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0C@BSFaceGenKeyframeMultiple@@UEBAEXZ",
+        "rva": "0x432520",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e1a90d7771630b5ceee50acab27dd812ea0e2ec6aad1a38458428dbce2a1825d.json",
+  "versions": [
+    {
+      "sha256": "e1a90d7771630b5ceee50acab27dd812ea0e2ec6aad1a38458428dbce2a1825d",
+      "base": null,
+      "added": [
+        "?GetType@TESRegionDataSound@@UEBAIXZ",
+        "?IsLoaded@TESRegionDataSound@@UEBA_NXZ",
+        "?Unk_05@TESRegionDataSound@@UEAAPEAVTESRegionDataSoundObj@@PEAX@Z"
+      ]
+    }
+  ]
+}

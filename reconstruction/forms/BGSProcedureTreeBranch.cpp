@@ -1,7 +1,7 @@
 // BGSProcedureTreeBranch::Unk_0A, build sse-steam-1-7-104, RVA 0x45b820, 3 bytes.
 // Labels: v2
 // Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
+// Evidence: findings/generator-leaves-selection.md for 0x45b820; Unk_0D, Unk_0E and Unk_0F (BGSProcedureTreeBranch, RVAs 0x4594c0, 0x45acb0, 0x45b810) are evidenced by the unit p92-s-bgsproceduretreebranch attempt log only
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
 // Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
 // Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"CharmedBaryon/CommonLibSSE-NG","revision":"b93280e832f263dbef44e44cbe2936622a02f91a","source":"ng-slot"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
@@ -39,4 +39,21 @@
 std::uint8_t BGSProcedureTreeBranch::Unk_0A() const
 {
     return 0x1;
+}
+
+// Unk_0D: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+std::uint32_t BGSProcedureTreeBranch::Unk_0D()
+{
+    return 0;
+}
+
+// Unk_0E: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BGSProcedureTreeBranch::Unk_0E()
+{
+}
+
+// Unk_0F: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+std::uint8_t BGSProcedureTreeBranch::Unk_0F()
+{
+    return 0;
 }

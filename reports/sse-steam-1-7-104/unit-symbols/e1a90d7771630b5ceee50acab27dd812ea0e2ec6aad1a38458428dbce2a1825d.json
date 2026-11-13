@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetType@TESRegionDataSound@@UEBAIXZ": {
+      "rva": 2437904,
+      "size": 6
+    },
+    "?IsLoaded@TESRegionDataSound@@UEBA_NXZ": {
+      "rva": 2438576,
+      "size": 9
+    },
+    "?Unk_05@TESRegionDataSound@@UEAAPEAVTESRegionDataSoundObj@@PEAX@Z": {
+      "rva": 2438160,
+      "size": 55
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetType@TESRegionDataSound@@UEBAIXZ",
+        "rva": "0x253310",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsLoaded@TESRegionDataSound@@UEBA_NXZ",
+        "rva": "0x2535b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_05@TESRegionDataSound@@UEAAPEAVTESRegionDataSoundObj@@PEAX@Z",
+        "rva": "0x253410",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

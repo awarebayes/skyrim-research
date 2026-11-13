@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetType@TESRegionDataMap@@UEBAIXZ": {
+      "rva": 2432608,
+      "size": 6
+    },
+    "?IsLoaded@TESRegionDataMap@@UEBA_NXZ": {
+      "rva": 2433200,
+      "size": 3
+    },
+    "?Unk_05@TESRegionDataMap@@UEAAPEAVTESRegionDataObj@@PEAX@Z": {
+      "rva": 2432784,
+      "size": 55
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetType@TESRegionDataMap@@UEBAIXZ",
+        "rva": "0x251e60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsLoaded@TESRegionDataMap@@UEBA_NXZ",
+        "rva": "0x2520b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_05@TESRegionDataMap@@UEAAPEAVTESRegionDataObj@@PEAX@Z",
+        "rva": "0x251f10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

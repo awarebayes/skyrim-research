@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetType@BGSEntryPointPerkEntry@@UEBAIXZ": {
+      "rva": 3769552,
+      "size": 6
+    },
+    "?GetFunction@BGSEntryPointPerkEntry@@UEAA?AW4EntryPoint@@XZ": {
+      "rva": 3769472,
+      "size": 5
+    },
+    "?GetFunctionData@BGSEntryPointPerkEntry@@UEBAPEAXXZ": {
+      "rva": 3769504,
+      "size": 5
+    },
+    "?RemovePerkEntry@BGSEntryPointPerkEntry@@UEAAXPEAVActor@@@Z": {
+      "rva": 3762000,
+      "size": 14
+    },
+    "?RemoveEntryPointFromActor@@YAXPEAVActor@@PEAVBGSEntryPointPerkEntry@@@Z": {
+      "rva": 6945136,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetType@BGSEntryPointPerkEntry@@UEBAIXZ",
+        "rva": "0x3984d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFunction@BGSEntryPointPerkEntry@@UEAA?AW4EntryPoint@@XZ",
+        "rva": "0x398480",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFunctionData@BGSEntryPointPerkEntry@@UEBAPEAXXZ",
+        "rva": "0x3984a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemovePerkEntry@BGSEntryPointPerkEntry@@UEAAXPEAVActor@@@Z",
+        "rva": "0x396750",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemoveEntryPointFromActor@@YAXPEAVActor@@PEAVBGSEntryPointPerkEntry@@@Z",
+        "rva": "0x69f970",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

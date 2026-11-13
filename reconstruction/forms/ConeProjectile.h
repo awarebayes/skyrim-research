@@ -20,4 +20,6 @@ class ConeProjectile
 {
 public:
     virtual std::uint8_t Slot194() const;
+    // GetKillOnCollision: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the sheet's declaration, without a base class declared here, so no override
+    virtual bool GetKillOnCollision();
 };

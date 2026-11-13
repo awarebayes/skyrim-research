@@ -40,3 +40,17 @@ std::uint8_t NiShadeProperty::SetupGeometry() const
 {
     return 0x1;
 }
+
+bool NiShadeProperty::FinishSetupGeometry(BSGeometry*)
+{
+    return true;
+}
+
+void NiShadeProperty::Unk_29()
+{
+}
+
+NiShadeProperty::Type NiShadeProperty::GetType() const
+{
+    return static_cast<Type>(1);
+}

@@ -1,7 +1,7 @@
 // TESPackageData::Compare, build sse-steam-1-7-104, RVA 0x49ec50, 3 bytes.
 // Labels: v2
 // Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
+// Evidence: findings/generator-leaves-selection.md (unit TESPackageData, RVA 0x49ec50)
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
 // Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
 // Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"meh321/AddressLibraryDatabase","revision":"0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91","source":"meh321"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
@@ -17,4 +17,16 @@
 std::uint8_t TESPackageData::Compare() const
 {
     return 0x1;
+}
+
+void TESPackageData::Copy(TESPackageData*, TESForm*)
+{
+}
+
+void TESPackageData::InitItem(TESForm*)
+{
+}
+
+void TESPackageData::LoadGame(BGSLoadFormBuffer*)
+{
 }

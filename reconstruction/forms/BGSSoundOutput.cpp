@@ -18,3 +18,21 @@ std::uint32_t BGSSoundOutput::DoGetSupportedInputChannels() const
 {
     return 0x2;
 }
+
+// DoGetAttenuatesWithDistance: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+bool BGSSoundOutput::DoGetAttenuatesWithDistance() const
+{
+    return (flags08 & 1) != 0;
+}
+
+// DoGetUsesHRTF: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+bool BGSSoundOutput::DoGetUsesHRTF() const
+{
+    return unk0C == 0;
+}
+
+// DoGetAttenuation: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+const BSIAttenuationCharacteristics* BGSSoundOutput::DoGetAttenuation() const
+{
+    return attenuation10;
+}

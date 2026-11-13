@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Slot194@ConeProjectile@@UEBAEXZ": {
+      "rva": 8263808,
+      "size": 3
+    },
+    "?GetKillOnCollision@ConeProjectile@@UEAA_NXZ": {
+      "rva": 8265296,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Slot194@ConeProjectile@@UEBAEXZ",
+        "rva": "0x7e1880",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetKillOnCollision@ConeProjectile@@UEAA_NXZ",
+        "rva": "0x7e1e50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

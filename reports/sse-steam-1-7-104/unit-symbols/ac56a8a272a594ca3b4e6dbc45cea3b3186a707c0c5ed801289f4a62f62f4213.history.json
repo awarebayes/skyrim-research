@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/ac56a8a272a594ca3b4e6dbc45cea3b3186a707c0c5ed801289f4a62f62f4213.json",
+  "versions": [
+    {
+      "sha256": "ac56a8a272a594ca3b4e6dbc45cea3b3186a707c0c5ed801289f4a62f62f4213",
+      "base": null,
+      "added": [
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "??1TESIdleForm@@UEAA@XZ",
+        "??_GTESIdleForm@@UEAAPEAXI@Z",
+        "??3@YAXPEAX_K@Z",
+        "__RTDynamicCast",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?InitItemImpl@TESIdleForm@@UEAAXXZ",
+        "?TESIdleFormInitSub@@YAXPEAXPEAVTESIdleForm@@@Z",
+        "?GetCompileIndexForOwner@@YA_KPEAVTESIdleForm@@I@Z",
+        "?RecordFlags_AddCompileIndex@@YAXPEAI_K@Z",
+        "?GetFormForID@@YAPEAVTESForm@@I@Z",
+        "??_R0?AVTESIdleForm@@@8",
+        "?FinishInitItem@@YAXPEAVTESIdleForm@@_N@Z"
+      ]
+    }
+  ]
+}

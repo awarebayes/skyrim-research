@@ -14,9 +14,16 @@
 // member, padding: GUESS(low); storage names invented for the measured member offset
 #pragma once
 #include <cstdint>
+
+class TESForm;
+class BGSLoadFormBuffer;
 // Compare: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 class TESPackageData
 {
 public:
     virtual std::uint8_t Compare() const;
+    // Copy, InitItem, LoadGame: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); signatures taken from the sheets, not checked against the community header
+    virtual void Copy(TESPackageData* a_package, TESForm* a_form);
+    virtual void InitItem(TESForm* a_form);
+    virtual void LoadGame(BGSLoadFormBuffer* a_buf);
 };

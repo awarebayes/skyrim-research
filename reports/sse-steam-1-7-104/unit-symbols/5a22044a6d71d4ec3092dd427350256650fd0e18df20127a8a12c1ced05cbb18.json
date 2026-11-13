@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SetupGeometry@NiShadeProperty@@UEBAEXZ": {
+      "rva": 15789808,
+      "size": 3
+    },
+    "?FinishSetupGeometry@NiShadeProperty@@UEAA_NPEAVBSGeometry@@@Z": {
+      "rva": 15789824,
+      "size": 3
+    },
+    "?Unk_29@NiShadeProperty@@UEAAXXZ": {
+      "rva": 15790336,
+      "size": 3
+    },
+    "?GetType@NiShadeProperty@@UEBA?AW4Type@1@XZ": {
+      "rva": 15790352,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SetupGeometry@NiShadeProperty@@UEBAEXZ",
+        "rva": "0xf0eef0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishSetupGeometry@NiShadeProperty@@UEAA_NPEAVBSGeometry@@@Z",
+        "rva": "0xf0ef00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_29@NiShadeProperty@@UEAAXXZ",
+        "rva": "0xf0f100",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetType@NiShadeProperty@@UEBA?AW4Type@1@XZ",
+        "rva": "0xf0f110",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

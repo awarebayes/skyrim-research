@@ -18,3 +18,18 @@ std::uint32_t BGSEntryPointPerkEntry::GetType() const
 {
     return 0x2;
 }
+
+EntryPoint BGSEntryPointPerkEntry::GetFunction()
+{
+    return static_cast<EntryPoint>(function);
+}
+
+void* BGSEntryPointPerkEntry::GetFunctionData() const
+{
+    return functionData;
+}
+
+void BGSEntryPointPerkEntry::RemovePerkEntry(Actor* a_actor)
+{
+    RemoveEntryPointFromActor(a_actor, this);
+}
