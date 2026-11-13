@@ -203,6 +203,16 @@ class ClaimsTests(unittest.TestCase):
         self.assertEqual(create[create.index('--assignee') + 1], 'project')
         self.assertIn('--label', create)
 
+    def test_publish_does_not_duplicate_scope_in_overlapping_groups(self):
+        issue = raw(8, entries=((0x1000, 0x1100),), me='project', managed=True)
+        issue['title'] = claims.parts(BUILD, [(0x1000, 0x1100)], PUBLIC, 'project', True)[0][0]
+        fake = FakeGh([issue])
+        groups = (BUILD, [([(0x1000, 0x1001)], {}), ([(0x1000, 0x1100)], {})])
+        with patch.object(claims, 'collect', return_value=groups), contextlib.redirect_stdout(io.StringIO()):
+            plans = claims.publish(self.root, fake.client, PUBLIC)
+        self.assertEqual(len(plans), 1)
+        self.assertFalse(any(action == 'create' for action, _ in fake.writes))
+
     def test_publish_skips_external_partial_overlap(self):
         fake = FakeGh([raw(entries=((0x1000, 0x1100),))])
         with patch.object(claims, 'collect', return_value=(BUILD, [([(0x1020, 0x1021), (0x2000, 0x2001)], {})])), \

@@ -425,6 +425,11 @@ def publish(root, gh, public, family_roots=(), cluster_lists=(), dry_run=False):
             for it in conflicts:
                 print(f'skip overlap with claim #{it["number"]} by {it["author"]}', file=sys.stderr)
             entries = [e for e in entries if not index.overlaps([e], me)]
+        # A family and a cluster can describe the same work. Earlier plans already
+        # preserve that scope, so do not open a second issue for covered entries.
+        covered = [interval for _, prior, title, text in plans if prior
+                   for interval in parse_issue(dict(number=prior['number'], title=title, body=text))['entries']]
+        entries = [e for e in entries if not any(a <= e[0] and e[1] <= b for a, b in covered)]
         if not entries:
             continue
         for title, text, chunk in parts(build, entries, public, me, True, counts):
