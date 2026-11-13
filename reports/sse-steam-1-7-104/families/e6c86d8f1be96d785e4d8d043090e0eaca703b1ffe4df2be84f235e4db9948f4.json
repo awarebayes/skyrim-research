@@ -1,0 +1,221 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "cf7e68c444f92558792952b6032ed3f9aeb48a6264d881ef2946a025bd1ca643",
+      "version": "0.7.1-internal"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy"
+      ],
+      "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x1740110": "31dca82179eec9bc9d0fe53e696832321c00878b5d9983f6ca6b9a0d0a8f23eb",
+    "sse-steam-1-7-104-0x1741b50": "770f996cd4222302d91598d9a0c8c6ba11fc53d2039b94cf27f6d5b09b5959ca",
+    "sse-steam-1-7-104-0x1748770": "f97eac200923e53b0835b979517fa029ea5d144ddcf467dd8d550e0805d24a1c",
+    "sse-steam-1-7-104-0x174a310": "b63b0104b5b2c672e8061711c81dba05cf9bd231f593162b72eae91fc0c8dab8",
+    "sse-steam-1-7-104-0x174dfd0": "1903b3cb7495f818cf73ec521bb8835b1f4e6ba7265016b7e0e19a1ccb71eb9b",
+    "sse-steam-1-7-104-0x1789fe0": "0d23fb6190ac6101a29f85176a2db6ebf8dd3a0ae99c154172e75ab1de159e0d",
+    "sse-steam-1-7-104-0x178a1e0": "15e7889cc076578494afbe189ee63fcc77b79cbae7af86805022fea4a7e2c8b2",
+    "sse-steam-1-7-104-0x178ed20": "12c3d960a98588924f464563c927db01e24bedaf6bdb95d9ba984abfcd4e6004",
+    "sse-steam-1-7-104-0x178ed30": "e1bdc6b30ae79f78192139b5cacdba80b91dc1dab26db6ab24afe851cd58a849",
+    "sse-steam-1-7-104-0x178ed40": "d12670c412fc8dc088cf4e81cf037a888a53cc4daeffc06985fe36b9212c074f",
+    "sse-steam-1-7-104-0x1792080": "e62271adf0f4c94c97547c56645371f62c11e37d5eb0dc2495125c750f8288db",
+    "sse-steam-1-7-104-0x17925c0": "3920d9acfdc431bd0aaf946170bf0c221fcb82b8d77fe882c29b070d4b652b20",
+    "sse-steam-1-7-104-0x1793610": "a804c8a465ad791c2ebe163a1ccea97ddc8a7dbbe939116cc0a124cd0e1441cd",
+    "sse-steam-1-7-104-0x1799880": "184789d7cc6e39aa8e9e8841d91541586888f09f5a9383975a91cc1156330f3a",
+    "sse-steam-1-7-104-0x17a84b0": "18b6443bcc0ade08db655308b55c9a9da25709f0774a8b45c1991cfcc394cf2b",
+    "sse-steam-1-7-104-0x17b0bc0": "780ac193e78227c422202123e9d70db7fb57fcc3b97664b2a5742cd813946494",
+    "sse-steam-1-7-104-0x17b0bd0": "912edac1728d8b7bd3297fb3487edb8124b008a046e6f0808585c01f04cc1b92",
+    "sse-steam-1-7-104-0x17b0d60": "37a8cff778b7304efab60b1e5252fc4f7384fa81505c38e9a9adf761be5b6683",
+    "sse-steam-1-7-104-0x17b1a20": "7e13e6677cd6bc5c31baf098cdff7c082fc71a7e6af8e92fcd880fd60c8080c6",
+    "sse-steam-1-7-104-0x17b1a30": "8f3c101139224ba1cc61b18196c035d9348134d8ae16eb0885455953967ad50e"
+  },
+  "origin": {
+    "family": "primitive-empty-teardown-entry",
+    "template_digest": "812588f0c8a551ef368c518f786a50eb0d5b0c5e404e6b03e69ae0f406bae752",
+    "version": "1"
+  },
+  "parameter_ranges": {
+    "rows": [
+      {
+        "entry-rva": 24379664,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24386384,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24414064,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24421136,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24436688,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24682464,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24682976,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24702240,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24702256,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24702272,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24715392,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24716736,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24720912,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24746112,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24806576,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24841152,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24841168,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24841568,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24844832,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24844848,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24844880,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24845264,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24847472,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24847904,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24849152,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24849776,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24858576,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24867200,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24867216,
+        "kind": "teardown",
+        "size": 3
+      },
+      {
+        "entry-rva": 24925936,
+        "kind": "teardown",
+        "size": 3
+      }
+    ]
+  },
+  "parameter_source": {
+    "path": "tools/empty_teardown_family_v1.py",
+    "sha256": "bc72972760ca52b42de8852336ced8a97042156483d5f1b7b336e37fd2e667d2"
+  },
+  "pause_reason": "",
+  "paused": false,
+  "review": null,
+  "template_source": {
+    "path": "tools/primitive_leaf_template_v1.py",
+    "sha256": "812588f0c8a551ef368c518f786a50eb0d5b0c5e404e6b03e69ae0f406bae752"
+  }
+}

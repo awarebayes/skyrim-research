@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Invoke@Leaf148d550@@QEAAXXZ": {
+      "rva": 21550416,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Invoke@Leaf148d550@@QEAAXXZ",
+        "rva": "0x148d550",
+        "community_name": null,
+        "note": "Explicit pinned-image leaf entry; reconstruction identity is a guess."
+      }
+    ]
+  }
+}
