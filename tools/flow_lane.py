@@ -214,7 +214,7 @@ def build(root, fdir, receipt, python, branch):
     frozen = tree / '.local/flow'
     snapshot(fdir, frozen)
     requests, bindings, origins, carried, pins = [], {}, [], set(), {}
-    input_pins = {}
+    input_pins, review_copies = {}, {}
     dropped = []
     parts = [dict(item, selection=[name]) if item['kind'] == 'groups' else item
              for item in receipt['items'] for name in (item['selection'] if item['kind'] == 'groups' else [None])]
@@ -226,12 +226,14 @@ def build(root, fdir, receipt, python, branch):
             for review in sorted((source / f.REVIEWS).glob('*')):
                 if not review.is_file():
                     continue
+                f.review_path(source, dict(saved_review=str(review)))
                 dest = tree / f.REVIEWS / review.name
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 f.refuse(not dest.exists() or dest.read_bytes() == review.read_bytes(),
                          'conflicting saved review: ' + review.name)
                 shutil.copyfile(review, dest)
                 input_pins[str(review.resolve())] = hashlib.sha256(review.read_bytes()).hexdigest()
+                review_copies[str(review.resolve())] = dest.relative_to(tree).as_posix()
             for request in selected:
                 if request['kind'] == 'family':
                     batch = f.fr.read(source, request['path'])
@@ -282,6 +284,16 @@ def build(root, fdir, receipt, python, branch):
             if f.git(tree, 'rev-parse', 'HEAD') != before_item:
                 f.git(tree, 'reset', '--hard', before_item)
             dropped.append(dict(item=item['id'], selection=item['selection'], reason=str(error)))
+    # Imported groups may name absolute paths in an input's private reviews. The frozen
+    # groups must instead refer to their validated copies, including groups not selected
+    # for acceptance: post-CI claims/status reads the entire frozen flow state.
+    for group in f.groups(frozen).values():
+        saved = group.get('saved_review')
+        if saved and Path(saved).is_absolute():
+            copied = review_copies.get(str(Path(saved).resolve()))
+            if copied:
+                group['saved_review'] = copied
+                f.save_group(frozen, group)
     if not requests:
         receipt.update(dropped=dropped, state='done')
         for item in receipt['items']:

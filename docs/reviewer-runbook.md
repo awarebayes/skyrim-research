@@ -105,7 +105,7 @@ blocks; list what you find as `naming_findings` and still approve.
 3. **Report binding.** The report's source revision (the digest you computed with
    `tools/source_digest.py`), recipe, compiler hash and target image hash agree with the files you
    hashed and with `builds/target.json`; the second-host reproduction is present;
-   `python3 tools/check.py` passes.
+   validate each function’s bindings during review; the full `python3 tools/check.py` must pass at integration (explicitly listed pending review-behind entries are expected during review).
 4. **Claim scope.** The claim is only a byte match of the checked code, not the correctness of an
    inferred name and not behaviour.
 5. **Publication hygiene.** Nothing staged for publication contains game bytes, disassembly,

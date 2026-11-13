@@ -12,6 +12,8 @@ from unittest.mock import patch
 
 from test_flow_multi import MultiGroupIntegration as _MultiGroupIntegration
 from test_flow import git, flow
+import claims
+from claims import sync_safe as real_claim_sync
 import flow_lane as lane
 
 
@@ -78,6 +80,61 @@ class PushLane(unittest.TestCase):
         self.assertEqual(checks.call_count, 1)
         self.assertEqual(result['integrated']['accepted'], 3)
         self.assertEqual({i['root'] for i in result['items']}, {str(self.root), str(other)})
+
+    def test_post_ci_claims_reads_absolute_imported_review_from_candidate_copy(self):
+        # A worktree can share the canonical private reviews through a directory symlink.
+        reviews = self.root / flow.REVIEWS
+        shared = self.tmp / 'shared-reviews'
+        reviews.rename(shared)
+        reviews.symlink_to(shared, target_is_directory=True)
+        group = flow.load_group(self.fdir, self.names[-1])
+        original = flow.review_path(self.root, group).resolve()
+        group['saved_review'] = str(original)
+        flow.save_group(self.fdir, group)
+        before = (self.fdir / 'groups' / (group['name'] + '.json')).read_bytes()
+        # The imported group is deliberately not selected; claims scans all groups.
+        self.enqueue(self.names[:1])
+        with patch.object(claims, 'sync_safe', real_claim_sync), patch.object(claims, 'GitHub') as github:
+            github.return_value.user.return_value = 'synthetic-owner'
+            github.return_value.issues.return_value = []
+            result = self.lane()
+        self.assertEqual(result['state'], 'done')
+        self.assertEqual(result['integrated']['ci'], 'green')
+        self.assertNotIn('error', result)
+        tree = Path(result['tree'])
+        frozen = flow.load_group(tree / '.local/flow', group['name'])
+        copied = flow.review_path(tree, frozen)
+        self.assertFalse(Path(frozen['saved_review']).is_absolute())
+        self.assertTrue(copied.resolve().is_relative_to((tree / flow.REVIEWS).resolve()))
+        self.assertEqual(copied.read_bytes(), original.read_bytes())
+        self.assertEqual((self.fdir / 'groups' / (group['name'] + '.json')).read_bytes(), before)
+        github.return_value.issues.assert_called_once_with()
+
+    def test_external_absolute_review_is_not_relocated_into_private_reviews(self):
+        group = flow.load_group(self.fdir, self.names[-1])
+        outside = self.tmp / 'outside.md'
+        outside.write_bytes(flow.review_path(self.root, group).read_bytes())
+        group['saved_review'] = str(outside)
+        flow.save_group(self.fdir, group)
+        self.enqueue(self.names[:1])
+        result = self.lane(push=False)
+        tree = Path(result['tree'])
+        frozen = flow.load_group(tree / '.local/flow', group['name'])
+        self.assertEqual(frozen['saved_review'], str(outside))
+        with self.assertRaisesRegex(flow.FlowError, 'review path escapes private reviews'):
+            flow.review_path(tree, frozen)
+
+    def test_review_file_symlink_escape_is_refused_before_copying(self):
+        outside = self.tmp / 'outside.md'
+        outside.write_text('not a private review\n')
+        (self.root / flow.REVIEWS / 'escape.md').symlink_to(outside)
+        self.enqueue(self.names[:1])
+        result = self.lane()
+        self.assertEqual(result['state'], 'done')
+        self.assertIsNone(result['integrated'])
+        self.assertIn('review path escapes private reviews', result['dropped'][0]['reason'])
+        candidate = Path(result['candidates'][0])
+        self.assertFalse((candidate / flow.REVIEWS / 'escape.md').exists())
 
     def test_changed_sampling_state_after_checks_never_pushes(self):
         self.enqueue()
