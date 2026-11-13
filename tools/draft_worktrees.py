@@ -234,6 +234,13 @@ def _create(root, unit, tier, owner):
         return old
     tree = root / '.local/worktrees/draft' / f'{unit["key"]}-{tier}'
     branch = f'draft/{unit["key"]}-{tier}'
+    if old and old.get('ready') and old.get('tree') == str(tree) and old.get('branch') == branch and not tree.exists():
+        git(root, 'worktree', 'add', '--quiet', str(tree), branch)
+        link_private(root, tree)
+        label(tree, owner, unit['key'], 'draft', branch)
+        old['owner'] = owner
+        save(state_path, old)
+        return old
     if old and not old.get('ready'):
         # A process may have stopped between worktree creation and completion of setup.
         if tree.exists():
@@ -536,6 +543,26 @@ def harvest(qdir, unit, claim, records):
     save(directory / f'harvest-{tier}.json', h)
     save(directory / 'harvest.json', h)
     return h
+
+
+def remove_clean_checkout(root, unit, state):
+    """Remove a labelled, clean checkout without changing its branch or harvest refs."""
+    tree = Path(state['tree'])
+    if not tree.exists():
+        return
+    try:
+        expected = Path(root).resolve() / '.local/worktrees/draft' / f"{unit['key']}-{state['tier']}"
+        owner = read(tree / '.local/worktree-owner.json', {})
+        if tree != expected or owner.get('task') != unit['key'] or owner.get('kind') != 'draft':
+            print(f'leaving draft checkout {tree}: owner unavailable')
+            return
+        status = git(tree, 'status', '--porcelain=v1', '--untracked-files=all')
+        if status:
+            print(f'leaving dirty draft checkout {tree}')
+            return
+        git(root, 'worktree', 'remove', str(tree))
+    except (OSError, ValueError, KeyError, AttributeError) as exc:
+        print(f'leaving draft checkout {tree}: {exc}')
 
 
 def cleanup(root, unit):

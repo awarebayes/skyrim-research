@@ -100,14 +100,46 @@ class DraftWorktrees(unittest.TestCase):
         self.finish()
         harvest = drafts.current(self.root, self.unit)
         self.assertEqual(harvest['passing'], [0x1000])
-        self.assertEqual(git(tree, 'diff-tree', '--no-commit-id', '--name-only', '-r', harvest['commit']),
+        self.assertFalse(tree.exists())
+        self.assertEqual(git(self.root, 'diff-tree', '--no-commit-id', '--name-only', '-r', harvest['commit']),
                          self.unit['sources'][-1])
-        (tree / self.unit['sources'][-1]).write_text('int later_dirty;\n')
         fallback = self.claim('fallback')
         other = Path(fallback['draft']['tree'])
         self.assertEqual((other / self.unit['sources'][-1]).read_text(), 'int harvested;\n')
         self.assertEqual(git(other, 'rev-parse', 'HEAD'), git(self.root, 'rev-parse', 'origin/main'))
         self.assertEqual(drafts.read(Path(harvest['task']) / 'task.json')['functions'][0]['rva'], '0x1000')
+
+    def test_failed_done_preserves_dirty_checkout_and_clean_release_can_resume(self):
+        import contextlib
+        import io
+        unit = self.claim()
+        tree = Path(unit['draft']['tree'])
+        (tree / 'untracked').write_text('keep')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.finish(passed=False)
+        self.assertTrue(tree.exists())
+        self.assertEqual(len(output.getvalue().splitlines()), 1)
+        self.assertIn('dirty', output.getvalue())
+        self.assertTrue((tree / 'untracked').exists())
+
+    def test_release_removes_only_clean_checkout_and_can_reclaim(self):
+        unit = self.claim()
+        tree = Path(unit['draft']['tree'])
+        branch = unit['draft']['branch']
+        wq.release(self.q, self.unit['dir'])
+        self.assertFalse(tree.exists())
+        self.assertTrue(git(self.root, 'branch', '--list', branch))
+        self.assertEqual(Path(self.claim()['draft']['tree']), tree)
+        (tree / 'untracked').write_text('keep')
+        wq.release(self.q, self.unit['dir'])
+        self.assertTrue(tree.exists())
+
+    def test_failed_done_removes_clean_checkout_and_keeps_branch(self):
+        unit = self.claim()
+        self.finish(passed=False)
+        self.assertFalse(Path(unit['draft']['tree']).exists())
+        self.assertTrue(git(self.root, 'branch', '--list', unit['draft']['branch']))
 
     def test_clean_attempt_failure_has_no_harvest_or_done_marker(self):
         self.claim()
@@ -503,7 +535,7 @@ class DraftWorktrees(unittest.TestCase):
         wq.finish(self.q, self.unit['dir'], ['{"rva":"0x1000","result":"fail"}',
                                             '{"rva":"0x1010","result":"fail"}'], tier='strong')
         self.assertFalse(Path(unit['draft']['tree']).exists())
-        self.assertEqual(git(self.root, 'branch', '--list', 'draft/*'), '')
+        self.assertIn('draft/g-foo-strong', git(self.root, 'branch', '--list', 'draft/*'))
         self.assertTrue(near.is_file())
         with self.assertRaisesRegex(ValueError, 'no live checkout'):
             drafts.route_attempt(self.directory, self.root)
@@ -520,7 +552,7 @@ class DraftWorktrees(unittest.TestCase):
                 wq.finish(self.q, self.unit['dir'], ['{"rva":"0x1010","result":"fail"}'], tier=tier)
         harvest = drafts.current(self.root, self.unit)
         self.assertFalse(Path(harvest['tree']).exists())
-        self.assertEqual(git(self.root, 'branch', '--list', 'draft/*'), '')
+        self.assertIn('draft/g-foo-strong', git(self.root, 'branch', '--list', 'draft/*'))
         self.assertEqual(git(self.root, 'rev-parse', 'refs/harvests/g-foo/strong'), harvest['commit'])
         self.assertTrue((Path(harvest['attempt']) / 'candidate.obj').is_file())
 
@@ -528,6 +560,7 @@ class DraftWorktrees(unittest.TestCase):
         unit = self.claim()
         tree = Path(unit['draft']['tree'])
         (tree / self.unit['sources'][-1]).write_text('int harvested;\n')
+        (tree / 'untracked').write_text('keep')
         self.finish()
         harvest = drafts.current(self.root, self.unit)
         rec_path = self.root / f'reports/{BUILD}/0x1000.json'
@@ -578,6 +611,7 @@ class DraftWorktrees(unittest.TestCase):
         unit = self.claim()
         tree = Path(unit['draft']['tree'])
         (tree / self.unit['sources'][-1]).write_text('int harvested;\n')
+        (tree / 'untracked').write_text('keep')
         self.finish()
         data['functions'].append(later_enrollment)
         drafts.save(self.root / 'data/progress.json', data)

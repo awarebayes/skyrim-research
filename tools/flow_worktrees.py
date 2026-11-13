@@ -1,5 +1,6 @@
 """Read-only worktree inventory and conservative cleanup."""
 import datetime as dt
+import json
 from functools import lru_cache
 import os
 import re
@@ -63,6 +64,38 @@ def in_use(path, fdir, original):
     return False
 
 
+def completed_draft(path, roots):
+    """Recognize a checkout only through its queue, tier state and completion marker."""
+    for root in roots:
+        for queue_file in (root / '.local/queue').glob('*/queue.tsv'):
+            try:
+                for line in queue_file.read_text().splitlines():
+                    if not line.strip() or line.startswith('#'):
+                        continue
+                    columns = line.split('\t')
+                    if len(columns) != 4:
+                        continue
+                    unit_dir = root / columns[0]
+                    key = Path(columns[0]).name
+                    for tier in ('first', 'fallback', 'strong'):
+                        expected = root / '.local/worktrees/draft' / f'{key}-{tier}'
+                        if path != expected.resolve():
+                            continue
+                        done = 'done' if tier == 'first' else 'done-' + tier
+                        claims = 'claims' if tier == 'first' else 'claims-' + tier
+                        if not (queue_file.parent / done / f'{key}.json').is_file() or (queue_file.parent / claims / f'{key}.lock').exists():
+                            continue
+                        state = json.loads((unit_dir / f'draft-{tier}.json').read_text())
+                        owner = json.loads((path / '.local/worktree-owner.json').read_text())
+                        if (state.get('ready') and state.get('tree') == str(path)
+                                and state.get('branch') == f'draft/{key}-{tier}'
+                                and owner.get('task') == key and owner.get('kind') == 'draft'):
+                            return True
+            except (OSError, ValueError, TypeError, AttributeError):
+                continue
+    return False
+
+
 def inventory(root, fdir):
     raw = git(root, 'worktree', 'list', '--porcelain', '-z').stdout
     records = []
@@ -112,9 +145,14 @@ def inventory(root, fdir):
             reasons.append('directory unavailable')
         if any(in_use(path, directory, Path(fields['worktree'])) for directory in flow_dirs):
             reasons.append('flow state reference')
+        completed = completed_draft(path, {Path(root).resolve(), main_path})
+        if completed:
+            reasons = [reason for reason in reasons if reason not in
+                       ('unmerged', 'recently modified', 'flow state reference')]
         records.append(dict(path=path, branch=fields.get('branch', '').removeprefix('refs/heads/') or '(detached)',
                             head=head, ahead=int(counts[0]), behind=int(counts[1]), modified=modified,
-                            untracked=untracked, merged=merged, size=size, mtime=modified_at, reasons=reasons))
+                            untracked=untracked, merged=merged, size=size, mtime=modified_at, reasons=reasons,
+                            completed_draft=completed))
     checked = {r['branch'] for r in records}
     branches = []
     for name in git(root, 'for-each-ref', '--format=%(refname:short)', 'refs/heads').stdout.splitlines():
@@ -141,8 +179,8 @@ def run(root, fdir, action, dry_run=False):
     prunable = [t for t in trees if not t['reasons']]
     # Branches of removable trees become eligible after their worktrees are removed.
     candidates = branches + [dict(name=t['branch'], merged=True, ahead=0) for t in prunable
-                             if t['branch'] != '(detached)']
-    deletable = [b for b in candidates if b['merged']]
+                             if t['branch'] != '(detached)' and not t['completed_draft']]
+    deletable = [b for b in candidates if b['merged'] and not b['name'].startswith('draft/')]
     branch_total = len(branches) + sum(t['branch'] != '(detached)' for t in trees)
     if action == 'list':
         for t in trees:

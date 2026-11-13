@@ -1,5 +1,6 @@
 import contextlib
 import io
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -15,7 +16,7 @@ import flow_worktrees as fw
 class WorktreeHygiene(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.base = Path(self.tmp.name)
+        self.base = Path(self.tmp.name).resolve()
         self.root = self.base / 'main'
         self.root.mkdir()
         self.git(self.root, 'init', '-b', 'main')
@@ -51,6 +52,38 @@ class WorktreeHygiene(unittest.TestCase):
         with contextlib.redirect_stdout(out):
             fw.run(self.root, self.fdir, action, dry)
         return out.getvalue()
+
+    def test_completed_draft_prunes_clean_unmerged_tree_and_preserves_branch(self):
+        (self.root / '.gitignore').write_text('.local/\n')
+        self.git(self.root, 'add', '.gitignore')
+        self.git(self.root, 'commit', '-m', 'ignore private state')
+        self.git(self.root, 'update-ref', 'refs/remotes/origin/main', 'HEAD')
+        queue = self.root / '.local/queue/test'
+        queue.mkdir(parents=True)
+        directory = self.root / '.local/tasks/g/unit'
+        directory.mkdir(parents=True)
+        (queue / 'queue.tsv').write_text('.local/tasks/g/unit\ta.cpp\t0x1000\t1\n')
+        tree = self.root / '.local/worktrees/draft/unit-first'
+        tree.parent.mkdir(parents=True)
+        self.git(self.root, 'worktree', 'add', '-b', 'draft/unit-first', str(tree), 'main')
+        self.git(tree, 'commit', '--allow-empty', '-m', 'harvest')
+        local = tree / '.local'
+        local.mkdir()
+        (local / 'worktree-owner.json').write_text(json.dumps({'task': 'unit', 'kind': 'draft'}))
+        (directory / 'draft-first.json').write_text(json.dumps(
+            {'ready': True, 'tree': str(tree), 'branch': 'draft/unit-first'}))
+        (queue / 'done').mkdir()
+        (queue / 'done/unit.json').write_text('{}')
+        self.assertIn('prunable', self.command('list'))
+        (tree / 'untracked').write_text('keep')
+        self.command('prune')
+        self.assertTrue(tree.exists())
+        (tree / 'untracked').unlink()
+        self.command('prune')
+        self.assertFalse(tree.exists())
+        self.assertIn('draft/unit-first', self.git(self.root, 'branch', '--list'))
+        self.command('prune')
+        self.assertIn('draft/unit-first', self.git(self.root, 'branch', '--list'))
 
     def test_prune_and_dry_run(self):
         clean = self.tree('clean')

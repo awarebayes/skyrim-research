@@ -308,12 +308,9 @@ def finish(qdir, unit_dir, lines, worker=None, t=None, tier="first"):
     hold = qdir / 'holds' / f'{u["key"]}.json'
     if harvest and drafts.read(hold, {}).get('kind') == 'harvest-refusal':
         hold.unlink(missing_ok=True)
-    exhausted = any('rva' in r and r.get('result') != 'pass' for r in records)
-    if c and c.get('draft') and tier == profiles.drafter_tiers(c.get('profile') or profiles.DEFAULT)[-1] and (not harvest or exhausted):
+    if c and c.get('draft'):
         with locked(drafts.task_dir(queue_repo(qdir), u) / 'draft-lifecycle.lock'):
-            drafts.cleanup(queue_repo(qdir), u)
-    if c and c.get('draft') and harvest:
-        drafts.cleanup_integrated(queue_repo(qdir))
+            drafts.remove_clean_checkout(queue_repo(qdir), u, c['draft'])
     return records
 
 
@@ -336,6 +333,9 @@ def release(qdir, unit_dir, worker=None, t=None, tier="first"):
         with open(qdir / 'releases.jsonl', 'a') as out:
             out.write(json.dumps({'queue_unit': u['dir'], 'worker': c.get('worker'), 'profile': c.get('profile'),
                                   'tier': tier, 'claimed': iso(float(c.get('time', t))), 'released': iso(t)}, sort_keys=True) + '\n')
+        if c.get('draft'):
+            with locked(drafts.task_dir(queue_repo(qdir), u) / 'draft-lifecycle.lock'):
+                drafts.remove_clean_checkout(queue_repo(qdir), u, c['draft'])
         lock.unlink(missing_ok=True)
     return c.get('worker')
 
