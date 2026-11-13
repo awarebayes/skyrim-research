@@ -1905,13 +1905,19 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         files = changed(tree, paths)
         refuse(files, 'nothing changed to commit')
         git(tree, 'add', '--', *files)
+        commit_date = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+        run([python, 'tools/build_model_trend.py', '--pending-date', commit_date], tree, 'build_model_trend.py')
+        trend_files = ['README.md', 'docs/model-trend.svg', 'docs/progress-trend.svg']
+        git(tree, 'add', '--', *trend_files)
+        files = sorted(set(files) | set(changed(tree, trend_files)))
         run([python, 'tools/check.py', '--staged'], tree, 'check.py --staged')
         accepted = len(approved)
         msg = (f'Accept {accepted} function(s) of review group {name}\n\n'
                f'Review {g["task_id"]}: {accepted} approve, '
                f'{sum(b.get("verdict") == "reject" for b in blocks.values())} reject; integrated by tools/flow.py.\n\n'
                'Co-Authored-By: Claude <noreply@anthropic.com>\n')
-        git(tree, 'commit', '--quiet', '-m', msg)
+        run(['git', 'commit', '--quiet', '-m', msg], tree, 'git commit',
+            env=dict(os.environ, GIT_COMMITTER_DATE=commit_date))
         integ = {'commit': git(tree, 'rev-parse', 'HEAD'), 'files': files, 'accepted': accepted, 'checks': None,
                  'pushed': None, 'ci': None, 'approved_only': approved_only}
         g['integrated'] = integ

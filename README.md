@@ -34,38 +34,27 @@ accepted functions sit in classes it does not draw. Both pictures are generated 
 
 ### Daily accepted code
 
-![Cumulative accepted code and functions by day](docs/progress-trend.svg)
+![Cumulative accepted bytes and functions by UTC day](docs/progress-trend.svg)
 
-Net change in accepted machine-code size per UTC day, from the last committed
-`data/progress.json` snapshot of each day:
+![New accepted bytes by model family and UTC day](docs/model-trend.svg)
 
-| Date (UTC) | Net accepted | Accepted total |
-| --- | ---: | ---: |
-| 2026-11-11 | 0.58 KiB | 0.58 KiB |
-| 2026-11-12 | 13.95 KiB | 14.53 KiB |
-| 2026-11-13 | 91.28 KiB | 105.81 KiB |
+Bars show gross acceptances on the accepting commit's UTC date; reacceptances count again.
+The cumulative charts reflect revocations and size corrections. Attribution is a recorded
+claim about the Drafter model or generating tool, not proof of authorship; review and acceptance
+models are not counted. Distinct model counts exclude tools and unreported claims. One KiB is
+1,024 bytes. The [report site](https://awarebayes.github.io/skyrim-research/) has daily details.
 
-This snapshot ends at [commit 0182f244](https://github.com/awarebayes/skyrim-research/commit/0182f244845b0afcca093f0a65abcdd6c3eaf967).
-It sums the recorded sizes of `matched` functions, including generated initializers, and
-subtracts the previous day's total. Revocations and size corrections reduce the net figure;
-the date is when the change was committed, not necessarily when the work was done. One KiB
-is 1,024 bytes. Later work is not included in this snapshot.
+<!-- model-trend-totals -->
+| Model family | Gross accepted bytes |
+| --- | ---: |
+| Claude | 17,713 |
+| GPT / Codex | 1,559 |
+| Scripts and tools | 86,185 |
+| Not reported | 4,178 |
+<!-- /model-trend-totals -->
 
-### Accepted code by attribution
-
-![Accepted code per day by source-header attribution](docs/model-trend.svg)
-
-Bars show gross bytes newly accepted on each UTC day, grouped by the source unit's
-`Drafted by` header at acceptance. Generated work, mixed claims and unknown attribution have
-their own categories. These are unit-level claims, not proof of individual authorship; a model
-may have worked alongside other people or models. The chart does not use the cost ledger.
-Reacceptances count again, while revocations and size corrections are excluded from the bars;
-the net table above includes those adjustments. The graphic states its source revision and
-the total adjustments.
-
-To refresh the chart from committed first-parent history in a full Git checkout, run
-`python3 tools/build_model_trend.py`. It reads public progress and reconstruction records only;
-uncommitted work is not included. Attribution does not affect the match acceptance rule.
+Regenerate from tracked first-parent history in a full checkout with
+`python3 tools/build_model_trend.py`. Attribution does not affect the acceptance rule.
 
 ## Function sizes and effort
 

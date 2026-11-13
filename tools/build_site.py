@@ -6,6 +6,7 @@ from string import Template
 import subprocess
 from check import ROOT, load
 import cost_ledger
+import build_model_trend
 
 
 def plural(n, word, many=None):
@@ -59,7 +60,25 @@ def cost_section(data, costs):
             f'<p class="scope"><span>Cost so far</span> {escape(note)}</p>')
 
 
-def render(data, revision, costs=None):
+def trend_section(rows):
+    details = []
+    for day, row in rows.items():
+        models = ', '.join(f'{escape(model)}: {value:,}' for model, value in sorted(row['models'].items())) or '—'
+        count = sum(model not in ('Not reported', 'Scripts and tools') for model in row['models'])
+        details.append(f'<tr><td>{day}</td><td>{sum(row["families"].values()):,}</td>'
+                       f'<td>{row["functions"]:,}</td><td>{models}</td><td>{count}</td></tr>')
+    return ('<section class="section"><h2>Daily accepted code</h2>'
+            '<img src="progress-trend.svg" alt="Cumulative matched bytes and functions">'
+            '<img src="model-trend.svg" alt="Gross accepted bytes by model family">'
+            '<p>Gross acceptances by accepting commit date (UTC). Attribution is a recorded claim '
+            'about the Drafter or generating tool, not proof of authorship; review and acceptance '
+            'models are not counted. Counts exclude tools and unreported models.</p>'
+            '<div style="overflow-x:auto"><table><thead><tr><th>UTC date</th><th>Bytes</th>'
+            '<th>Functions</th><th>Bytes per individual model or tool</th><th>Distinct models</th>'
+            '</tr></thead><tbody>' + ''.join(details) + '</tbody></table></div></section>')
+
+
+def render(data, revision, costs=None, trends=None):
     counts = Counter(fn['status'] for fn in data['functions'])
     pipeline = ''.join(f'<li><span>{label}</span><strong>{counts[state]:,}</strong></li>' for state, label in
                        [('mapped', 'Mapped'), ('analyzed', 'Analyzed'), ('reconstructed', 'Reconstructed'), ('matched', 'Byte matched')])
@@ -87,7 +106,7 @@ def render(data, revision, costs=None):
     scope_note = ('Scope remains unknown; no completion percentage' if data['scope']['functions'] is None
                   else f'{data["scope"]["functions"]:,} functions in measured scope')
     return Template((ROOT / 'site/index.html').read_text()).substitute(
-        costs=cost_section(data, costs),
+        costs=cost_section(data, costs), trends=trend_section(trends or {}),
         phase=escape(data['phase']), phase_blurb=escape(phase_blurb), updated=escape(data['updated_at']), revision=escape(revision),
         target=escape(data['target_build_id'] or 'Not pinned'), inventory=len(data['functions']),
         matched=matched, matched_note=escape(matched_note), matched_bytes_note=escape(matched_bytes_note),
@@ -118,9 +137,16 @@ def main():
     output.mkdir(exist_ok=True)
     ledger = ROOT / 'data/costs.json'
     costs = json.loads(ledger.read_text()) if ledger.exists() else None
-    (output / 'index.html').write_text(render(data, revision, costs))
+    blobs = build_model_trend.GitBlobs()
+    try:
+        trends, _ = build_model_trend.history('HEAD', blobs)
+    finally:
+        blobs.close()
+    (output / 'index.html').write_text(render(data, revision, costs, trends))
     (output / 'join.html').write_text(render_join(data, revision))
     (output / 'style.css').write_text((ROOT / 'site/style.css').read_text())
+    (output / 'model-trend.svg').write_text(build_model_trend.render(trends))
+    (output / 'progress-trend.svg').write_text(build_model_trend.render_cumulative(trends))
     for name in ('progress.svg', 'progress-map.svg'):
         graphic = ROOT / 'docs' / name
         if graphic.exists():

@@ -1,32 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" role="img" aria-labelledby="title desc">
-  <title id="title">Accepted code and functions over time</title>
-  <desc id="desc">Cumulative accepted code increased from 0.58 to 14.53 to 105.81 KiB, and matched functions from 6 to 247 to 2,932, on November 11, 12 and 13, 2026 UTC. Snapshot through commit 0182f244.</desc>
-  <rect width="840" height="340" rx="12" fill="#0d1117"/>
-  <g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
-    <text x="24" y="34" fill="#e6edf3" font-size="18" font-weight="700">Accepted progress</text>
-    <text x="24" y="55" fill="#9ba3ad" font-size="12">Cumulative · daily snapshots · UTC</text>
-    <g fill="#e6edf3" font-size="14" font-weight="600">
-      <text x="24" y="89">Machine code (KiB)</text>
-      <text x="437" y="89">Matched functions</text>
-    </g>
-    <g stroke="#30363d" stroke-width="1">
-      <path d="M65 115H390 M65 161H390 M65 207H390 M65 253H390 M65 299H390"/>
-      <path d="M478 115H803 M478 161H803 M478 207H803 M478 253H803 M478 299H803"/>
-    </g>
-    <g fill="#9ba3ad" font-size="11" text-anchor="end">
-      <text x="57" y="119">120</text><text x="57" y="165">90</text><text x="57" y="211">60</text><text x="57" y="257">30</text><text x="57" y="303">0</text>
-      <text x="470" y="119">3,000</text><text x="470" y="165">2,250</text><text x="470" y="211">1,500</text><text x="470" y="257">750</text><text x="470" y="303">0</text>
-    </g>
-    <path d="M65 298.1 L227.5 276.7 L390 136.8 L390 299 H65 Z" fill="#3fb950" fill-opacity=".12"/>
-    <path d="M478 298.6 L640.5 283.9 L803 119.2 L803 299 H478 Z" fill="#58a6ff" fill-opacity=".12"/>
-    <path d="M65 298.1 L227.5 276.7 L390 136.8" fill="none" stroke="#3fb950" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M478 298.6 L640.5 283.9 L803 119.2" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linejoin="round"/>
-    <g fill="#3fb950"><circle cx="65" cy="298.1" r="3"/><circle cx="227.5" cy="276.7" r="3"/><circle cx="390" cy="136.8" r="4"/></g>
-    <g fill="#58a6ff"><circle cx="478" cy="298.6" r="3"/><circle cx="640.5" cy="283.9" r="3"/><circle cx="803" cy="119.2" r="4"/></g>
-    <g font-size="13" font-weight="700" text-anchor="end"><text x="386" y="126" fill="#3fb950">105.81 KiB</text><text x="798" y="110" fill="#58a6ff">2,932</text></g>
-    <g fill="#9ba3ad" font-size="11" text-anchor="middle">
-      <text x="65" y="320">Nov 11</text><text x="227.5" y="320">Nov 12</text><text x="390" y="320">Nov 13</text>
-      <text x="478" y="320">Nov 11</text><text x="640.5" y="320">Nov 12</text><text x="803" y="320">Nov 13</text>
-    </g>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 320" role="img" aria-label="Cumulative matched bytes and functions">
+<rect width="840" height="320" rx="12" fill="#0d1117"/><g font-family="sans-serif">
+<text x="24" y="32" fill="#e6edf3" font-size="18">Accepted progress · UTC</text>
+<text x="55" y="65" fill="#e6edf3" font-size="14">Bytes matched, cumulative</text>
+<path d="M55 260h330" stroke="#30363d"/>
+<path d="M55 220h330" stroke="#30363d"/>
+<path d="M55 180h330" stroke="#30363d"/>
+<path d="M55 140h330" stroke="#30363d"/>
+<path d="M55 100h330" stroke="#30363d"/>
+<polyline points="55.0,259.2 220.0,239.6 385.0,110.0" fill="none" stroke="#3fb950" stroke-width="3"/>
+<circle cx="385.0" cy="110.0" r="4" fill="#3fb950"/>
+<text x="385.0" y="100.0" text-anchor="end" fill="#3fb950" font-size="13">109,551</text>
+<text x="55.0" y="284" fill="#9ba3ad" font-size="11" text-anchor="middle">2026-11-11</text>
+<text x="385.0" y="284" fill="#9ba3ad" font-size="11" text-anchor="middle">2026-11-13</text>
+<text x="465" y="65" fill="#e6edf3" font-size="14">Functions matched, cumulative</text>
+<path d="M465 260h330" stroke="#30363d"/>
+<path d="M465 220h330" stroke="#30363d"/>
+<path d="M465 180h330" stroke="#30363d"/>
+<path d="M465 140h330" stroke="#30363d"/>
+<path d="M465 100h330" stroke="#30363d"/>
+<polyline points="465.0,259.7 630.0,247.4 795.0,110.0" fill="none" stroke="#58a6ff" stroke-width="3"/>
+<circle cx="795.0" cy="110.0" r="4" fill="#58a6ff"/>
+<text x="795.0" y="100.0" text-anchor="end" fill="#58a6ff" font-size="13">2,950</text>
+<text x="465.0" y="284" fill="#9ba3ad" font-size="11" text-anchor="middle">2026-11-11</text>
+<text x="795.0" y="284" fill="#9ba3ad" font-size="11" text-anchor="middle">2026-11-13</text>
+</g></svg>
