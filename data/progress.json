@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T01:09:35Z",
+  "updated_at": "2026-11-13T01:15:35Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -10098,156 +10098,182 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1401232,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraCell3D::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x156190.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1561d0",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401296,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraHavok::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1561d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1561e0",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401312,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraRegionList::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1561e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x156260",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401440,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraEditorID::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x156260.json"
     },
     {
       "id": "sse-steam-1-7-104-0x156270",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401456,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraProcessMiddleLow::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x156270.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1562a0",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401504,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraCellMusicType::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1562a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1562d0",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401552,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraCellAcousticSpace::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1562d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x156300",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401600,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraCellSkyRegion::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x156300.json"
     },
     {
       "id": "sse-steam-1-7-104-0x156330",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401648,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraCellImageSpace::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x156330.json"
     },
     {
       "id": "sse-steam-1-7-104-0x156360",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401696,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraCellWaterType::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x156360.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1563b0",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401776,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraSeenData::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1563b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1563c0",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401792,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraNorthRotation::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1563c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1563d0",
       "build_id": "sse-steam-1-7-104",
       "rva": 1401808,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ExtraDetachTime::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1563d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1563e0",
@@ -14298,12 +14324,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 5115600,
       "size": 4,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "PathingDoor::Slot2",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): method spelling invented from RTTI/vtable owner PathingDoor and slot 2; no public method symbol verified.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x4e0ed0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x556990",
@@ -14346,12 +14374,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 7255200,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ActorProcess::GetEquippedLeftHand",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x6eb4a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7e5a60",
@@ -14370,36 +14400,42 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15439744,
       "size": 7,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ArchiveFile::Unk_0A",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a, ng-slot association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xeb9780.json"
     },
     {
       "id": "sse-steam-1-7-104-0xeb9ee0",
       "build_id": "sse-steam-1-7-104",
       "rva": 15441632,
       "size": 7,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "CompressedArchiveFile::Unk_0A",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a, ng-slot association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xeb9ee0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xec1710",
       "build_id": "sse-steam-1-7-104",
       "rva": 15472400,
       "size": 4,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSMemStorage::GetFileSize",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xec1710.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf00b20",
