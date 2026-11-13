@@ -42,6 +42,7 @@ independent Opus does the second pass for a Sol first review.
   output, listing or pack under `.local/` when the brief names their paths. Do so whenever the
   form of the source alone does not settle checklist item 1 (pasted decompiler output). Say in the
   review whether you read them. Never quote them, and never read binary dumps.
+  The absence of a separate written terms analysis is not a reason to stop; the recorded maintainer statement in `docs/authorizations.md` is the gate for its stated scopes.
 - Do not open other reviews under `.local/reviews/` unless the brief names one as prior context.
 - Do not push, post publicly, mark `matched`, or start further agents.
 
