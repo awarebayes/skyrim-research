@@ -5,8 +5,8 @@ Paste into a fresh session, with your own worker label (and the profile, if not 
 
 A brief from `python3 tools/flow.py brief drafter` may name a profile and a queue directory; then
 pass `--profile <profile>` and `--queue-dir <dir>` to every `work_queue.py` call below.
-A session told `Your unit kind is normal` uses `docs/drafter-card-normal.md` in step 0 and
-`--queue-dir .local/queue/normal` on every queue call; otherwise use the small card and queue.
+A session told `Your unit kind is normal` uses `docs/drafter-card-normal.md` in step 0;
+otherwise use the small card. Use the queue directory named by the brief on every queue call.
 The unit sheet also names its kind and card. Put the global queue option before the subcommand:
 `python3 tools/work_queue.py --queue-dir .local/queue/normal next --worker <label> --profile cheap`.
 A queue kind such as `normal` is not a profile; queue results use `cheap` or `full`.
@@ -50,7 +50,9 @@ every other document are optional: an unread document is never a reason to stop.
 
 0. Read the card for your unit kind once (`docs/drafter-card-small.md` by default). Use its rules
    and result guidance. The small card's skeleton creation and handoff steps are replaced by this
-   runbook: skeletons already exist, and step 9 here reports the results.
+   runbook: skeletons already exist, and step 9 here reports the results. If the unit sheet says
+   it extends an existing unit, follow its instructions for using its separate skeleton without
+   replacing existing source files or regression functions.
 1. `python3 tools/work_queue.py next --worker <label> --profile cheap` prints a unit dir, e.g.
    `.local/tasks/q1-s02-niobject/q1-s02-niobject-bsxflags`. If it prints `EMPTY`, go to "Finished".
 2. `cat <unit dir>/sheet.md` (Claude models: `sheet.fnv.md`). It names the two source files, the
@@ -75,7 +77,8 @@ every other document are optional: an unread document is never a reason to stop.
    adapted, its file and licence). Then run
    `python3 tools/lint_reconstruction.py <h> <cpp>` and `python3 tools/check_labels.py <h> <cpp>`
    and fix every finding. If you changed code, run step 5 again.
-9. Report and release the unit, one `--result` per function and one for the unit:
+9. Report and release the unit, one `--result` per selected function in the unit sheet and one for
+   the unit. Existing regression functions in an extension are compared but are not new queue work:
    ```
    python3 tools/work_queue.py done <unit dir> \
      --result '{"rva": "0x4aa860", "result": "pass", "reason": "all-checks-passed", "attempts": 2}' \

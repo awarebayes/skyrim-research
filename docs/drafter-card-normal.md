@@ -4,6 +4,8 @@ One class per unit; usually 6–10 functions, mostly 65–512 bytes. Use this ca
 `docs/drafter-runbook.md`, passing the queue directory from the brief to every queue command.
 Read `sheet.md` and one function's numbered pages at a time. Luna reads only plain `.md`
 sheets, never `.fnv.md`. All five binding rules of the runbook apply.
+For a unit extending existing source, follow its sheet's instructions for the separate skeleton
+and shared class context; preserve the existing layout and function bodies.
 
 ## Loop
 
