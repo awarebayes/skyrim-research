@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__imp_GetTickCount": {
+      "rva": 24937528,
+      "size": null
+    },
+    "?GetDurationImpl@BGSMusicPaletteTrack@@UEBAMXZ": {
+      "rva": 3298640,
+      "size": 6
+    },
+    "?GetType@BGSMusicPaletteTrack@@UEBA?AW4TrackType@@XZ": {
+      "rva": 3298672,
+      "size": 47
+    },
+    "?DoPause@BGSMusicPaletteTrack@@UEAAXXZ": {
+      "rva": 3297280,
+      "size": 114
+    },
+    "?DoFinish@BGSMusicPaletteTrack@@UEAAX_NM@Z": {
+      "rva": 3297408,
+      "size": 136
+    },
+    "?g_paletteTrackTypeId@@3IA": {
+      "rva": 52295192,
+      "size": null
+    },
+    "??_C@_0BF@LMLFFPAG@BGSMusicPaletteTrack@": {
+      "rva": 25376696,
+      "size": null
+    },
+    "?RegisterTrackType@@YAXPEAIPEBDI@Z": {
+      "rva": 13509184,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__imp_GetTickCount",
+        "rva": "0x17c8438",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDurationImpl@BGSMusicPaletteTrack@@UEBAMXZ",
+        "rva": "0x325550",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetType@BGSMusicPaletteTrack@@UEBA?AW4TrackType@@XZ",
+        "rva": "0x325570",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoPause@BGSMusicPaletteTrack@@UEAAXXZ",
+        "rva": "0x325000",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoFinish@BGSMusicPaletteTrack@@UEAAX_NM@Z",
+        "rva": "0x325080",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_paletteTrackTypeId@@3IA",
+        "rva": "0x31df618",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_0BF@LMLFFPAG@BGSMusicPaletteTrack@",
+        "rva": "0x18337b8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterTrackType@@YAXPEAIPEBDI@Z",
+        "rva": "0xce2240",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

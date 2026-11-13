@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/64577b4997f30ca2140666c349f5d43c0f955747af6d32620bb05b2463cefdab.json",
+  "versions": [
+    {
+      "sha256": "64577b4997f30ca2140666c349f5d43c0f955747af6d32620bb05b2463cefdab",
+      "base": null,
+      "added": [
+        "??_GNiBillboardNode@@UEAAPEAXI@Z",
+        "?IsEqual@NiBillboardNode@@UEAA_NPEAVNiObject@@@Z",
+        "?OnVisible@NiBillboardNode@@UEAAXAEAVNiCullingProcess@@H@Z",
+        "?LoadBinary@NiBillboardNode@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary@NiBillboardNode@@UEAAXAEAVNiStream@@@Z",
+        "?UpdateWorldBound@NiBillboardNode@@UEAAXXZ",
+        "?UpdateWorldData@NiBillboardNode@@UEAAXPEAVNiUpdateData@@@Z",
+        "?BaseIsEqual@NiBillboardNode@@QEAA_NPEAVNiObject@@@Z",
+        "?UpdateVisibleHelper@NiBillboardNode@@QEAAXPEAX@Z",
+        "?BaseOnVisible@NiBillboardNode@@QEAAXAEAVNiCullingProcess@@H@Z",
+        "?BaseLoadBinary@NiBillboardNode@@QEAAXAEAVNiStream@@@Z",
+        "?BaseSaveBinary@NiBillboardNode@@QEAAXAEAVNiStream@@@Z",
+        "??1NiBillboardNode@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/99499eebeacbaa32dc72e15c70b07fe350a941823dd207645366f6c02e6c8601.json",
+  "versions": [
+    {
+      "sha256": "99499eebeacbaa32dc72e15c70b07fe350a941823dd207645366f6c02e6c8601",
+      "base": null,
+      "added": [
+        "?InitializeData@TESObjectBOOK@@UEAAXXZ",
+        "?LoadGame@TESObjectBOOK@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@TESObjectBOOK@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "??_GTESObjectBOOK@@UEAAPEAXI@Z",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?LoadBaseSubobject@@YAXPEAXPEAVBGSLoadFormBuffer@@@Z",
+        "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?SaveBaseSubobject@@YAXPEAXPEAVBGSSaveFormBuffer@@@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "?GetActivateText@TESObjectBOOK@@UEAA_NPEAVTESObjectREFR@@AEAVBSString@@@Z",
+        "?g_activateVerbPlain@@3PEBDEB",
+        "?g_activateVerbTake@@3PEBDEB",
+        "?IsCrimeToActivate@TESObjectREFR@@QEAA_NXZ",
+        "?g_activateVerbSteal@@3PEBDEB",
+        "?GetDisplayFullName@TESObjectREFR@@QEAAPEBDXZ",
+        "?FormatString@@YAXAEAVBSString@@PEBD11@Z",
+        "??_C@_05PCAHBOJM@?$CFs?6?$CFs@"
+      ]
+    }
+  ]
+}

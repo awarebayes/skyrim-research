@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__imp_GetTickCount": {
+      "rva": 24937528,
+      "size": null
+    },
+    "?GetDurationImpl@BGSMusicSilenceTrack@@UEBAMXZ": {
+      "rva": 3300288,
+      "size": 6
+    },
+    "?DoFinish@BGSMusicSilenceTrack@@UEAAX_NM@Z": {
+      "rva": 3300224,
+      "size": 8
+    },
+    "?DoPause@BGSMusicSilenceTrack@@UEAAXXZ": {
+      "rva": 3300176,
+      "size": 34
+    },
+    "?DoPlay@BGSMusicSilenceTrack@@UEAAXXZ": {
+      "rva": 3300080,
+      "size": 90
+    },
+    "?Load@BGSMusicSilenceTrack@@UEAAXPEAVTESFile@@@Z": {
+      "rva": 3299824,
+      "size": 147
+    },
+    "?GetCurrentSubRecordType@TESFile@@QEAAIXZ": {
+      "rva": 1891344,
+      "size": null
+    },
+    "?HandleSubrecord@@YA_NPEAVBGSMusicSilenceTrack@@I@Z": {
+      "rva": 3304928,
+      "size": null
+    },
+    "?LoadSubrecord@@YAXPEAVBGSMusicSilenceTrack@@PEAVTESFile@@@Z": {
+      "rva": 3304944,
+      "size": null
+    },
+    "?ReadData@TESFile@@QEAA_NPEAXI@Z": {
+      "rva": 1891600,
+      "size": null
+    },
+    "?SeekNextSubrecord@TESFile@@QEAA_NXZ": {
+      "rva": 1891424,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__imp_GetTickCount",
+        "rva": "0x17c8438",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDurationImpl@BGSMusicSilenceTrack@@UEBAMXZ",
+        "rva": "0x325bc0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoFinish@BGSMusicSilenceTrack@@UEAAX_NM@Z",
+        "rva": "0x325b80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoPause@BGSMusicSilenceTrack@@UEAAXXZ",
+        "rva": "0x325b50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoPlay@BGSMusicSilenceTrack@@UEAAXXZ",
+        "rva": "0x325af0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Load@BGSMusicSilenceTrack@@UEAAXPEAVTESFile@@@Z",
+        "rva": "0x3259f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "rva": "0x1cdc10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HandleSubrecord@@YA_NPEAVBGSMusicSilenceTrack@@I@Z",
+        "rva": "0x326de0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadSubrecord@@YAXPEAVBGSMusicSilenceTrack@@PEAVTESFile@@@Z",
+        "rva": "0x326df0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadData@TESFile@@QEAA_NPEAXI@Z",
+        "rva": "0x1cdd10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SeekNextSubrecord@TESFile@@QEAA_NXZ",
+        "rva": "0x1cdc60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

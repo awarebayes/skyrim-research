@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/fa95aeac6fc9f83dff51f0a4340b0208abd1bc0be5e84f20bda5e03cdd2b8aa6.json",
+  "versions": [
+    {
+      "sha256": "fa95aeac6fc9f83dff51f0a4340b0208abd1bc0be5e84f20bda5e03cdd2b8aa6",
+      "base": null,
+      "added": [
+        "__imp_GetTickCount",
+        "?GetDurationImpl@BGSMusicSilenceTrack@@UEBAMXZ",
+        "?DoFinish@BGSMusicSilenceTrack@@UEAAX_NM@Z",
+        "?DoPause@BGSMusicSilenceTrack@@UEAAXXZ",
+        "?DoPlay@BGSMusicSilenceTrack@@UEAAXXZ",
+        "?Load@BGSMusicSilenceTrack@@UEAAXPEAVTESFile@@@Z",
+        "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "?HandleSubrecord@@YA_NPEAVBGSMusicSilenceTrack@@I@Z",
+        "?LoadSubrecord@@YAXPEAVBGSMusicSilenceTrack@@PEAVTESFile@@@Z",
+        "?ReadData@TESFile@@QEAA_NPEAXI@Z",
+        "?SeekNextSubrecord@TESFile@@QEAA_NXZ"
+      ]
+    }
+  ]
+}
