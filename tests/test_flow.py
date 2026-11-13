@@ -686,6 +686,34 @@ class QueueStates(unittest.TestCase):
         self.assertTrue(any('brief confirm' in t for t in acts))
         self.assertTrue(any('--queue-dir .local/queue/full add .local/tasks/g/g-foo' in t for t in acts))
 
+    def test_confirmation_prepares_private_maps_for_every_queue_kind(self):
+        for kind in ('small', 'normal', 'mid'):
+            with self.subTest(queue=kind):
+                q = self.q.parent / kind
+                q.mkdir(exist_ok=True)
+                (q / 'queue.tsv').write_text((self.q / 'queue.tsv').read_text())
+                wq.claim(q, f'worker-{kind}', profile='cheap')
+                wq.finish(q, '.local/tasks/g/g-foo', [json.dumps({
+                    'rva': '0x1000', 'result': 'pass', 'attempts': 1})])
+        unit = self.root / '.local/tasks/g/g-foo'
+        unit.mkdir(parents=True)
+        task = unit / 'task.json'
+        task.write_text(json.dumps({'symbols': 'symbols.json'}))
+        original = task.read_bytes()
+        brief = self.root / flow.brief_confirm(self.root, self.fdir)
+        text = brief.read_text()
+        command = next(line.strip(' `.') for line in text.splitlines()
+                       if '`python3 tools/verifier/bind.py --list ' in line)
+        args = shlex.split(command)
+        self.assertEqual(args[:3], ['python3', 'tools/verifier/bind.py', '--list'])
+        self.assertEqual(args[-1], '--unit-maps')
+        self.assertEqual((self.root / args[3]).read_text(), '.local/tasks/g/g-foo\n')
+        self.assertLess(text.index(command), text.index('tools/verifier/confirm --list'))
+        self.assertEqual(task.read_bytes(), original)
+        task.write_text(json.dumps({'symbols': f'reports/{BUILD}/unit-symbols/existing.json'}))
+        brief = self.root / flow.brief_confirm(self.root, self.fdir)
+        self.assertNotIn('tools/verifier/bind.py --list', brief.read_text())
+
     def test_every_queue_action_parses_and_keeps_its_queue(self):
         for name in ('normal', 'mid', 'full', 'custom'):
             q = self.q.parent / name

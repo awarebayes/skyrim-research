@@ -1443,6 +1443,22 @@ def brief_confirm(root, fdir, manifests=None, tasks=None):
     lst = Path(root) / '.local/flow' / f'confirm-{stamp}.txt'
     lst.parent.mkdir(parents=True, exist_ok=True)
     lst.write_text(''.join(f'{u}\n' for u in sorted(units)))
+    private_units = []
+    for unit in sorted(units):
+        task = json.loads((Path(root) / unit / 'task.json').read_text())
+        if not task.get('symbols', 'symbols.json').startswith('reports/'):
+            private_units.append(unit)
+    binding_step = ''
+    if private_units:
+        bind_list = lst.with_name(lst.stem + '-bind.txt')
+        bind_list.write_text(''.join(f'{u}\n' for u in private_units))
+        binding_step = f'''   Before confirmation, publish these units' private bindings with
+   `python3 tools/verifier/bind.py --list {bind_list.relative_to(root).as_posix()} --unit-maps`.
+   This uses the compiled candidate and task packs, publishes immutable per-unit repository maps
+   through `tools/symbol_map.py`, and updates each task's map path. Keep existing repository map
+   paths, provenance and history; do not merge private maps into the global map or invent origins.
+   A binding or provenance refusal needs Engineer triage, never a weaker check.
+'''
     text = f"""# Brief confirm-{stamp}
 
 Role: strong role of the profile (Claude: Engineer), or the routine orchestrator with a shell when every step below is a
@@ -1454,6 +1470,7 @@ Records that no longer bind their unit ({len(stale)}): {', '.join(stale) or 'non
 
 1. For each unit, remove from its `task.json` only functions that did not pass (their near-miss
    files stay), as earlier confirm runs did. Every remaining function must be an inventory entry.
+{binding_step}\
 2. `tools/verifier/confirm --list {lst.relative_to(root).as_posix()} --replace` (the runner hosts of
    `.local/verifier/runners.json`; docs/verification.md, Runner hosts. Boat is retired: never pass
    `--boat`). Re-confirm stale records' units the same way.
