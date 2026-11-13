@@ -548,6 +548,75 @@ class DraftWorktrees(unittest.TestCase):
             with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
                 self.finish()
 
+    def accepted_baseline(self, stale=False, accepted=True):
+        symbol = self.existing_header()
+        source = self.root / self.unit['sources'][-1]
+        source.write_text('#include "Foo.h"\nExisting::~Existing() {}\n')
+        data = drafts.read(self.root / 'data/progress.json')
+        regression = data['functions'][0]
+        regression['status'] = 'matched' if accepted else 'mapped'
+        record = drafts.read(self.root / regression['report'])
+        record['source']['digest'] = 'stale' if stale else tu_digest(
+            self.root, record['source']['translation_unit'])
+        drafts.save(self.root / regression['report'], record)
+        drafts.save(self.root / 'data/progress.json', data)
+        git(self.root, 'add', *self.unit['sources'], 'data/progress.json', regression['report'])
+        git(self.root, 'commit', '-m', 'synthetic accepted regression with supporting destructor')
+        git(self.root, 'push', 'origin', 'main')
+        task = drafts.read(self.directory / 'task.json')
+        task['functions'][1]['symbol'] = symbol
+        drafts.save(self.directory / 'task.json', task)
+        return symbol
+
+    def test_unchanged_target_body_supporting_accepted_regression_is_harvested_without_passing_it(self):
+        symbol = self.accepted_baseline()
+        tree = Path(self.claim()['draft']['tree'])
+        source = tree / self.unit['sources'][-1]
+        source.write_text(source.read_text() + 'int Added() { return 3; }\n')
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            self.finish()
+        h = drafts.current(self.root, self.unit)
+        self.assertEqual(h['passing'], [0x1000])
+        self.assertEqual(h['compared'], [0x1000])
+        self.assertEqual(h['baseline_definitions'], [symbol])
+
+    def test_changed_target_signature_cannot_borrow_an_accepted_regression(self):
+        symbol = self.accepted_baseline()
+        tree = Path(self.claim()['draft']['tree'])
+        (tree / self.unit['sources'][-1]).write_text(
+            '#include "Foo.h"\nExisting::~Existing() noexcept {}\n')
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_changed_target_body_cannot_borrow_an_accepted_regression(self):
+        symbol = self.accepted_baseline()
+        tree = Path(self.claim()['draft']['tree'])
+        (tree / self.unit['sources'][-1]).write_text(
+            '#include "Foo.h"\nExisting::~Existing() { int added = 1; }\n')
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_stale_baseline_does_not_exempt_a_target(self):
+        symbol = self.accepted_baseline(stale=True)
+        self.claim()
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_unaccepted_baseline_does_not_exempt_a_target(self):
+        symbol = self.accepted_baseline(accepted=False)
+        self.claim()
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
     def test_added_defaulted_destructor_is_not_an_untouched_header_emission(self):
         symbol = self.existing_header()
         tree = Path(self.claim()['draft']['tree'])

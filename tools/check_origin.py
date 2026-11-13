@@ -150,7 +150,7 @@ def parameters(text):
     return out
 
 
-def functions(text):
+def functions(text, with_heads=False):
     """[{class, name, line, params, body}] for every function body in a cleaned text. `class` is
     the innermost class around an inline body or the qualifier of an out-of-line name."""
     pairs = brace_pairs(text)
@@ -187,6 +187,8 @@ def functions(text):
                     owner = parts[-2] if len(parts) > 1 else cls
                     out.append({'class': owner, 'name': parts[-1], 'line': text.count('\n', 0, pos) + 1,
                                 'params': parameters(params), 'body': text[pos + 1:close]})
+                    if with_heads:
+                        out[-1]['head'] = ACCESS.sub(' ', head)
             seg = i = close + 1
 
     walk(0, len(text), None)
