@@ -197,7 +197,13 @@ def record_state(root, fn):
 
 
 def git(root, *args, check=True):
-    r = subprocess.run(['git', *args], cwd=root, capture_output=True, text=True)
+    command, extra = ['git', *args], {}
+    if args[:2] == ('add', '--') and len(args) > 2:
+        paths = [os.fsdecode(path) for path in args[2:]]
+        refuse(all('\0' not in path for path in paths), 'NUL in git add pathspec')
+        command = ['git', 'add', '--pathspec-from-file=-', '--pathspec-file-nul']
+        extra['input'] = ''.join(path + '\0' for path in paths)
+    r = subprocess.run(command, cwd=root, capture_output=True, text=True, **extra)
     if check and r.returncode:
         raise FlowError(f'git {" ".join(args)} failed: {r.stderr.strip() or r.stdout.strip()}')
     return r.stdout.strip()
@@ -1772,15 +1778,39 @@ def run(cmd, root, step, env=None):
     return r.stdout
 
 
+PATHSPEC_ARG_BYTES = 32768
+
+
+def path_batches(paths):
+    """Bound path arguments, including pointer overhead, independently of inventory size."""
+    batch, size = [], 0
+    for path in sorted(set(paths)):
+        cost = len(os.fsencode(path)) + 16
+        refuse(cost <= PATHSPEC_ARG_BYTES, 'git pathspec exceeds argument budget')
+        if batch and size + cost > PATHSPEC_ARG_BYTES:
+            yield batch
+            batch, size = [], 0
+        batch.append(path)
+        size += cost
+    if batch:
+        yield batch
+
+
 def changed(root, paths):
     """The paths among `paths` that differ from HEAD (new, modified or deleted)."""
     if not paths:
         return []
     # Raw -z output: the status columns are positional, so the output must not be stripped.
-    r = subprocess.run(['git', 'status', '--porcelain', '-z', '--no-renames', '--untracked-files=all', '--',
-                        *sorted(set(paths))], cwd=root, capture_output=True, text=True)
-    refuse(r.returncode == 0, f'git status failed: {r.stderr.strip()}')
-    return sorted({entry[3:] for entry in r.stdout.split('\0') if len(entry) > 3})
+    batches = list(path_batches(paths))
+    refuse(len(batches) < 2 or not any(path.startswith(':') for batch in batches for path in batch),
+           'Git magic pathspecs are not supported across status batches')
+    result = set()
+    for batch in batches:
+        r = subprocess.run(['git', 'status', '--porcelain', '-z', '--no-renames', '--untracked-files=all', '--',
+                            *batch], cwd=root, capture_output=True, text=True)
+        refuse(r.returncode == 0, f'git status failed: {r.stderr.strip()}')
+        result.update(entry[3:] for entry in r.stdout.split('\0') if len(entry) > 3)
+    return sorted(result)
 
 
 def integration_tree(fdir, name):
