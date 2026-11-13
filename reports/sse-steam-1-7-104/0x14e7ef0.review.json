@@ -6,18 +6,18 @@
   "naming_findings": [
     "The flag enum is declared 32-bit where NG declares it 8-bit; it is labelled OBSERVED with the reason, and the divergence should stay documented."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
+  "previous_code_section_sha256": "17d6370b963f2e7e588f55c633136e5c51f85c448296d6ddf009275c4d768065",
+  "previous_review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
+  "previous_source_digest": "24a620e545a7d00cb2ac0b2cec0352f0b2ff209570b952307dac3afecb97a0fc",
   "review_date": "2026-11-12",
-  "review_kind": "full",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
-  "review_task_id": "review-p19-wave2-1",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "ca968500056859cf112e761425b9fa940baf0073bcf8e48b4e947d6d02dc8195",
+  "review_task_id": "p71-delta-review",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 21921520,
   "size": 73,
-  "source_digest": "24a620e545a7d00cb2ac0b2cec0352f0b2ff209570b952307dac3afecb97a0fc",
+  "source_digest": "83b348834325a081de6b22850f8defc1ca3264701c4a6a51f6deadc8d289d516",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

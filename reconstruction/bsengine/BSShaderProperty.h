@@ -4,9 +4,10 @@
 // Source exposure: mixed (binary-analysis of the pinned image, community-headers).
 // Class, member and virtual names follow CharmedBaryon/CommonLibSSE-NG b93280e (MIT)
 // include/RE/B/BSShaderProperty.h, include/RE/N/NiStream.h and include/RE/N/NiBinaryStream.h.
-// Layout sizes and offsets are from the image. No body is adapted from a community source;
-// tools/check_origin.py reports none above its threshold at CommonLibSSE-NG b93280e,
-// powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
+// Layout sizes and offsets are from the image. NiBinaryStream::binary_read and binary_write
+// are adapted from CharmedBaryon/CommonLibSSE-NG b93280e src/RE/N/NiBinaryStream.cpp (MIT).
+// tools/check_origin.py reports no further bodies above its threshold at CommonLibSSE-NG
+// b93280e, powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
 // Shared header: ../netimmerse/NiObject.h supplies NiObject and NiRefObject.
 // NiObjectNET, NiProperty, NiShadeProperty, NiStream, NiBinaryStream, NiPoint2, BSShaderMaterial,
 // BSRenderPass, ForEachVisitor: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)

@@ -218,6 +218,10 @@
       "rva": 1951280,
       "size": 38
     },
+    "?SetFlagBit@TESActorBaseData@@QEAAXI_N0@Z": {
+      "rva": 1954496,
+      "size": null
+    },
     "?GetLevel@TESActorBaseData@@QEBAGXZ": {
       "rva": 1954736,
       "size": null
@@ -862,6 +866,18 @@
       "rva": 3866288,
       "size": 20
     },
+    "?IsAutoCalc@TESActorBase@@UEBA_NXZ": {
+      "rva": 3866320,
+      "size": 22
+    },
+    "?SetAutoCalc@TESActorBase@@UEAAX_N@Z": {
+      "rva": 3866352,
+      "size": 28
+    },
+    "?GetIsPlayerOwner@TESActorBase@@UEBA_NXZ": {
+      "rva": 3867552,
+      "size": 11
+    },
     "?InitializeData@TESEyes@@UEAAXXZ": {
       "rva": 3878832,
       "size": 5
@@ -881,6 +897,14 @@
     "?HasOverlays@TESNPC@@QEAA_NXZ": {
       "rva": 3968000,
       "size": 238
+    },
+    "??1TESActorBase@@UEAA@XZ": {
+      "rva": 3978976,
+      "size": null
+    },
+    "??_GTESActorBase@@UEAAPEAXI@Z": {
+      "rva": 3980384,
+      "size": 52
     },
     "?SetObjectVoiceType@TESNPC@@UEAAXPEAVBGSVoiceType@@@Z": {
       "rva": 3987664,
@@ -986,9 +1010,37 @@
       "rva": 4890576,
       "size": 5
     },
+    "??1BSTempEffectSimpleDecal@@UEAA@XZ": {
+      "rva": 4918336,
+      "size": null
+    },
+    "?Initialize@BSTempEffectSimpleDecal@@UEAAXXZ": {
+      "rva": 4919440,
+      "size": 35
+    },
+    "?SetupAVShape@BSTempEffectSimpleDecal@@QEAA_NPEAVBSTriShape@@@Z": {
+      "rva": 4919520,
+      "size": null
+    },
+    "?Get3D@BSTempEffectSimpleDecal@@UEBAPEAVNiAVObject@@XZ": {
+      "rva": 4925776,
+      "size": 5
+    },
+    "??_GBSTempEffectSimpleDecal@@UEAAPEAXI@Z": {
+      "rva": 4934208,
+      "size": 52
+    },
     "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ": {
       "rva": 4934352,
       "size": 6
+    },
+    "?GetType@BSTempEffectSPG@@UEBA?AW4TEMP_EFFECT_TYPE@@XZ": {
+      "rva": 4937728,
+      "size": 6
+    },
+    "?GetManagerHandlesSaveLoad@BSTerrainEffect@@UEBA_NXZ": {
+      "rva": 4947008,
+      "size": 5
     },
     "?GetName@BGSRegisteredStoryEvent@@QEBAPEBDXZ": {
       "rva": 5451568,
@@ -1490,6 +1542,26 @@
       "rva": 15789600,
       "size": null
     },
+    "?IsEqual@NiAlphaAccumulator@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 15790736,
+      "size": 19
+    },
+    "??_GNiAlphaAccumulator@@UEAAPEAXI@Z": {
+      "rva": 15791264,
+      "size": 62
+    },
+    "?IsEqual@NiBooleanExtraData@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 15794016,
+      "size": 20
+    },
+    "?IsEqual@NiBackToFrontAccumulator@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 15853184,
+      "size": null
+    },
+    "??1NiBackToFrontAccumulator@@UEAA@XZ": {
+      "rva": 15853504,
+      "size": null
+    },
     "?RegisterStreamables@NiInterpolator@@UEAA_NAEAVNiStream@@@Z": {
       "rva": 16174032,
       "size": 5
@@ -1542,9 +1614,17 @@
       "rva": 16388560,
       "size": 210
     },
+    "??_GBSOcclusionShape@@UEAAPEAXI@Z": {
+      "rva": 16631312,
+      "size": 50
+    },
     "?GetBoneFromName@NiAVObject@@SAPEAV1@PEAV1@AEBVBSFixedString@@_N@Z": {
       "rva": 16636608,
       "size": 215
+    },
+    "??_GBSOcclusionPlane@@UEAAPEAXI@Z": {
+      "rva": 16686032,
+      "size": 50
     },
     "?FindBone@@YA_NPEAVNiExtraData@@AEBVBSFixedString@@AEAPEAVNiAVObject@@@Z": {
       "rva": 16726832,
@@ -1602,6 +1682,26 @@
       "rva": 21923456,
       "size": 9
     },
+    "?GetCurrentAccumulator@BSShaderAccumulator@@SAPEAV1@XZ": {
+      "rva": 21941136,
+      "size": 8
+    },
+    "?SetCurrentAccumulator@BSShaderAccumulator@@SAXPEAV1@@Z": {
+      "rva": 21941152,
+      "size": 8
+    },
+    "?FinishAccumulatingPostResolveDepth@BSShaderAccumulator@@UEAAXI@Z": {
+      "rva": 22146816,
+      "size": 49
+    },
+    "?PrepareDepth@BSShaderAccumulator@@QEAAXXZ": {
+      "rva": 22148416,
+      "size": null
+    },
+    "?StartGroupingAlphas@BSShaderAccumulator@@UEAAPEAVGeometryGroup@BSBatchRenderer@@PEAVNiBound@@@Z": {
+      "rva": 22154576,
+      "size": 21
+    },
     "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z": {
       "rva": 22165472,
       "size": 384
@@ -1630,8 +1730,16 @@
       "rva": 22168016,
       "size": 396
     },
+    "?GetTexturePath@BSShaderTextureSet@@UEAAPEBDW4Texture@@@Z": {
+      "rva": 22262720,
+      "size": 9
+    },
     "?ClearRenderPass@BSRenderPass@@QEAAXXZ": {
       "rva": 22370592,
+      "size": null
+    },
+    "?BuildAlphaGroups@@YAPEAVGeometryGroup@BSBatchRenderer@@_KPEAVNiBound@@0E@Z": {
+      "rva": 22419024,
       "size": null
     },
     "?CopyMembers@BSShaderMaterial@@UEAAXPEAV1@@Z": {
@@ -1740,6 +1848,10 @@
     },
     "??_7NiExtraData@@6B@": {
       "rva": 27565256,
+      "size": null
+    },
+    "??_7NiAlphaAccumulator@@6B@": {
+      "rva": 27576416,
       "size": null
     },
     "?kEmptyString@@3QBDB": {
@@ -1912,6 +2024,10 @@
     },
     "?NiRTTI_bhkCollisionObject@@3VNiRTTI@@B": {
       "rva": 53704336,
+      "size": null
+    },
+    "?ms_currentAccumulator@@3PEAVBSShaderAccumulator@@EA": {
+      "rva": 54345128,
       "size": null
     },
     "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA": {
@@ -2316,6 +2432,13 @@
         "size_from": "task",
         "community_name": "TESActorBaseData::ClearDataComponent",
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFlagBit@TESActorBaseData@@QEAAXI_N0@Z",
+        "rva": "0x1dd2c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?GetLevel@TESActorBaseData@@QEBAGXZ",
@@ -3455,6 +3578,27 @@
         "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
       },
       {
+        "name": "?IsAutoCalc@TESActorBase@@UEBA_NXZ",
+        "rva": "0x3afed0",
+        "size_from": "task",
+        "community_name": "TESActorBase::IsAutoCalc",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetAutoCalc@TESActorBase@@UEAAX_N@Z",
+        "rva": "0x3afef0",
+        "size_from": "task",
+        "community_name": "TESActorBase::SetAutoCalc",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetIsPlayerOwner@TESActorBase@@UEBA_NXZ",
+        "rva": "0x3b03a0",
+        "size_from": "task",
+        "community_name": "TESActorBase::GetIsPlayerOwner",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?InitializeData@TESEyes@@UEAAXXZ",
         "rva": "0x3b2fb0",
         "size_from": "task",
@@ -3487,6 +3631,20 @@
         "rva": "0x3c8c00",
         "size_from": "task",
         "community_name": "TESNPC::HasOverlays",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESActorBase@@UEAA@XZ",
+        "rva": "0x3cb6e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GTESActorBase@@UEAAPEAXI@Z",
+        "rva": "0x3cbc60",
+        "size_from": "task",
+        "community_name": "TESActorBase::~TESActorBase",
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
@@ -3674,10 +3832,59 @@
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
+        "name": "??1BSTempEffectSimpleDecal@@UEAA@XZ",
+        "rva": "0x4b0c40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Initialize@BSTempEffectSimpleDecal@@UEAAXXZ",
+        "rva": "0x4b1090",
+        "size_from": "task",
+        "community_name": "BSTempEffectSimpleDecal::Initialize",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetupAVShape@BSTempEffectSimpleDecal@@QEAA_NPEAVBSTriShape@@@Z",
+        "rva": "0x4b10e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Get3D@BSTempEffectSimpleDecal@@UEBAPEAVNiAVObject@@XZ",
+        "rva": "0x4b2950",
+        "size_from": "task",
+        "community_name": "BSTempEffectSimpleDecal::Get3D",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSTempEffectSimpleDecal@@UEAAPEAXI@Z",
+        "rva": "0x4b4a40",
+        "size_from": "task",
+        "community_name": "BSTempEffectSimpleDecal::~BSTempEffectSimpleDecal",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ",
         "rva": "0x4b4ad0",
         "size_from": "task",
         "community_name": "BSLightingShaderMaterialBase::GetType",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetType@BSTempEffectSPG@@UEBA?AW4TEMP_EFFECT_TYPE@@XZ",
+        "rva": "0x4b5800",
+        "size_from": "task",
+        "community_name": "BSTempEffectSPG::GetType",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetManagerHandlesSaveLoad@BSTerrainEffect@@UEBA_NXZ",
+        "rva": "0x4b7c40",
+        "size_from": "task",
+        "community_name": "BSTerrainEffect::GetManagerHandlesSaveLoad",
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
@@ -4563,6 +4770,41 @@
         "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       },
       {
+        "name": "?IsEqual@NiAlphaAccumulator@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xf0f290",
+        "size_from": "task",
+        "community_name": "NiAlphaAccumulator::IsEqual",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GNiAlphaAccumulator@@UEAAPEAXI@Z",
+        "rva": "0xf0f4a0",
+        "size_from": "task",
+        "community_name": "NiAlphaAccumulator::~NiAlphaAccumulator",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiBooleanExtraData@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xf0ff60",
+        "size_from": "task",
+        "community_name": "NiBooleanExtraData::IsEqual",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiBackToFrontAccumulator@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xf1e680",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1NiBackToFrontAccumulator@@UEAA@XZ",
+        "rva": "0xf1e7c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?RegisterStreamables@NiInterpolator@@UEAA_NAEAVNiStream@@@Z",
         "rva": "0xf6cbd0",
         "size_from": "task",
@@ -4654,10 +4896,24 @@
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
+        "name": "??_GBSOcclusionShape@@UEAAPEAXI@Z",
+        "rva": "0xfdc610",
+        "size_from": "task",
+        "community_name": "BSOcclusionShape::~BSOcclusionShape",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?GetBoneFromName@NiAVObject@@SAPEAV1@PEAV1@AEBVBSFixedString@@_N@Z",
         "rva": "0xfddac0",
         "size_from": "task",
         "community_name": "NiAVObject::GetBoneFromName",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSOcclusionPlane@@UEAAPEAXI@Z",
+        "rva": "0xfe9bd0",
+        "size_from": "task",
+        "community_name": "BSOcclusionPlane::~BSOcclusionPlane",
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
@@ -4763,6 +5019,41 @@
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
+        "name": "?GetCurrentAccumulator@BSShaderAccumulator@@SAPEAV1@XZ",
+        "rva": "0x14ecb90",
+        "size_from": "task",
+        "community_name": "BSShaderAccumulator::GetCurrentAccumulator",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetCurrentAccumulator@BSShaderAccumulator@@SAXPEAV1@@Z",
+        "rva": "0x14ecba0",
+        "size_from": "task",
+        "community_name": "BSShaderAccumulator::SetCurrentAccumulator",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishAccumulatingPostResolveDepth@BSShaderAccumulator@@UEAAXI@Z",
+        "rva": "0x151ef00",
+        "size_from": "task",
+        "community_name": "BSShaderAccumulator::FinishAccumulatingPostResolveDepth",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareDepth@BSShaderAccumulator@@QEAAXXZ",
+        "rva": "0x151f540",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StartGroupingAlphas@BSShaderAccumulator@@UEAAPEAVGeometryGroup@BSBatchRenderer@@PEAVNiBound@@@Z",
+        "rva": "0x1520d50",
+        "size_from": "task",
+        "community_name": "BSShaderAccumulator::StartGroupingAlphas",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z",
         "rva": "0x15237e0",
         "size_from": "task",
@@ -4812,8 +5103,22 @@
         "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
       },
       {
+        "name": "?GetTexturePath@BSShaderTextureSet@@UEAAPEBDW4Texture@@@Z",
+        "rva": "0x153b3c0",
+        "size_from": "task",
+        "community_name": "BSShaderTextureSet::GetTexturePath",
+        "note": "bound by tools/verifier/bind.py (kept) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
         "name": "?ClearRenderPass@BSRenderPass@@QEAAXXZ",
         "rva": "0x1555920",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BuildAlphaGroups@@YAPEAVGeometryGroup@BSBatchRenderer@@_KPEAVNiBound@@0E@Z",
+        "rva": "0x1561650",
         "size_from": null,
         "community_name": null,
         "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
@@ -5009,6 +5314,13 @@
       {
         "name": "??_7NiExtraData@@6B@",
         "rva": "0x1a49cc8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiAlphaAccumulator@@6B@",
+        "rva": "0x1a4c860",
         "size_from": null,
         "community_name": null,
         "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
@@ -5325,6 +5637,13 @@
         "size_from": null,
         "community_name": null,
         "note": "bound by tools/verifier/bind.py (hint) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ms_currentAccumulator@@3PEAVBSShaderAccumulator@@EA",
+        "rva": "0x33d3da8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (position) from the task pack; the decorated name is the reconstruction's"
       },
       {
         "name": "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA",
