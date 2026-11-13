@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/de3eb39f5951f10d98e91bde077eb7c80f1b6ad2dfc1f8d45eceb7145bfe032f.json",
+  "versions": [
+    {
+      "sha256": "de3eb39f5951f10d98e91bde077eb7c80f1b6ad2dfc1f8d45eceb7145bfe032f",
+      "base": null,
+      "added": [
+        "?IsEqual@NiStringExtraData@@UEAA_NPEAVNiObject@@@Z",
+        "?LoadBinary@NiStringExtraData@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiStringExtraData@@UEAA_NAEAVNiStream@@@Z",
+        "?LoadBinary@NiExtraData@@UEAAXAEAVNiStream@@@Z",
+        "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "?RegisterStreamables@NiExtraData@@UEAA_NAEAVNiStream@@@Z"
+      ]
+    }
+  ]
+}

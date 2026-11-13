@@ -3013,9 +3013,9 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiTexture::~NiTexture` (COMMUNITY) | `sse-steam-1-7-104` / `0xef3ea0` / 52 | - | - | mapped | - | - |
 | `bsengine/BSFlattenedBoneTree` | `BSFlattenedBoneTree::UpdateDownwardPass` (COMMUNITY) | `sse-steam-1-7-104` / `0xef4d10` / 27 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef4d10.json` | matched | full | open |
 | - | `NiSkinInstance::~NiSkinInstance` (COMMUNITY) | `sse-steam-1-7-104` / `0xef6f50` / 52 | - | - | mapped | - | - |
-| - | `NiStringExtraData::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xef70e0` / 43 | - | - | mapped | - | - |
-| - | `NiStringExtraData::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xef7130` / 62 | - | - | mapped | - | - |
-| - | `NiStringExtraData::IsEqual` (COMMUNITY) | `sse-steam-1-7-104` / `0xef71c0` / 21 | - | - | mapped | - | - |
+| `netimmerse/NiStringExtraData` | `NiStringExtraData::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xef70e0` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef70e0.json` | matched | full | open |
+| `netimmerse/NiStringExtraData` | `NiStringExtraData::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xef7130` / 62 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef7130.json` | matched | full | open |
+| `netimmerse/NiStringExtraData` | `NiStringExtraData::IsEqual` (COMMUNITY) | `sse-steam-1-7-104` / `0xef71c0` / 21 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef71c0.json` | matched | full | open |
 | `netimmerse/NiTimeController` | `NiTimeController::ProcessClone` (COMMUNITY) | `sse-steam-1-7-104` / `0xef8900` / 53 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef8900.json` | matched | label-only | - |
 | `netimmerse/NiExtraData` | `NiExtraData::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xef9880` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef9880.json` | matched | full | open |
 | `netimmerse/NiExtraData` | `NiExtraData::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xef98d0` / 68 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xef98d0.json` | matched | full | open |
@@ -3056,7 +3056,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiDirectionalLight::UpdateWorldData` (COMMUNITY) | `sse-steam-1-7-104` / `0xf045c0` / 53 | - | - | mapped | - | - |
 | - | `NiDirectionalLight::~NiDirectionalLight` (COMMUNITY) | `sse-steam-1-7-104` / `0xf046d0` / 52 | - | - | mapped | - | - |
 | - | `NiParticles::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xf05220` / 53 | - | - | mapped | - | - |
-| - | `NiTexture::Unk_28` (COMMUNITY) | `sse-steam-1-7-104` / `0xf05970` / 18 | - | - | mapped | - | - |
+| `netimmerse/NiTexture` | `NiTexture::Unk_28` (COMMUNITY) | `sse-steam-1-7-104` / `0xf05970` / 18 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf05970.json` | matched | full | open |
 | - | `NiSkinInstance::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xf096a0` / 51 | - | - | mapped | - | - |
 | - | `NiSkinInstance::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xf09820` / 167 | - | - | mapped | - | - |
 | - | `NiSkinInstance::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xf098d0` / 186 | - | - | mapped | - | - |
