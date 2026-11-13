@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T01:41:36Z",
+  "updated_at": "2026-11-13T01:47:12Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -14330,12 +14330,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 2459392,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "TESRegionObject::Slot2",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): method spelling invented from RTTI/vtable owner TESRegionObject and slot 2; no public method symbol verified.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x258700.json"
     },
     {
       "id": "sse-steam-1-7-104-0x320390",
@@ -14440,12 +14442,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 6031440,
       "size": 7,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "ActorMagicCaster::GetCastingSource",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a, ng-slot association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x5c0850.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6398f0",
@@ -14536,24 +14540,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15731488,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiDefaultAVObjectPalette::Slot41",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): method spelling invented from RTTI/vtable owner NiDefaultAVObjectPalette and slot 41; no public method symbol verified.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf00b20.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf971f0",
       "build_id": "sse-steam-1-7-104",
       "rva": 16347632,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiExtraDataController::GetCtlrID",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf971f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfa0b60",

@@ -2380,7 +2380,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TESRegionDataSound::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x253310` / 6 | - | - | mapped | - | - |
 | - | `TESRegionDataWeather::IsLoaded` (COMMUNITY) | `sse-steam-1-7-104` / `0x253ea0` / 20 | - | - | mapped | - | - |
 | - | `TESRegionGrassObject::Slot1` (GUESS) | `sse-steam-1-7-104` / `0x254570` / 6 | - | - | mapped | - | - |
-| - | `TESRegionObject::Slot2` (GUESS) | `sse-steam-1-7-104` / `0x258700` / 5 | - | - | mapped | - | - |
+| `forms/TESRegionObject` | `TESRegionObject::Slot2` (GUESS) | `sse-steam-1-7-104` / `0x258700` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x258700.json` | matched | full | open |
 | - | `BGSAddonNode::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x25b7f0` / 14 | - | - | mapped | - | - |
 | - | `BGSConstructibleObject::ClearData` (COMMUNITY) | `sse-steam-1-7-104` / `0x25de90` / 34 | - | - | mapped | - | - |
 | - | `BGSExplosion::UnClone3D` (COMMUNITY) | `sse-steam-1-7-104` / `0x261270` / 18 | - | - | mapped | - | - |
@@ -2766,7 +2766,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BGSStoryTeller::ProcessEvent` (COMMUNITY) | `sse-steam-1-7-104` / `0x53a270` / 28 | - | - | mapped | - | - |
 | - | `BGSStoryTeller::~BGSStoryTeller` (COMMUNITY) | `sse-steam-1-7-104` / `0x53d110` / 52 | - | - | mapped | - | - |
 | `bsengine/SimpleAnimationGraphManagerLoadingTask` | `SimpleAnimationGraphManagerLoadingTask::Slot19` (GUESS) | `sse-steam-1-7-104` / `0x556990` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x556990.json` | matched | full | open |
-| - | `ActorMagicCaster::GetCastingSource` (COMMUNITY) | `sse-steam-1-7-104` / `0x5c0850` / 7 | - | - | mapped | - | - |
+| `magic/ActorMagicCaster` | `ActorMagicCaster::GetCastingSource` (COMMUNITY) | `sse-steam-1-7-104` / `0x5c0850` / 7 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x5c0850.json` | matched | full | open |
 | - | `ActorMagicCaster::SetSkipCheckCast` (COMMUNITY) | `sse-steam-1-7-104` / `0x5c1260` / 8 | - | - | mapped | - | - |
 | - | `ActorMagicCaster::PrepareSound` (COMMUNITY) | `sse-steam-1-7-104` / `0x5c1800` / 42 | - | - | mapped | - | - |
 | - | `ActorMagicCaster::GetCasterStatsObject` (COMMUNITY) | `sse-steam-1-7-104` / `0x5c1b10` / 8 | - | - | mapped | - | - |
@@ -3038,7 +3038,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiDefaultAVObjectPalette::ResetAndFillFromScenegraph` (COMMUNITY) | `sse-steam-1-7-104` / `0xf002d0` / 140 | - | - | mapped | - | - |
 | - | `NiDefaultAVObjectPalette::~NiDefaultAVObjectPalette` (COMMUNITY) | `sse-steam-1-7-104` / `0xf00a10` / 83 | - | - | mapped | - | - |
 | - | `NiDefaultAVObjectPalette::GetAVObject` (COMMUNITY) | `sse-steam-1-7-104` / `0xf00a70` / 137 | - | - | mapped | - | - |
-| - | `NiDefaultAVObjectPalette::Slot41` (GUESS) | `sse-steam-1-7-104` / `0xf00b20` / 5 | - | - | mapped | - | - |
+| `netimmerse/NiDefaultAVObjectPalette` | `NiDefaultAVObjectPalette::Slot41` (GUESS) | `sse-steam-1-7-104` / `0xf00b20` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf00b20.json` | matched | full | open |
 | - | `NiDefaultAVObjectPalette::SetAVObject` (COMMUNITY) | `sse-steam-1-7-104` / `0xf01190` / 52 | - | - | mapped | - | - |
 | - | `NiDefaultAVObjectPalette::SetScene` (COMMUNITY) | `sse-steam-1-7-104` / `0xf011d0` / 5 | - | - | mapped | - | - |
 | - | `BSResourceNiBinaryStream::Dtor` (COMMUNITY) | `sse-steam-1-7-104` / `0xf014c0` / 313 | - | - | mapped | - | - |
@@ -3149,7 +3149,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiQuaternionInterpolator::IsQuaternionValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf85950` / 3 | - | - | mapped | - | - |
 | - | `NiRollController::IsTransformController` (COMMUNITY) | `sse-steam-1-7-104` / `0xf86570` / 3 | - | - | mapped | - | - |
 | - | `BSTreadTransfInterpolator::GetKeyChannelCount` (COMMUNITY) | `sse-steam-1-7-104` / `0xf8d040` / 6 | - | - | mapped | - | - |
-| - | `NiExtraDataController::GetCtlrID` (COMMUNITY) | `sse-steam-1-7-104` / `0xf971f0` / 5 | - | - | mapped | - | - |
+| `netimmerse/NiExtraDataController` | `NiExtraDataController::GetCtlrID` (COMMUNITY) | `sse-steam-1-7-104` / `0xf971f0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf971f0.json` | matched | full | open |
 | - | `NiParticleSystem::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xf98f50` / 127 | - | - | mapped | - | - |
 | - | `NiParticleSystem::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xf99260` / 89 | - | - | mapped | - | - |
 | - | `NiParticleSystem::SaveBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xf992c0` / 193 | - | - | mapped | - | - |
