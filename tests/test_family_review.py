@@ -523,6 +523,13 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
                 return 'changed files (stage these by name; nothing was committed):\n' + ''.join('  ' + p + '\n' for p in changed)
             if step in ('build_index.py', 'build_progress_svg.py'):
                 return ''
+            if step == 'build_model_trend.py':
+                for path in ('README.md', 'docs/model-trend.svg', 'docs/progress-trend.svg'):
+                    (tree / path).parent.mkdir(parents=True, exist_ok=True)
+                    (tree / path).write_text('synthetic trend\n')
+                return ''
+            if step == 'git commit':
+                return flow.git(tree, *cmd[1:])
             if step == 'check.py --staged':
                 check.validate(fr.read(tree, 'data/progress.json'), self.target, tree)
                 return 'PASS'
@@ -532,7 +539,7 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
             group = flow.integrate_family(self.root, self.fdir, self.batch_path, push=False)
         result = group['integrated']
         self.assertIsNone(result['pushed'])
-        self.assertEqual(ran, ['accept_function.py', 'build_index.py', 'build_progress_svg.py', 'check.py --staged'])
+        self.assertEqual(ran, ['accept_function.py', 'build_index.py', 'build_progress_svg.py', 'build_model_trend.py', 'check.py --staged', 'git commit'])
         checks.assert_called_once()
         integrated = json.loads(self.git('show', result['commit'] + ':data/progress.json'))
         self.assertTrue(all(fn['status'] == 'matched' for fn in integrated['functions']))
