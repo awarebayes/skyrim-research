@@ -56,6 +56,12 @@ Read `LEGAL.md`, `PROVENANCE.md` and `docs/verification.md` before adding source
   These are explicitly labelled minimal source stand-ins, with no claim of original class
   ownership. Every method name and placeholder class is `GUESS(low) STANDIN`; public naming
   evidence is retained separately. The family rule and ordinary comparison/review gates apply.
+- **Census leaf ABI stand-ins.** `reconstruction/leaves/LeafForward<rva>` and
+  `LeafAddress<rva>` pairs isolate externally bound direct forwarders and global-address
+  accessors whose original ownership or signature is not established. The class, method and
+  reference names are explicitly guessed stand-ins, not recovered ownership. Each unit compares
+  one complete externally bound entry with its own extracted reference; this layout makes no
+  admission of other internal function kinds and leaves existing class units unchanged.
 - **One recipe per source unit.** A match record binds a translation unit to one recipe in
   `recipes/<compiler>-<flags>.json` (compiler binary hash and version, flags, SDK, host). If a
   class's functions need different recipes, split them into separate units, one per recipe,
