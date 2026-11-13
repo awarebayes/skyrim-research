@@ -481,7 +481,7 @@ class FlowTests(unittest.TestCase):
         stops = [t for k, t in self.actions() if k == 'stop']
         self.assertTrue(any('sampling disagreement' in t for t in stops), stops)
         with self.assertRaises(flow.FlowError):
-            flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable)
 
     def test_rerun_disagree_is_a_stop(self):
         g = self.grouped()
@@ -502,7 +502,7 @@ class FlowTests(unittest.TestCase):
         self.assertTrue(any(k == 'stop' and 'legal' in t for k, t in acts))
         self.assertFalse(any('integrate' in t for _, t in acts))
         with self.assertRaisesRegex(flow.FlowError, 'blocking escalation'):
-            flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable)
 
     def test_non_opus_escalation_goes_to_an_opus_confirmation_first(self):
         (self.root / 'docs/verification.md').write_text('the Terra class as the Reviewer\n')
@@ -532,7 +532,7 @@ class FlowTests(unittest.TestCase):
         path.write_text(path.read_text().replace('verdict: approve', 'verdict: Approve', 1))
         self.assertTrue(any(f'redo-review {g["name"]}' in t for _, t in self.actions()))
         with self.assertRaisesRegex(flow.FlowError, 'redo-review'):
-            flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable)
         g2 = flow.redo_review(self.root, self.fdir, g['name'])
         self.assertEqual(g2['task_id'], f'{g["task_id"]}-r2')
         self.assertEqual(flow.redo_review(self.root, self.fdir, g['name'])['task_id'], f'{g["task_id"]}-r3')
@@ -551,7 +551,7 @@ class FlowTests(unittest.TestCase):
     def test_missing_review_is_refused(self):
         g = self.grouped()
         with self.assertRaisesRegex(flow.FlowError, 'not saved'):
-            flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable)
 
     def test_earlier_reject_of_same_source_holds_function(self):
         self.repo.save_review('review-old', [(0x2000, 12, self.repo.digest(0x2000), 'reject', 'none')])
@@ -573,7 +573,7 @@ class FlowTests(unittest.TestCase):
         # An unrelated working-tree change is never staged.
         (self.root / 'reconstruction/x/Other.cpp').write_text('int other;\n')
         head = git(self.root, 'rev-parse', 'HEAD')
-        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
         g = flow.load_group(self.fdir, g['name'])
         integ = g['integrated']
         self.assertEqual((integ['accepted'], integ['ci']), (2, 'green'))
@@ -604,7 +604,7 @@ class FlowTests(unittest.TestCase):
         data = json.loads(record.read_text())
         data['symbol_map'] = {'path': rel}
         record.write_text(json.dumps(data))
-        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
         integ = flow.load_group(self.fdir, g['name'])['integrated']
         self.assertIn(rel, integ['files'])
         self.assertIn(history, integ['files'])
@@ -618,8 +618,8 @@ class FlowTests(unittest.TestCase):
         path = self.repo.save_review(g['task_id'], blocks)
         before = path.read_bytes()
         with self.assertRaisesRegex(flow.FlowError, 'blocking escalation'):
-            flow.integrate(self.root, self.fdir, g['name'], push=False)
-        flow.integrate(self.root, self.fdir, g['name'], push=False, approved_only=True)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], push=False)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], push=False, approved_only=True)
         integ = flow.load_group(self.fdir, g['name'])['integrated']
         self.assertEqual(integ['accepted'], 2)
         self.assertEqual(path.read_bytes(), before)
@@ -648,7 +648,7 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(child['sampled'], ['0x1000'])
         self.assertEqual(child['pair'], g['pair'])
         self.assertEqual(flow.load_group(self.fdir, g['name'])['sampled'], ['0x1000', '0x2000'])
-        flow.integrate(self.root, self.fdir, child['name'], push=False, approved_only=True)
+        flow._legacy_integrate(self.root, self.fdir, child['name'], push=False, approved_only=True)
         tree = flow.integration_tree(self.fdir, child['name'])
         self.assertEqual([f['rva'] for f in flow.inventory(tree)['functions'] if f['status'] == 'matched'], [0x1000, 0x1010])
         self.assertEqual(path.read_bytes(), before)
@@ -672,7 +672,7 @@ class FlowTests(unittest.TestCase):
         pair = flow.load_group(self.fdir, child['pair'])
         self.assertEqual(pair['functions'], child['sampled'])
         with self.assertRaisesRegex(flow.FlowError, 'sampling gate'):
-            flow.integrate(self.root, self.fdir, child['name'], push=False, approved_only=True)
+            flow._legacy_integrate(self.root, self.fdir, child['name'], push=False, approved_only=True)
 
     def test_split_group_does_not_clear_escalation_with_same_source_confirmation(self):
         g = self.integrate_ready()
@@ -696,7 +696,7 @@ assert group['profile'] == 'cheap'
         git(self.root, 'commit', '--quiet', '-am', 'check integration group context')
         git(self.root, 'push', '--quiet', 'origin', 'main')
         g = self.integrate_ready()
-        flow.integrate(self.root, self.fdir, g['name'], push=False, python=sys.executable)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], push=False, python=sys.executable)
         self.assertIsNotNone(flow.load_group(self.fdir, g['name'])['integrated']['commit'])
 
     def test_integrate_stops_at_failed_check_and_commits_nothing(self):
@@ -706,7 +706,7 @@ assert group['profile'] == 'cheap'
         git(self.root, 'push', '--quiet', 'origin', 'main')
         head = git(self.root, 'rev-parse', 'HEAD')
         with self.assertRaisesRegex(flow.FlowError, 'STOPPED at check.py --staged'):
-            flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable)
         self.assertEqual(git(self.root, 'rev-parse', 'HEAD'), head)
         self.assertEqual(git(self.root, 'diff', '--cached', '--name-only'), '')
 
@@ -716,7 +716,7 @@ assert group['profile'] == 'cheap'
         git(self.root, 'add', 'x.txt')
         git(self.root, 'commit', '--quiet', '-m', 'local only')
         with self.assertRaisesRegex(flow.FlowError, 'origin/main lacks'):
-            flow.integrate(self.root, self.fdir, g['name'], python=sys.executable)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable)
 
     def test_integrate_stops_on_red_ci_and_resumes(self):
         g = self.integrate_ready()
@@ -724,16 +724,16 @@ assert group['profile'] == 'cheap'
         git(self.root, 'commit', '--quiet', '-am', 'red ci stub')
         git(self.root, 'push', '--quiet', 'origin', 'main')
         with self.assertRaisesRegex(flow.FlowError, 'CI RED'):
-            flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+            flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
         integ = flow.load_group(self.fdir, g['name'])['integrated']
         self.assertTrue(integ['pushed'])
         (self.root / 'tools/ci_status.py').write_text('import sys\nsys.exit(0)\n')
-        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
         self.assertEqual(flow.load_group(self.fdir, g['name'])['integrated']['ci'], 'green')
 
     def test_integrate_no_push_stops_after_clean_checks(self):
         g = self.integrate_ready()
-        flow.integrate(self.root, self.fdir, g['name'], push=False, python=sys.executable)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], push=False, python=sys.executable)
         integ = flow.load_group(self.fdir, g['name'])['integrated']
         self.assertTrue(integ['checks'])
         self.assertIsNone(integ['pushed'])
@@ -750,7 +750,7 @@ assert group['profile'] == 'cheap'
             path.write_text(json.dumps(rec))
         g = self.integrate_ready()
         (self.root / 'reconstruction/x/Bar.cpp').write_text('int c_half_edited;\n')
-        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
         commit = flow.load_group(self.fdir, g['name'])['integrated']['commit']
         self.assertEqual(git(self.origin, 'show', f'{commit}:reconstruction/x/Foo.cpp'), 'int a2;')
         self.assertEqual(git(self.origin, 'show', f'{commit}:reconstruction/x/Bar.cpp'), 'int c;')
@@ -762,7 +762,7 @@ assert group['profile'] == 'cheap'
 
     def test_sync_refuses_a_differing_local_copy(self):
         g = self.integrate_ready()
-        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        flow._legacy_integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
         (self.root / 'data/progress.json').write_text('{}\n')
         head = git(self.root, 'rev-parse', 'HEAD')
         with self.assertRaisesRegex(flow.FlowError, 'data/progress.json'):

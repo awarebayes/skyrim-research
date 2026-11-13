@@ -113,8 +113,10 @@ every other document are optional: an unread document is never a reason to stop.
    harvest, retains the claim and holds the unit so `next` can continue elsewhere: report the
    refusal for Engineer triage. A successful retry clears that harvest-refusal hold; other holds
    need an explicit Engineer release. A unit with no passing
-   function has no harvest. Tooling removes its checkout after final failure or integration;
-   near-miss files remain in the task directory.
+   function has no harvest. Integration retains draft checkouts and harvest refs; cleanup is an explicit Engineer action
+   (`flow.py worktrees prune`). Near-miss files remain in the task directory. Approved harvests
+   enter the queue with `flow.py integrate <group>`; the orchestrator runs `flow.py lane-run`
+   once for all ready work. Drafters do not run integration commands.
    Helpers without a task or inventory function target follow the existing lint and Reviewer
    rules; harvest runs that lint, without requiring a separate target or pass for each helper.
    The comparator's existing binding and relocation checks still apply to emitted helpers.

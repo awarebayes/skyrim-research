@@ -34,10 +34,11 @@ byte match, or edit `docs/authorizations.md`.
   agent drafted or triaged. Its brief names the task id, the functions as `(build id, RVA, size)`,
   the source revision and paths, the report paths, and the gates in force (G2 is required); `python3 tools/flow.py review-group` writes such
   briefs. It saves its review to `.local/reviews/<task-id>.md` itself and returns a short verdict
-  table; `python3 tools/flow.py integrate <group>` (or an integrating Engineer) then runs
-  `tools/accept_function.py --all-approved --review .local/reviews/<task-id>.md`, which writes the
-  sanitized verdict records beside the reports and sets the approved entries to `matched` only if
-  the validator accepts the result. For accepted functions whose unit changed (`tools/check.py` reports them as
+  table; `python3 tools/flow.py integrate <group>` enqueues the approved selection. The integrating
+  Engineer or routine orchestrator runs `python3 tools/flow.py lane-run` for all queued work.
+  The lane uses `tools/accept_function.py`'s unchanged acceptance checks and final validator,
+  writes sanitized verdict records beside the reports and marks approved entries `matched`
+  only if those checks pass, then checks, commits, pushes and waits for CI once. For accepted functions whose unit changed (`tools/check.py` reports them as
   stale), brief the Reviewer for a delta review from `tools/review_packet.py --stale`. When G2 is granted, give the Reviewer the paths of the function's private
   decompiler output and listing so it can judge "pasted decompiler output" against them.
 

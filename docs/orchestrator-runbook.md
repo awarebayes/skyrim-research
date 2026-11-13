@@ -17,7 +17,7 @@ orchestrator (`.claude/agents/orchestrator.md`, strongest model) or the maintain
    it into a commit, an issue, a PR, a public message or a brief for a model whose exposure is
    not recorded in `docs/authorizations.md`.
 2. **Only tools decide.** A match is a comparator report; acceptance is `tools/accept_function.py`
-   run by `flow.py integrate`. Never claim a pass, an approval or a green CI a tool did not print.
+   run by the push lane (`flow.py lane-run`). Never claim a pass, an approval or a green CI a tool did not print.
 3. **Never weaken a check.** Never edit the comparator, validator, lint, a match record, a saved
    review, `docs/verification.md`, `docs/authorizations.md`, `AGENTS.md` or agent definitions. A
    refusal is a stop, not a problem to work around.
@@ -53,7 +53,7 @@ A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`; Drafter
 `Read docs/drafter-runbook.md in this repository and follow it exactly. Your worker label is <label>.`
 
-After a successful push, both `flow.py integrate` and `integrate-family` run claim synchronization.
+After a successful lane push, `flow.py lane-run` runs claim synchronization.
 A failure prints a warning and leaves integration successful; retry with `python3 tools/claims.py sync`.
 Sync counts only acceptances on `origin/main`, updates the accepted count, and comments and closes
 an issue when every member is accepted. It leaves unknown range members open. Fetch origin before
@@ -93,35 +93,37 @@ running sync manually. Issues without the new claim block are left alone.
 6. When only `[wait]` and `[end]` lines remain and no worker is running, or after about four
    hours, do the `[end]` lines and finish ("End of session").
 
-`flow.py integrate <group>` is the whole integration: it runs the strict review parser,
-`tools/accept_function.py`, `tools/check.py --staged`, a commit, the pre-push checks in a clean
-worktree (`check.py`, unit tests, `build_site.py`), the push and `tools/ci_status.py`. It stops at
-the first failure and resumes after the last finished step when run again. It builds the commit
-in its own worktree at `origin/main` and carries over only the approved functions' inventory
-entries, match records and unit files, so a unit a Drafter is still editing neither enters the
-commit nor blocks it; the shared checkout is not touched. Afterwards `next-actions` lists
-`python3 tools/flow.py sync`, which fast-forwards the shared checkout, dropping only local copies
-byte-identical to the integrated files; if any local file differs it refuses and lists it: that
-is a stop for the strong role, never a reason to delete or overwrite a file yourself.
+`flow.py integrate <group>`, `integrate-groups <groups...> --name <batch>` and
+`integrate-family <batch path>` enqueue the existing selections and return immediately. Keep
+the source checkout and its approved inputs available until the lane finishes. The queue records
+the input root, selection and options under `.local/flow/lane/`; `lane-status` prints its receipts.
+Label-only re-acceptances use `integrate-labels --functions <ids or RVAs...>`; their existing
+code-section, provenance and sampling requirements remain unchanged.
 
-New Drafter claims create private checkouts at origin/main; each generated brief requires editing
-only there. `work_queue.py done` harvests passing units after a fresh clean all-pass attempt of
-retained functions and regressions; failed additions must already be removed. Harvest failures
-retain the claim and park the unit with its refusal as the hold reason. `next` continues to other
-units; an Engineer retries after repairing tooling or preparation. A successful clean harvest clears
-its own refusal hold. This is never permission to filter source or weaken a comparison.
-`confirm` automatically uses the immutable harvest commit and its frozen task. Review groups get
-a frozen checkout built from those commits, and integration copies their whole closures from the
-same commits. The match record still binds the entire translation-unit closure. Subsequent tiers
-carry the previous unintegrated snapshot, recovering earlier in-place passes from the control
-checkout when no harvest exists. Claim preparation refuses a recipe inconsistent with accepted
-evidence or an accepted regression that fails its baseline comparison; send that unit to an Engineer.
-Standalone tasks install their prepared skeleton even if origin contains an unrelated stub at the
-same source path; reference skeletons for existing-unit extensions never replace accepted source.
-Draft checkouts and branches are removed after their
-harvest is integrated, or remaining functions fail at the last tier. Private harvest refs retain
-the commits after draft branches are removed; task diagnostics and near-misses stay.
-Older claims and state without harvest fields keep their existing in-place workflow.
+Run `python3 tools/flow.py lane-run` after enqueueing all ready work. One runner takes everything
+queued at its start, carries only the approved input through the existing acceptance path into
+one isolated local clone at current `origin/main`, rebuilds the index once, stages named files,
+runs `check.py --staged` and makes one combined commit. It runs `check.py`, the full unit suite
+and `build_site.py` once on that exact commit, pushes it, and waits for exact-commit CI with
+`ci_status.py`. Work enqueued during the run remains queued for the next run. `--run` on an
+integration command enqueues and runs the lane; `--no-push` also runs it, stopping after checks.
+Resume a failed check or pending CI with `lane-run`; it retains the candidate and checkpoint.
+A red CI stops the lane before any later push.
+
+An individual acceptance failure is recorded with its reason and excluded; successful members
+still ship. Family binding/sampling failures hold the entire family batch, never shrink its
+committed population. A whole-tree check failure stops the run without pushing. Inspect dropped
+items in `lane-status`, fix their evidence and enqueue them again. Missing inputs or conflicting
+source closures are refusals, not permission to overwrite them. If origin moves, the lane checks
+for overlapping inventory/source changes, replays the combined selection on the winner and
+reruns all required checks. It never pushes an unchecked rebased tree.
+
+`.state.lock` protects queue snapshots and short state/receipt writes. It is released throughout
+acceptance, checks, push and CI; a separate nonblocking `.lane.lock` admits one runner. Record-only
+commands and review saves can proceed during a lane run. Candidate clones and failed attempts
+are retained. No lane operation prunes worktrees, branches or stashes; cleanup is opt-in through
+`flow.py worktrees prune`. Afterwards `flow.py sync` fast-forwards the shared checkout, replacing
+only local copies byte-identical to origin; differing files refuse and stay intact.
 
 ## Approved subsets (Engineer)
 
@@ -198,8 +200,8 @@ refused. All ordinary review, comparison, staged, clean-tree and CI gates still 
 The ordinary `review-group` excludes eligible unsampled members, reviews all sampled members
 and all parameters outside the approved ranges, and keeps every existing second-pass safeguard.
 `integrate-family <batch path>` accepts the remaining unsampled in-range members only after
-those individual reviews and safeguards pass, in the same isolated integration/check/commit/push
-path as ordinary groups. The acceptance tool requires the actual saved approving family review,
+those individual reviews and safeguards pass, through the same push lane as ordinary groups.
+The acceptance tool requires the actual saved approving family review,
 an admitted model, active family, exact origin/version/digest and target bindings, unchanged
 member rows and the committed draw. Other functions keep individual review; a family approval
 cannot be carried by label-only acceptance. No family command changes the comparator or lint.
@@ -276,8 +278,8 @@ started you.
 
 ## Never
 
-Commit or push except through `flow.py integrate` or `flow.py integrate-family` (Engineer metadata
-commits are described above); run `accept_function.py` directly; edit a
+Commit or push except through `flow.py lane-run` or an integration command with `--run`
+(Engineer metadata commits are described above); run `accept_function.py` directly; edit a
 saved review; start a Reviewer on work it drafted, engineered or triaged; give a worker
 material its model is not cleared to read; start a Boat machine (Boat is retired; confirm briefs
 use the runner hosts); post anything publicly.
@@ -305,9 +307,10 @@ from that source worktree, using the shared flow and reviews directories.
 
 An identical import is idempotent, including after normal progress of its imported groups.
 Different existing files are never overwritten. A partially written import blocks other flow and acceptance commands until it resumes with its
-recorded id mapping. Direct acceptance takes the same lock; integration passes its locked
-descriptor to the acceptance subprocess without releasing ownership. Keep the source state unchanged until import completes. Flow CLI operations
-use a permanent advisory `.state.lock` in their resolved flow directory; readers also lock so
-multi-file mutations stay consistent. Group and version JSON use atomic replacement. Run the
-updated tooling in every concurrent orchestrator; older processes do not participate in this
-lock. An integration holds the lock through checks, push and CI; other commands wait for it.
+recorded id mapping. Direct acceptance takes its repository state lock. Lane acceptance operates
+on a private scheduling snapshot in an independent local clone, so it never holds the live state
+lock while validating or rebuilding. Keep source state unchanged until import completes. Flow
+CLI operations use a permanent advisory `.state.lock` in their resolved flow directory; readers
+also lock so multi-file mutations stay consistent. Group, queue and receipt JSON use atomic
+replacement. Run the updated tooling in every concurrent orchestrator; older integration
+processes retain their old whole-run lock until they finish.

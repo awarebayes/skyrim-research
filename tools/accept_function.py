@@ -718,7 +718,7 @@ def prepare_many(root, data, target, review_source, targets, verdict, when, sele
 
 
 @source_digest_cache()
-def accept_reviews(root, requests, when=None):
+def accept_reviews(root, requests, when=None, *, prepare_only=False):
     """Accept several reviews in one transaction with one inventory validation and index rebuild.
 
     Each request names a review, optional functions and profile. Review parsing, admission and
@@ -746,6 +746,8 @@ def accept_reviews(root, requests, when=None):
     for index, _, record, review in prepared:
         new['functions'][index]['status'] = 'matched'
         set_named(new['functions'], index, named_value(root, record, review['naming_findings']))
+    if prepare_only:
+        return data, new, target, prepared, stale_before - selected, when
     return apply(root, data, new, target, prepared, stale_before - selected, when), skipped
 
 
@@ -761,7 +763,7 @@ def accept(root, build_id, rva, review_file, verdict, when=None, profile=None):
 
 
 @source_digest_cache()
-def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None):
+def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None, *, prepare_only=False):
     """Accept unsampled members only after all required individual reviews and safeguards passed."""
     import flow
     root = Path(root)
@@ -812,6 +814,8 @@ def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None):
     if not prepared:
         return []
     selected = {fn['id'] for _, fn, _, _ in prepared}
+    if prepare_only:
+        return data, new, target, prepared, stale_ids(root, data) - selected, when
     return apply(root, data, new, target, prepared, stale_ids(root, data) - selected, when)
 
 
@@ -831,7 +835,7 @@ def superseded_approval(fn, record, previous):
     refuse(is_hash(previous['review_sha256']), f'{where} names no review hash')
 
 
-def label_only(root, select=None, when=None):
+def label_only(root, select=None, when=None, *, prepare_only=False):
     """Re-accept `review behind` entries whose compared code section is unchanged, without a
     Reviewer pass (docs/verification.md, "Label-only re-acceptance"). All selected entries, or all
     `review behind` entries when nothing is selected; any ineligible one refuses the whole run."""
@@ -884,6 +888,8 @@ def label_only(root, select=None, when=None):
         set_named(new['functions'], index, named_value(root, record, naming))
         prepared.append((index, fn, record, review))
     selected = {fn['id'] for _, fn, _, _ in prepared}
+    if prepare_only:
+        return data, new, target, prepared, stale_before - selected, when
     return apply(root, data, new, target, prepared, stale_before - selected, when)
 
 

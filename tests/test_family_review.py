@@ -567,6 +567,29 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.assertEqual(self.accept_batch(), [])
 
 
+    def test_lane_family_preparation_preserves_acceptance_bytes_and_single_index(self):
+        import lane_accept
+        from datetime import datetime, timezone
+        self.ready()
+        when = datetime(2000, 1, 3, tzinfo=timezone.utc)
+        before = {p: p.read_bytes() for p in self.root.rglob('*')
+                  if p.is_file() and '.git' not in p.relative_to(self.root).parts}
+        af.accept_family_batch(self.root, self.batch_path, when, 'cheap', self.fdir)
+        expected = {p: p.read_bytes() for p in self.root.rglob('*')
+                    if p.is_file() and '.git' not in p.relative_to(self.root).parts}
+        for path in set(expected) - set(before):
+            path.unlink()
+        for path, blob in before.items():
+            path.write_bytes(blob)
+        with patch.object(af, 'write_index', wraps=af.write_index) as index:
+            result = lane_accept.accept(self.root, [dict(kind='family', path=self.batch_path,
+                                        functions=self.unsampled, profile='cheap')], when)
+        self.assertFalse(result['dropped'])
+        self.assertEqual(index.call_count, 1)
+        actual = {p: p.read_bytes() for p in self.root.rglob('*')
+                  if p.is_file() and '.git' not in p.relative_to(self.root).parts}
+        self.assertEqual(expected, actual)
+
     def test_integrate_family_uses_isolated_tree_without_pushing(self):
         self.ready()
         remote = self.root / '.local/origin.git'
@@ -595,7 +618,7 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
             self.fail('unexpected command ' + step)
 
         with patch.object(flow, 'run', side_effect=run), patch.object(flow, 'pre_push_checks') as checks:
-            group = flow.integrate_family(self.root, self.fdir, self.batch_path, push=False)
+            group = flow._legacy_integrate_family(self.root, self.fdir, self.batch_path, push=False)
         result = group['integrated']
         self.assertIsNone(result['pushed'])
         self.assertEqual(ran, ['accept_function.py', 'build_progress_svg.py', 'build_model_trend.py', 'check.py --staged', 'git commit'])
@@ -757,6 +780,9 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         public = self.git('rev-parse', 'HEAD')
         self.git('update-ref', 'refs/remotes/origin/main', public)
         self.git('checkout', '--quiet', 'main')
+        common = self.git('merge-base', 'HEAD', 'origin/main')
+        self.assertEqual(flow.integration_base(self.root, 'main', True, remote=common),
+                         self.git('rev-parse', 'HEAD'))
         self.git('merge', '--quiet', '--no-edit', public)
         self.assertEqual(flow.integration_base(self.root, 'main', True), self.git('rev-parse', 'HEAD'))
         fr.ordering(self.root, self.batch_path, self.batch)

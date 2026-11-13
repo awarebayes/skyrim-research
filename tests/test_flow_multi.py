@@ -36,7 +36,7 @@ class MultiGroupIntegration(unittest.TestCase):
             flow.record_rerun(self.root, self.fdir, name, compare)
 
     def integrate(self, **kwargs):
-        return flow.integrate_groups(self.root, self.fdir, self.names, 'synthetic-combined',
+        return flow._legacy_integrate_groups(self.root, self.fdir, self.names, 'synthetic-combined',
                                      python=sys.executable, ci_wait=0, **kwargs)
 
     def test_one_commit_preserves_reviews_and_records_every_group(self):
@@ -231,7 +231,7 @@ class MultiGroupIntegration(unittest.TestCase):
     def test_batch_resume_requires_all_groups_and_next_actions_lists_it_once(self):
         self.integrate(push=False)
         with self.assertRaisesRegex(flow.FlowError, 'resume combined integration'):
-            flow.integrate(self.root, self.fdir, self.names[0], push=False)
+            flow._legacy_integrate(self.root, self.fdir, self.names[0], push=False)
         actions = flow.next_actions(self.root, self.fdir, online=False)
         combined = [text for kind, text in actions if 'integrate-groups' in text]
         self.assertEqual(len(combined), 1)

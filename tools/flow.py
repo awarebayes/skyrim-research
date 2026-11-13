@@ -10,8 +10,8 @@
     python3 tools/flow.py void-review <group> --setup-failure --reason TEXT  # retire specified setup-failure verdicts
     python3 tools/flow.py redo-review <group>            # new task id after a review the parser refused
     python3 tools/flow.py record-rerun <group> --compare FILE   # sampling re-run result (AGREE/DISAGREE rows)
-    python3 tools/flow.py integrate <group> [--no-push] [--approved-only]  # accept, check, commit, push, watch CI, in its own worktree; stops at the first failure
-    python3 tools/flow.py integrate-groups <group> <group> --name <batch>  # one commit and CI result
+    python3 tools/flow.py integrate <group> [--no-push] [--approved-only]  # enqueue; --run drains the lane
+    python3 tools/flow.py integrate-groups <group> <group> --name <batch>  # enqueue a multi-group selection
     python3 tools/flow.py sync                           # fast-forward the shared checkout after an integration
     python3 tools/flow.py brief drafter|confirm|triage|rerun|direction ...   # write a brief file under .local/briefs/
     python3 tools/flow.py baseline <component> <value> <count>  # versions already past their first 20 (a strong-role call)
@@ -50,6 +50,10 @@ import subprocess
 import sys
 import tempfile
 import time
+
+# CLI helpers must share this module's exceptions and locks, rather than loading it twice.
+if __name__ == '__main__':
+    sys.modules['flow'] = sys.modules[__name__]
 
 TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
@@ -751,7 +755,7 @@ def family_group_hold(root, fdir, ids):
         fr.require(problem is None, f'{problem}; pause family ' + batch['family_path'])
 
 
-def integrate_family(root, fdir, path, branch='main', push=True):
+def _legacy_integrate_family(root, fdir, path, branch='main', push=True):
     root = Path(root)
     batch = fr.read(root, path)
     family = fr.read(root, batch['family_path'])
@@ -780,7 +784,7 @@ def integrate_family(root, fdir, path, branch='main', push=True):
                              build_id=family['binding']['build_id'], functions=functions, batch_path=path,
                              reviewer_model=family['review']['reviewer_model'], profile=session_profile(fdir),
                              integrated=None, sampled=[]))
-    return integrate(root, fdir, name, branch, push)
+    return _legacy_integrate(root, fdir, name, branch, push)
 
 
 def family_deferred(root, fn):
@@ -1290,6 +1294,8 @@ def split_group(root, fdir, name, selected):
 
 def next_actions(root, fdir, branch='main', now=None, online=True):
     """[(kind, text)] with kind 'stop', 'run', 'dispatch', 'wait' or 'done', in the order to do them."""
+    lane_pending = any(json.loads(p.read_text()).get('state') in ('queued', 'running')
+                       for p in (Path(fdir) / 'lane/queue').glob('*.json'))
     import time
     now = time.time() if now is None else now
     root = Path(root)
@@ -1452,6 +1458,12 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
             waits.append(('end', 'before ending the session: python3 tools/flow.py brief direction, then dispatch '
                           'subagent_type direction-check with the brief'))
     out = stops + acts + waits
+    if lane_pending:
+        import flow_lane
+        live = Path(fdir) / 'lane-live.json'
+        active = json.loads(live.read_text())['running'] if live.is_file() else flow_lane.running(fdir)
+        out.insert(len(stops), ('wait', 'push lane is running; new work remains queued for the next run')
+                   if active else ('run', 'python3 tools/flow.py lane-run'))
     return out or [('done', 'nothing to do')]
 
 
@@ -1817,10 +1829,11 @@ def integration_tree(fdir, name):
     return Path(fdir) / 'integrate' / name / 'tree'
 
 
-def remove_tree(root, tree):
+def remove_tree(root, tree, *, prune=False):
     git(root, 'worktree', 'remove', '--force', str(tree), check=False)
     shutil.rmtree(tree, ignore_errors=True)
-    git(root, 'worktree', 'prune', check=False)
+    if prune:
+        git(root, 'worktree', 'prune', check=False)
 
 
 def carry_into_tree(root, tree, approved, by_rva, harvests=None):
@@ -1868,9 +1881,9 @@ def carry_into_tree(root, tree, approved, by_rva, harvests=None):
     return sorted(files)
 
 
-def integration_base(root, branch, with_metadata=False):
+def integration_base(root, branch, with_metadata=False, *, remote=None):
     """Carry explicit, precommitted family metadata without carrying unpublished source."""
-    remote = f'origin/{branch}'
+    remote = remote or f'origin/{branch}'
     ahead = git(root, 'rev-list', '--count', f'{remote}..HEAD')
     if ahead == '0':
         return remote
@@ -1910,7 +1923,7 @@ def integration_base(root, branch, with_metadata=False):
     return git(root, 'rev-parse', 'HEAD')
 
 
-def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable, approved_only=False,
+def _legacy_integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable, approved_only=False,
               with_metadata=False):
     """Accept the approve blocks of one group's saved review, check, commit, push and watch CI.
 
@@ -2054,7 +2067,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         save_group(fdir, g)
         log_event(fdir, 'integrated', group=name, accepted=integ['accepted'], commit=integ['commit'])
         remove_tree(root, tree)
-        drafts.cleanup_integrated(root)
+        # Draft/worktree pruning is explicit opt-in via flow.py worktrees prune.
     if integ.get('ci') != 'green':
         started = time.monotonic()
         r = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
@@ -2072,7 +2085,8 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
 
 
 def _integration_origin_unchanged(root, base, destination, carried, build_id, rvas):
-    changed_paths = git(root, 'diff', '--name-only', base, destination, '--', *carried).splitlines()
+    changed_paths = sorted({path for batch in path_batches(carried)
+                            for path in git(root, 'diff', '--name-only', base, destination, '--', *batch).splitlines()})
     refuse(not changed_paths, 'origin changed carried files; reconcile before retry: ' + ', '.join(changed_paths))
     old = json.loads(git(root, 'show', base + ':data/progress.json'))
     new = json.loads(git(root, 'show', destination + ':data/progress.json'))
@@ -2082,7 +2096,7 @@ def _integration_origin_unchanged(root, base, destination, carried, build_id, rv
            'origin changed selected inventory entries; reconcile before retry')
 
 
-def integrate_groups(root, fdir, names, batch_name, branch='main', push=True,
+def _legacy_integrate_groups(root, fdir, names, batch_name, branch='main', push=True,
                      ci_wait=600, python=sys.executable):
     """Integrate disjoint, fully approved review groups in one commit; keep each review intact."""
     root, fdir = Path(root), Path(fdir)
@@ -2232,7 +2246,7 @@ def integrate_groups(root, fdir, names, batch_name, branch='main', push=True,
                 current['integrated'] = None
                 save_group(fdir, current)
             remove_tree(root, tree)
-            return integrate_groups(root, fdir, names, batch_name, branch, push, ci_wait, python)
+            return _legacy_integrate_groups(root, fdir, names, batch_name, branch, push, ci_wait, python)
         import claims as github_claims
         github_claims.sync_safe(root)
         integ['wall_seconds']['push'] = time.monotonic() - started
@@ -2241,7 +2255,7 @@ def integrate_groups(root, fdir, names, batch_name, branch='main', push=True,
         for group, approved, _ in selected:
             log_event(fdir, 'integrated', group=group['name'], accepted=len(approved), commit=integ['commit'])
         remove_tree(root, tree)
-        drafts.cleanup_integrated(root)
+        # Draft/worktree pruning is explicit opt-in via flow.py worktrees prune.
     if integ.get('ci') != 'green':
         started = time.monotonic()
         result = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
@@ -2254,6 +2268,30 @@ def integrate_groups(root, fdir, names, batch_name, branch='main', push=True,
             log_event(fdir, 'ci', group=group['name'], result=integ['ci'], commit=integ['commit'])
         refuse(integ['ci'] == 'green', f'CI {integ["ci"].upper()} for {integ["commit"]}: {result.stdout.strip()}')
     return transaction
+
+
+def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable,
+              approved_only=False, with_metadata=False, *, run_lane=False):
+    """Enqueue an individual review group; optionally run the one shared push lane."""
+    import flow_lane
+    item = flow_lane.enqueue(root, fdir, 'review', [name], branch, approved_only, with_metadata)
+    return flow_lane.run_lane(root, fdir, branch, push, ci_wait, python) if (run_lane or not push) and not flow_lane.running(fdir) else item
+
+
+def integrate_groups(root, fdir, names, batch_name, branch='main', push=True, ci_wait=600,
+                     python=sys.executable, *, run_lane=False):
+    """Enqueue the existing multi-group selection in the shared lane."""
+    import flow_lane
+    refuse(len(names) >= 2 and len(set(names)) == len(names), 'name at least two different review groups')
+    item = flow_lane.enqueue(root, fdir, 'groups', names, branch, name=batch_name)
+    return flow_lane.run_lane(root, fdir, branch, push, ci_wait, python) if (run_lane or not push) and not flow_lane.running(fdir) else item
+
+
+def integrate_family(root, fdir, path, branch='main', push=True, *, run_lane=False):
+    """Enqueue a committed family batch without changing its population or sampling gates."""
+    import flow_lane
+    item = flow_lane.enqueue(root, fdir, 'family', [path], branch)
+    return flow_lane.run_lane(root, fdir, branch, push) if (run_lane or not push) and not flow_lane.running(fdir) else item
 
 
 def sync(root, branch='main'):
@@ -2274,8 +2312,9 @@ def sync(root, branch='main'):
     incoming = [p for p in git(root, 'diff', '--name-only', '--no-renames', 'HEAD', target).splitlines() if p]
     local = {}
     if incoming:
-        out = subprocess.run(['git', 'status', '--porcelain', '-z', '--no-renames', '--untracked-files=all', '--', *incoming],
-                             cwd=root, capture_output=True, text=True).stdout
+        out = ''.join(subprocess.run(['git', 'status', '--porcelain', '-z', '--no-renames', '--untracked-files=all',
+                                      '--', *batch], cwd=root, check=True, capture_output=True, text=True).stdout
+                      for batch in path_batches(incoming))
         local = {e[3:]: e[:2] for e in out.split('\0') if len(e) > 3}
     conflicts, same = [], []
     for rel, code in sorted(local.items()):
@@ -2295,8 +2334,17 @@ def sync(root, branch='main'):
     return [rel for rel, _ in same]
 
 
-def pre_push_checks(root, commit, python):
-    """AGENTS.md pre-push checks in a clean detached worktree, away from other sessions' files."""
+def pre_push_checks(root, commit, python, *, candidate=False):
+    """AGENTS.md checks on a clean exact commit; a lane candidate is already isolated."""
+    if candidate:
+        refuse(git(root, 'rev-parse', 'HEAD') == commit and not git(root, 'status', '--porcelain', '--untracked-files=no'),
+               'lane candidate differs from its commit before checks')
+        run([python, 'tools/check.py'], root, 'check.py (lane tree)')
+        run([python, '-m', 'unittest', 'discover', '-s', 'tests', '-v'], root, 'unit tests (lane tree)')
+        run([python, 'tools/build_site.py'], root, 'build_site.py (lane tree)')
+        refuse(not git(root, 'status', '--porcelain', '--untracked-files=no'),
+               'checks changed tracked candidate files')
+        return
     tmp = Path(tempfile.mkdtemp(prefix='flow-check-'))
     tree = tmp / 'tree'
     git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), commit)
@@ -2370,6 +2418,7 @@ def parser():
     s.add_argument('path')
     s.add_argument('--reason', required=True)
     s = sub.add_parser('integrate-family')
+    s.add_argument('--run', action='store_true', help='run the push lane after enqueueing')
     s.add_argument('path')
     s.add_argument('--no-push', action='store_true')
     s.add_argument('--branch', default='main')
@@ -2390,16 +2439,28 @@ def parser():
     s.add_argument('group')
     s.add_argument('--functions', nargs='+', required=True)
     s = sub.add_parser('integrate')
+    s.add_argument('--run', action='store_true', help='run the push lane after enqueueing')
     s.add_argument('group')
     s.add_argument('--approved-only', action='store_true', help='integrate approvals while leaving other functions held')
     s.add_argument('--with-metadata', action='store_true', help='carry only committed family metadata before acceptance')
     s.add_argument('--no-push', action='store_true', help='stop after the clean-tree checks')
     s.add_argument('--branch', default='main')
     s = sub.add_parser('integrate-groups')
+    s.add_argument('--run', action='store_true', help='run the push lane after enqueueing')
     s.add_argument('groups', nargs='+')
     s.add_argument('--name', required=True)
     s.add_argument('--no-push', action='store_true')
     s.add_argument('--branch', default='main')
+    s = sub.add_parser('integrate-labels')
+    s.add_argument('--functions', nargs='+', required=True)
+    s.add_argument('--branch', default='main')
+    s.add_argument('--run', action='store_true')
+    s.add_argument('--no-push', action='store_true')
+    s = sub.add_parser('lane-run')
+    s.add_argument('--branch', default='main')
+    s.add_argument('--no-push', action='store_true')
+    s.add_argument('--ci-wait', type=int, default=600)
+    sub.add_parser('lane-status')
     s = sub.add_parser('sync')
     s.add_argument('--branch', default='main')
     s = sub.add_parser('brief')
@@ -2433,7 +2494,19 @@ def main(argv=None):
         return flow_worktrees.run(root, fdir, a.worktrees_action, getattr(a, 'dry_run', False))
     if a.cmd == 'import-state':
         fdir = af.active_flow_dir(root)
-    # Readers take the same lock so multi-file mutations cannot expose partial state.
+    if a.cmd in ('status', 'next-actions'):
+        import flow_lane
+        try:
+            with tempfile.TemporaryDirectory(prefix='flow-read-') as directory:
+                frozen = Path(directory) / 'flow'
+                flow_lane.snapshot(fdir, frozen)
+                return execute(a, root, frozen)
+        except (FlowError, ValueError, OSError) as exc:
+            print(f'flow: {exc}', file=sys.stderr)
+            return 1
+    if a.cmd in ('integrate', 'integrate-groups', 'integrate-family', 'integrate-labels', 'lane-run', 'lane-status', 'sync'):
+        return execute(a, root, fdir)
+    # Readers take the same short scheduling lock as state mutations.
     with state_lock(fdir):
         return execute(a, root, fdir)
 
@@ -2479,9 +2552,6 @@ def execute(a, root, fdir):
         elif a.cmd == 'family-pause':
             pause_family(root, a.path, a.reason)
             print('family paused; assess accepted members and revoke invalidated evidence')
-        elif a.cmd == 'integrate-family':
-            g = integrate_family(root, fdir, a.path, a.branch, not a.no_push)
-            print('family batch integration: ' + str(g.get('integrated')))
         elif a.cmd == 'review-group':
             made = review_group(root, fdir, a.max, a.reviewer_model)
             if not made:
@@ -2514,17 +2584,30 @@ def execute(a, root, fdir):
             g = split_group(root, fdir, a.group, a.functions)
             print(f'{g["name"]}: {len(g["functions"])} functions; parent and saved reviews unchanged')
             print(f'next: python3 tools/flow.py integrate {g["name"]} --approved-only')
-        elif a.cmd == 'integrate':
-            g = integrate(root, fdir, a.group, a.branch, push=not a.no_push, approved_only=a.approved_only,
-                          with_metadata=a.with_metadata)
-            integ = g['integrated']
-            print(f'{a.group}: accepted {integ["accepted"]}, commit {integ["commit"]}, checks {integ["checks"]}, '
-                  f'pushed {integ.get("pushed") or "no"}, CI {integ.get("ci") or "not checked"}')
-            if integ.get('pushed'):
-                print('next: python3 tools/flow.py sync    # bring the shared checkout up to origin')
-        elif a.cmd == 'integrate-groups':
-            transaction = integrate_groups(root, fdir, a.groups, a.name, a.branch, not a.no_push)
-            print(json.dumps(transaction['integrated'], indent=2))
+        elif a.cmd in ('integrate', 'integrate-groups', 'integrate-family', 'integrate-labels'):
+            import flow_lane
+            kind = {'integrate': 'review', 'integrate-groups': 'groups',
+                    'integrate-family': 'family', 'integrate-labels': 'label'}[a.cmd]
+            selection = ([a.group] if kind == 'review' else a.groups if kind == 'groups'
+                         else [a.path] if kind == 'family' else a.functions)
+            item = flow_lane.enqueue(root, fdir, kind, selection, a.branch,
+                                     getattr(a, 'approved_only', False), getattr(a, 'with_metadata', False),
+                                     getattr(a, 'name', None))
+            print(f'queued {item["id"]}: {kind}; next: python3 tools/flow.py lane-run')
+            if a.run or a.no_push:
+                if flow_lane.running(fdir):
+                    print('push lane is already running; request remains queued for the next run')
+                else:
+                    print(json.dumps(flow_lane.run_lane(root, fdir, a.branch, not a.no_push), indent=2))
+        elif a.cmd == 'lane-run':
+            import flow_lane
+            print(json.dumps(flow_lane.run_lane(root, fdir, a.branch, not a.no_push, a.ci_wait), indent=2))
+        elif a.cmd == 'lane-status':
+            import flow_lane
+            with state_lock(fdir):
+                items = [flow_lane.read(p) for p in sorted((fdir / 'lane/queue').glob('*.json'))]
+                runs = [flow_lane.read(p) for p in sorted((fdir / 'lane/runs').glob('*.json'))]
+            print(json.dumps(dict(queue=items, runs=runs), indent=2))
         elif a.cmd == 'sync':
             dropped = sync(root, a.branch)
             print(f'checkout at origin/{a.branch}; {len(dropped)} identical local cop(ies) replaced by the integrated files')
