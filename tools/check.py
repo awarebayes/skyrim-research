@@ -11,7 +11,8 @@ import sys
 import tempfile
 
 from compare import COMPARATOR_VERSION, CONTRACT_VERSION, REPORT_SCHEMA, comparator_source_sha256, sanitized
-from source_digest import DIGEST_METHOD, INCLUDE_ROOTS, include_closure, recipe_flag_problem, tu_digest
+from source_digest import DIGEST_METHOD, INCLUDE_ROOTS, recipe_flag_problem, tu_digest
+from check_source_digest import include_closure, source_digest_cache
 from lint_reconstruction import lint_tree
 import cost_ledger
 import symbol_map as symbol_maps
@@ -886,7 +887,8 @@ def main():
     parser.add_argument('--staged', action='store_true', help='Check index blobs and staged metadata')
     args = parser.parse_args()
     try:
-        load(staged=args.staged)
+        with source_digest_cache():
+            load(staged=args.staged)
         count = check_git(staged=args.staged)
     except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
         print(f'FAIL: {exc}', file=sys.stderr)
