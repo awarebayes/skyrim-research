@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T09:29:15Z",
+  "updated_at": "2026-11-13T10:53:33.640734Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -110086,6 +110086,54 @@
       "name_source": "GUESS(low): compiler-generated static function; owning system unknown.",
       "owner": "awarebayes",
       "evidence": "findings/ghidra-import.md"
+    },
+    {
+      "id": "sse-steam-1-7-104-0x539050",
+      "build_id": "sse-steam-1-7-104",
+      "rva": 5476432,
+      "size": 143,
+      "status": "mapped",
+      "name": "BGSStoryManagerQuestNode::SaveGame",
+      "name_origin": "COMMUNITY",
+      "name_source": "Unverified community method name from CharmedBaryon/CommonLibSSE-NG at b93280e832f263dbef44e44cbe2936622a02f91a (MIT), joined to the pinned image during local task preparation; the name is not proved by comparison.",
+      "owner": "awarebayes",
+      "evidence": "findings/p85-mid-enrollment.md"
+    },
+    {
+      "id": "sse-steam-1-7-104-0x1e1380",
+      "build_id": "sse-steam-1-7-104",
+      "rva": 1971072,
+      "size": 420,
+      "status": "mapped",
+      "name": "TESDescription::GetDescription",
+      "name_origin": "COMMUNITY",
+      "name_source": "Unverified community method name from CharmedBaryon/CommonLibSSE-NG at b93280e832f263dbef44e44cbe2936622a02f91a (MIT), joined to the pinned image during local task preparation; the name is not proved by comparison.",
+      "owner": "awarebayes",
+      "evidence": "findings/p85-mid-enrollment.md"
+    },
+    {
+      "id": "sse-steam-1-7-104-0x26b760",
+      "build_id": "sse-steam-1-7-104",
+      "rva": 2537312,
+      "size": 180,
+      "status": "mapped",
+      "name": "TESEffectShader::InitItemImpl",
+      "name_origin": "COMMUNITY",
+      "name_source": "Unverified community method name from CharmedBaryon/CommonLibSSE-NG at b93280e832f263dbef44e44cbe2936622a02f91a (MIT), joined to the pinned image during local task preparation; the name is not proved by comparison.",
+      "owner": "awarebayes",
+      "evidence": "findings/p85-mid-enrollment.md"
+    },
+    {
+      "id": "sse-steam-1-7-104-0x3b7240",
+      "build_id": "sse-steam-1-7-104",
+      "rva": 3895872,
+      "size": 319,
+      "status": "mapped",
+      "name": "TESIdleForm::InitItemImpl",
+      "name_origin": "COMMUNITY",
+      "name_source": "Unverified community method name from CharmedBaryon/CommonLibSSE-NG at b93280e832f263dbef44e44cbe2936622a02f91a (MIT), joined to the pinned image during local task preparation; the name is not proved by comparison.",
+      "owner": "awarebayes",
+      "evidence": "findings/p85-mid-enrollment.md"
     }
   ],
   "work_items": [

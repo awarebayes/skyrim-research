@@ -2325,6 +2325,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `forms/TESAttackDamageForm` | `TESAttackDamageForm::~TESAttackDamageForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1df1a0` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1df1a0.json` | matched | full | checked |
 | `forms/TESContainer` | `TESContainer::GetItemCount` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e0b10` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e0b10.json` | matched | full | open |
 | `forms/TESDescription` | `TESDescription::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1240` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e1240.json` | matched | full | open |
+| - | `TESDescription::GetDescription` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1380` / 420 | - | - | mapped | - | - |
 | `forms/TESEnchantableForm` | `TESEnchantableForm::InitializeDataComponent` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1e60` / 14 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e1e60.json` | matched | full | open |
 | `forms/TESForm` | `TESForm::GetEnchantment` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e1fd0` / 91 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e1fd0.json` | matched | label-only | open |
 | `forms/TESEnchantableForm` | `TESEnchantableForm::~TESEnchantableForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x1e20a0` / 43 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1e20a0.json` | matched | full | checked |
@@ -2401,6 +2402,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TESCombatStyle::InitItemImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x26a160` / 18 | - | - | mapped | - | - |
 | `forms/TESCombatStyle` | `TESCombatStyle::~TESCombatStyle` (COMMUNITY) | `sse-steam-1-7-104` / `0x26a890` / 62 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x26a890.json` | matched | full | open |
 | `forms/TESEffectShader` | `TESEffectShader::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x26b3e0` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x26b3e0.json` | matched | full | open |
+| - | `TESEffectShader::InitItemImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x26b760` / 180 | - | - | mapped | - | - |
 | - | `TESFlora::InitItemImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x26da40` / 60 | - | - | mapped | - | - |
 | - | `TESFlora::Activate` (COMMUNITY) | `sse-steam-1-7-104` / `0x26da90` / 12 | - | - | mapped | - | - |
 | - | `TESFurniture::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x26e110` / 20 | - | - | mapped | - | - |
@@ -2625,6 +2627,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TESClass::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x3b2890` / 44 | - | - | mapped | - | - |
 | `forms/TESClass` | `TESClass::GetMaximumTrainingLevel` (COMMUNITY) | `sse-steam-1-7-104` / `0x3b2b10` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3b2b10.json` | matched | full | open |
 | `forms/TESEyes` | `TESEyes::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x3b2fb0` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3b2fb0.json` | matched | full | open |
+| - | `TESIdleForm::InitItemImpl` (COMMUNITY) | `sse-steam-1-7-104` / `0x3b7240` / 319 | - | - | mapped | - | - |
 | `forms/TESIdleForm` | `TESIdleForm::~TESIdleForm` (COMMUNITY) | `sse-steam-1-7-104` / `0x3b8200` / 52 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3b8200.json` | matched | full | open |
 | - | `TESNPC::ClearData` (COMMUNITY) | `sse-steam-1-7-104` / `0x3bbf50` / 416 | - | - | mapped | - | - |
 | `forms/TESNPC` | `TESNPC::GetScale` (COMMUNITY) | `sse-steam-1-7-104` / `0x3c65c0` / 95 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x3c65c0.json` | matched | full | open |
@@ -2763,6 +2766,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `forms/BGSStoryManagerEventNode` | `BGSStoryManagerEventNode::GetFormEditorID` (COMMUNITY) | `sse-steam-1-7-104` / `0x535d60` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x535d60.json` | matched | full | open |
 | `forms/BGSStoryManagerNodeBase` | `BGSStoryManagerNodeBase::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x5360f0` / 34 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x5360f0.json` | matched | full | open |
 | `forms/BGSStoryManagerQuestNode` | `BGSStoryManagerQuestNode::Revert` (COMMUNITY) | `sse-steam-1-7-104` / `0x539020` / 40 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x539020.json` | matched | full | open |
+| - | `BGSStoryManagerQuestNode::SaveGame` (COMMUNITY) | `sse-steam-1-7-104` / `0x539050` / 143 | - | - | mapped | - | - |
 | - | `BGSStoryTeller::ProcessEvent` (COMMUNITY) | `sse-steam-1-7-104` / `0x53a270` / 28 | - | - | mapped | - | - |
 | - | `BGSStoryTeller::~BGSStoryTeller` (COMMUNITY) | `sse-steam-1-7-104` / `0x53d110` / 52 | - | - | mapped | - | - |
 | `bsengine/SimpleAnimationGraphManagerLoadingTask` | `SimpleAnimationGraphManagerLoadingTask::Slot19` (GUESS) | `sse-steam-1-7-104` / `0x556990` / 8 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x556990.json` | matched | full | open |
