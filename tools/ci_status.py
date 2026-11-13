@@ -1,6 +1,6 @@
-"""CI result of one pushed commit, read-only through `gh run list` and `gh run view`.
+"""CI result of one pushed commit, read-only through GitHub CLI.
 
-Exit status: 0 every workflow run for the commit succeeded, 1 at least one finished red,
+Exit status: 0 workflows passed or Pages was superseded, 1 at least one finished red,
 2 runs are still pending or none exist yet, 3 `gh` is missing or could not answer, or
 `--commit` names no commit of this repository. A short SHA or ref is expanded with `git rev-parse`.
 A green result proves only what CI checks (publication hygiene, metadata, tests, site build),
@@ -18,6 +18,8 @@ from pathlib import Path
 GREEN, RED, PENDING, UNAVAILABLE = 0, 1, 2, 3
 # Conclusions that do not make a run red: a skipped or neutral workflow did not fail anything.
 OK_CONCLUSIONS = {'success', 'skipped', 'neutral'}
+PAGES = 'Publish research report'
+CHECKS = 'Infrastructure checks'
 POLL_SECONDS = 15
 REPO = Path(__file__).resolve().parents[1]
 FULL_SHA = re.compile(r'[0-9a-f]{40}')
@@ -71,22 +73,68 @@ def failed_steps(run_id):
     return out
 
 
+def superseding_pages(commit):
+    """Find the newest main-branch push of a descendant, proven against current main."""
+    runs = gh('run', 'list', '--workflow', 'pages.yml', '--branch', 'main', '--event', 'push',
+              '--limit', '100', '--json', 'databaseId,workflowName,status,conclusion,headSha')
+    main = gh('api', 'repos/{owner}/{repo}/commits/main').get('sha')
+    if not isinstance(main, str) or not FULL_SHA.fullmatch(main):
+        raise GhError('could not determine main head')
+    for run in runs:
+        sha = run.get('headSha', '')
+        if not FULL_SHA.fullmatch(sha) or sha == commit or run.get('workflowName') != PAGES:
+            continue
+        relation = gh('api', f'repos/{{owner}}/{{repo}}/compare/{commit}...{sha}').get('status')
+        if relation != 'ahead':
+            continue
+        if sha != main and gh('api', f'repos/{{owner}}/{{repo}}/compare/{sha}...{main}').get('status') != 'ahead':
+            continue
+        return run
+    return None
+
+
 def status(commit):
     """(exit code, run summaries) for the workflow runs of one commit."""
     runs = gh('run', 'list', '--commit', commit, '--limit', '50',
               '--json', 'databaseId,workflowName,status,conclusion,headSha')
     runs = [r for r in runs if r.get('headSha') == commit]
     summaries = []
+    cancelled_pages = []
     for run in sorted(runs, key=lambda r: (r['workflowName'], r['databaseId'])):
         finished = run['status'] == 'completed'
-        red = finished and run.get('conclusion') not in OK_CONCLUSIONS
-        summaries.append({'workflow': run['workflowName'], 'run_id': run['databaseId'],
-                          'status': run['status'], 'conclusion': run.get('conclusion') or None,
-                          'failed_steps': failed_steps(run['databaseId']) if red else []})
-    if any(s['status'] == 'completed' and s['conclusion'] not in OK_CONCLUSIONS for s in summaries):
+        cancelled = finished and run.get('conclusion') == 'cancelled' and run['workflowName'] == PAGES
+        red = finished and run.get('conclusion') not in OK_CONCLUSIONS and not cancelled
+        summary = {'workflow': run['workflowName'], 'run_id': run['databaseId'],
+                   'status': run['status'], 'conclusion': run.get('conclusion') or None,
+                   'failed_steps': failed_steps(run['databaseId']) if red else []}
+        summaries.append(summary)
+        if cancelled:
+            cancelled_pages.append(summary)
+    if any(s['status'] == 'completed' and s['conclusion'] not in OK_CONCLUSIONS
+           and s not in cancelled_pages for s in summaries):
         return RED, summaries
     if not summaries or any(s['status'] != 'completed' for s in summaries):
         return PENDING, summaries
+    if cancelled_pages:
+        # A skipped check, missing check, or skipped other workflow cannot establish success.
+        others = [s for s in summaries if s not in cancelled_pages]
+        if not any(s['workflow'] == CHECKS and s['conclusion'] == 'success' for s in others):
+            return PENDING, summaries
+        if any(s['conclusion'] != 'success' for s in others):
+            return PENDING, summaries
+        newer = superseding_pages(commit)
+        if newer is None:
+            return PENDING, summaries
+        for summary in cancelled_pages:
+            summary['superseded_by'] = newer['headSha']
+            summary['superseding_status'] = newer['status']
+            summary['superseding_conclusion'] = newer.get('conclusion') or None
+            summary['superseding_run_id'] = newer['databaseId']
+        if newer['status'] != 'completed' or newer.get('conclusion') == 'cancelled':
+            return PENDING, summaries
+        if newer.get('conclusion') != 'success':
+            cancelled_pages[0]['failed_steps'] = failed_steps(newer['databaseId'])
+            return RED, summaries
     return GREEN, summaries
 
 
@@ -114,6 +162,12 @@ def main(argv=None):
         print(f'{label}: {commit}' + ('' if summaries else ' (no workflow runs yet)'))
         for s in summaries:
             print(f"  {s['workflow']} (run {s['run_id']}): {s['conclusion'] or s['status']}")
+            if s.get('superseded_by'):
+                sha = s['superseded_by'][:7]
+                result = s['superseding_conclusion'] or s['superseding_status']
+                print(f'    pages superseded by {sha}: {result}')
+                if code == RED:
+                    print(f'    newer Pages run {s["superseding_run_id"]} failed; older publish is unverified')
             for step in s['failed_steps']:
                 print(f'    failed: {step}')
     return code
