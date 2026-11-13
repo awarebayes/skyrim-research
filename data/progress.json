@@ -1,9 +1,4 @@
 {
-  "scope": {
-    "functions": null,
-    "bytes": null,
-    "notes": "Inventory and exclusions have not been established. No completion percentage is meaningful yet."
-  },
   "milestones": [
     {
       "date": "2026-11-11",
@@ -117415,12 +117410,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16761984,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSMasterParticleSystem::GetRTTI",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 2. RVA 0xffc480; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xffc480.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1575450",
@@ -117463,12 +117460,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16739232,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSSubIndexTriShape::GetRTTI",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: powerof3/CommonLibSSE commit 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0), virtual slot comment of the class header, joined through the image RTTI vftable slot 2. RVA 0xff6ba0; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xff6ba0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1e85e0",
@@ -149505,12 +149504,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 2774016,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward2a5400::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x2a5400.json"
     },
     {
       "id": "sse-steam-1-7-104-0x2d0ce0",
@@ -150189,12 +150190,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 5208480,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward4f79a0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x4f79a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x4f79b0",
@@ -150717,12 +150720,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 6159728,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward5dfd70::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x5dfd70.json"
     },
     {
       "id": "sse-steam-1-7-104-0x5f3ce0",
@@ -150969,12 +150974,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 7055568,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward6ba8d0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x6ba8d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6ba8e0",
@@ -151089,12 +151096,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 7579776,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward73a880::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x73a880.json"
     },
     {
       "id": "sse-steam-1-7-104-0x73a890",
@@ -151425,12 +151434,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8028048,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward7a7f90::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7a7f90.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7a8680",
@@ -151533,12 +151544,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8098128,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward7b9150::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7b9150.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7c6160",
@@ -151653,12 +151666,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8303152,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward7eb230::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x7eb230.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7ec7c0",
@@ -151821,12 +151836,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8452192,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward80f860::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x80f860.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8145e0",
@@ -151929,12 +151946,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8577232,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward82e0d0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x82e0d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x82e290",
@@ -152277,12 +152296,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8643456,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward83e380::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x83e380.json"
     },
     {
       "id": "sse-steam-1-7-104-0x83e690",
@@ -152385,24 +152406,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8650656,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward83ffa0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x83ffa0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x840320",
       "build_id": "sse-steam-1-7-104",
       "rva": 8651552,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward840320::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x840320.json"
     },
     {
       "id": "sse-steam-1-7-104-0x840630",
@@ -152481,24 +152506,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8656656,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward841710::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x841710.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8419b0",
       "build_id": "sse-steam-1-7-104",
       "rva": 8657328,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward8419b0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x8419b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x841cc0",
@@ -152529,12 +152558,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8659568,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward842270::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x842270.json"
     },
     {
       "id": "sse-steam-1-7-104-0x842580",
@@ -152565,12 +152596,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8661760,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward842b00::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x842b00.json"
     },
     {
       "id": "sse-steam-1-7-104-0x842d90",
@@ -152649,12 +152682,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8666496,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward843d80::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x843d80.json"
     },
     {
       "id": "sse-steam-1-7-104-0x844020",
@@ -152673,12 +152708,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8667952,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward844330::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x844330.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8445a0",
@@ -152889,24 +152926,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8680592,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward847490::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x847490.json"
     },
     {
       "id": "sse-steam-1-7-104-0x847730",
       "build_id": "sse-steam-1-7-104",
       "rva": 8681264,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward847730::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x847730.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8479b0",
@@ -152973,12 +153014,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8685504,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward8487c0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x8487c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x848a60",
@@ -153261,12 +153304,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8981824,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward890d40::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x890d40.json"
     },
     {
       "id": "sse-steam-1-7-104-0x890df0",
@@ -153345,12 +153390,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8999344,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward8951b0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x8951b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x895260",
@@ -153501,12 +153548,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 9141584,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward8b7d50::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x8b7d50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8bcd70",
@@ -153633,12 +153682,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 9227600,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward8ccd50::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x8ccd50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x8cce80",
@@ -154185,12 +154236,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 10299696,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward9d2930::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9d2930.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9d2940",
@@ -154329,12 +154382,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 10299888,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward9d29f0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9d29f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9d2a00",
@@ -154437,12 +154492,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 10300032,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward9d2a80::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x9d2a80.json"
     },
     {
       "id": "sse-steam-1-7-104-0x9eca20",
@@ -154797,12 +154854,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 10833344,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwarda54dc0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xa54dc0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xa68060",
@@ -154965,12 +155024,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 11266336,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardabe920::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xabe920.json"
     },
     {
       "id": "sse-steam-1-7-104-0xabe950",
@@ -155373,12 +155434,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 12284032,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardbb7080::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xbb7080.json"
     },
     {
       "id": "sse-steam-1-7-104-0xbb7960",
@@ -155433,12 +155496,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 12301168,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardbbb370::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xbbb370.json"
     },
     {
       "id": "sse-steam-1-7-104-0xbbbcc0",
@@ -155565,12 +155630,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 12416960,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardbd77c0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xbd77c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xbd77d0",
@@ -156033,12 +156100,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15296608,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwarde96860::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xe96860.json"
     },
     {
       "id": "sse-steam-1-7-104-0xea5930",
@@ -156465,12 +156534,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15721760,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardefe520::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xefe520.json"
     },
     {
       "id": "sse-steam-1-7-104-0xeffce0",
@@ -156873,12 +156944,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15792752,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf0fa70::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf0fa70.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf0fa80",
@@ -157341,12 +157414,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15832144,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf19450::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf19450.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf19460",
@@ -157485,12 +157560,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15842416,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf1bc70::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf1bc70.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf1dc90",
@@ -157509,12 +157586,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15850656,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf1dca0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf1dca0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf1ddf0",
@@ -158469,12 +158548,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16156320,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf686a0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf686a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf686b0",
@@ -158589,12 +158670,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16158832,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf69070::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf69070.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf69080",
@@ -159501,12 +159584,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16212128,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf760a0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf760a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf761a0",
@@ -159861,12 +159946,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16224784,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf79210::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf79210.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf79220",
@@ -159885,12 +159972,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16224816,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf79230::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf79230.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf793d0",
@@ -160329,12 +160418,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16238176,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf7c660::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf7c660.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf7ced0",
@@ -160365,12 +160456,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16242944,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf7d900::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf7d900.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf7d910",
@@ -160629,12 +160722,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16277312,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf85f40::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf85f40.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf85f50",
@@ -160989,24 +161084,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16296608,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf8aaa0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf8aaa0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf8b000",
       "build_id": "sse-steam-1-7-104",
       "rva": 16297984,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf8b000::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf8b000.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf8b910",
@@ -161025,12 +161124,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16302128,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf8c030::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf8c030.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf8c080",
@@ -161121,12 +161222,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16304144,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf8c810::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf8c810.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf8c9c0",
@@ -161541,12 +161644,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16377120,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardf9e520::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf9e520.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf9e530",
@@ -161973,12 +162078,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16408752,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfa60b0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfa60b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfa60c0",
@@ -162909,12 +163016,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16456928,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfb1ce0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfb1ce0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfb1cf0",
@@ -162969,12 +163078,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16457952,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfb20e0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfb20e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfb20f0",
@@ -163089,12 +163200,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16460000,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfb28e0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfb28e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfb28f0",
@@ -163317,12 +163430,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16483024,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfb82d0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfb82d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfb82e0",
@@ -163461,12 +163576,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16495008,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfbb1a0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfbb1a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfbb1b0",
@@ -163749,12 +163866,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16587344,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfd1a50::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfd1a50.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfd1a60",
@@ -163881,12 +164000,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16644768,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfdfaa0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfdfaa0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfdfab0",
@@ -163941,12 +164062,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16645392,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardfdfd10::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfdfd10.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfdfd40",
@@ -164505,12 +164628,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16773072,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForwardffefd0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xffefd0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfff620",
@@ -165069,12 +165194,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17352176,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward108c5f0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x108c5f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x108cb30",
@@ -165201,12 +165328,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17427776,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward109ed40::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x109ed40.json"
     },
     {
       "id": "sse-steam-1-7-104-0x109ed50",
@@ -165681,12 +165810,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 18416784,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward1190490::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1190490.json"
     },
     {
       "id": "sse-steam-1-7-104-0x11974c0",
@@ -165741,12 +165872,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 18655312,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward11ca850::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x11ca850.json"
     },
     {
       "id": "sse-steam-1-7-104-0x11cc150",
@@ -165885,12 +166018,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 18731888,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward11dd370::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x11dd370.json"
     },
     {
       "id": "sse-steam-1-7-104-0x11e6540",
@@ -165945,12 +166080,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 18838672,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward11f7490::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x11f7490.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1216800",
@@ -166305,12 +166442,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19071600,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward1230270::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1230270.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12302b0",
@@ -166341,12 +166480,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19083872,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward1233260::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1233260.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12340b0",
@@ -166653,12 +166794,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19732576,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward12d1860::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12d1860.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12ed2f0",
@@ -166689,12 +166832,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19878944,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward12f5420::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12f5420.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12f9b50",
@@ -166953,12 +167098,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 21586880,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward14963c0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x14963c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x14963d0",
@@ -167157,12 +167304,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 21851872,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward14d6ee0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x14d6ee0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x14e36b0",
@@ -167193,12 +167342,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 21911872,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward14e5940::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x14e5940.json"
     },
     {
       "id": "sse-steam-1-7-104-0x14e5970",
@@ -167325,12 +167476,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 21923952,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward14e8870::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x14e8870.json"
     },
     {
       "id": "sse-steam-1-7-104-0x14e9080",
@@ -167565,12 +167718,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 22262320,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward153b230::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x153b230.json"
     },
     {
       "id": "sse-steam-1-7-104-0x153b240",
@@ -167589,12 +167744,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 22360512,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward15531c0::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x15531c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x15531d0",
@@ -168189,12 +168346,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 22708048,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "LeafForward15a7f50::Forward",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x15a7f50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x15a8c4c",
@@ -168565,12 +168724,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1311248,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress140210::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x140210.json"
     },
     {
       "id": "sse-steam-1-7-104-0x140280",
@@ -168793,24 +168954,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 2415360,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress24db00::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x24db00.json"
     },
     {
       "id": "sse-steam-1-7-104-0x25c1d0",
       "build_id": "sse-steam-1-7-104",
       "rva": 2474448,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress25c1d0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x25c1d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x2a56f0",
@@ -168865,12 +169030,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 3121344,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress2fa0c0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x2fa0c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x2fa0d0",
@@ -168925,12 +169092,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 3121424,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress2fa110::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x2fa110.json"
     },
     {
       "id": "sse-steam-1-7-104-0x2fa120",
@@ -169453,12 +169622,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4526528,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress4511c0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x4511c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x4525f0",
@@ -169513,12 +169684,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4566880,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress45af60::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x45af60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x45af70",
@@ -169681,12 +169854,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4567104,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress45b040::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x45b040.json"
     },
     {
       "id": "sse-steam-1-7-104-0x45b050",
@@ -170245,12 +170420,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4690592,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress4792a0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x4792a0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x47cc50",
@@ -170485,12 +170662,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4801760,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress4944e0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x4944e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x494a80",
@@ -170545,12 +170724,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4811232,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress4969e0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x4969e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x4a9fb0",
@@ -170569,12 +170750,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4906112,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress4adc80::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x4adc80.json"
     },
     {
       "id": "sse-steam-1-7-104-0x51c9f0",
@@ -170869,12 +171052,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 6181696,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress5e5340::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x5e5340.json"
     },
     {
       "id": "sse-steam-1-7-104-0x5e9f60",
@@ -171049,12 +171234,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 6289664,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress5ff900::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x5ff900.json"
     },
     {
       "id": "sse-steam-1-7-104-0x600c00",
@@ -171109,12 +171296,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 6313504,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress605620::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x605620.json"
     },
     {
       "id": "sse-steam-1-7-104-0x6076b0",
@@ -172081,12 +172270,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 11429440,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressae6640::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xae6640.json"
     },
     {
       "id": "sse-steam-1-7-104-0xae6650",
@@ -172741,12 +172932,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 11873792,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressb52e00::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb52e00.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb52e30",
@@ -172825,12 +173018,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 11874000,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressb52ed0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb52ed0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb52ee0",
@@ -172993,12 +173188,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 11874368,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressb53040::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb53040.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb53050",
@@ -173017,12 +173214,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 11874400,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressb53060::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb53060.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb53070",
@@ -173101,12 +173300,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 12114720,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressb8db20::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xb8db20.json"
     },
     {
       "id": "sse-steam-1-7-104-0xb8db30",
@@ -174145,12 +174346,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15815136,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressf151e0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf151e0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf15ad0",
@@ -174265,12 +174468,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15841536,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressf1b900::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf1b900.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf1d6f0",
@@ -174613,12 +174818,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16213520,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressf76610::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf76610.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf76b30",
@@ -174793,12 +175000,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16247952,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressf7ec90::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf7ec90.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf7f1d0",
@@ -174913,12 +175122,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16280944,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressf86d70::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xf86d70.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf87d90",
@@ -175309,12 +175520,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16415856,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressfa7c70::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfa7c70.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfa8f10",
@@ -175477,12 +175690,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16446416,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressfaf3d0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xfaf3d0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xfaf7d0",
@@ -176137,12 +176352,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16734912,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressff5ac0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xff5ac0.json"
     },
     {
       "id": "sse-steam-1-7-104-0xff6f00",
@@ -176173,12 +176390,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16770352,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddressffe530::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0xffe530.json"
     },
     {
       "id": "sse-steam-1-7-104-0xffff30",
@@ -176365,12 +176584,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17212080,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress106a2b0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x106a2b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x106bb10",
@@ -176785,12 +177006,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17515712,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress10b44c0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x10b44c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x10b7050",
@@ -176845,12 +177068,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17534208,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress10b8d00::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x10b8d00.json"
     },
     {
       "id": "sse-steam-1-7-104-0x10b8d10",
@@ -176869,12 +177094,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17541376,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress10ba900::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x10ba900.json"
     },
     {
       "id": "sse-steam-1-7-104-0x10bbd50",
@@ -177133,12 +177360,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17638544,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress10d2490::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x10d2490.json"
     },
     {
       "id": "sse-steam-1-7-104-0x10d24a0",
@@ -177241,12 +177470,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 17638832,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress10d25b0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x10d25b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x10d25c0",
@@ -177385,12 +177616,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19245904,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress125ab50::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x125ab50.json"
     },
     {
       "id": "sse-steam-1-7-104-0x125ab60",
@@ -177637,12 +177870,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19602288,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress12b1b70::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12b1b70.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12b1b80",
@@ -177697,12 +177932,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19602368,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress12b1bc0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12b1bc0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12b1bd0",
@@ -177841,12 +178078,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19675840,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress12c3ac0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12c3ac0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12c3ad0",
@@ -177877,12 +178116,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19675888,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress12c3af0::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12c3af0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12c3b00",
@@ -177961,12 +178202,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19676000,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress12c3b60::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12c3b60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12c3b70",
@@ -178117,12 +178360,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 20170048,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress133c540::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x133c540.json"
     },
     {
       "id": "sse-steam-1-7-104-0x133c550",
@@ -178369,12 +178614,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 22428816,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "LeafAddress1563c90::Address",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): ABI stand-in; original ownership and signature unknown.",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1563c90.json"
     },
     {
       "id": "sse-steam-1-7-104-0x156b020",
@@ -207856,8 +208103,6 @@
     }
   ],
   "target_build_id": "sse-steam-1-7-104",
-  "schema_version": 1,
-  "phase": "First matches",
   "work_items": [
     {
       "id": "pin-target",
@@ -207916,5 +208161,12 @@
       "issue_url": "https://github.com/awarebayes/skyrim-research/issues/7"
     }
   ],
-  "updated_at": "2026-11-13T18:39:51Z"
+  "phase": "First matches",
+  "schema_version": 1,
+  "updated_at": "2026-11-13T18:39:51Z",
+  "scope": {
+    "functions": null,
+    "bytes": null,
+    "notes": "Inventory and exclusions have not been established. No completion percentage is meaningful yet."
+  }
 }

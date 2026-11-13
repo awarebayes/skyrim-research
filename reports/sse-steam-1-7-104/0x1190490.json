@@ -1,0 +1,348 @@
+{
+  "build": {
+    "added_flags": [
+      "/showIncludes"
+    ],
+    "claim": "Build facts are self-reported by each compile host (tools/verifier/unit_build.py build record). tools/check.py verifies only that they are present and consistent with the runs and the translation unit.",
+    "cleared_environment": [
+      "CL",
+      "EXTERNAL_INCLUDE",
+      "INCLUDE",
+      "LIB",
+      "LIBPATH",
+      "_CL_"
+    ],
+    "hosts": {
+      "mac-wine": {
+        "command_flags": [
+          "/nologo",
+          "/c",
+          "/O2",
+          "/MD",
+          "/GS-",
+          "/EHsc",
+          "/GR",
+          "/fp:precise",
+          "/Gy",
+          "/showIncludes"
+        ],
+        "object_sha256": "4d7b97b7a543db309ab78c45e810957e7a94d2dc00763d366283886047a6f088",
+        "opened_equals_closure": true,
+        "repository_files_opened": [
+          "reconstruction/leaves/LeafForward1190490.cpp",
+          "reconstruction/leaves/LeafForward1190490.h"
+        ]
+      },
+      "winpc-native": {
+        "command_flags": [
+          "/nologo",
+          "/c",
+          "/O2",
+          "/MD",
+          "/GS-",
+          "/EHsc",
+          "/GR",
+          "/fp:precise",
+          "/Gy",
+          "/showIncludes"
+        ],
+        "object_sha256": "2813b7a5a3a0f3f6cb4cf661d0b4131665b73e6c4b8fbdc30ab4ad3ee41db856",
+        "opened_equals_closure": true,
+        "repository_files_opened": [
+          "reconstruction/leaves/LeafForward1190490.cpp",
+          "reconstruction/leaves/LeafForward1190490.h"
+        ]
+      }
+    }
+  },
+  "family_parameters": {
+    "kind": "forward",
+    "rva": 18416784,
+    "size": 5,
+    "target-rva": 18501616
+  },
+  "function_id": "sse-steam-1-7-104-0x1190490",
+  "match_record_schema": 2,
+  "name_source": "GUESS(low)",
+  "notes": [
+    "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.",
+    "independence: separate-machine, different-loader. The compile hosts are the maintainer's own machines, each with its own install of the pinned toolchain, reached by tools/verifier/runners.py: mac-wine (machine maintainer-mac; macos arm64; the pinned compiler run under Wine; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099); winpc-native (machine maintainer-winpc; windows amd64; the pinned compiler run natively; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099). Each host hashed its compiler binaries during this confirm run and checked them against pinned.sha256, checked its own copy of the image against builds/target.json before compiling, and compared its own object; the local host also compared the other hosts' objects. Host facts are self-reported by tools/verifier/unit_build.py.",
+    "Build environment on both compile hosts: INCLUDE, LIB, LIBPATH, CL, _CL_ and EXTERNAL_INCLUDE removed before the compile, INCLUDE then set to toolchain and SDK directories only (by the msvc-wine wrapper under Wine, by tools/verifier/unit_build.py from the same directory list natively); /showIncludes added after the recipe flags, and the repository files the compiler opened equalled the include closure. Each host's flags, cleared variables, object hash and opened files are in the build block, as that host reported them; the gate checks that block for presence and consistency with the runs, not for truth.",
+    "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
+    "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
+    "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
+    "Source state: working tree on base commit 64489cbb57ca427b18695a06dc0709e6c683745d, with uncommitted changes to reconstruction/leaves/LeafForward1190490.cpp, reconstruction/leaves/LeafForward1190490.h, reports/sse-steam-1-7-104/unit-symbols/2813d23cd812312c7ec47a81bdb0c4a0b25f972e752bc3d4c69ee24f0e6b5f8d.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+  ],
+  "origin": {
+    "family": "census-forward-leaf",
+    "template_digest": "b18016973b925d0755b2acaa7a6dc1f0e14b5df18c55cb1516affefe633c01bd",
+    "version": "1"
+  },
+  "recipe": {
+    "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
+    "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+  },
+  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/leaves/LeafForward1190490.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/leaves/LeafForward1190490.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x1190490 --symbol '?Forward@LeafForward1190490@@QEAAPEAXXZ' --compiled reconstruction/leaves/LeafForward1190490.cpp --unit reconstruction/leaves/LeafForward1190490.cpp reconstruction/leaves/LeafForward1190490.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/2813d23cd812312c7ec47a81bdb0c4a0b25f972e752bc3d4c69ee24f0e6b5f8d.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "runs": [
+    {
+      "compared_on": "mac-wine",
+      "compiled_on": "mac-wine",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "code_section_sha256": "7e3bbfa5c3c8ef2e6a9eef8479bbb58972dff7be0ed1d4737260f7509af4846c",
+          "code_sections": 1,
+          "object_sha256": "4d7b97b7a543db309ab78c45e810957e7a94d2dc00763d366283886047a6f088"
+        },
+        "comparator": {
+          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+          "version": "0.6.0"
+        },
+        "contract_version": 2,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 4,
+          "code_bytes_exact": 1,
+          "code_bytes_total": 5,
+          "eh": {
+            "bytes": 0,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_end_evidence": {},
+          "funclet_ranges": [],
+          "funclet_sections": 0,
+          "relocations_by_type": {
+            "REL32": 1
+          },
+          "self_rva_fields": 0,
+          "unwind": "none-in-range",
+          "unwind_bytes_exact": 0,
+          "unwind_chained_entries": 0,
+          "unwind_entries": 0
+        },
+        "detail": "all contract v2 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 18416784,
+          "size": 5,
+          "symbol": "?Forward@LeafForward1190490@@QEAAPEAXXZ"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/leaves/LeafForward1190490.cpp",
+          "source_revision": "a9e1e3d129ffea472613a5b7331118dd1a282ec25e02727e50a0ff4234c4c9ad"
+        },
+        "symbol_map_sha256": "2813d23cd812312c7ec47a81bdb0c4a0b25f972e752bc3d4c69ee24f0e6b5f8d",
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x1190490"
+      }
+    },
+    {
+      "compared_on": "winpc-native",
+      "compiled_on": "winpc-native",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "code_section_sha256": "7e3bbfa5c3c8ef2e6a9eef8479bbb58972dff7be0ed1d4737260f7509af4846c",
+          "code_sections": 1,
+          "object_sha256": "2813b7a5a3a0f3f6cb4cf661d0b4131665b73e6c4b8fbdc30ab4ad3ee41db856"
+        },
+        "comparator": {
+          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+          "version": "0.6.0"
+        },
+        "contract_version": 2,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 4,
+          "code_bytes_exact": 1,
+          "code_bytes_total": 5,
+          "eh": {
+            "bytes": 0,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_end_evidence": {},
+          "funclet_ranges": [],
+          "funclet_sections": 0,
+          "relocations_by_type": {
+            "REL32": 1
+          },
+          "self_rva_fields": 0,
+          "unwind": "none-in-range",
+          "unwind_bytes_exact": 0,
+          "unwind_chained_entries": 0,
+          "unwind_entries": 0
+        },
+        "detail": "all contract v2 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 18416784,
+          "size": 5,
+          "symbol": "?Forward@LeafForward1190490@@QEAAPEAXXZ"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/leaves/LeafForward1190490.cpp",
+          "source_revision": "a9e1e3d129ffea472613a5b7331118dd1a282ec25e02727e50a0ff4234c4c9ad"
+        },
+        "symbol_map_sha256": "2813d23cd812312c7ec47a81bdb0c4a0b25f972e752bc3d4c69ee24f0e6b5f8d",
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x1190490"
+      }
+    },
+    {
+      "compared_on": "mac-wine",
+      "compiled_on": "winpc-native",
+      "report": {
+        "acceptance": "not-evaluated",
+        "candidate": {
+          "code_section_sha256": "7e3bbfa5c3c8ef2e6a9eef8479bbb58972dff7be0ed1d4737260f7509af4846c",
+          "code_sections": 1,
+          "object_sha256": "2813b7a5a3a0f3f6cb4cf661d0b4131665b73e6c4b8fbdc30ab4ad3ee41db856"
+        },
+        "comparator": {
+          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+          "version": "0.6.0"
+        },
+        "contract_version": 2,
+        "coverage": {
+          "aliases_declared": [],
+          "code_bytes_by_reference": 4,
+          "code_bytes_exact": 1,
+          "code_bytes_total": 5,
+          "eh": {
+            "bytes": 0,
+            "handlers": {},
+            "int_fields": 0,
+            "ref_fields": 0,
+            "structures": {},
+            "type_names_compared": 0
+          },
+          "funclet_bytes_by_reference": 0,
+          "funclet_bytes_exact": 0,
+          "funclet_bytes_total": 0,
+          "funclet_end_evidence": {},
+          "funclet_ranges": [],
+          "funclet_sections": 0,
+          "relocations_by_type": {
+            "REL32": 1
+          },
+          "self_rva_fields": 0,
+          "unwind": "none-in-range",
+          "unwind_bytes_exact": 0,
+          "unwind_chained_entries": 0,
+          "unwind_entries": 0
+        },
+        "detail": "all contract v2 checks passed",
+        "function": {
+          "build_id": "sse-steam-1-7-104",
+          "rva": 18416784,
+          "size": 5,
+          "symbol": "?Forward@LeafForward1190490@@QEAAPEAXXZ"
+        },
+        "reason": "all-checks-passed",
+        "recipe": {
+          "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+          "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/MD",
+            "/GS-",
+            "/EHsc",
+            "/GR",
+            "/fp:precise",
+            "/Gy"
+          ],
+          "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+        },
+        "report_schema": 1,
+        "result": "pass",
+        "source": {
+          "path": "reconstruction/leaves/LeafForward1190490.cpp",
+          "source_revision": "a9e1e3d129ffea472613a5b7331118dd1a282ec25e02727e50a0ff4234c4c9ad"
+        },
+        "symbol_map_sha256": "2813d23cd812312c7ec47a81bdb0c4a0b25f972e752bc3d4c69ee24f0e6b5f8d",
+        "target": {
+          "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+          "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
+        },
+        "task_id": "sse-steam-1-7-104-0x1190490"
+      }
+    }
+  ],
+  "source": {
+    "compiled": "reconstruction/leaves/LeafForward1190490.cpp",
+    "digest": "a9e1e3d129ffea472613a5b7331118dd1a282ec25e02727e50a0ff4234c4c9ad",
+    "digest_method": "tu-sha256-v1",
+    "translation_unit": [
+      "reconstruction/leaves/LeafForward1190490.cpp",
+      "reconstruction/leaves/LeafForward1190490.h"
+    ]
+  },
+  "symbol_map": {
+    "path": "reports/sse-steam-1-7-104/unit-symbols/2813d23cd812312c7ec47a81bdb0c4a0b25f972e752bc3d4c69ee24f0e6b5f8d.json",
+    "sha256": "2813d23cd812312c7ec47a81bdb0c4a0b25f972e752bc3d4c69ee24f0e6b5f8d"
+  },
+  "toolchain_pin": {
+    "path": "tools/verifier/pinned.sha256",
+    "sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  }
+}
