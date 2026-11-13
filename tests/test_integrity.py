@@ -14,8 +14,12 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from check import ROOT, check_git, index_blob, inspect_payload, validate
+from check_source_digest import source_digest_cache
 from fingerprint import fingerprint
 from build_site import render
+
+# Each validation reads a fixed include namespace, as the production checker does.
+validate = source_digest_cache()(validate)
 
 
 class IntegrityTests(unittest.TestCase):

@@ -5,6 +5,7 @@ import json
 from string import Template
 import subprocess
 from check import ROOT, load
+from check_source_digest import source_digest_cache
 import cost_ledger
 import build_model_trend
 
@@ -125,6 +126,7 @@ def render_join(data, revision):
         updated=escape(data['updated_at']), revision=escape(revision))
 
 
+@source_digest_cache()
 def main():
     data = load()
     try:
