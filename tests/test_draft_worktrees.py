@@ -169,6 +169,59 @@ class DraftWorktrees(unittest.TestCase):
         self.assertEqual((tree / self.unit['sources'][-1]).read_text(), '// prepared Foo.cpp\n')
         self.assertEqual((self.root / self.unit['sources'][-1]).read_text(), 'int a;\n')
 
+    def test_missing_unit_map_and_history_are_carried_without_shared_source(self):
+        task = drafts.read(self.directory / 'task.json')
+        rel = f'reports/{BUILD}/unit-symbols/seed.json'
+        task['symbols'] = rel
+        drafts.save(self.directory / 'task.json', task)
+        payload = {'schema': 1, 'build_id': BUILD, 'symbols': {fx.FUNCTION: {'rva': 0x1000}}, 'folds': []}
+        drafts.save(self.root / rel, payload)
+        from symbol_map import history_name
+        drafts.save(self.root / history_name(rel), {'schema': 1, 'versions': []})
+        tree = Path(self.claim()['draft']['tree'])
+        self.assertEqual(drafts.read(tree / rel), payload)
+        self.assertTrue((tree / history_name(rel)).is_file())
+        self.assertEqual(drafts.read(self.directory / 'symbols.json'), payload)
+        self.assertEqual(drafts.read(self.directory / 'task.json')['symbols'], 'symbols.json')
+        self.assertEqual(git(tree, 'diff', '--name-only'), '')
+
+    def test_missing_map_failure_rolls_back_claim_and_private_inputs(self):
+        task = drafts.read(self.directory / 'task.json')
+        task['symbols'] = f'reports/{BUILD}/unit-symbols/missing.json'
+        drafts.save(self.directory / 'task.json', task)
+        before = (self.directory / 'task.json').read_bytes()
+        with self.assertRaisesRegex(wq.QueueError, 'symbol-map dependency is missing'):
+            self.claim()
+        self.assertEqual((self.directory / 'task.json').read_bytes(), before)
+        self.assertFalse((self.q / 'claims/g-foo.lock').exists())
+        self.assertFalse((self.directory / 'draft-first.json').exists())
+
+    def test_later_integrated_unit_members_prevent_standalone_skeleton_replacement(self):
+        task = drafts.read(self.directory / 'task.json')
+        task['export'] = {'unit_already_records': []}
+        drafts.save(self.directory / 'task.json', task)
+        data = drafts.read(self.root / 'data/progress.json')
+        data['functions'][0]['status'] = 'matched'
+        drafts.save(self.root / 'data/progress.json', data)
+        git(self.root, 'add', 'data/progress.json')
+        git(self.root, 'commit', '-m', 'synthetic unit integration after preparation')
+        git(self.root, 'push', 'origin', 'main')
+        import unit_skeleton
+        with patch.object(unit_skeleton, 'skeleton_files', side_effect=AssertionError('must keep accepted unit')):
+            tree = Path(self.claim()['draft']['tree'])
+        self.assertEqual((tree / self.unit['sources'][-1]).read_text(), 'int a;\n')
+
+    def test_claim_refuses_and_parks_missing_offered_function_before_setup(self):
+        task = drafts.read(self.directory / 'task.json')
+        task['functions'].pop()
+        drafts.save(self.directory / 'task.json', task)
+        with self.assertRaisesRegex(wq.QueueError, 'offered functions absent.*0x1010'):
+            self.claim()
+        self.assertFalse((self.q / 'claims/g-foo.lock').exists())
+        self.assertFalse((self.directory / 'draft-first.json').exists())
+        self.assertEqual(drafts.read(self.q / 'holds/g-foo.json')['kind'], 'preparation-refusal')
+        self.assertIsNone(self.claim())
+
     def test_standalone_without_cached_skeleton_regenerates_over_base_stub(self):
         task = drafts.read(self.directory / 'task.json')
         task['export'] = {'unit_already_records': []}

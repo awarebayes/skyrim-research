@@ -56,6 +56,19 @@ class Queue(unittest.TestCase):
         self.assertEqual(sum(o == '.local/tasks/g/g-u0' for o in outs), 1, outs)
         self.assertTrue(all(o == '.local/tasks/g/g-u0' or o.startswith('EMPTY') for o in outs), outs)
 
+    def test_add_refuses_readding_a_unit_whose_task_lost_offered_coverage(self):
+        directory = self.tmp / '.local/tasks/coverage'
+        directory.mkdir(parents=True)
+        task = {'compiled': 'reconstruction/forms/Example.cpp', 'max_attempts': 4,
+                'functions': [{'rva': '0x1000'}, {'rva': '0x2000'}]}
+        path = directory / 'task.json'
+        path.write_text(json.dumps(task))
+        wq.add(self.q, [str(directory)], repo=self.tmp)
+        task['functions'].pop()
+        path.write_text(json.dumps(task))
+        with self.assertRaisesRegex(wq.QueueError, 'offered functions absent.*0x2000'):
+            wq.add(self.q, [str(directory)], repo=self.tmp)
+
     def test_two_processes_split_two_units(self):
         write_queue(self.q, 2)
         procs = [subprocess.Popen([sys.executable, str(TOOL), '--queue-dir', str(self.q), 'next', '--worker', f'w-{i}'],

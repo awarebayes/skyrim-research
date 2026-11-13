@@ -155,6 +155,13 @@ def claim(qdir, worker, t=None, profile=None, repo=None, refresh=False, tier="fi
         lock = tier_dir(qdir, 'claims', tier) / f'{u["key"]}.lock'
         c = read_claim(lock)
         root = queue_repo(qdir) if repo is None else repo
+        try:
+            check_coverage(root, u)
+        except QueueError as exc:
+            drafts.save(qdir / 'holds' / f'{u["key"]}.json',
+                        {'reason': str(exc), 'kind': 'preparation-refusal', 'tier': tier})
+            lock.unlink(missing_ok=True)
+            raise
         state = drafts.task_dir(root, u) / f'draft-{tier}.json'
         if not u.get('resumed') or c.get('draft_requested') or c.get('draft') or state.exists():
             try:
@@ -170,6 +177,21 @@ def claim(qdir, worker, t=None, profile=None, repo=None, refresh=False, tier="fi
     if u is not None and not u.get('resumed'):
         u['earlier_near_misses'] = set_aside_near_misses(u['dir'], t, queue_repo(qdir) if repo is None else repo)
     return u
+
+
+def check_coverage(root, unit):
+    """An offered function must be selectable by the assigned attempt command."""
+    path = Path(root) / unit['dir'] / 'task.json'
+    if not path.is_file() and not (Path(root) / '.git').exists():
+        return  # Non-repository scratch queues do not carry verifier tasks.
+    if not path.is_file():
+        raise QueueError(f'{unit["key"]}: missing task.json')
+    task = json.loads(path.read_text())
+    targets = {int(str(fn['rva']), 0) for fn in task['functions']}
+    missing = sorted({int(str(rv), 0) for rv in unit['functions']} - targets)
+    if missing:
+        raise QueueError(f'{unit["key"]}: offered functions absent from task.json; regenerate coverage: '
+                         + ', '.join(f'0x{rv:x}' for rv in missing))
 
 
 def blocked_functions(functions, external):
@@ -381,8 +403,12 @@ def add(qdir, dirs, repo=None, refresh=False):
                 out.write('# unit dir\tsources\tfunctions\tcounted attempts left\n')
             for d in units:
                 if d.name in have:
+                    check_coverage(repo, next(u for u in read_queue(qdir) if u['key'] == d.name))
                     continue
                 line, budget = unit_line(d, repo)
+                columns = line.split('\t')
+                check_coverage(repo, {'dir': columns[0], 'key': d.name,
+                                      'functions': columns[2].split(',')})
                 if blocked_functions(line.split('\t')[2].split(','), external):
                     continue
                 if budget <= 0:

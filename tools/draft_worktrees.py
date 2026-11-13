@@ -93,6 +93,34 @@ def copy_commit(root, commit, paths, tree):
         dest.write_bytes(git(root, 'show', f'{commit}:{rel}'))
 
 
+def carry_map_dependencies(root, tree, task):
+    """Seed missing unit namespaces without changing maps already pinned by the base checkout."""
+    from symbol_map import history_name
+    paths = {task['symbols']} if task.get('symbols', '').startswith('reports/') else set()
+    members = {int(str(fn['rva']), 0) for fn in task['functions']}
+    for fn in read(tree / 'data/progress.json')['functions']:
+        if fn['rva'] not in members or not fn.get('report'):
+            continue
+        record = read(tree / fn['report'], {})
+        if record.get('source', {}).get('compiled') == task['compiled']:
+            path = record.get('symbol_map', {}).get('path')
+            if path:
+                paths.add(path)
+    for rel in sorted(paths):
+        if not rel.startswith(f'reports/{task["build_id"]}/') or '..' in Path(rel).parts:
+            raise ValueError(f'unit map is not a build-relative report dependency: {rel}')
+        for name in (rel, history_name(rel)):
+            dest, source = tree / name, root / name
+            if dest.is_file():
+                continue
+            if not source.is_file():
+                if name == rel:
+                    raise ValueError(f'unit symbol-map dependency is missing: {rel}')
+                continue
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, dest)
+
+
 def create(root, unit, tier, owner):
     root = Path(root).resolve()
     if not (root / '.git').exists():
@@ -190,6 +218,11 @@ def install_prepared_skeleton(directory, tree, state):
     if state.get('carryover') or read(directory / 'harvest.json') or task.get('export', {}).get(
             'unit_already_records') != [] or any(f.get('role') == 'regression' for f in task['functions']):
         return
+    members = {int(str(fn['rva']), 0) for fn in task['functions']}
+    for fn in read(tree / 'data/progress.json')['functions']:
+        if fn['rva'] in members and fn['status'] == 'matched' and fn.get('report'):
+            if read(tree / fn['report'], {}).get('source', {}).get('compiled') == task['compiled']:
+                return
     sources = state['sources']
     cached = [directory / 'skeleton' / Path(rel).name for rel in sources]
     if all(p.is_file() for p in cached):
@@ -216,6 +249,7 @@ def _create(root, unit, tier, owner):
     state_path = directory / f'draft-{tier}.json'
     old = read(state_path)
     if old and old.get('ready') and Path(old['tree']).is_dir():
+        carry_map_dependencies(root, Path(old['tree']), read(directory / 'task.json'))
         carry_legacy_passes(root, unit, tier, old)
         # Resume a checkout initialized from a base stub only while it is still untouched.
         # Never replace a Drafter's edits when recovering an older setup state.
@@ -262,6 +296,7 @@ def _create(root, unit, tier, owner):
         git(root, 'worktree', 'add', '--quiet', '-b', branch, str(tree), 'origin/main')
         link_private(root, tree)
         label(tree, owner, unit['key'], 'draft', branch)
+        carry_map_dependencies(root, tree, read(directory / 'task.json'))
         prior = current(root, unit)
         if prior and not prior.get('integrated'):
             copy_commit(root, prior['commit'], prior['sources'], tree)
