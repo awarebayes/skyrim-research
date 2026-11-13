@@ -5,7 +5,7 @@
 <text x="20" y="42" class="h">Class map</text>
 <text x="820" y="42" class="rl mu" text-anchor="end">Skyrim Special Edition · build sse-steam-1-7-104</text>
 <text x="20" y="68" class="rl mu">One cell is one function, whatever its size. In-scope code with a known class: 32,932 of 89,973 functions (measured).</text>
-<rect x="20" y="79" width="11" height="11" fill="#3fb950"/><text x="38" y="89" class="rl mu">accepted byte match; 151 of the 2894 accepted functions are in a class named here</text>
+<rect x="20" y="79" width="11" height="11" fill="#3fb950"/><text x="38" y="89" class="rl mu">accepted byte match; 151 of the 2914 accepted functions are in a class named here</text>
 <text x="20" y="128" class="st">Bethesda engine (BS*)</text><text x="820" y="128" class="rl mu" text-anchor="end">6,948 functions</text>
 <rect x="20" y="138" width="800" height="24" fill="#6e7681"/><pattern id="g0" x="20" y="138" width="3.704" height="4.000" patternUnits="userSpaceOnUse"><path d="M3.204 0V4.000M0 3.500H3.704" stroke="#0d1117" stroke-width="1"/></pattern><rect x="20" y="138" width="800" height="24" fill="url(#g0)"/><text x="25" y="154.5" class="bl">BSTDerivedCreator&lt;&gt;</text>
 <rect x="20" y="164" width="275.4" height="24" fill="#6e7681"/><pattern id="g1" x="20" y="164" width="4.831" height="4.000" patternUnits="userSpaceOnUse"><path d="M4.331 0V4.000M0 3.500H4.831" stroke="#0d1117" stroke-width="1"/></pattern><rect x="20" y="164" width="275.4" height="24" fill="url(#g1)"/><text x="25" y="180.5" class="bl">NativeFunction1&lt;&gt;</text>
