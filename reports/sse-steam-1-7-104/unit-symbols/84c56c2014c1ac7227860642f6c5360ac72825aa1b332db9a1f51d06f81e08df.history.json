@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/84c56c2014c1ac7227860642f6c5360ac72825aa1b332db9a1f51d06f81e08df.json",
+  "versions": [
+    {
+      "sha256": "84c56c2014c1ac7227860642f6c5360ac72825aa1b332db9a1f51d06f81e08df",
+      "base": null,
+      "added": [
+        "?Unk_05@BGSEntryPointFunctionDataActivateChoice@@UEAAGXZ",
+        "?SetPerk@BGSEntryPointFunctionDataActivateChoice@@UEAAXPEAVBGSPerk@@@Z",
+        "?GetPerk@BGSEntryPointFunctionDataActivateChoice@@UEAAPEAVBGSPerk@@XZ"
+      ]
+    }
+  ]
+}

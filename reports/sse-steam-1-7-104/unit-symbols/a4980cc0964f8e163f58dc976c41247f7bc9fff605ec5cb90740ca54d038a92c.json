@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_0B@BGSSceneAction@@UEAAXXZ": {
+      "rva": 3846288,
+      "size": 5
+    },
+    "?Unk_10@BGSSceneAction@@UEAAXXZ": {
+      "rva": 3846432,
+      "size": 5
+    },
+    "?ClearFlags@BGSSceneAction@@UEAAXXZ": {
+      "rva": 3845984,
+      "size": 8
+    },
+    "?Unk_11@BGSSceneAction@@UEAAXXZ": {
+      "rva": 3846448,
+      "size": 33
+    },
+    "?Unk_02@BGSSceneAction@@UEAAXPEAV1@@Z": {
+      "rva": 3845920,
+      "size": 58
+    },
+    "?FindSceneActionEntry@@YAPEAXPEAXI@Z": {
+      "rva": 4010480,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_0B@BGSSceneAction@@UEAAXXZ",
+        "rva": "0x3ab090",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_10@BGSSceneAction@@UEAAXXZ",
+        "rva": "0x3ab120",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearFlags@BGSSceneAction@@UEAAXXZ",
+        "rva": "0x3aaf60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_11@BGSSceneAction@@UEAAXXZ",
+        "rva": "0x3ab130",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_02@BGSSceneAction@@UEAAXPEAV1@@Z",
+        "rva": "0x3aaf20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FindSceneActionEntry@@YAPEAXPEAXI@Z",
+        "rva": "0x3d31f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

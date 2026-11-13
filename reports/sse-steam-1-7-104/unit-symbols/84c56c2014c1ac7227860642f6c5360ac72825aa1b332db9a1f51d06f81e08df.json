@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_05@BGSEntryPointFunctionDataActivateChoice@@UEAAGXZ": {
+      "rva": 3730048,
+      "size": 5
+    },
+    "?SetPerk@BGSEntryPointFunctionDataActivateChoice@@UEAAXPEAVBGSPerk@@@Z": {
+      "rva": 3730064,
+      "size": 5
+    },
+    "?GetPerk@BGSEntryPointFunctionDataActivateChoice@@UEAAPEAVBGSPerk@@XZ": {
+      "rva": 3730080,
+      "size": 5
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_05@BGSEntryPointFunctionDataActivateChoice@@UEAAGXZ",
+        "rva": "0x38ea80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetPerk@BGSEntryPointFunctionDataActivateChoice@@UEAAXPEAVBGSPerk@@@Z",
+        "rva": "0x38ea90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetPerk@BGSEntryPointFunctionDataActivateChoice@@UEAAPEAVBGSPerk@@XZ",
+        "rva": "0x38eaa0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
