@@ -54,6 +54,7 @@ import accept_function as af  # noqa: E402
 import family_review as fr  # noqa: E402
 import profiles  # noqa: E402
 from source_digest import include_closure, tu_digest  # noqa: E402
+from symbol_map import history_name  # noqa: E402
 import work_queue as wq  # noqa: E402
 
 ROOT = TOOLS.parent
@@ -1577,7 +1578,14 @@ def carry_into_tree(root, tree, approved, by_rva):
         fn = by_rva[rva]
         refuse(fn.get('report'), f'{fn["id"]} names no match record in data/progress.json')
         files.add(fn['report'])
-        files.update(json.loads((root / fn['report']).read_text())['source']['translation_unit'])
+        record = json.loads((root / fn['report']).read_text())
+        files.update(record['source']['translation_unit'])
+        map_name = (record.get('symbol_map') or {}).get('path')
+        if map_name:
+            files.add(map_name)
+            history = history_name(map_name)
+            if (root / history).is_file():
+                files.add(history)
     for rel in sorted(files):
         src, dst = root / rel, tree / rel
         refuse(src.is_file(), f'{rel} is missing from the checkout')

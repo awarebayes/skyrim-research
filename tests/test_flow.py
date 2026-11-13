@@ -549,6 +549,25 @@ class FlowTests(unittest.TestCase):
         self.assertFalse(any('integrate' in t for _, t in self.actions()))
         self.assertTrue(any('brief triage --group' in t for _, t in self.actions()))
 
+    def test_integration_carries_record_symbol_map_and_history_only(self):
+        g = self.integrate_ready()
+        rel = f'reports/{BUILD}/unit-symbols/foo.json'
+        history = rel.replace('.json', '.history.json')
+        for name in (rel, history, f'reports/{BUILD}/unit-symbols/unrelated.json'):
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text('{}\n')
+        record = self.root / f'reports/{BUILD}/0x1000.json'
+        data = json.loads(record.read_text())
+        data['symbol_map'] = {'path': rel}
+        record.write_text(json.dumps(data))
+        flow.integrate(self.root, self.fdir, g['name'], python=sys.executable, ci_wait=0)
+        integ = flow.load_group(self.fdir, g['name'])['integrated']
+        self.assertIn(rel, integ['files'])
+        self.assertIn(history, integ['files'])
+        self.assertNotIn(f'reports/{BUILD}/unit-symbols/unrelated.json', integ['files'])
+        self.assertEqual(git(self.origin, 'show', f'main:{rel}'), '{}')
+
     def test_integration_passes_recorded_group_to_acceptance(self):
         probe = '''import os, json
 from pathlib import Path
