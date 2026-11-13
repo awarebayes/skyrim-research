@@ -1849,6 +1849,7 @@ def integration_base(root, branch, with_metadata=False):
            'metadata commits must descend from current origin; merge moving main first')
     commits = git(root, 'rev-list', f'{remote}..HEAD').splitlines()
     paths = set()
+    snapshots = {}
     for commit in commits:
         parents = git(root, 'rev-list', '--parents', '-n', '1', commit).split()
         refuse(len(parents) in (2, 3), 'metadata commits must be ordinary commits or public-base merges')
@@ -1861,6 +1862,17 @@ def integration_base(root, branch, with_metadata=False):
         refuse(names and not deleted and all(re.fullmatch(
             r'reports/[a-z0-9][a-z0-9-]*/(?:families/[0-9a-f]{64}|family-batches/[a-z0-9][a-z0-9-]*)\.json', p)
             for p in names), 'unpublished commits contain changes other than family metadata')
+        for path in names:
+            if path not in snapshots:
+                tip = subprocess.check_output(['git', 'show', f'HEAD:{path}'], cwd=root)
+                snapshots[path] = [tip]
+                if '/family-batches/' in path:
+                    planned = dict(fr.read(root, path), commitment=None, sample=None)
+                    snapshots[path].append((json.dumps(planned, indent=2, sort_keys=True,
+                                                       allow_nan=False) + '\n').encode())
+            historical = subprocess.check_output(['git', 'show', f'{commit}:{path}'], cwd=root)
+            refuse(historical in snapshots[path],
+                   'unpublished metadata history differs from the reviewed tip or canonical planned batch')
         paths.update(names)
     fr.validate_metadata(root)
     for path in paths:

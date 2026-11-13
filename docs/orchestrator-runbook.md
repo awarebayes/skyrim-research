@@ -190,6 +190,8 @@ An Engineer may combine the committed family metadata and sampled acceptance in 
 manifests or batch JSON, without deletions. The tip must descend from current origin; a merge may
 preserve moving main only through a parent already on origin, with only metadata added to that base.
 The metadata must validate and match its committed content. The seed/population and draw commits
+may contain only the exact tip snapshots or the canonical pre-draw batch (null commitment/sample),
+so an invalid intermediate blob cannot hide behind a repaired tip. These commits
 remain separate ancestors before acceptance; source, tooling and other unpublished changes are
 refused. All ordinary review, comparison, staged, clean-tree and CI gates still run.
 

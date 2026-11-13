@@ -741,7 +741,7 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         changed = copy.deepcopy(batch)
         changed['seed'] = 'different-uncommitted-seed'
         fr.write(self.root, self.batch_path, changed)
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(flow.FlowError, 'metadata history differs'):
             flow.integration_base(self.root, 'main', True)
         fr.write(self.root, self.batch_path, batch)
         self.write('tools/unpublished.py', 'value = 1\n')
@@ -770,6 +770,30 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.git('checkout', '--quiet', 'main')
         self.git('merge', '--quiet', '--no-edit', private)
         with self.assertRaisesRegex(flow.FlowError, 'parent already on origin'):
+            flow.integration_base(self.root, 'main', True)
+
+    def test_metadata_integration_refuses_repaired_invalid_history(self):
+        self.git('update-ref', 'refs/remotes/origin/main', 'HEAD')
+        batch = fr.read(self.root, self.batch_path)
+        invalid = dict(batch, unreviewed_content='synthetic private-content marker')
+        fr.write(self.root, self.batch_path, invalid)
+        self.commit('invalid intermediate metadata')
+        fr.write(self.root, self.batch_path, batch)
+        self.commit('repair tip metadata')
+        fr.validate_metadata(self.root)
+        with self.assertRaisesRegex(flow.FlowError, 'metadata history differs'):
+            flow.integration_base(self.root, 'main', True)
+
+    def test_metadata_integration_refuses_repaired_valid_but_unreviewed_history(self):
+        self.git('update-ref', 'refs/remotes/origin/main', 'HEAD')
+        family = fr.read(self.root, self.family_path)
+        changed = dict(family, paused=True, pause_reason='synthetic unreviewed-content marker')
+        fr.write(self.root, self.family_path, changed)
+        self.commit('unreviewed intermediate family text')
+        fr.write(self.root, self.family_path, family)
+        self.commit('restore reviewed tip')
+        fr.validate_metadata(self.root)
+        with self.assertRaisesRegex(flow.FlowError, 'metadata history differs'):
             flow.integration_base(self.root, 'main', True)
 
     def test_metadata_integration_refuses_deletions(self):
