@@ -45,6 +45,11 @@ python3 tools/contrib.py compare    # compile and compare locally; repeat until 
 python3 tools/contrib.py submit     # open the pull request (source and a sanitized summary only)
 ```
 
+The [claim issues](https://github.com/awarebayes/skyrim-research/issues?q=is%3Aopen+label%3Aclaim)
+show work already taken by contributors and the project. `contrib.py next` respects live batch
+claims; `claim` accepts multiple RVAs, `--class`, `--list` and `--range` (see
+[Claims](docs/contributing-agent.md#claims)).
+
 Or open a coding agent in the clone and say *"help me match one function; follow
 docs/contributing-agent.md"*. The helper asks you only for your game's path and to accept
 Microsoft's compiler licence yourself; your system may also ask for your password (`sudo`) or, on

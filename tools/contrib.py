@@ -704,6 +704,9 @@ def write_pack(ctx, exe, fn, names):
     return dest, pack
 
 
+import claims as batch_claims  # noqa: E402
+
+
 # ------------------------------------------------------------------ GitHub claims
 
 class Offline(Exception):
@@ -751,19 +754,19 @@ class GitHub:
         """Open issues and pull requests whose title names an RVA: {rva: [item]}."""
         if getattr(self, '_items', None) is not None and not refresh:
             return self._items
-        out = {}
+        items = []
         for page in range(1, self.MAX_PAGES + 1):
             batch = self.api(f'repos/{self.repo}/issues?state=open&per_page=100&page={page}')
             if page == self.MAX_PAGES and len(batch) == 100:
                 raise Offline(f'more than {100 * self.MAX_PAGES} open items; claims cannot all be checked')
             for it in batch:
-                for m in RVA_TOKEN.finditer(it.get('title') or ''):
-                    out.setdefault(int(m.group(1), 16), []).append({
-                        'number': it['number'], 'title': it['title'], 'url': it.get('html_url'),
-                        'author': (it.get('user') or {}).get('login'), 'updated_at': it.get('updated_at'),
-                        'pull_request': 'pull_request' in it})
+                parsed = batch_claims.parse_issue(it)
+                if parsed['entries']:
+                    it['updated_at'] = batch_claims.activity(self.api, self.repo, it)
+                    items.append(batch_claims.parse_issue(it))
             if len(batch) < 100:
                 break
+        out = batch_claims.ClaimIndex(items)
         self._items = out
         return out
 
@@ -782,12 +785,21 @@ class GitHub:
         gh = self.gh()
         if not gh:
             return None
-        for labels in (['--label', 'claim'], []):
-            proc = self.ctx.run([gh, 'issue', 'create', '--repo', self.repo, '--title', title, '--body', body, *labels],
-                                capture_output=True, text=True)
-            if proc.returncode == 0:
-                return proc.stdout.strip().splitlines()[-1]
-        raise Stop(NETWORK, f'gh issue create failed: {proc.stderr.strip()[:200]}')
+        if len(body) >= batch_claims.BODY_LIMIT:
+            raise Stop(USAGE, 'refusing issue body at or above 60,000 characters')
+        label = self.ctx.run([gh, 'label', 'create', 'claim', '--repo', self.repo, '--color', '1d76db',
+                              '--description', 'Function work claims', '--force'], capture_output=True, text=True)
+        if label.returncode:
+            raise Stop(NETWORK, 'cannot create or verify the claim label')
+        me = self.user()
+        if not me:
+            raise Stop(USAGE, 'GitHub login is unknown')
+        proc = self.ctx.run([gh, 'issue', 'create', '--repo', self.repo, '--title', title,
+                             '--body-file', '-', '--label', 'claim', '--assignee', me],
+                            input=body, capture_output=True, text=True)
+        if proc.returncode == 0:
+            return proc.stdout.strip().splitlines()[-1]
+        raise Stop(NETWORK, 'gh issue create failed')
 
     def new_issue_link(self, title, body):
         q = urllib.parse.urlencode({'template': 'claim.yml', 'title': title, 'body': body})
@@ -820,7 +832,7 @@ def claim_state(items, me, now=None, days=CLAIM_DAYS):
     now = now or datetime.now(timezone.utc)
     mine, fresh, stale = [], [], []
     for it in items:
-        if me and it.get('author') == me:
+        if me and me in (it.get('assignees') or [it.get('author')]):
             mine.append(it)
             continue
         try:
@@ -1421,7 +1433,12 @@ def cmd_next(ctx, args):
     data = inventory(ctx.repo)
     claimed, online = set(), True
     try:
-        claimed = set(ctx.github().open_items())
+        index = ctx.github().open_items()
+        me = ctx.github().user()
+        claimed = {f['rva'] for f in data['functions']
+                   if batch_claims.claimed(index, f['rva'], me) and
+                   any(it.get('build_id') in (None, f['build_id']) for it in
+                       batch_claims.claimed(index, f['rva'], me))}
     except Offline:
         online = False
     claimed |= {parse_rva(k) for k in local_claims(ctx)}
@@ -1436,83 +1453,137 @@ def cmd_next(ctx, args):
     return OK, {'candidates': rows, 'claims_checked': online}, f'{ctx.cli} claim {rows[0]["rva"]}'
 
 
-def claim_title(fn):
-    return f'claim: {fn["build_id"]} 0x{fn["rva"]:x} {fn.get("name") or ""}'.strip()
-
-
-def claim_body(fn):
-    return (f'Function: `{fn["build_id"]}` RVA `0x{fn["rva"]:x}`, {fn["size"]} bytes, name `{fn.get("name")}` '
-            f'({fn.get("name_origin")}, unverified).\n\n'
-            f'Claimed with `tools/contrib.py claim`. The claim lapses after {CLAIM_DAYS} days without activity on this '
-            'issue or its pull request; anyone may then take it over. Close this issue to give the function back.\n\n'
-            'No game files, bytes, disassembly or decompiler output belong in this issue.')
+def claim_selection(ctx, args, data):
+    values = getattr(args, 'rva', []) or []
+    values = [values] if isinstance(values, str) else list(values)
+    for file in getattr(args, 'lists', []) or []:
+        for line in Path(file).read_text().splitlines():
+            if line.strip() and not line.lstrip().startswith('#'):
+                values.append(line.split()[0])
+    addresses = {parse_rva(v) for v in values}
+    for cls in getattr(args, 'classes', []) or []:
+        selected = [f for f in data['functions'] if (f.get('name') or '').rsplit('::', 1)[0] == cls
+                    and f['status'] != 'matched']
+        if not selected:
+            raise Stop(USAGE, f'class {cls} has no unmatched functions')
+        addresses.update(f['rva'] for f in selected)
+    ranges = []
+    for value in getattr(args, 'ranges', []) or []:
+        try:
+            start, end = map(parse_rva, value.split('-', 1))
+        except (ValueError, Stop):
+            raise Stop(USAGE, 'range must be 0x<start>-0x<end>') from None
+        if end <= start:
+            raise Stop(USAGE, 'range end must be greater than start')
+        ranges.append((start, end))
+        addresses.update(f['rva'] for f in data['functions'] if start <= f['rva'] < end and f['status'] != 'matched')
+    if not addresses:
+        raise Stop(USAGE, 'select RVAs, --class, --list or --range')
+    merged = []
+    for a, b in sorted(ranges):
+        if merged and a <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(b, merged[-1][1]))
+        else:
+            merged.append((a, b))
+    ranges = merged
+    functions = []
+    for address in sorted(addresses):
+        fn = find_function(data, address)
+        if fn is None:
+            raise Stop(USAGE, f'0x{address:x} is not in data/progress.json')
+        if fn['status'] == 'matched':
+            raise Stop(USAGE, f'0x{address:x} is already matched', f'{ctx.cli} next')
+        functions.append(fn)
+    entries = ranges + [(r, r + 1) for r in sorted(addresses) if not any(a <= r < b for a, b in ranges)]
+    return functions, entries
 
 
 def cmd_claim(ctx, args):
     data = inventory(ctx.repo)
-    rva = parse_rva(args.rva)
-    fn = find_function(data, rva)
-    if fn is None:
-        raise Stop(USAGE, f'0x{rva:x} is not in data/progress.json', f'{ctx.cli} next')
-    if fn['status'] == 'matched':
-        raise Stop(USAGE, f'0x{rva:x} is already matched', f'{ctx.cli} next')
+    functions, entries = claim_selection(ctx, args, data)
+    build = functions[0]['build_id']
+    addresses = [f['rva'] for f in functions]
+    first = addresses[0]
     gh = ctx.github()
     try:
-        items = gh.open_items().get(rva, [])
+        index = gh.open_items()
     except Offline as exc:
         if not args.offline_ok:
             raise Stop(NETWORK, f'cannot reach GitHub to check claims ({exc})',
-                       f'{ctx.cli} claim 0x{rva:x} when online, or --offline-ok to start unclaimed')
-        save_local_claim(ctx, rva, {'status': 'unpublished', 'url': None})
+                       f'{ctx.cli} claim 0x{first:x} when online, or --offline-ok to start unclaimed')
+        for address in addresses:
+            save_local_claim(ctx, address, {'status': 'unpublished', 'url': None})
         ctx.say('WARNING: claim recorded locally only; others cannot see it. Run claim again when online.')
-        return OK, {'rva': f'0x{rva:x}', 'claim': 'unpublished'}, f'{ctx.cli} start 0x{rva:x}'
+        return OK, {'rva': f'0x{first:x}', 'claim': 'unpublished'}, f'{ctx.cli} start 0x{first:x}'
     if getattr(args, 'github_user', None):
         save_config(ctx, github_user=args.github_user)
     me = gh.user()
-    if me is None and items:
-        raise Stop(USAGE, f'0x{rva:x} has open claims or pull requests and your GitHub login is unknown, so it '
-                   'cannot tell whether one is yours', f'{ctx.cli} claim 0x{rva:x} --github-user <your-login>',
-                   claims=items)
+    def overlapping(idx):
+        if isinstance(idx, batch_claims.ClaimIndex):
+            return [it for it in batch_claims.ClaimIndex(idx.records, build).overlaps(entries, active=False)]
+        result = []
+        for address in addresses:
+            for it in idx.get(address, []):
+                if it not in result:
+                    result.append(it)
+        return result
+    items = overlapping(index)
+    if not me and items:
+        raise Stop(USAGE, 'GitHub login is unknown; cannot tell whether an existing claim is yours',
+                   f'{ctx.cli} claim 0x{first:x} --github-user <your-login>', claims=items)
     mine, fresh, stale = claim_state(items, me)
-    if mine:
-        save_local_claim(ctx, rva, {'status': 'published', 'url': mine[0]['url']})
-        ctx.say(f'already yours: {mine[0]["url"]}')
-        return OK, {'rva': f'0x{rva:x}', 'claim': mine[0]['url']}, f'{ctx.cli} start 0x{rva:x}'
     if fresh:
-        raise Stop(CLAIMED, f'0x{rva:x} is claimed: ' + ', '.join(f'{i["url"]} by {i["author"]}' for i in fresh),
+        raise Stop(CLAIMED, 'scope is claimed: ' + ', '.join(f'#{i["number"]} {i["url"]} by {i["author"]}' for i in fresh),
                    f'{ctx.cli} next', claims=fresh)
     if stale and not args.take_over:
-        raise Stop(CLAIMED, f'0x{rva:x} has a lapsed claim ({stale[0]["url"]}, no activity for {CLAIM_DAYS} days)',
-                   f'{ctx.cli} claim 0x{rva:x} --take-over', claims=stale)
-    for it in stale:
-        gh.comment(it['number'], f'Taking over 0x{rva:x}: no activity for {CLAIM_DAYS} days (tools/contrib.py).')
-    title, body = claim_title(fn), claim_body(fn)
-    url = gh.create_issue(title, body)
-    if url:
-        save_local_claim(ctx, rva, {'status': 'published', 'url': url})
-        # Two people can file in the same minute; the older open claim by someone else wins.
+        raise Stop(CLAIMED, f'lapsed claim #{stale[0]["number"]}; use --take-over',
+                   f'{ctx.cli} claim 0x{first:x} --take-over', claims=stale)
+    ranges_covered = all(any(a <= start and end <= b for it in mine for a, b in it.get('entries', []))
+                         for start, end in entries if end > start + 1)
+    if mine and ranges_covered and all(any(it in mine for it in index.get(address, [])) for address in addresses):
+        for address in addresses:
+            save_local_claim(ctx, address, {'status': 'published', 'url': mine[0]['url']})
+        ctx.say(f'already yours: {mine[0]["url"]}')
+        return OK, {'rva': f'0x{first:x}', 'claim': mine[0]['url']}, f'{ctx.cli} start 0x{first:x}'
+    public = batch_claims.git_json(ctx.repo)
+    counts = {e: sum(e[0] <= f['rva'] < e[1] and f['build_id'] == build for f in data['functions']) for e in entries}
+    plans = batch_claims.parts(build, entries, public, me or 'claimant', counts=counts)
+    urls, links = [], []
+    for title, text, chunk in plans:
+        url = gh.create_issue(title, text)
+        if not url:
+            links.append(gh.new_issue_link(title, text))
+            continue
+        urls.append(url)
         try:
-            after = gh.open_items(refresh=True).get(rva, [])
+            after = overlapping(gh.open_items(refresh=True))
         except Offline:
             after = []
-        rivals = [i for i in after if i['url'] != url and i.get('author') != me and not i['pull_request']
-                  and i in claim_state(after, me)[1] and int(i['number']) < issue_number(url)]
+        rivals = [i for i in claim_state(after, me)[1] if i['url'] != url and int(i['number']) < issue_number(url)]
         if rivals:
-            gh.close(issue_number(url), f'Withdrawn: {rivals[0]["url"]} claimed 0x{rva:x} first.')
-            claims = local_claims(ctx)
-            claims.pop(f'0x{rva:x}', None)
-            (ctx.private / 'claims.json').write_text(json.dumps(claims, indent=2, sort_keys=True) + '\n')
-            raise Stop(CLAIMED, f'0x{rva:x} was claimed first by {rivals[0]["author"]}: {rivals[0]["url"]}; '
-                       'your claim issue was withdrawn', f'{ctx.cli} next', claims=rivals)
+            for created in urls:
+                gh.close(issue_number(created), f'Withdrawn: {rivals[0]["url"]} claimed the overlapping scope first.')
+            saved = local_claims(ctx)
+            saved = {key: value for key, value in saved.items() if value.get('url') not in urls}
+            ctx.private.mkdir(parents=True, exist_ok=True)
+            (ctx.private / 'claims.json').write_text(json.dumps(saved) + '\n')
+            raise Stop(CLAIMED, f'older claim #{rivals[0]["number"]} won; your claim was withdrawn', claims=rivals)
+        for address in addresses:
+            if any(a <= address < b for a, b in chunk):
+                save_local_claim(ctx, address, {'status': 'published', 'url': url})
         ctx.say(f'claimed: {url}')
-        return OK, {'rva': f'0x{rva:x}', 'claim': url}, f'{ctx.cli} start 0x{rva:x}'
-    # Without gh nothing is filed yet: the link only prefills an issue. It is not recorded as a claim
-    # until the issue exists, which `claim` finds on its next run (it is then "already yours").
-    link = gh.new_issue_link(title, body)
-    ctx.say('gh is not signed in; open this link to file the claim, then run claim again to confirm it:')
-    ctx.say(link)
-    return OK, {'rva': f'0x{rva:x}', 'claim': 'link-only', 'link': link}, \
-        f'open the link, file the issue, then {ctx.cli} claim 0x{rva:x}'
+    if links:
+        ctx.say('gh is not signed in; file these issues, then run claim again:')
+        for link in links:
+            ctx.say(link)
+        return OK, {'rva': f'0x{first:x}', 'claim': 'link-only', 'link': links[0], 'links': links}, 'file the issues and run claim again'
+    for it in stale:
+        for offset in range(0, len(entries), 500):
+            markers = '\n'.join(f'<!-- skyrim-claim-takeover-v1 0x{a:x}-0x{b:x} -->'
+                                for a, b in entries[offset:offset + 500])
+            gh.comment(it['number'], f'Taking over overlapping functions after {CLAIM_DAYS} days without activity. '
+                       f'New claim: #{issue_number(urls[0])}.\n' + markers)
+    return OK, {'rva': f'0x{first:x}', 'claim': urls[0], 'claims': urls}, f'{ctx.cli} start 0x{first:x}'
 
 
 def cmd_release(ctx, args):
@@ -1523,6 +1594,9 @@ def cmd_release(ctx, args):
     try:
         me = gh.user()
         for it in gh.open_items().get(rva, []):
+            if len(it.get('entries', [])) > 1 or any(b > a + 1 for a, b in it.get('entries', [])):
+                ctx.say(f'batch #{it["number"]}: edit its scope on GitHub or close the whole issue to release it')
+                continue
             if it['author'] == me and not it['pull_request'] and gh.close(it['number'], f'Released: {reason}'):
                 closed.append(it['url'])
     except Offline:
@@ -2024,7 +2098,10 @@ def parser():
     s.add_argument('--count', type=int, default=5)
     s.add_argument('--max-size', type=int, default=64)
     s = sub.add_parser('claim')
-    s.add_argument('rva')
+    s.add_argument('rva', nargs='*')
+    s.add_argument('--class', dest='classes', action='append', default=[])
+    s.add_argument('--list', dest='lists', action='append', default=[])
+    s.add_argument('--range', dest='ranges', action='append', default=[])
     s.add_argument('--take-over', action='store_true')
     s.add_argument('--offline-ok', action='store_true')
     s.add_argument('--github-user', help='your GitHub login, when gh is not signed in')

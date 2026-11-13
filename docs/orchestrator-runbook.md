@@ -51,10 +51,29 @@ A Codex worker that should follow a runbook gets the runbook line: Reviewer
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`; Drafter
 `Read docs/drafter-runbook.md in this repository and follow it exactly. Your worker label is <label>.`
 
+After a successful push, both `flow.py integrate` and `integrate-family` run claim synchronization.
+A failure prints a warning and leaves integration successful; retry with `python3 tools/claims.py sync`.
+Sync counts only acceptances on `origin/main`, updates the accepted count, and comments and closes
+an issue when every member is accepted. It leaves unknown range members open. Fetch origin before
+running sync manually. Issues without the new claim block are left alone.
+
 ## The loop
 
 1. `python3 tools/flow.py session-start --profile <profile>` (once per session). It prints which
-   model does each role.
+   model does each role. Then run `python3 tools/claims.py publish --dry-run` and
+   `python3 tools/claims.py publish` to expose every queued, drafted and confirmed unaccepted
+   function on GitHub. This publishes only build ids, RVAs, counts and names from committed
+   inventory, assigned to the authenticated GitHub user. It never publishes task paths or notes.
+   `publish` is idempotent and groups work by queue, family or static cluster (at most 15 issues).
+   Additional family checkouts and static member/range manifests may be supplied with
+   `--family-root` and `--cluster-list`, or ignored `.local/claims-config.json` settings
+   `family_roots` and `cluster_lists`. A cluster manifest holds `build_id` and `clusters`, each
+   with `members` (RVA values or objects with `rva`) and optional `ranges` (`start`, `end`).
+   Ranges must cover the member starts; use only ranges known not to reserve unrelated work.
+   Set `project_login` in that local config only to override the authenticated user's login.
+   `work_queue.py add` and `next` skip units containing other people's live claims, reporting the
+   issue; their `--refresh` option bypasses the ten-minute cache. Offline reads warn and use stale
+   claims without stopping the pipeline.
 2. `python3 tools/flow.py next-actions`. It prints numbered lines, each `[stop]`, `[run]`,
    `[dispatch]`, `[wait]`, `[end]` or `[done]`.
 3. Do every `[stop]` line first: report it (see "Stop and escalate"), and do nothing else for the

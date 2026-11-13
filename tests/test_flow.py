@@ -10,10 +10,12 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import flow  # noqa: E402
+import claims as github_claims  # noqa: E402
 from source_digest import tu_digest  # noqa: E402
 import work_queue as wq  # noqa: E402
 
@@ -122,6 +124,12 @@ class Repo:
 
 class FlowTests(unittest.TestCase):
     def setUp(self):
+        claim_sync = patch('claims.sync_safe')
+        self.claim_sync = claim_sync.start()
+        self.addCleanup(claim_sync.stop)
+        claim_cache = patch('claims.cached', return_value=(github_claims.ClaimIndex(), None))
+        claim_cache.start()
+        self.addCleanup(claim_cache.stop)
         self.tmp = Path(tempfile.mkdtemp()).resolve()
         self.repo = Repo(self.tmp)
         self.root, self.fdir, self.origin = self.repo.root, self.repo.fdir, self.repo.origin
@@ -658,6 +666,12 @@ assert group['profile'] == 'cheap'
 
 class QueueStates(unittest.TestCase):
     def setUp(self):
+        claim_sync = patch('claims.sync_safe')
+        self.claim_sync = claim_sync.start()
+        self.addCleanup(claim_sync.stop)
+        claim_cache = patch('claims.cached', return_value=(github_claims.ClaimIndex(), None))
+        claim_cache.start()
+        self.addCleanup(claim_cache.stop)
         self.tmp = Path(tempfile.mkdtemp()).resolve()
         self.repo = Repo(self.tmp, confirmed=())
         self.root, self.fdir, self.origin = self.repo.root, self.repo.fdir, self.repo.origin
@@ -825,6 +839,12 @@ class GeneratorConfirmTests(unittest.TestCase):
     """Selection preflight produces normal confirm tasks; it never runs a host."""
 
     def setUp(self):
+        claim_sync = patch('claims.sync_safe')
+        self.claim_sync = claim_sync.start()
+        self.addCleanup(claim_sync.stop)
+        claim_cache = patch('claims.cached', return_value=(github_claims.ClaimIndex(), None))
+        claim_cache.start()
+        self.addCleanup(claim_cache.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.repo = Repo(Path(self.tmp.name))

@@ -1732,6 +1732,8 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
             save_group(fdir, g)
             remove_tree(root, tree)
             raise
+        import claims as github_claims
+        github_claims.sync_safe(root)
         integ['pushed'] = utc()
         save_group(fdir, g)
         log_event(fdir, 'integrated', group=name, accepted=integ['accepted'], commit=integ['commit'])

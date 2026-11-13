@@ -43,6 +43,8 @@ import re
 import sys
 import time
 
+import claims as github_claims
+
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_DIR = REPO / '.local/queue/small'
 # A session that has not reported within this time is treated as dead. Small units take a few
@@ -136,21 +138,31 @@ def set_aside_near_misses(unit_dir, t, repo):
     return dest
 
 
-def claim(qdir, worker, t=None, profile=None, repo=None):
+def claim(qdir, worker, t=None, profile=None, repo=None, refresh=False):
     """Claim a unit for `worker`: its own unfinished claim first, then the first unclaimed unit,
     then the first stale claim. Returns the unit dict, or None when nothing is left to claim.
     Relative unit dirs resolve against `repo`, by default the queue's own (queue_repo)."""
     if not LABEL.fullmatch(worker or ''):
         raise QueueError('--worker must be a label like luna56-medium-1 (letters, digits, . _ -)')
     t = now() if t is None else t
-    u = _claim(qdir, worker, t, profile)
+    u = _claim(qdir, worker, t, profile, external=github_claims.project_claims(queue_repo(qdir) if repo is None else repo, refresh))
     if u is not None and not u.get('resumed'):
         u['earlier_near_misses'] = set_aside_near_misses(u['dir'], t, queue_repo(qdir) if repo is None else repo)
     return u
 
 
-def _claim(qdir, worker, t, profile):
-    units = read_queue(qdir)
+def blocked_functions(functions, external):
+    index, login = external
+    blocked = False
+    for value in functions:
+        for item in github_claims.claimed(index, github_claims.rva(value), login):
+            print(f'skip {value}: claim #{item["number"]} by {item["author"]}', file=sys.stderr)
+            blocked = True
+    return blocked
+
+
+def _claim(qdir, worker, t, profile, external):
+    units = [u for u in read_queue(qdir) if not blocked_functions(u['functions'], external)]
     claims, done = qdir / 'claims', qdir / 'done'
     claims.mkdir(parents=True, exist_ok=True)
     done.mkdir(parents=True, exist_ok=True)
@@ -267,7 +279,7 @@ def unit_line(unit_dir, repo):
     return f'{rel}\t{cpp[:-4]}.h,{cpp}\t{functions}\t{budget}', budget
 
 
-def add(qdir, dirs, repo=None):
+def add(qdir, dirs, repo=None, refresh=False):
     """Append unit task dirs (a group dir adds all its units) that are not queued yet. Relative
     dirs resolve against `repo`, by default the queue's own (queue_repo)."""
     repo = queue_repo(qdir) if repo is None else Path(repo)
@@ -284,6 +296,7 @@ def add(qdir, dirs, repo=None):
             units.append(d)
         else:
             raise QueueError(f'{arg} has neither task.json nor group.json')
+    external = github_claims.project_claims(repo, refresh)
     added = []
     with locked(qdir / 'results.lock'):
         with open(path, 'a') as out:
@@ -293,6 +306,8 @@ def add(qdir, dirs, repo=None):
                 if d.name in have:
                     continue
                 line, budget = unit_line(d, repo)
+                if blocked_functions(line.split('\t')[2].split(','), external):
+                    continue
                 if budget <= 0:
                     raise QueueError(f'{d}: no counted attempts left; raise max_attempts in its task.json first')
                 out.write(line + '\n')
@@ -353,6 +368,7 @@ def parser():
     p.add_argument('--queue-dir', help='default $SKYRIM_QUEUE_DIR or .local/queue/small')
     sub = p.add_subparsers(dest='cmd', required=True)
     n = sub.add_parser('next', help='claim the next unit and print its unit dir (EMPTY when none is left)')
+    n.add_argument('--refresh', action='store_true', help='refresh GitHub claims cache')
     n.add_argument('--worker', required=True, help='model, effort and session number, e.g. luna56-medium-1')
     n.add_argument('--profile', choices=('cheap', 'full'), help='drafting profile (tools/profiles.py); recorded with the results')
     r = sub.add_parser('release', help='give back a claimed unit you will not work on')
@@ -365,6 +381,7 @@ def parser():
     sub.add_parser('status')
     sub.add_parser('stats')
     ad = sub.add_parser('add', help='append unit or group task dirs to the queue (queue order = order given)')
+    ad.add_argument('--refresh', action='store_true', help='refresh GitHub claims cache')
     ad.add_argument('dirs', nargs='+')
     for command in sub.choices.values():
         command.add_argument('--queue-dir', default=argparse.SUPPRESS,
@@ -377,7 +394,7 @@ def main(argv=None):
     qdir = queue_dir(a.queue_dir)
     try:
         if a.cmd == 'next':
-            u = claim(qdir, a.worker, profile=a.profile)
+            u = claim(qdir, a.worker, profile=a.profile, refresh=a.refresh)
             if u is None:
                 busy = sum(1 for state, _, _ in status(qdir) if state == 'claimed')
                 print('EMPTY' + (f' ({busy} unit(s) still claimed by other sessions)' if busy else ''))
@@ -409,7 +426,7 @@ def main(argv=None):
                               'functions': sum(len(u['functions']) for _, _, u in rows)}))
             return 0
         if a.cmd == 'add':
-            added = add(qdir, a.dirs)
+            added = add(qdir, a.dirs, refresh=a.refresh)
             print(f'added {len(added)} unit(s) to {qdir / "queue.tsv"}')
             return 0
         if a.cmd == 'stats':

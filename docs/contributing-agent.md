@@ -102,13 +102,35 @@ read Steam's account files. A Steam install made in October 2026 delivered exact
 
 ## Claims
 
-`claim` opens a GitHub issue titled `claim: <build> 0x<rva> <name>` (with `gh` signed in) or prints
-a prefilled link for the person to click; after they file it, run `claim` again so it is recorded
-(`--github-user <their login>` when `gh` is not signed in). Another open issue or pull request
-naming the same RVA blocks it (exit 6): pick another with `next`. If two claims are filed at the
-same time, the older one wins and `claim` withdraws the newer. A claim lapses after 14 days without
-activity; `claim --take-over` then takes it with a comment. Without network, `claim --offline-ok`
-lets you start, but nobody else can see the claim until you run `claim` again online.
+`claim` opens an assigned GitHub issue with the `claim` label. A claim may cover one function,
+hundreds of functions, several classes or half-open address ranges. For example:
+
+```sh
+python3 tools/contrib.py claim 0x1000 0x2000
+python3 tools/contrib.py claim --class Actor --class TESForm
+python3 tools/contrib.py claim --list functions.txt --range 0x1000-0x2000
+```
+
+List files hold one RVA per line, with optional names after it and `#` comment lines. A range
+includes every function starting at or above its start and below its end. Titles look like
+`claim: <build id> <classes or range> (<N> functions)`. Bodies have a `skyrim-claim-v1 <build id>`
+fenced block, one `0x<rva> [public name]` or `0x<start>-0x<end>` per line. Bodies stay below
+60,000 characters; large claims split into numbered parts. Names come only from the committed
+inventory, never from a local listing. Old single-function issue titles remain recognized.
+
+`next` excludes other people's live claims, including ranges and the project's own published
+queue claims. Any partial overlap with another person's live issue or PR is refused (exit 6)
+and names the issue. Overlap with your own claim is allowed. If claims race, the older issue
+wins and the newer claim is withdrawn. Claims lapse after 14 days without issue, comment or
+linked PR activity; `claim --take-over` records a takeover comment. With no network,
+`claim --offline-ok` records an unpublished local claim: run it again online to make it visible.
+Without signed-in `gh`, the helper prints prefilled issue links; file them, assign yourself and
+run `claim` again (`--github-user <login>` identifies you). Releasing one member of a batch does
+not close the entire batch: edit its scope or close the issue on GitHub.
+
+`python3 tools/claims.py list` shows live claims and accepted counts; `check 0x<rva> ...` checks
+specific addresses. Reads use an ignored `.local/claims-cache.json` with a ten-minute TTL;
+`--refresh` forces a refresh. Offline project queue commands warn and use the stale cache.
 
 ## What is tested
 

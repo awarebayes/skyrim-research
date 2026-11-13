@@ -2362,7 +2362,10 @@ def open_claim_rvas():
         print(f'warning: contributor claims not checked ({exc}); compare the plan with open claim issues',
               file=sys.stderr)
         return set()
-    return {rva for rva, its in items.items() if contrib.claim_state(its, None)[1]}
+    import claims
+    me = ctx.github().user()
+    addresses = set(items) | {fn['rva'] for fn in contrib.inventory(ctx.repo)['functions']}
+    return {rva for rva in addresses if claims.claimed(items, rva, me)}
 
 
 def cmd_plan(args):
