@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/c5826cf71d7675c91912db8348418b134216904344105e4ba27e7eda657333ed.json",
+  "versions": [
+    {
+      "sha256": "c5826cf71d7675c91912db8348418b134216904344105e4ba27e7eda657333ed",
+      "base": null,
+      "added": [
+        "?GetEmotionType@BGSSceneActionDialogue@@UEBA?AW4EmotionType@@XZ",
+        "?GetEmotionValue@BGSSceneActionDialogue@@UEBAIXZ",
+        "?Loops@BGSSceneActionDialogue@@UEBA_NXZ",
+        "?FacesTarget@BGSSceneActionDialogue@@UEBA_NXZ",
+        "?Unk_0B@BGSSceneActionDialogue@@UEAAXXZ",
+        "??_GBGSSceneActionDialogue@@UEAAPEAXI@Z",
+        "?Unk_0B@BGSSceneActionBase@@UEAAXXZ",
+        "??_7BGSSceneActionDialogue@@6B@",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

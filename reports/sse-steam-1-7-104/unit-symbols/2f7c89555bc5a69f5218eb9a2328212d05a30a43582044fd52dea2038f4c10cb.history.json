@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/2f7c89555bc5a69f5218eb9a2328212d05a30a43582044fd52dea2038f4c10cb.json",
+  "versions": [
+    {
+      "sha256": "2f7c89555bc5a69f5218eb9a2328212d05a30a43582044fd52dea2038f4c10cb",
+      "base": null,
+      "added": [
+        "?SetCategoryAttenuation@BGSSoundCategory@@UEAAXG@Z",
+        "?SetCategoryFrequency@BGSSoundCategory@@UEAAXM@Z",
+        "?InitializeData@BGSSoundCategory@@UEAAXXZ",
+        "?Matches@BGSSoundCategory@@UEBA_NPEBVBSISoundCategory@@@Z"
+      ]
+    }
+  ]
+}

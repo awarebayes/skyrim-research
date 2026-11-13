@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetEmotionType@BGSSceneActionDialogue@@UEBA?AW4EmotionType@@XZ": {
+      "rva": 3846784,
+      "size": 4
+    },
+    "?GetEmotionValue@BGSSceneActionDialogue@@UEBAIXZ": {
+      "rva": 3846800,
+      "size": 4
+    },
+    "?Loops@BGSSceneActionDialogue@@UEBA_NXZ": {
+      "rva": 3847472,
+      "size": 7
+    },
+    "?FacesTarget@BGSSceneActionDialogue@@UEBA_NXZ": {
+      "rva": 3846816,
+      "size": 9
+    },
+    "?Unk_0B@BGSSceneActionDialogue@@UEAAXXZ": {
+      "rva": 3849456,
+      "size": 19
+    },
+    "??_GBGSSceneActionDialogue@@UEAAPEAXI@Z": {
+      "rva": 3846592,
+      "size": 43
+    },
+    "?Unk_0B@BGSSceneActionBase@@UEAAXXZ": {
+      "rva": 3846288,
+      "size": null
+    },
+    "??_7BGSSceneActionDialogue@@6B@": {
+      "rva": 25531776,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetEmotionType@BGSSceneActionDialogue@@UEBA?AW4EmotionType@@XZ",
+        "rva": "0x3ab280",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEmotionValue@BGSSceneActionDialogue@@UEBAIXZ",
+        "rva": "0x3ab290",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Loops@BGSSceneActionDialogue@@UEBA_NXZ",
+        "rva": "0x3ab530",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FacesTarget@BGSSceneActionDialogue@@UEBA_NXZ",
+        "rva": "0x3ab2a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0B@BGSSceneActionDialogue@@UEAAXXZ",
+        "rva": "0x3abcf0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSSceneActionDialogue@@UEAAPEAXI@Z",
+        "rva": "0x3ab1c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0B@BGSSceneActionBase@@UEAAXXZ",
+        "rva": "0x3ab090",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSSceneActionDialogue@@6B@",
+        "rva": "0x1859580",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SetCategoryAttenuation@BGSSoundCategory@@UEAAXG@Z": {
+      "rva": 3316192,
+      "size": 5
+    },
+    "?SetCategoryFrequency@BGSSoundCategory@@UEAAXM@Z": {
+      "rva": 3316080,
+      "size": 6
+    },
+    "?InitializeData@BGSSoundCategory@@UEAAXXZ": {
+      "rva": 3315600,
+      "size": 17
+    },
+    "?Matches@BGSSoundCategory@@UEBA_NPEBVBSISoundCategory@@@Z": {
+      "rva": 3315744,
+      "size": 64
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SetCategoryAttenuation@BGSSoundCategory@@UEAAXG@Z",
+        "rva": "0x3299e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetCategoryFrequency@BGSSoundCategory@@UEAAXM@Z",
+        "rva": "0x329970",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@BGSSoundCategory@@UEAAXXZ",
+        "rva": "0x329790",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Matches@BGSSoundCategory@@UEBA_NPEBVBSISoundCategory@@@Z",
+        "rva": "0x329820",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
