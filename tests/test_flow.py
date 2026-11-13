@@ -785,6 +785,12 @@ class QueueStates(unittest.TestCase):
         (q / 'queue.tsv').write_text('.local/tasks/g/g-foo\treconstruction/x/Foo.h,reconstruction/x/Foo.cpp\t0x1000,0x1010\t3\n'
                                      '.local/tasks/g/g-bar\treconstruction/x/Bar.cpp\t0x2000\t3\n')
         self.q = q
+        for unit in wq.read_queue(q):
+            directory = self.root / unit['dir']
+            directory.mkdir(parents=True)
+            (directory / 'task.json').write_text(json.dumps({
+                'compiled': unit['sources'][-1], 'symbols': 'symbols.json',
+                'functions': [{'rva': rva, 'symbol': 'Synthetic' + rva} for rva in unit['functions']]}))
 
     def tearDown(self):
         shutil.rmtree(self.tmp)
@@ -815,7 +821,7 @@ class QueueStates(unittest.TestCase):
                 wq.finish(q, '.local/tasks/g/g-foo', [json.dumps({
                     'rva': '0x1000', 'result': 'pass', 'attempts': 1})])
         unit = self.root / '.local/tasks/g/g-foo'
-        unit.mkdir(parents=True)
+        unit.mkdir(parents=True, exist_ok=True)
         task = unit / 'task.json'
         task.write_text(json.dumps({'symbols': 'symbols.json'}))
         original = task.read_bytes()
