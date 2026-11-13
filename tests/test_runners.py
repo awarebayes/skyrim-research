@@ -583,7 +583,7 @@ class AgentEndToEnd(unittest.TestCase):
         (bindir / 'cl').write_text(FAKE_CL)
         (bindir / 'cl').chmod(0o755)
         files = {}
-        for name in ('tools/compare.py', 'tools/pecoff.py', 'tools/source_digest.py',
+        for name in ('tools/compare_runtime.py', 'tools/compare_internal.py', 'tools/compare.py', 'tools/pecoff.py', 'tools/source_digest.py',
                      'tools/verifier/verify_function.py', 'tools/verifier/unit_build.py'):
             files[name] = ROOT / name
         pins = src / 'tools/verifier/pinned.sha256'
