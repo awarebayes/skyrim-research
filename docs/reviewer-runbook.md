@@ -140,6 +140,12 @@ source plausibility, source digest and report bindings. Check each member's name
 (public symbol source or labelled guess with confidence); neither a matching body nor a shared
 family establishes a name. Never infer target names from the template's name.
 
+For exact-row manifests, `python3 tools/review_packet.py --family-rows <manifest>` is a read-only
+inspection command that checks every row against current reproduced member bindings and hashes
+the complete row-to-member relation. Inspect its checks and limitations; it is a reading aid,
+not a provenance verdict or an independent extraction from the target. Review the pinned
+extraction method and all first-20 sources yourself as above.
+
 The first 20 also retain ordinary per-function approval records and the existing second-pass
 sampling safeguard. A combined family brief asks you to write their ordinary `.md` blocks and
 the family JSON in the same primary pass; use the task id in that combined brief for both. Their order and identities are frozen in `first_members` when the Engineer

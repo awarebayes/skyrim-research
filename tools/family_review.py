@@ -4,6 +4,7 @@ Private approvals stay in .local/reviews; public manifests contain only structur
 Git ordering is checked by the acceptance tool; CI checks the published bindings and draw.
 """
 import hashlib
+from functools import lru_cache
 import json
 import math
 from pathlib import Path
@@ -307,20 +308,37 @@ def private_approval(root, family, profile):
     return doc
 
 
+@lru_cache(maxsize=8)
+def _public_family_batch(family_blob, batch_blob):
+    """Validate shared metadata once per exact content pair, never per path or mtime.
+
+    Callers still read both files for every member and check all member-specific
+    bindings. The cached dictionaries are private and are only read by that check.
+    """
+    family = json.loads(family_blob.decode(), object_pairs_hook=unique_fields)
+    validate_family(family)
+    batch = json.loads(batch_blob.decode(), object_pairs_hook=unique_fields)
+    validate_batch(batch, family)
+    return family, batch, digest(batch)
+
+
 def validate_public_review(root, fn, record, review):
     evidence = review['family_evidence']
     require(isinstance(evidence, dict) and set(evidence) == {'family_path', 'batch_path', 'batch_sha256', 'member_sha256'},
             'invalid sanitized family evidence')
-    family = read(root, public_path(evidence['family_path'], f'reports/{fn["build_id"]}/families/'))
-    validate_family(family)
-    batch = read(root, public_path(evidence['batch_path'], f'reports/{fn["build_id"]}/family-batches/'))
+    family_path = public_path(evidence['family_path'], f'reports/{fn["build_id"]}/families/')
+    batch_path = public_path(evidence['batch_path'], f'reports/{fn["build_id"]}/family-batches/')
+    family, batch, batch_digest = _public_family_batch(
+        (Path(root) / family_path).read_bytes(), (Path(root) / batch_path).read_bytes())
     require(batch['family_path'] == evidence['family_path'], 'batch names another family')
-    validate_batch(batch, family, fn, record)
+    member_hash = member_digest(fn, record)
+    require(fn['id'] in batch['population'] and batch['members'][fn['id']] == member_hash,
+            'member differs from committed population')
     check_member(family, fn, record)
     require(fn['id'] not in batch['sample'], 'sampled member needs its own approving review')
     require(review['naming_findings'] == ['Family approval does not assess individual names.'],
             'family approval does not establish individual names')
-    require(evidence['batch_sha256'] == digest(batch) and evidence['member_sha256'] == member_digest(fn, record),
+    require(evidence['batch_sha256'] == batch_digest and evidence['member_sha256'] == member_hash,
             'sanitized family evidence digest mismatch')
     import accept_function as af
     require(af.reviewer_admitted(root, family['review']['reviewer_model'], family['review']['profile']),

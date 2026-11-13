@@ -407,11 +407,64 @@ def function_view(root, fn, record, shown):
     return out
 
 
+def family_rows(root, path):
+    """Read-only coverage audit, not a family approval or a new comparator result."""
+    import check
+    import family_review as fr
+    root = Path(root)
+    family = fr.read(root, path)
+    fr.validate_family(family, approved=family['review'] is not None)
+    ranges = family['parameter_ranges']
+    fr.require(set(ranges) == {'rows'}, 'row audit requires exact enumerated parameter rows')
+    source_lines = []
+    for field in ('template_source', 'parameter_source'):
+        src = family[field]
+        measured = hashlib.sha256((root / src['path']).read_bytes()).hexdigest()
+        fr.require(measured == src['sha256'], 'template or extraction source changed')
+        source_lines.append(f'{field}: {src["path"]} sha256 {measured}')
+    target = fr.read(root, 'builds/target.json')
+    data = fr.read(root, 'data/progress.json')
+    covered = {fr.digest(row): [] for row in ranges['rows']}
+    members = []
+    for fn in data['functions']:
+        record = record_of(root, fn)
+        if record is None or record.get('origin') != family['origin']:
+            continue
+        record = check.validate_match(fn, target, root)
+        fr.check_member(family, fn, record)
+        if fn['id'] in family['first_members']:
+            fr.require(fr.member_digest(fn, record) == family['first_members'][fn['id']],
+                       'frozen first-20 member binding changed')
+        params = record['family_parameters']
+        for key, expected in (('entry-rva', fn['rva']), ('size', fn['size'])):
+            if key in params:
+                fr.require(type(params[key]) is int and params[key] == expected,
+                           f'{fn["id"]}: parameter {key} disagrees with inventory')
+        row_hash = fr.digest(params)
+        fr.require(row_hash in covered, 'record parameters are not a permitted exact row')
+        covered[row_hash].append(fn['id'])
+        members.append(fn['id'])
+    missing = [row for row, ids in covered.items() if not ids]
+    fr.require(not missing, f'{len(missing)} permitted row(s) lack a current reproduced member')
+    fr.require(set(family['first_members']) <= set(members), 'first-20 member missing from row audit')
+    if all('entry-rva' in row for row in ranges['rows']):
+        fr.require(all(len(ids) == 1 for ids in covered.values()), 'entry-RVA row has multiple members')
+    return ['# Family exact-row audit (reading aid only)', *source_lines,
+            f'family spec sha256: {fr.digest(fr.spec(family))}',
+            f'permitted rows checked: {len(covered)}/{len(covered)}; current reproduced members: {len(members)}',
+            f'row-to-member bindings sha256: {fr.digest(covered)}',
+            'Every row has current source, recipe, compiler, image and two-host record bindings checked by check.validate_match.',
+            'Origin, target binding, exact parameter equality, name-source syntax, first-20 membership and any entry-RVA/size fields were checked.',
+            'This does not re-extract target references, judge provenance or approve a family. Review the pinned extraction method and first-20 sources independently.']
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('functions', nargs='*', help='Inventory ids or RVAs (0x...)')
     p.add_argument('--stale', action='store_true', help='Add every matched entry whose acceptance is stale')
     p.add_argument('--all', action='store_true', help='Every entry that names a match record')
+    p.add_argument('--family-rows', metavar='MANIFEST',
+                   help='Audit every exact parameter row against current reproduced member bindings, read-only')
     p.add_argument('--no-notes', action='store_true', help='Omit the record notes')
     p.add_argument('--no-community', action='store_true',
                    help='Omit the community declarations of COMMUNITY-labelled names')
@@ -426,6 +479,15 @@ def main(argv=None):
     p.add_argument('--root', type=Path, default=ROOT, help=argparse.SUPPRESS)
     args = p.parse_args(argv)
     root = args.root
+    if args.family_rows:
+        if args.functions or args.stale or args.all or args.prior_review or args.prior_ref:
+            p.error('--family-rows cannot be combined with function selection or prior reviews')
+        try:
+            print('\n'.join(family_rows(root, args.family_rows)))
+        except (ValueError, KeyError, TypeError, OSError) as exc:
+            print(f'family row audit: {exc}', file=sys.stderr)
+            return 1
+        return 0
     if args.prior_ref and not args.prior_review:
         p.error('--prior-ref needs --prior-review')
     data = json.loads((root / 'data/progress.json').read_text())

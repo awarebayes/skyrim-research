@@ -5,6 +5,7 @@ Comparator reports come from compare(), never a fabricated pass. No game input o
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import struct
 import shutil
@@ -215,6 +216,117 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.assertEqual(rv['review_sha256'], self.family['review']['review_sha256'])
         self.assertEqual(rv['family_evidence']['batch_sha256'], fr.digest(self.batch))
         self.assertFalse(fn['named'])
+
+    def public_review_inputs(self):
+        self.ready()
+        self.accept_batch()
+        self.reload_data()
+        fn = next(fn for fn in self.data['functions'] if fn['id'] == self.unsampled[0])
+        return fn, self.records[fn['id']], fr.read(self.root, check.review_record_path(fn))
+
+    def test_public_metadata_validation_reuses_only_exact_contents(self):
+        fn, record, review = self.public_review_inputs()
+        fr._public_family_batch.cache_clear()
+        with patch.object(fr, 'validate_family', wraps=fr.validate_family) as family_check, \
+                patch.object(fr, 'validate_batch', wraps=fr.validate_batch) as batch_check, \
+                patch.object(fr, 'check_member', wraps=fr.check_member) as member_check:
+            for _ in range(2):
+                fr.validate_public_review(self.root, fn, record, review)
+            self.assertEqual(family_check.call_count, 1)
+            self.assertEqual(batch_check.call_count, 1)
+            self.assertEqual(member_check.call_count, 2)
+        self.assertEqual(fr._public_family_batch.cache_info().maxsize, 8)
+
+    def test_public_cache_rereads_same_size_same_mtime_changed_batch(self):
+        fn, record, review = self.public_review_inputs()
+        fr.validate_public_review(self.root, fn, record, review)
+        path = self.root / self.batch_path
+        before, stat = path.read_bytes(), path.stat()
+        batch = copy.deepcopy(self.batch)
+        batch['members'][fn['id']] = '0' * 64
+        fr.write(self.root, self.batch_path, batch)
+        self.assertEqual(len(path.read_bytes()), len(before))
+        os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        with self.assertRaisesRegex(ValueError, 'member differs from committed population'):
+            fr.validate_public_review(self.root, fn, record, review)
+
+    def test_public_cache_keeps_all_member_and_review_bindings(self):
+        fn, record, review = self.public_review_inputs()
+        fr.validate_public_review(self.root, fn, record, review)
+        changed_record = copy.deepcopy(record)
+        changed_record['family_parameters']['width'] = 5
+        with self.assertRaisesRegex(ValueError, 'member differs from committed population'):
+            fr.validate_public_review(self.root, fn, changed_record, review)
+        changed_review = copy.deepcopy(review)
+        changed_review['family_evidence']['member_sha256'] = '0' * 64
+        with self.assertRaisesRegex(ValueError, 'sanitized family evidence digest mismatch'):
+            fr.validate_public_review(self.root, fn, record, changed_review)
+        changed_review = copy.deepcopy(review)
+        changed_review['review_sha256'] = '0' * 64
+        with self.assertRaisesRegex(ValueError, 'sanitized record names another family review'):
+            fr.validate_public_review(self.root, fn, record, changed_review)
+
+    def test_public_cache_does_not_hide_duplicate_fields_or_changed_paths(self):
+        fn, record, review = self.public_review_inputs()
+        fr.validate_public_review(self.root, fn, record, review)
+        other_path = str(Path(self.family_path).with_name('other.json'))
+        self.write(other_path, (self.root / self.family_path).read_text())
+        changed_review = copy.deepcopy(review)
+        changed_review['family_evidence']['family_path'] = other_path
+        with self.assertRaisesRegex(ValueError, 'batch names another family'):
+            fr.validate_public_review(self.root, fn, record, changed_review)
+        path = self.root / self.batch_path
+        path.write_text(path.read_text().replace('{', '{"batch_schema": 1,', 1))
+        with self.assertRaisesRegex(ValueError, 'duplicate JSON field'):
+            fr.validate_public_review(self.root, fn, record, review)
+
+    def exact_row_audit_family(self, rows=None):
+        family = copy.deepcopy(self.family)
+        family.update(parameter_ranges=fr.exact_ranges(rows or [{'width': 4}]), review=None)
+        fr.write(self.root, self.family_path, family)
+        return family
+
+    def test_family_packet_audits_every_row_and_is_read_only(self):
+        import review_packet
+        self.exact_row_audit_family()
+        paths = [self.family_path, 'data/progress.json', self.data['functions'][0]['report']]
+        before = {p: (self.root / p).read_bytes() for p in paths}
+        result = '\n'.join(review_packet.family_rows(self.root, self.family_path))
+        self.assertIn('permitted rows checked: 1/1; current reproduced members: 41', result)
+        self.assertIn('does not re-extract target references', result)
+        self.assertEqual(before, {p: (self.root / p).read_bytes() for p in paths})
+
+    def test_family_packet_refuses_unrepresented_rows_and_changed_first_members(self):
+        import review_packet
+        self.exact_row_audit_family([{'width': 4}, {'width': 5}])
+        with self.assertRaisesRegex(ValueError, '1 permitted row.*lack'):
+            review_packet.family_rows(self.root, self.family_path)
+        family = self.exact_row_audit_family()
+        family['first_members'][self.first[0]] = '0' * 64
+        fr.write(self.root, self.family_path, family)
+        with self.assertRaisesRegex(ValueError, 'frozen first-20 member binding changed'):
+            review_packet.family_rows(self.root, self.family_path)
+
+    def test_family_packet_refuses_wrong_parameter_rva_and_stale_source(self):
+        import review_packet
+        family = copy.deepcopy(self.family)
+        for fn in self.data['functions']:
+            rec = self.records[fn['id']]
+            rec['family_parameters'] = {'entry-rva': fn['rva'], 'size': fn['size']}
+        self.records[self.later[-1]]['family_parameters']['entry-rva'] += 1
+        for fn in self.data['functions']:
+            fr.write(self.root, fn['report'], self.records[fn['id']])
+        family.update(review=None, parameter_ranges=fr.exact_ranges(
+            [r['family_parameters'] for r in self.records.values()]))
+        family['first_members'] = {fn['id']: fr.member_digest(fn, self.records[fn['id']])
+                                   for fn in self.data['functions'] if fn['id'] in self.first}
+        fr.write(self.root, self.family_path, family)
+        with self.assertRaisesRegex(ValueError, 'parameter entry-rva disagrees with inventory'):
+            review_packet.family_rows(self.root, self.family_path)
+        with (self.root / CPP).open('a') as out:
+            out.write('// Changed fixture source.\n')
+        with self.assertRaisesRegex(ValueError, 'stale'):
+            review_packet.family_rows(self.root, self.family_path)
 
     def test_unreviewed_family(self):
         self.family['review'] = None

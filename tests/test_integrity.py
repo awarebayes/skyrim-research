@@ -1,6 +1,7 @@
 """Negative cases that protect publication boundaries and prevent invented match claims."""
 import copy
 import hashlib
+import io
 import json
 from pathlib import Path
 import struct
@@ -8,9 +9,11 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from check import ROOT, check_git, inspect_payload, validate
+from check import ROOT, check_git, index_blob, inspect_payload, validate
 from fingerprint import fingerprint
 from build_site import render
 
@@ -145,6 +148,57 @@ class IntegrityTests(unittest.TestCase):
             subprocess.run(['git', 'add', 'notes.txt'], cwd=root, check=True)
             path.write_text('innocent replacement')
             with self.assertRaisesRegex(ValueError, 'binary content'):
+                check_git(root, staged=True)
+            with self.assertRaisesRegex(ValueError, 'binary content'):
+                check_git(root, staged=False)
+
+    def test_batch_blob_framing_refuses_wrong_missing_or_truncated_objects(self):
+        sha = 'a' * 40
+        for response in (b'', f'{sha} missing\n'.encode(), b'b' * 40 + b' blob 1\nx\n',
+                         f'{sha} tree 1\nx\n'.encode(), f'{sha} blob -1\n'.encode(),
+                         f'{sha} blob 3\nx\n'.encode(), f'{sha} blob 1\nx!'.encode(),
+                         f'{sha} blob {32 * 1024 * 1024 + 1}\n'.encode()):
+            with self.subTest(response=response), self.assertRaises(ValueError):
+                index_blob(SimpleNamespace(stdin=io.BytesIO(), stdout=io.BytesIO(response)), sha, 'notes.txt')
+        objects = SimpleNamespace(stdin=io.BytesIO(), stdout=io.BytesIO(
+            f'{sha} blob 3\n'.encode() + b'a\nb\n' + f'{sha} blob 0\n\n'.encode()))
+        self.assertEqual(index_blob(objects, sha, 'first.txt'), b'a\nb')
+        self.assertEqual(index_blob(objects, sha, 'empty.txt'), b'')
+        self.assertEqual(objects.stdin.getvalue(), (sha + '\n' + sha + '\n').encode())
+
+    def test_one_git_batch_checks_every_index_blob_and_working_file(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            subprocess.run(['git', 'init', '-q', str(root)], check=True)
+            for name in ('notes.txt', 'same text.txt', 'unicode-λ.txt', 'line\nbreak.txt'):
+                (root / name).write_text('safe text\n')
+            subprocess.run(['git', 'add', '--all'], cwd=root, check=True)
+            real_popen = subprocess.Popen
+            with patch('check.subprocess.Popen', wraps=real_popen) as calls:
+                self.assertEqual(check_git(root), 4)
+                self.assertEqual(sum(c.args[0] == ['git', 'cat-file', '--batch'] for c in calls.call_args_list), 1)
+            path = root / 'notes.txt'
+            path.write_bytes(b'working\0binary')
+            self.assertEqual(check_git(root, staged=True), 4)
+            with self.assertRaisesRegex(ValueError, 'binary content'):
+                check_git(root)
+            path.unlink()
+            self.assertEqual(check_git(root, staged=True), 4)
+            with self.assertRaisesRegex(ValueError, 'missing file/symlink'):
+                check_git(root)
+            path.symlink_to('same text.txt')
+            with self.assertRaisesRegex(ValueError, 'missing file/symlink'):
+                check_git(root)
+
+    def test_batch_git_still_refuses_unresolved_index_stages(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            subprocess.run(['git', 'init', '-q', str(root)], check=True)
+            sha = subprocess.check_output(['git', 'hash-object', '-w', '--stdin'], cwd=root,
+                                          input=b'safe text\n').decode().strip()
+            subprocess.run(['git', 'update-index', '--index-info'], cwd=root, check=True,
+                           input=f'100644 {sha} 1\tconflict.txt\n'.encode())
+            with self.assertRaisesRegex(ValueError, 'unresolved conflict'):
                 check_git(root, staged=True)
 
     def test_fingerprint_is_read_only_and_checks_architecture(self):

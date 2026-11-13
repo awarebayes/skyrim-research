@@ -844,21 +844,40 @@ def inspect_payload(name, payload, mode='100644'):
             symbol_maps.check_map(data, name)
 
 
+def index_blob(objects, sha, name):
+    """Read exactly one requested blob from Git's batch protocol."""
+    objects.stdin.write(sha.encode('ascii') + b'\n')
+    objects.stdin.flush()
+    header = objects.stdout.readline().split()
+    require(len(header) == 3 and header[0] == sha.encode('ascii') and header[1] == b'blob'
+            and header[2].isdigit(), f'{name}: invalid index blob response')
+    size = int(header[2])
+    # No permitted file exceeds this bound; inspect_payload applies its exact per-path limit.
+    require(size <= 32 * 1024 * 1024, f'{name}: exceeds 32 MiB limit')
+    payload = objects.stdout.read(size)
+    require(len(payload) == size and objects.stdout.read(1) == b'\n', f'{name}: truncated index blob')
+    return payload
+
+
 def check_git(root=ROOT, staged=False):
     records = subprocess.check_output(['git', 'ls-files', '--stage', '-z'], cwd=root).split(b'\0')
     count = 0
-    for record in filter(None, records):
-        meta, rawname = record.split(b'\t', 1)
-        mode, sha, stage = meta.decode().split()
-        name = rawname.decode('utf-8')
-        require(stage == '0', f'{name}: unresolved conflict')
-        # Index blobs matter: a staged binary may have been replaced by harmless text on disk.
-        inspect_payload(name, subprocess.check_output(['git', 'cat-file', 'blob', sha], cwd=root), mode)
-        if not staged:
-            path = root / name
-            require(path.is_file() and not path.is_symlink(), f'{name}: missing file/symlink')
-            inspect_payload(name, path.read_bytes(), mode)
-        count += 1
+    with subprocess.Popen(['git', 'cat-file', '--batch'], cwd=root,
+                          stdin=subprocess.PIPE, stdout=subprocess.PIPE) as objects:
+        for record in filter(None, records):
+            meta, rawname = record.split(b'\t', 1)
+            mode, sha, stage = meta.decode().split()
+            name = rawname.decode('utf-8')
+            require(stage == '0', f'{name}: unresolved conflict')
+            # Index blobs matter: a staged binary may have been replaced by harmless text on disk.
+            inspect_payload(name, index_blob(objects, sha, name), mode)
+            if not staged:
+                path = root / name
+                require(path.is_file() and not path.is_symlink(), f'{name}: missing file/symlink')
+                inspect_payload(name, path.read_bytes(), mode)
+            count += 1
+        objects.stdin.close()
+        require(objects.wait() == 0, 'git cat-file failed')
     return count
 
 
