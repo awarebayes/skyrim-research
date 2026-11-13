@@ -231,6 +231,8 @@ different group order.
   `direction-check` worker (strong model of the profile) with the brief. It edits nothing; it
   writes `.local/handoffs/direction-check-<n>.md`. Then `python3 tools/flow.py event direction-check`.
 
+At session start run `python3 tools/flow.py worktrees list`; at session end run `python3 tools/flow.py worktrees prune`.
+
 ## End of session
 
 Write `.local/handoffs/orchestrator-<date>.md` with: profile; groups dispatched, integrated

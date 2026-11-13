@@ -1973,6 +1973,11 @@ def parser():
     p.add_argument('--root', type=Path, default=ROOT, help=argparse.SUPPRESS)
     p.add_argument('--offline', action='store_true', help='do not read origin (pushed state unknown)')
     sub = p.add_subparsers(dest='cmd', required=True)
+    s = sub.add_parser('worktrees')
+    ws = s.add_subparsers(dest='worktrees_action', required=True)
+    ws.add_parser('list')
+    prune = ws.add_parser('prune')
+    prune.add_argument('--dry-run', action='store_true')
     s = sub.add_parser('import-state')
     s.add_argument('source', type=Path)
     s.add_argument('--reviews', type=Path, required=True)
@@ -2055,6 +2060,9 @@ def main(argv=None):
     a = parser().parse_args(argv)
     root = a.root
     fdir = flow_dir(root, a.flow_dir)
+    if a.cmd == 'worktrees':
+        import flow_worktrees
+        return flow_worktrees.run(root, fdir, a.worktrees_action, getattr(a, 'dry_run', False))
     if a.cmd == 'import-state':
         fdir = af.active_flow_dir(root)
     # Readers take the same lock so multi-file mutations cannot expose partial state.
