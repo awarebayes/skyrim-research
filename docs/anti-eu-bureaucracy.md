@@ -42,8 +42,9 @@ Everything else is negotiable in favour of shipping.
 
 9. **Ninety-minute box.** No worker runs longer than 90 minutes without reporting to the
    orchestrator. At the box it ends its turn with a short status table, leaving any long command
-   running in the background with its log path; the orchestrator resumes it. A worker that is
-   only waiting ends its turn instead of waiting. Every brief states the box.
+   running in the background with its log path; the orchestrator resumes it. Watching your own
+   generation, confirmation, checks, reviews or CI is work: stay in the turn through it. A worker ends its turn early only when the sole thing left is another worker's push
+   or a decision that is not its to make. Every brief states the box.
 
 ## Precedence
 
