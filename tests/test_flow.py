@@ -23,8 +23,14 @@ BUILD = 'synthetic-build'
 FUNCS = [(0x1000, 16, 'Foo::A'), (0x1010, 8, 'Foo::B'), (0x2000, 12, 'Bar::C')]
 
 STUB_ACCEPT = r'''
-import json, sys
+import json, sys, subprocess
 from pathlib import Path
+if '--review-batch' in sys.argv:
+    requests = json.loads(Path(sys.argv[sys.argv.index('--review-batch') + 1]).read_text())
+    for request in requests:
+        subprocess.run([sys.executable, __file__, '--review', request['review'],
+                        '--functions', *request['functions']], check=True)
+    raise SystemExit(0)
 review = sys.argv[sys.argv.index('--review') + 1]
 data = json.loads(Path('data/progress.json').read_text())
 changed = ['data/progress.json']
@@ -38,6 +44,7 @@ for fn in data['functions']:
         rec.write_text(json.dumps({'verdict': 'approve'}) + '\n')
         changed.append(rec.as_posix())
 Path('data/progress.json').write_text(json.dumps(data, indent=2) + '\n')
+Path('reconstruction/INDEX.md').write_text(Path('data/progress.json').read_text())
 print('accepted')
 print('changed files (stage these by name; nothing was committed):')
 for c in changed:

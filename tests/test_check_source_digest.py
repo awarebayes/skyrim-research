@@ -2,6 +2,7 @@
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parents[1] / 'tools'
@@ -34,6 +35,22 @@ class CachedClosureTests(unittest.TestCase):
                         self.assertEqual(actual, expected)
                         self.assertEqual(reference.tu_digest(root, actual), reference.tu_digest(root, expected))
                         self.assertEqual(cached.include_closure(root, name, roots), expected)
+
+    def test_nested_operations_reuse_closures_and_directory_listings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'a.cpp').write_text('#include "x.h"\n')
+            (root / 'x.h').write_text('')
+            with patch.object(cached.os, 'listdir', wraps=cached.os.listdir) as listing, \
+                    patch.object(cached, 'quoted_includes', wraps=cached.quoted_includes) as includes:
+                with cached.source_digest_cache():
+                    expected = cached.include_closure(root, 'a.cpp')
+                    counts = listing.call_count, includes.call_count
+                    with cached.source_digest_cache():
+                        self.assertEqual(cached.include_closure(root, 'a.cpp'), expected)
+                    self.assertEqual((listing.call_count, includes.call_count), counts)
+                self.assertEqual(listing.call_count, 1)
+                self.assertEqual(includes.call_count, 2)
 
     def test_cache_is_discarded_between_checks(self):
         with tempfile.TemporaryDirectory() as tmp:

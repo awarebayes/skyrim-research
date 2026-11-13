@@ -13,6 +13,9 @@ _CACHE = ContextVar('source_digest_cache', default=None)
 
 @contextmanager
 def source_digest_cache():
+    if _CACHE.get() is not None:
+        yield
+        return
     token = _CACHE.set({'directories': {}, 'includes': {}, 'closures': {}})
     try:
         yield

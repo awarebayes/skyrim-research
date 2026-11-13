@@ -17,6 +17,8 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check import ROOT, _json_or_none, acceptance_staleness, review_record_path  # noqa: E402
 
+from check_source_digest import source_digest_cache  # noqa: E402
+
 INDEX = 'reconstruction/INDEX.md'
 HEADER = """# Reconstruction index
 
@@ -59,6 +61,7 @@ def row(fn, root):
             f'{"`" + cell(fn["report"]) + "`" if record is not None else "-"} | {status} | {kind} | {names} |\n')
 
 
+@source_digest_cache()
 def render_index(data, root=ROOT):
     root = Path(root)
     functions = sorted(data['functions'], key=lambda fn: (fn['build_id'], fn['rva']))
