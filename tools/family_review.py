@@ -347,6 +347,16 @@ def validate_public_review(root, fn, record, review):
             'sanitized record names another family review')
 
 
+def supersession_binding(old, replacement):
+    """Retirement preserves the family and evidence pins; source revisions are new versions."""
+    require(replacement['origin']['family'] == old['origin']['family']
+            and replacement['binding'] == old['binding'], 'family supersession binding mismatch')
+    if replacement['origin'] != old['origin']:
+        require(replacement['origin']['version'] != old['origin']['version']
+                and replacement['origin']['template_digest'] != old['origin']['template_digest'],
+                'changed family source requires a new version and template digest')
+
+
 def check_superseded(root, path, family):
     """A retired manifest cannot hide a pause without a matching replacement."""
     replacement_path = public_path(family['superseded_by'],
@@ -354,8 +364,8 @@ def check_superseded(root, path, family):
     require(replacement_path != str(path), 'family cannot supersede itself')
     replacement = read(root, replacement_path)
     validate_family(replacement, approved=replacement['review'] is not None)
-    require(replacement.get('supersedes') == str(path) and replacement['origin'] == family['origin']
-            and replacement['binding'] == family['binding'], 'family supersession binding mismatch')
+    require(replacement.get('supersedes') == str(path), 'family supersession binding mismatch')
+    supersession_binding(family, replacement)
 
 
 def validate_metadata(root):

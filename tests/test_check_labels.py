@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 TOOLS = Path(__file__).resolve().parents[1] / 'tools'
 sys.path.insert(0, str(TOOLS))
@@ -333,6 +334,16 @@ class ConfirmNoteTests(unittest.TestCase):
         note = self.confirm.source_note('b' * 40, [], 'c' * 64)
         self.assertIn('committed tree at base commit ' + 'b' * 40, note)
         self.assertIn('comparator source sha256 ' + 'c' * 64, note)
+
+    def test_source_state_uses_the_tasks_comparator_engine(self):
+        for functions, expected in (([{'rva': 16}], self.confirm.check.legacy_comparator),
+                                    ([{'rva': 16, 'internal_selector': {}}],
+                                     self.confirm.check.compare_internal)):
+            task = {'functions': functions, 'recipe': 'recipe.json', 'symbols_repo': 'map.json'}
+            with patch.object(self.confirm.pipeline, 'git_dirty', return_value=[]):
+                state = self.confirm.source_state(task, [])
+            self.assertEqual(state[2], expected.comparator_source_sha256())
+            self.assertIn(state[2], self.confirm.source_note(*state))
 
     def test_result_tools_include_the_comparator_and_verifier(self):
         for path in ('tools/compare.py', 'tools/pecoff.py', 'tools/verifier/verify_function.py',

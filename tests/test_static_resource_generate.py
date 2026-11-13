@@ -9,6 +9,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import lint_reconstruction
 import static_resource_generate as generator
 import static_resource_template_v1 as template
+import static_context_resource_template_v2 as initializer_v2
 
 
 def rows(*texts):
@@ -48,15 +49,28 @@ class StaticResourceGeneratorTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             generator.extract(code, 0x1000, 0x8640, [0x150], [])
 
+    def test_revised_initializer_discloses_possible_sibling_lineage_in_every_file(self):
+        cls, header, cpp, origin, _ = initializer_v2.emit(0x7c40, 106, 0x7c40)
+        for text in (header, cpp):
+            self.assertIn('Sibling source: momusdigital/fnv_decomp@91e1b6e8', text)
+            self.assertIn('src/staging/blk_00cc0000_o2.cpp:13192', text)
+            self.assertIn('no licence is granted', text)
+            self.assertNotIn('no external implementation source reused', text)
+        self.assertEqual(origin['version'], '2')
+        self.assertNotEqual(origin['template_digest'], template.template_digest())
+        with self.assertRaises(ValueError):
+            initializer_v2.emit(0x173c120, 67, 0x173c120)
+
     def test_distinct_families_lint_and_limit_claim_scope(self):
         origins = []
-        for cluster, size, wording in ((0x7c40, 106, 'Only the generated initializer'),
-                                       (0x173c120, 67, 'Only the generated teardown')):
-            cls, header, cpp, origin, params = template.emit(cluster, size, cluster)
+        for producer, cluster, size, wording in ((template, 0x7c40, 106, 'Only the generated initializer'),
+                                       (template, 0x173c120, 67, 'Only the generated teardown'),
+                                       (initializer_v2, 0x7c40, 106, 'Only the generated initializer')):
+            cls, header, cpp, origin, params = producer.emit(cluster, size, cluster)
             origins.append(origin)
             self.assertIn(wording, header)
             self.assertEqual(params, {'entry-rva': cluster, 'size': size})
-            self.assertEqual(origin['template_digest'], template.template_digest())
+            self.assertEqual(origin['template_digest'], producer.template_digest())
             with tempfile.TemporaryDirectory() as d:
                 root = Path(d)
                 (root / 'builds').mkdir()
@@ -70,5 +84,5 @@ class StaticResourceGeneratorTest(unittest.TestCase):
                 (area / f'{cls}.cpp').write_text(cpp)
                 self.assertEqual(lint_reconstruction.lint_tree(root), [])
             with self.assertRaises(ValueError):
-                template.emit(cluster, size + 1, cluster)
+                producer.emit(cluster, size + 1, cluster)
         self.assertNotEqual(origins[0]['family'], origins[1]['family'])

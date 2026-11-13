@@ -683,12 +683,101 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'supersession binding mismatch'):
             fr.validate_metadata(self.root)
 
+    def test_supersede_new_source_version_requires_fresh_review_and_bindings(self):
+        (self.root / self.batch_path).unlink()
+        (self.root / self.family_path).unlink()
+        shutil.rmtree(self.fdir / 'groups')
+        for fn in self.data['functions']:
+            if fn['id'] in self.first:
+                fn['status'] = 'mapped'
+                fn.pop('named', None)
+                (self.root / check.review_record_path(fn)).unlink()
+        self.save_data()
+        old_path = flow.plan_family(self.root, '.local/family-spec.json', self.fdir)
+        flow.pause_family(self.root, old_path, 'Source disclosure correction.')
+        spec = fr.read(self.root, '.local/family-spec.json')
+        new_source = 'def emit(value):\n    return value + 0\n'
+        self.write('tools/new_template.py', new_source)
+        new_digest = hashlib.sha256(new_source.encode()).hexdigest()
+        spec['origin'] = dict(spec['origin'], version='2', template_digest=new_digest)
+        spec['template_source'] = {'path': 'tools/new_template.py', 'sha256': new_digest}
+        fr.write(self.root, '.local/new-spec.json', spec)
+        # Old reproduced records cannot be carried into the changed source version.
+        with self.assertRaisesRegex(ValueError, 'family version or template digest mismatch'):
+            flow.plan_family(self.root, '.local/new-spec.json', self.fdir, old_path)
+        for fn in self.data['functions']:
+            record = self.records[fn['id']]
+            record['origin'] = copy.deepcopy(spec['origin'])
+            fr.write(self.root, fn['report'], record)
+        new_path = flow.plan_family(self.root, '.local/new-spec.json', self.fdir, old_path)
+        replacement = fr.read(self.root, new_path)
+        self.assertIsNone(replacement['review'])
+        self.assertEqual(set(replacement['first_members']), set(self.first))
+        fr.check_superseded(self.root, old_path, fr.read(self.root, old_path))
+        with self.assertRaises(ValueError):
+            flow.approve_family(self.root, self.fdir, new_path, self.root / self.family_review_path)
+
+    def test_supersession_rejects_partial_source_version_or_other_family(self):
+        for changes in ({'version': '2'}, {'template_digest': 'f' * 64},
+                        {'family': 'another-family', 'version': '2', 'template_digest': 'f' * 64}):
+            replacement = copy.deepcopy(self.family)
+            replacement['origin'].update(changes)
+            with self.assertRaises(ValueError):
+                fr.supersession_binding(self.family, replacement)
+
     def test_supersede_approved_family_is_refused_without_changes(self):
         old = fr.read(self.root, self.family_path)
         with self.assertRaisesRegex(ValueError, 'never-approved'):
             flow.plan_family(self.root, '.local/family-spec.json', self.fdir, self.family_path)
         self.assertEqual(fr.read(self.root, self.family_path), old)
         self.assertTrue((self.root / self.family_review_path).is_file())
+
+    def test_integration_can_carry_only_committed_metadata_ancestors(self):
+        self.git('update-ref', 'refs/remotes/origin/main', 'HEAD^^')
+        with self.assertRaisesRegex(flow.FlowError, 'push or drop'):
+            flow.integration_base(self.root, 'main')
+        self.assertEqual(flow.integration_base(self.root, 'main', True), self.git('rev-parse', 'HEAD'))
+        batch = fr.read(self.root, self.batch_path)
+        changed = copy.deepcopy(batch)
+        changed['seed'] = 'different-uncommitted-seed'
+        fr.write(self.root, self.batch_path, changed)
+        with self.assertRaises(ValueError):
+            flow.integration_base(self.root, 'main', True)
+        fr.write(self.root, self.batch_path, batch)
+        self.write('tools/unpublished.py', 'value = 1\n')
+        self.commit('unpublished source must not travel as metadata')
+        with self.assertRaisesRegex(flow.FlowError, 'other than family metadata'):
+            flow.integration_base(self.root, 'main', True)
+
+    def test_metadata_integration_preserves_commitments_when_main_moves(self):
+        self.git('update-ref', 'refs/remotes/origin/main', 'HEAD^^')
+        self.git('checkout', '--quiet', '-b', 'public-base', 'HEAD^^')
+        self.write('tools/published.py', 'value = 1\n')
+        self.commit('public tooling')
+        public = self.git('rev-parse', 'HEAD')
+        self.git('update-ref', 'refs/remotes/origin/main', public)
+        self.git('checkout', '--quiet', 'main')
+        self.git('merge', '--quiet', '--no-edit', public)
+        self.assertEqual(flow.integration_base(self.root, 'main', True), self.git('rev-parse', 'HEAD'))
+        fr.ordering(self.root, self.batch_path, self.batch)
+
+    def test_metadata_integration_refuses_merge_of_private_branches(self):
+        self.git('update-ref', 'refs/remotes/origin/main', 'HEAD^^')
+        self.git('checkout', '--quiet', '-b', 'private-base', 'HEAD^^')
+        self.write('tools/unpublished.py', 'value = 1\n')
+        self.commit('unpublished source')
+        private = self.git('rev-parse', 'HEAD')
+        self.git('checkout', '--quiet', 'main')
+        self.git('merge', '--quiet', '--no-edit', private)
+        with self.assertRaisesRegex(flow.FlowError, 'parent already on origin'):
+            flow.integration_base(self.root, 'main', True)
+
+    def test_metadata_integration_refuses_deletions(self):
+        self.git('update-ref', 'refs/remotes/origin/main', 'HEAD')
+        (self.root / self.batch_path).unlink()
+        self.commit('delete metadata')
+        with self.assertRaisesRegex(flow.FlowError, 'other than family metadata'):
+            flow.integration_base(self.root, 'main', True)
 
     def test_seed_population_must_be_committed_before_draw(self):
         self.git('reset', '--quiet', '--hard', 'HEAD^^')
