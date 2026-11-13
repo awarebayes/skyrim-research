@@ -1,6 +1,6 @@
 {
   "batch_schema": 1,
-  "commitment": null,
+  "commitment": "18835b9d29cfec6d96c652f2852230f71c428dc6",
   "family_path": "reports/sse-steam-1-7-104/families/5adf752c9f30ca21ec5ef9dda6fc6c899b4d95ebf8443da8aef77e0163776793.json",
   "family_sha256": "7361f94fb1b26aa1f5ce2b8c99571aff75e0d4d807738293581e9aba8f320373",
   "members": {
@@ -47,6 +47,27 @@
     "sse-steam-1-7-104-0xc55d0",
     "sse-steam-1-7-104-0xe7fe0"
   ],
-  "sample": null,
+  "sample": [
+    "sse-steam-1-7-104-0x100f00",
+    "sse-steam-1-7-104-0x101320",
+    "sse-steam-1-7-104-0x103700",
+    "sse-steam-1-7-104-0x107f70",
+    "sse-steam-1-7-104-0x108720",
+    "sse-steam-1-7-104-0x10a0d0",
+    "sse-steam-1-7-104-0x10a130",
+    "sse-steam-1-7-104-0x10a160",
+    "sse-steam-1-7-104-0x9f880",
+    "sse-steam-1-7-104-0xa0cc0",
+    "sse-steam-1-7-104-0xa6980",
+    "sse-steam-1-7-104-0xb51f0",
+    "sse-steam-1-7-104-0xb5a30",
+    "sse-steam-1-7-104-0xb6680",
+    "sse-steam-1-7-104-0xb6770",
+    "sse-steam-1-7-104-0xb7360",
+    "sse-steam-1-7-104-0xbb330",
+    "sse-steam-1-7-104-0xbf4e0",
+    "sse-steam-1-7-104-0xc55d0",
+    "sse-steam-1-7-104-0xe7fe0"
+  ],
   "seed": "p71-static-descriptor-v1-enrolled"
 }
