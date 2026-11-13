@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Clone3D@TESSound@@UEAAPEAVNiAVObject@@PEAVTESObjectREFR@@@Z": {
+      "rva": 3704928,
+      "size": 3
+    },
+    "?InitializeData@TESSound@@UEAAXXZ": {
+      "rva": 3704960,
+      "size": 9
+    },
+    "?SetFormEditorID@TESSound@@UEAA_NPEBD@Z": {
+      "rva": 3704352,
+      "size": 25
+    },
+    "??_GTESSound@@UEAAPEAXI@Z": {
+      "rva": 3705040,
+      "size": 62
+    },
+    "?SetEditorID@@YAXPEBDPEAVTESSound@@@Z": {
+      "rva": 5610192,
+      "size": null
+    },
+    "??1TESSound@@UEAA@XZ": {
+      "rva": 2593040,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7TESSound@@6B@": {
+      "rva": 25502352,
+      "size": null
+    },
+    "??1TESForm@@UEAA@XZ": {
+      "rva": 2593040,
+      "size": null
+    }
+  },
+  "folds": [
+    [
+      "??1TESSound@@UEAA@XZ",
+      "??1TESForm@@UEAA@XZ"
+    ]
+  ],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Clone3D@TESSound@@UEAAPEAVNiAVObject@@PEAVTESObjectREFR@@@Z",
+        "rva": "0x388860",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESSound@@UEAAXXZ",
+        "rva": "0x388880",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFormEditorID@TESSound@@UEAA_NPEBD@Z",
+        "rva": "0x388620",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GTESSound@@UEAAPEAXI@Z",
+        "rva": "0x3888d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetEditorID@@YAXPEBDPEAVTESSound@@@Z",
+        "rva": "0x559ad0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESSound@@UEAA@XZ",
+        "rva": "0x279110",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7TESSound@@6B@",
+        "rva": "0x1852290",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESForm@@UEAA@XZ",
+        "rva": "0x279110",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

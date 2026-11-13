@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/770102c81785bf89529dcb459f6a4bc242c397005a92eaedc893b54ec3cac97d.json",
+  "versions": [
+    {
+      "sha256": "770102c81785bf89529dcb459f6a4bc242c397005a92eaedc893b54ec3cac97d",
+      "base": null,
+      "added": [
+        "?IsEqual@NiAlphaAccumulator@@UEAA_NPEAVNiObject@@@Z",
+        "??_GNiAlphaAccumulator@@UEAAPEAXI@Z",
+        "?IsEqual@NiBackToFrontAccumulator@@UEAA_NPEAVNiObject@@@Z",
+        "??_7NiAlphaAccumulator@@6B@",
+        "??1NiBackToFrontAccumulator@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

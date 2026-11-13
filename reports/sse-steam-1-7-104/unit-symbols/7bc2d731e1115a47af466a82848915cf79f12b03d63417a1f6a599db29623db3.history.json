@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/7bc2d731e1115a47af466a82848915cf79f12b03d63417a1f6a599db29623db3.json",
+  "versions": [
+    {
+      "sha256": "7bc2d731e1115a47af466a82848915cf79f12b03d63417a1f6a599db29623db3",
+      "base": null,
+      "added": [
+        "?Clone3D@TESSound@@UEAAPEAVNiAVObject@@PEAVTESObjectREFR@@@Z",
+        "?InitializeData@TESSound@@UEAAXXZ",
+        "?SetFormEditorID@TESSound@@UEAA_NPEBD@Z",
+        "??_GTESSound@@UEAAPEAXI@Z",
+        "?SetEditorID@@YAXPEBDPEAVTESSound@@@Z",
+        "??1TESSound@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "??_7TESSound@@6B@",
+        "??1TESForm@@UEAA@XZ"
+      ]
+    }
+  ]
+}
