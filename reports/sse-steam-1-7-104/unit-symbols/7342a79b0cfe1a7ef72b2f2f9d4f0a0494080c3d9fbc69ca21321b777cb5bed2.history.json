@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/7342a79b0cfe1a7ef72b2f2f9d4f0a0494080c3d9fbc69ca21321b777cb5bed2.json",
+  "versions": [
+    {
+      "sha256": "7342a79b0cfe1a7ef72b2f2f9d4f0a0494080c3d9fbc69ca21321b777cb5bed2",
+      "base": null,
+      "added": [
+        "local-xea44mpx-rd3zqomd-esdv4fdx-lhygclo7-elpwitaf-br4ebvpb-73ea",
+        "?manager@@YAPEAUManager@@XZ",
+        "local-7uaxzwqq-ihy5bjwo-lguo6rhe-lyhf47k2-kq5g3tjk-yvv5ldb2-qutq",
+        "?cleanup@@YAXPEAUStatic17c59d0@@@Z",
+        "?empty_resource@@3EA",
+        "__std_terminate",
+        "__CxxFrameHandler3"
+      ]
+    }
+  ]
+}
