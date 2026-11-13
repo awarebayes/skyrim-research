@@ -145,6 +145,8 @@ def fallback_budget(task_dir, qdir, tier='fallback'):
 def attempt(task_dir, tier='first', qdir=None):
     started = time.monotonic()
     task = pipeline.load_task(task_dir)
+    import draft_worktrees
+    draft_worktrees.route_attempt(task['dir'], pipeline.REPO)
     task_dir = task['dir']
     handle = pipeline.lock(task_dir)  # noqa: F841 (held until exit)
     attempts = task_dir / 'attempts'

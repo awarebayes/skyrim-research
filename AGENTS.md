@@ -185,6 +185,8 @@ orchestrator does not start a phase until the previous one's finish condition fr
 - **Draft loop**: a Drafter writes a reconstruction in its own git worktree (`isolation:
   "worktree"`), submits it to a verifier, reads only the sanitized diff summary, and retries within
   an attempt limit set in the brief. Stuck tasks go to an Engineer with the attempt history.
+  Queue claims create that private checkout; `done` harvests a clean all-pass unit snapshot, and
+  confirmation, review and integration consume its commit rather than a Drafter's working tree.
 - **Review**: a reproduced pass gets a fresh admitted Reviewer (never its Drafter or an Engineer who engineered or triaged it). Under the family rule in `docs/verification.md`, review the pinned generator or
   stamp template, extraction and first 20 members once; later batches review a reproducible
   random sample of max(20, 5%), rounded up, or all if fewer than 20, plus every out-of-range

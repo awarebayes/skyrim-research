@@ -45,6 +45,7 @@ import time
 
 import claims as github_claims
 import profiles
+import draft_worktrees as drafts
 
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_DIR = REPO / '.local/queue/small'
@@ -119,7 +120,8 @@ def try_create(path, worker, t, profile=None, tier="first"):
     except FileExistsError:
         return False
     with os.fdopen(fd, 'w') as out:
-        json.dump({'worker': worker, 'time': t, 'claimed': iso(t), 'pid': os.getpid(), 'profile': profile, 'tier': tier}, out)
+        json.dump({'worker': worker, 'time': t, 'claimed': iso(t), 'pid': os.getpid(), 'profile': profile,
+                   'tier': tier, 'draft_requested': True}, out)
     return True
 
 
@@ -149,6 +151,22 @@ def claim(qdir, worker, t=None, profile=None, repo=None, refresh=False, tier="fi
         raise QueueError(f'{tier} tier requires a profile with that Drafter tier')
     t = now() if t is None else t
     u = _claim(qdir, worker, t, profile, tier=tier, external=github_claims.project_claims(queue_repo(qdir) if repo is None else repo, refresh))
+    if u is not None:
+        lock = tier_dir(qdir, 'claims', tier) / f'{u["key"]}.lock'
+        c = read_claim(lock)
+        root = queue_repo(qdir) if repo is None else repo
+        state = drafts.task_dir(root, u) / f'draft-{tier}.json'
+        if not u.get('resumed') or c.get('draft_requested') or c.get('draft') or state.exists():
+            try:
+                draft = drafts.create(root, u, tier, worker)
+                if draft:
+                    c['draft'] = draft
+                    drafts.save(lock, c)
+            except (OSError, ValueError) as exc:
+                lock.unlink(missing_ok=True)
+                raise QueueError(str(exc)) from exc
+        if c.get('draft'):
+            u['draft'] = c['draft']
     if u is not None and not u.get('resumed'):
         u['earlier_near_misses'] = set_aside_near_misses(u['dir'], t, queue_repo(qdir) if repo is None else repo)
     return u
@@ -270,13 +288,27 @@ def finish(qdir, unit_dir, lines, worker=None, t=None, tier="first"):
         if tier != 'first' and 'rva' in rec and str(rec['rva']).lower() not in {str(f).lower() for f in unpassed(qdir, u, tier)}:
             raise QueueError(f'{tier} results may only report previously unpassed functions')
         records.append(dict(rec, worker=worker, queue_unit=u['dir'], recorded=iso(t), **stamp))
+    harvest = None
+    if c and c.get('draft'):
+        try:
+            harvest = drafts.harvest(qdir, u, c, records)
+        except (OSError, ValueError) as exc:
+            drafts.save(drafts.task_dir(queue_repo(qdir), u) / f'harvest-error-{tier}.json', {'error': str(exc)})
+            raise QueueError(str(exc)) from exc
     tier_dir(qdir, 'done', tier).mkdir(parents=True, exist_ok=True)
     with locked(qdir / 'results.lock'):
         with open(qdir / 'results.jsonl', 'a') as out:
             for rec in records:
                 out.write(json.dumps(rec, sort_keys=True) + '\n')
-        (tier_dir(qdir, 'done', tier) / f'{u["key"]}.json').write_text(json.dumps({'worker': worker, 'done': iso(t)}) + '\n')
+        (tier_dir(qdir, 'done', tier) / f'{u["key"]}.json').write_text(json.dumps({'worker': worker, 'done': iso(t),
+            **({'harvest': harvest} if harvest else {})}) + '\n')
         lock.unlink(missing_ok=True)
+    exhausted = any('rva' in r and r.get('result') != 'pass' for r in records)
+    if c and c.get('draft') and tier == profiles.drafter_tiers(c.get('profile') or profiles.DEFAULT)[-1] and (not harvest or exhausted):
+        with locked(drafts.task_dir(queue_repo(qdir), u) / 'draft-lifecycle.lock'):
+            drafts.cleanup(queue_repo(qdir), u)
+    if c and c.get('draft') and harvest:
+        drafts.cleanup_integrated(queue_repo(qdir))
     return records
 
 
@@ -449,6 +481,10 @@ def main(argv=None):
                 print('EMPTY' + (f' ({busy} unit(s) still claimed by other sessions)' if busy else ''))
                 return 0
             print(u['dir'])
+            if u.get('draft'):
+                print(f'# edit only in draft checkout: {u["draft"]["tree"]}; cd there before editing or attempt', file=sys.stderr)
+                print(f'# queue control checkout: {queue_repo(qdir)}; cd back there before done or next '
+                      '(done may remove the draft checkout); use the tool path from your brief', file=sys.stderr)
             if a.tier != 'first':
                 print('# draft only: ' + ' '.join(unpassed(qdir, u, a.tier)) + '; prior passes remain regressions', file=sys.stderr)
             if u.get('earlier_near_misses'):

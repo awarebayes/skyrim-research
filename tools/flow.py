@@ -57,6 +57,7 @@ import profiles  # noqa: E402
 from source_digest import include_closure, tu_digest  # noqa: E402
 from symbol_map import history_name  # noqa: E402
 import work_queue as wq  # noqa: E402
+import draft_worktrees as drafts  # noqa: E402
 from flow_state import atomic_write, state_lock, require_complete, inherited_lock  # noqa: E402
 
 ROOT = TOOLS.parent
@@ -182,7 +183,12 @@ def record_state(root, fn):
     rec = json.loads((Path(root) / rel).read_text())
     hosts = {r.get('compiled_on') for r in rec.get('runs') or []}
     try:
-        digest = tu_digest(root, rec['source']['translation_unit'])
+        harvested = drafts.source_for(root, rec['source']['compiled'], fn['rva'])
+        if harvested and not harvested.get('integrated'):
+            from review_packet import digest_at
+            digest = digest_at(root, harvested['commit'], rec['source']['translation_unit'])
+        else:
+            digest = tu_digest(root, rec['source']['translation_unit'])
     except (OSError, ValueError, KeyError):
         return 'confirm-stale'
     return 'confirmed' if len(hosts) >= 2 and digest == rec['source'].get('digest') else 'confirm-stale'
@@ -947,6 +953,18 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
              'reviewer_harness': entry.get('harness', 'claude-code'),
              'components': comps, 'sampled': sample, 'pair': f'{name}-s' if sample else None,
              'dispatched': None, 'rerun': None, 'integrated': None}
+        snapshots = {unit_of(root, by_rva[r])[0]: h for r in batch
+                     if (h := drafts.source_for(root, unit_of(root, by_rva[r])[0], by_rva[r]['rva']))
+                     and not h.get('integrated')}
+        if snapshots:
+            g['harvests'] = snapshots
+            tree = root / '.local/worktrees/review' / name
+            git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), 'origin/main')
+            drafts.link_private(root, tree)
+            drafts.label(tree, g['task_id'], name, 'review')
+            carry_into_tree(root, tree, batch, by_rva, snapshots)
+            g['review_root'] = str(tree.resolve())
+            g['source_revision'] = git(tree, 'rev-parse', 'HEAD')
         g['brief'] = write_review_brief(root, g, by_rva)
         save_group(fdir, g)
         if sample:
@@ -982,7 +1000,7 @@ context, model {g['reviewer_model']}. Task id:
 Gates in force: G2 (you may read reconstructed source and, where listed, the private packs under
 `.local/packs/`; never quote them). G3/G4/G5 are not needed: run no verifier, no Boat, no network.
 
-Review working directory: `{root}`. Run every review command from this checkout.
+Review working directory: `{g.get('review_root', root)}`. Run every review command from this checkout.
 {('Exposure authorization: `docs/authorizations.md:33`, Notes, profile `claude-low`, explicitly permits Terra and Sol to read reconstructed source, sanitized reports and function packs through the maintainer own Codex subscription. The owner has knowingly repeated that authorization. A missing written provider-terms assessment is not a stop condition; do not invent or record an assessment. Continue the full review under that authorization. If you decline pack access, complete a source-only review, write `decompiler_output_read: no` and state in the review reasons that packs were not read; this is not a setup failure.') if g.get('profile') == 'claude-low' else ''}
 
 ## Functions ({len(g['functions'])})
@@ -1041,9 +1059,14 @@ from-scratch comparator re-run for group {g['name']} ({len(g['sampled'])} functi
 checkout (docs/verification.md, Sampling safeguard). Gates: as recorded for confirm runs.
 
 1. `git worktree add --detach .local/flow/rerun/{g['name']}/tree {g['source_revision']}`, then copy
-   the unit files of these units from the main working tree if they are uncommitted:
-   {', '.join(f'`{u}`' for u in units)}. Link `.local` into it as earlier re-runs did.
+   the unit files of these units from `{g.get('review_root', root)}`:
+   {', '.join(f'`{u}`' for u in units)}. Copy their entire include closures, match records and pinned
+   maps with histories from that same frozen checkout. Link `.local` into it as earlier re-runs did.
+   Label it with `python3 -c "import sys; sys.path.insert(0, 'tools'); import draft_worktrees as d; d.label('.local/flow/rerun/{g['name']}/tree', 'rerun', '{g['name']}', 'rerun')"`.
 2. In that tree: `tools/verifier/confirm --list <file with the units' task dirs> --out .local/flow/rerun/{g['name']}/out`.
+   For harvested units use the frozen task paths below, which keep the group's original harvest
+   instead of following a newer tier's harvest:
+   {', '.join(f"`{u}`: `{h['task']}`" for u, h in g.get('harvests', {}).items()) or 'none (legacy units)'}.
 3. `python3 tools/sampling_packet.py --sample .local/flow/rerun/{g['name']}/sample.json --rerun .local/flow/rerun/{g['name']}/out/<build id> --compare-out .local/flow/rerun/{g['name']}/compare.txt`
 4. `python3 tools/flow.py record-rerun {g['name']} --compare .local/flow/rerun/{g['name']}/compare.txt`
 5. Remove the worktree. Return a table: function, AGREE/DISAGREE; and the compare file path.
@@ -1471,6 +1494,22 @@ remove failed additions by exact text. Record a function as failed only after it
 No Boat, git or network. Do not push, post publicly, mark `matched`, or start further agents.
 Return the short table from the runbook; full details go to the queue.
 '''
+        text += '''
+On claim, `next` prints the private draft checkout. That is the only place to edit source;
+cd there and run every attempt there. Never edit source in the shared checkout. The sanctioned
+`done` command runs the clean harvest check and snapshots the whole unit; remove failed additions
+first. Before done or next, cd back to the printed queue control checkout: done can remove the
+draft checkout. A refused harvest is reported, never worked around. Legacy claims without a checkout keep
+their original location.
+'''
+        if Path(root).resolve() != ROOT.resolve():
+            tool = ROOT / 'tools/work_queue.py'
+            queue_path = (Path(root) / queue_dir).resolve()
+            text += (f'\nThis checkout may have older tooling. Make the claim with the landed tool by path:\n'
+                     f'`python3 {shlex.quote(str(tool))} --queue-dir {shlex.quote(str(queue_path))} '
+                     f'next --worker <label> --profile {profile} --tier {tier}`.\n'
+                     f'Use that same tool path and queue path for done and release. After claiming, '
+                     f'run the checkout\'s own attempt command from the printed private draft checkout.\n')
         path = Path(root) / BRIEFS / f'drafter-{label}.md'
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text)
@@ -1578,6 +1617,8 @@ def brief_confirm(root, fdir, manifests=None, tasks=None):
     lst.write_text(''.join(f'{u}\n' for u in sorted(units)))
     private_units = []
     for unit in sorted(units):
+        if drafts.read((Path(root) / unit) / 'harvest.json'):
+            continue
         task = json.loads((Path(root) / unit / 'task.json').read_text())
         if not task.get('symbols', 'symbols.json').startswith('reports/'):
             private_units.append(unit)
@@ -1601,7 +1642,8 @@ Units with a passing function ({len(units)}), list file `{lst.relative_to(root).
 """ + ''.join(f'- `{u}`: {", ".join(sorted(r, key=lambda x: int(x, 16)))}\n' for u, r in sorted(units.items())) + f"""
 Records that no longer bind their unit ({len(stale)}): {', '.join(stale) or 'none'}.
 
-1. For each unit, remove from its `task.json` only functions that did not pass (their near-miss
+1. Harvested units are confirmed from their immutable harvest commit automatically; do not edit
+   their task or source. For legacy units only, remove from `task.json` functions that did not pass (their near-miss
    files stay), as earlier confirm runs did. Every remaining function must be an inventory entry.
 {binding_step}\
 2. `tools/verifier/confirm --list {lst.relative_to(root).as_posix()} --replace` (the runner hosts of
@@ -1723,17 +1765,26 @@ def remove_tree(root, tree):
     git(root, 'worktree', 'prune', check=False)
 
 
-def carry_into_tree(root, tree, approved, by_rva):
+def carry_into_tree(root, tree, approved, by_rva, harvests=None):
     """Copy, from the shared checkout into the integration tree, only what the approved functions
     need: their inventory entries, match records and translation-unit files. Other units, which a
     Drafter may still be editing, stay out of the commit and cannot block it."""
     files = set()
+    snapshots = {}
     for rva in approved:
         fn = by_rva[rva]
         refuse(fn.get('report'), f'{fn["id"]} names no match record in data/progress.json')
         files.add(fn['report'])
         record = json.loads((root / fn['report']).read_text())
         files.update(record['source']['translation_unit'])
+        compiled = record['source']['compiled']
+        h = (harvests or {}).get(compiled) if harvests is not None else drafts.source_for(root, compiled, fn['rva'])
+        if h and not h.get('integrated'):
+            refuse(h['digest'] == record['source']['digest'], f'{fn["id"]}: harvest differs from confirmed record')
+            for rel in record['source']['translation_unit']:
+                blob = drafts.git(root, 'show', f'{h["commit"]}:{rel}')
+                refuse(rel not in snapshots or snapshots[rel] == blob, f'incompatible harvest closures: {rel}')
+                snapshots[rel] = blob
         map_name = (record.get('symbol_map') or {}).get('path')
         if map_name:
             files.add(map_name)
@@ -1742,9 +1793,12 @@ def carry_into_tree(root, tree, approved, by_rva):
                 files.add(history)
     for rel in sorted(files):
         src, dst = root / rel, tree / rel
-        refuse(src.is_file(), f'{rel} is missing from the checkout')
         dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(src, dst)
+        if rel in snapshots:
+            dst.write_bytes(snapshots[rel])
+        else:
+            refuse(src.is_file(), f'{rel} is missing from the checkout')
+            shutil.copyfile(src, dst)
     path = tree / 'data/progress.json'
     data = json.loads(path.read_text())
     index = {fn['id']: i for i, fn in enumerate(data['functions'])}
@@ -1802,8 +1856,9 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         remove_tree(root, tree)
         tree.parent.mkdir(parents=True, exist_ok=True)
         git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), f'origin/{branch}')
+        drafts.label(tree, 'flow-integrate', name, 'integration')
         by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == g['build_id']}
-        carried = carry_into_tree(root, tree, approved, by_rva)
+        carried = carry_into_tree(root, tree, approved, by_rva, g.get('harvests'))
         data = inventory(tree)
         by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == g['build_id']}
         done = all(by_rva[r]['status'] == 'matched' for r in approved)
@@ -1883,6 +1938,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         save_group(fdir, g)
         log_event(fdir, 'integrated', group=name, accepted=integ['accepted'], commit=integ['commit'])
         remove_tree(root, tree)
+        drafts.cleanup_integrated(root)
     if integ.get('ci') != 'green':
         r = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
                            cwd=root, capture_output=True, text=True)
@@ -1939,6 +1995,7 @@ def pre_push_checks(root, commit, python):
     tmp = Path(tempfile.mkdtemp(prefix='flow-check-'))
     tree = tmp / 'tree'
     git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), commit)
+    drafts.label(tree, 'flow-check', commit, 'integration-check')
     try:
         run([python, 'tools/check.py'], tree, 'check.py (clean tree)')
         run([python, '-m', 'unittest', 'discover', '-s', 'tests'], tree, 'unit tests (clean tree)')

@@ -55,6 +55,12 @@ every other document are optional: an unread document is never a reason to stop.
    replacing existing source files or regression functions.
 1. `python3 tools/work_queue.py next --worker <label> --profile cheap` prints a unit dir, e.g.
    `.local/tasks/q1-s02-niobject/q1-s02-niobject-bsxflags`. If it prints `EMPTY`, go to "Finished".
+   It also prints the private draft checkout under `.local/worktrees/draft/<unit>-<tier>`.
+   **cd to that checkout before editing source or running attempt.** It is the only place to edit;
+   never edit source in the shared checkout. Kit inputs, task directories, queues and verifier
+   settings are linked from the shared `.local/`. Later tiers start at origin/main with the prior
+   unintegrated harvest overlaid. A claim made before isolated checkouts existed keeps its original
+   location and commands.
 2. `cat <unit dir>/sheet.md` (Claude models: `sheet.fnv.md`). It names the two source files, the
    budget and each function. Read each function's page: `cat <unit dir>/sheet-0x<rva>.md`
    (Claude: `sheet-0x<rva>.fnv.md`; `-p1`, `-p2` when split). If `next` said it moved near-miss
@@ -77,7 +83,10 @@ every other document are optional: an unread document is never a reason to stop.
    adapted, its file and licence). Then run
    `python3 tools/lint_reconstruction.py <h> <cpp>` and `python3 tools/check_labels.py <h> <cpp>`
    and fix every finding. If you changed code, run step 5 again.
-9. Report and release the unit, one `--result` per selected function in the unit sheet and one for
+9. **cd back to the queue control checkout printed by `next`** before running `done` or claiming
+   another unit. Use the tool path from your brief if it names one. `done` may remove the private
+   draft checkout, so never remain inside it for queue commands.
+   Report and release the unit, one `--result` per selected function in the unit sheet and one for
    the unit. Existing regression functions in an extension are compared but are not new queue work:
    ```
    python3 tools/work_queue.py done <unit dir> \
@@ -86,6 +95,14 @@ every other document are optional: an unread document is never a reason to stop.
    ```
    `result` is `pass` only if the last attempt printed PASS for that RVA. `blocker` names the
    near-miss file or the problem; `friction` is one sentence on anything that slowed you, or null.
+   For an isolated claim, `done` also harvests: it runs a fresh clean attempt of every retained
+   passing function and integrated regression, checks for leftover untested definitions, then
+   commits exactly the unit files through tooling. This is the only sanctioned git operation for
+   a Drafter; never run git yourself. Failed additions must already be removed. The clean check
+   is separate from retry budgets. A failure writes `harvest-error-<tier>.json`, creates no new
+   harvest and retains the claim: report the refusal for Engineer triage. A unit with no passing
+   function has no harvest. Tooling removes its checkout after final failure or integration;
+   near-miss files remain in the task directory.
 10. Go to step 1. A finished, stuck or budget-exhausted unit ends that unit only. Continue
     until `next` prints `EMPTY` or the infrastructure stop below applies.
 

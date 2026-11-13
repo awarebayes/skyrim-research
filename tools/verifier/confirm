@@ -373,6 +373,25 @@ def main():
     if not dirs:
         p.error('a task directory is required')
     try:
+        import draft_worktrees
+        routed = []
+        legacy = []
+        for directory in dirs:
+            resolved = pipeline.resolve_task_dir(directory)
+            if draft_worktrees.harvest_for_confirmation(resolved):
+                options = (['--replace'] if a.replace else []) + (['--resume'] if a.resume else [])
+                if a.out:
+                    options += ['--out', str(a.out.resolve())]
+                if a.boat or a.fork or a.stop:
+                    p.error('harvest confirmation uses runner hosts')
+                routed.append(draft_worktrees.confirm_one(REPO, resolved, options))
+            else:
+                legacy.append(directory)
+        if not legacy:
+            return max(routed, default=0)
+        if any(routed):
+            return max(routed)
+        dirs = legacy
         import bind
         bind.preflight(dirs)
         if a.fork:

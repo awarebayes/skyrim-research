@@ -764,6 +764,11 @@ assert group['profile'] == 'cheap'
 
 class QueueStates(unittest.TestCase):
     def setUp(self):
+        # These fixtures exercise legacy claims without task inputs; isolated claims have their
+        # own repository-backed lifecycle tests.
+        legacy = patch('draft_worktrees.create', return_value=None)
+        legacy.start()
+        self.addCleanup(legacy.stop)
         claim_sync = patch('claims.sync_safe')
         self.claim_sync = claim_sync.start()
         self.addCleanup(claim_sync.stop)
