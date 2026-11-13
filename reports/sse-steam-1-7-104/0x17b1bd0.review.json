@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "f71c2e2b574e3510191339a64de000c35ef6afa42b49c33a3031d6d8f4a0b407",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x17b1bd0",
+  "naming_findings": [
+    "The generated teardown name is not explicitly labelled in the unit header."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "d3da60ec62ca44619db1b25a5a168c0d502ce720a24670b0a51058a786fcc6f5",
+  "review_task_id": "review-flow-g074",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 24845264,
+  "size": 3,
+  "source_digest": "56c73601d7ea3f9a72032ff639bf7a689269a0aad1a5a6a4407eb99043c7a4bb",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}
