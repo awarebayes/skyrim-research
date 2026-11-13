@@ -221,6 +221,18 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         fr.write(self.root, self.family_path, self.family)
         self.assertRefused('unreviewed family')
 
+    def test_family_actions_waits_for_records_from_another_checkout(self):
+        missing = next(fn for fn in self.data['functions'] if fn['id'] == self.later[0])
+        missing.pop('report')
+        self.save_data()
+        actions = flow.family_actions(self.root, self.fdir)
+        self.assertTrue(any(kind == 'wait' and 'needs local match records' in text for kind, text in actions))
+        self.assertFalse(any('review-group' in text or 'integrate-family' in text for _, text in actions))
+        before = (self.root / 'data/progress.json').read_bytes()
+        with self.assertRaises((ValueError, KeyError, af.Refused)):
+            self.accept_batch()
+        self.assertEqual(before, (self.root / 'data/progress.json').read_bytes())
+
     def test_missing_saved_private_family_review(self):
         (self.root / self.family_review_path).unlink()
         self.assertRefused('saved approving family review missing')
