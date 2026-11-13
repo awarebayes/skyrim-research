@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetCurrentAccumulator@BSShaderAccumulator@@SAPEAV1@XZ": {
+      "rva": 21941136,
+      "size": 8
+    },
+    "?SetCurrentAccumulator@BSShaderAccumulator@@SAXPEAV1@@Z": {
+      "rva": 21941152,
+      "size": 8
+    },
+    "?StartGroupingAlphas@BSShaderAccumulator@@UEAAPEAVGeometryGroup@BSBatchRenderer@@PEAVNiBound@@@Z": {
+      "rva": 22154576,
+      "size": 21
+    },
+    "?FinishAccumulatingPostResolveDepth@BSShaderAccumulator@@UEAAXI@Z": {
+      "rva": 22146816,
+      "size": 49
+    },
+    "?ms_currentAccumulator@@3PEAVBSShaderAccumulator@@EA": {
+      "rva": 54345128,
+      "size": null
+    },
+    "?BuildAlphaGroups@@YAPEAVGeometryGroup@BSBatchRenderer@@_KPEAVNiBound@@0E@Z": {
+      "rva": 22419024,
+      "size": null
+    },
+    "?PrepareDepth@BSShaderAccumulator@@QEAAXXZ": {
+      "rva": 22148416,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetCurrentAccumulator@BSShaderAccumulator@@SAPEAV1@XZ",
+        "rva": "0x14ecb90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetCurrentAccumulator@BSShaderAccumulator@@SAXPEAV1@@Z",
+        "rva": "0x14ecba0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StartGroupingAlphas@BSShaderAccumulator@@UEAAPEAVGeometryGroup@BSBatchRenderer@@PEAVNiBound@@@Z",
+        "rva": "0x1520d50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishAccumulatingPostResolveDepth@BSShaderAccumulator@@UEAAXI@Z",
+        "rva": "0x151ef00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ms_currentAccumulator@@3PEAVBSShaderAccumulator@@EA",
+        "rva": "0x33d3da8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BuildAlphaGroups@@YAPEAVGeometryGroup@BSBatchRenderer@@_KPEAVNiBound@@0E@Z",
+        "rva": "0x1561650",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareDepth@BSShaderAccumulator@@QEAAXXZ",
+        "rva": "0x151f540",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetIsOmniLight@BSShadowParabolicLight@@UEAA_NXZ": {
+      "rva": 22580768,
+      "size": 11
+    },
+    "?ReturnShadowmaps@BSShadowParabolicLight@@UEAAXXZ": {
+      "rva": 22580560,
+      "size": 31
+    },
+    "?ReturnShadowmapsTarget@BSShadowParabolicLight@@QEAAXXZ": {
+      "rva": 22399376,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetIsOmniLight@BSShadowParabolicLight@@UEAA_NXZ",
+        "rva": "0x1588e20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReturnShadowmaps@BSShadowParabolicLight@@UEAAXXZ",
+        "rva": "0x1588d50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReturnShadowmapsTarget@BSShadowParabolicLight@@QEAAXXZ",
+        "rva": "0x155c990",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

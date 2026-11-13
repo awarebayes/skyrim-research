@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GBSOcclusionPlane@@UEAAPEAXI@Z": {
+      "rva": 16686032,
+      "size": 50
+    },
+    "??_7BSOcclusionPlane@@6B@": {
+      "rva": 25165752,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7NiRefObject@@6B@": {
+      "rva": 25165752,
+      "size": null
+    },
+    "?ms_totalObjects@NiRefObject@@2JC": {
+      "rva": 53593632,
+      "size": null
+    }
+  },
+  "folds": [
+    [
+      "??_7BSOcclusionPlane@@6B@",
+      "??_7NiRefObject@@6B@"
+    ]
+  ],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GBSOcclusionPlane@@UEAAPEAXI@Z",
+        "rva": "0xfe9bd0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSOcclusionPlane@@6B@",
+        "rva": "0x17fffb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiRefObject@@6B@",
+        "rva": "0x17fffb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ms_totalObjects@NiRefObject@@2JC",
+        "rva": "0x331c620",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

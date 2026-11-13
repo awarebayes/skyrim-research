@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/7ff0dbb74f1da98e23d5b9c6b746098a7abd77de83682ae6f410d7ec31980ca3.json",
+  "versions": [
+    {
+      "sha256": "7ff0dbb74f1da98e23d5b9c6b746098a7abd77de83682ae6f410d7ec31980ca3",
+      "base": null,
+      "added": [
+        "?GetCurrentAccumulator@BSShaderAccumulator@@SAPEAV1@XZ",
+        "?SetCurrentAccumulator@BSShaderAccumulator@@SAXPEAV1@@Z",
+        "?StartGroupingAlphas@BSShaderAccumulator@@UEAAPEAVGeometryGroup@BSBatchRenderer@@PEAVNiBound@@@Z",
+        "?FinishAccumulatingPostResolveDepth@BSShaderAccumulator@@UEAAXI@Z",
+        "?ms_currentAccumulator@@3PEAVBSShaderAccumulator@@EA",
+        "?BuildAlphaGroups@@YAPEAVGeometryGroup@BSBatchRenderer@@_KPEAVNiBound@@0E@Z",
+        "?PrepareDepth@BSShaderAccumulator@@QEAAXXZ"
+      ]
+    }
+  ]
+}
