@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "local-trxy7dcb-guxhybi5-xs2v6e4q-ivwmgl2v-2bpbb7ef-qcfsfzqu-bhaa": {
+      "rva": 24867200,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "local-trxy7dcb-guxhybi5-xs2v6e4q-ivwmgl2v-2bpbb7ef-qcfsfzqu-bhaa",
+        "rva": "0x17b7180",
+        "community_name": null,
+        "note": "Explicit pinned-image leaf entry; reconstruction identity is a guess."
+      }
+    ]
+  }
+}
