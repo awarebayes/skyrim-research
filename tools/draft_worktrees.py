@@ -3,7 +3,6 @@
 This is queue transport, not match evidence. Confirmation and acceptance keep their existing gates.
 """
 import json
-from collections import Counter
 from pathlib import Path
 import re
 import shutil
@@ -196,34 +195,66 @@ def passing_before(qdir, unit, tier):
         int(r, 16) for r in wq.unpassed(qdir, unit, tier)} if tier != 'first' else set()
 
 
-def audit_source(tree, sources, allowed, bind):
-    """Also catch removed-from-task bodies that optimization left out of the object."""
+def target_symbols(tree, directory, task, final, data):
+    """Names bound to task or inventory function targets, rather than incidental helpers."""
+    inventory = [f for f in data.get('functions', []) if f['build_id'] == task['build_id']]
+    targets = {int(str(f['rva']), 0) for f in task['functions']} | {f['rva'] for f in inventory}
+    symbols = {f['symbol'] for f in task['functions'] + final['functions']}
+    for path in {directory / 'symbols.json',
+                 (tree / task['symbols']) if task.get('symbols', '').startswith('reports/')
+                 else directory / task.get('symbols', 'symbols.json')}:
+        for name, entry in read(path, {}).get('symbols', {}).items():
+            if 'rva' in entry and int(str(entry['rva']), 0) in targets:
+                symbols.add(name)
+    hints = read(directory / 'bind-hints.json', {})
+    for name, value in hints.items():
+        if not str(value).startswith('tls:') and int(str(value), 0) in targets:
+            symbols.add(name)
+    for fn in inventory:
+        if not fn.get('report'):
+            continue
+        record = read(tree / fn['report'], {})
+        for run in record.get('runs', []):
+            symbol = run.get('report', {}).get('function', {}).get('symbol')
+            if symbol:
+                symbols.add(symbol)
+    return symbols
+
+
+def audit_source(tree, sources, allowed, targets, bind):
+    """Catch known failed target bodies even when optimization omitted their symbols."""
     from check_origin import clean, functions
     names = bind.Names(bind.find_undname())
-    counts = Counter()
-    for symbol in allowed:
-        name = names(symbol)
+    symbols = sorted(targets | allowed)
+    for start in range(0, len(symbols), 64):
+        names.load(symbols[start:start + 64])
+
+    def qualified(symbol):
+        name = symbol if re.fullmatch(r'(?:[A-Za-z_]\w*::)*~?[A-Za-z_]\w*', symbol) else names(symbol)
         special = re.match(r'\?\?(0|1|_G|_E)([A-Za-z_]\w*)@@', symbol)
         if special:
             kind, cls = special.groups()
             name = f'{cls}::{cls if kind == "0" else "~" + cls}'
-        if name:
-            counts[name] += 1
-    bodies = Counter()
+        return name
+    # A source name shared with a passing overload does not establish another binding.
+    # Emitted definitions are checked by their exact symbol, independently of this scan.
+    failed_names = {qualified(s) for s in targets - allowed} - {qualified(s) for s in allowed} - {None}
+    failed = set()
     for rel in sources:
         for fn in functions(clean((Path(tree) / rel).read_text())):
             name = (fn['class'] + '::' if fn['class'] else '') + fn['name']
-            bodies[name] += 1
-    if bodies - counts:
-        raise ValueError('unit source contains bodies without passing attempts; remove failed additions: '
-                         + ', '.join(sorted(bodies - counts)))
+            if name in failed_names:
+                failed.add(name)
+    if failed:
+        raise ValueError('unit source contains target bodies without passing attempts; remove failed additions: '
+                         + ', '.join(sorted(failed)))
 
 
 def harvest(qdir, unit, claim, records):
     """Snapshot only after a fresh all-pass compile and comparison of the retained unit.
 
     The full task is preserved for later tiers. The clean task selects passing additions and all
-    existing regressions; an object-definition audit refuses leftover untested additions.
+    existing regressions; a target-binding audit refuses leftover untested candidates.
     """
     import work_queue as wq
     root = wq.queue_repo(qdir)
@@ -235,7 +266,8 @@ def harvest(qdir, unit, claim, records):
         int(r['rva'], 16) for r in records if r.get('result') == 'pass' and 'rva' in r}
     if not passing:
         return None
-    raw = read(directory / 'task.json')
+    original = read(directory / 'task.json')
+    raw = dict(original)
     queued = {int(r, 16) for r in unit['functions']}
     selected = [f for f in raw['functions'] if int(str(f['rva']), 0) in passing
                 or int(str(f['rva']), 0) not in queued]
@@ -288,11 +320,24 @@ def harvest(qdir, unit, claim, records):
         if fn.get('status') == 'matched' and rec.get('source', {}).get('compiled') == raw['compiled']:
             if fn['rva'] not in {int(str(f['rva']), 0) for f in final['functions']}:
                 raise ValueError('integrated regression absent from clean task; no harvest')
-    extra = defined - allowed
+    targets = target_symbols(tree, directory, original, final, data)
+    # The clean binder may have learned additional target bindings during this attempt.
+    targets.update(target_symbols(tree, clean, final, final, data))
+    names = bind.Names(bind.find_undname())
+    names.load(sorted(defined))
+    targets.update(symbol for symbol in defined if names(symbol) in targets)
+    extra = (defined & targets) - allowed
     if extra:
-        raise ValueError('unit still defines functions without passing attempts; remove failed additions: '
+        raise ValueError('unit still defines target functions without passing attempts; remove failed additions: '
                          + ', '.join(sorted(extra)))
-    audit_source(tree, unit['sources'], allowed, bind)
+    # Only the task names identify source candidates; unrelated inventory overloads do not
+    # establish a source binding by name alone. Emitted inventory bindings were checked above.
+    candidates = {f['symbol'] for f in original['functions'] + final['functions']}
+    audit_source(tree, unit['sources'], allowed, candidates, bind)
+    import lint_reconstruction
+    findings = lint_reconstruction.lint_tree(tree, closure)
+    if findings:
+        raise ValueError('harvest lint failed; no harvest: ' + '; '.join(findings))
     changed = git(tree, 'diff', '--name-only', 'HEAD').decode().splitlines()
     if set(changed) - set(unit['sources']):
         raise ValueError('draft changed files outside its unit; no harvest')

@@ -96,13 +96,16 @@ every other document are optional: an unread document is never a reason to stop.
    `result` is `pass` only if the last attempt printed PASS for that RVA. `blocker` names the
    near-miss file or the problem; `friction` is one sentence on anything that slowed you, or null.
    For an isolated claim, `done` also harvests: it runs a fresh clean attempt of every retained
-   passing function and integrated regression, checks for leftover untested definitions, then
+   passing function and integrated regression, checks for leftover untested target candidates, then
    commits exactly the unit files through tooling. This is the only sanctioned git operation for
    a Drafter; never run git yourself. Failed additions must already be removed. The clean check
    is separate from retry budgets. A failure writes `harvest-error-<tier>.json`, creates no new
    harvest and retains the claim: report the refusal for Engineer triage. A unit with no passing
    function has no harvest. Tooling removes its checkout after final failure or integration;
    near-miss files remain in the task directory.
+   Helpers without a task or inventory function target follow the existing lint and Reviewer
+   rules; harvest runs that lint, without requiring a separate target or pass for each helper.
+   The comparator's existing binding and relocation checks still apply to emitted helpers.
 10. Go to step 1. A finished, stuck or budget-exhausted unit ends that unit only. Continue
     until `next` prints `EMPTY` or the infrastructure stop below applies.
 

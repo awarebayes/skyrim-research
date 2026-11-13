@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import draft_worktrees as drafts
 import work_queue as wq
 import flow
+import lint_reconstruction as lint
 import synthetic_pecoff as fx
 from source_digest import include_closure, tu_digest
 from test_flow import Repo, BUILD, git
@@ -40,6 +41,11 @@ class DraftWorktrees(unittest.TestCase):
         self.claims = patch('claims.project_claims', return_value=({}, None))
         self.claims.start()
         self.addCleanup(self.claims.stop)
+        # Minimal transport fixtures omit source paperwork; helper-policy tests use real lint.
+        self.lint_patch = patch.object(lint, 'lint_tree', return_value=[])
+        self.lint_patch.start()
+        self.addCleanup(self.lint_patch.stop)
+        self.object_bytes = fx.coff_object()
 
     def tearDown(self):
         shutil.rmtree(self.tmp)
@@ -55,7 +61,7 @@ class DraftWorktrees(unittest.TestCase):
             dest.mkdir(parents=True)
             digest = tu_digest(cwd, include_closure(cwd, task['compiled']))
             drafts.save(dest / 'result.json', {'source_revision': digest})
-            (dest / 'candidate.obj').write_bytes(fx.coff_object())
+            (dest / 'candidate.obj').write_bytes(self.object_bytes)
             for fn in task['functions']:
                 drafts.save(dest / f'0x{int(str(fn["rva"]), 0):x}/report.json', {'result': 'pass'})
             return subprocess.CompletedProcess(command, 0, 'all pass\n', '')
@@ -178,17 +184,107 @@ class DraftWorktrees(unittest.TestCase):
                 self.finish()
         self.assertIsNone(drafts.current(self.root, self.unit))
 
-    def test_optimized_out_failed_body_and_overload_refuse_harvest(self):
+    def test_optimized_out_failed_target_body_refuses_harvest(self):
         unit = self.claim()
         tree = Path(unit['draft']['tree'])
-        for body in ('static int FailedAddition() { return 1; }',
-                     'int SyntheticSum(int other) { return other; }'):
-            with self.subTest(body=body):
-                (tree / self.unit['sources'][-1]).write_text('int SyntheticSum() { return 0; }\n' + body + '\n')
-                with self.assertRaisesRegex(wq.QueueError, 'source contains bodies without passing attempts'):
-                    self.finish()
+        (tree / self.unit['sources'][-1]).write_text('int SyntheticSum() { return 0; }\n'
+                                                    'static int FailedAddition() { return 1; }\n')
+        with self.assertRaisesRegex(wq.QueueError, 'source contains target bodies without passing attempts'):
+            self.finish()
         (tree / self.unit['sources'][-1]).write_text('int SyntheticSum() { return 0; }\n')
         self.finish()
+
+    def linted_claim(self):
+        self.lint_patch.stop()
+        drafts.save(self.root / 'builds/target.json', {'build_id': BUILD})
+        drafts.save(self.root / 'reconstruction/recipes/r.json', {})
+        (self.root / self.unit['sources'][0]).write_text(
+            f'// Foo, build {BUILD}. Source exposure: binary-analysis. Names are GUESS.\n'
+            '#pragma once\nclass Foo {};\n')
+        source = (f'// SyntheticSum, build {BUILD}, RVA 0x1000, 16 bytes.\n'
+                  f'// Evidence: reports/{BUILD}/0x1000.json\n'
+                  '// Source exposure: binary-analysis. Drafted by a synthetic test.\n'
+                  '// Recipe: reconstruction/recipes/r.json\n#include "Foo.h"\n')
+        (self.root / self.unit['sources'][-1]).write_text(source + 'int SyntheticSum() { return 0; }\n')
+        git(self.root, 'add', 'builds/target.json', 'reconstruction/recipes/r.json', *self.unit['sources'])
+        git(self.root, 'commit', '-m', 'synthetic lint inputs')
+        git(self.root, 'push', 'origin', 'main')
+        unit = self.claim()
+        return Path(unit['draft']['tree']), source
+
+    def test_scope_guard_ctor_dtor_used_by_pass_are_harvested_under_existing_lint(self):
+        tree, source = self.linted_claim()
+        ctor, dtor = '??0Scope@@QEAA@XZ', '??1Scope@@QEAA@XZ'
+        source += ('struct Scope { int& slot; int saved;\n'
+                   ' Scope(int& s) : slot(s), saved(s) { slot = 1; }\n'
+                   ' ~Scope() { slot = saved; } };\n'
+                   'int slot;\nint SyntheticSum() { Scope scope(slot); return slot; }\n')
+        (tree / self.unit['sources'][-1]).write_text(source)
+        obj = fx.Unit()
+        for symbol in (fx.FUNCTION, ctor, dtor):
+            section = obj.section('.text$mn', fx.CALLEE_CODE, fx.SCN_CODE)
+            obj.define(symbol, section, storage=2, function=True)
+        self.object_bytes = obj.coff()
+        # A reference binding outside the task/inventory function targets does not make this
+        # helper a separately compared function. Its actual uses still face the comparator.
+        drafts.save(self.directory / 'symbols.json', {'symbols': {dtor: {'rva': 0x9000}}})
+        self.assertEqual(lint.lint_tree(tree, self.unit['sources']), [])
+        self.finish()
+        self.assertIsNotNone(drafts.current(self.root, self.unit))
+
+    def test_unreferenced_helper_follows_existing_lint_without_new_harvest_rule(self):
+        tree, source = self.linted_claim()
+        source += ('inline int UnusedHelper() { return 7; }\n'
+                   'int SyntheticSum() { return 0; }\n')
+        (tree / self.unit['sources'][-1]).write_text(source)
+        # Existing lint has no unused-helper rule; review still judges dead code and rationale.
+        self.assertEqual(lint.lint_tree(tree, self.unit['sources']), [])
+        self.finish()
+
+    def test_helper_lint_finding_is_not_suppressed_by_harvest(self):
+        tree, source = self.linted_claim()
+        source += ('__forceinline int UnusedHelper() { return 7; }\n'
+                   'int SyntheticSum() { return 0; }\n')
+        (tree / self.unit['sources'][-1]).write_text(source)
+        findings = lint.lint_tree(tree, self.unit['sources'])
+        self.assertTrue(any('__forceinline' in finding for finding in findings))
+        with self.assertRaisesRegex(wq.QueueError, 'harvest lint failed'):
+            self.finish()
+        self.assertIsNone(drafts.current(self.root, self.unit))
+
+    def test_definition_bound_to_other_inventory_target_is_not_a_helper(self):
+        self.claim()
+        drafts.save(self.directory / 'symbols.json', {'symbols': {'InventoryOther': {'rva': 0x2000}}})
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, 'InventoryOther': 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_qualified_target_hint_does_not_turn_a_failed_candidate_into_a_helper(self):
+        self.claim()
+        drafts.save(self.directory / 'bind-hints.json', {'Other::Failed': '0x1010'})
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        failed = '?Failed@Other@@YAHXZ'
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, failed: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_emitted_helper_reference_keeps_comparator_unbound_symbol_refusal(self):
+        from compare import compare
+        unit = fx.Unit()
+        body = unit.section('.text$mn', fx.CODE, fx.SCN_CODE)
+        unit.define(fx.FUNCTION, body, storage=2, function=True)
+        helper = unit.section('.text$mn', fx.CALLEE_CODE, fx.SCN_CODE)
+        unit.define(fx.CALLEE, helper, storage=2, function=True)
+        for offset, symbol, kind in fx.RELOCS:
+            if symbol != fx.CALLEE:
+                unit.external(symbol)
+            unit.reloc(body, offset, symbol, kind)
+        args = fx.unit_inputs(unit, fx.FUNCTION, {fx.BASE: 0x3100, fx.COUNTER: 0x3104})
+        report = compare(**args)
+        self.assertEqual((report['result'], report['reason']), ('fail', 'unresolved-symbol'))
 
     def test_final_failure_removes_worktrees_and_branches_keeps_near_misses(self):
         self.claim()
