@@ -294,6 +294,8 @@ def finish(qdir, unit_dir, lines, worker=None, t=None, tier="first"):
             harvest = drafts.harvest(qdir, u, c, records)
         except (OSError, ValueError) as exc:
             drafts.save(drafts.task_dir(queue_repo(qdir), u) / f'harvest-error-{tier}.json', {'error': str(exc)})
+            drafts.save(qdir / 'holds' / f'{u["key"]}.json',
+                        {'reason': str(exc), 'kind': 'harvest-refusal', 'tier': tier, 'worker': worker})
             raise QueueError(str(exc)) from exc
     tier_dir(qdir, 'done', tier).mkdir(parents=True, exist_ok=True)
     with locked(qdir / 'results.lock'):
@@ -303,6 +305,9 @@ def finish(qdir, unit_dir, lines, worker=None, t=None, tier="first"):
         (tier_dir(qdir, 'done', tier) / f'{u["key"]}.json').write_text(json.dumps({'worker': worker, 'done': iso(t),
             **({'harvest': harvest} if harvest else {})}) + '\n')
         lock.unlink(missing_ok=True)
+    hold = qdir / 'holds' / f'{u["key"]}.json'
+    if harvest and drafts.read(hold, {}).get('kind') == 'harvest-refusal':
+        hold.unlink(missing_ok=True)
     exhausted = any('rva' in r and r.get('result') != 'pass' for r in records)
     if c and c.get('draft') and tier == profiles.drafter_tiers(c.get('profile') or profiles.DEFAULT)[-1] and (not harvest or exhausted):
         with locked(drafts.task_dir(queue_repo(qdir), u) / 'draft-lifecycle.lock'):

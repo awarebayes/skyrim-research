@@ -870,7 +870,8 @@ class QueueStates(unittest.TestCase):
         brief = self.root / flow.brief_drafter(self.root, self.fdir, 'claude-low', queue_dir='.local/queue/mid', tier='fallback')[0]
         text = brief.read_text()
         for expected in ('docs/anti-eu-bureaucracy.md', 'gpt-6.1-terra', '--tier fallback', 'sheet.fnv.md', 'near-miss',
-                         'existing bodies or layout', '8 counted attempts per function'):
+                         'preserve every previously passing function body', '8 counted attempts per function',
+                         'uncompared placeholder', 'Engineer revocation'):
             self.assertIn(expected, text)
         with self.assertRaises(ValueError):
             flow.brief_drafter(self.root, self.fdir, 'cheap', tier='fallback')
@@ -880,7 +881,8 @@ class QueueStates(unittest.TestCase):
         self.assertTrue(any('--profile claude-low --tier strong' in t for t in actions))
         brief = self.root / flow.brief_drafter(self.root, self.fdir, 'claude-low', queue_dir='.local/queue/mid', tier='strong')[0]
         for expected in ('gpt-6.1-sol', '--tier strong', '10 counted attempts per function',
-                         'previous tiers', 'named structural blocker', 'existing bodies or layout'):
+                         'previous tiers', 'named structural blocker', 'uncompared placeholder',
+                         'every retained regression must still pass'):
             self.assertIn(expected, brief.read_text())
 
 

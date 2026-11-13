@@ -107,11 +107,18 @@ is a stop for the strong role, never a reason to delete or overwrite a file your
 New Drafter claims create private checkouts at origin/main; each generated brief requires editing
 only there. `work_queue.py done` harvests passing units after a fresh clean all-pass attempt of
 retained functions and regressions; failed additions must already be removed. Harvest failures
-retain the claim and are Engineer triage, never permission to filter source or weaken a check.
+retain the claim and park the unit with its refusal as the hold reason. `next` continues to other
+units; an Engineer retries after repairing tooling or preparation. A successful clean harvest clears
+its own refusal hold. This is never permission to filter source or weaken a comparison.
 `confirm` automatically uses the immutable harvest commit and its frozen task. Review groups get
 a frozen checkout built from those commits, and integration copies their whole closures from the
 same commits. The match record still binds the entire translation-unit closure. Subsequent tiers
-carry the previous unintegrated snapshot. Draft checkouts and branches are removed after their
+carry the previous unintegrated snapshot, recovering earlier in-place passes from the control
+checkout when no harvest exists. Claim preparation refuses a recipe inconsistent with accepted
+evidence or an accepted regression that fails its baseline comparison; send that unit to an Engineer.
+Standalone tasks install their prepared skeleton even if origin contains an unrelated stub at the
+same source path; reference skeletons for existing-unit extensions never replace accepted source.
+Draft checkouts and branches are removed after their
 harvest is integrated, or remaining functions fail at the last tier. Private harvest refs retain
 the commits after draft branches are removed; task diagnostics and near-misses stay.
 Older claims and state without harvest fields keep their existing in-place workflow.

@@ -3,11 +3,13 @@
 This is queue transport, not match evidence. Confirmation and acceptance keep their existing gates.
 """
 import json
+import hashlib
 from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import uuid
 
 from source_digest import include_closure, tu_digest
@@ -44,14 +46,26 @@ def link_private(root, tree):
     # Keep the worktree's own lifecycle metadata private to it; share kit inputs and task logs.
     local = Path(tree) / '.local'
     local.mkdir(exist_ok=True)
-    names = {'tasks', 'queue', 'verifier', 'packs', 'sources', 'analysis', 'material',
+    names = {'tasks', 'queue', 'packs', 'sources', 'analysis', 'material',
              'briefs', 'reviews', 'flow', 'toolchains'}
     names.update(p.name for p in (Path(root) / '.local').iterdir()
-                 if p.is_dir() and p.name != 'worktrees')
+                 if p.is_dir() and p.name not in {'worktrees', 'verifier'})
     for name in names:
         dest = local / name
         if not dest.exists() and not dest.is_symlink():
             dest.symlink_to((Path(root) / '.local' / name).resolve(), target_is_directory=True)
+    # Diagnostics must resolve inside the checkout checked by verify_function. Host slots and
+    # configuration remain shared, so changing the diagnostic location cannot bypass concurrency.
+    verifier = local / 'verifier'
+    if verifier.is_symlink():
+        verifier.unlink()
+    verifier.mkdir(exist_ok=True)
+    shared = Path(root) / '.local/verifier'
+    if shared.is_dir():
+        for entry in shared.iterdir():
+            dest = verifier / entry.name
+            if entry.name != 'diagnostics' and not dest.exists() and not dest.is_symlink():
+                dest.symlink_to(entry.resolve(), target_is_directory=entry.is_dir())
 
 
 def current(root, unit):
@@ -90,6 +104,109 @@ def create(root, unit, tier, owner):
         return _create(root, unit, tier, owner)
 
 
+def carry_legacy_passes(root, unit, tier, state):
+    """Recover earlier in-place passes, merging around any work already done in this tier."""
+    if tier == 'first' or state.get('carryover') or current(root, unit):
+        return
+    import work_queue as wq
+    retained = set()
+    for queue in (root / '.local/queue').glob('*/queue.tsv'):
+        if any(u['dir'] == unit['dir'] for u in wq.read_queue(queue.parent)):
+            retained.update(passing_before(queue.parent, unit, tier))
+    data = json.loads(git(root, 'show', 'origin/main:data/progress.json'))
+    integrated = {f['rva'] for f in data['functions'] if f['status'] == 'matched'}
+    retained -= integrated
+    if not retained:
+        return
+    tree = Path(state['tree'])
+    merged = {}
+    for rel in include_closure(root, read(task_dir(root, unit) / 'task.json')['compiled']):
+        shared = (root / rel).read_bytes()
+        dest = tree / rel
+        try:
+            base = git(root, 'show', f'{state["base"]}:{rel}')
+        except ValueError:
+            base = b''
+        ours = dest.read_bytes() if dest.exists() else b''
+        with tempfile.TemporaryDirectory() as tmp:
+            paths = [Path(tmp) / name for name in ('ours', 'base', 'earlier')]
+            for path, blob in zip(paths, (ours, base, shared)):
+                path.write_bytes(blob)
+            proc = subprocess.run(['git', 'merge-file', '-p', *map(str, paths)], capture_output=True)
+        if proc.returncode:
+            raise ValueError(f'earlier passing source conflicts in {rel}; preserve both tiers before retrying')
+        merged[rel] = proc.stdout
+    for rel, blob in merged.items():
+        dest = tree / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(blob)
+    state['carryover'] = {'kind': 'legacy', 'passing': sorted(retained)}
+
+
+def prepare_regressions(root, unit, tree):
+    """Check integrated functions before spending a Drafter's attempt budget."""
+    directory = task_dir(root, unit)
+    task = read(directory / 'task.json')
+    data = read(tree / 'data/progress.json')
+    records = []
+    members = {int(str(f['rva']), 0) for f in task['functions']}
+    for fn in data['functions']:
+        if fn['status'] != 'matched' or fn['rva'] not in members:
+            continue
+        rec = read(tree / fn['report'])
+        if rec['source']['compiled'] != task['compiled']:
+            continue
+        records.append((fn, rec))
+    if not records:
+        return
+    digest = hashlib.sha256((tree / task['recipe']).read_bytes()).hexdigest()
+    selected = []
+    for fn, rec in records:
+        if rec['recipe']['sha256'] != digest:
+            raise ValueError(f'unit preparation: accepted 0x{fn["rva"]:x} uses '
+                             f'{rec["recipe"]["path"]}, not the task recipe {task["recipe"]}')
+        selected.append(dict(rec['runs'][0]['report']['function']))
+    probe = directory / 'preparation-checks' / uuid.uuid4().hex
+    probe.mkdir(parents=True)
+    for name in ('symbols.json', 'bind-hints.json', 'config.json'):
+        if (directory / name).is_file():
+            shutil.copyfile(directory / name, probe / name)
+    if task.get('symbols', '').startswith('reports/'):
+        shutil.copyfile(tree / task['symbols'], probe / 'symbols.json')
+    save(probe / 'task.json', dict(task, functions=selected, max_attempts=None, symbols='symbols.json'))
+    proc = subprocess.run([sys.executable, str(tree / 'tools/verifier/attempt'), str(probe)],
+                          cwd=tree, capture_output=True, text=True)
+    (probe / 'preparation.log').write_text(proc.stdout + proc.stderr)
+    reports = [read(probe / f'attempts/001/0x{int(str(f["rva"]), 0):x}/report.json', {})
+               for f in selected]
+    if proc.returncode or any(r.get('result') != 'pass' for r in reports):
+        raise ValueError(f'unit preparation: accepted regressions do not pass; see {probe / "preparation.log"}')
+    save(directory / 'preparation.json', {'task': str(probe), 'recipe_sha256': digest,
+                                        'passing': [int(str(f['rva']), 0) for f in selected]})
+
+
+def install_prepared_skeleton(directory, tree, state):
+    task = read(directory / 'task.json', {})
+    if state.get('carryover') or read(directory / 'harvest.json') or task.get('export', {}).get(
+            'unit_already_records') != [] or any(f.get('role') == 'regression' for f in task['functions']):
+        return
+    sources = state['sources']
+    cached = [directory / 'skeleton' / Path(rel).name for rel in sources]
+    if all(p.is_file() for p in cached):
+        blobs = {rel: p.read_bytes() for rel, p in zip(sources, cached)}
+    else:
+        from unit_skeleton import skeleton_files
+        header, htext, cpp, ctext = skeleton_files(directory, repo=tree)
+        blobs = {header: htext.encode(), cpp: ctext.encode()}
+    if set(blobs) != set(sources):
+        raise ValueError('prepared skeleton does not name exactly the claimed unit files')
+    for rel, blob in blobs.items():
+        dest = tree / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(blob)
+    state['prepared_skeleton'] = True
+
+
 def _create(root, unit, tier, owner):
     root = Path(root).resolve()
     directory = task_dir(root, unit)
@@ -99,6 +216,17 @@ def _create(root, unit, tier, owner):
     state_path = directory / f'draft-{tier}.json'
     old = read(state_path)
     if old and old.get('ready') and Path(old['tree']).is_dir():
+        carry_legacy_passes(root, unit, tier, old)
+        # Resume a checkout initialized from a base stub only while it is still untouched.
+        # Never replace a Drafter's edits when recovering an older setup state.
+        if not old.get('prepared_skeleton') and old.get('base'):
+            try:
+                untouched = all((Path(old['tree']) / rel).read_bytes() == git(
+                    root, 'show', f'{old["base"]}:{rel}') for rel in unit['sources'])
+            except (OSError, ValueError):
+                untouched = False
+            if untouched:
+                install_prepared_skeleton(directory, Path(old['tree']), old)
         link_private(root, Path(old['tree']))
         label(old['tree'], owner, unit['key'], 'draft', old['branch'])
         old['owner'] = owner
@@ -144,10 +272,12 @@ def _create(root, unit, tier, owner):
                 shutil.copyfile(tree / task['symbols'], directory / 'symbols.json')
                 task['symbols'] = 'symbols.json'
                 save(directory / 'task.json', task)
-        # Never seed a new checkout from tracked source in the shared working tree.
+        carry_legacy_passes(root, unit, tier, state)
+        install_prepared_skeleton(directory, tree, state)
         if not (tree / unit['sources'][-1]).exists():
             from unit_skeleton import write_skeleton
             write_skeleton(directory, repo=tree)
+        prepare_regressions(root, unit, tree)
         state['ready'] = True
         save(state_path, state)
         save(directory / 'draft-managed.json', {'unit': unit['key']})
@@ -250,6 +380,62 @@ def audit_source(tree, sources, allowed, targets, bind):
                          + ', '.join(sorted(failed)))
 
 
+def existing_header_emissions(tree, base, closure, symbols, task_targets, bind):
+    """Untouched stand-ins can emit incidental functions, just as in an ordinary attempt."""
+    from check_origin import brace_pairs, clean, functions
+    existing_classes, existing_bodies, changed_bodies = set(), set(), set()
+
+    def bodies(text):
+        out = {}
+        for fn in functions(text):
+            name = (fn['class'] + '::' if fn['class'] else '') + fn['name']
+            out.setdefault(name, set()).add((json.dumps(fn['params']), fn['body']))
+        return out
+
+    def classes(text):
+        pairs = brace_pairs(text)
+        return {(m.group(1), text[m.start():pairs[m.end() - 1] + 1])
+                for m in re.finditer(r'\b(?:class|struct)\s+([A-Za-z_]\w*)\b[^;{}]*\{', text)
+                if m.end() - 1 in pairs}
+
+    def defaults(text):
+        return {f'{owner}::{member}' for owner, member in re.findall(
+            r'\b([A-Za-z_]\w*)::(~?[A-Za-z_]\w*)\s*\([^;{}]*\)[^;{}=]*=\s*default\s*;', text)}
+
+    for rel in closure:
+        blob = (tree / rel).read_bytes()
+        try:
+            before = git(tree, 'show', f'{base}:{rel}')
+        except ValueError:
+            before = b''
+        text = clean(blob.decode())
+        original = clean(before.decode())
+        old_bodies = bodies(original)
+        for name, definitions in bodies(text).items():
+            if definitions <= old_bodies.get(name, set()):
+                existing_bodies.add(name)
+            else:
+                changed_bodies.add(name)
+        changed_bodies.update(defaults(text) - defaults(original))
+        if Path(rel).suffix in ('.h', '.hpp'):
+            existing_classes.update(name for name, definition in classes(text) & classes(original))
+    names = bind.Names(bind.find_undname())
+    names.load(sorted(symbols))
+    exempt = set()
+    for symbol in symbols - task_targets:
+        name = names(symbol) or symbol
+        special = re.match(r'\?\?(0|1|_G|_E)([A-Za-z_]\w*)@@', symbol)
+        if special:
+            kind, owner = special.groups()
+            name = f'{owner}::{owner if kind == "0" else "~" + owner}'
+        if name in changed_bodies:
+            continue
+        owner = name.rsplit('::', 1)[0] if '::' in name else None
+        if owner in existing_classes or name in existing_bodies:
+            exempt.add(symbol)
+    return exempt
+
+
 def harvest(qdir, unit, claim, records):
     """Snapshot only after a fresh all-pass compile and comparison of the retained unit.
 
@@ -272,13 +458,6 @@ def harvest(qdir, unit, claim, records):
     selected = [f for f in raw['functions'] if int(str(f['rva']), 0) in passing
                 or int(str(f['rva']), 0) not in queued]
     data = read(tree / 'data/progress.json', {})
-    for fn in data.get('functions', []):
-        if fn.get('status') != 'matched':
-            continue
-        rec = read(tree / fn.get('report', 'missing'), {})
-        if rec.get('source', {}).get('compiled') == raw['compiled'] and fn['rva'] not in {
-                int(str(f['rva']), 0) for f in selected}:
-            selected.append(dict(rec['runs'][0]['report']['function']))
     if not passing <= {int(str(f['rva']), 0) for f in selected}:
         raise ValueError('passing function missing from task.json')
     clean = directory / 'harvest-checks' / uuid.uuid4().hex
@@ -312,14 +491,9 @@ def harvest(qdir, unit, claim, records):
     from pecoff import CoffObject
     defined = set(bind.defined_functions(CoffObject((dest / 'candidate.obj').read_bytes())))
     allowed = {f['symbol'] for f in final['functions']}
-    # Every pre-existing integrated function remains a regression, even if an old task omitted it.
-    for fn in data.get('functions', []):
-        if fn.get('status') != 'matched':
-            continue
-        rec = read(tree / fn.get('report', 'missing'), {})
-        if fn.get('status') == 'matched' and rec.get('source', {}).get('compiled') == raw['compiled']:
-            if fn['rva'] not in {int(str(f['rva']), 0) for f in final['functions']}:
-                raise ValueError('integrated regression absent from clean task; no harvest')
+    # Membership comes from the prepared task, including its explicit regressions. Other
+    # producers may publish a stub with the same compiled path; integration still validates
+    # every accepted record against the complete source closure before anything can land.
     targets = target_symbols(tree, directory, original, final, data)
     # The clean binder may have learned additional target bindings during this attempt.
     targets.update(target_symbols(tree, clean, final, final, data))
@@ -327,6 +501,8 @@ def harvest(qdir, unit, claim, records):
     names.load(sorted(defined))
     targets.update(symbol for symbol in defined if names(symbol) in targets)
     extra = (defined & targets) - allowed
+    task_targets = target_symbols(tree, directory, original, final, {'functions': []})
+    extra -= existing_header_emissions(tree, state['base'], closure, extra, task_targets, bind)
     if extra:
         raise ValueError('unit still defines target functions without passing attempts; remove failed additions: '
                          + ', '.join(sorted(extra)))
@@ -413,6 +589,25 @@ def confirm_one(root, directory, args):
     try:
         link_private(root, tree)
         label(tree, 'confirm', Path(directory).name, 'confirm')
+        # Enrollment can land after the source harvest. Carry only the selected identities;
+        # their source still comes exclusively from the immutable harvest commit.
+        task = read(Path(h['task']) / 'task.json')
+        data = read(tree / 'data/progress.json')
+        known = {f['id']: f for f in data['functions']}
+        enrolled = {f['id']: f for f in read(Path(root) / 'data/progress.json')['functions']}
+        for fn in task['functions']:
+            ident = f'{task["build_id"]}-0x{int(str(fn["rva"]), 0):x}'
+            row = enrolled.get(ident)
+            if row is None or row['size'] != fn['size']:
+                raise ValueError(f'{ident} must be enrolled before confirmation')
+            if ident not in known:
+                data['functions'].append(row)
+                evidence = row.get('evidence')
+                if evidence and (Path(root) / evidence).is_file():
+                    dest = tree / evidence
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(Path(root) / evidence, dest)
+        save(tree / 'data/progress.json', data)
         binding_list = tree / '.local/harvest-bind.txt'
         binding_list.write_text(h['task'] + '\n')
         command = [sys.executable, str(tree / 'tools/verifier/bind.py'), '--list', str(binding_list), '--unit-maps']

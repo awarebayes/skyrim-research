@@ -1495,8 +1495,13 @@ Use `--tier {tier}` on queue done and release, and run
 Draft only the unpassed functions listed by the claim; previously passed functions remain regression comparisons.
 You have {entry['attempts_per_function']} counted attempts per function, and a unit budget of
 {entry['attempts_per_function']} times the number of unpassed functions. Keep per-function counts yourself.
-For units extending existing source files, add only: never change existing bodies or layout;
-remove failed additions by exact text. Record a function as failed only after its attempt budget is used or a named structural blocker; stop when it passes. Record one result per newly attempted function and the unit.
+For units extending existing source files, preserve every previously passing function body.
+You may replace an uncompared placeholder for your assigned target and complete declarations
+inside your own unit when that target requires them; every retained regression must still pass.
+An accepted adjustor thunk and the destructor it calls are separate targets. A wrong accepted
+body needs Engineer revocation, never silent replacement. Remove failed additions by exact text.
+Record a function as failed only after its attempt budget is used or a named structural blocker;
+stop when it passes. Record one result per newly attempted function and the unit.
 No Boat, git or network. Do not push, post publicly, mark `matched`, or start further agents.
 Return the short table from the runbook; full details go to the queue.
 '''

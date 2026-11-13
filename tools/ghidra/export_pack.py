@@ -1906,6 +1906,9 @@ def render_brief(task, packs):
     if regress:
         risks.append('- Shared unit: it already holds ' + ', '.join(f'`{f["community_name"]}` ({f["rva"]})'
                      for f in regress) + '; every attempt re-checks it, keep it passing and its source unchanged.')
+        risks.append('- An assigned destructor may replace an uncompared placeholder body; an accepted '
+                     'adjustor thunk is a separate function and must still pass. A wrong accepted body '
+                     'requires Engineer revocation, never silent replacement.')
     if task['recipe'].endswith('fpfast.json'):
         risks.append('- `/fp:fast` recipe: some functions test float equality without a parity branch; the others '
                      'do no float arithmetic, compare or conversion, so the recipe does not change them.')

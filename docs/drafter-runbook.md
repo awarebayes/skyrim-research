@@ -53,13 +53,19 @@ every other document are optional: an unread document is never a reason to stop.
    runbook: skeletons already exist, and step 9 here reports the results. If the unit sheet says
    it extends an existing unit, follow its instructions for using its separate skeleton without
    replacing existing source files or regression functions.
+   An uncompared destructor placeholder may be replaced when that destructor is the assigned
+   target. An accepted adjustor thunk is a separate function: retain and re-check it. If an
+   accepted function body itself is wrong, report it for Engineer revocation; do not replace it.
 1. `python3 tools/work_queue.py next --worker <label> --profile cheap` prints a unit dir, e.g.
    `.local/tasks/q1-s02-niobject/q1-s02-niobject-bsxflags`. If it prints `EMPTY`, go to "Finished".
    It also prints the private draft checkout under `.local/worktrees/draft/<unit>-<tier>`.
    **cd to that checkout before editing source or running attempt.** It is the only place to edit;
    never edit source in the shared checkout. Kit inputs, task directories, queues and verifier
    settings are linked from the shared `.local/`. Later tiers start at origin/main with the prior
-   unintegrated harvest overlaid. A claim made before isolated checkouts existed keeps its original
+   unintegrated harvest overlaid; earlier in-place passes without a harvest are recovered from
+   the control checkout. Conflicting additions require Engineer resolution preserving both tiers.
+   Setup checks that accepted regressions pass under the task recipe before drafting starts.
+   A claim made before isolated checkouts existed keeps its original
    location and commands.
 2. `cat <unit dir>/sheet.md` (Claude models: `sheet.fnv.md`). It names the two source files, the
    budget and each function. Read each function's page: `cat <unit dir>/sheet-0x<rva>.md`
@@ -96,16 +102,22 @@ every other document are optional: an unread document is never a reason to stop.
    `result` is `pass` only if the last attempt printed PASS for that RVA. `blocker` names the
    near-miss file or the problem; `friction` is one sentence on anything that slowed you, or null.
    For an isolated claim, `done` also harvests: it runs a fresh clean attempt of every retained
-   passing function and integrated regression, checks for leftover untested target candidates, then
+   passing function and the prepared task's regressions, checks for leftover untested target candidates, then
    commits exactly the unit files through tooling. This is the only sanctioned git operation for
    a Drafter; never run git yourself. Failed additions must already be removed. The clean check
    is separate from retry budgets. A failure writes `harvest-error-<tier>.json`, creates no new
-   harvest and retains the claim: report the refusal for Engineer triage. A unit with no passing
+   harvest, retains the claim and holds the unit so `next` can continue elsewhere: report the
+   refusal for Engineer triage. A successful retry clears that harvest-refusal hold; other holds
+   need an explicit Engineer release. A unit with no passing
    function has no harvest. Tooling removes its checkout after final failure or integration;
    near-miss files remain in the task directory.
    Helpers without a task or inventory function target follow the existing lint and Reviewer
    rules; harvest runs that lint, without requiring a separate target or pass for each helper.
    The comparator's existing binding and relocation checks still apply to emitted helpers.
+   Untouched existing headers may emit incidental definitions, as in an ordinary attempt; these
+   are not failed additions. Task targets and added inventory-target definitions still need passes.
+   Integration checks every accepted record against the entire source closure, including records
+   from another producer that used the same compiled path.
 10. Go to step 1. A finished, stuck or budget-exhausted unit ends that unit only. Continue
     until `next` prints `EMPTY` or the infrastructure stop below applies.
 

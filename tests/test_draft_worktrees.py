@@ -46,6 +46,9 @@ class DraftWorktrees(unittest.TestCase):
         self.lint_patch.start()
         self.addCleanup(self.lint_patch.stop)
         self.object_bytes = fx.coff_object()
+        self.preparation = patch.object(drafts, 'prepare_regressions')
+        self.preparation.start()
+        self.addCleanup(self.preparation.stop)
 
     def tearDown(self):
         shutil.rmtree(self.tmp)
@@ -115,6 +118,120 @@ class DraftWorktrees(unittest.TestCase):
         self.assertFalse((self.q / 'done/g-foo.json').exists())
         self.assertTrue((self.q / 'claims/g-foo.lock').exists())
         self.assertTrue((self.directory / 'harvest-error-first.json').exists())
+        hold = drafts.read(self.q / 'holds/g-foo.json')
+        self.assertEqual(hold['kind'], 'harvest-refusal')
+        self.assertIn('clean harvest attempt failed', hold['reason'])
+        self.assertIsNone(self.claim())
+        self.finish()
+        self.assertFalse((self.q / 'holds/g-foo.json').exists())
+
+    def test_standalone_prepared_skeleton_replaces_an_unrelated_base_stub(self):
+        task = drafts.read(self.directory / 'task.json')
+        task['export'] = {'unit_already_records': []}
+        drafts.save(self.directory / 'task.json', task)
+        for rel in self.unit['sources']:
+            path = self.directory / 'skeleton' / Path(rel).name
+            path.parent.mkdir(exist_ok=True)
+            path.write_text('// prepared ' + Path(rel).name + '\n')
+        tree = Path(self.claim()['draft']['tree'])
+        self.assertEqual((tree / self.unit['sources'][-1]).read_text(), '// prepared Foo.cpp\n')
+        self.assertEqual((self.root / self.unit['sources'][-1]).read_text(), 'int a;\n')
+
+    def test_standalone_without_cached_skeleton_regenerates_over_base_stub(self):
+        task = drafts.read(self.directory / 'task.json')
+        task['export'] = {'unit_already_records': []}
+        drafts.save(self.directory / 'task.json', task)
+        import unit_skeleton
+        with patch.object(unit_skeleton, 'skeleton_files', return_value=(
+                self.unit['sources'][0], '// prepared header\n', self.unit['sources'][1], '// prepared source\n')):
+            tree = Path(self.claim()['draft']['tree'])
+        self.assertEqual((tree / self.unit['sources'][0]).read_text(), '// prepared header\n')
+        self.assertEqual((tree / self.unit['sources'][1]).read_text(), '// prepared source\n')
+
+    def test_resume_repairs_an_untouched_base_stub_but_preserves_drafter_edits(self):
+        tree = Path(self.claim()['draft']['tree'])
+        task = drafts.read(self.directory / 'task.json')
+        task['export'] = {'unit_already_records': []}
+        drafts.save(self.directory / 'task.json', task)
+        import unit_skeleton
+        with patch.object(unit_skeleton, 'skeleton_files', return_value=(
+                self.unit['sources'][0], '// prepared header\n', self.unit['sources'][1], '// prepared source\n')):
+            self.claim()
+        self.assertEqual((tree / self.unit['sources'][1]).read_text(), '// prepared source\n')
+        (tree / self.unit['sources'][1]).write_text('// current draft\n')
+        self.claim()
+        self.assertEqual((tree / self.unit['sources'][1]).read_text(), '// current draft\n')
+
+    def test_preparation_checks_the_recipe_and_runs_all_accepted_regressions(self):
+        import hashlib
+        self.preparation.stop()
+        recipe = self.root / 'reconstruction/recipes/r.json'
+        drafts.save(recipe, {'flags': ['/O2']})
+        task = drafts.read(self.directory / 'task.json')
+        task['recipe'] = recipe.relative_to(self.root).as_posix()
+        drafts.save(self.directory / 'task.json', task)
+        data = drafts.read(self.root / 'data/progress.json')
+        for fn in data['functions']:
+            fn['status'] = 'matched'
+            rec_path = self.root / fn['report']
+            rec = drafts.read(rec_path)
+            rec['recipe'] = {'path': task['recipe'], 'sha256': hashlib.sha256(recipe.read_bytes()).hexdigest()}
+            rec['runs'][0]['report'] = {'function': {'rva': hex(fn['rva']), 'size': fn['size'],
+                                                    'symbol': fx.FUNCTION}}
+            drafts.save(rec_path, rec)
+        drafts.save(self.root / 'data/progress.json', data)
+        self.real_run = subprocess.run
+        with patch('draft_worktrees.subprocess.run', side_effect=self.clean_attempt):
+            drafts.prepare_regressions(self.root, self.unit, self.root)
+        self.assertEqual(drafts.read(self.directory / 'preparation.json')['passing'], [0x1000, 0x1010])
+        with patch('draft_worktrees.subprocess.run', return_value=subprocess.CompletedProcess([], 1, '', 'fail')):
+            with self.assertRaisesRegex(ValueError, 'accepted regressions do not pass'):
+                drafts.prepare_regressions(self.root, self.unit, self.root)
+        recipe.write_text('{}')
+        with self.assertRaisesRegex(ValueError, 'not the task recipe'):
+            drafts.prepare_regressions(self.root, self.unit, self.root)
+
+    def legacy_pass(self):
+        data = drafts.read(self.root / 'data/progress.json')
+        data['functions'][0]['status'] = 'mapped'
+        drafts.save(self.root / 'data/progress.json', data)
+        git(self.root, 'add', 'data/progress.json')
+        (self.q / 'results.jsonl').write_text(json.dumps({
+            'queue_unit': self.unit['dir'], 'tier': 'first', 'rva': '0x1000', 'result': 'pass'}) + '\n')
+
+    def test_legacy_earlier_pass_is_carried_without_a_harvest(self):
+        self.legacy_pass()
+        (self.root / self.unit['sources'][-1]).write_text('int a;\nint earlier;\n')
+        state = drafts.create(self.root, self.unit, 'strong', 'worker-strong')
+        self.assertEqual((Path(state['tree']) / self.unit['sources'][-1]).read_text(),
+                         'int a;\nint earlier;\n')
+        self.assertEqual(state['carryover']['passing'], [0x1000])
+
+    def test_recover_existing_tier_keeps_its_work_and_earlier_pass(self):
+        self.legacy_pass()
+        state = drafts.create(self.root, self.unit, 'strong', 'worker-strong')
+        tree = Path(state['tree'])
+        (tree / self.unit['sources'][0]).write_text('#pragma once\nint strong;\n')
+        (self.root / self.unit['sources'][-1]).write_text('int a;\nint earlier;\n')
+        # A checkout made before carry-over support has no completion marker.
+        state.pop('carryover', None)
+        drafts.save(self.directory / 'draft-strong.json', state)
+        drafts.create(self.root, self.unit, 'strong', 'worker-strong')
+        self.assertIn('int strong;', (tree / self.unit['sources'][0]).read_text())
+        self.assertIn('int earlier;', (tree / self.unit['sources'][-1]).read_text())
+
+    def test_legacy_carryover_conflict_preserves_both_inputs(self):
+        self.legacy_pass()
+        state = drafts.create(self.root, self.unit, 'strong', 'worker-strong')
+        tree = Path(state['tree'])
+        state.pop('carryover', None)
+        drafts.save(self.directory / 'draft-strong.json', state)
+        (tree / self.unit['sources'][-1]).write_text('int strong;\n')
+        (self.root / self.unit['sources'][-1]).write_text('int earlier;\n')
+        with self.assertRaisesRegex(ValueError, 'preserve both tiers'):
+            drafts.create(self.root, self.unit, 'strong', 'worker-strong')
+        self.assertEqual((tree / self.unit['sources'][-1]).read_text(), 'int strong;\n')
+        self.assertEqual((self.root / self.unit['sources'][-1]).read_text(), 'int earlier;\n')
 
     def test_setup_link_and_label_failures_roll_back_and_next_claim_recovers(self):
         for stage in ('link_private', 'label'):
@@ -261,6 +378,93 @@ class DraftWorktrees(unittest.TestCase):
             with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
                 self.finish()
 
+    def existing_header(self):
+        symbol = '??_GExisting@@UEAAPEAXI@Z'
+        (self.root / self.unit['sources'][0]).write_text('class Existing { public: virtual ~Existing(); };\n')
+        (self.root / self.unit['sources'][1]).write_text('#include "Foo.h"\nint a;\n')
+        git(self.root, 'add', *self.unit['sources'])
+        git(self.root, 'commit', '-m', 'synthetic pre-existing stand-in')
+        git(self.root, 'push', 'origin', 'main')
+        drafts.save(self.directory / 'symbols.json', {'symbols': {symbol: {'rva': 0x2000}}})
+        return symbol
+
+    def test_untouched_header_emitted_destructor_is_not_a_failed_addition(self):
+        symbol = self.existing_header()
+        self.claim()
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            self.finish()
+
+    def test_unchanged_standin_class_survives_unrelated_header_addition(self):
+        symbol = self.existing_header()
+        tree = Path(self.claim()['draft']['tree'])
+        header = tree / self.unit['sources'][0]
+        header.write_text(header.read_text() + 'int NewDeclaration();\n')
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            self.finish()
+
+    def test_preexisting_inventory_body_is_not_a_new_candidate_when_cpp_is_extended(self):
+        source = self.root / self.unit['sources'][-1]
+        source.write_text('int InventoryOther() { return 1; }\n')
+        git(self.root, 'add', self.unit['sources'][-1])
+        git(self.root, 'commit', '-m', 'synthetic existing uncompared body')
+        git(self.root, 'push', 'origin', 'main')
+        drafts.save(self.directory / 'symbols.json', {'symbols': {'InventoryOther': {'rva': 0x2000}}})
+        tree = Path(self.claim()['draft']['tree'])
+        (tree / self.unit['sources'][-1]).write_text(source.read_text() + 'int NewHelper() { return 2; }\n')
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, 'InventoryOther': 2}):
+            self.finish()
+
+    def test_added_inventory_target_body_cannot_use_existing_header_exemption(self):
+        symbol = self.existing_header()
+        tree = Path(self.claim()['draft']['tree'])
+        (tree / self.unit['sources'][-1]).write_text('#include "Foo.h"\nExisting::~Existing() {}\n')
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_unit_target_in_untouched_header_still_requires_a_pass(self):
+        symbol = self.existing_header()
+        task = drafts.read(self.directory / 'task.json')
+        task['functions'][1]['symbol'] = symbol
+        drafts.save(self.directory / 'task.json', task)
+        self.claim()
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_added_defaulted_destructor_is_not_an_untouched_header_emission(self):
+        symbol = self.existing_header()
+        tree = Path(self.claim()['draft']['tree'])
+        (tree / self.unit['sources'][-1]).write_text('#include "Foo.h"\nExisting::~Existing() noexcept(true) = default;\n')
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
+    def test_harvest_does_not_add_an_unrelated_inventory_stub_to_the_task(self):
+        self.claim()
+        data = drafts.read(self.root / 'data/progress.json')
+        row = dict(data['functions'][-1], rva=0x1020, id=f'{BUILD}-0x1020', status='matched',
+                   report=f'reports/{BUILD}/0x1020.json')
+        data['functions'].append(row)
+        drafts.save(self.root / 'data/progress.json', data)
+        drafts.save(self.root / row['report'], {'source': {'compiled': self.unit['sources'][-1]},
+            'runs': [{'report': {'function': {'rva': '0x1020', 'size': 3, 'symbol': 'UnrelatedStub'}}}]})
+        self.finish()
+        clean = drafts.read(Path(drafts.current(self.root, self.unit)['task']) / 'task.json')
+        self.assertEqual([f['rva'] for f in clean['functions']], ['0x1000'])
+
     def test_qualified_target_hint_does_not_turn_a_failed_candidate_into_a_helper(self):
         self.claim()
         drafts.save(self.directory / 'bind-hints.json', {'Other::Failed': '0x1010'})
@@ -365,10 +569,18 @@ class DraftWorktrees(unittest.TestCase):
         self.assertTrue(drafts.current(self.root, self.unit)['integrated'])
 
     def test_confirm_reads_commit_and_not_mutable_draft(self):
+        data = drafts.read(self.root / 'data/progress.json')
+        later_enrollment = data['functions'].pop(0)
+        drafts.save(self.root / 'data/progress.json', data)
+        git(self.root, 'add', 'data/progress.json')
+        git(self.root, 'commit', '-m', 'synthetic source precedes enrollment')
+        git(self.root, 'push', 'origin', 'main')
         unit = self.claim()
         tree = Path(unit['draft']['tree'])
         (tree / self.unit['sources'][-1]).write_text('int harvested;\n')
         self.finish()
+        data['functions'].append(later_enrollment)
+        drafts.save(self.root / 'data/progress.json', data)
         (tree / self.unit['sources'][-1]).write_text('int dirty_draft;\n')
         self.real_run = subprocess.run
         seen = []
@@ -376,12 +588,38 @@ class DraftWorktrees(unittest.TestCase):
         def run(command, cwd=None, **kwargs):
             if len(command) > 1 and ('verifier/bind.py' in str(command[1]) or 'verifier/confirm' in str(command[1])):
                 seen.append((Path(cwd) / self.unit['sources'][-1]).read_text())
+                self.assertIn(later_enrollment, drafts.read(Path(cwd) / 'data/progress.json')['functions'])
                 return subprocess.CompletedProcess(command, 0)
             return self.real_run(command, cwd=cwd, **kwargs)
 
         with patch('draft_worktrees.subprocess.run', side_effect=run):
             self.assertEqual(drafts.confirm_one(self.root, self.directory, ['--out', str(self.tmp / 'out')]), 0)
         self.assertEqual(seen, ['int harvested;\n', 'int harvested;\n'])
+
+    def test_private_diagnostics_keep_shared_host_slots(self):
+        shared = self.root / '.local/verifier'
+        (shared / 'runner-slots').mkdir(parents=True)
+        drafts.save(shared / 'config.json', {})
+        unit = self.claim()
+        verifier = Path(unit['draft']['tree']) / '.local/verifier'
+        self.assertFalse(verifier.is_symlink())
+        self.assertEqual((verifier / 'runner-slots').resolve(), (shared / 'runner-slots').resolve())
+        self.assertEqual((verifier / 'config.json').resolve(), (shared / 'config.json').resolve())
+        (verifier / 'diagnostics').mkdir()
+        self.assertTrue((verifier / 'diagnostics').resolve().is_relative_to(Path(unit['draft']['tree'])))
+
+    def test_confirm_cannot_invent_or_change_an_enrolled_identity(self):
+        self.claim()
+        self.finish()
+        data = drafts.read(self.root / 'data/progress.json')
+        data['functions'][0]['size'] += 1
+        drafts.save(self.root / 'data/progress.json', data)
+        with self.assertRaisesRegex(ValueError, 'must be enrolled'):
+            drafts.confirm_one(self.root, self.directory, [])
+        data['functions'].pop(0)
+        drafts.save(self.root / 'data/progress.json', data)
+        with self.assertRaisesRegex(ValueError, 'must be enrolled'):
+            drafts.confirm_one(self.root, self.directory, [])
 
 
 if __name__ == '__main__':
