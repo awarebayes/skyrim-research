@@ -1,0 +1,21 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "ea3f622fabeb7f8dbec125e50f8415238ab0dec3b0e996f608161986a0204781",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xbae30",
+  "naming_findings": [],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "44b1b2524d02c65866cf23e120c851f2391f2491374d3da42e826ce23895fc8a",
+  "review_task_id": "review-flow-g039",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 765488,
+  "size": 39,
+  "source_digest": "40fc919c5eb9d3ac8e7f084150fbc0b70343b99f9eb5abeda10661ccb63739cf",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}
