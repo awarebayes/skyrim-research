@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/ab40e534471a584b5542aab9047c5b2dba84b9070910789b67d8336feb83dfb2.json",
+  "versions": [
+    {
+      "sha256": "ab40e534471a584b5542aab9047c5b2dba84b9070910789b67d8336feb83dfb2",
+      "base": null,
+      "added": [
+        "?LinkObject@NiPSysGravityModifier@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ"
+      ]
+    }
+  ]
+}

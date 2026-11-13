@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?LinkObject@NiPSysGravityModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16368640,
+      "size": 44
+    },
+    "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16388112,
+      "size": null
+    },
+    "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ": {
+      "rva": 15618960,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?LinkObject@NiPSysGravityModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xf9c400",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfa1010",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ",
+        "rva": "0xee5390",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
