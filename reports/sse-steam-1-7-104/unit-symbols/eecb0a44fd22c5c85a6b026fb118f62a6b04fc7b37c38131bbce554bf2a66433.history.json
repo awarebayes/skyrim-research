@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/eecb0a44fd22c5c85a6b026fb118f62a6b04fc7b37c38131bbce554bf2a66433.json",
+  "versions": [
+    {
+      "sha256": "eecb0a44fd22c5c85a6b026fb118f62a6b04fc7b37c38131bbce554bf2a66433",
+      "base": null,
+      "added": [
+        "?GetPlayable@TESObjectWEAP@@UEBA_NXZ",
+        "?GetObjectTypeName@TESObjectWEAP@@UEBAPEBDXZ",
+        "?GetDescriptionOwnerFile@TESObjectWEAP@@UEBAPEAVTESFile@@XZ",
+        "??_GTESObjectWEAP@@UEAAPEAXI@Z",
+        "?ResolveOwnerFile@@YAPEAVTESFile@@PEBVTESForm@@I@Z",
+        "?kObjectTypeNames@@3PAPEBDA",
+        "??1TESObjectWEAP@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

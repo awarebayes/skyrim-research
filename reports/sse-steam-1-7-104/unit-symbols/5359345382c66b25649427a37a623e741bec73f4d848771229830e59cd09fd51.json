@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Activate@TESObjectLIGH@@UEAA_NPEAVTESObjectREFR@@0EPEAVTESBoundObject@@H@Z": {
+      "rva": 2576512,
+      "size": 20
+    },
+    "?SaveGame@TESObjectLIGH@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 2576912,
+      "size": 46
+    },
+    "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": null
+    },
+    "?SaveValueState@@YAXPEAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 2045536,
+      "size": null
+    },
+    "?Activate@TESBoundObject@@UEAA_NPEAVTESObjectREFR@@0EPEAV1@H@Z": {
+      "rva": 2592336,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Activate@TESObjectLIGH@@UEAA_NPEAVTESObjectREFR@@0EPEAVTESBoundObject@@H@Z",
+        "rva": "0x275080",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESObjectLIGH@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x275210",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveValueState@@YAXPEAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1f3660",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Activate@TESBoundObject@@UEAA_NPEAVTESObjectREFR@@0EPEAV1@H@Z",
+        "rva": "0x278e50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

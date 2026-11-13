@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetPlayable@TESObjectWEAP@@UEBA_NXZ": {
+      "rva": 2680848,
+      "size": 15
+    },
+    "?GetObjectTypeName@TESObjectWEAP@@UEBAPEBDXZ": {
+      "rva": 2680816,
+      "size": 19
+    },
+    "?GetDescriptionOwnerFile@TESObjectWEAP@@UEBAPEAVTESFile@@XZ": {
+      "rva": 2680752,
+      "size": 24
+    },
+    "??_GTESObjectWEAP@@UEAAPEAXI@Z": {
+      "rva": 2680064,
+      "size": 52
+    },
+    "?ResolveOwnerFile@@YAPEAVTESFile@@PEBVTESForm@@I@Z": {
+      "rva": 1989344,
+      "size": null
+    },
+    "?kObjectTypeNames@@3PAPEBDA": {
+      "rva": 34058752,
+      "size": null
+    },
+    "??1TESObjectWEAP@@UEAA@XZ": {
+      "rva": 2659088,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetPlayable@TESObjectWEAP@@UEBA_NXZ",
+        "rva": "0x28e810",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetObjectTypeName@TESObjectWEAP@@UEBAPEBDXZ",
+        "rva": "0x28e7f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDescriptionOwnerFile@TESObjectWEAP@@UEBAPEAVTESFile@@XZ",
+        "rva": "0x28e7b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GTESObjectWEAP@@UEAAPEAXI@Z",
+        "rva": "0x28e500",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResolveOwnerFile@@YAPEAVTESFile@@PEBVTESForm@@I@Z",
+        "rva": "0x1e5ae0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?kObjectTypeNames@@3PAPEBDA",
+        "rva": "0x207b200",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESObjectWEAP@@UEAA@XZ",
+        "rva": "0x289310",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

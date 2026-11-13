@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?LoadDataHeader@TESRegionData@@UEAA_NPEAX@Z": {
+      "rva": 2424544,
+      "size": 29
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?LoadDataHeader@TESRegionData@@UEAA_NPEAX@Z",
+        "rva": "0x24fee0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

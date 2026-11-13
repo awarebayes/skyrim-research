@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/f5ff52fb88bcdfa464afa7314c79006ce0ad1ce7db9bf4e5b85ce175f410f075.json",
+  "versions": [
+    {
+      "sha256": "f5ff52fb88bcdfa464afa7314c79006ce0ad1ce7db9bf4e5b85ce175f410f075",
+      "base": null,
+      "added": [
+        "?SaveBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?ComputeCRC32@BSLightingShaderMaterialEnvmap@@QEAAII@Z",
+        "?ComputeFlagHash@BSLightingShaderMaterialEnvmap@@QEAAII@Z",
+        "?SizeOfSize@CRC32Calculator@@SAXPEAIPEBXI@Z",
+        "?SizeOf32@CRC32Calculator@@SAXPEAI_KI@Z",
+        "?GetFeature@BSLightingShaderMaterialEnvmap@@UEBAIXZ"
+      ],
+      "superseded": true
+    },
+    {
+      "sha256": "2bbbef830b53d68e50b50b64b878a65fe7df4582ee35f61dd73bfe379a528952",
+      "base": null,
+      "added": [
+        "?SaveBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?ComputeCRC32@BSLightingShaderMaterialEnvmap@@QEAAII@Z",
+        "?ComputeFlagHash@BSLightingShaderMaterialEnvmap@@QEAAII@Z",
+        "?SizeOfSize@CRC32Calculator@@SAXPEAIPEBXI@Z",
+        "?SizeOf32@CRC32Calculator@@SAXPEAI_KI@Z",
+        "?GetFeature@BSLightingShaderMaterialEnvmap@@UEBA?AW4Feature@BSShaderMaterial@@XZ"
+      ]
+    }
+  ]
+}

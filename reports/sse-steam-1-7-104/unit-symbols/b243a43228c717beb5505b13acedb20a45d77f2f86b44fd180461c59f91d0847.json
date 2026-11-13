@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SaveGame@TESObjectMISC@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 2649776,
+      "size": 46
+    },
+    "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": null
+    },
+    "?SaveData@MiscSaveBlock@@QEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 2045536,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SaveGame@TESObjectMISC@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x286eb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveData@MiscSaveBlock@@QEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1f3660",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,21 +1,46 @@
-// NiDefaultAVObjectPalette::Slot41, build sse-steam-1-7-104, RVA 0xf00b20, 5 bytes.
+// NiDefaultAVObjectPalette functions for build sse-steam-1-7-104.
+//
 // Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"member-return","generator_version":"2","name_source":{"confidence":"low","kind":"guess","owner":"NiDefaultAVObjectPalette","rationale":"vtable owner and slot; method spelling invented","slot":41},"template_digest":"1254832e5ca7cdca7f6330a2018dde32919625f6149744dd0138e59a943106d8"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// NiDefaultAVObjectPalette: EXE_RTTI
-// Slot41: GUESS(low)
-// member, padding: GUESS(low); storage names invented for the measured member offset
-// Method name is a guess built from the vtable owner and slot, not a public symbol.
+// Task: p46-n-nidefaultavobjectpalette
+// Source exposure: mixed (names and declarations from community headers; the listing of the pinned
+// image).
+// Declarations derived from powerof3/CommonLibSSE are GPL-3.0 (its licence).
+// Evidence: findings/queue-normal-selection.md
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone).
+// Drafted by Claude Haiku 5.5 (claude-haiku-5-5), starting from a tools/skeleton.py skeleton.
+// Compared functions:
+//   RVA 0xf011d0, 5 bytes: NiDefaultAVObjectPalette::SetScene
+//   RVA 0xf00a10, 83 bytes: NiDefaultAVObjectPalette::~NiDefaultAVObjectPalette
+// Functions set aside in near-miss/ (not in this unit): 0xf01190 SetAVObject, 0xf00a70 GetAVObject,
+// 0xf002d0 ResetAndFillFromScenegraph.
+// Adapted bodies: NiDefaultAVObjectPalette::SetScene, from powerof3/CommonLibSSE@654e55f
+// include/RE/N/NiDefaultAVObjectPalette.h:28 (GPL-3.0, stated above); the body is one member store.
+// A byte match shows that this source and recipe produce the checked code; it does not verify the
+// community names or that the original source looked like this.
 #include "NiDefaultAVObjectPalette.h"
+
+// Not compared: defined so that the compiler emits the vftable and, beside it, the
+// deleting destructor that is compared (cookbook rule 14).
+NiDefaultAVObjectPalette::NiDefaultAVObjectPalette()
+{
+}
+
+void NiDefaultAVObjectPalette::SetScene(NiAVObject* a_scene)
+{
+    scene = a_scene;
+}
+
+// Body done: RVA 0xf00a10, 83 bytes, NiDefaultAVObjectPalette::~NiDefaultAVObjectPalette; compared
+// as the scalar deleting destructor. The target does the NiRefObject cleanup itself, so keep this
+// empty definition and the constructor: the inline base destructors in the header make the compiler
+// produce the same body.
+NiDefaultAVObjectPalette::~NiDefaultAVObjectPalette()
+{
+}
+
+// Retained generated leaf; its byte-match evidence is renewed with this unit.
 // Slot41: GUESS(low); method name inferred from vtable owner and slot
 void* NiDefaultAVObjectPalette::Slot41() const
 {
-    return member;
+    return scene;
 }

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/99feeb66a97d57e7f4f6610919da7fab08a76688e6e18f7307740dd4bf3f995e.json",
+  "versions": [
+    {
+      "sha256": "99feeb66a97d57e7f4f6610919da7fab08a76688e6e18f7307740dd4bf3f995e",
+      "base": null,
+      "added": [
+        "?GetLength@BSMultiBoundAABB@@UEAAMXZ",
+        "??_GBSMultiBoundAABB@@UEAAPEAXI@Z",
+        "?LoadBinary@BSMultiBoundAABB@@UEAAXAEAVNiStream@@@Z",
+        "?Unk_2B@BSMultiBoundAABB@@UEAAXPEAM@Z",
+        "?GetWithinPoint@BSMultiBoundAABB@@UEAA_NAEBVNiPoint3@@@Z",
+        "?Unk_2A@BSMultiBoundAABB@@UEAA_NAEBUBSMultiBoundPlanes@@@Z",
+        "?Unk_28@BSMultiBoundAABB@@UEAAIPEBM@Z",
+        "??_7NiRefObject@@6B@",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "??3@YAXPEAX_K@Z",
+        "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?LoadTriple@NiPoint3@@QEAAXAEAVNiStream@@@Z",
+        "?GetType@BSMultiBoundAABB@@UEBAIXZ"
+      ]
+    }
+  ]
+}

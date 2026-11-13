@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/40a548a5569d403b0531c59a8d521ff156ad3144d441ae7d74bb70dbfd6e24b4.json",
+  "versions": [
+    {
+      "sha256": "40a548a5569d403b0531c59a8d521ff156ad3144d441ae7d74bb70dbfd6e24b4",
+      "base": null,
+      "added": [
+        "?DoClearRenderPasses@BSWaterShaderProperty@@UEAAXXZ",
+        "?SaveBinary@BSWaterShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@BSWaterShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "?ReleaseWaterEntry@@YAXPEAPEAUWaterMaterialEntry@@@Z",
+        "?ClearRenderPass@BSRenderPass@@QEAAXXZ",
+        "?DoClearRenderPasses@BSShaderProperty@@UEAAXXZ",
+        "?SaveBinary@BSShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "?BaseLinkObject@BSWaterShaderProperty@@QEAAXAEAVNiStream@@@Z",
+        "?SetMaterial@BSShaderProperty@@QEAAXPEAVBSShaderMaterial@@_N@Z",
+        "?g_scrapHeapInitState@@3HA",
+        "?g_memoryManager@@3VMemoryManager@@A",
+        "?InitScrapHeapGuard@@YAXPEAVMemoryManager@@PEAH@Z",
+        "?GetThreadScrapHeap@MemoryManager@@QEAAPEAVScrapHeap@@I@Z",
+        "?Deallocate@ScrapHeap@@QEAAXPEAX@Z",
+        "?QShader@BSWaterShaderProperty@@UEBAIXZ"
+      ]
+    }
+  ]
+}

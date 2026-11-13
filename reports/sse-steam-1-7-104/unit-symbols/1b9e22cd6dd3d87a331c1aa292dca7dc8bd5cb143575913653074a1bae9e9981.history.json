@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/1b9e22cd6dd3d87a331c1aa292dca7dc8bd5cb143575913653074a1bae9e9981.json",
+  "versions": [
+    {
+      "sha256": "1b9e22cd6dd3d87a331c1aa292dca7dc8bd5cb143575913653074a1bae9e9981",
+      "base": null,
+      "added": [
+        "?AsRegionDataObjects@TESRegionDataManager@@UEBAPEAVTESRegionDataObjects@@PEAVTESRegionData@@@Z",
+        "?AsRegionDataWeather@TESRegionDataManager@@UEBAPEAVTESRegionDataWeather@@PEAVTESRegionData@@@Z",
+        "?AsRegionDataMap@TESRegionDataManager@@UEBAPEAVTESRegionDataMap@@PEAVTESRegionData@@@Z",
+        "?AsRegionDataLandscape@TESRegionDataManager@@UEBAPEAVTESRegionDataLandscape@@PEAVTESRegionData@@@Z",
+        "?AsRegionDataGrass@TESRegionDataManager@@UEBAPEAVTESRegionDataGrass@@PEAVTESRegionData@@@Z",
+        "?AsRegionDataSound@TESRegionDataManager@@UEBAPEAVTESRegionDataSound@@PEAVTESRegionData@@@Z"
+      ]
+    }
+  ]
+}

@@ -1,20 +1,44 @@
-// TESBoundObject::IsBoundObject, build sse-steam-1-7-104, RVA 0x1468a0, 3 bytes.
+// TESBoundObject functions for build sse-steam-1-7-104.
+//
 // Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"meh321/AddressLibraryDatabase","revision":"0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91","source":"meh321"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// TESBoundObject: EXE_RTTI
-// IsBoundObject: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-// member, padding: GUESS(low); storage names invented for the measured member offset
+// Task: p46-n-tesboundobject
+// Source exposure: mixed (names and declarations from community headers; the listing of the pinned
+// image).
+// Evidence: findings/queue-normal-selection.md
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone).
+// Drafted by claude-haiku-5-5 (worker haiku-202611122314-2).
+// Compared functions:
+//   RVA 0x6b70f0, 51 bytes: TESBoundObject::SendActorItemEquippedEvent
+//   RVA 0x278f90, 104 bytes: TESBoundObject::CalculateDoFavor
+// Not compared in this unit (near-miss, see task directory): RVA 0x278e50 Activate, RVA 0x277b10
+// LoadObjectBound, RVA 0x278ed0 GetActivateText.
+// Adapted bodies: none
+// A byte match shows that this source and recipe produce the checked code; it does not verify the
+// community names or that the original source looked like this.
 #include "TESBoundObject.h"
-// IsBoundObject: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-std::uint8_t TESBoundObject::IsBoundObject() const
+
+// RVA 0x6b70f0, 51 bytes
+void TESBoundObject::SendActorItemEquippedEvent(TESObjectREFR* a_actor)
 {
-    return 0x1;
+    if (a_actor != nullptr && a_actor == g_itemEventFilter) {
+        ItemEquippedEvent event{ this, a_actor };
+        SendItemEvent(GetItemEventSource(), &event);
+    }
+}
+
+// RVA 0x278f90, 104 bytes
+bool TESBoundObject::CalculateDoFavor(Actor* a_activator, bool a_arg2, TESObjectREFR* a_toActivate, float a_arg3)
+{
+    if (a_arg2 && a_arg3 > 2.0f) {
+        NotifyFavorEvent(a_activator->unkF8, a_activator, 4, 0x13, g_playerCharacterSingleton, nullptr, false, false, true, false);
+        return false;
+    }
+    return true;
+}
+
+// Retained generated leaf; its byte-match evidence is renewed with this unit.
+// IsBoundObject: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+bool TESBoundObject::IsBoundObject() const
+{
+    return true;
 }

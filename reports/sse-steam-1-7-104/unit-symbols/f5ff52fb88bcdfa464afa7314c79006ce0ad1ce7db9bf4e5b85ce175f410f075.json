@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SaveBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22171680,
+      "size": 82
+    },
+    "?LoadBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22171776,
+      "size": 82
+    },
+    "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22167600,
+      "size": null
+    },
+    "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22168016,
+      "size": null
+    },
+    "?ComputeCRC32@BSLightingShaderMaterialEnvmap@@QEAAII@Z": {
+      "rva": 22170848,
+      "size": 161
+    },
+    "?ComputeFlagHash@BSLightingShaderMaterialEnvmap@@QEAAII@Z": {
+      "rva": 22166064,
+      "size": null
+    },
+    "?SizeOfSize@CRC32Calculator@@SAXPEAIPEBXI@Z": {
+      "rva": 13509904,
+      "size": null
+    },
+    "?SizeOf32@CRC32Calculator@@SAXPEAI_KI@Z": {
+      "rva": 13509184,
+      "size": null
+    },
+    "?GetFeature@BSLightingShaderMaterialEnvmap@@UEBA?AW4Feature@BSShaderMaterial@@XZ": {
+      "rva": 22171664,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1525020",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialEnvmap@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1525080",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1524030",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x15241d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ComputeCRC32@BSLightingShaderMaterialEnvmap@@QEAAII@Z",
+        "rva": "0x1524ce0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ComputeFlagHash@BSLightingShaderMaterialEnvmap@@QEAAII@Z",
+        "rva": "0x1523a30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SizeOfSize@CRC32Calculator@@SAXPEAIPEBXI@Z",
+        "rva": "0xce2510",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SizeOf32@CRC32Calculator@@SAXPEAI_KI@Z",
+        "rva": "0xce2240",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialEnvmap@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "rva": "0x1525010",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialEnvmap::GetFeature",
+        "note": "bound by tools/verifier/bind.py (community name) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

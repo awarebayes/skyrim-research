@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/d7b5038d3b4ad2db7e167ce62cac68bfa633829b8f97454c77588ba1e3a2e506.json",
+  "versions": [
+    {
+      "sha256": "d7b5038d3b4ad2db7e167ce62cac68bfa633829b8f97454c77588ba1e3a2e506",
+      "base": null,
+      "added": [
+        "?GetInterpolator@BSProceduralLightningController@@UEBAPEAVNiInterpolator@@G@Z",
+        "?GetInterpolatorID@BSProceduralLightningController@@UEAAPEBDG@Z",
+        "?TargetIsRequiredType@BSProceduralLightningController@@UEBA_NXZ",
+        "?LoadBinary@BSProceduralLightningController@@UEAAXAEAVNiStream@@@Z",
+        "?InterpolatorIsCorrectType@BSProceduralLightningController@@UEBA_NPEAVNiInterpolator@@G@Z",
+        "?RegisterStreamables@BSProceduralLightningController@@UEAA_NAEAVNiStream@@@Z",
+        "?g_procLightningIDNames@@3QBQEBDB",
+        "?NiTimeController_LoadBinary@@YAXPEAVNiTimeController@@AEAVNiStream@@@Z",
+        "?StreamReadSlot@@YAXAEAVNiStream@@@Z",
+        "?ReadStreamSubA@@YAXPEAXAEAVNiStream@@@Z",
+        "?ReadStreamSubB@@YAXPEAXAEAVNiStream@@@Z",
+        "?NiRTTI_NiBoolTimelineInterpolator@@3VNiRTTI@@A",
+        "?NiRTTI_NiFloatInterpolator@@3VNiRTTI@@A",
+        "?NiTimeController_RegisterStreamables@@YA_NPEAVNiTimeController@@AEAVNiStream@@@Z",
+        "?GetInterpolatorCount@BSProceduralLightningController@@UEBAIXZ"
+      ]
+    }
+  ]
+}

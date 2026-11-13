@@ -1,0 +1,287 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_0D@BSImagespaceShader@@UEAAPEA_KPEA_K@Z": {
+      "rva": 22434272,
+      "size": 13
+    },
+    "?RestoreRenderStates@BSImagespaceShader@@UEAA_NPEAVImageSpaceEffectParam@@@Z": {
+      "rva": 22433264,
+      "size": 46
+    },
+    "?Unk_0C@BSImagespaceShader@@UEAAXIII@Z": {
+      "rva": 22434160,
+      "size": 100
+    },
+    "?ShutDown@BSImagespaceShader@@UEAAXXZ": {
+      "rva": 22432256,
+      "size": 117
+    },
+    "?ResetRenderStates@BSImagespaceShader@@QEAA_NXZ": {
+      "rva": 22515264,
+      "size": null
+    },
+    "?ApplyRenderStates@@YA_NPEAVImageSpaceRenderState@@@Z": {
+      "rva": 22585008,
+      "size": null
+    },
+    "?SetSlotIndex@@YAXPEAVImageSpaceSlot@@I@Z": {
+      "rva": 22368864,
+      "size": null
+    },
+    "?FinalizeCommit@@YAX_N@Z": {
+      "rva": 22415568,
+      "size": null
+    },
+    "?g_shadowDirtyB@@3_NA": {
+      "rva": 34405556,
+      "size": null
+    },
+    "?g_shadowFlags@@3IA": {
+      "rva": 34405376,
+      "size": null
+    },
+    "?g_shadowSlotB@@3IA": {
+      "rva": 34405552,
+      "size": null
+    },
+    "?g_shadowModeA@@3IA": {
+      "rva": 34405512,
+      "size": null
+    },
+    "?g_shadowModeB@@3IA": {
+      "rva": 34405516,
+      "size": null
+    },
+    "?ApplyShadowState@@YAXXZ": {
+      "rva": 22516288,
+      "size": null
+    },
+    "?g_renderer@@3VRenderer@@A": {
+      "rva": 53681984,
+      "size": null
+    },
+    "?SetFlagA@Renderer@@QEAAXI_K@Z": {
+      "rva": 16840288,
+      "size": null
+    },
+    "?SetFlagB@Renderer@@QEAAXI_K@Z": {
+      "rva": 16840480,
+      "size": null
+    },
+    "?SetFlagC@Renderer@@QEAAXII@Z": {
+      "rva": 16840992,
+      "size": null
+    },
+    "?SetFlagD@Renderer@@QEAAXII@Z": {
+      "rva": 16840880,
+      "size": null
+    },
+    "?SetFlagE@Renderer@@QEAAXII@Z": {
+      "rva": 16841008,
+      "size": null
+    },
+    "?SetFlagF@Renderer@@QEAAXII@Z": {
+      "rva": 16840672,
+      "size": null
+    },
+    "?CopyBytes@Renderer@@QEAAXPEAXI@Z": {
+      "rva": 16844144,
+      "size": null
+    },
+    "?CopySubRegionToTarget@@YAXPEAVSubRegionTarget@@PEBUSubRegion@@@Z": {
+      "rva": 22590288,
+      "size": null
+    },
+    "?DispatchCopySubRegion@BSImagespaceShader@@SAIPEAUCopySubRegionRequest@@@Z": {
+      "rva": 22285744,
+      "size": 259
+    },
+    "?UpdateParams@BSImagespaceShader@@UEAAXPEAVImageSpaceEffectParam@@@Z": {
+      "rva": 22433168,
+      "size": 79
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_0D@BSImagespaceShader@@UEAAPEA_KPEA_K@Z",
+        "rva": "0x15651e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RestoreRenderStates@BSImagespaceShader@@UEAA_NPEAVImageSpaceEffectParam@@@Z",
+        "rva": "0x1564df0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0C@BSImagespaceShader@@UEAAXIII@Z",
+        "rva": "0x1565170",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ShutDown@BSImagespaceShader@@UEAAXXZ",
+        "rva": "0x1564a00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResetRenderStates@BSImagespaceShader@@QEAA_NXZ",
+        "rva": "0x1578e40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ApplyRenderStates@@YA_NPEAVImageSpaceRenderState@@@Z",
+        "rva": "0x1589eb0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetSlotIndex@@YAXPEAVImageSpaceSlot@@I@Z",
+        "rva": "0x1555260",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinalizeCommit@@YAX_N@Z",
+        "rva": "0x15608d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_shadowDirtyB@@3_NA",
+        "rva": "0x20cfcb4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_shadowFlags@@3IA",
+        "rva": "0x20cfc00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_shadowSlotB@@3IA",
+        "rva": "0x20cfcb0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_shadowModeA@@3IA",
+        "rva": "0x20cfc88",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_shadowModeB@@3IA",
+        "rva": "0x20cfc8c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ApplyShadowState@@YAXXZ",
+        "rva": "0x1579240",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_renderer@@3VRenderer@@A",
+        "rva": "0x3331f40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFlagA@Renderer@@QEAAXI_K@Z",
+        "rva": "0x100f660",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFlagB@Renderer@@QEAAXI_K@Z",
+        "rva": "0x100f720",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFlagC@Renderer@@QEAAXII@Z",
+        "rva": "0x100f920",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFlagD@Renderer@@QEAAXII@Z",
+        "rva": "0x100f8b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFlagE@Renderer@@QEAAXII@Z",
+        "rva": "0x100f930",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFlagF@Renderer@@QEAAXII@Z",
+        "rva": "0x100f7e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopyBytes@Renderer@@QEAAXPEAXI@Z",
+        "rva": "0x1010570",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopySubRegionToTarget@@YAXPEAVSubRegionTarget@@PEBUSubRegion@@@Z",
+        "rva": "0x158b350",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DispatchCopySubRegion@BSImagespaceShader@@SAIPEAUCopySubRegionRequest@@@Z",
+        "rva": "0x1540db0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateParams@BSImagespaceShader@@UEAAXPEAVImageSpaceEffectParam@@@Z",
+        "rva": "0x1564d90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

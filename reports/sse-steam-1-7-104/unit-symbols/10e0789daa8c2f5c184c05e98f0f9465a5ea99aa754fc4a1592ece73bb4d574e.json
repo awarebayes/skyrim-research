@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?UpdateDownwardPass@BSGeometry@@UEAAXAEAVNiUpdateData@@I@Z": {
+      "rva": 15714016,
+      "size": 49
+    },
+    "?UpdateSelectedDownwardPass@BSGeometry@@UEAAXAEAVNiUpdateData@@I@Z": {
+      "rva": 15714080,
+      "size": 56
+    },
+    "?SetSelectiveUpdateFlags@BSGeometry@@UEAAXAEA_N_N0@Z": {
+      "rva": 15713920,
+      "size": 75
+    },
+    "?RegisterStreamables@BSGeometry@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 15713152,
+      "size": 121
+    },
+    "?SaveBinary@BSGeometry@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15713280,
+      "size": 145
+    },
+    "?BaseUpdateDownwardPass@BSGeometry@@QEAAXAEAVNiUpdateData@@I@Z": {
+      "rva": 15600432,
+      "size": null
+    },
+    "?UpdateBoundFromFlags@BSGeometry@@QEAAXAEAVNiUpdateData@@@Z": {
+      "rva": 15714208,
+      "size": null
+    },
+    "?BaseUpdateSelectedDownwardPass@BSGeometry@@QEAAXAEAVNiUpdateData@@I@Z": {
+      "rva": 15600560,
+      "size": null
+    },
+    "?BaseSetSelectiveUpdateFlags@BSGeometry@@QEAAXAEA_N_N0@Z": {
+      "rva": 15600224,
+      "size": null
+    },
+    "?BaseRegisterStreamables@BSGeometry@@QEAA_NAEAVNiStream@@@Z": {
+      "rva": 15599360,
+      "size": null
+    },
+    "?BaseSaveBinary@BSGeometry@@QEAAXAEAVNiStream@@@Z": {
+      "rva": 15599440,
+      "size": null
+    },
+    "?SaveBinaryFields@BSGeometryData110@@QEAAXAEAVNiStream@@@Z": {
+      "rva": 15725824,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?UpdateDownwardPass@BSGeometry@@UEAAXAEAVNiUpdateData@@I@Z",
+        "rva": "0xefc6e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateSelectedDownwardPass@BSGeometry@@UEAAXAEAVNiUpdateData@@I@Z",
+        "rva": "0xefc720",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetSelectiveUpdateFlags@BSGeometry@@UEAAXAEA_N_N0@Z",
+        "rva": "0xefc680",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@BSGeometry@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xefc380",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSGeometry@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xefc400",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseUpdateDownwardPass@BSGeometry@@QEAAXAEAVNiUpdateData@@I@Z",
+        "rva": "0xee0b30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateBoundFromFlags@BSGeometry@@QEAAXAEAVNiUpdateData@@@Z",
+        "rva": "0xefc7a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseUpdateSelectedDownwardPass@BSGeometry@@QEAAXAEAVNiUpdateData@@I@Z",
+        "rva": "0xee0bb0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseSetSelectiveUpdateFlags@BSGeometry@@QEAAXAEA_N_N0@Z",
+        "rva": "0xee0a60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseRegisterStreamables@BSGeometry@@QEAA_NAEAVNiStream@@@Z",
+        "rva": "0xee0700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseSaveBinary@BSGeometry@@QEAAXAEAVNiStream@@@Z",
+        "rva": "0xee0750",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinaryFields@BSGeometryData110@@QEAAXAEAVNiStream@@@Z",
+        "rva": "0xeff500",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

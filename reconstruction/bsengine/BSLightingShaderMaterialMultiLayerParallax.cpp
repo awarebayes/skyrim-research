@@ -1,20 +1,69 @@
-// BSLightingShaderMaterialMultiLayerParallax::GetFeature, build sse-steam-1-7-104, RVA 0x15288c0, 6 bytes.
+// BSLightingShaderMaterialMultiLayerParallax functions for build sse-steam-1-7-104.
+//
 // Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"meh321/AddressLibraryDatabase","revision":"0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91","source":"meh321"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// BSLightingShaderMaterialMultiLayerParallax: EXE_RTTI
-// GetFeature: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-// member, padding: GUESS(low); storage names invented for the measured member offset
+// Task: p46-n-bslightingshadermaterialmultilayerparallax
+// Source exposure: mixed (names and declarations from community headers; the listing of the pinned
+// image).
+// Evidence: findings/queue-normal-selection.md
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone).
+// Drafted by Claude Haiku 5.5 (claude-haiku-5-5, worker haiku-202611122349-3), starting from
+// a tools/skeleton.py skeleton.
+// Compared functions:
+//   RVA 0x1529070, 52 bytes: BSLightingShaderMaterialMultiLayerParallax::~BSLightingShaderMaterialMultiLayerParallax
+//   RVA 0x15281a0, 102 bytes: BSLightingShaderMaterialMultiLayerParallax::Ctor (set aside in near-miss/0x15281a0.cpp)
+//   RVA 0x1528820, 153 bytes: BSLightingShaderMaterialMultiLayerParallax::GetTextures (set aside in near-miss/0x1528820.cpp)
+//   RVA 0x1528770, 163 bytes: BSLightingShaderMaterialMultiLayerParallax::ReceiveValuesFromRootMaterial
+//   RVA 0x15284c0, 211 bytes: BSLightingShaderMaterialMultiLayerParallax::ComputeCRC32 (set aside in near-miss/0x15284c0.cpp)
+//   RVA 0x15288d0, 292 bytes: BSLightingShaderMaterialMultiLayerParallax::SaveBinary (set aside in near-miss/0x15288d0.cpp)
+//   RVA 0x1528a00, 324 bytes: BSLightingShaderMaterialMultiLayerParallax::LoadBinary (set aside in near-miss/0x1528a00.cpp)
+// Adapted bodies: none
+// A byte match shows that this source and recipe produce the checked code; it does not verify the
+// community names or that the original source looked like this.
+#include <cstring>
+
 #include "BSLightingShaderMaterialMultiLayerParallax.h"
-// GetFeature: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-std::uint32_t BSLightingShaderMaterialMultiLayerParallax::GetFeature() const
+
+// Not compared: defined so that the compiler emits the vftable and, beside it, the
+// deleting destructor that is compared.
+BSLightingShaderMaterialMultiLayerParallax::BSLightingShaderMaterialMultiLayerParallax()
 {
-    return 0xb;
+}
+
+
+
+// RVA 0x1528770, 163 bytes.
+void BSLightingShaderMaterialMultiLayerParallax::ReceiveValuesFromRootMaterial(bool a_skinned, bool a_rimLighting, bool a_softLighting, bool a_backLighting, bool a_MSN, void* a_extra7, void* a_extra8)
+{
+	BaseReceiveValues(this, a_skinned, a_rimLighting, a_softLighting, a_backLighting, a_MSN, a_extra7, a_extra8);
+	if (m_texA0 == nullptr) {
+		NiSourceTexture* defaultTexture = g_defaultTexture._ptr;
+		if (defaultTexture) {
+			defaultTexture->IncRefCount();
+			m_texA0 = defaultTexture;
+		}
+	}
+	if (m_texA8 == nullptr) {
+		NiSourceTexture* defaultMulti = g_defaultMultiLayerTexture._ptr;
+		if (defaultMulti) {
+			defaultMulti->IncRefCount();
+			m_texA8 = defaultMulti;
+		}
+	}
+	if (m_texB0 == nullptr) {
+		NiSourceTexture* defaultTexture = g_defaultTexture._ptr;
+		if (defaultTexture) {
+			defaultTexture->IncRefCount();
+			m_texB0 = defaultTexture;
+		}
+	}
+}
+
+
+
+
+// Retained generated leaf; its byte-match evidence is renewed with this unit.
+// GetFeature: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+BSShaderMaterial::Feature BSLightingShaderMaterialMultiLayerParallax::GetFeature() const
+{
+    return static_cast<Feature>(0xb);
 }

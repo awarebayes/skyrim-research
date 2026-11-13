@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetLength@BSMultiBoundAABB@@UEAAMXZ": {
+      "rva": 2178160,
+      "size": 43
+    },
+    "??_GBSMultiBoundAABB@@UEAAPEAXI@Z": {
+      "rva": 2177712,
+      "size": 50
+    },
+    "?LoadBinary@BSMultiBoundAABB@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16574576,
+      "size": 55
+    },
+    "?Unk_2B@BSMultiBoundAABB@@UEAAXPEAM@Z": {
+      "rva": 16576848,
+      "size": 65
+    },
+    "?GetWithinPoint@BSMultiBoundAABB@@UEAA_NAEBVNiPoint3@@@Z": {
+      "rva": 16576928,
+      "size": 90
+    },
+    "?Unk_2A@BSMultiBoundAABB@@UEAA_NAEBUBSMultiBoundPlanes@@@Z": {
+      "rva": 16576672,
+      "size": 163
+    },
+    "?Unk_28@BSMultiBoundAABB@@UEAAIPEBM@Z": {
+      "rva": 16575392,
+      "size": 276
+    },
+    "??_7NiRefObject@@6B@": {
+      "rva": 25165752,
+      "size": null
+    },
+    "?ms_totalObjects@NiRefObject@@2JC": {
+      "rva": 53593632,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16666384,
+      "size": null
+    },
+    "?LoadTriple@NiPoint3@@QEAAXAEAVNiStream@@@Z": {
+      "rva": 15581104,
+      "size": null
+    },
+    "?GetType@BSMultiBoundAABB@@UEBAIXZ": {
+      "rva": 16575136,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetLength@BSMultiBoundAABB@@UEAAMXZ",
+        "rva": "0x213c70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSMultiBoundAABB@@UEAAPEAXI@Z",
+        "rva": "0x213ab0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSMultiBoundAABB@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfce870",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_2B@BSMultiBoundAABB@@UEAAXPEAM@Z",
+        "rva": "0xfcf150",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetWithinPoint@BSMultiBoundAABB@@UEAA_NAEBVNiPoint3@@@Z",
+        "rva": "0xfcf1a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_2A@BSMultiBoundAABB@@UEAA_NAEBUBSMultiBoundPlanes@@@Z",
+        "rva": "0xfcf0a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_28@BSMultiBoundAABB@@UEAAIPEBM@Z",
+        "rva": "0xfceba0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiRefObject@@6B@",
+        "rva": "0x17fffb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ms_totalObjects@NiRefObject@@2JC",
+        "rva": "0x331c620",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfe4f10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadTriple@NiPoint3@@QEAAXAEAVNiStream@@@Z",
+        "rva": "0xedbfb0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetType@BSMultiBoundAABB@@UEBAIXZ",
+        "rva": "0xfceaa0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

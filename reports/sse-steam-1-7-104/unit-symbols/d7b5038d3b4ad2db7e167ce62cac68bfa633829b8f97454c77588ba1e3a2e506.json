@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetInterpolator@BSProceduralLightningController@@UEBAPEAVNiInterpolator@@G@Z": {
+      "rva": 16767104,
+      "size": 12
+    },
+    "?GetInterpolatorID@BSProceduralLightningController@@UEAAPEBDG@Z": {
+      "rva": 16766928,
+      "size": 24
+    },
+    "?TargetIsRequiredType@BSProceduralLightningController@@UEBA_NXZ": {
+      "rva": 16766864,
+      "size": 38
+    },
+    "?LoadBinary@BSProceduralLightningController@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16762896,
+      "size": 99
+    },
+    "?InterpolatorIsCorrectType@BSProceduralLightningController@@UEBA_NPEAVNiInterpolator@@G@Z": {
+      "rva": 16770368,
+      "size": 113
+    },
+    "?RegisterStreamables@BSProceduralLightningController@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 16763168,
+      "size": 142
+    },
+    "?g_procLightningIDNames@@3QBQEBDB": {
+      "rva": 34405248,
+      "size": null
+    },
+    "?NiTimeController_LoadBinary@@YAXPEAVNiTimeController@@AEAVNiStream@@@Z": {
+      "rva": 15695408,
+      "size": null
+    },
+    "?StreamReadSlot@@YAXAEAVNiStream@@@Z": {
+      "rva": 15618288,
+      "size": null
+    },
+    "?ReadStreamSubA@@YAXPEAXAEAVNiStream@@@Z": {
+      "rva": 16799776,
+      "size": null
+    },
+    "?ReadStreamSubB@@YAXPEAXAEAVNiStream@@@Z": {
+      "rva": 16800448,
+      "size": null
+    },
+    "?NiRTTI_NiBoolTimelineInterpolator@@3VNiRTTI@@A": {
+      "rva": 53603768,
+      "size": null
+    },
+    "?NiRTTI_NiFloatInterpolator@@3VNiRTTI@@A": {
+      "rva": 53603256,
+      "size": null
+    },
+    "?NiTimeController_RegisterStreamables@@YA_NPEAVNiTimeController@@AEAVNiStream@@@Z": {
+      "rva": 15695856,
+      "size": null
+    },
+    "?GetInterpolatorCount@BSProceduralLightningController@@UEBAIXZ": {
+      "rva": 16766912,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetInterpolator@BSProceduralLightningController@@UEBAPEAVNiInterpolator@@G@Z",
+        "rva": "0xffd880",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetInterpolatorID@BSProceduralLightningController@@UEAAPEBDG@Z",
+        "rva": "0xffd7d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?TargetIsRequiredType@BSProceduralLightningController@@UEBA_NXZ",
+        "rva": "0xffd790",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSProceduralLightningController@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xffc810",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InterpolatorIsCorrectType@BSProceduralLightningController@@UEBA_NPEAVNiInterpolator@@G@Z",
+        "rva": "0xffe540",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@BSProceduralLightningController@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xffc920",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_procLightningIDNames@@3QBQEBDB",
+        "rva": "0x20cfb80",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiTimeController_LoadBinary@@YAXPEAVNiTimeController@@AEAVNiStream@@@Z",
+        "rva": "0xef7e30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StreamReadSlot@@YAXAEAVNiStream@@@Z",
+        "rva": "0xee50f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadStreamSubA@@YAXPEAXAEAVNiStream@@@Z",
+        "rva": "0x1005820",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadStreamSubB@@YAXPEAXAEAVNiStream@@@Z",
+        "rva": "0x1005ac0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiRTTI_NiBoolTimelineInterpolator@@3VNiRTTI@@A",
+        "rva": "0x331edb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiRTTI_NiFloatInterpolator@@3VNiRTTI@@A",
+        "rva": "0x331ebb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiTimeController_RegisterStreamables@@YA_NPEAVNiTimeController@@AEAVNiStream@@@Z",
+        "rva": "0xef7ff0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetInterpolatorCount@BSProceduralLightningController@@UEBAIXZ",
+        "rva": "0xffd7c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

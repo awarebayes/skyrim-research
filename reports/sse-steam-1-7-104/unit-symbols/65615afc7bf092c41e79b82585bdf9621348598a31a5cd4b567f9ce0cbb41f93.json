@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SetScene@NiDefaultAVObjectPalette@@UEAAXPEAVNiAVObject@@@Z": {
+      "rva": 15733200,
+      "size": 5
+    },
+    "?SetAVObject@NiDefaultAVObjectPalette@@UEAAXAEAVBSFixedString@@PEAVNiAVObject@@@Z": {
+      "rva": 15733136,
+      "size": 52
+    },
+    "??_GNiDefaultAVObjectPalette@@UEAAPEAXI@Z": {
+      "rva": 15731216,
+      "size": 83
+    },
+    "?GetAVObject@NiDefaultAVObjectPalette@@UEAAPEAVNiAVObject@@AEAVBSFixedString@@@Z": {
+      "rva": 15731312,
+      "size": 137
+    },
+    "?ResetAndFillFromScenegraph@NiDefaultAVObjectPalette@@UEAAXXZ": {
+      "rva": 15729360,
+      "size": 140
+    },
+    "??_7NiDefaultAVObjectPalette@@6B@": {
+      "rva": 27568896,
+      "size": null
+    },
+    "??1PaletteTable@@QEAA@XZ": {
+      "rva": 15730736,
+      "size": null
+    },
+    "??_7NiRefObject@@6B@": {
+      "rva": 25165752,
+      "size": null
+    },
+    "?ms_totalObjects@NiRefObject@@2JC": {
+      "rva": 53593632,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?Slot41@NiDefaultAVObjectPalette@@UEBAPEAXXZ": {
+      "rva": 15731488,
+      "size": 5
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SetScene@NiDefaultAVObjectPalette@@UEAAXPEAVNiAVObject@@@Z",
+        "rva": "0xf011d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetAVObject@NiDefaultAVObjectPalette@@UEAAXAEAVBSFixedString@@PEAVNiAVObject@@@Z",
+        "rva": "0xf01190",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GNiDefaultAVObjectPalette@@UEAAPEAXI@Z",
+        "rva": "0xf00a10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetAVObject@NiDefaultAVObjectPalette@@UEAAPEAVNiAVObject@@AEAVBSFixedString@@@Z",
+        "rva": "0xf00a70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResetAndFillFromScenegraph@NiDefaultAVObjectPalette@@UEAAXXZ",
+        "rva": "0xf002d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiDefaultAVObjectPalette@@6B@",
+        "rva": "0x1a4ab00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1PaletteTable@@QEAA@XZ",
+        "rva": "0xf00830",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiRefObject@@6B@",
+        "rva": "0x17fffb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ms_totalObjects@NiRefObject@@2JC",
+        "rva": "0x331c620",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot41@NiDefaultAVObjectPalette@@UEBAPEAXXZ",
+        "rva": "0xf00b20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/65615afc7bf092c41e79b82585bdf9621348598a31a5cd4b567f9ce0cbb41f93.json",
+  "versions": [
+    {
+      "sha256": "65615afc7bf092c41e79b82585bdf9621348598a31a5cd4b567f9ce0cbb41f93",
+      "base": null,
+      "added": [
+        "?SetScene@NiDefaultAVObjectPalette@@UEAAXPEAVNiAVObject@@@Z",
+        "?SetAVObject@NiDefaultAVObjectPalette@@UEAAXAEAVBSFixedString@@PEAVNiAVObject@@@Z",
+        "??_GNiDefaultAVObjectPalette@@UEAAPEAXI@Z",
+        "?GetAVObject@NiDefaultAVObjectPalette@@UEAAPEAVNiAVObject@@AEAVBSFixedString@@@Z",
+        "?ResetAndFillFromScenegraph@NiDefaultAVObjectPalette@@UEAAXXZ",
+        "??_7NiDefaultAVObjectPalette@@6B@",
+        "??1PaletteTable@@QEAA@XZ",
+        "??_7NiRefObject@@6B@",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "??3@YAXPEAX_K@Z",
+        "?Slot41@NiDefaultAVObjectPalette@@UEBAPEAXXZ"
+      ]
+    }
+  ]
+}

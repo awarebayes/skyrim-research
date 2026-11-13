@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?AsRegionDataObjects@TESRegionDataManager@@UEBAPEAVTESRegionDataObjects@@PEAVTESRegionData@@@Z": {
+      "rva": 2431088,
+      "size": 45
+    },
+    "?AsRegionDataWeather@TESRegionDataManager@@UEBAPEAVTESRegionDataWeather@@PEAVTESRegionData@@@Z": {
+      "rva": 2431152,
+      "size": 45
+    },
+    "?AsRegionDataMap@TESRegionDataManager@@UEBAPEAVTESRegionDataMap@@PEAVTESRegionData@@@Z": {
+      "rva": 2431216,
+      "size": 45
+    },
+    "?AsRegionDataLandscape@TESRegionDataManager@@UEBAPEAVTESRegionDataLandscape@@PEAVTESRegionData@@@Z": {
+      "rva": 2431280,
+      "size": 45
+    },
+    "?AsRegionDataGrass@TESRegionDataManager@@UEBAPEAVTESRegionDataGrass@@PEAVTESRegionData@@@Z": {
+      "rva": 2431344,
+      "size": 45
+    },
+    "?AsRegionDataSound@TESRegionDataManager@@UEBAPEAVTESRegionDataSound@@PEAVTESRegionData@@@Z": {
+      "rva": 2431408,
+      "size": 45
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?AsRegionDataObjects@TESRegionDataManager@@UEBAPEAVTESRegionDataObjects@@PEAVTESRegionData@@@Z",
+        "rva": "0x251870",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AsRegionDataWeather@TESRegionDataManager@@UEBAPEAVTESRegionDataWeather@@PEAVTESRegionData@@@Z",
+        "rva": "0x2518b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AsRegionDataMap@TESRegionDataManager@@UEBAPEAVTESRegionDataMap@@PEAVTESRegionData@@@Z",
+        "rva": "0x2518f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AsRegionDataLandscape@TESRegionDataManager@@UEBAPEAVTESRegionDataLandscape@@PEAVTESRegionData@@@Z",
+        "rva": "0x251930",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AsRegionDataGrass@TESRegionDataManager@@UEBAPEAVTESRegionDataGrass@@PEAVTESRegionData@@@Z",
+        "rva": "0x251970",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AsRegionDataSound@TESRegionDataManager@@UEBAPEAVTESRegionDataSound@@PEAVTESRegionData@@@Z",
+        "rva": "0x2519b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

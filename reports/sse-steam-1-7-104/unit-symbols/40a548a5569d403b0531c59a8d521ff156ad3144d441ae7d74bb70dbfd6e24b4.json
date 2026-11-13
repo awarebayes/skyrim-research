@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?DoClearRenderPasses@BSWaterShaderProperty@@UEAAXXZ": {
+      "rva": 22204816,
+      "size": 62
+    },
+    "?SaveBinary@BSWaterShaderProperty@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22201360,
+      "size": 82
+    },
+    "?LinkObject@BSWaterShaderProperty@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22201200,
+      "size": 123
+    },
+    "?ReleaseWaterEntry@@YAXPEAPEAUWaterMaterialEntry@@@Z": {
+      "rva": 21919728,
+      "size": null
+    },
+    "?ClearRenderPass@BSRenderPass@@QEAAXXZ": {
+      "rva": 22370592,
+      "size": null
+    },
+    "?DoClearRenderPasses@BSShaderProperty@@UEAAXXZ": {
+      "rva": 21921712,
+      "size": null
+    },
+    "?SaveBinary@BSShaderProperty@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 21918800,
+      "size": null
+    },
+    "?BaseLinkObject@BSWaterShaderProperty@@QEAAXAEAVNiStream@@@Z": {
+      "rva": 21918768,
+      "size": null
+    },
+    "?SetMaterial@BSShaderProperty@@QEAAXPEAVBSShaderMaterial@@_N@Z": {
+      "rva": 21921792,
+      "size": null
+    },
+    "?g_scrapHeapInitState@@3HA": {
+      "rva": 57257112,
+      "size": null
+    },
+    "?g_memoryManager@@3VMemoryManager@@A": {
+      "rva": 57255952,
+      "size": null
+    },
+    "?InitScrapHeapGuard@@YAXPEAVMemoryManager@@PEAH@Z": {
+      "rva": 13494288,
+      "size": null
+    },
+    "?GetThreadScrapHeap@MemoryManager@@QEAAPEAVScrapHeap@@I@Z": {
+      "rva": 13490144,
+      "size": null
+    },
+    "?Deallocate@ScrapHeap@@QEAAXPEAX@Z": {
+      "rva": 13499488,
+      "size": null
+    },
+    "?QShader@BSWaterShaderProperty@@UEBAIXZ": {
+      "rva": 22202096,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?DoClearRenderPasses@BSWaterShaderProperty@@UEAAXXZ",
+        "rva": "0x152d190",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSWaterShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x152c410",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@BSWaterShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x152c370",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReleaseWaterEntry@@YAXPEAPEAUWaterMaterialEntry@@@Z",
+        "rva": "0x14e77f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearRenderPass@BSRenderPass@@QEAAXXZ",
+        "rva": "0x1555920",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoClearRenderPasses@BSShaderProperty@@UEAAXXZ",
+        "rva": "0x14e7fb0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSShaderProperty@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x14e7450",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseLinkObject@BSWaterShaderProperty@@QEAAXAEAVNiStream@@@Z",
+        "rva": "0x14e7430",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetMaterial@BSShaderProperty@@QEAAXPEAVBSShaderMaterial@@_N@Z",
+        "rva": "0x14e8000",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_scrapHeapInitState@@3HA",
+        "rva": "0x369ac98",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_memoryManager@@3VMemoryManager@@A",
+        "rva": "0x369a810",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitScrapHeapGuard@@YAXPEAVMemoryManager@@PEAH@Z",
+        "rva": "0xcde810",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetThreadScrapHeap@MemoryManager@@QEAAPEAVScrapHeap@@I@Z",
+        "rva": "0xcdd7e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Deallocate@ScrapHeap@@QEAAXPEAX@Z",
+        "rva": "0xcdfc60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?QShader@BSWaterShaderProperty@@UEBAIXZ",
+        "rva": "0x152c6f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

@@ -1,17 +1,21 @@
-// BSWaterShaderProperty::QShader, build sse-steam-1-7-104, RVA 0x152c6f0, 6 bytes.
+// BSWaterShaderProperty functions for build sse-steam-1-7-104.
+//
 // Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"CharmedBaryon/CommonLibSSE-NG","revision":"b93280e832f263dbef44e44cbe2936622a02f91a","source":"ng-slot"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// BSWaterShaderProperty: EXE_RTTI
-// QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-// member, padding: GUESS(low); storage names invented for the measured member offset
+// Task: p46-n-bswatershaderproperty
+// Source exposure: mixed (names and declarations from community headers; the listing of the pinned
+// image).
+// Evidence: findings/queue-normal-selection.md
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone).
+// Drafted by claude-haiku-5-5 (worker haiku-202611122314-2).
+// Compared functions:
+//   RVA 0x152d190, 62 bytes: BSWaterShaderProperty::DoClearRenderPasses
+//   RVA 0x152c410, 82 bytes: BSWaterShaderProperty::SaveBinary
+//   RVA 0x152c370, 123 bytes: BSWaterShaderProperty::LinkObject
+// Not compared in this unit (near-miss, see task directory): RVA 0x152ce50 ForEachTexture,
+// RVA 0x152cd00 Unk_2C.
+// Adapted bodies: none
+// A byte match shows that this source and recipe produce the checked code; it does not verify the
+// community names or that the original source looked like this.
 // Public naming source notice:
 // MIT License
 //
@@ -35,6 +39,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "BSWaterShaderProperty.h"
+
+// RVA 0x152d190, 62 bytes
+void BSWaterShaderProperty::DoClearRenderPasses()
+{
+    ReleaseWaterEntry(&unkC8);
+    if (unkC0 != nullptr) {
+        unkC0->ClearRenderPass();
+        unkC0 = nullptr;
+    }
+    BSShaderProperty::DoClearRenderPasses();
+}
+
+// RVA 0x152c410, 82 bytes
+void BSWaterShaderProperty::SaveBinary(NiStream& a_stream)
+{
+    BSShaderProperty::SaveBinary(a_stream);
+    std::uint32_t componentSize = sizeof(waterFlags);
+    a_stream.oStr->binary_write(&waterFlags, sizeof(waterFlags), &componentSize, 1);
+}
+
+// RVA 0x152c370, 123 bytes
+void BSWaterShaderProperty::LinkObject(NiStream& a_stream)
+{
+    BaseLinkObject(a_stream);
+    BSShaderMaterial* previous = material;
+    material = nullptr;
+    BSShaderProperty::SetMaterial(previous, false);
+    if (previous != nullptr) {
+        previous->~BSShaderMaterial();
+        if (g_scrapHeapInitState != 2) {
+            InitScrapHeapGuard(&g_memoryManager, &g_scrapHeapInitState);
+        }
+        g_memoryManager.GetThreadScrapHeap(0)->Deallocate(previous);
+    }
+}
+
+
+// Retained generated leaf; its byte-match evidence is renewed with this unit.
 // QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 std::uint32_t BSWaterShaderProperty::QShader() const
 {

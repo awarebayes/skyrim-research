@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GBSLightingShaderMaterialMultiLayerParallax@@UEAAPEAXI@Z": {
+      "rva": 22188144,
+      "size": 52
+    },
+    "?GetTextures@BSLightingShaderMaterialMultiLayerParallax@@UEAAIPEAPEAVNiSourceTexture@@@Z": {
+      "rva": 22186016,
+      "size": 153
+    },
+    "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialMultiLayerParallax@@UEAAX_N0000PEAX1@Z": {
+      "rva": 22185840,
+      "size": 163
+    },
+    "?ComputeCRC32@BSLightingShaderMaterialMultiLayerParallax@@UEAAII@Z": {
+      "rva": 22185152,
+      "size": 211
+    },
+    "?SaveBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22186192,
+      "size": 292
+    },
+    "?LoadBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22186496,
+      "size": 324
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?BaseReceiveValues@@YAXPEAVBSLightingShaderMaterialBase@@_N1111PEAX2@Z": {
+      "rva": 22167296,
+      "size": null
+    },
+    "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A": {
+      "rva": 53699656,
+      "size": null
+    },
+    "?g_defaultMultiLayerTexture@@3V?$NiPointer@VNiSourceTexture@@@@A": {
+      "rva": 53699632,
+      "size": null
+    },
+    "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22167600,
+      "size": null
+    },
+    "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22168016,
+      "size": null
+    },
+    "??1BSLightingShaderMaterialMultiLayerParallax@@UEAA@XZ": {
+      "rva": 22184464,
+      "size": null
+    },
+    "?GetFeature@BSLightingShaderMaterialMultiLayerParallax@@UEBA?AW4Feature@BSShaderMaterial@@XZ": {
+      "rva": 22186176,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GBSLightingShaderMaterialMultiLayerParallax@@UEAAPEAXI@Z",
+        "rva": "0x1529070",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetTextures@BSLightingShaderMaterialMultiLayerParallax@@UEAAIPEAPEAVNiSourceTexture@@@Z",
+        "rva": "0x1528820",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialMultiLayerParallax@@UEAAX_N0000PEAX1@Z",
+        "rva": "0x1528770",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ComputeCRC32@BSLightingShaderMaterialMultiLayerParallax@@UEAAII@Z",
+        "rva": "0x15284c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x15288d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1528a00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseReceiveValues@@YAXPEAVBSLightingShaderMaterialBase@@_N1111PEAX2@Z",
+        "rva": "0x1523f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "rva": "0x3336448",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultMultiLayerTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "rva": "0x3336430",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1524030",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x15241d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSLightingShaderMaterialMultiLayerParallax@@UEAA@XZ",
+        "rva": "0x1528210",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialMultiLayerParallax@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "rva": "0x15288c0",
+        "size_from": "task",
+        "community_name": "BSLightingShaderMaterialMultiLayerParallax::GetFeature",
+        "note": "bound by tools/verifier/bind.py (community name) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Existing unit bindings and accepted leaf identities; consolidated source requires fresh comparison"
+  }
+}

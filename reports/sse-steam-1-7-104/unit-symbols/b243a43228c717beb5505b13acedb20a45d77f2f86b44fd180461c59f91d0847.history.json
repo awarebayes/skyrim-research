@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/b243a43228c717beb5505b13acedb20a45d77f2f86b44fd180461c59f91d0847.json",
+  "versions": [
+    {
+      "sha256": "b243a43228c717beb5505b13acedb20a45d77f2f86b44fd180461c59f91d0847",
+      "base": null,
+      "added": [
+        "?SaveGame@TESObjectMISC@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?SaveData@MiscSaveBlock@@QEAAXPEAVBGSSaveFormBuffer@@@Z"
+      ]
+    }
+  ]
+}

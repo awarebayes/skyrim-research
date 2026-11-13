@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/d9e07d707f85009317e350576312859aebefd82ceeddf0f1804629b839e8f8c5.json",
+  "versions": [
+    {
+      "sha256": "d9e07d707f85009317e350576312859aebefd82ceeddf0f1804629b839e8f8c5",
+      "base": null,
+      "added": [
+        "??_GBSLightingShaderMaterialMultiLayerParallax@@UEAAPEAXI@Z",
+        "?GetTextures@BSLightingShaderMaterialMultiLayerParallax@@UEAAIPEAPEAVNiSourceTexture@@@Z",
+        "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialMultiLayerParallax@@UEAAX_N0000PEAX1@Z",
+        "?ComputeCRC32@BSLightingShaderMaterialMultiLayerParallax@@UEAAII@Z",
+        "?SaveBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z",
+        "??3@YAXPEAX_K@Z",
+        "?BaseReceiveValues@@YAXPEAVBSLightingShaderMaterialBase@@_N1111PEAX2@Z",
+        "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?g_defaultMultiLayerTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "??1BSLightingShaderMaterialMultiLayerParallax@@UEAA@XZ",
+        "?GetFeature@BSLightingShaderMaterialMultiLayerParallax@@UEBAIXZ"
+      ],
+      "superseded": true
+    },
+    {
+      "sha256": "b074ff1281f1b347bfb0b4e1acabc60a748bcf2d15f730219ce4518953e0dc09",
+      "base": null,
+      "added": [
+        "??_GBSLightingShaderMaterialMultiLayerParallax@@UEAAPEAXI@Z",
+        "?GetTextures@BSLightingShaderMaterialMultiLayerParallax@@UEAAIPEAPEAVNiSourceTexture@@@Z",
+        "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialMultiLayerParallax@@UEAAX_N0000PEAX1@Z",
+        "?ComputeCRC32@BSLightingShaderMaterialMultiLayerParallax@@UEAAII@Z",
+        "?SaveBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialMultiLayerParallax@@UEAAXAEAVNiStream@@@Z",
+        "??3@YAXPEAX_K@Z",
+        "?BaseReceiveValues@@YAXPEAVBSLightingShaderMaterialBase@@_N1111PEAX2@Z",
+        "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?g_defaultMultiLayerTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "??1BSLightingShaderMaterialMultiLayerParallax@@UEAA@XZ",
+        "?GetFeature@BSLightingShaderMaterialMultiLayerParallax@@UEBA?AW4Feature@BSShaderMaterial@@XZ"
+      ]
+    }
+  ]
+}

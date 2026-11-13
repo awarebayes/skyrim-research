@@ -2,28 +2,22 @@
   "build_id": "sse-steam-1-7-104",
   "code_section_sha256": "e61412f8d83929dda6bfebf18f5f3a028be1c6e82fbec7a03e98422ce4ccfb5f",
   "escalation_category": "none",
-  "family_evidence": {
-    "batch_path": "reports/sse-steam-1-7-104/family-batches/p81-const-return-v2-01.json",
-    "batch_sha256": "aa935b2d5750bc0effa9b35568dca41f9c16a927819f247bb5dbadbae9498ff0",
-    "family_path": "reports/sse-steam-1-7-104/families/e5d3f654f509c5398369bf78e9b5a3aeb68cbd4946222f94633f53a55f41d040.json",
-    "member_sha256": "c744c2fc6c220b011e72ddc6b5bb3faaf8077883ad11b27b9915af6c7ea7384d"
-  },
   "function_id": "sse-steam-1-7-104-0x152c6f0",
   "naming_findings": [
-    "Family approval does not assess individual names."
+    "The QShader declaration differs in return type and const qualification from the community declaration."
   ],
   "previous_code_section_sha256": null,
   "previous_review_sha256": null,
   "previous_source_digest": null,
   "review_date": "2026-11-13",
-  "review_kind": "family",
-  "review_record_schema": 4,
-  "review_sha256": "689a7a0686e17d106b0ace5daaa03767ba0017390e807f80c2f000da33e0c58d",
-  "review_task_id": "review-family-e5d3f654f509c5398369",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "1792e05b96559e5e27b6eff6f604ffd58c9a0a92ef5d4c5eda5d65f9d690f9bf",
+  "review_task_id": "review-p83-consolidated-d",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 22202096,
   "size": 6,
-  "source_digest": "7ef668d82f2e793291d5baba69371d3ae291cfbb2af09bf7cee58139848fdd72",
+  "source_digest": "3b8d0cdab1ef5dadbdc0261b95f2898bf61710192d26d695cb675a5c427e8953",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }
