@@ -17,7 +17,8 @@ and shared class context; preserve the existing layout and function bodies.
 3. Declare members at observed offsets, keeping padding and every size assertion correct. Declare
    called functions without bodies so attempt can bind them; add missing addresses from the sheet
    only to this task's `bind-hints.json`.
-4. Run `tools/verifier/attempt <unit dir>` in the foreground. Read the first compile error or each
+4. Run `tools/verifier/attempt <unit dir>` in the foreground with a 600000 ms shell timeout.
+   Wait for your command to finish before ending the turn. Read the first compile error or each
    function's first mismatch. Change one concrete cause, then attempt again. Do not optimize from
    intuition when the target does different work.
 5. A normal unit gets three counted attempts per selected function plus four for shared setup.
@@ -55,6 +56,33 @@ and shared class context; preserve the existing layout and function bodies.
 - **Frame/unwind mismatch.** Check local lifetimes and called function signatures. Try one concrete
   correction, then preserve the near-miss. Never use assembly, raw bytes, codegen pragmas or remove
   an assertion to silence a layout error.
+
+## TLS scopes and polymorphic subobjects
+
+- **TLS save/set/restore.** A saved thread-local value restored after the body is a scoped object,
+  including its exception cleanup. Declare a `__declspec(thread)` variable of the observed width,
+  save it in an inline helper's constructor, set the observed value there, and restore it in the
+  destructor. Construct the helper at the observed scope entry; keep other local objects in their
+  observed lifetime order. Nested scopes need separate helper instances. Bind that variable to
+  `tls:0x<offset from the sheet>`; a different thread-local flag is a different variable, with its
+  own width and offset. Do not replace TLS with a plain global or hand-written TLS-array reads.
+  See [cookbook rule 21](matching-cookbook.md). Proved on BGSKeyword's 299-byte Load, including EH.
+- **Several vptr stores in a destructor.** Restore the actual polymorphic bases in order at their
+  observed subobject offsets, rather than leaving those bases as an opaque padding array. A vptr
+  can also belong to a polymorphic member: use the RTTI and declaration to distinguish composition
+  from inheritance (BSPathing has a filter member). Keep
+  every size assertion. Let C++ destroy bases and members in reverse construction order. For a
+  base destructor the target calls, declare it without a body and bind the call from the sheet.
+  For cleanup the target inlines, use a justified inline definition in your own unit, preserving
+  its member cleanup and intermediate base-vtable stores. Never edit an accepted shared header.
+  Retain the constructor that emits the deleting destructor. See
+  [cookbook rule 28](matching-cookbook.md). Proved on TESEyes' three-base destructor, 126/126,
+  with its retained Load and accepted regression still passing.
+- A preparation fault is different from an exhausted source hypothesis. If the shared declaration
+  prevents the required layout, or harvest flags an emitted inventory-named base function, save
+  the exact reason for the Engineer. Never remove an accepted regression or rename a real target
+  into a helper to evade the check. A new inventory-named base definition needs its own passing comparison;
+  an external declaration avoids emitting an incomplete local stand-in implementation.
 
 ## Results and labels
 

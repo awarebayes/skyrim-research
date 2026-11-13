@@ -146,8 +146,30 @@ registers. Fix: declare `extern __declspec(thread) T name;` (a thread-safe funct
 reads the CRT's `_Init_thread_epoch` the same way) and bind it with the hint
 `{"<decorated name>": "tls:0x<offset>"}`; `_tls_index` needs no hint. Give each variable one name
 and offset for every function that uses it. Compared from comparator 0.5.0 on (earlier:
-`unsupported-relocation` SECREL); measured on synthetic code only. Seen in TESForm 0x1e6930 and
-0x1e5b30, not yet closed.
+`unsupported-relocation` SECREL).
+
+When the value is saved, set for the body, and restored afterward, represent its lifetime with
+an inline scope guard, rather than restoring it only on the normal return path. Its destructor
+must also restore it while unwinding. Match the loaded width, the written value, the scope entry
+and the order of the other destructor-bearing locals. For example, with all helper names labelled
+`GUESS(low)` in a reconstruction:
+
+```cpp
+extern __declspec(thread) std::uint32_t activeTag;
+class TagScope {
+public:
+    explicit TagScope(std::uint32_t value) : saved(activeTag) { activeTag = value; }
+    ~TagScope() { activeTag = saved; }
+private:
+    std::uint32_t saved;
+};
+```
+
+Instantiate at the observed entry with the observed value; use another instance for a nested
+save/restore. A separately read TLS flag needs its own variable and binding, not another guessed
+use of this slot. This shape passed BGSKeyword::Load 0x391fe0 (299/299, unwind covered) and its
+accepted regression in a fresh one-host attempt; that is a source-shape observation, not acceptance.
+TESForm 0x1e6930 and 0x1e5b30 remain separate, unclosed functions.
 
 **22. A callee's out-parameter below an 8-byte temporary in the home slots is a small type.**
 (medium)
@@ -210,6 +232,32 @@ caller reaches it there by a call or a jump. Its comment says it stands in for t
 not itself compared in the unit, prefer declaring it without defining it: the call stays a
 call and no attribute is needed. An attribute whose callee no longer has a caller in the unit
 is removed. Using it to change the caller's code in any other way is "to match" and is rejected.
+
+**28. Destructor vptr stores need typed component subobjects.** (medium)
+Several stores to different offsets of `this` identify separate polymorphic subobjects. Use RTTI
+and declarations to distinguish bases from polymorphic members. Preserve the bases, their order,
+their observed sizes and the primary base's virtual slots. A padding array of the same total size cannot produce their destructor cleanup or secondary vftables.
+Give the derived class a constructor so the compiler emits its deleting destructor (rule 14).
+
+Distinguish each base cleanup from the listing: an out-of-line destructor call needs a declaration
+and binding; inlined cleanup needs an inline body in this unit, with its members represented by
+actual types whose destructors perform the observed cleanup. An empty component destructor can
+still store its own vftable before member destruction and its base's vftable afterward. Do not
+replace these transitions with explicit vtable writes. Keep a called base destructor out of line,
+and keep an inlined empty base cleanup inline; a small inline out-of-class definition can supply
+that body locally without editing the shared declaration. This is justified only by the cleanup
+the listing shows. C++ destroys members and bases in reverse construction order.
+
+Restoring TESFullName and TESTexture at TESEyes' observed subobject offsets closed the deleting
+destructor 0x3b32b0 (126/126, unwind covered), while Load 0x3b2fc0 (429/429) and the accepted
+InitializeData regression still passed in the same fresh one-host attempt. Its texture destructor
+stays an external call; full-name string cleanup and the empty BaseFormComponent cleanup inline.
+This is one proving unit, not a promise that every multiple-inheritance destructor shares that
+cleanup. BSPathing is a composition case: the pinned powerof3/CommonLibSSE `BSPathing.h` declares
+a polymorphic FindTriangleForLocationFilterCheckDeltaZ member after its own vptr. Making that
+filter a base would share the primary vptr and lose the observed member offset. A new
+inventory-named base definition still needs a passing comparison; declare an existing external
+constructor instead of emitting a partial local version.
 
 ## Unsolved patterns
 

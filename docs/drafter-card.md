@@ -16,7 +16,7 @@ code, first mismatch offset, candidate/target size. Read locally
 `attempts/<NNN>/0x<rva>/side-by-side.txt` (target vs candidate disassembly; `*` marks rows that
 differ outside relocated fields) and `compile.log`, revise, repeat. Never stop the machine; it
 stops itself at its deadline. One unit per shell command: never chain several `attempt` runs in one
-command or start one in the background (tool timeout of 120 s, and a second run on a unit fails with
+command or start one in the background (shell timeout of 600000 ms, and a second run on a unit fails with
 "another attempt is running").
 
 **Names and binding.** Your class and function names may differ from the community names; the
