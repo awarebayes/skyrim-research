@@ -436,9 +436,25 @@ def existing_header_emissions(tree, base, closure, symbols, task_targets, bind):
 
     def classes(text):
         pairs = brace_pairs(text)
-        return {(m.group(1), text[m.start():pairs[m.end() - 1] + 1])
-                for m in re.finditer(r'\b(?:class|struct)\s+([A-Za-z_]\w*)\b[^;{}]*\{', text)
-                if m.end() - 1 in pairs}
+        declarations = set()
+        for match in re.finditer(r'\b(?:class|struct)\s+([A-Za-z_]\w*)\b[^;{}]*\{', text):
+            end = pairs.get(match.end() - 1)
+            if end is None:
+                continue
+            definition = text[match.start():end + 1]
+            # A nested enum declaration emits no destructor code. Keep enum-valued members:
+            # only a closing brace followed directly by a semicolon is declaration-only.
+            nested = brace_pairs(definition)
+            enums = []
+            for enum in re.finditer(r'\benum\s+(?:class\s+)?[A-Za-z_]\w*[^;{}]*\{', definition):
+                close = nested.get(enum.end() - 1)
+                if close is not None and re.match(r'\s*;', definition[close + 1:]):
+                    tail = re.match(r'\s*;', definition[close + 1:]).end()
+                    enums.append((enum.start(), close + 1 + tail))
+            for start, stop in reversed(enums):
+                definition = definition[:start] + definition[stop:]
+            declarations.add((match.group(1), re.sub(r'\s+', ' ', definition)))
+        return declarations
 
     def defaults(text):
         return {f'{owner}::{member}' for owner, member in re.findall(

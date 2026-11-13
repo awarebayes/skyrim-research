@@ -90,7 +90,7 @@ import sys
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 sys.path.insert(0, str(REPO / 'tools'))
-from pecoff import CoffObject, PeImage, SCN_CNT_CODE, STORAGE_EXTERNAL  # noqa: E402
+from pecoff import CoffObject, PeImage, Reject, SCN_CNT_CODE, STORAGE_EXTERNAL, SYM_UNDEFINED  # noqa: E402
 import symbol_map as symbol_maps  # noqa: E402
 
 UNBOUND = 'unbound:'
@@ -532,6 +532,19 @@ def bind(task_dir, obj_path, image_path=None, objdump=None, repo=REPO):
     report = {'functions': [], 'references': [], 'unbound_functions': [], 'unbound_references': [],
               'unbound_thread_locals': [],
               'renamed': [], 'ignored_hints': [], 'destructor_choices': [], 'warnings': [], 'changed': False}
+    if image is not None and any(s.name == '__std_terminate' and s.section == SYM_UNDEFINED
+                                 for s in obj.symbols.values()):
+        from compare_runtime import termination_thunk
+        try:
+            entry = termination_thunk(image)
+        except Reject:
+            pass  # An unsupported or ambiguous import remains unbound and cannot pass.
+        else:
+            previous = symbols.get('__std_terminate')
+            if previous is None or previous == dict(entry, size=None):
+                symbols['__std_terminate'] = entry
+                found['__std_terminate'] = ('verified runtime import', None)
+                report['changed'] |= previous != entry
     if annotate_destructors(task, repo):
         report['changed'] = True
 

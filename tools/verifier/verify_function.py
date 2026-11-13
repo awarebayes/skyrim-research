@@ -206,7 +206,7 @@ def run(task_file, obj, build_record, image, report_path, diagnostics=None, pyth
     flat_task.parent.mkdir(parents=True, exist_ok=True)
     flat_task.write_text(json.dumps(task, indent=2, sort_keys=True) + '\n')
     # Not isolated mode: compare.py imports pecoff from its own directory.
-    comparator = COMPARE.with_name('compare_internal.py') if 'internal_identity' in task else COMPARE
+    comparator = COMPARE.with_name('compare_internal.py') if 'internal_identity' in task else COMPARE.with_name('compare_runtime.py')
     cmd = [python, str(comparator), '--task', str(flat_task), '--manifest', str(manifest),
            '--recipe', str(recipe), '--build-record', str(build_record), '--object', str(obj),
            '--image', str(image), '--symbols', str(symbols), '--report', str(report_path),

@@ -491,6 +491,27 @@ class DraftWorktrees(unittest.TestCase):
         with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
             self.finish()
 
+    def test_nested_enum_does_not_make_existing_deleting_destructor_a_candidate(self):
+        symbol = self.existing_header()
+        tree = Path(self.claim()['draft']['tree'])
+        header = tree / self.unit['sources'][0]
+        header.write_text(header.read_text().replace('public:', 'public: enum class Kind : int {};'))
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            self.finish()
+
+    def test_enum_valued_member_keeps_changed_class_destructor_refusal(self):
+        symbol = self.existing_header()
+        tree = Path(self.claim()['draft']['tree'])
+        header = tree / self.unit['sources'][0]
+        header.write_text(header.read_text().replace('public:', 'public: enum Kind { one } field;'))
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, symbol: 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
     def test_preexisting_inventory_body_is_not_a_new_candidate_when_cpp_is_extended(self):
         source = self.root / self.unit['sources'][-1]
         source.write_text('int InventoryOther() { return 1; }\n')

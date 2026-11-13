@@ -43,7 +43,7 @@ try:
 except ImportError:
     cost_hooks = None
 
-TOOL_FILES = ('tools/compare_internal.py', 'tools/compare.py', 'tools/pecoff.py', 'tools/source_digest.py',
+TOOL_FILES = ('tools/compare_runtime.py', 'tools/compare_internal.py', 'tools/compare.py', 'tools/pecoff.py', 'tools/source_digest.py',
               'tools/verifier/verify_function.py', 'tools/verifier/unit_build.py', 'tools/verifier/pinned.sha256', 'builds/target.json')
 TASK_ID = re.compile(r'[a-z0-9][a-z0-9.-]{0,55}')
 PRIVATE_SYMBOLS = 'task/symbols.json'

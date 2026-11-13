@@ -68,3 +68,28 @@ Every added name needs an origin label. Copy the skeleton's labels; use a separa
 `static_assert(sizeof(X) == 0x20, "X size");`. Use quoted relative includes as the skeleton gives them.
 Never edit task.json, symbols.json, tools, docs, another unit, or the queue files directly.
 Never commit, push, mark matched, start agents, or access a remote machine.
+
+
+## Destructor preparation and exception data
+
+A size match is not a pass. `unwind-info-mismatch` can mean a different saved-register offset;
+`eh-data-mismatch` on a state (including state -2) means the cleanup lifetimes or exception
+specification differ. Check actual owning members, base cleanup, local scopes and the declared
+exception specifications. Do not add catch/rethrow code or change `noexcept` just to remove a
+failure. Keep an out-of-line destructor declared when the target calls it; make owned cleanup
+an ordinary member or scoped lifetime when the target unwinds it.
+
+A compiler-emitted `__std_terminate` unwind action is a runtime dependency, not a missing helper
+body to write. The ordinary runtime engine verifies its complete import thunk and named runtime
+import. If that action remains unbound or refused, save the note as a preparation fault; do not
+spend repeated attempts on it, invent a helper, or edit the map. Other external EH actions remain
+unsupported. A handler's name alone does not establish that its EH tables match.
+
+When a deleting destructor stores a base vtable and has no call to a separate base destructor,
+preparation must provide the observed inline base cleanup. The skeleton already supports local
+`NiObject`/`NiRefObject` stand-ins for their counter cleanup. An empty `BaseFormComponent` base
+can likewise need a unit-local inline destructor; preserve its slot order, size and virtual
+methods. Do not change shared `TESForm`, `NiObject` or other accepted base headers to force
+inlining: record the base name for the Engineer, who prepares the local declaration and reruns
+every accepted function in the affected unit. A real out-of-line base destructor must retain its
+call; inline does not mean deleting its work.

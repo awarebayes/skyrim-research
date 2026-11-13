@@ -585,3 +585,26 @@ stated here; changing any of them is a contract change.
    `pass` still implies complete coverage and the gate checks the same fields as before.
 6. **Referenced data.** It says data references are checked, which versions 1 and 2 do as addresses
    only. Whether referenced constants must also match is not stated.
+
+
+## Ordinary functions with CRT termination actions
+
+The separately pinned `compare_runtime.py` engine (`0.6.1-runtime`, contract 2) retains the
+ordinary function identity, primary boundaries and every byte, relocation, unwind, EH-data and
+funclet check above. Its only extension is the same verified `__std_terminate` unwind-map
+reference supported by the internal engine (`docs/comparator-internal-prototype.md`, Runtime
+termination actions). It requires an undefined external function symbol with zero offset and
+addend, an exact map entry covering a complete six-byte import jump, executable target storage,
+the unique unbound named `__std_terminate` import from `VCRUNTIME140.dll`, and no overlap with
+compared code or a procedure's unwind range. Arbitrary external actions and catch handlers stay
+refused. Every other EH field, including negative state integers, is compared unchanged.
+
+The binder can seed this one reference only when the image has exactly one complete jump to
+that verified import slot. It never replaces a conflicting binding. The comparator independently
+checks the pinned image, field RVA, map entry, thunk and import on every comparison.
+The verifier uses this engine for new ordinary comparisons. The match gate pins its version and
+all implementation dependencies, checks reported runtime identities against the record's map,
+and requires both hosts to report the same runtime dependencies. Mixed engines are refused.
+The original `compare.py` and `compare_internal.py` remain unchanged: existing records continue
+to require their exact original engine hashes; new support does not relabel earlier reports or
+turn any old failure into a pass without a fresh deterministic comparison.

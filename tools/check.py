@@ -16,6 +16,7 @@ from lint_reconstruction import lint_tree
 import cost_ledger
 import symbol_map as symbol_maps
 import compare_internal
+import compare_runtime
 import compare as legacy_comparator
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -149,7 +150,7 @@ def check_unit(root, compiled, unit, what):
 
 
 def check_runtime_actions(report, symbol_map):
-    """Consistency of the internal engine's verified CRT dependencies; image proof stays private."""
+    """Consistency of verified CRT dependencies; image proof stays private."""
     actions = (report.get('coverage') or {}).get('runtime_actions', [])
     require(isinstance(actions, list), 'Match record: runtime actions must be a list')
     keys = {'symbol', 'rva', 'size', 'iat_rva', 'module', 'import'}
@@ -256,7 +257,10 @@ def check_match(fn, target, root=None):
     runs = record.get('runs')
     require(isinstance(runs, list) and len(runs) >= MIN_HOSTS, f'Match record: needs at least {MIN_HOSTS} runs')
     internal = record['match_record_schema'] == 3
-    engine = compare_internal if internal else legacy_comparator
+    first = runs[0].get('report') if isinstance(runs[0], dict) else None
+    identity = first.get('comparator') if isinstance(first, dict) else None
+    runtime = not internal and isinstance(identity, dict) and identity.get('version') == compare_runtime.COMPARATOR_VERSION
+    engine = compare_internal if internal else compare_runtime if runtime else legacy_comparator
     require(not internal or map_ref.get('sha256') == map_state.current_sha,
             'Match record: internal prototype requires the exact current symbol map')
     identities, runtime_actions = set(), set()
@@ -313,14 +317,14 @@ def check_match(fn, target, root=None):
                 'Match record: report does not name its candidate object')
         object_hosts.setdefault(report['candidate']['object_sha256'], set()).add(run['compiled_on'])
         cov = report.get('coverage') or {}
-        if internal:
+        if internal or runtime:
             runtime_actions.add(check_runtime_actions(report, symbol_map))
         require(cov.get('code_bytes_total') == fn['size']
                 and integer(cov.get('code_bytes_exact')) and integer(cov.get('code_bytes_by_reference'))
                 and cov['code_bytes_exact'] + cov['code_bytes_by_reference'] == fn['size']
                 and cov.get('unwind') in {'covered', 'none-in-range'},
                 'Match record: report coverage is incomplete')
-    require(not internal or len(runtime_actions) == 1, 'Match record: runs compared different runtime actions')
+    require(not (internal or runtime) or len(runtime_actions) == 1, 'Match record: runs compared different runtime actions')
     require(not internal or len(identities) == 1, 'Match record: runs compared different internal identities')
     require(len(symbols) == 1, 'Match record: runs compared different symbols')
     if pinned_names is not None:

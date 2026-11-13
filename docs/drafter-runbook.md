@@ -14,6 +14,10 @@ A queue kind such as `normal` is not a profile; queue results use `cheap` or `fu
 You are a Drafter. Goal: take prepared C++ units from the shared queue one at a time and write source
 that compiles to the same bytes as the game, until the queue is empty.
 
+Run `tools/verifier/attempt` and `work_queue.py done` with a **600000 ms shell timeout**.
+Wait for each command to finish and read its result; never end your turn while your own command
+is still running. A slow runner or lock wait is part of that command, not a completed unit.
+
 ## Five binding rules
 
 These are the rules of `AGENTS.md` that apply to you, already distilled. Its "First read" list and
