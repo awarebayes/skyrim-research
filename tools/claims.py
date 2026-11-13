@@ -22,7 +22,7 @@ MARKER = 'skyrim-claim-v1'
 MANAGED = '<!-- skyrim-project-claim -->'
 BODY_LIMIT = 60000
 TTL = 600
-DAYS = 14
+CLAIM_LAPSE = timedelta(hours=24)
 TOKEN = re.compile(r'(?<![A-Za-z0-9])0x([0-9a-fA-F]+)\b')
 ENTRY = re.compile(r'0x([0-9a-fA-F]+)(?:-0x([0-9a-fA-F]+))?(?:\s+[^\r\n]+)?')
 
@@ -39,7 +39,7 @@ def stamp(value):
 
 
 def live(item, now=None):
-    return (now or datetime.now(timezone.utc)) - stamp(item.get('updated_at')) <= timedelta(days=DAYS)
+    return (now or datetime.now(timezone.utc)) - stamp(item.get('updated_at')) < CLAIM_LAPSE
 
 
 def parse_issue(issue):
@@ -195,6 +195,9 @@ class GitHub:
     def edit(self, number, title, body, me):
         self.run('issue', 'edit', number, '--repo', REPO, '--title', title, '--add-assignee', me, body=body)
 
+    def comment(self, number, text):
+        self.run('issue', 'comment', number, '--repo', REPO, body=text)
+
     def close(self, number, reason=None):
         self.run('issue', 'close', number, '--repo', REPO, '--comment', reason or
                  'All functions in this claim are accepted on origin/main. Closing the claim.')
@@ -263,7 +266,7 @@ def body(build, entries, public, me, total=None, done=0, managed=False):
     total = len(entries) if total is None else total
     text = (f'Claimant: @{me}\nBuild: {build}\nScope: {scope(entries, public, build)}\n'
             f'Functions: {total}\nAccepted on origin/main: {done} / {total}\n\n'
-            f'This claim lapses after {DAYS} days without issue, comment or linked PR activity.\n'
+            'This claim lapses after 24 hours without activity (a comment, an update or a linked pull request); anyone may then take it over.\n'
             'Only public metadata belongs in this issue.\n\n'
             + (MANAGED + '\n' if managed else '') + f'```text\n{MARKER} {build}\n' + '\n'.join(lines) + '\n```\n')
     if len(text) >= BODY_LIMIT:
@@ -380,10 +383,39 @@ def collect(root, public, family_roots=(), cluster_lists=()):
     return build, groups
 
 
+def active_entries(root, public, family_roots=()):
+    """Find work still in the pipeline, without treating static cluster reservations as active."""
+    root = Path(root)
+    if not (root / 'data/progress.json').is_file():
+        return []
+    build = public['target_build_id']
+    accepted = {f['rva'] for f in public['functions'] if f['build_id'] == build and f['status'] == 'matched'}
+    config = load_json(root / '.local/claims-config.json')
+    addresses = set()
+    for family_root in [root, *config.get('family_roots', []), *family_roots]:
+        base = Path(family_root)
+        for path in (base / 'reports' / build / 'families').glob('*.json'):
+            addresses |= planned_family(base, path)
+    import flow
+    states = flow.function_states(root, flow.flow_dir(root), online=False)
+    active = {'queued', 'drafting', 'drafted-pass', 'confirmed', 'review-pending', 'approved'}
+    addresses |= {rva(a) for a, state in states.items() if state.get('state') in active}
+    return [(a, a + 1) for a in addresses - accepted]
+
+
+def keep_alive(gh, issue, active, done, total):
+    now = datetime.now(timezone.utc)
+    age = now - stamp(issue.get('updated_at'))
+    if (CLAIM_LAPSE / 2 < age < CLAIM_LAPSE and
+            any(a < d and c < b for a, b in issue['entries'] for c, d in active)):
+        gh.comment(issue['number'], f'Progress: {done} / {total} accepted; work remains active.')
+
+
 def publish(root, gh, public, family_roots=(), cluster_lists=(), dry_run=False):
     me = load_json(Path(root) / '.local/claims-config.json').get('project_login') or gh.user()
     build, groups = collect(root, public, family_roots, cluster_lists)
     existing = gh.issues()
+    active = active_entries(root, public, family_roots)
     index = ClaimIndex(existing, build)
     used, plans = set(), []
     for entries, counts in groups:
@@ -444,6 +476,10 @@ def publish(root, gh, public, family_roots=(), cluster_lists=(), dry_run=False):
                 raise ValueError('an older overlapping claim won the publication race')
         elif action == 'update':
             gh.edit(prior['number'], title, text, me)
+        elif action == 'unchanged':
+            match = re.search(r'^Accepted on origin/main: (\d+) / (\d+)$', text, re.M)
+            if match:
+                keep_alive(gh, prior, active, int(match[1]), int(match[2]))
     return plans
 
 
@@ -451,6 +487,7 @@ def sync(root, gh=None):
     gh = gh or GitHub(root)
     public = git_json(root, 'origin/main')
     me = load_json(Path(root) / '.local/claims-config.json').get('project_login') or gh.user()
+    active = active_entries(root, public)
     for it in gh.issues():
         if MARKER not in it.get('body', '') or it['author'] != me:
             continue
@@ -466,6 +503,8 @@ def sync(root, gh=None):
             gh.edit(it['number'], it['title'], text, me)
         if done == total and total > 0:
             gh.close(it['number'])
+        elif text == it['body'] and it.get('build_id') == public['target_build_id']:
+            keep_alive(gh, it, active, done, total)
         print(f'#{it["number"]}: accepted {done}/{total}' + ('; closed' if done == total else ''))
 
 

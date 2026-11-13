@@ -223,14 +223,14 @@ class ClaimTests(Base):
         self.assertEqual(out['claim'], 'https://github.com/x/y/issues/99')
 
     def test_collision_is_refused(self):
-        gh = FakeGitHub({MAPPED: [item('someone', 1)]})
+        gh = FakeGitHub({MAPPED: [item('someone', 0)]})
         code, out = self.run_claim(gh)
         self.assertEqual(code, contrib.CLAIMED)
         self.assertEqual(gh.created, [])
         self.assertIn('someone', out['error'])
 
     def test_lapsed_claim_needs_take_over(self):
-        gh = FakeGitHub({MAPPED: [item('someone', contrib.CLAIM_DAYS + 1, 7)]})
+        gh = FakeGitHub({MAPPED: [item('someone', 2, 7)]})
         self.assertEqual(self.run_claim(gh)[0], contrib.CLAIMED)
         code, _ = self.run_claim(gh, '--take-over')
         self.assertEqual(code, 0)
@@ -538,7 +538,7 @@ class SubmitTests(Base):
     def test_fresh_foreign_claim_blocks_on_any_function(self):
         self.task['functions'].append({'rva': '0xf2120', 'size': 3, 'symbol': 'y', 'community_name': 'A::B'})
         self.write()
-        gh = FakeGitHub({0xf2120: [item('someone', 1, 5)]})
+        gh = FakeGitHub({0xf2120: [item('someone', 0, 5)]})
         self.assertIn('0xf2120', self.blockers(gh))
         code, out = self.submit(gh, '--ack-collision')
         self.assertEqual(out['blockers'], [])
@@ -579,7 +579,7 @@ class ClaimFollowUpTests(Base):
         self.assertNotIn(f'0x{MAPPED:x}', contrib.local_claims(self.ctx()))
 
     def test_unknown_login_with_open_items_asks_for_it(self):
-        gh = FakeGitHub({MAPPED: [item('someone', 1)]}, me=None)
+        gh = FakeGitHub({MAPPED: [item('someone', 0)]}, me=None)
         code, out = self.claim(gh)
         self.assertEqual(code, contrib.USAGE)
         self.assertIn('--github-user', out['next'])
@@ -762,7 +762,7 @@ class FollowUpTests(Base):
     def test_planner_skips_open_claims_and_warns_offline(self):
         sys.path.insert(0, str(ROOT / 'tools' / 'ghidra'))
         import export_pack
-        gh = FakeGitHub({MAPPED: [item('someone', 1)], 0x2000: [item('someone', contrib.CLAIM_DAYS + 3)]})
+        gh = FakeGitHub({MAPPED: [item('someone', 0)], 0x2000: [item('someone', 4)]})
         with unittest.mock.patch.object(contrib.Ctx, 'github', return_value=gh):
             self.assertEqual(export_pack.open_claim_rvas(), {MAPPED})
         err = io.StringIO()

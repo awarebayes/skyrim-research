@@ -32,7 +32,7 @@ Haiku- or Luna-class models) or `full` (full card and cookbook, for Sonnet-class
 changes what counts as a match. `python3 tools/profiles.py` prints a rough cost line for each.
 """
 import argparse
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import hashlib
 import json
 import ntpath
@@ -58,9 +58,6 @@ for _p in (TOOLS, TOOLS / 'verifier', TOOLS / 'analysis', TOOLS / 'ghidra'):
 
 OK, FAILED, USAGE, COMPILE, UNIT, MISSING, CLAIMED, CONSENT, NETWORK = 0, 1, 2, 3, 4, 5, 6, 7, 8
 UPSTREAM = 'awarebayes/skyrim-research'
-# A claim lapses when its issue or pull request has had no activity for this long; anyone may then
-# take the function over (`claim --take-over`), which comments on the old claim.
-CLAIM_DAYS = 14
 COMPILE_TIMEOUT = 180
 # Contributor units are small; a cap keeps a pathological file away from the compiler and reviewers.
 MAX_UNIT_FILE_BYTES = 64 * 1024
@@ -827,7 +824,7 @@ def issue_number(url):
     return int(m.group(1)) if m else 1 << 62
 
 
-def claim_state(items, me, now=None, days=CLAIM_DAYS):
+def claim_state(items, me, now=None):
     """Split claims on one function into mine, fresh claims by others and lapsed ones."""
     now = now or datetime.now(timezone.utc)
     mine, fresh, stale = [], [], []
@@ -839,7 +836,7 @@ def claim_state(items, me, now=None, days=CLAIM_DAYS):
             updated = datetime.fromisoformat(str(it.get('updated_at')).replace('Z', '+00:00'))
         except ValueError:
             updated = now
-        (stale if now - updated > timedelta(days=days) else fresh).append(it)
+        (stale if now - updated >= batch_claims.CLAIM_LAPSE else fresh).append(it)
     return mine, fresh, stale
 
 
@@ -1581,7 +1578,7 @@ def cmd_claim(ctx, args):
         for offset in range(0, len(entries), 500):
             markers = '\n'.join(f'<!-- skyrim-claim-takeover-v1 0x{a:x}-0x{b:x} -->'
                                 for a, b in entries[offset:offset + 500])
-            gh.comment(it['number'], f'Taking over overlapping functions after {CLAIM_DAYS} days without activity. '
+            gh.comment(it['number'], f'Taking over overlapping functions after 24 hours without activity. '
                        f'New claim: #{issue_number(urls[0])}.\n' + markers)
     return OK, {'rva': f'0x{first:x}', 'claim': urls[0], 'claims': urls}, f'{ctx.cli} start 0x{first:x}'
 

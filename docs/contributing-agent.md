@@ -121,8 +121,8 @@ inventory, never from a local listing. Old single-function issue titles remain r
 `next` excludes other people's live claims, including ranges and the project's own published
 queue claims. Any partial overlap with another person's live issue or PR is refused (exit 6)
 and names the issue. Overlap with your own claim is allowed. If claims race, the older issue
-wins and the newer claim is withdrawn. Claims lapse after 14 days without issue, comment or
-linked PR activity; `claim --take-over` records a takeover comment. With no network,
+wins and the newer claim is withdrawn. Claims lapse after 24 hours without activity (an issue
+update, comment or linked pull request); `claim --take-over` records a takeover comment. With no network,
 `claim --offline-ok` records an unpublished local claim: run it again online to make it visible.
 Without signed-in `gh`, the helper prints prefilled issue links; file them, assign yourself and
 run `claim` again (`--github-user <login>` identifies you). Releasing one member of a batch does
@@ -131,6 +131,8 @@ not close the entire batch: edit its scope or close the issue on GitHub.
 `python3 tools/claims.py list` shows live claims and accepted counts; `check 0x<rva> ...` checks
 specific addresses. Reads use an ignored `.local/claims-cache.json` with a ten-minute TTL;
 `--refresh` forces a refresh. Offline project queue commands warn and use the stale cache.
+Project `publish` and `sync` renew live claims after 12 hours of inactivity while their work
+remains active in the pipeline or is a planned family member.
 
 ## What is tested
 
