@@ -8,6 +8,7 @@ sys.path.insert(0,str(ROOT/'tools'))
 import primitive_leaf_generate as generator
 import primitive_leaf_template_v1 as template
 import lint_reconstruction
+import family_review
 
 
 class PrimitiveTests(unittest.TestCase):
@@ -32,6 +33,9 @@ class PrimitiveTests(unittest.TestCase):
             size=3 if family=='empty' else 6
             e=template.emit(0x1234,size,family,kind,value)
             self.assertEqual(e['parameters']['entry_rva'],0x1234)
+            parameters=generator.family_parameters(e)
+            self.assertTrue(all(family_review.ID.fullmatch(k) for k in parameters))
+            self.assertEqual(parameters['entry-rva'],0x1234)
             self.assertIn('original function signature are unknown',e['header'])
             with tempfile.TemporaryDirectory() as directory:
                 root=Path(directory)

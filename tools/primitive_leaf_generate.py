@@ -42,6 +42,15 @@ def write_new(path, text):
         path.write_text(text)
 
 
+def family_parameters(emitted):
+    """Translate the emitter's Python field names to the public family grammar."""
+    row = emitted['parameters']
+    result = {'entry-rva': row['entry_rva'], 'size': row['size'], 'kind': row['kind']}
+    if 'value' in row:
+        result['value'] = row['value']
+    return result
+
+
 def prepare(selection):
     root, out = (Path(selection[k]).resolve() for k in ('root', 'out'))
     if any('.local' not in p.parts for p in (root, out)):
@@ -94,10 +103,11 @@ def prepare(selection):
         digest=hashlib.sha256(symbol_map.serialize(smap)).hexdigest()
         map_path=f'reports/{template.BUILD}/unit-symbols/{digest}.json'
         symbol_map.create(root,map_path,smap)
-        entry['family_metadata']=dict(origin=emitted['origin'],family_parameters=emitted['parameters'],name_source='GUESS(low)')
+        parameters=family_parameters(emitted)
+        entry['family_metadata']=dict(origin=emitted['origin'],family_parameters=parameters,name_source='GUESS(low)')
         task=dict(task_schema=2 if m['kind']=='teardown' else 1,task_id=taskdir.name,build_id=template.BUILD,
                   compiled=source,recipe=template.RECIPE,symbols=map_path,functions=[entry])
-        (taskdir/'task.json').write_text(json.dumps(task,indent=2)+'\n');tasks.append(str(taskdir));rows.append(emitted['parameters'])
+        (taskdir/'task.json').write_text(json.dumps(task,indent=2)+'\n');tasks.append(str(taskdir));rows.append(parameters)
         if m['rva'] not in existing:
             progress['functions'].append(dict(id=f'{template.BUILD}-0x{m["rva"]:x}',build_id=template.BUILD,
                 rva=m['rva'],size=m['size'],status='mapped',name=f'{emitted["cls"]}::{emitted["method"]}',
