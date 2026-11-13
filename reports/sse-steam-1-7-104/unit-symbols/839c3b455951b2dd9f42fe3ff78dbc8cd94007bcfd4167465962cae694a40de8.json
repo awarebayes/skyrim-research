@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetInterpolatorCount@NiMultiTargetTransformController@@UEBAGXZ": {
+      "rva": 16113168,
+      "size": 5
+    },
+    "?GetInterpolatorID@NiMultiTargetTransformController@@UEAAPEBDG@Z": {
+      "rva": 16113184,
+      "size": 16
+    },
+    "??_GNiMultiTargetTransformController@@UEAAPEAXI@Z": {
+      "rva": 16102688,
+      "size": 52
+    },
+    "?GuaranteeTimeRange@NiMultiTargetTransformController@@UEAAXMM@Z": {
+      "rva": 16114304,
+      "size": 108
+    },
+    "?GetInterpolatorIndex@NiMultiTargetTransformController@@UEBAGPEBD@Z": {
+      "rva": 16113216,
+      "size": 120
+    },
+    "?LoadBinary@NiMultiTargetTransformController@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16111520,
+      "size": 147
+    },
+    "?SaveBinary@NiMultiTargetTransformController@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16111712,
+      "size": 147
+    },
+    "?IsEqual@NiMultiTargetTransformController@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 16111872,
+      "size": 151
+    },
+    "?ResetTimeExtrema@NiMultiTargetTransformController@@UEAAXXZ": {
+      "rva": 16113456,
+      "size": 203
+    },
+    "?ProcessClone@NiMultiTargetTransformController@@UEAAXAEAVNiCloningProcess@@@Z": {
+      "rva": 16114512,
+      "size": 308
+    },
+    "??1NiMultiTargetTransformController@@UEAA@XZ": {
+      "rva": 16112224,
+      "size": null
+    },
+    "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z": {
+      "rva": 15698176,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetInterpolatorCount@NiMultiTargetTransformController@@UEBAGXZ",
+        "rva": "0xf5de10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetInterpolatorID@NiMultiTargetTransformController@@UEAAPEBDG@Z",
+        "rva": "0xf5de20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GNiMultiTargetTransformController@@UEAAPEAXI@Z",
+        "rva": "0xf5b520",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GuaranteeTimeRange@NiMultiTargetTransformController@@UEAAXMM@Z",
+        "rva": "0xf5e280",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetInterpolatorIndex@NiMultiTargetTransformController@@UEBAGPEBD@Z",
+        "rva": "0xf5de40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@NiMultiTargetTransformController@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xf5d7a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@NiMultiTargetTransformController@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xf5d860",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiMultiTargetTransformController@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xf5d900",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResetTimeExtrema@NiMultiTargetTransformController@@UEAAXXZ",
+        "rva": "0xf5df30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProcessClone@NiMultiTargetTransformController@@UEAAXAEAVNiCloningProcess@@@Z",
+        "rva": "0xf5e350",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1NiMultiTargetTransformController@@UEAA@XZ",
+        "rva": "0xf5da60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z",
+        "rva": "0xef8900",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

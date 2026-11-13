@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T03:58:39Z",
+  "updated_at": "2026-11-13T04:06:38Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -8648,48 +8648,56 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16113168,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiMultiTargetTransformController::GetInterpolatorCount",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 47. RVA 0xf5de10; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf5de10.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf5de20",
       "build_id": "sse-steam-1-7-104",
       "rva": 16113184,
       "size": 16,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiMultiTargetTransformController::GetInterpolatorID",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 48. RVA 0xf5de20; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf5de20.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf5b520",
       "build_id": "sse-steam-1-7-104",
       "rva": 16102688,
       "size": 52,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiMultiTargetTransformController::~NiMultiTargetTransformController",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 0. RVA 0xf5b520; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf5b520.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf5e280",
       "build_id": "sse-steam-1-7-104",
       "rva": 16114304,
       "size": 108,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiMultiTargetTransformController::GuaranteeTimeRange",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 58. RVA 0xf5e280; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf5e280.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf5de40",
@@ -9680,12 +9688,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15652144,
       "size": 82,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiSwitchNode::IsEqual",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: powerof3/CommonLibSSE commit 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0), virtual slot comment of the class header, joined through the image RTTI vftable slot 28. RVA 0xeed530; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xeed530.json"
     },
     {
       "id": "sse-steam-1-7-104-0xeee080",

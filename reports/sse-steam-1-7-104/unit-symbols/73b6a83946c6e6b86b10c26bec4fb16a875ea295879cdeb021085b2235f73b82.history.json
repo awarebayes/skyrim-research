@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/73b6a83946c6e6b86b10c26bec4fb16a875ea295879cdeb021085b2235f73b82.json",
+  "versions": [
+    {
+      "sha256": "73b6a83946c6e6b86b10c26bec4fb16a875ea295879cdeb021085b2235f73b82",
+      "base": null,
+      "added": [
+        "?IsEqual@NiSwitchNode@@UEAA_NPEAVNiObject@@@Z",
+        "?NiNodeIsEqual@@YA_NPEAVNiNode@@PEAVNiObject@@@Z"
+      ]
+    }
+  ]
+}

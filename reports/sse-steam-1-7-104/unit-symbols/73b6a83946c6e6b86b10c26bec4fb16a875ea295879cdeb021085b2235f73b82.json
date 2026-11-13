@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?IsEqual@NiSwitchNode@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 15652144,
+      "size": 82
+    },
+    "?NiNodeIsEqual@@YA_NPEAVNiNode@@PEAVNiObject@@@Z": {
+      "rva": 15603632,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?IsEqual@NiSwitchNode@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xeed530",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiNodeIsEqual@@YA_NPEAVNiNode@@PEAVNiObject@@@Z",
+        "rva": "0xee17b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/839c3b455951b2dd9f42fe3ff78dbc8cd94007bcfd4167465962cae694a40de8.json",
+  "versions": [
+    {
+      "sha256": "839c3b455951b2dd9f42fe3ff78dbc8cd94007bcfd4167465962cae694a40de8",
+      "base": null,
+      "added": [
+        "?GetInterpolatorCount@NiMultiTargetTransformController@@UEBAGXZ",
+        "?GetInterpolatorID@NiMultiTargetTransformController@@UEAAPEBDG@Z",
+        "??_GNiMultiTargetTransformController@@UEAAPEAXI@Z",
+        "?GuaranteeTimeRange@NiMultiTargetTransformController@@UEAAXMM@Z",
+        "?GetInterpolatorIndex@NiMultiTargetTransformController@@UEBAGPEBD@Z",
+        "?LoadBinary@NiMultiTargetTransformController@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary@NiMultiTargetTransformController@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiMultiTargetTransformController@@UEAA_NPEAVNiObject@@@Z",
+        "?ResetTimeExtrema@NiMultiTargetTransformController@@UEAAXXZ",
+        "?ProcessClone@NiMultiTargetTransformController@@UEAAXAEAVNiCloningProcess@@@Z",
+        "??1NiMultiTargetTransformController@@UEAA@XZ",
+        "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}
