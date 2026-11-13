@@ -1535,6 +1535,32 @@ def shared_unit_functions(unit_cpp):
     return out
 
 
+def regression_symbols(shared, build_id, root=None):
+    """Keep each regression's reference namespace and explicit alias declarations."""
+    root = Path(root or REPO)
+    paths = []
+    for fn in shared:
+        record = json.loads((root / fn['record']).read_text())
+        path = record.get('symbol_map', {}).get('path') or f'reports/{build_id}/symbol-map.json'
+        if path not in paths:
+            paths.append(path)
+    symbols, folds, provenance = {}, [], []
+    for path in paths:
+        payload = json.loads((root / path).read_text())
+        for name, entry in payload['symbols'].items():
+            previous = symbols.get(name)
+            if previous is not None and {k: v for k, v in previous.items() if k != 'size'} != {
+                    k: v for k, v in entry.items() if k != 'size'}:
+                raise ValueError(f'regression symbol {name} has conflicting bindings')
+            if previous is None or previous.get('size') is None:
+                symbols[name] = entry
+            provenance.append({'name': name, 'from': path})
+        for group in payload.get('folds', []):
+            if not any(set(group) == set(known) for known in folds):
+                folds.append(group)
+    return symbols, folds, provenance
+
+
 AREA_PREFIXES = (('Ni', 'netimmerse'), ('BS', 'bsengine'), ('TES', 'forms'), ('BGS', 'forms'))
 ACTOR_CLASSES = {'Actor', 'Character', 'PlayerCharacter'}
 
@@ -1575,14 +1601,11 @@ def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts
                 symbols[r['symbol']] = {'rva': r['target_rva'], 'size': None}
                 provenance.append({'name': r['symbol'], 'rva': hex(r['target_rva']), 'from': r['resolution']})
     shared = shared_unit_functions(unit_cpp)
-    public_map = REPO / 'reports' / target['build_id'] / 'symbol-map.json'
-    if shared and public_map.is_file():
-        # The accepted functions of a shared unit resolve their references through the published
-        # map; seeding the task map with it keeps the regression comparison bindable from the start.
-        for k, v in json.loads(public_map.read_text())['symbols'].items():
-            if k not in symbols:
-                symbols[k] = v
-                provenance.append({'name': k, 'rva': hex(v['rva']), 'from': public_map.relative_to(REPO).as_posix()})
+    regression, folds, origins = regression_symbols(shared, target['build_id'])
+    # A unit's accepted records can use private reference names frozen in immutable unit maps.
+    # A global map alone loses those names and their explicitly declared aliases.
+    symbols.update(regression)
+    provenance.extend(origins)
     for rec in shared:
         # Compared on every attempt too, so an edit to the shared unit that breaks an accepted
         # function shows up at once instead of at integration.
@@ -1615,8 +1638,11 @@ def write_task(task_id, unit_cpp, recipe, packs, target, task_root, max_attempts
         smap = json.loads(smap_path.read_text())
         for k, v in symbols.items():
             smap['symbols'].setdefault(k, v)
+        for group in folds:
+            if not any(set(group) == set(known) for known in smap.get('folds', [])):
+                smap.setdefault('folds', []).append(group)
     else:
-        smap = {'schema': 1, 'build_id': target['build_id'], 'symbols': symbols, 'folds': [],
+        smap = {'schema': 1, 'build_id': target['build_id'], 'symbols': symbols, 'folds': folds,
                 '_provenance': {'generator': 'tools/ghidra/export_pack.py', 'entries': provenance,
                                 'note': 'bind adds task and reference symbols from the compiled object'}}
     smap_path.write_text(json.dumps(smap, indent=2) + '\n')

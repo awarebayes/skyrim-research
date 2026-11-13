@@ -346,7 +346,8 @@ def unit_line(unit_dir, repo):
         used = sum(1 for line in log.read_text().splitlines() if line.strip() and json.loads(line).get('counted') and json.loads(line).get('tier', 'first') == 'first')
     budget = (task.get('max_attempts') or 0) - used
     rel = d.relative_to(repo).as_posix() if d.is_absolute() else d.as_posix()
-    functions = ','.join(str(f['rva']) for f in task.get('functions') or [])
+    functions = ','.join(str(f['rva']) for f in task.get('functions') or []
+                         if f.get('role') != 'regression')
     return f'{rel}\t{cpp[:-4]}.h,{cpp}\t{functions}\t{budget}', budget
 
 

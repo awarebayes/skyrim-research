@@ -33,6 +33,20 @@ class Queue(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp)
 
+    def test_added_extension_queues_targets_and_retains_regression_comparisons(self):
+        directory = self.tmp / '.local/tasks/extension'
+        directory.mkdir(parents=True)
+        task = {'compiled': 'reconstruction/forms/Example.cpp', 'max_attempts': 4,
+                'functions': [{'rva': '0x1000'}, {'rva': '0x2000', 'role': 'regression'}]}
+        path = directory / 'task.json'
+        original = json.dumps(task)
+        path.write_text(original)
+        self.assertEqual(wq.add(self.q, [str(directory)], repo=self.tmp), [str(directory)])
+        unit = wq.read_queue(self.q)[0]
+        self.assertEqual(unit['functions'], ['0x1000'])
+        self.assertEqual(unit['budget'], 4)
+        self.assertEqual(path.read_text(), original)
+
     def test_two_processes_never_get_the_same_unit(self):
         write_queue(self.q, 1)
         # Many racing processes for one unit: exactly one gets it, the rest see EMPTY.
