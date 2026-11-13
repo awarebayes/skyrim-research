@@ -1,6 +1,6 @@
 {
   "batch_schema": 1,
-  "commitment": null,
+  "commitment": "20baf233dd5348d1656b81864b0e90a37049890f",
   "family_path": "reports/sse-steam-1-7-104/families/e6c86d8f1be96d785e4d8d043090e0eaca703b1ffe4df2be84f235e4db9948f4.json",
   "family_sha256": "da36c09ce6949a802b9452c61992c68e65272f32b8febd3435fb8619e65e80d7",
   "members": {
@@ -27,6 +27,17 @@
     "sse-steam-1-7-104-0x17b7190",
     "sse-steam-1-7-104-0x17c56f0"
   ],
-  "sample": null,
+  "sample": [
+    "sse-steam-1-7-104-0x17b1a50",
+    "sse-steam-1-7-104-0x17b1bd0",
+    "sse-steam-1-7-104-0x17b2470",
+    "sse-steam-1-7-104-0x17b2620",
+    "sse-steam-1-7-104-0x17b2b00",
+    "sse-steam-1-7-104-0x17b2d70",
+    "sse-steam-1-7-104-0x17b4fd0",
+    "sse-steam-1-7-104-0x17b7180",
+    "sse-steam-1-7-104-0x17b7190",
+    "sse-steam-1-7-104-0x17c56f0"
+  ],
   "seed": "p93b-teardown-20261113-v1"
 }
