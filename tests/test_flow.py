@@ -867,6 +867,15 @@ class QueueStates(unittest.TestCase):
             self.assertIn(expected, text)
         with self.assertRaises(ValueError):
             flow.brief_drafter(self.root, self.fdir, 'cheap', tier='fallback')
+        wq.claim(self.q, 'terra-1', profile='claude-low', tier='fallback')
+        wq.finish(self.q, '.local/tasks/g/g-foo', [json.dumps({'rva': '0x1010', 'result': 'fail'})], tier='fallback')
+        actions = [text for _, text in flow.next_actions(self.root, self.fdir, online=False)]
+        self.assertTrue(any('--profile claude-low --tier strong' in t for t in actions))
+        brief = self.root / flow.brief_drafter(self.root, self.fdir, 'claude-low', queue_dir='.local/queue/mid', tier='strong')[0]
+        for expected in ('gpt-6.1-sol', '--tier strong', '10 counted attempts per function',
+                         'previous tiers', 'named structural blocker', 'existing bodies or layout'):
+            self.assertIn(expected, brief.read_text())
+
 
     def test_normal_brief_routes_card_queue_and_profile_separately(self):
         small = flow.brief_drafter(self.root, self.fdir, 'cheap')[0]

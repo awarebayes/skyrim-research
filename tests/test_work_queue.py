@@ -113,6 +113,30 @@ class Queue(unittest.TestCase):
         with self.assertRaises(wq.QueueError):
             wq.claim(self.q, 'other', profile='cheap', tier='fallback')
 
+    def test_strong_requires_fallback_and_honors_hold(self):
+        self.q.mkdir(parents=True)
+        (self.q / 'queue.tsv').write_text('unit-a\ta.cpp\t0x1,0x2\t3\n')
+        wq.claim(self.q, 'first-1')
+        wq.finish(self.q, 'unit-a', ['{"rva":"0x1","result":"pass"}', '{"rva":"0x2","result":"fail"}'])
+        self.assertIsNone(wq.claim(self.q, 'sol-1', profile='claude-low', tier='strong'))
+        wq.claim(self.q, 'terra-1', profile='claude-low', tier='fallback')
+        wq.finish(self.q, 'unit-a', ['{"rva":"0x2","result":"fail"}'], tier='fallback')
+        self.assertEqual(wq.main(['--queue-dir', str(self.q), 'hold', 'unit-a', '--reason', 'investigate']), 0)
+        self.assertIsNone(wq.claim(self.q, 'sol-1', profile='claude-low', tier='strong'))
+        self.assertEqual(wq.main(['--queue-dir', str(self.q), 'unhold', 'unit-a']), 0)
+        self.assertEqual(wq.claim(self.q, 'sol-1', profile='claude-low', tier='strong')['key'], 'unit-a')
+        self.assertEqual(wq.unpassed(self.q, wq.find_unit(self.q, 'unit-a'), 'strong'), ['0x2'])
+        import importlib.machinery, importlib.util
+        loader = importlib.machinery.SourceFileLoader('attempt_strong_test', str(ROOT / 'tools/verifier/attempt'))
+        spec = importlib.util.spec_from_loader(loader.name, loader)
+        attempt = importlib.util.module_from_spec(spec)
+        loader.exec_module(attempt)
+        self.assertEqual(attempt.fallback_budget('unit-a', self.q, 'strong'), 10)
+        with self.assertRaises(wq.QueueError):
+            wq.finish(self.q, 'unit-a', ['{"rva":"0x1","result":"fail"}'], tier='strong')
+        wq.finish(self.q, 'unit-a', ['{"rva":"0x2","result":"pass"}'], tier='strong')
+        self.assertEqual(json.loads((self.q / 'results.jsonl').read_text().splitlines()[-1])['tier'], 'strong')
+
     def test_fallback_budget_uses_unpassed_count(self):
         import importlib.machinery
         import importlib.util

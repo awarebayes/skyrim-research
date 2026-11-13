@@ -30,14 +30,18 @@ ROLES = ('orchestrator', 'drafter', 'reviewer', 'strong')
 
 def validate(profile):
     roles = profile['roles']
-    if not set(ROLES) <= roles.keys() or set(roles) - set(ROLES) - {'drafter_fallback'}:
+    if not set(ROLES) <= roles.keys() or set(roles) - set(ROLES) - {'drafter_fallback', 'drafter_strong'}:
         raise ValueError('invalid profile roles')
     for entry in roles.values():
         if not all(k in entry for k in ('provider', 'model', 'effort', 'harness')):
             raise ValueError('incomplete profile role')
-    fallback = roles.get('drafter_fallback')
-    if fallback and (type(fallback.get('attempts_per_function')) is not int or fallback['attempts_per_function'] <= 0):
-        raise ValueError('fallback attempts_per_function must be positive')
+    tiers = profile.get('drafter_tiers', ['first'] + (['fallback'] if 'drafter_fallback' in roles else []))
+    if not tiers or tiers[0] != 'first' or len(set(tiers)) != len(tiers) or any(t not in ('first', 'fallback', 'strong') for t in tiers):
+        raise ValueError('invalid drafter tiers')
+    for tier in tiers[1:]:
+        entry = roles.get('drafter_' + tier, {})
+        if type(entry.get('attempts_per_function')) is not int or entry['attempts_per_function'] <= 0:
+            raise ValueError(f'{tier} attempts_per_function must be positive')
 
 
 def get(name=None):
@@ -46,6 +50,11 @@ def get(name=None):
         raise ValueError(f'unknown profile {name!r}; choose one of {", ".join(sorted(PROFILES))}')
     validate(PROFILES[name])
     return dict(PROFILES[name], name=name)
+
+
+def drafter_tiers(name):
+    p = get(name)
+    return p.get('drafter_tiers', ['first'] + (['fallback'] if 'drafter_fallback' in p['roles'] else []))
 
 
 def role(name, which):
@@ -64,7 +73,7 @@ def cost_lines():
 def show(name):
     p = get(name)
     lines = [f'profile {name}: {p["summary"]}']
-    for r in (*ROLES, *(['drafter_fallback'] if 'drafter_fallback' in p['roles'] else [])):
+    for r in (*ROLES, *('drafter_' + tier for tier in drafter_tiers(name)[1:])):
         e = p['roles'][r]
         alt = '; or ' + ', '.join(model_label(a) for a in e.get('alternatives', [])) if e.get('alternatives') else ''
         lines.append(f'  {r}: {model_label(e)}{alt}' + (f'  [needs: {e["requires"]}]' if e.get('requires') else ''))

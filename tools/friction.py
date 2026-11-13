@@ -66,7 +66,7 @@ def summarise(root, now=None):
     table = {'model': defaultdict(lambda: defaultdict(list)), 'profile': defaultdict(lambda: defaultdict(list)), 'tier': defaultdict(lambda: defaultdict(list))}
     messages = Counter()
     for r in recs:
-        keys = (('model', wq.model_of(r.get('worker')) + ('/fallback' if r.get('tier', 'first') == 'fallback' else '')), ('profile', (r.get('profile') or 'unrecorded') + ('/fallback' if r.get('tier', 'first') == 'fallback' else '')),
+        keys = (('model', wq.model_of(r.get('worker')) + ('/' + r.get('tier') if r.get('tier', 'first') != 'first' else '')), ('profile', (r.get('profile') or 'unrecorded') + ('/' + r.get('tier') if r.get('tier', 'first') != 'first' else '')),
                 ('tier', r.get('tier', 'first')))
         for kind, key in keys:
             s = table[kind][key]
@@ -88,12 +88,13 @@ def summarise(root, now=None):
             age = now - float((claim or {}).get('time', now))
             if age >= flow.CLAIM_LOOK_SECONDS:
                 stalls.append({'unit': u['dir'], 'worker': who, 'profile': profile, 'tier': 'first', 'minutes': int(age // 60)})
-        fallback = wq.read_claim(wq.tier_dir(qdir, 'claims', 'fallback') / f'{u["key"]}.lock')
-        if fallback:
-            age = now - float(fallback.get('time', now))
-            if age >= flow.CLAIM_LOOK_SECONDS:
-                stalls.append({'unit': u['dir'], 'worker': fallback.get('worker'),
-                               'profile': fallback.get('profile') or profile, 'tier': 'fallback', 'minutes': int(age // 60)})
+        for tier in ('fallback', 'strong'):
+            claim = wq.read_claim(wq.tier_dir(qdir, 'claims', tier) / f'{u["key"]}.lock')
+            if claim:
+                age = now - float(claim.get('time', now))
+                if age >= flow.CLAIM_LOOK_SECONDS:
+                    stalls.append({'unit': u['dir'], 'worker': claim.get('worker'),
+                                   'profile': claim.get('profile') or profile, 'tier': tier, 'minutes': int(age // 60)})
     rows = {}
     for kind, groups in table.items():
         rows[kind] = {}
@@ -104,7 +105,7 @@ def summarise(root, now=None):
             for r in fns:
                 by_unit[r.get('queue_unit')].append(r)
             abandoned = sum(1 for rs in by_unit.values() if not any(r.get('result') == 'pass' for r in rs))
-            abandoned += sum(1 for r in rel if (wq.model_of(r.get('worker')) + ('/fallback' if r.get('tier', 'first') == 'fallback' else '') if kind == 'model' else (r.get('tier', 'first') if kind == 'tier' else (r.get('profile') or 'unrecorded') + ('/fallback' if r.get('tier', 'first') == 'fallback' else ''))) == key)
+            abandoned += sum(1 for r in rel if (wq.model_of(r.get('worker')) + ('/' + r.get('tier') if r.get('tier', 'first') != 'first' else '') if kind == 'model' else (r.get('tier', 'first') if kind == 'tier' else (r.get('profile') or 'unrecorded') + ('/' + r.get('tier') if r.get('tier', 'first') != 'first' else ''))) == key)
             walls = []
             for r in s['units']:
                 a, b = parse_time(r.get('claimed')), parse_time(r.get('recorded'))
@@ -115,7 +116,7 @@ def summarise(root, now=None):
                 'pass_rate': round(len(passed) / len(fns), 3) if fns else None,
                 'attempts_per_pass': round(sum(int(r.get('attempts') or 0) for r in fns) / len(passed), 2) if passed else None,
                 'units': len(s['units']), 'abandoned_units': abandoned,
-                'stalls_now': sum(1 for st in stalls if (wq.model_of(st['worker']) + ('/fallback' if st['tier'] == 'fallback' else '') if kind == 'model' else (st['tier'] if kind == 'tier' else st['profile'] + ('/fallback' if st['tier'] == 'fallback' else ''))) == key),
+                'stalls_now': sum(1 for st in stalls if (wq.model_of(st['worker']) + ('/' + st['tier'] if st['tier'] != 'first' else '') if kind == 'model' else (st['tier'] if kind == 'tier' else st['profile'] + ('/' + st['tier'] if st['tier'] != 'first' else ''))) == key),
                 'median_minutes_per_unit': round(statistics.median(walls), 1) if walls else None,
             }
     rejects = Counter()

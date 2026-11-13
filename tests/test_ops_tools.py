@@ -33,6 +33,7 @@ class FallbackFriction(unittest.TestCase):
             records = [
                 {'rva': '0x1', 'result': 'fail', 'worker': 'haiku-1', 'profile': 'claude-low', 'queue_unit': 'u'},
                 {'rva': '0x1', 'result': 'pass', 'worker': 'terra-1', 'profile': 'claude-low', 'queue_unit': 'u', 'tier': 'fallback'},
+                {'rva': '0x2', 'result': 'fail', 'worker': 'sol-1', 'profile': 'claude-low', 'queue_unit': 'u', 'tier': 'strong'},
             ]
             with patch.object(friction.flow, 'queue_results', return_value=records), \
                  patch.object(friction.flow, 'queue_units', return_value=[]):
@@ -41,6 +42,8 @@ class FallbackFriction(unittest.TestCase):
             self.assertEqual(report['by_tier']['fallback']['pass_rate'], 1)
             self.assertEqual(report['by_profile']['claude-low']['functions'], 1)
             self.assertEqual(report['by_profile']['claude-low/fallback']['functions'], 1)
+            self.assertEqual(report['by_tier']['strong']['functions'], 1)
+            self.assertEqual(report['by_model']['sol/strong']['functions'], 1)
 
 
 class QueueAdditions(unittest.TestCase):
@@ -122,7 +125,7 @@ class Profiles(unittest.TestCase):
         self.assertEqual(profiles.DEFAULT, 'cheap')
         for name in ('cheap', 'full', 'claude-low'):
             p = profiles.get(name)
-            self.assertEqual(set(p['roles']) - {'drafter_fallback'}, set(profiles.ROLES))
+            self.assertEqual(set(p['roles']) - {'drafter_fallback', 'drafter_strong'}, set(profiles.ROLES))
             for entry in p['roles'].values():
                 self.assertTrue({'provider', 'model', 'harness'} <= entry.keys())
             self.assertTrue(p['cost'].startswith(name + ':'))

@@ -115,7 +115,7 @@ changes. Sol was admitted by maintainer decision WITHOUT a calibration
 uses a different model from the first review. Independence is per run: fresh context, never
 the run that drafted, engineered, triaged or first-reviewed the function. Outside `claude-low`
 these duties stay with Opus.
-Under `claude-low`, the fallback Drafter is Terra with a separate per-tier attempt budget; it drafts only functions that did not pass in the first tier. What OpenAI models may read under `claude-low` is recorded in `docs/authorizations.md` (Notes).
+Under `claude-low`, the fallback Drafter is Terra with a separate per-tier attempt budget; it drafts only functions that did not pass in the first tier. What OpenAI models may read under `claude-low` is recorded in `docs/authorizations.md` (Notes). Under `claude-low`, the strong Drafter tier uses Sol after Terra, with 10 counted attempts per unpassed function.
 
 **Friction and direction checks.** The routine orchestrator produces the friction report
 (`python3 tools/friction.py --write`) every work session. A direction check (strong model, fresh

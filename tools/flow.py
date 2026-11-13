@@ -1355,11 +1355,11 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
             failed.setdefault(s['unit'], s)
     full_queued = {u['key'] for qdir, profile, u, *_ in units if profile == 'full'}
     for unit, s in sorted(failed.items()):
-        fallback_pending = ('drafter_fallback' in profiles.get(active_profile)['roles'] and any(
-            u['dir'] == unit and state == 'done' and wq.unpassed(qdir, u)
-            and not (wq.tier_dir(qdir, 'done', 'fallback') / f'{u["key"]}.json').exists()
-            for qdir, _, u, state, *_ in units))
-        if fallback_pending:
+        tier_pending = any(
+            u['dir'] == unit and any(wq.eligible(qdir, u, tier, profiles.drafter_tiers(active_profile))
+                                     for tier in profiles.drafter_tiers(active_profile)[1:])
+            for qdir, _, u, state, *_ in units)
+        if tier_pending:
             continue
         if s.get('profile') == 'cheap' and Path(unit).name not in full_queued:
             acts.append(('run', f'python3 tools/work_queue.py --queue-dir {QUEUES}/full add {unit}    # failed under cheap; '
@@ -1379,19 +1379,17 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
             acts.append(('run', f'python3 tools/flow.py brief drafter --profile {profile} '
                          f'--queue-dir {shlex.quote(str(queue_arg))} --count {n}    '
                          f'# {c["open"]} open unit(s); then dispatch one Drafter per brief it prints'))
-    if 'drafter_fallback' in profiles.get(active_profile)['roles']:
+    for tier in profiles.drafter_tiers(active_profile)[1:]:
         for qdir in sorted({item[0] for item in units}):
             eligible = [u for u in wq.read_queue(qdir)
-                        if (qdir / 'done' / f'{u["key"]}.json').exists()
-                        and wq.unpassed(qdir, u)
-                        and not (wq.tier_dir(qdir, 'done', 'fallback') / f'{u["key"]}.json').exists()
-                        and (not (claim := wq.read_claim(wq.tier_dir(qdir, 'claims', 'fallback') / f'{u["key"]}.lock'))
+                        if wq.eligible(qdir, u, tier, profiles.drafter_tiers(active_profile))
+                        and (not (claim := wq.read_claim(wq.tier_dir(qdir, 'claims', tier) / f'{u["key"]}.lock'))
                              or now - float(claim.get('time', now)) >= wq.STALE_SECONDS)]
             if eligible:
                 queue_arg = qdir.relative_to(root) if qdir.is_relative_to(root) else qdir
-                acts.append(('run', f'python3 tools/flow.py brief drafter --profile {active_profile} --tier fallback '
+                acts.append(('run', f'python3 tools/flow.py brief drafter --profile {active_profile} --tier {tier} '
                              f'--queue-dir {shlex.quote(str(queue_arg))} --count {min(len(eligible), 3)} '
-                             f'# {len(eligible)} fallback unit(s); dispatch one Drafter per brief'))
+                             f'# {len(eligible)} {tier} unit(s); dispatch one Drafter per brief'))
     # Reports.
     ev = events(fdir)
     last_session = max([i for i, e in enumerate(ev) if e['event'] == 'session-start'], default=None)
@@ -1426,8 +1424,8 @@ def dispatch_line(g):
 def brief_drafter(root, fdir, profile, count=1, queue_dir=None, tier="first"):
     p = profiles.get(profile)
     queue_dir = queue_dir or p['queue_dir']
-    if tier == 'fallback' and 'drafter_fallback' not in p['roles']:
-        raise ValueError('profile has no fallback Drafter')
+    if tier not in profiles.drafter_tiers(profile):
+        raise ValueError(f'profile has no {tier} Drafter')
     kind = 'normal' if Path(queue_dir).name in ('normal', 'mid') else 'small'
     queue_profile = 'full' if profile == 'full' else 'cheap'
     docs = [d.replace('drafter-card-small.md', 'drafter-card-normal.md') if kind == 'normal' else d
@@ -1453,23 +1451,23 @@ attempts with no change in its first mismatch; the unit budget is what `attempt`
 Return only the short table from the runbook ("Return message"); full details go to the queue.
 Do not push, post publicly, mark `matched`, or start further agents.
 """
-        if tier == 'fallback':
-            entry = p['roles']['drafter_fallback']
+        if tier != 'first':
+            entry = p['roles']['drafter_' + tier]
             text = f'''# Brief drafter-{label}
 
-Role: fallback Drafter, profile `{profile}`, tier `fallback` ({profiles.model_label(entry)}).
+Role: {tier} Drafter, profile `{profile}`, tier `{tier}` ({profiles.model_label(entry)}).
 Read docs/drafter-runbook.md and {', '.join(docs)}. The recorded exposure grant permits
-reading FNV-variant sheets (`sheet.fnv.md` and `sheet-*.fnv.md`); use them as inputs.
-Read the previous tier's near-miss files (including `near-miss/earlier-*`), unit notes and
+reading function packs and FNV-variant sheets (`sheet.fnv.md` and `sheet-*.fnv.md`); use them as inputs.
+Read the previous tiers' near-miss files (including `near-miss/earlier-*`), unit notes and
 `{queue_dir}/results.jsonl` as hints.
-Claim with `python3 tools/work_queue.py --queue-dir {queue_dir} next --worker <label> --profile {profile} --tier fallback`.
-Use `--tier fallback` on queue done and release, and run
-`tools/verifier/attempt --tier fallback --queue-dir {queue_dir} <unit dir>` for every attempt.
+Claim with `python3 tools/work_queue.py --queue-dir {queue_dir} next --worker <label> --profile {profile} --tier {tier}`.
+Use `--tier {tier}` on queue done and release, and run
+`tools/verifier/attempt --tier {tier} --queue-dir {queue_dir} <unit dir>` for every attempt.
 Draft only the unpassed functions listed by the claim; previously passed functions remain regression comparisons.
 You have {entry['attempts_per_function']} counted attempts per function, and a unit budget of
 {entry['attempts_per_function']} times the number of unpassed functions. Keep per-function counts yourself.
 For units extending existing source files, add only: never change existing bodies or layout;
-remove failed additions by exact text. Record one result per newly attempted function and the unit.
+remove failed additions by exact text. Record a function as failed only after its attempt budget is used or a named structural blocker; stop when it passes. Record one result per newly attempted function and the unit.
 No Boat, git or network. Do not push, post publicly, mark `matched`, or start further agents.
 Return the short table from the runbook; full details go to the queue.
 '''
@@ -2036,7 +2034,7 @@ def parser():
     s.add_argument('--profile', default=profiles.DEFAULT, choices=sorted(profiles.PROFILES))
     s.add_argument('--count', type=int, default=1)
     s.add_argument('--queue-dir', help='drafter queue kind, independent of the drafting profile')
-    s.add_argument('--tier', choices=('first', 'fallback'), default='first')
+    s.add_argument('--tier', choices=('first', 'fallback', 'strong'), default='first')
     s.add_argument('--group')
     s.add_argument('--units', nargs='+')
     s.add_argument('--manifests', nargs='+', help='generator selection manifests (confirm only)')

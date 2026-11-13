@@ -37,6 +37,7 @@
       "cost": "full: Sonnet-class drafting, about $0.18 per matched function for drafting alone (measured over 243 matched functions; the whole pipeline then was about $1.14)"
     },
     "claude-low": {
+      "drafter_tiers": ["first", "fallback", "strong"],
       "summary": "for when the Claude subscription runs low: OpenAI models through Codex for orchestration, review and strong work",
       "roles": {
         "orchestrator": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "medium", "harness": "codex",
@@ -45,6 +46,7 @@
                     "alternatives": [{"provider": "openai", "model": "gpt-5.6-luna", "effort": "medium", "harness": "codex",
                                       "note": "uses no Claude subscription at all"}]},
         "drafter_fallback": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "high", "harness": "codex", "attempts_per_function": 8},
+        "drafter_strong": {"provider": "openai", "model": "gpt-6.1-sol", "effort": "high", "harness": "codex", "attempts_per_function": 10},
         "reviewer": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "high", "harness": "codex",
                      "requires": "admitted as gpt-6.1-terra under claude-low; sampling second passes use an independent strong Reviewer"},
         "strong": {"provider": "openai", "model": "gpt-6.1-sol", "effort": "high", "harness": "codex",

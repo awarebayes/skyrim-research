@@ -145,8 +145,8 @@ def claim(qdir, worker, t=None, profile=None, repo=None, refresh=False, tier="fi
     Relative unit dirs resolve against `repo`, by default the queue's own (queue_repo)."""
     if not LABEL.fullmatch(worker or ''):
         raise QueueError('--worker must be a label like luna56-medium-1 (letters, digits, . _ -)')
-    if tier == 'fallback' and (not profile or 'drafter_fallback' not in profiles.get(profile)['roles']):
-        raise QueueError('fallback tier requires a profile with drafter_fallback')
+    if tier != 'first' and (not profile or tier not in profiles.drafter_tiers(profile)):
+        raise QueueError(f'{tier} tier requires a profile with that Drafter tier')
     t = now() if t is None else t
     u = _claim(qdir, worker, t, profile, tier=tier, external=github_claims.project_claims(queue_repo(qdir) if repo is None else repo, refresh))
     if u is not None and not u.get('resumed'):
@@ -165,19 +165,35 @@ def blocked_functions(functions, external):
 
 
 def tier_dir(qdir, kind, tier):
-    return qdir / (kind if tier == 'first' else kind + '-fallback')
+    return qdir / (kind if tier == 'first' else kind + '-' + tier)
 
 
-def unpassed(qdir, unit):
+def unpassed(qdir, unit, tier='fallback', tier_order=None):
+    order = tier_order or ('first', 'fallback', 'strong')
+    prior = set(order[:order.index(tier)])
     path = qdir / 'results.jsonl'
     results = {}
     if path.is_file():
         for line in path.read_text().splitlines():
             if line.strip():
                 r = json.loads(line)
-                if r.get('queue_unit') == unit['dir'] and r.get('tier', 'first') == 'first' and 'rva' in r:
-                    results[str(r['rva']).lower()] = r.get('result')
+                if r.get('queue_unit') == unit['dir'] and r.get('tier', 'first') in prior and 'rva' in r:
+                    key = str(r['rva']).lower()
+                    if results.get(key) != 'pass':
+                        results[key] = r.get('result')
     return [f for f in unit['functions'] if results.get(str(f).lower()) != 'pass']
+
+
+def eligible(qdir, unit, tier, tier_order=None):
+    if (qdir / 'holds' / f'{unit["key"]}.json').exists():
+        return False
+    if (tier_dir(qdir, 'done', tier) / f'{unit["key"]}.json').exists():
+        return False
+    if tier == 'first':
+        return True
+    order = tier_order or ('first', 'fallback', 'strong')
+    previous = order[order.index(tier) - 1]
+    return (tier_dir(qdir, 'done', previous) / f'{unit["key"]}.json').exists() and bool(unpassed(qdir, unit, tier, order))
 
 
 def _claim(qdir, worker, t, profile, external, tier='first'):
@@ -185,8 +201,7 @@ def _claim(qdir, worker, t, profile, external, tier='first'):
     claims, done = tier_dir(qdir, 'claims', tier), tier_dir(qdir, 'done', tier)
     claims.mkdir(parents=True, exist_ok=True)
     done.mkdir(parents=True, exist_ok=True)
-    open_units = [u for u in units if not (done / f'{u["key"]}.json').exists() and
-                  (tier == 'first' or ((qdir / 'done' / f'{u["key"]}.json').exists() and unpassed(qdir, u)))]
+    open_units = [u for u in units if eligible(qdir, u, tier, profiles.drafter_tiers(profile) if profile else None)]
     for u in open_units:  # a restarted session resumes its own unit
         c = read_claim(claims / f'{u["key"]}.lock')
         if c and c.get('worker') == worker:
@@ -237,8 +252,8 @@ def finish(qdir, unit_dir, lines, worker=None, t=None, tier="first"):
     worker = worker or (c or {}).get('worker')
     if not worker:
         raise QueueError(f'{u["dir"]} is not claimed; pass --worker <label> to record a result anyway')
-    if tier == 'fallback' and not c:
-        raise QueueError('fallback result requires a fallback claim')
+    if tier != 'first' and not c:
+        raise QueueError(f'{tier} result requires a {tier} claim')
     stamp = {'profile': (c or {}).get('profile'), 'tier': tier}
     if c and c.get('time') is not None:
         stamp['claimed'] = iso(float(c['time']))
@@ -252,8 +267,8 @@ def finish(qdir, unit_dir, lines, worker=None, t=None, tier="first"):
             raise QueueError(f'--result is not one JSON object: {exc}: {raw[:120]}') from None
         if not isinstance(rec, dict) or not ({'rva', 'result'} <= rec.keys() or 'unit' in rec or 'task' in rec):
             raise QueueError('each --result needs "rva" and "result" (a function line) or "unit" (the unit line)')
-        if tier == 'fallback' and 'rva' in rec and str(rec['rva']).lower() not in {str(f).lower() for f in unpassed(qdir, u)}:
-            raise QueueError('fallback results may only report previously unpassed functions')
+        if tier != 'first' and 'rva' in rec and str(rec['rva']).lower() not in {str(f).lower() for f in unpassed(qdir, u, tier)}:
+            raise QueueError(f'{tier} results may only report previously unpassed functions')
         records.append(dict(rec, worker=worker, queue_unit=u['dir'], recorded=iso(t), **stamp))
     tier_dir(qdir, 'done', tier).mkdir(parents=True, exist_ok=True)
     with locked(qdir / 'results.lock'):
@@ -344,7 +359,9 @@ def status(qdir, t=None):
     t = now() if t is None else t
     rows = []
     for u in read_queue(qdir):
-        if (qdir / 'done' / f'{u["key"]}.json').exists():
+        if (qdir / 'holds' / f'{u["key"]}.json').exists():
+            state, who = 'held', ''
+        elif (qdir / 'done' / f'{u["key"]}.json').exists():
             state, who = 'done', json.loads((qdir / 'done' / f'{u["key"]}.json').read_text()).get('worker')
         else:
             c = read_claim(qdir / 'claims' / f'{u["key"]}.lock') if (qdir / 'claims' / f'{u["key"]}.lock').exists() else None
@@ -402,13 +419,18 @@ def parser():
     d.add_argument('unit_dir')
     d.add_argument('--result', action='append', default=[], help='one JSON line; repeat for each line')
     d.add_argument('--worker', help='only when the unit has no claim (default: the claim\'s label)')
+    hold = sub.add_parser('hold', help='exclude a unit from dispatch')
+    hold.add_argument('unit_dir')
+    hold.add_argument('--reason', required=True)
+    unhold = sub.add_parser('unhold', help='allow a held unit to be dispatched')
+    unhold.add_argument('unit_dir')
     sub.add_parser('status')
     sub.add_parser('stats')
     ad = sub.add_parser('add', help='append unit or group task dirs to the queue (queue order = order given)')
     ad.add_argument('--refresh', action='store_true', help='refresh GitHub claims cache')
     ad.add_argument('dirs', nargs='+')
     for command in (n, r, d):
-        command.add_argument('--tier', choices=('first', 'fallback'), default='first')
+        command.add_argument('--tier', choices=('first', 'fallback', 'strong'), default='first')
     for command in sub.choices.values():
         command.add_argument('--queue-dir', default=argparse.SUPPRESS,
                              help='queue directory (also accepted before the subcommand)')
@@ -423,17 +445,17 @@ def main(argv=None):
             u = claim(qdir, a.worker, profile=a.profile, refresh=a.refresh, tier=a.tier)
             if u is None:
                 busy = (sum(1 for state, _, _ in status(qdir) if state == 'claimed') if a.tier == 'first' else
-                        sum(1 for u in read_queue(qdir) if (tier_dir(qdir, 'claims', 'fallback') / f'{u["key"]}.lock').exists()))
+                        sum(1 for u in read_queue(qdir) if (tier_dir(qdir, 'claims', a.tier) / f'{u["key"]}.lock').exists()))
                 print('EMPTY' + (f' ({busy} unit(s) still claimed by other sessions)' if busy else ''))
                 return 0
             print(u['dir'])
-            if a.tier == 'fallback':
-                print('# draft only: ' + ' '.join(unpassed(qdir, u)) + '; prior passes remain regressions', file=sys.stderr)
+            if a.tier != 'first':
+                print('# draft only: ' + ' '.join(unpassed(qdir, u, a.tier)) + '; prior passes remain regressions', file=sys.stderr)
             if u.get('earlier_near_misses'):
                 print(f'# near-miss files of an earlier session moved to {u["earlier_near_misses"]}; they may not '
                       'match the current unit source', file=sys.stderr)
             budget = (u['budget'] if a.tier == 'first' else
-                      profiles.role(a.profile, 'drafter_fallback')['attempts_per_function'] * len(unpassed(qdir, u)))
+                      profiles.role(a.profile, 'drafter_' + a.tier)['attempts_per_function'] * len(unpassed(qdir, u, a.tier)))
             print(f'# sources: {" ".join(u["sources"])}; functions: {" ".join(u["functions"])}; '
                   f'budget: {budget} counted attempts', file=sys.stderr)
             return 0
@@ -441,11 +463,24 @@ def main(argv=None):
             recs = finish(qdir, a.unit_dir, a.result, a.worker, tier=a.tier)
             print(f'recorded {len(recs)} line(s) for {recs[0]["queue_unit"]} as {recs[0]["worker"]}; '
                   'next: python3 tools/work_queue.py --queue-dir ' + str(qdir) + ' next --worker ' + recs[0]['worker'] +
-                  (f' --tier fallback --profile {recs[0]["profile"]}' if a.tier == 'fallback' else ''))
+                  (f' --tier {a.tier} --profile {recs[0]["profile"]}' if a.tier != 'first' else ''))
             return 0
         if a.cmd == 'release':
             holder = release(qdir, a.unit_dir, a.worker, tier=a.tier)
             print(f'released {a.unit_dir} (was claimed by {holder})')
+            return 0
+        if a.cmd in ('hold', 'unhold'):
+            u = find_unit(qdir, a.unit_dir)
+            path = qdir / 'holds' / f'{u["key"]}.json'
+            if a.cmd == 'hold':
+                if not a.reason.strip():
+                    raise QueueError('hold reason must not be empty')
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(json.dumps({'reason': a.reason}) + '\n')
+                print(f'held {u["dir"]}: {a.reason}')
+            else:
+                path.unlink(missing_ok=True)
+                print(f'unheld {u["dir"]}')
             return 0
         if a.cmd == 'status':
             rows = status(qdir)

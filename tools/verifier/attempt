@@ -132,14 +132,14 @@ def run_once(task, host, files, task_dir, dest):
     return code
 
 
-def fallback_budget(task_dir, qdir):
+def fallback_budget(task_dir, qdir, tier='fallback'):
     unit = wq.find_unit(qdir, str(task_dir))
-    claim_path = wq.tier_dir(qdir, 'claims', 'fallback') / f'{unit["key"]}.lock'
+    claim_path = wq.tier_dir(qdir, 'claims', tier) / f'{unit["key"]}.lock'
     claim = wq.read_claim(claim_path)
     if not claim:
-        raise wq.QueueError('fallback attempt requires a claimed fallback unit')
-    entry = profiles.role(claim.get('profile'), 'drafter_fallback')
-    return entry['attempts_per_function'] * len(wq.unpassed(qdir, unit))
+        raise wq.QueueError(f'{tier} attempt requires a claimed {tier} unit')
+    entry = profiles.role(claim.get('profile'), 'drafter_' + tier)
+    return entry['attempts_per_function'] * len(wq.unpassed(qdir, unit, tier))
 
 
 def attempt(task_dir, tier='first', qdir=None):
@@ -150,7 +150,7 @@ def attempt(task_dir, tier='first', qdir=None):
     attempts = task_dir / 'attempts'
     done = sorted(p for p in attempts.glob('[0-9][0-9][0-9]') if p.is_dir()) if attempts.is_dir() else []
     number = int(done[-1].name) + 1 if done else 1
-    budget = task['max_attempts'] if tier == 'first' else fallback_budget(task_dir, qdir)
+    budget = task['max_attempts'] if tier == 'first' else fallback_budget(task_dir, qdir, tier)
     used = counted_attempts(task_dir / 'attempts.jsonl', tier)
     if budget is not None and used >= budget:
         print(f'attempt budget exhausted: {budget} of {budget} used. Write your result lines and stop.')
@@ -360,7 +360,7 @@ def clean(task_dir):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('task_dir', nargs='?')
-    p.add_argument('--tier', choices=('first', 'fallback'), default='first')
+    p.add_argument('--tier', choices=('first', 'fallback', 'strong'), default='first')
     p.add_argument('--queue-dir', type=Path)
     p.add_argument('--clean', action='store_true', help="remove the task's files on the machine")
     p.add_argument('--stop', action='store_true', help=argparse.SUPPRESS)
@@ -381,8 +381,8 @@ def main():
         if not (group_dir / 'task.json').is_file() and (group_dir / 'group.json').is_file():
             print('\n'.join(group_status(group_dir)))
             return 2
-        if a.tier == 'fallback' and not a.queue_dir:
-            p.error('--tier fallback requires --queue-dir')
+        if a.tier != 'first' and not a.queue_dir:
+            p.error(f'--tier {a.tier} requires --queue-dir')
         return attempt(a.task_dir, a.tier, a.queue_dir)
     except (PipelineError, boatctl.BoatError, runners.RunnerError, wq.QueueError, ValueError, KeyError) as exc:
         print(f'attempt: {exc}', file=sys.stderr)
