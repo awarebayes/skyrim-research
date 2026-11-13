@@ -11,6 +11,7 @@
     python3 tools/flow.py redo-review <group>            # new task id after a review the parser refused
     python3 tools/flow.py record-rerun <group> --compare FILE   # sampling re-run result (AGREE/DISAGREE rows)
     python3 tools/flow.py integrate <group> [--no-push] [--approved-only]  # accept, check, commit, push, watch CI, in its own worktree; stops at the first failure
+    python3 tools/flow.py integrate-groups <group> <group> --name <batch>  # one commit and CI result
     python3 tools/flow.py sync                           # fast-forward the shared checkout after an integration
     python3 tools/flow.py brief drafter|confirm|triage|rerun|direction ...   # write a brief file under .local/briefs/
     python3 tools/flow.py baseline <component> <value> <count>  # versions already past their first 20 (a strong-role call)
@@ -48,6 +49,7 @@ import shlex
 import subprocess
 import sys
 import tempfile
+import time
 
 TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
@@ -1338,7 +1340,14 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
         if approved and integ.get('ci') != 'green':
             ok, problem = sampling_gate(root, fdir, g, data)
             if ok:
-                acts.append(('run', f'python3 tools/flow.py integrate {name}'))
+                if integ.get('batch'):
+                    batch = integ['batch']
+                    transaction = json.loads((Path(fdir) / 'combined' / f'{batch}.json').read_text())
+                    command = 'python3 tools/flow.py integrate-groups ' + ' '.join(transaction['groups']) + f' --name {batch}'
+                    if ('run', command) not in acts:
+                        acts.append(('run', command))
+                else:
+                    acts.append(('run', f'python3 tools/flow.py integrate {name}'))
             elif problem.startswith('DISAGREE'):
                 stops.append(('stop', f'ESCALATE to the maintainer (sampling disagreement, systemic): {name}: {problem}; '
                               f'pause group {name}'))
@@ -1846,6 +1855,8 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     """
     root = Path(root)
     g = load_group(fdir, name)
+    refuse(not (g.get('integrated') or {}).get('batch'),
+           'resume combined integration with integrate-groups and its full group selection')
     refuse(g['kind'] in ('review', 'family'), f'{name} is a sampling group; integrate its primary group {g.get("pair")}')
     data = inventory(root)
     family_group = g['kind'] == 'family'
@@ -1869,6 +1880,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     review_file = str(review_path(root, g).resolve())
     tree = integration_tree(fdir, name)
     if not integ.get('commit'):
+        build_started = time.monotonic()
         git(root, 'fetch', '--quiet', 'origin', branch)
         ahead = git(root, 'rev-list', '--count', f'origin/{branch}..HEAD')
         refuse(ahead == '0', f'the checkout holds {ahead} commit(s) origin/{branch} lacks; push or drop them first')
@@ -1938,16 +1950,20 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         run(['git', 'commit', '--quiet', '-m', msg], tree, 'git commit',
             env=dict(os.environ, GIT_COMMITTER_DATE=commit_date))
         integ = {'commit': git(tree, 'rev-parse', 'HEAD'), 'files': files, 'accepted': accepted, 'checks': None,
-                 'pushed': None, 'ci': None, 'approved_only': approved_only}
+                 'pushed': None, 'ci': None, 'approved_only': approved_only,
+                 'wall_seconds': {'build': time.monotonic() - build_started}}
         g['integrated'] = integ
         save_group(fdir, g)
     if not integ.get('checks'):
+        started = time.monotonic()
         pre_push_checks(root, integ['commit'], python)
+        integ.setdefault('wall_seconds', {})['checks'] = time.monotonic() - started
         integ['checks'] = utc()
         save_group(fdir, g)
     if not push:
         return g
     if not integ.get('pushed'):
+        started = time.monotonic()
         # Fast-forward only. When origin moved meanwhile the commit is dropped, so the next run
         # rebuilds it on the new origin and re-runs every check, rather than pushing a stale base.
         try:
@@ -1959,14 +1975,18 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
             raise
         import claims as github_claims
         github_claims.sync_safe(root)
+        integ.setdefault('wall_seconds', {})['push'] = time.monotonic() - started
         integ['pushed'] = utc()
         save_group(fdir, g)
         log_event(fdir, 'integrated', group=name, accepted=integ['accepted'], commit=integ['commit'])
         remove_tree(root, tree)
         drafts.cleanup_integrated(root)
     if integ.get('ci') != 'green':
+        started = time.monotonic()
         r = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
                            cwd=root, capture_output=True, text=True)
+        wall = integ.setdefault('wall_seconds', {})
+        wall['ci'] = wall.get('ci', 0) + time.monotonic() - started
         integ['ci'] = {0: 'green', 1: 'red', 2: 'pending'}.get(r.returncode, 'unavailable')
         save_group(fdir, g)
         log_event(fdir, 'ci', group=name, result=integ['ci'], commit=integ['commit'])
@@ -1974,6 +1994,190 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
                + ('fix main or report the cause to the maintainer before any further push.\n' if integ['ci'] == 'red'
                   else 'run integrate again later to re-check.\n') + r.stdout.strip())
     return g
+
+
+
+def _integration_origin_unchanged(root, base, destination, carried, build_id, rvas):
+    changed_paths = git(root, 'diff', '--name-only', base, destination, '--', *carried).splitlines()
+    refuse(not changed_paths, 'origin changed carried files; reconcile before retry: ' + ', '.join(changed_paths))
+    old = json.loads(git(root, 'show', base + ':data/progress.json'))
+    new = json.loads(git(root, 'show', destination + ':data/progress.json'))
+    old_entries = {(fn['build_id'], hexrva(fn['rva'])): fn for fn in old['functions']}
+    new_entries = {(fn['build_id'], hexrva(fn['rva'])): fn for fn in new['functions']}
+    refuse(all(old_entries.get((build_id, rva)) == new_entries.get((build_id, rva)) for rva in rvas),
+           'origin changed selected inventory entries; reconcile before retry')
+
+
+def integrate_groups(root, fdir, names, batch_name, branch='main', push=True,
+                     ci_wait=600, python=sys.executable):
+    """Integrate disjoint, fully approved review groups in one commit; keep each review intact."""
+    root, fdir = Path(root), Path(fdir)
+    refuse(re.fullmatch(r'[a-z0-9][a-z0-9-]{0,99}', batch_name) is not None, 'invalid integration batch name')
+    refuse(len(names) >= 2 and len(set(names)) == len(names), 'name at least two different review groups')
+    data = inventory(root)
+    selected, approvals, identity = [], {}, {}
+    for name in names:
+        g = load_group(fdir, name)
+        refuse(g['kind'] == 'review', 'combined integration accepts individual review groups only')
+        status, blocks = read_review(root, g, data['functions'])
+        refuse(status == 'ok', f'{name}: saved review {status}')
+        approved = sorted((r for r, b in blocks.items() if b.get('verdict') == 'approve'
+                           and (not g.get('subset_of') or r in g['functions'])), key=lambda r: int(r, 16))
+        refuse(set(approved) == set(g['functions']) and approved,
+               f'{name}: every selected function needs approval; use an approved subset for held functions')
+        ok, why = sampling_gate(root, fdir, g, data)
+        refuse(ok, f'{name}: sampling gate: {why}')
+        refuse(not set(approved) & set(approvals), 'review groups overlap')
+        prior = g.get('integrated') or {}
+        refuse(not prior or prior.get('batch') == batch_name, f'{name}: already has another integration')
+        approvals.update({r: name for r in approved})
+        selected.append((g, approved, str(review_path(root, g).resolve())))
+        identity[name] = {'task_id': g['task_id'], 'build_id': g['build_id'],
+                          'profile': g.get('profile', profiles.DEFAULT), 'functions': approved,
+                          'review_sha256': hashlib.sha256(review_path(root, g).read_bytes()).hexdigest()}
+    refuse(len({g['build_id'] for g, _, _ in selected}) == 1
+           and len({g.get('profile', profiles.DEFAULT) for g, _, _ in selected}) == 1,
+           'combined groups must share build and profile')
+    family_group_hold(root, fdir, [fn['id'] for fn in data['functions'] if hexrva(fn['rva']) in approvals])
+    receipt = fdir / 'combined' / f'{batch_name}.json'
+    transaction = json.loads(receipt.read_text()) if receipt.is_file() else {'groups': identity, 'integrated': None}
+    refuse(transaction['groups'] == identity, 'combined integration selection or saved review changed')
+    integ = transaction['integrated'] or {}
+    tree = integration_tree(fdir, 'combined-' + batch_name)
+
+    def save():
+        transaction['integrated'] = integ
+        atomic_write(receipt, (json.dumps(transaction, indent=2) + '\n').encode())
+        for group, approved, _ in selected:
+            current = load_group(fdir, group['name'])
+            current['integrated'] = dict(integ, accepted=len(approved), batch=batch_name)
+            save_group(fdir, current)
+
+    if not integ.get('commit'):
+        started = time.monotonic()
+        git(root, 'fetch', '--quiet', 'origin', branch)
+        refuse(git(root, 'rev-list', '--count', f'origin/{branch}..HEAD') == '0',
+               'the checkout has commits origin lacks')
+        by_rva = {hexrva(fn['rva']): fn for fn in data['functions'] if fn['build_id'] == selected[0][0]['build_id']}
+        source_paths = set()
+        for rva in approvals:
+            fn = by_rva[rva]
+            source_paths.add(fn['report'])
+            record = fr.read(root, fn['report'])
+            source_paths.update(record['source']['translation_unit'])
+            map_name = (record.get('symbol_map') or {}).get('path')
+            if map_name:
+                source_paths.add(map_name)
+                if (root / history_name(map_name)).is_file():
+                    source_paths.add(history_name(map_name))
+        _integration_origin_unchanged(root, git(root, 'rev-parse', 'HEAD'),
+                                      git(root, 'rev-parse', f'origin/{branch}'), sorted(source_paths),
+                                      selected[0][0]['build_id'], approvals)
+        remove_tree(root, tree)
+        tree.parent.mkdir(parents=True, exist_ok=True)
+        git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), f'origin/{branch}')
+        drafts.label(tree, 'flow-integrate', batch_name, 'integration')
+        base_revision = git(tree, 'rev-parse', 'HEAD')
+        by_rva = {hexrva(fn['rva']): fn for fn in data['functions'] if fn['build_id'] == selected[0][0]['build_id']}
+        carried = set()
+        for group, approved, _ in selected:
+            carried.update(carry_into_tree(root, tree, approved, by_rva, group.get('harvests')))
+        printed = sorted(carried)
+        private = tree / REVIEWS
+        private.parent.mkdir(parents=True, exist_ok=True)
+        private.symlink_to((root / REVIEWS).resolve(), target_is_directory=True)
+        for group, approved, review_file in selected:
+            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file,
+                       '--profile', group.get('profile', profiles.DEFAULT), '--functions', *approved],
+                      tree, 'accept_function.py ' + group['name'],
+                      env=dict(os.environ, SKYRIM_FLOW_DIR=str(fdir.resolve())))
+            take = False
+            for line in out.splitlines():
+                if line.startswith('changed files'):
+                    take = True
+                elif take and line.startswith('  '):
+                    printed.append(line.strip().split('  ')[0])
+                elif take:
+                    take = False
+        run([python, 'tools/build_index.py'], tree, 'build_index.py')
+        run([python, 'tools/build_progress_svg.py'], tree, 'build_progress_svg.py')
+        paths = set(printed) | {'data/progress.json', 'reconstruction/INDEX.md', 'docs/progress.svg', 'docs/progress-map.svg'}
+        for fn in inventory(tree)['functions']:
+            if fn.get('report'):
+                paths.add(fn['report'])
+                rec = tree / fn['report']
+                paths.update(json.loads(rec.read_text())['source']['translation_unit'])
+                review = rec.with_name(rec.name.replace('.json', '.review.json'))
+                if review.is_file():
+                    paths.add(review.relative_to(tree).as_posix())
+        files = changed(tree, paths)
+        refuse(files, 'nothing changed to commit')
+        git(tree, 'add', '--', *files)
+        commit_date = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+        run([python, 'tools/build_model_trend.py', '--pending-date', commit_date], tree, 'build_model_trend.py')
+        trend = ['README.md', 'docs/model-trend.svg', 'docs/progress-trend.svg']
+        git(tree, 'add', '--', *trend)
+        files = sorted(set(files) | set(changed(tree, trend)))
+        run([python, 'tools/check.py', '--staged'], tree, 'check.py --staged')
+        message = f'Accept {len(approvals)} functions from {len(names)} review groups\n\nGroups: ' + ', '.join(names)
+        run(['git', 'commit', '--quiet', '-m', message], tree, 'git commit',
+            env=dict(os.environ, GIT_COMMITTER_DATE=commit_date))
+        integ = {'commit': git(tree, 'rev-parse', 'HEAD'), 'accepted': len(approvals), 'files': files,
+                 'checks': None, 'pushed': None, 'ci': None, 'batch': batch_name,
+                 'wall_seconds': {'build': time.monotonic() - started},
+                 'base_revision': base_revision, 'carried_paths': sorted(carried)}
+        save()
+    if not integ.get('checks'):
+        started = time.monotonic()
+        pre_push_checks(root, integ['commit'], python)
+        integ['wall_seconds']['checks'] = time.monotonic() - started
+        integ['checks'] = utc()
+        save()
+    if not push:
+        return transaction
+    if not integ.get('pushed'):
+        started = time.monotonic()
+        try:
+            run(['git', 'push', 'origin', f'{integ["commit"]}:refs/heads/{branch}'], root, 'git push')
+        except FlowError as error:
+            if 'non-fast-forward' not in str(error) and 'fetch first' not in str(error):
+                raise
+            git(root, 'fetch', '--quiet', 'origin', branch)
+            destination = git(root, 'rev-parse', f'origin/{branch}')
+            _integration_origin_unchanged(root, integ['base_revision'], destination, integ['carried_paths'],
+                                          selected[0][0]['build_id'], approvals)
+            # Replay the unchanged reviewed selection on the new origin, through the same gates.
+            integ['wall_seconds']['push'] = time.monotonic() - started
+            transaction.setdefault('unpublished_attempts', []).append(integ)
+            transaction['integrated'] = None
+            atomic_write(receipt, (json.dumps(transaction, indent=2) + '\n').encode())
+            for group, _, _ in selected:
+                current = load_group(fdir, group['name'])
+                current['integrated'] = None
+                save_group(fdir, current)
+            remove_tree(root, tree)
+            return integrate_groups(root, fdir, names, batch_name, branch, push, ci_wait, python)
+        import claims as github_claims
+        github_claims.sync_safe(root)
+        integ['wall_seconds']['push'] = time.monotonic() - started
+        integ['pushed'] = utc()
+        save()
+        for group, approved, _ in selected:
+            log_event(fdir, 'integrated', group=group['name'], accepted=len(approved), commit=integ['commit'])
+        remove_tree(root, tree)
+        drafts.cleanup_integrated(root)
+    if integ.get('ci') != 'green':
+        started = time.monotonic()
+        result = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
+                                cwd=root, capture_output=True, text=True)
+        wall = integ['wall_seconds']
+        wall['ci'] = wall.get('ci', 0) + time.monotonic() - started
+        integ['ci'] = {0: 'green', 1: 'red', 2: 'pending'}.get(result.returncode, 'unavailable')
+        save()
+        for group, _, _ in selected:
+            log_event(fdir, 'ci', group=group['name'], result=integ['ci'], commit=integ['commit'])
+        refuse(integ['ci'] == 'green', f'CI {integ["ci"].upper()} for {integ["commit"]}: {result.stdout.strip()}')
+    return transaction
 
 
 def sync(root, branch='main'):
@@ -2114,6 +2318,11 @@ def parser():
     s.add_argument('--approved-only', action='store_true', help='integrate approvals while leaving other functions held')
     s.add_argument('--no-push', action='store_true', help='stop after the clean-tree checks')
     s.add_argument('--branch', default='main')
+    s = sub.add_parser('integrate-groups')
+    s.add_argument('groups', nargs='+')
+    s.add_argument('--name', required=True)
+    s.add_argument('--no-push', action='store_true')
+    s.add_argument('--branch', default='main')
     s = sub.add_parser('sync')
     s.add_argument('--branch', default='main')
     s = sub.add_parser('brief')
@@ -2235,6 +2444,9 @@ def execute(a, root, fdir):
                   f'pushed {integ.get("pushed") or "no"}, CI {integ.get("ci") or "not checked"}')
             if integ.get('pushed'):
                 print('next: python3 tools/flow.py sync    # bring the shared checkout up to origin')
+        elif a.cmd == 'integrate-groups':
+            transaction = integrate_groups(root, fdir, a.groups, a.name, a.branch, not a.no_push)
+            print(json.dumps(transaction['integrated'], indent=2))
         elif a.cmd == 'sync':
             dropped = sync(root, a.branch)
             print(f'checkout at origin/{a.branch}; {len(dropped)} identical local cop(ies) replaced by the integrated files')
