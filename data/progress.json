@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T02:30:09Z",
+  "updated_at": "2026-11-13T02:40:23Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -12348,12 +12348,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 3003248,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "TESObjectREFRFactory::GetFormType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x2dd370.json"
     },
     {
       "id": "sse-steam-1-7-104-0x305da0",
@@ -13092,12 +13094,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 5359376,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSQueuedObjectDowngrade::Slot5",
       "name_origin": "GUESS",
       "name_source": "GUESS(low): method spelling invented from RTTI/vtable owner BGSQueuedObjectDowngrade and slot 5; no public method symbol verified.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x51c710.json"
     },
     {
       "id": "sse-steam-1-7-104-0x51c720",
@@ -13308,12 +13312,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8305440,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "GrenadeProjectile::IsGrenadeProjectile",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a, ng-slot association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x7ebb20.json"
     },
     {
       "id": "sse-steam-1-7-104-0x7f2140",
@@ -13464,12 +13470,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 8581520,
       "size": 6,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "CombatInventoryItemScroll::GetType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a, ng-slot association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x82f190.json"
     },
     {
       "id": "sse-steam-1-7-104-0x834ca0",
@@ -13902,12 +13910,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16206144,
       "size": 3,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiBlendQuaternionInterpolator::IsQuaternionValueSupported",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf74940.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf75bf0",
@@ -14698,12 +14708,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 16386912,
       "size": 5,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiPSysModifierCtlr::GetCtlrID",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, unverified: meh321/AddressLibraryDatabase commit 0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91, meh321 association in the pinned local function inventory; a code pass does not verify the name.",
       "owner": "awarebayes",
-      "evidence": "findings/generator-leaves-selection.md"
+      "evidence": "findings/generator-leaves-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xfa0b60.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1535640",

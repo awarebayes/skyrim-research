@@ -2483,7 +2483,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TESObjectCELL::Revert` (COMMUNITY) | `sse-steam-1-7-104` / `0x2c8330` / 191 | - | - | mapped | - | - |
 | `forms/TESObjectCELL` | `TESObjectCELL::EnterReferenceListLock` (COMMUNITY) | `sse-steam-1-7-104` / `0x2cbed0` / 14 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2cbed0.json` | matched | label-only | - |
 | `forms/TESObjectCELL` | `TESObjectCELL::ExitReferenceListLock` (COMMUNITY) | `sse-steam-1-7-104` / `0x2cbef0` / 78 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2cbef0.json` | matched | label-only | - |
-| - | `TESObjectREFRFactory::GetFormType` (COMMUNITY) | `sse-steam-1-7-104` / `0x2dd370` / 6 | - | - | mapped | - | - |
+| `forms/TESObjectREFRFactory` | `TESObjectREFRFactory::GetFormType` (COMMUNITY) | `sse-steam-1-7-104` / `0x2dd370` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2dd370.json` | matched | full | open |
 | `forms/TESForm` | `TESForm::IsPersistent` (COMMUNITY) | `sse-steam-1-7-104` / `0x2e4ac0` / 9 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2e4ac0.json` | matched | label-only | checked |
 | `forms/TESObjectREFR` | `TESObjectREFR::HasQuestObject` (COMMUNITY) | `sse-steam-1-7-104` / `0x2e5a60` / 86 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2e5a60.json` | matched | label-only | open |
 | `forms/TESObjectREFR` | `TESObjectREFR::GetScale` (COMMUNITY) | `sse-steam-1-7-104` / `0x2e6f30` / 68 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2e6f30.json` | matched | label-only | open |
@@ -2753,7 +2753,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `BSTempEffectWeaponBlood::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b6170` / 6 | - | - | mapped | - | - |
 | `bsengine/BSTerrainEffect` | `BSTerrainEffect::GetManagerHandlesSaveLoad` (COMMUNITY) | `sse-steam-1-7-104` / `0x4b7c40` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4b7c40.json` | matched | full | open |
 | `bsengine/PathingDoor` | `PathingDoor::Slot2` (GUESS) | `sse-steam-1-7-104` / `0x4e0ed0` / 4 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x4e0ed0.json` | matched | full | open |
-| - | `BGSQueuedObjectDowngrade::Slot5` (GUESS) | `sse-steam-1-7-104` / `0x51c710` / 6 | - | - | mapped | - | - |
+| `forms/BGSQueuedObjectDowngrade` | `BGSQueuedObjectDowngrade::Slot5` (GUESS) | `sse-steam-1-7-104` / `0x51c710` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x51c710.json` | matched | full | open |
 | - | `BGSQueuedObjectInitialLoad::Slot5` (GUESS) | `sse-steam-1-7-104` / `0x51c720` / 6 | - | - | mapped | - | - |
 | - | `BGSQueuedObjectUpgrade::Slot5` (GUESS) | `sse-steam-1-7-104` / `0x51c730` / 6 | - | - | mapped | - | - |
 | - | `BGSQueuedTerrainDowngrade::Slot5` (GUESS) | `sse-steam-1-7-104` / `0x51c740` / 6 | - | - | mapped | - | - |
@@ -2852,7 +2852,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `FlameProjectile::Revert` (COMMUNITY) | `sse-steam-1-7-104` / `0x7eb240` / 29 | - | - | mapped | - | - |
 | - | `FlameProjectile::Handle3DLoaded` (COMMUNITY) | `sse-steam-1-7-104` / `0x7eb430` / 19 | - | - | mapped | - | - |
 | - | `FlameProjectile::~FlameProjectile` (COMMUNITY) | `sse-steam-1-7-104` / `0x7eb510` / 52 | - | - | mapped | - | - |
-| - | `GrenadeProjectile::IsGrenadeProjectile` (COMMUNITY) | `sse-steam-1-7-104` / `0x7ebb20` / 3 | - | - | mapped | - | - |
+| `forms/GrenadeProjectile` | `GrenadeProjectile::IsGrenadeProjectile` (COMMUNITY) | `sse-steam-1-7-104` / `0x7ebb20` / 3 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x7ebb20.json` | matched | full | open |
 | - | `Hazard::SetActorCause` (COMMUNITY) | `sse-steam-1-7-104` / `0x7ee740` / 35 | - | - | mapped | - | - |
 | - | `MissileProjectile::Slot162` (GUESS) | `sse-steam-1-7-104` / `0x7f2140` / 3 | - | - | mapped | - | - |
 | - | `MissileProjectile::GetKillOnCollision` (COMMUNITY) | `sse-steam-1-7-104` / `0x7f4d40` / 11 | - | - | mapped | - | - |
@@ -2878,7 +2878,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `CombatInventoryItemShout::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x82ef80` / 6 | - | - | mapped | - | - |
 | - | `CombatInventoryItemStaff::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x82f140` / 6 | - | - | mapped | - | - |
 | - | `CombatInventoryItemPotion::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x82f170` / 6 | - | - | mapped | - | - |
-| - | `CombatInventoryItemScroll::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x82f190` / 6 | - | - | mapped | - | - |
+| `netimmerse/CombatInventoryItemScroll` | `CombatInventoryItemScroll::GetType` (COMMUNITY) | `sse-steam-1-7-104` / `0x82f190` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x82f190.json` | matched | full | open |
 | - | `CombatMagicCasterRestore::GetCategory` (COMMUNITY) | `sse-steam-1-7-104` / `0x834ca0` / 6 | - | - | mapped | - | - |
 | - | `CombatMagicCasterDisarm::GetCategory` (COMMUNITY) | `sse-steam-1-7-104` / `0x835d40` / 6 | - | - | mapped | - | - |
 | - | `CombatMagicCasterLight::GetCategory` (COMMUNITY) | `sse-steam-1-7-104` / `0x836740` / 6 | - | - | mapped | - | - |
@@ -3132,7 +3132,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `NiBlendBoolInterpolator::IsBoolValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf72de0` / 3 | - | - | mapped | - | - |
 | - | `NiBlendColorInterpolator::IsColorAValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf735f0` / 3 | - | - | mapped | - | - |
 | - | `NiBlendPoint3Interpolator::IsPoint3ValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf74080` / 3 | - | - | mapped | - | - |
-| - | `NiBlendQuaternionInterpolator::IsQuaternionValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf74940` / 3 | - | - | mapped | - | - |
+| `netimmerse/NiBlendQuaternionInterpolator` | `NiBlendQuaternionInterpolator::IsQuaternionValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf74940` / 3 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf74940.json` | matched | full | open |
 | - | `NiBoolInterpolator::IsBoolValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf75bf0` / 3 | - | - | mapped | - | - |
 | - | `NiBSplineColorInterpolator::IsColorAValueSupported` (COMMUNITY) | `sse-steam-1-7-104` / `0xf782f0` / 3 | - | - | mapped | - | - |
 | - | `NiBSplineCompColorInterpolator::Slot62` (GUESS) | `sse-steam-1-7-104` / `0xf78a60` / 3 | - | - | mapped | - | - |
@@ -3163,7 +3163,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `netimmerse/NiPSysGravityModifier` | `NiPSysGravityModifier::LinkObject` (COMMUNITY) | `sse-steam-1-7-104` / `0xf9c400` / 44 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xf9c400.json` | matched | full | open |
 | - | `NiMeshParticleSystem::~NiMeshParticleSystem` (COMMUNITY) | `sse-steam-1-7-104` / `0xf9eb30` / 52 | - | - | mapped | - | - |
 | - | `BSStripParticleSystem::~BSStripParticleSystem` (COMMUNITY) | `sse-steam-1-7-104` / `0xf9fd70` / 52 | - | - | mapped | - | - |
-| - | `NiPSysModifierCtlr::GetCtlrID` (COMMUNITY) | `sse-steam-1-7-104` / `0xfa0b60` / 5 | - | - | mapped | - | - |
+| `netimmerse/NiPSysModifierCtlr` | `NiPSysModifierCtlr::GetCtlrID` (COMMUNITY) | `sse-steam-1-7-104` / `0xfa0b60` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xfa0b60.json` | matched | full | open |
 | `netimmerse/NiPSysModifier` | `NiPSysModifier::LoadBinary` (COMMUNITY) | `sse-steam-1-7-104` / `0xfa0f40` / 187 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xfa0f40.json` | matched | label-only | open |
 | `netimmerse/NiPSysModifier` | `NiPSysModifier::LinkObject` (COMMUNITY) | `sse-steam-1-7-104` / `0xfa1010` / 27 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xfa1010.json` | matched | label-only | open |
 | `netimmerse/NiPSysModifier` | `NiPSysModifier::RegisterStreamables` (COMMUNITY) | `sse-steam-1-7-104` / `0xfa1040` / 62 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xfa1040.json` | matched | label-only | open |

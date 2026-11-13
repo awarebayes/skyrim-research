@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "add66a814ee425d9d6986518162e120c022a48d7f38fa30ef6dde13758383300",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0xfa0b60",
+  "naming_findings": [
+    "The packet did not locate the cited method name in the community source."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "5ebeb1c2dfe1990143f78f906692329d7a701b4fbf87011033fec3541a321b68",
+  "review_task_id": "review-flow-g033",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 16386912,
+  "size": 5,
+  "source_digest": "5c8e26f3ead0700cbbd1c66cb8e98ed659c5be220fa1dd8243e4afb7e4beb98b",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}
