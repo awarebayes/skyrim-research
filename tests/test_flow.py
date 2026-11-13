@@ -158,6 +158,7 @@ class FlowTests(unittest.TestCase):
         made = flow.review_group(self.root, self.fdir)
         self.assertIn('0x1000', flow.load_group(self.fdir, made[0])['functions'])
         self.assertIn('setup failure', (self.root / flow.load_group(self.fdir, made[0])['brief']).read_text())
+        self.assertIn('docs/anti-eu-bureaucracy.md', (self.root / flow.load_group(self.fdir, made[0])['brief']).read_text())
 
     def test_void_review_refuses_approval(self):
         name = flow.review_group(self.root, self.fdir, max_size=10)[0]
@@ -868,7 +869,7 @@ class QueueStates(unittest.TestCase):
         self.assertTrue(any('--profile claude-low --tier fallback' in t for t in actions))
         brief = self.root / flow.brief_drafter(self.root, self.fdir, 'claude-low', queue_dir='.local/queue/mid', tier='fallback')[0]
         text = brief.read_text()
-        for expected in ('gpt-6.1-terra', '--tier fallback', 'sheet.fnv.md', 'near-miss',
+        for expected in ('docs/anti-eu-bureaucracy.md', 'gpt-6.1-terra', '--tier fallback', 'sheet.fnv.md', 'near-miss',
                          'existing bodies or layout', '8 counted attempts per function'):
             self.assertIn(expected, text)
         with self.assertRaises(ValueError):
@@ -888,6 +889,8 @@ class QueueStates(unittest.TestCase):
         normal = flow.brief_drafter(self.root, self.fdir, 'cheap', queue_dir='.local/queue/normal')[0]
         self.assertNotEqual(small, normal)
         text = (self.root / normal).read_text()
+        self.assertIn('docs/anti-eu-bureaucracy.md', text)
+        self.assertIn('within 90 minutes', text)
         self.assertIn('Your unit kind is normal', text)
         self.assertIn('docs/drafter-card-normal.md', text)
         self.assertIn('--profile cheap', text)

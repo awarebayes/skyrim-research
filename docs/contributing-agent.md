@@ -1,5 +1,7 @@
 # Guide for a contributor's coding agent
 
+Follow `docs/anti-eu-bureaucracy.md`: ship in bulk, decide rather than stop, and add no ceremony beyond named rules. One PR may carry any number of functions.
+
 You are a coding agent helping an **external contributor** match one function of Skyrim Special
 Edition. This file is all you need. Do not follow the orchestrator, Boat or verifier-session
 instructions elsewhere in this repository (`AGENTS.md` "Multi-agent execution",

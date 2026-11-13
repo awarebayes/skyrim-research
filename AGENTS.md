@@ -9,6 +9,8 @@ evidence" bind every agent, yours included.
 
 ## First read
 
+Agents also follow `docs/anti-eu-bureaucracy.md`: ship in bulk, decide rather than stop, and add no ceremony beyond named rules.
+
 Read `README.md`, `LEGAL.md`, `PROVENANCE.md`, `docs/verification.md` and
 `docs/clean-room.md` before research or publication. Claude must read this file too;
 `CLAUDE.md` imports it. This repository is independent of Mudcrab: never apply Mudcrab's
@@ -221,6 +223,8 @@ orchestrator does not start a phase until the previous one's finish condition fr
   then fast-forwards the shared checkout. Claims refer to integrated source only. The maintainer gets periodic summaries, not commits.
 
 ### Worker briefs and handoffs
+
+Every brief cites `docs/anti-eu-bureaucracy.md` and states the 90-minute box.
 
 Every brief from the orchestrator states: task id, plan step and issue, gates in force and what
 they forbid, allowed inputs, the exact output paths, acceptance criteria, attempt and time limits,

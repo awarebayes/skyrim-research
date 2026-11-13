@@ -586,6 +586,8 @@ def family_brief(root, path, profile=None, fdir=None, render_only=False, attache
                if attached else 'The first 20 already have individual approvals; assess them with the template.')
     text = f"""# Family review {task}
 
+Follow `docs/anti-eu-bureaucracy.md`; report to the orchestrator within 90 minutes and follow its box rule.
+
 Role: fresh independent admitted Reviewer. Follow docs/reviewer-runbook.md, Family reviews.
 Task: {task}; review scope is the family at `{path}` (spec digest `{fr.digest(fr.spec(family))}`).
 Gates and exposure: docs/authorizations.md. Stop if the model lacks authorization to read an input.
@@ -992,6 +994,8 @@ def write_review_brief(root, g, by_rva, render_only=False):
     sampling = g['kind'] == 'sampling'
     text = f"""# Brief {g['task_id']}
 
+Follow `docs/anti-eu-bureaucracy.md`; report to the orchestrator within 90 minutes and follow its box rule.
+
 Role: Reviewer (`docs/reviewer-runbook.md`; in Claude Code `.claude/agents/reviewer.md`), fresh
 context, model {g['reviewer_model']}. Task id:
 `{g['task_id']}`. Plan step 5 / fan-out review (AGENTS.md "Fan-out design", "Review").
@@ -1053,6 +1057,8 @@ def write_rerun_brief(root, g, by_rva, render_only=False):
         sdir.mkdir(parents=True, exist_ok=True)
         (sdir / 'sample.json').write_text(json.dumps(sample, indent=2) + '\n')
     text = f"""# Brief rerun-{g['name']}
+
+Follow `docs/anti-eu-bureaucracy.md`; report to the orchestrator within 90 minutes and follow its box rule.
 
 Role: Engineer (or the routine orchestrator with a shell). Task: the sampling safeguard's
 from-scratch comparator re-run for group {g['name']} ({len(g['sampled'])} functions), on a clean
@@ -1495,6 +1501,8 @@ No Boat, git or network. Do not push, post publicly, mark `matched`, or start fu
 Return the short table from the runbook; full details go to the queue.
 '''
         text += '''
+Follow `docs/anti-eu-bureaucracy.md`; report to the orchestrator within 90 minutes and follow its box rule.
+
 On claim, `next` prints the private draft checkout. That is the only place to edit source;
 cd there and run every attempt there. Never edit source in the shared checkout. The sanctioned
 `done` command runs the clean harvest check and snapshots the whole unit; remove failed additions
@@ -1635,6 +1643,8 @@ def brief_confirm(root, fdir, manifests=None, tasks=None):
 '''
     text = f"""# Brief confirm-{stamp}
 
+Follow `docs/anti-eu-bureaucracy.md`; report to the orchestrator within 90 minutes and follow its box rule.
+
 Role: strong role of the profile (Claude: Engineer), or the routine orchestrator with a shell when every step below is a
 plain run. Reproduce the drafted passes on two runner hosts (docs/verification.md, Runner hosts).
 
@@ -1683,6 +1693,8 @@ def brief_triage(root, fdir, group=None, units=None, held=False):
         lines.append(f'- unit `{u}`: failed drafting; attempt history in `{u}/attempts.jsonl`, near-misses in `{u}/near-miss/`')
     text = f"""# Brief triage-{stamp}
 
+Follow `docs/anti-eu-bureaucracy.md`; report to the orchestrator within 90 minutes and follow its box rule.
+
 Role: strong role of the profile (Claude: Engineer, Opus; claude-low: Sol). Triage, fix and re-draft; you did not draft these functions (if you
 did, say so and stop). Gates: as recorded; G2 for reading reviews and packs.
 
@@ -1707,6 +1719,8 @@ def brief_direction(root, fdir):
     n = 1 + sum(e['event'] == 'direction-check' for e in ev)
     frictions = sorted((Path(root) / '.local/flow').glob('friction-*.md'))
     text = f"""# Brief direction-check-{n}
+
+Follow `docs/anti-eu-bureaucracy.md`; report to the orchestrator within 90 minutes and follow its box rule.
 
 Role: direction check (`.claude/agents/direction-check.md`; strong role of the profile), fresh context. Read only;
 you edit nothing except your own output file.

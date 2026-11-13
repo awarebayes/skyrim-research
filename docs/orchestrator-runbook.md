@@ -1,5 +1,7 @@
 # Orchestrator runbook (routine queue work, any model)
 
+Follow `docs/anti-eu-bureaucracy.md`: ship in bulk, decide rather than stop, and add no ceremony beyond named rules.
+
 Paste into a fresh session started in this repository, naming the profile:
 `Read docs/orchestrator-runbook.md in this repository and follow it exactly. Your profile is <cheap|full|claude-low>.`
 

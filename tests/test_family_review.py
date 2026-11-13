@@ -564,6 +564,7 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         g = primaries[0]
         self.assertEqual(len(g['functions']), 20)
         self.assertEqual(g['family_review_path'], path)
+        self.assertIn('docs/anti-eu-bureaucracy.md', (self.root / g['brief']).read_text())
         self.assertIn('in this same pass', (self.root / g['brief']).read_text())
         self.assertIn(str((self.root / '.local/analysis/fnv_index.jsonl').resolve()), (self.root / g['brief']).read_text())
         self.assertIn(str((self.root / '.local/packs').resolve()), (self.root / g['brief']).read_text())

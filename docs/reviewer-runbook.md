@@ -1,5 +1,7 @@
 # Reviewer runbook (any model, any harness)
 
+Follow `docs/anti-eu-bureaucracy.md`: ship in bulk, decide rather than stop, and add no ceremony beyond named rules.
+
 Paste into a fresh session started in this repository:
 `Read docs/reviewer-runbook.md and follow it. Your brief is <brief path>.`
 
