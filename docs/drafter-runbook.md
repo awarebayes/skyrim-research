@@ -144,3 +144,5 @@ print; running `attempt` in the background or on two units in one command; delet
   kit, about 17k tokens per passing function. Label example: `haiku-1`.
 - Labels: model, effort, session number; a new session gets a new number. Several sessions may run
   at once; the queue never gives one unit to two of them.
+
+For a fallback brief, use its tier-specific queue and attempt commands, draft only the listed unpassed functions, and retain prior passes as regression comparisons. The fallback budget is separate from the first tier and scales with the number of unpassed functions.

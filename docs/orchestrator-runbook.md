@@ -230,3 +230,5 @@ commits are described above); run `accept_function.py` directly; edit a
 saved review; start a Reviewer on work it drafted, engineered or triaged; give a worker
 material its model is not cleared to read; start a Boat machine (Boat is retired; confirm briefs
 use the runner hosts); post anything publicly.
+
+When the profile has a fallback Drafter, `next-actions` offers failed first-tier units through `brief drafter --tier fallback`; dispatch the specified model with that brief. Fallback results and counted attempts are recorded separately from the first tier.

@@ -44,6 +44,7 @@
         "drafter": {"provider": "claude", "model": "haiku", "effort": null, "harness": "claude-code",
                     "alternatives": [{"provider": "openai", "model": "gpt-5.6-luna", "effort": "medium", "harness": "codex",
                                       "note": "uses no Claude subscription at all"}]},
+        "drafter_fallback": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "high", "harness": "codex", "attempts_per_function": 8},
         "reviewer": {"provider": "openai", "model": "gpt-6.1-terra", "effort": "high", "harness": "codex",
                      "requires": "admitted as gpt-6.1-terra under claude-low; sampling second passes use an independent strong Reviewer"},
         "strong": {"provider": "openai", "model": "gpt-6.1-sol", "effort": "high", "harness": "codex",

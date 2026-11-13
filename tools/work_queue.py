@@ -44,6 +44,7 @@ import sys
 import time
 
 import claims as github_claims
+import profiles
 
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_DIR = REPO / '.local/queue/small'
@@ -112,13 +113,13 @@ def read_claim(path):
             return None
 
 
-def try_create(path, worker, t, profile=None):
+def try_create(path, worker, t, profile=None, tier="first"):
     try:
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
     except FileExistsError:
         return False
     with os.fdopen(fd, 'w') as out:
-        json.dump({'worker': worker, 'time': t, 'claimed': iso(t), 'pid': os.getpid(), 'profile': profile}, out)
+        json.dump({'worker': worker, 'time': t, 'claimed': iso(t), 'pid': os.getpid(), 'profile': profile, 'tier': tier}, out)
     return True
 
 
@@ -138,14 +139,16 @@ def set_aside_near_misses(unit_dir, t, repo):
     return dest
 
 
-def claim(qdir, worker, t=None, profile=None, repo=None, refresh=False):
+def claim(qdir, worker, t=None, profile=None, repo=None, refresh=False, tier="first"):
     """Claim a unit for `worker`: its own unfinished claim first, then the first unclaimed unit,
     then the first stale claim. Returns the unit dict, or None when nothing is left to claim.
     Relative unit dirs resolve against `repo`, by default the queue's own (queue_repo)."""
     if not LABEL.fullmatch(worker or ''):
         raise QueueError('--worker must be a label like luna56-medium-1 (letters, digits, . _ -)')
+    if tier == 'fallback' and (not profile or 'drafter_fallback' not in profiles.get(profile)['roles']):
+        raise QueueError('fallback tier requires a profile with drafter_fallback')
     t = now() if t is None else t
-    u = _claim(qdir, worker, t, profile, external=github_claims.project_claims(queue_repo(qdir) if repo is None else repo, refresh))
+    u = _claim(qdir, worker, t, profile, tier=tier, external=github_claims.project_claims(queue_repo(qdir) if repo is None else repo, refresh))
     if u is not None and not u.get('resumed'):
         u['earlier_near_misses'] = set_aside_near_misses(u['dir'], t, queue_repo(qdir) if repo is None else repo)
     return u
@@ -161,18 +164,35 @@ def blocked_functions(functions, external):
     return blocked
 
 
-def _claim(qdir, worker, t, profile, external):
+def tier_dir(qdir, kind, tier):
+    return qdir / (kind if tier == 'first' else kind + '-fallback')
+
+
+def unpassed(qdir, unit):
+    path = qdir / 'results.jsonl'
+    results = {}
+    if path.is_file():
+        for line in path.read_text().splitlines():
+            if line.strip():
+                r = json.loads(line)
+                if r.get('queue_unit') == unit['dir'] and r.get('tier', 'first') == 'first' and 'rva' in r:
+                    results[str(r['rva']).lower()] = r.get('result')
+    return [f for f in unit['functions'] if results.get(str(f).lower()) != 'pass']
+
+
+def _claim(qdir, worker, t, profile, external, tier='first'):
     units = [u for u in read_queue(qdir) if not blocked_functions(u['functions'], external)]
-    claims, done = qdir / 'claims', qdir / 'done'
+    claims, done = tier_dir(qdir, 'claims', tier), tier_dir(qdir, 'done', tier)
     claims.mkdir(parents=True, exist_ok=True)
     done.mkdir(parents=True, exist_ok=True)
-    open_units = [u for u in units if not (done / f'{u["key"]}.json').exists()]
+    open_units = [u for u in units if not (done / f'{u["key"]}.json').exists() and
+                  (tier == 'first' or ((qdir / 'done' / f'{u["key"]}.json').exists() and unpassed(qdir, u)))]
     for u in open_units:  # a restarted session resumes its own unit
         c = read_claim(claims / f'{u["key"]}.lock')
         if c and c.get('worker') == worker:
             return dict(u, resumed=True)
     for u in open_units:
-        if try_create(claims / f'{u["key"]}.lock', worker, t, profile):
+        if try_create(claims / f'{u["key"]}.lock', worker, t, profile, tier):
             return u
     for u in open_units:
         lock = claims / f'{u["key"]}.lock'
@@ -185,7 +205,7 @@ def _claim(qdir, worker, t, profile, external):
         except FileNotFoundError:
             continue
         tomb.unlink(missing_ok=True)
-        if try_create(lock, worker, t, profile):
+        if try_create(lock, worker, t, profile, tier):
             return u
     return None
 
@@ -208,16 +228,18 @@ def find_unit(qdir, unit_dir):
     raise QueueError(f'{unit_dir} is not a unit of {qdir / "queue.tsv"}')
 
 
-def finish(qdir, unit_dir, lines, worker=None, t=None):
+def finish(qdir, unit_dir, lines, worker=None, t=None, tier="first"):
     """Record result lines for a unit, mark it done and release its claim. Returns the records."""
     t = now() if t is None else t
     u = find_unit(qdir, unit_dir)
-    lock = qdir / 'claims' / f'{u["key"]}.lock'
+    lock = tier_dir(qdir, 'claims', tier) / f'{u["key"]}.lock'
     c = read_claim(lock) if lock.exists() else None
     worker = worker or (c or {}).get('worker')
     if not worker:
         raise QueueError(f'{u["dir"]} is not claimed; pass --worker <label> to record a result anyway')
-    stamp = {'profile': (c or {}).get('profile')}
+    if tier == 'fallback' and not c:
+        raise QueueError('fallback result requires a fallback claim')
+    stamp = {'profile': (c or {}).get('profile'), 'tier': tier}
     if c and c.get('time') is not None:
         stamp['claimed'] = iso(float(c['time']))
     if not lines:
@@ -230,26 +252,28 @@ def finish(qdir, unit_dir, lines, worker=None, t=None):
             raise QueueError(f'--result is not one JSON object: {exc}: {raw[:120]}') from None
         if not isinstance(rec, dict) or not ({'rva', 'result'} <= rec.keys() or 'unit' in rec or 'task' in rec):
             raise QueueError('each --result needs "rva" and "result" (a function line) or "unit" (the unit line)')
+        if tier == 'fallback' and 'rva' in rec and str(rec['rva']).lower() not in {str(f).lower() for f in unpassed(qdir, u)}:
+            raise QueueError('fallback results may only report previously unpassed functions')
         records.append(dict(rec, worker=worker, queue_unit=u['dir'], recorded=iso(t), **stamp))
-    (qdir / 'done').mkdir(parents=True, exist_ok=True)
+    tier_dir(qdir, 'done', tier).mkdir(parents=True, exist_ok=True)
     with locked(qdir / 'results.lock'):
         with open(qdir / 'results.jsonl', 'a') as out:
             for rec in records:
                 out.write(json.dumps(rec, sort_keys=True) + '\n')
-        (qdir / 'done' / f'{u["key"]}.json').write_text(json.dumps({'worker': worker, 'done': iso(t)}) + '\n')
+        (tier_dir(qdir, 'done', tier) / f'{u["key"]}.json').write_text(json.dumps({'worker': worker, 'done': iso(t)}) + '\n')
         lock.unlink(missing_ok=True)
     return records
 
 
-def release(qdir, unit_dir, worker=None, t=None):
+def release(qdir, unit_dir, worker=None, t=None, tier="first"):
     """Give back a claim without a result, so another session can take the unit at once.
 
     With `worker`, refuses a claim held by another label: a session releases only its own claim
     (or names the holder deliberately)."""
     t = now() if t is None else t
     u = find_unit(qdir, unit_dir)
-    lock = qdir / 'claims' / f'{u["key"]}.lock'
-    if (qdir / 'done' / f'{u["key"]}.json').exists():
+    lock = tier_dir(qdir, 'claims', tier) / f'{u["key"]}.lock'
+    if (tier_dir(qdir, 'done', tier) / f'{u["key"]}.json').exists():
         raise QueueError(f'{u["dir"]} is already done; nothing to release')
     c = read_claim(lock) if lock.exists() else None
     if c is None:
@@ -259,7 +283,7 @@ def release(qdir, unit_dir, worker=None, t=None):
     with locked(qdir / 'results.lock'):
         with open(qdir / 'releases.jsonl', 'a') as out:
             out.write(json.dumps({'queue_unit': u['dir'], 'worker': c.get('worker'), 'profile': c.get('profile'),
-                                  'claimed': iso(float(c.get('time', t))), 'released': iso(t)}, sort_keys=True) + '\n')
+                                  'tier': tier, 'claimed': iso(float(c.get('time', t))), 'released': iso(t)}, sort_keys=True) + '\n')
         lock.unlink(missing_ok=True)
     return c.get('worker')
 
@@ -272,7 +296,7 @@ def unit_line(unit_dir, repo):
     log = (d if d.is_absolute() else repo / d) / 'attempts.jsonl'
     used = 0
     if log.is_file():
-        used = sum(1 for line in log.read_text().splitlines() if line.strip() and json.loads(line).get('counted'))
+        used = sum(1 for line in log.read_text().splitlines() if line.strip() and json.loads(line).get('counted') and json.loads(line).get('tier', 'first') == 'first')
     budget = (task.get('max_attempts') or 0) - used
     rel = d.relative_to(repo).as_posix() if d.is_absolute() else d.as_posix()
     functions = ','.join(str(f['rva']) for f in task.get('functions') or [])
@@ -370,7 +394,7 @@ def parser():
     n = sub.add_parser('next', help='claim the next unit and print its unit dir (EMPTY when none is left)')
     n.add_argument('--refresh', action='store_true', help='refresh GitHub claims cache')
     n.add_argument('--worker', required=True, help='model, effort and session number, e.g. luna56-medium-1')
-    n.add_argument('--profile', choices=('cheap', 'full'), help='drafting profile (tools/profiles.py); recorded with the results')
+    n.add_argument('--profile', choices=sorted(profiles.PROFILES), help='drafting profile (tools/profiles.py); recorded with the results')
     r = sub.add_parser('release', help='give back a claimed unit you will not work on')
     r.add_argument('unit_dir')
     r.add_argument('--worker', help='your label; refuses a claim held by another label')
@@ -383,6 +407,8 @@ def parser():
     ad = sub.add_parser('add', help='append unit or group task dirs to the queue (queue order = order given)')
     ad.add_argument('--refresh', action='store_true', help='refresh GitHub claims cache')
     ad.add_argument('dirs', nargs='+')
+    for command in (n, r, d):
+        command.add_argument('--tier', choices=('first', 'fallback'), default='first')
     for command in sub.choices.values():
         command.add_argument('--queue-dir', default=argparse.SUPPRESS,
                              help='queue directory (also accepted before the subcommand)')
@@ -394,25 +420,31 @@ def main(argv=None):
     qdir = queue_dir(a.queue_dir)
     try:
         if a.cmd == 'next':
-            u = claim(qdir, a.worker, profile=a.profile, refresh=a.refresh)
+            u = claim(qdir, a.worker, profile=a.profile, refresh=a.refresh, tier=a.tier)
             if u is None:
-                busy = sum(1 for state, _, _ in status(qdir) if state == 'claimed')
+                busy = (sum(1 for state, _, _ in status(qdir) if state == 'claimed') if a.tier == 'first' else
+                        sum(1 for u in read_queue(qdir) if (tier_dir(qdir, 'claims', 'fallback') / f'{u["key"]}.lock').exists()))
                 print('EMPTY' + (f' ({busy} unit(s) still claimed by other sessions)' if busy else ''))
                 return 0
             print(u['dir'])
+            if a.tier == 'fallback':
+                print('# draft only: ' + ' '.join(unpassed(qdir, u)) + '; prior passes remain regressions', file=sys.stderr)
             if u.get('earlier_near_misses'):
                 print(f'# near-miss files of an earlier session moved to {u["earlier_near_misses"]}; they may not '
                       'match the current unit source', file=sys.stderr)
+            budget = (u['budget'] if a.tier == 'first' else
+                      profiles.role(a.profile, 'drafter_fallback')['attempts_per_function'] * len(unpassed(qdir, u)))
             print(f'# sources: {" ".join(u["sources"])}; functions: {" ".join(u["functions"])}; '
-                  f'budget: {u["budget"]} counted attempts', file=sys.stderr)
+                  f'budget: {budget} counted attempts', file=sys.stderr)
             return 0
         if a.cmd == 'done':
-            recs = finish(qdir, a.unit_dir, a.result, a.worker)
+            recs = finish(qdir, a.unit_dir, a.result, a.worker, tier=a.tier)
             print(f'recorded {len(recs)} line(s) for {recs[0]["queue_unit"]} as {recs[0]["worker"]}; '
-                  'next: python3 tools/work_queue.py next --worker ' + recs[0]['worker'])
+                  'next: python3 tools/work_queue.py --queue-dir ' + str(qdir) + ' next --worker ' + recs[0]['worker'] +
+                  (f' --tier fallback --profile {recs[0]["profile"]}' if a.tier == 'fallback' else ''))
             return 0
         if a.cmd == 'release':
-            holder = release(qdir, a.unit_dir, a.worker)
+            holder = release(qdir, a.unit_dir, a.worker, tier=a.tier)
             print(f'released {a.unit_dir} (was claimed by {holder})')
             return 0
         if a.cmd == 'status':

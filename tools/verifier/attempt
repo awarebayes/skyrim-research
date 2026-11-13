@@ -53,6 +53,9 @@ import disasm  # noqa: E402
 import pipeline  # noqa: E402
 from pipeline import PipelineError  # noqa: E402
 import runners  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import work_queue as wq  # noqa: E402
+import profiles  # noqa: E402
 
 LABEL = 'standing'
 
@@ -73,19 +76,19 @@ def log_rows(log):
     return [json.loads(line) for line in log.read_text().splitlines() if line.strip()]
 
 
-def counted_attempts(log):
+def counted_attempts(log, tier="first"):
     """Attempts that count against max_attempts: every logged run except binding-only ones and
     the free compile failures."""
-    return sum(1 for r in log_rows(log) if r.get('counted', True))
+    return sum(1 for r in log_rows(log) if r.get('counted', True) and r.get('tier', 'first') == tier)
 
 
-def charge(code, binding_only, log):
+def charge(code, binding_only, log, tier="first"):
     """(counted, free_compile_failure) for a finished run: binding-only runs and host refusals
     (INFRASTRUCTURE_EXITS) never count, and a compile failure (exit 3) is free while fewer than
     FREE_COMPILE_FAILURES were free before."""
     if binding_only or code in INFRASTRUCTURE_EXITS:
         return False, False
-    if code == 3 and sum(1 for r in log_rows(log) if r.get('free_compile_failure')) < FREE_COMPILE_FAILURES:
+    if code == 3 and sum(1 for r in log_rows(log) if r.get('free_compile_failure') and r.get('tier', 'first') == tier) < FREE_COMPILE_FAILURES:
         return False, True
     return True, False
 
@@ -129,7 +132,17 @@ def run_once(task, host, files, task_dir, dest):
     return code
 
 
-def attempt(task_dir):
+def fallback_budget(task_dir, qdir):
+    unit = wq.find_unit(qdir, str(task_dir))
+    claim_path = wq.tier_dir(qdir, 'claims', 'fallback') / f'{unit["key"]}.lock'
+    claim = wq.read_claim(claim_path)
+    if not claim:
+        raise wq.QueueError('fallback attempt requires a claimed fallback unit')
+    entry = profiles.role(claim.get('profile'), 'drafter_fallback')
+    return entry['attempts_per_function'] * len(wq.unpassed(qdir, unit))
+
+
+def attempt(task_dir, tier='first', qdir=None):
     started = time.monotonic()
     task = pipeline.load_task(task_dir)
     task_dir = task['dir']
@@ -137,8 +150,8 @@ def attempt(task_dir):
     attempts = task_dir / 'attempts'
     done = sorted(p for p in attempts.glob('[0-9][0-9][0-9]') if p.is_dir()) if attempts.is_dir() else []
     number = int(done[-1].name) + 1 if done else 1
-    budget = task['max_attempts']
-    used = counted_attempts(task_dir / 'attempts.jsonl')
+    budget = task['max_attempts'] if tier == 'first' else fallback_budget(task_dir, qdir)
+    used = counted_attempts(task_dir / 'attempts.jsonl', tier)
     if budget is not None and used >= budget:
         print(f'attempt budget exhausted: {budget} of {budget} used. Write your result lines and stop.')
         return 5
@@ -188,7 +201,7 @@ def attempt(task_dir):
                 bind_lines.append('  re-compared after binding (same source)')
     results = results_of(task, dest)
     binding_only = code in (0, 1) and bool(results) and all(r in bind.BINDING_REASONS for r in results.values())
-    counted, free_compile = charge(code, binding_only, task_dir / 'attempts.jsonl')
+    counted, free_compile = charge(code, binding_only, task_dir / 'attempts.jsonl', tier)
     lines, all_rows = [], []
     shown = used + (1 if counted else 0)
     why_free = ''
@@ -197,7 +210,7 @@ def attempt(task_dir):
     elif code in INFRASTRUCTURE_EXITS:
         why_free = ' (host refusal, not counted)'
     elif free_compile:
-        n = sum(1 for r in log_rows(task_dir / 'attempts.jsonl') if r.get('free_compile_failure')) + 1
+        n = sum(1 for r in log_rows(task_dir / 'attempts.jsonl') if r.get('free_compile_failure') and r.get('tier', 'first') == tier) + 1
         why_free = f' (compile failure {n}/{FREE_COMPILE_FAILURES} free, not counted)'
     head = (f'attempt {number} {task["task_id"]} ({task["compiled"]}); counted {shown}'
             + (f'/{budget}' if budget else '') + why_free)
@@ -247,7 +260,7 @@ def attempt(task_dir):
     text = '\n'.join(lines)
     (dest / 'attempt.txt').write_text(text + '\n' + ''.join(f'{r}\n' for r in all_rows))
     with open(task_dir / 'attempts.jsonl', 'a') as log:
-        log.write(json.dumps({'attempt': number, 'exit': code, 'counted': counted,
+        log.write(json.dumps({'attempt': number, 'exit': code, 'counted': counted, 'tier': tier,
                               **({'free_compile_failure': True} if free_compile else {}),
                               'seconds': round(time.monotonic() - started, 1),
                               'runner': runner['host_id'] if runner else 'boat',
@@ -347,6 +360,8 @@ def clean(task_dir):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('task_dir', nargs='?')
+    p.add_argument('--tier', choices=('first', 'fallback'), default='first')
+    p.add_argument('--queue-dir', type=Path)
     p.add_argument('--clean', action='store_true', help="remove the task's files on the machine")
     p.add_argument('--stop', action='store_true', help=argparse.SUPPRESS)
     p.add_argument('--force', action='store_true', help=argparse.SUPPRESS)
@@ -366,8 +381,10 @@ def main():
         if not (group_dir / 'task.json').is_file() and (group_dir / 'group.json').is_file():
             print('\n'.join(group_status(group_dir)))
             return 2
-        return attempt(a.task_dir)
-    except (PipelineError, boatctl.BoatError, runners.RunnerError) as exc:
+        if a.tier == 'fallback' and not a.queue_dir:
+            p.error('--tier fallback requires --queue-dir')
+        return attempt(a.task_dir, a.tier, a.queue_dir)
+    except (PipelineError, boatctl.BoatError, runners.RunnerError, wq.QueueError, ValueError, KeyError) as exc:
         print(f'attempt: {exc}', file=sys.stderr)
         return 2
 

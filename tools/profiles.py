@@ -28,10 +28,23 @@ PROFILES = DATA['profiles']
 ROLES = ('orchestrator', 'drafter', 'reviewer', 'strong')
 
 
+def validate(profile):
+    roles = profile['roles']
+    if not set(ROLES) <= roles.keys() or set(roles) - set(ROLES) - {'drafter_fallback'}:
+        raise ValueError('invalid profile roles')
+    for entry in roles.values():
+        if not all(k in entry for k in ('provider', 'model', 'effort', 'harness')):
+            raise ValueError('incomplete profile role')
+    fallback = roles.get('drafter_fallback')
+    if fallback and (type(fallback.get('attempts_per_function')) is not int or fallback['attempts_per_function'] <= 0):
+        raise ValueError('fallback attempts_per_function must be positive')
+
+
 def get(name=None):
     name = name or DEFAULT
     if name not in PROFILES:
         raise ValueError(f'unknown profile {name!r}; choose one of {", ".join(sorted(PROFILES))}')
+    validate(PROFILES[name])
     return dict(PROFILES[name], name=name)
 
 
@@ -51,7 +64,7 @@ def cost_lines():
 def show(name):
     p = get(name)
     lines = [f'profile {name}: {p["summary"]}']
-    for r in ROLES:
+    for r in (*ROLES, *(['drafter_fallback'] if 'drafter_fallback' in p['roles'] else [])):
         e = p['roles'][r]
         alt = '; or ' + ', '.join(model_label(a) for a in e.get('alternatives', [])) if e.get('alternatives') else ''
         lines.append(f'  {r}: {model_label(e)}{alt}' + (f'  [needs: {e["requires"]}]' if e.get('requires') else ''))

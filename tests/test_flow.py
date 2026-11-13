@@ -764,6 +764,22 @@ class QueueStates(unittest.TestCase):
         actions = [text for kind, text in flow.next_actions(self.root, self.fdir, online=False)]
         self.assertTrue(any('brief drafter' in t and '--queue-dir .local/queue/normal' in t for t in actions))
 
+    def test_fallback_brief_and_next_action(self):
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        wq.claim(self.q, 'haiku-1', profile='cheap')
+        wq.finish(self.q, '.local/tasks/g/g-foo', [
+            json.dumps({'rva': '0x1000', 'result': 'pass'}),
+            json.dumps({'rva': '0x1010', 'result': 'fail'}), json.dumps({'unit': 'foo'})])
+        actions = [text for _, text in flow.next_actions(self.root, self.fdir, online=False)]
+        self.assertTrue(any('--profile claude-low --tier fallback' in t for t in actions))
+        brief = self.root / flow.brief_drafter(self.root, self.fdir, 'claude-low', queue_dir='.local/queue/mid', tier='fallback')[0]
+        text = brief.read_text()
+        for expected in ('gpt-6.1-terra', '--tier fallback', 'sheet.fnv.md', 'near-miss',
+                         'existing bodies or layout', '8 counted attempts per function'):
+            self.assertIn(expected, text)
+        with self.assertRaises(ValueError):
+            flow.brief_drafter(self.root, self.fdir, 'cheap', tier='fallback')
+
     def test_normal_brief_routes_card_queue_and_profile_separately(self):
         small = flow.brief_drafter(self.root, self.fdir, 'cheap')[0]
         normal = flow.brief_drafter(self.root, self.fdir, 'cheap', queue_dir='.local/queue/normal')[0]

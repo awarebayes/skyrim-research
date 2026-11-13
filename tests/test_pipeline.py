@@ -273,6 +273,15 @@ class AttemptCharge(unittest.TestCase):
         self.assertEqual(self.log_run(2), (True, False))
         self.assertEqual(self.log_run(7), (True, False))
 
+    def test_tier_budgets_count_independently(self):
+        self.log.write_text(''.join(json.dumps(row) + '\n' for row in [
+            {'counted': True}, {'counted': True},
+            {'counted': True, 'tier': 'fallback'},
+            {'counted': False, 'tier': 'first', 'free_compile_failure': True}]))
+        self.assertEqual(self.attempt.counted_attempts(self.log), 2)
+        self.assertEqual(self.attempt.counted_attempts(self.log, 'fallback'), 1)
+        self.assertEqual(self.attempt.charge(3, False, self.log, 'fallback'), (False, True))
+
     def test_old_logs_without_the_field(self):
         self.log.write_text(json.dumps({'exit': 3, 'counted': True}) + '\n')
         self.assertEqual(self.attempt.charge(3, False, self.log), (False, True))

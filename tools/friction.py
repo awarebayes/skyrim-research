@@ -63,10 +63,11 @@ def summarise(root, now=None):
     root = Path(root)
     now = time.time() if now is None else now
     recs = flow.queue_results(root)
-    table = {'model': defaultdict(lambda: defaultdict(list)), 'profile': defaultdict(lambda: defaultdict(list))}
+    table = {'model': defaultdict(lambda: defaultdict(list)), 'profile': defaultdict(lambda: defaultdict(list)), 'tier': defaultdict(lambda: defaultdict(list))}
     messages = Counter()
     for r in recs:
-        keys = (('model', wq.model_of(r.get('worker'))), ('profile', r.get('profile') or 'unrecorded'))
+        keys = (('model', wq.model_of(r.get('worker')) + ('/fallback' if r.get('tier', 'first') == 'fallback' else '')), ('profile', (r.get('profile') or 'unrecorded') + ('/fallback' if r.get('tier', 'first') == 'fallback' else '')),
+                ('tier', r.get('tier', 'first')))
         for kind, key in keys:
             s = table[kind][key]
             if 'rva' in r:
@@ -86,7 +87,13 @@ def summarise(root, now=None):
         if state in ('claimed', 'stale'):
             age = now - float((claim or {}).get('time', now))
             if age >= flow.CLAIM_LOOK_SECONDS:
-                stalls.append({'unit': u['dir'], 'worker': who, 'profile': profile, 'minutes': int(age // 60)})
+                stalls.append({'unit': u['dir'], 'worker': who, 'profile': profile, 'tier': 'first', 'minutes': int(age // 60)})
+        fallback = wq.read_claim(wq.tier_dir(qdir, 'claims', 'fallback') / f'{u["key"]}.lock')
+        if fallback:
+            age = now - float(fallback.get('time', now))
+            if age >= flow.CLAIM_LOOK_SECONDS:
+                stalls.append({'unit': u['dir'], 'worker': fallback.get('worker'),
+                               'profile': fallback.get('profile') or profile, 'tier': 'fallback', 'minutes': int(age // 60)})
     rows = {}
     for kind, groups in table.items():
         rows[kind] = {}
@@ -97,7 +104,7 @@ def summarise(root, now=None):
             for r in fns:
                 by_unit[r.get('queue_unit')].append(r)
             abandoned = sum(1 for rs in by_unit.values() if not any(r.get('result') == 'pass' for r in rs))
-            abandoned += sum(1 for r in rel if (wq.model_of(r.get('worker')) if kind == 'model' else r.get('profile')) == key)
+            abandoned += sum(1 for r in rel if (wq.model_of(r.get('worker')) + ('/fallback' if r.get('tier', 'first') == 'fallback' else '') if kind == 'model' else (r.get('tier', 'first') if kind == 'tier' else (r.get('profile') or 'unrecorded') + ('/fallback' if r.get('tier', 'first') == 'fallback' else ''))) == key)
             walls = []
             for r in s['units']:
                 a, b = parse_time(r.get('claimed')), parse_time(r.get('recorded'))
@@ -108,7 +115,7 @@ def summarise(root, now=None):
                 'pass_rate': round(len(passed) / len(fns), 3) if fns else None,
                 'attempts_per_pass': round(sum(int(r.get('attempts') or 0) for r in fns) / len(passed), 2) if passed else None,
                 'units': len(s['units']), 'abandoned_units': abandoned,
-                'stalls_now': sum(1 for st in stalls if (wq.model_of(st['worker']) if kind == 'model' else st['profile']) == key),
+                'stalls_now': sum(1 for st in stalls if (wq.model_of(st['worker']) + ('/fallback' if st['tier'] == 'fallback' else '') if kind == 'model' else (st['tier'] if kind == 'tier' else st['profile'] + ('/fallback' if st['tier'] == 'fallback' else ''))) == key),
                 'median_minutes_per_unit': round(statistics.median(walls), 1) if walls else None,
             }
     rejects = Counter()
@@ -130,7 +137,7 @@ def summarise(root, now=None):
     if cheap.get('pass_rate') is not None and cheap['pass_rate'] < profiles.CHEAP_MIN_PASS_RATE:
         flag = (f'cheap pass rate {cheap["pass_rate"]} is below {profiles.CHEAP_MIN_PASS_RATE}: '
                 'a direction check should consider making `full` the default again')
-    return {'generated': flow.utc(), 'by_model': rows['model'], 'by_profile': rows['profile'], 'stalls': stalls,
+    return {'generated': flow.utc(), 'by_model': rows['model'], 'by_profile': rows['profile'], 'by_tier': rows['tier'], 'stalls': stalls,
             'releases': len(rel), 'rejects_by_reason': rejects.most_common(15),
             'top_failure_messages': messages.most_common(15), 'default_profile': profiles.DEFAULT,
             'cheap_threshold': profiles.CHEAP_MIN_PASS_RATE, 'cheap_flag': flag}
@@ -142,7 +149,7 @@ def render(rep):
            + (f'**{rep["cheap_flag"]}**' if rep['cheap_flag'] else 'Cheap profile at or above the threshold (or no data).'), '']
     cols = ('functions', 'passed', 'pass_rate', 'attempts_per_pass', 'units', 'abandoned_units', 'stalls_now',
             'median_minutes_per_unit')
-    for title, key in (('By profile', 'by_profile'), ('By model', 'by_model')):
+    for title, key in (('By tier', 'by_tier'), ('By profile', 'by_profile'), ('By model', 'by_model')):
         out += [f'## {title}', '', '| key | ' + ' | '.join(cols) + ' |', '|---' * (len(cols) + 1) + '|']
         for k, row in rep[key].items():
             out.append(f'| {k} | ' + ' | '.join('-' if row[c] is None else str(row[c]) for c in cols) + ' |')

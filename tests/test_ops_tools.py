@@ -25,6 +25,24 @@ def write_queue(qdir, n):
     (qdir / 'queue.tsv').write_text('\n'.join(lines) + '\n')
 
 
+class FallbackFriction(unittest.TestCase):
+    def test_first_and_fallback_rates_are_separate(self):
+        import friction
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            records = [
+                {'rva': '0x1', 'result': 'fail', 'worker': 'haiku-1', 'profile': 'claude-low', 'queue_unit': 'u'},
+                {'rva': '0x1', 'result': 'pass', 'worker': 'terra-1', 'profile': 'claude-low', 'queue_unit': 'u', 'tier': 'fallback'},
+            ]
+            with patch.object(friction.flow, 'queue_results', return_value=records), \
+                 patch.object(friction.flow, 'queue_units', return_value=[]):
+                report = friction.summarise(tmp)
+            self.assertEqual(report['by_tier']['first']['pass_rate'], 0)
+            self.assertEqual(report['by_tier']['fallback']['pass_rate'], 1)
+            self.assertEqual(report['by_profile']['claude-low']['functions'], 1)
+            self.assertEqual(report['by_profile']['claude-low/fallback']['functions'], 1)
+
+
 class QueueAdditions(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp()).resolve()
@@ -104,7 +122,7 @@ class Profiles(unittest.TestCase):
         self.assertEqual(profiles.DEFAULT, 'cheap')
         for name in ('cheap', 'full', 'claude-low'):
             p = profiles.get(name)
-            self.assertEqual(set(p['roles']), set(profiles.ROLES))
+            self.assertEqual(set(p['roles']) - {'drafter_fallback'}, set(profiles.ROLES))
             for entry in p['roles'].values():
                 self.assertTrue({'provider', 'model', 'harness'} <= entry.keys())
             self.assertTrue(p['cost'].startswith(name + ':'))
