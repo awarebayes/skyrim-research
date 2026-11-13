@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetPlayable@TESAmmo@@UEBA_NXZ": {
+      "rva": 2528752,
+      "size": 14
+    },
+    "?InitializeData@TESAmmo@@UEAAXXZ": {
+      "rva": 2525888,
+      "size": 46
+    },
+    "?SaveGame@TESAmmo@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 2527936,
+      "size": 46
+    },
+    "ammoDefault": {
+      "rva": 34056600,
+      "size": null
+    },
+    "?InitializeSubobject@@YAXPEAX_N@Z": {
+      "rva": 2150736,
+      "size": null
+    },
+    "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": null
+    },
+    "?SaveSubobject@@YAXPEAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 2045536,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetPlayable@TESAmmo@@UEBA_NXZ",
+        "rva": "0x2695f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESAmmo@@UEAAXXZ",
+        "rva": "0x268ac0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESAmmo@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x2692c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "ammoDefault",
+        "rva": "0x207a998",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeSubobject@@YAXPEAX_N@Z",
+        "rva": "0x20d150",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveSubobject@@YAXPEAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1f3660",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
