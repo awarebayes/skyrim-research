@@ -1,0 +1,1104 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+      "version": "0.6.0"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy"
+      ],
+      "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x146660": "45ad748a5d109f68f236c12708c6b2f3d66f1fe09bd063ab6d636e28b81eba43",
+    "sse-steam-1-7-104-0x1468a0": "36a539b860ba55bcb3d0f94c65398ebb9c2cbb9829e9e3618b8a253595ca3dee",
+    "sse-steam-1-7-104-0x146900": "7575f332dc3fe554f97dbdc8b049606aa5e00ab896eadc929e4a85b1b7b92680",
+    "sse-steam-1-7-104-0x14e740": "817c92252b81dbbd05400ae916f43471707725b5b8f7c9f1421ff90804d828ce",
+    "sse-steam-1-7-104-0x14fcd0": "0efd5c001fc11cf266434b076a04664abe7a97ea28fefba8f5158f2d0ef3faad",
+    "sse-steam-1-7-104-0x1549a0": "a7d6eba8541c75a5c49eab3bb31b0f9a3b8399fb1051d393a49ba0fa5ad2b20e",
+    "sse-steam-1-7-104-0x154ce0": "a984bec54eaec3ca657e5c8212821774376a93f72c603221f10a87d4c60e8877",
+    "sse-steam-1-7-104-0x156190": "9ae3f78e28aeea992d9191f941bde815f7f1b87e406977b288aa255b65b0ddd9",
+    "sse-steam-1-7-104-0x1561d0": "0648c58c9c86b79d630f79fc12c11b2f50609c3834f5635ad6ac5ce253c5e69d",
+    "sse-steam-1-7-104-0x1561e0": "57745c77b6669fc2b8bbdc4f38aaaab98c20df20aecd00c8e0090783ed77af1f",
+    "sse-steam-1-7-104-0x156260": "6ca0ade3b9cf50e18525708b71e4d57500ab4eb94b9150dd8643e2e780b5ae0b",
+    "sse-steam-1-7-104-0x156270": "3a13e6a690f72d95ae08bd2f9f2698800e5ee0660a4353085cf6ed683e537ce5",
+    "sse-steam-1-7-104-0x1562a0": "e8a0e769b40e95ee2ac70caf1420172e634cdced5457d9a6fdef309f327f58d9",
+    "sse-steam-1-7-104-0x1562d0": "decd688746d709a48fa8f8ce574211c399e3e7b6068c18aaf6c29f966beac6cb",
+    "sse-steam-1-7-104-0x156300": "49f10083aae9ee67997c120977ae41591b01b93edac991e738e006480ba15f78",
+    "sse-steam-1-7-104-0x156330": "903980d35908b031a6e22882509b57376b1a001c1a491e83e8936748b60ed340",
+    "sse-steam-1-7-104-0x156360": "1942c2b431db73975c91ddfb80b98788b87aa3e8d9becc952454c4e5c39765cb",
+    "sse-steam-1-7-104-0x1563b0": "1693b2f0743420e9312a8e288fe5b9d69309a9bfc24c792418e14fa19577c1ca",
+    "sse-steam-1-7-104-0x1563c0": "7bf2738ab0be2a7a327c0149d0ad345f824eb1bf19dc957698aca459465a54f8",
+    "sse-steam-1-7-104-0x1563d0": "1577f2f676900e443f3fc88c03132dff79437a5ef2ee5b592dccb2e8b32b4599"
+  },
+  "origin": {
+    "family": "const-return",
+    "template_digest": "ef77800110c657a66ca442774781ea1425190056a513667cffcfe0dddf7c0148",
+    "version": "2"
+  },
+  "parameter_ranges": {
+    "rows": [
+      {
+        "family": "constant",
+        "value": 1,
+        "virtual": true,
+        "width": 1
+      },
+      {
+        "family": "constant",
+        "value": 1,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 10,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 101,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 103,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 104,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 105,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 106,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 107,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 108,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 109,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 11,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 110,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 111,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 112,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 113,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 114,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 115,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 116,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 117,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 118,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 119,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 120,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 121,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 123,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 124,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 125,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 126,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 127,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 128,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 129,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 13,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 130,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 131,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 132,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 133,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 134,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 135,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 136,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 137,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 139,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 14,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 140,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 141,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 1414090835,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 142,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 144,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 145,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 146,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 147,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 148,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 149,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 150,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 151,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 152,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 153,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 154,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 155,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 156,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 157,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 159,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 16,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 160,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 161,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 162,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 163,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 164,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 165,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 166,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 167,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 168,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 169,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 17,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 170,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 171,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 172,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 173,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 174,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 175,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 176,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 177,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 178,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 179,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 18,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 181,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 19,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 2,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 20,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 21,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 22,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 23,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 24,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 25,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 255,
+        "virtual": true,
+        "width": 1
+      },
+      {
+        "family": "constant",
+        "value": 26,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 27,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 28,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 29,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 3,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 30,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 31,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 32,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 33,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 34,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 35,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 36,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 37,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 39,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 4,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 40,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 41,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 42,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 4294967295,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 43,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 44,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 45,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 46,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 47,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 48,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 49,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 5,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 50,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 52,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 54,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 55,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 56,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 57,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 58,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 6,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 60,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 61,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 62,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 63,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 64,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 65,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 65535,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 66,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 67,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 68,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 69,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 7,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 71,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 72,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 73,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 74,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 75,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 76,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 77,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 78,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 79,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 8,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 80,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 81,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 82,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 83,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 84,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 85,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 86,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 87,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 88,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 89,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 9,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 91,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 92,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 93,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 94,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 95,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 96,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 97,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 98,
+        "virtual": true,
+        "width": 4
+      },
+      {
+        "family": "constant",
+        "value": 99,
+        "virtual": true,
+        "width": 4
+      }
+    ]
+  },
+  "parameter_source": {
+    "path": "tools/stamp.py",
+    "sha256": "710fc4dc0ad91b9ab02457e6612747fa2a62e346a27dbd61fd68f841d243c000"
+  },
+  "pause_reason": "",
+  "paused": false,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "689a7a0686e17d106b0ace5daaa03767ba0017390e807f80c2f000da33e0c58d",
+    "review_task_id": "review-family-e5d3f654f509c5398369",
+    "reviewer_model": "gpt-6.1-terra",
+    "spec_sha256": "2aa90d0afba6b9fd2c2587f334cb66366c2cbc4d9be7caa0e8084b38e26fe021"
+  },
+  "supersedes": "reports/sse-steam-1-7-104/families/c4bffe9ab05f62d28d11a5e155149700046d598bb442c451a6a4e618351cdd1a.json",
+  "template_source": {
+    "path": "tools/stamp_template_v2.py",
+    "sha256": "ef77800110c657a66ca442774781ea1425190056a513667cffcfe0dddf7c0148"
+  }
+}

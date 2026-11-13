@@ -1,0 +1,20 @@
+{
+  "batch_schema": 1,
+  "commitment": null,
+  "family_path": "reports/sse-steam-1-7-104/families/64761d9a3c3b4c142a9fb592afbd35c521bbdb58ef79ce06d0c49c1c40e6097f.json",
+  "family_sha256": "b71703fb8ca300d86a8e55e0e8dd23fdd5c35b2aa3de5183d5427d25f6df2f87",
+  "members": {
+    "sse-steam-1-7-104-0x1535640": "9c462fe9257ef25f07bd84c8b1aaf30df3bb1c5358564a3b9a36d0afcfb84ed4",
+    "sse-steam-1-7-104-0x1535970": "808c325c8c5ae920546b8615957fad8d472d99de7b2c805c8c6ae6e5b167da56",
+    "sse-steam-1-7-104-0x15362a0": "f837740a6a367f8c2f3d59434ae6e946fc8e8293092aa84a4943cfab360bcdfe",
+    "sse-steam-1-7-104-0xfa0b60": "19e81e9885c82be1c22f6f849791948cd083ae02a32894f52974c182184c0753"
+  },
+  "population": [
+    "sse-steam-1-7-104-0x1535640",
+    "sse-steam-1-7-104-0x1535970",
+    "sse-steam-1-7-104-0x15362a0",
+    "sse-steam-1-7-104-0xfa0b60"
+  ],
+  "sample": null,
+  "seed": "p81-member-return-v2-01"
+}

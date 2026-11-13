@@ -1,0 +1,88 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
+      "version": "0.6.0"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy"
+      ],
+      "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x146780": "e3ab9e39498762b50ac9b462ba80329316d37b40d984baae8661c34ab3724d7d",
+    "sse-steam-1-7-104-0x14c8c0": "fcc431544ea6345bb73e8bce06c665f8b8a82ea76ee0cb60cde2ffa2d709c764",
+    "sse-steam-1-7-104-0x1e85a0": "78e523b679226b706eb62d9325df2ee04c7fd0bd169a1b134b52036739bf6280",
+    "sse-steam-1-7-104-0x258700": "8bd7562ca8550349bfb3d1c55e54107dd0d131905478096117a40d1355165d94",
+    "sse-steam-1-7-104-0x320390": "f4e73076a59295d819ea777e1d87e57af43cc5343b94302a77a042c32a8714df",
+    "sse-steam-1-7-104-0x448e30": "f9192e2f032a932f27556c70ca51f28a84dd31724fd8e0e7a435d82492986324",
+    "sse-steam-1-7-104-0x45acd0": "5d4b0f5e0a3f527b8e3749e5b5097d02f9c9853e7e01722c9bc8a67971e605b8",
+    "sse-steam-1-7-104-0x45af30": "6988cc3ea5ba1a890e291b99c5eca9594a84b4aeed146c87a3e276ec7b8f046c",
+    "sse-steam-1-7-104-0x45af40": "c3f8414146113880d814e9eb784630744fc20a8534d6191abaa158c90447b0d3",
+    "sse-steam-1-7-104-0x4e0ed0": "8865e21643e3d4fc1b2111448b3fcde2f62846fc8914afeb71377fea8ae63f9d",
+    "sse-steam-1-7-104-0x556990": "a4a9b8d1f3d54c01c167fd8090f88b923d0a515e55012564c2faa2b7303e6f66",
+    "sse-steam-1-7-104-0x5c0850": "3001673b1c45ec4c6942f652b371463af7ca4c4de2bb3eba0bcfa37a1e07fb29",
+    "sse-steam-1-7-104-0x6398f0": "3e91f82b89353ce0f8eb17b1065d5e4edc525856f45188c1ed720dbb61281e8f",
+    "sse-steam-1-7-104-0x6eb4a0": "8e51233e7eb2b428201b4b5a2532eb0b18e9e783489a41e07c73f7130e670743",
+    "sse-steam-1-7-104-0x7e5a60": "01aac1eb17ba7e3f5261bc6ac68b098abf8b67bc5f6477558556d94edf1e93b9",
+    "sse-steam-1-7-104-0xeb9780": "050b72cebfe5bd20a9d55dc5b1b766823932a9e254f1d5787d71381b47fe1506",
+    "sse-steam-1-7-104-0xeb9ee0": "4543a45e8453b6c0d4bbe96f1b6be63409e41a9e9c90ca7879e58808c42e1c9a",
+    "sse-steam-1-7-104-0xec1710": "4508e69e448f53434fb4c0ad3c2ad076fed486d04927f8667dea1b61d6dea83e",
+    "sse-steam-1-7-104-0xf00b20": "1764b668eb5d4e66c2032db2d4f88065db96464333f0401db0591669626ce898",
+    "sse-steam-1-7-104-0xf971f0": "1ab63fd94ca4c5d5ab6980a099f6945474a91a27a79019110bc5ef77d413d7fe"
+  },
+  "origin": {
+    "family": "member-return",
+    "template_digest": "ef77800110c657a66ca442774781ea1425190056a513667cffcfe0dddf7c0148",
+    "version": "2"
+  },
+  "parameter_ranges": {
+    "family": {
+      "values": [
+        "member"
+      ]
+    },
+    "value": {
+      "max": 3824,
+      "min": 8
+    },
+    "virtual": {
+      "values": [
+        true
+      ]
+    },
+    "width": {
+      "max": 8,
+      "min": 4
+    }
+  },
+  "parameter_source": {
+    "path": "tools/stamp.py",
+    "sha256": "710fc4dc0ad91b9ab02457e6612747fa2a62e346a27dbd61fd68f841d243c000"
+  },
+  "pause_reason": "Superseded by a corrected unapproved family.",
+  "paused": true,
+  "review": null,
+  "superseded_by": "reports/sse-steam-1-7-104/families/64761d9a3c3b4c142a9fb592afbd35c521bbdb58ef79ce06d0c49c1c40e6097f.json",
+  "template_source": {
+    "path": "tools/stamp_template_v2.py",
+    "sha256": "ef77800110c657a66ca442774781ea1425190056a513667cffcfe0dddf7c0148"
+  }
+}
