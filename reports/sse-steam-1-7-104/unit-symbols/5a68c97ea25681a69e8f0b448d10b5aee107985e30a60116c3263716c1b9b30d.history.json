@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/5a68c97ea25681a69e8f0b448d10b5aee107985e30a60116c3263716c1b9b30d.json",
+  "versions": [
+    {
+      "sha256": "5a68c97ea25681a69e8f0b448d10b5aee107985e30a60116c3263716c1b9b30d",
+      "base": null,
+      "added": [
+        "?QShader@BSSkyShaderProperty@@UEAAHXZ",
+        "?GetBaseTexture@BSSkyShaderProperty@@UEAAPEAVNiSourceTexture@@XZ"
+      ]
+    }
+  ]
+}

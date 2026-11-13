@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetManagerHandlesSaveLoad@BSTerrainEffect@@UEBA_NXZ": {
+      "rva": 4947008,
+      "size": 5
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetManagerHandlesSaveLoad@BSTerrainEffect@@UEBA_NXZ",
+        "rva": "0x4b7c40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

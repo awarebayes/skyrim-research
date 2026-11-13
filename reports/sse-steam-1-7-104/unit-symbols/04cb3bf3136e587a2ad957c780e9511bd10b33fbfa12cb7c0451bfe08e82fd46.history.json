@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/04cb3bf3136e587a2ad957c780e9511bd10b33fbfa12cb7c0451bfe08e82fd46.json",
+  "versions": [
+    {
+      "sha256": "04cb3bf3136e587a2ad957c780e9511bd10b33fbfa12cb7c0451bfe08e82fd46",
+      "base": null,
+      "added": [
+        "?Get3D@BSTempEffectSimpleDecal@@UEBAPEAVNiAVObject@@XZ",
+        "?Initialize@BSTempEffectSimpleDecal@@UEAAXXZ",
+        "??_GBSTempEffectSimpleDecal@@UEAAPEAXI@Z",
+        "?SetupAVShape@BSTempEffectSimpleDecal@@QEAA_NPEAVBSTriShape@@@Z",
+        "??1BSTempEffectSimpleDecal@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

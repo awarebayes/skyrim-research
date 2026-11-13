@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/435f0388cc976d5aa3e4544dd6cc5b9a23c742cfb8372f304bf97be4af0cb3f2.json",
+  "versions": [
+    {
+      "sha256": "435f0388cc976d5aa3e4544dd6cc5b9a23c742cfb8372f304bf97be4af0cb3f2",
+      "base": null,
+      "added": [
+        "__imp_strncpy_s",
+        "?GetDescription@BSTask@@UEAA_NPEADI@Z",
+        "??_GBSTask@@UEAAPEAXI@Z",
+        "??1BSTask@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "??_C@_07EMPPFCON@Unnamed@"
+      ]
+    }
+  ]
+}

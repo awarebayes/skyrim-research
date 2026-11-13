@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Get3D@BSTempEffectSimpleDecal@@UEBAPEAVNiAVObject@@XZ": {
+      "rva": 4925776,
+      "size": 5
+    },
+    "?Initialize@BSTempEffectSimpleDecal@@UEAAXXZ": {
+      "rva": 4919440,
+      "size": 35
+    },
+    "??_GBSTempEffectSimpleDecal@@UEAAPEAXI@Z": {
+      "rva": 4934208,
+      "size": 52
+    },
+    "?SetupAVShape@BSTempEffectSimpleDecal@@QEAA_NPEAVBSTriShape@@@Z": {
+      "rva": 4919520,
+      "size": null
+    },
+    "??1BSTempEffectSimpleDecal@@UEAA@XZ": {
+      "rva": 4918336,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Get3D@BSTempEffectSimpleDecal@@UEBAPEAVNiAVObject@@XZ",
+        "rva": "0x4b2950",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Initialize@BSTempEffectSimpleDecal@@UEAAXXZ",
+        "rva": "0x4b1090",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSTempEffectSimpleDecal@@UEAAPEAXI@Z",
+        "rva": "0x4b4a40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetupAVShape@BSTempEffectSimpleDecal@@QEAA_NPEAVBSTriShape@@@Z",
+        "rva": "0x4b10e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSTempEffectSimpleDecal@@UEAA@XZ",
+        "rva": "0x4b0c40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
