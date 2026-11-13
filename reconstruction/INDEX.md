@@ -4175,7 +4175,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1752600::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1752600` / 67 | - | - | mapped | - | - |
 | - | `Static1752650::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1752650` / 67 | - | - | mapped | - | - |
 | - | `Static17526a0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17526a0` / 67 | - | - | mapped | - | - |
-| - | `Static17526f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17526f0` / 67 | - | - | mapped | - | - |
+| `static/Static17526f0` | `Static17526f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17526f0` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x17526f0.json` | matched | full | checked |
 | - | `Static1752740::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1752740` / 67 | - | - | mapped | - | - |
 | - | `Static1752790::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1752790` / 67 | - | - | mapped | - | - |
 | - | `Static17527e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17527e0` / 67 | - | - | mapped | - | - |
@@ -4209,7 +4209,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static17530a0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17530a0` / 67 | - | - | mapped | - | - |
 | - | `Static17530f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17530f0` / 67 | - | - | mapped | - | - |
 | - | `Static1753140::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753140` / 67 | - | - | mapped | - | - |
-| - | `Static1753190::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753190` / 67 | - | - | mapped | - | - |
+| `static/Static1753190` | `Static1753190::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753190` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1753190.json` | matched | full | checked |
 | - | `Static17531e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17531e0` / 67 | - | - | mapped | - | - |
 | - | `Static1753230::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753230` / 67 | - | - | mapped | - | - |
 | - | `Static1753280::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753280` / 67 | - | - | mapped | - | - |
@@ -4240,7 +4240,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1753a50::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753a50` / 67 | - | - | mapped | - | - |
 | - | `Static1753aa0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753aa0` / 67 | - | - | mapped | - | - |
 | - | `Static1753af0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753af0` / 67 | - | - | mapped | - | - |
-| - | `Static1753b40::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753b40` / 67 | - | - | mapped | - | - |
+| `static/Static1753b40` | `Static1753b40::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753b40` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1753b40.json` | matched | full | checked |
 | - | `Static1753b90::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753b90` / 67 | - | - | mapped | - | - |
 | - | `Static1753be0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753be0` / 67 | - | - | mapped | - | - |
 | - | `Static1753c30::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1753c30` / 67 | - | - | mapped | - | - |
@@ -4266,17 +4266,17 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1754270::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754270` / 67 | - | - | mapped | - | - |
 | - | `Static17542c0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17542c0` / 67 | - | - | mapped | - | - |
 | - | `Static1754310::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754310` / 67 | - | - | mapped | - | - |
-| - | `Static1754360::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754360` / 67 | - | - | mapped | - | - |
+| `static/Static1754360` | `Static1754360::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754360` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1754360.json` | matched | full | checked |
 | - | `Static17543b0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17543b0` / 67 | - | - | mapped | - | - |
 | - | `Static1754400::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754400` / 67 | - | - | mapped | - | - |
 | - | `Static1754450::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754450` / 67 | - | - | mapped | - | - |
-| - | `Static17544a0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17544a0` / 67 | - | - | mapped | - | - |
+| `static/Static17544a0` | `Static17544a0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17544a0` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x17544a0.json` | matched | full | checked |
 | - | `Static17544f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17544f0` / 67 | - | - | mapped | - | - |
 | - | `Static1754540::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754540` / 67 | - | - | mapped | - | - |
 | - | `Static1754590::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754590` / 67 | - | - | mapped | - | - |
 | - | `Static17545e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17545e0` / 67 | - | - | mapped | - | - |
 | - | `Static1754630::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754630` / 67 | - | - | mapped | - | - |
-| - | `Static1754680::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754680` / 67 | - | - | mapped | - | - |
+| `static/Static1754680` | `Static1754680::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754680` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1754680.json` | matched | full | checked |
 | - | `Static17546d0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17546d0` / 67 | - | - | mapped | - | - |
 | - | `Static1754720::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754720` / 67 | - | - | mapped | - | - |
 | - | `Static1754770::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1754770` / 67 | - | - | mapped | - | - |
@@ -4313,7 +4313,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1755120::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755120` / 67 | - | - | mapped | - | - |
 | - | `Static1755170::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755170` / 67 | - | - | mapped | - | - |
 | - | `Static17551c0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17551c0` / 67 | - | - | mapped | - | - |
-| - | `Static1755210::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755210` / 67 | - | - | mapped | - | - |
+| `static/Static1755210` | `Static1755210::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755210` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1755210.json` | matched | full | checked |
 | - | `Static1755260::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755260` / 67 | - | - | mapped | - | - |
 | - | `Static17552b0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17552b0` / 67 | - | - | mapped | - | - |
 | - | `Static1755300::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755300` / 67 | - | - | mapped | - | - |
@@ -4342,7 +4342,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1755a30::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755a30` / 67 | - | - | mapped | - | - |
 | - | `Static1755a80::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755a80` / 67 | - | - | mapped | - | - |
 | - | `Static1755ad0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755ad0` / 67 | - | - | mapped | - | - |
-| - | `Static1755b20::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755b20` / 67 | - | - | mapped | - | - |
+| `static/Static1755b20` | `Static1755b20::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755b20` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1755b20.json` | matched | full | checked |
 | - | `Static1755b70::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755b70` / 67 | - | - | mapped | - | - |
 | - | `Static1755bc0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755bc0` / 67 | - | - | mapped | - | - |
 | - | `Static1755c10::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1755c10` / 67 | - | - | mapped | - | - |
@@ -4380,7 +4380,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1756610::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756610` / 67 | - | - | mapped | - | - |
 | - | `Static1756660::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756660` / 67 | - | - | mapped | - | - |
 | - | `Static17566b0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17566b0` / 67 | - | - | mapped | - | - |
-| - | `Static1756700::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756700` / 67 | - | - | mapped | - | - |
+| `static/Static1756700` | `Static1756700::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756700` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1756700.json` | matched | full | checked |
 | - | `Static1756750::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756750` / 67 | - | - | mapped | - | - |
 | - | `Static17567a0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17567a0` / 67 | - | - | mapped | - | - |
 | - | `Static17567f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17567f0` / 67 | - | - | mapped | - | - |
@@ -4390,7 +4390,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1756930::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756930` / 67 | - | - | mapped | - | - |
 | - | `Static1756980::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756980` / 67 | - | - | mapped | - | - |
 | - | `Static17569d0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17569d0` / 67 | - | - | mapped | - | - |
-| - | `Static1756a20::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756a20` / 67 | - | - | mapped | - | - |
+| `static/Static1756a20` | `Static1756a20::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756a20` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1756a20.json` | matched | full | checked |
 | - | `Static1756a70::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756a70` / 67 | - | - | mapped | - | - |
 | - | `Static1756ac0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756ac0` / 67 | - | - | mapped | - | - |
 | - | `Static1756b10::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1756b10` / 67 | - | - | mapped | - | - |
@@ -4434,7 +4434,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static17576f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17576f0` / 67 | - | - | mapped | - | - |
 | - | `Static1757740::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757740` / 67 | - | - | mapped | - | - |
 | - | `Static1757790::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757790` / 67 | - | - | mapped | - | - |
-| - | `Static17577e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17577e0` / 67 | - | - | mapped | - | - |
+| `static/Static17577e0` | `Static17577e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17577e0` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x17577e0.json` | matched | full | checked |
 | - | `Static1757830::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757830` / 67 | - | - | mapped | - | - |
 | - | `Static1757880::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757880` / 67 | - | - | mapped | - | - |
 | - | `Static17578d0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17578d0` / 67 | - | - | mapped | - | - |
@@ -4443,7 +4443,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static17579c0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17579c0` / 67 | - | - | mapped | - | - |
 | - | `Static1757a10::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757a10` / 67 | - | - | mapped | - | - |
 | - | `Static1757a60::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757a60` / 67 | - | - | mapped | - | - |
-| - | `Static1757ab0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757ab0` / 67 | - | - | mapped | - | - |
+| `static/Static1757ab0` | `Static1757ab0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757ab0` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1757ab0.json` | matched | full | checked |
 | - | `Static1757b00::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757b00` / 67 | - | - | mapped | - | - |
 | - | `Static1757b50::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757b50` / 67 | - | - | mapped | - | - |
 | - | `Static1757ba0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757ba0` / 67 | - | - | mapped | - | - |
@@ -4454,9 +4454,9 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1757d30::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757d30` / 67 | - | - | mapped | - | - |
 | - | `Static1757d80::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757d80` / 67 | - | - | mapped | - | - |
 | - | `Static1757dd0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757dd0` / 67 | - | - | mapped | - | - |
-| - | `Static1757e20::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757e20` / 67 | - | - | mapped | - | - |
+| `static/Static1757e20` | `Static1757e20::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757e20` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1757e20.json` | matched | full | checked |
 | - | `Static1757e70::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757e70` / 67 | - | - | mapped | - | - |
-| - | `Static1757ec0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757ec0` / 67 | - | - | mapped | - | - |
+| `static/Static1757ec0` | `Static1757ec0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757ec0` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1757ec0.json` | matched | full | checked |
 | - | `Static1757f10::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757f10` / 67 | - | - | mapped | - | - |
 | - | `Static1757f60::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757f60` / 67 | - | - | mapped | - | - |
 | - | `Static1757fb0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1757fb0` / 67 | - | - | mapped | - | - |
@@ -4464,7 +4464,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1758050::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758050` / 67 | - | - | mapped | - | - |
 | - | `Static17580a0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17580a0` / 67 | - | - | mapped | - | - |
 | - | `Static17580f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17580f0` / 67 | - | - | mapped | - | - |
-| - | `Static1758140::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758140` / 67 | - | - | mapped | - | - |
+| `static/Static1758140` | `Static1758140::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758140` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1758140.json` | matched | full | checked |
 | `static/Static1758190` | `Static1758190::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758190` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1758190.json` | matched | full | checked |
 | - | `Static17581e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17581e0` / 67 | - | - | mapped | - | - |
 | - | `Static1758230::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758230` / 67 | - | - | mapped | - | - |
@@ -4485,7 +4485,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static17586e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17586e0` / 67 | - | - | mapped | - | - |
 | - | `Static1758730::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758730` / 67 | - | - | mapped | - | - |
 | - | `Static1758780::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758780` / 67 | - | - | mapped | - | - |
-| - | `Static17587d0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17587d0` / 67 | - | - | mapped | - | - |
+| `static/Static17587d0` | `Static17587d0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17587d0` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x17587d0.json` | matched | full | checked |
 | - | `Static1758820::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758820` / 67 | - | - | mapped | - | - |
 | - | `Static1758870::teardown` (GUESS) | `sse-steam-1-7-104` / `0x1758870` / 67 | - | - | mapped | - | - |
 | - | `Static17588c0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x17588c0` / 67 | - | - | mapped | - | - |
@@ -4576,7 +4576,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static175a350::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a350` / 67 | - | - | mapped | - | - |
 | - | `Static175a3a0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a3a0` / 67 | - | - | mapped | - | - |
 | - | `Static175a3f0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a3f0` / 67 | - | - | mapped | - | - |
-| - | `Static175a440::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a440` / 67 | - | - | mapped | - | - |
+| `static/Static175a440` | `Static175a440::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a440` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x175a440.json` | matched | full | checked |
 | - | `Static175a490::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a490` / 67 | - | - | mapped | - | - |
 | - | `Static175a4e0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a4e0` / 67 | - | - | mapped | - | - |
 | - | `Static175a530::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175a530` / 67 | - | - | mapped | - | - |
@@ -4601,7 +4601,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static175ab20::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175ab20` / 67 | - | - | mapped | - | - |
 | - | `Static175ab70::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175ab70` / 67 | - | - | mapped | - | - |
 | - | `Static175abc0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175abc0` / 67 | - | - | mapped | - | - |
-| - | `Static175ac10::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175ac10` / 67 | - | - | mapped | - | - |
+| `static/Static175ac10` | `Static175ac10::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175ac10` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x175ac10.json` | matched | full | checked |
 | - | `Static175ac60::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175ac60` / 67 | - | - | mapped | - | - |
 | - | `Static175acb0::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175acb0` / 67 | - | - | mapped | - | - |
 | - | `Static175ad00::teardown` (GUESS) | `sse-steam-1-7-104` / `0x175ad00` / 67 | - | - | mapped | - | - |
