@@ -824,6 +824,12 @@ def family_actions(root, fdir):
         family = fr.read(root, batch['family_path'])
         if family['paused']:
             continue
+        missing = [fid for fid in batch['population'] if not by_id[fid].get('report')
+                   or not (root / by_id[fid]['report']).is_file()]
+        if missing:
+            acts.append(('wait', f'family batch {path} needs local match records for {len(missing)} member(s) '
+                         'in its source checkout'))
+            continue
         if batch['sample'] is None:
             acts.append(('run', f'python3 tools/flow.py family-draw {path}    # draw sample; seed and population must be committed first'))
             continue
