@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "f2f680766b95a5a3e7fdf1442fbd76ae1fb91863b3be2d91c96b51fc29eff872",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x17b3780",
+  "naming_findings": [
+    "Object and supporting names are labelled stand-ins and remain guesses."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "7b10d0105f9d77733e4745c6d53972cfb7adf97c252e73db7e9574132a67b3d7",
+  "review_task_id": "review-flow-g060",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 24852352,
+  "size": 67,
+  "source_digest": "c39c33af406a60f3b3ce5dc91a774baff6573108bfb6ad14c60968d0e9940698",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}
