@@ -10,6 +10,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import check  # noqa: E402
+from check_source_digest import source_digest_cache  # noqa: E402
 
 PROGRESS = json.loads((ROOT / 'data/progress.json').read_text())
 
@@ -63,7 +64,8 @@ class CheckCostsTests(unittest.TestCase):
 
     def test_both_load_paths_check_the_ledger(self):
         for staged in (False, True):
-            with self.subTest(staged=staged), mock.patch.object(check, 'check_costs') as called:
+            # Each load reads a frozen snapshot, just like check.main's cache scope.
+            with self.subTest(staged=staged), mock.patch.object(check, 'check_costs') as called, source_digest_cache():
                 check.load(staged=staged)
                 self.assertEqual(called.call_count, 1)
 

@@ -885,7 +885,7 @@ class IntegratedRecordTests(unittest.TestCase):
     """Every record in the tree lists exactly its include closure and its digest is unchanged."""
 
     def test_records_in_tree_still_bind_their_closure(self):
-        from source_digest import include_closure
+        from check_source_digest import include_closure, source_digest_cache
         root = TOOLS.parent
         records = sorted(p for p in (root / 'reports').glob('*/0x*.json')
                          if not p.name.endswith(('.review.json', '-recheck-cases.json')))
@@ -894,10 +894,12 @@ class IntegratedRecordTests(unittest.TestCase):
         self.assertEqual(records, named, 'every record in the tree is named by its inventory entry')
         if not records:
             self.skipTest('no match records in the tree')
-        for path in records:
-            source = json.loads(path.read_text())['source']
-            self.assertEqual(include_closure(root, source['compiled']), sorted(source['translation_unit']))
-            self.assertEqual(tu_digest(root, source['translation_unit']), source['digest'])
+        # The committed records and include namespace stay frozen during this scan.
+        with source_digest_cache():
+            for path in records:
+                source = json.loads(path.read_text())['source']
+                self.assertEqual(include_closure(root, source['compiled']), sorted(source['translation_unit']))
+                self.assertEqual(tu_digest(root, source['translation_unit']), source['digest'])
 
 
 class SourceDigestTests(unittest.TestCase):
