@@ -1,0 +1,24 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "54a2b4f630736136860ff1ad9b9ea0b7adfa18abcde17668166e75e99ceaf817",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x23290",
+  "naming_findings": [
+    "The placeholder member value has no explicit origin label.",
+    "The record note describes an outdated comparator digest; the report bindings use the current pin."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "e61605ac22618962631b63934b6e05f0e7008c130399595fbb78ebceb8dbc969",
+  "review_task_id": "review-family-5adf752c9f30ca21ec5e",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 144016,
+  "size": 39,
+  "source_digest": "7fcd2e989e573598f7ac018356d8fa01b81d89df742934a84b9d22f35b2e0633",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

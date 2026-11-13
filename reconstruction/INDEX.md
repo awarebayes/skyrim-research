@@ -77,7 +77,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Staticdca0::initializer` (GUESS) | `sse-steam-1-7-104` / `0xdca0` / 39 | - | - | mapped | - | - |
 | - | `Statice700::initializer` (GUESS) | `sse-steam-1-7-104` / `0xe700` / 39 | - | - | mapped | - | - |
 | - | `Statice730::initializer` (GUESS) | `sse-steam-1-7-104` / `0xe730` / 39 | - | - | mapped | - | - |
-| - | `Staticeeb0::initializer` (GUESS) | `sse-steam-1-7-104` / `0xeeb0` / 39 | - | - | mapped | - | - |
+| `static/Staticeeb0` | `Staticeeb0::initializer` (GUESS) | `sse-steam-1-7-104` / `0xeeb0` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0xeeb0.json` | matched | full | open |
 | - | `Staticef40::initializer` (GUESS) | `sse-steam-1-7-104` / `0xef40` / 39 | - | - | mapped | - | - |
 | - | `Staticf520::initializer` (GUESS) | `sse-steam-1-7-104` / `0xf520` / 39 | - | - | mapped | - | - |
 | - | `Staticf630::initializer` (GUESS) | `sse-steam-1-7-104` / `0xf630` / 39 | - | - | mapped | - | - |
@@ -170,7 +170,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static158e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x158e0` / 39 | - | - | mapped | - | - |
 | - | `Static15910::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15910` / 39 | - | - | mapped | - | - |
 | - | `Static15940::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15940` / 39 | - | - | mapped | - | - |
-| - | `Static15970::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15970` / 39 | - | - | mapped | - | - |
+| `static/Static15970` | `Static15970::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15970` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x15970.json` | matched | full | open |
 | - | `Static159a0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x159a0` / 39 | - | - | mapped | - | - |
 | - | `Static159d0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x159d0` / 39 | - | - | mapped | - | - |
 | - | `Static15a00::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15a00` / 39 | - | - | mapped | - | - |
@@ -196,10 +196,10 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static15dc0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15dc0` / 39 | - | - | mapped | - | - |
 | - | `Static15df0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15df0` / 39 | - | - | mapped | - | - |
 | - | `Static15e20::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15e20` / 39 | - | - | mapped | - | - |
-| - | `Static15e50::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15e50` / 39 | - | - | mapped | - | - |
+| `static/Static15e50` | `Static15e50::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15e50` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x15e50.json` | matched | full | open |
 | - | `Static15e80::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15e80` / 39 | - | - | mapped | - | - |
 | - | `Static15eb0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15eb0` / 39 | - | - | mapped | - | - |
-| - | `Static15ee0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15ee0` / 39 | - | - | mapped | - | - |
+| `static/Static15ee0` | `Static15ee0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15ee0` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x15ee0.json` | matched | full | open |
 | - | `Static15f10::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15f10` / 39 | - | - | mapped | - | - |
 | - | `Static15f40::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15f40` / 39 | - | - | mapped | - | - |
 | - | `Static15f70::initializer` (GUESS) | `sse-steam-1-7-104` / `0x15f70` / 39 | - | - | mapped | - | - |
@@ -238,7 +238,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static17fe0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x17fe0` / 39 | - | - | mapped | - | - |
 | - | `Static18010::initializer` (GUESS) | `sse-steam-1-7-104` / `0x18010` / 39 | - | - | mapped | - | - |
 | - | `Static18040::initializer` (GUESS) | `sse-steam-1-7-104` / `0x18040` / 39 | - | - | mapped | - | - |
-| - | `Static18070::initializer` (GUESS) | `sse-steam-1-7-104` / `0x18070` / 39 | - | - | mapped | - | - |
+| `static/Static18070` | `Static18070::initializer` (GUESS) | `sse-steam-1-7-104` / `0x18070` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x18070.json` | matched | full | open |
 | - | `Static180a0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x180a0` / 39 | - | - | mapped | - | - |
 | - | `Static180d0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x180d0` / 39 | - | - | mapped | - | - |
 | - | `Static18100::initializer` (GUESS) | `sse-steam-1-7-104` / `0x18100` / 39 | - | - | mapped | - | - |
@@ -277,7 +277,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1af20::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1af20` / 39 | - | - | mapped | - | - |
 | - | `Static1af50::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1af50` / 39 | - | - | mapped | - | - |
 | - | `Static1af80::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1af80` / 39 | - | - | mapped | - | - |
-| - | `Static1afb0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1afb0` / 39 | - | - | mapped | - | - |
+| `static/Static1afb0` | `Static1afb0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1afb0` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1afb0.json` | matched | full | open |
 | - | `Static1afe0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1afe0` / 39 | - | - | mapped | - | - |
 | - | `Static1b010::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b010` / 39 | - | - | mapped | - | - |
 | - | `Static1b040::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b040` / 39 | - | - | mapped | - | - |
@@ -295,7 +295,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1b280::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b280` / 39 | - | - | mapped | - | - |
 | - | `Static1b2b0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b2b0` / 39 | - | - | mapped | - | - |
 | - | `Static1b2e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b2e0` / 39 | - | - | mapped | - | - |
-| - | `Static1b310::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b310` / 39 | - | - | mapped | - | - |
+| `static/Static1b310` | `Static1b310::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b310` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1b310.json` | matched | full | open |
 | - | `Static1b340::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b340` / 39 | - | - | mapped | - | - |
 | - | `Static1b370::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b370` / 39 | - | - | mapped | - | - |
 | - | `Static1b3a0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1b3a0` / 39 | - | - | mapped | - | - |
@@ -380,7 +380,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static1dce0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1dce0` / 39 | - | - | mapped | - | - |
 | - | `Static1dd10::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1dd10` / 39 | - | - | mapped | - | - |
 | - | `Static1dd40::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1dd40` / 39 | - | - | mapped | - | - |
-| - | `Static1dd70::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1dd70` / 39 | - | - | mapped | - | - |
+| `static/Static1dd70` | `Static1dd70::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1dd70` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x1dd70.json` | matched | full | open |
 | - | `Static1dda0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1dda0` / 39 | - | - | mapped | - | - |
 | - | `Static1ddd0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1ddd0` / 39 | - | - | mapped | - | - |
 | - | `Static1de00::initializer` (GUESS) | `sse-steam-1-7-104` / `0x1de00` / 39 | - | - | mapped | - | - |
@@ -455,7 +455,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static212b0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x212b0` / 39 | - | - | mapped | - | - |
 | - | `Static212e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x212e0` / 39 | - | - | mapped | - | - |
 | - | `Static21310::initializer` (GUESS) | `sse-steam-1-7-104` / `0x21310` / 39 | - | - | mapped | - | - |
-| - | `Static21340::initializer` (GUESS) | `sse-steam-1-7-104` / `0x21340` / 39 | - | - | mapped | - | - |
+| `static/Static21340` | `Static21340::initializer` (GUESS) | `sse-steam-1-7-104` / `0x21340` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x21340.json` | matched | full | open |
 | - | `Static21370::initializer` (GUESS) | `sse-steam-1-7-104` / `0x21370` / 39 | - | - | mapped | - | - |
 | - | `Static213a0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x213a0` / 39 | - | - | mapped | - | - |
 | - | `Static213d0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x213d0` / 39 | - | - | mapped | - | - |
@@ -499,7 +499,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static21af0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x21af0` / 39 | - | - | mapped | - | - |
 | - | `Static21bf0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x21bf0` / 39 | - | - | mapped | - | - |
 | - | `Static21c20::initializer` (GUESS) | `sse-steam-1-7-104` / `0x21c20` / 39 | - | - | mapped | - | - |
-| - | `Static23290::initializer` (GUESS) | `sse-steam-1-7-104` / `0x23290` / 39 | - | - | mapped | - | - |
+| `static/Static23290` | `Static23290::initializer` (GUESS) | `sse-steam-1-7-104` / `0x23290` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x23290.json` | matched | full | open |
 | - | `Static238b0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x238b0` / 39 | - | - | mapped | - | - |
 | - | `Static238e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x238e0` / 39 | - | - | mapped | - | - |
 | - | `Static23990::initializer` (GUESS) | `sse-steam-1-7-104` / `0x23990` / 39 | - | - | mapped | - | - |
@@ -530,7 +530,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static23f90::initializer` (GUESS) | `sse-steam-1-7-104` / `0x23f90` / 39 | - | - | mapped | - | - |
 | - | `Static23fc0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x23fc0` / 39 | - | - | mapped | - | - |
 | - | `Static23ff0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x23ff0` / 39 | - | - | mapped | - | - |
-| - | `Static24020::initializer` (GUESS) | `sse-steam-1-7-104` / `0x24020` / 39 | - | - | mapped | - | - |
+| `static/Static24020` | `Static24020::initializer` (GUESS) | `sse-steam-1-7-104` / `0x24020` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x24020.json` | matched | full | open |
 | - | `Static24050::initializer` (GUESS) | `sse-steam-1-7-104` / `0x24050` / 39 | - | - | mapped | - | - |
 | - | `Static24080::initializer` (GUESS) | `sse-steam-1-7-104` / `0x24080` / 39 | - | - | mapped | - | - |
 | - | `Static240b0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x240b0` / 39 | - | - | mapped | - | - |
@@ -581,7 +581,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static820c0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x820c0` / 39 | - | - | mapped | - | - |
 | - | `Static87510::initializer` (GUESS) | `sse-steam-1-7-104` / `0x87510` / 39 | - | - | mapped | - | - |
 | - | `Static87560::initializer` (GUESS) | `sse-steam-1-7-104` / `0x87560` / 39 | - | - | mapped | - | - |
-| - | `Static87590::initializer` (GUESS) | `sse-steam-1-7-104` / `0x87590` / 39 | - | - | mapped | - | - |
+| `static/Static87590` | `Static87590::initializer` (GUESS) | `sse-steam-1-7-104` / `0x87590` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x87590.json` | matched | full | open |
 | - | `Static87680::initializer` (GUESS) | `sse-steam-1-7-104` / `0x87680` / 39 | - | - | mapped | - | - |
 | - | `Static876e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x876e0` / 39 | - | - | mapped | - | - |
 | - | `Static87750::initializer` (GUESS) | `sse-steam-1-7-104` / `0x87750` / 39 | - | - | mapped | - | - |
@@ -631,7 +631,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static8b3c0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b3c0` / 39 | - | - | mapped | - | - |
 | - | `Static8b3f0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b3f0` / 39 | - | - | mapped | - | - |
 | - | `Static8b420::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b420` / 39 | - | - | mapped | - | - |
-| - | `Static8b450::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b450` / 39 | - | - | mapped | - | - |
+| `static/Static8b450` | `Static8b450::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b450` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x8b450.json` | matched | full | open |
 | - | `Static8b480::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b480` / 39 | - | - | mapped | - | - |
 | - | `Static8b4b0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b4b0` / 39 | - | - | mapped | - | - |
 | - | `Static8b4e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8b4e0` / 39 | - | - | mapped | - | - |
@@ -678,7 +678,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static8f850::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f850` / 39 | - | - | mapped | - | - |
 | - | `Static8f880::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f880` / 39 | - | - | mapped | - | - |
 | - | `Static8f8b0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f8b0` / 39 | - | - | mapped | - | - |
-| - | `Static8f8e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f8e0` / 39 | - | - | mapped | - | - |
+| `static/Static8f8e0` | `Static8f8e0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f8e0` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x8f8e0.json` | matched | full | open |
 | - | `Static8f910::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f910` / 39 | - | - | mapped | - | - |
 | - | `Static8f940::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f940` / 39 | - | - | mapped | - | - |
 | - | `Static8f970::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8f970` / 39 | - | - | mapped | - | - |
@@ -688,7 +688,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static8fa30::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fa30` / 39 | - | - | mapped | - | - |
 | - | `Static8fa60::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fa60` / 39 | - | - | mapped | - | - |
 | - | `Static8fa90::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fa90` / 39 | - | - | mapped | - | - |
-| - | `Static8fac0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fac0` / 39 | - | - | mapped | - | - |
+| `static/Static8fac0` | `Static8fac0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fac0` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x8fac0.json` | matched | full | open |
 | - | `Static8faf0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8faf0` / 39 | - | - | mapped | - | - |
 | - | `Static8fb20::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fb20` / 39 | - | - | mapped | - | - |
 | - | `Static8fb50::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fb50` / 39 | - | - | mapped | - | - |
@@ -697,7 +697,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static8fbe0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fbe0` / 39 | - | - | mapped | - | - |
 | - | `Static8fc10::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fc10` / 39 | - | - | mapped | - | - |
 | - | `Static8fc40::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fc40` / 39 | - | - | mapped | - | - |
-| - | `Static8fc70::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fc70` / 39 | - | - | mapped | - | - |
+| `static/Static8fc70` | `Static8fc70::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fc70` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x8fc70.json` | matched | full | open |
 | - | `Static8fca0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fca0` / 39 | - | - | mapped | - | - |
 | - | `Static8fcd0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fcd0` / 39 | - | - | mapped | - | - |
 | - | `Static8fd00::initializer` (GUESS) | `sse-steam-1-7-104` / `0x8fd00` / 39 | - | - | mapped | - | - |
@@ -761,7 +761,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static97840::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97840` / 39 | - | - | mapped | - | - |
 | - | `Static97870::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97870` / 39 | - | - | mapped | - | - |
 | - | `Static978a0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x978a0` / 39 | - | - | mapped | - | - |
-| - | `Static978d0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x978d0` / 39 | - | - | mapped | - | - |
+| `static/Static978d0` | `Static978d0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x978d0` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x978d0.json` | matched | full | open |
 | - | `Static97900::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97900` / 39 | - | - | mapped | - | - |
 | - | `Static97930::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97930` / 39 | - | - | mapped | - | - |
 | - | `Static97960::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97960` / 39 | - | - | mapped | - | - |
@@ -785,7 +785,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static97cc0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97cc0` / 39 | - | - | mapped | - | - |
 | - | `Static97cf0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97cf0` / 39 | - | - | mapped | - | - |
 | - | `Static97d20::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97d20` / 39 | - | - | mapped | - | - |
-| - | `Static97d50::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97d50` / 39 | - | - | mapped | - | - |
+| `static/Static97d50` | `Static97d50::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97d50` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x97d50.json` | matched | full | open |
 | - | `Static97d80::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97d80` / 39 | - | - | mapped | - | - |
 | - | `Static97db0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97db0` / 39 | - | - | mapped | - | - |
 | - | `Static97de0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x97de0` / 39 | - | - | mapped | - | - |
@@ -802,7 +802,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static9ab70::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9ab70` / 39 | - | - | mapped | - | - |
 | - | `Static9abd0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9abd0` / 39 | - | - | mapped | - | - |
 | - | `Static9ae40::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9ae40` / 39 | - | - | mapped | - | - |
-| - | `Static9b390::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9b390` / 39 | - | - | mapped | - | - |
+| `static/Static9b390` | `Static9b390::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9b390` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x9b390.json` | matched | full | open |
 | - | `Static9e6c0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9e6c0` / 39 | - | - | mapped | - | - |
 | - | `Static9e6f0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9e6f0` / 39 | - | - | mapped | - | - |
 | - | `Static9e720::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9e720` / 39 | - | - | mapped | - | - |
@@ -830,7 +830,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `Static9eb40::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9eb40` / 39 | - | - | mapped | - | - |
 | - | `Static9eb70::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9eb70` / 39 | - | - | mapped | - | - |
 | - | `Static9eba0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9eba0` / 39 | - | - | mapped | - | - |
-| - | `Static9ebd0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9ebd0` / 39 | - | - | mapped | - | - |
+| `static/Static9ebd0` | `Static9ebd0::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9ebd0` / 39 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x9ebd0.json` | matched | full | open |
 | - | `Static9ec00::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9ec00` / 39 | - | - | mapped | - | - |
 | - | `Static9ec30::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9ec30` / 39 | - | - | mapped | - | - |
 | - | `Static9ec60::initializer` (GUESS) | `sse-steam-1-7-104` / `0x9ec60` / 39 | - | - | mapped | - | - |
