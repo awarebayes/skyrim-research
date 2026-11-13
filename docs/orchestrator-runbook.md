@@ -232,3 +232,31 @@ material its model is not cleared to read; start a Boat machine (Boat is retired
 use the runner hosts); post anything publicly.
 
 When the profile has a fallback Drafter, `next-actions` offers failed first-tier units through `brief drafter --tier fallback`; dispatch the specified model with that brief. Fallback results and counted attempts are recorded separately from the first tier.
+
+## Importing isolated family state (Engineer)
+
+`python3 tools/flow.py import-state <worktree>/.local/flow --reviews <worktree>/.local/reviews`
+imports an isolated worktree's private review scheduling state into this repository's shared
+`.local/flow`. Run it before replacing the source directories with links to the shared ones.
+The source must be another worktree of the same repository. It validates match records, unit
+and first-member digests, family template/extraction pins, saved family approvals and sampling
+rerun records against that worktree. A mismatch refuses the import before publishing state.
+
+The receipt under shared `.local/flow/imports/` records the input hashes, fresh group ids,
+review filenames and unchanged review-file hashes. Saved reviews retain their original task
+titles and bytes; an imported group's `saved_review` locates the renamed file. Unsent reviews
+get new task ids and collision-checked briefs in the shared checkout, with explicit paths
+and instructions to review the source worktree. Combined family instructions are retained. Import preserves dispatch and
+sampling records, but does not activate families, accept functions, replay session events or
+import sampling version baselines. Family plans and original events are retained as private
+snapshots; generated public inputs remain in their source worktree. Continue the family steps
+from that source worktree, using the shared flow and reviews directories.
+
+An identical import is idempotent, including after normal progress of its imported groups.
+Different existing files are never overwritten. A partially written import blocks other flow and acceptance commands until it resumes with its
+recorded id mapping. Direct acceptance takes the same lock; integration passes its locked
+descriptor to the acceptance subprocess without releasing ownership. Keep the source state unchanged until import completes. Flow CLI operations
+use a permanent advisory `.state.lock` in their resolved flow directory; readers also lock so
+multi-file mutations stay consistent. Group and version JSON use atomic replacement. Run the
+updated tooling in every concurrent orchestrator; older processes do not participate in this
+lock. An integration holds the lock through checks, push and CI; other commands wait for it.

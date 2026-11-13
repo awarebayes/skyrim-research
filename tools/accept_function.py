@@ -76,6 +76,7 @@ from lint_reconstruction import LABELS_VERSION, lint_tree  # noqa: E402
 from source_digest import DIGEST_METHOD  # noqa: E402
 import review_packet  # noqa: E402
 import family_review as fr  # noqa: E402
+from flow_state import state_lock, require_complete  # noqa: E402
 
 PROGRESS = 'data/progress.json'
 TARGET = 'builds/target.json'
@@ -654,6 +655,7 @@ def active_profile(root, default=None):
 def review_profile(root, task_id, requested):
     """A saved group's profile takes precedence over a later session; overrides must agree."""
     import profiles
+    require_complete(active_flow_dir(root))
     recorded = set()
     for path in (active_flow_dir(root) / 'groups').glob('*.json'):
         group = json.loads(path.read_text())
@@ -941,6 +943,16 @@ def main(argv=None):
     p.add_argument('--profile', choices=['cheap', 'full', 'claude-low'], help='Profile in use (defaults to active session)')
     p.add_argument('--root', type=Path, default=ROOT, help=argparse.SUPPRESS)
     args = p.parse_args(argv)
+    try:
+        with state_lock(active_flow_dir(args.root)):
+            require_complete(active_flow_dir(args.root))
+            return execute(args)
+    except (Refused, ValueError, OSError) as exc:
+        print(f'REFUSED: {exc}', file=sys.stderr)
+        return 1
+
+
+def execute(args):
     skipped = []
     try:
         modes = sum(map(bool, (args.revoke, args.all_approved, args.label_only, args.refresh_named, args.family_batch)))

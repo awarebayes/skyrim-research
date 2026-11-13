@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Pipeline state and next steps, so a routine orchestrator executes a list instead of tracking state.
 
+    python3 tools/flow.py import-state <other .local/flow> --reviews <other .local/reviews>
     python3 tools/flow.py session-start                  # mark the start of a work session
     python3 tools/flow.py next-actions                   # the exact next steps, in order
     python3 tools/flow.py status [--functions]           # counts per state, groups, stale claims
@@ -56,6 +57,7 @@ import profiles  # noqa: E402
 from source_digest import include_closure, tu_digest  # noqa: E402
 from symbol_map import history_name  # noqa: E402
 import work_queue as wq  # noqa: E402
+from flow_state import atomic_write, state_lock, require_complete, inherited_lock  # noqa: E402
 
 ROOT = TOOLS.parent
 REVIEWS = '.local/reviews'
@@ -99,9 +101,10 @@ def hexrva(rva):
 # ------------------------------------------------------------------ files this tool keeps
 
 def log_event(fdir, event, **detail):
-    fdir.mkdir(parents=True, exist_ok=True)
-    with open(fdir / 'events.jsonl', 'a') as out:
-        out.write(json.dumps(dict(detail, event=event, time=utc()), sort_keys=True) + '\n')
+    with state_lock(fdir):
+        path = fdir / 'events.jsonl'
+        before = path.read_bytes() if path.exists() else b''
+        atomic_write(path, before + (json.dumps(dict(detail, event=event, time=utc()), sort_keys=True) + '\n').encode())
 
 
 def events(fdir):
@@ -109,17 +112,21 @@ def events(fdir):
     return [json.loads(l) for l in path.read_text().splitlines() if l.strip()] if path.is_file() else []
 
 
-def groups(fdir):
+def groups(fdir, allow_incomplete=False):
+    if not allow_incomplete:
+        require_complete(fdir)
     gdir = fdir / 'groups'
     return {p.stem: json.loads(p.read_text()) for p in sorted(gdir.glob('*.json'))} if gdir.is_dir() else {}
 
 
 def save_group(fdir, g):
-    (fdir / 'groups').mkdir(parents=True, exist_ok=True)
-    (fdir / 'groups' / f'{g["name"]}.json').write_text(json.dumps(g, indent=2, sort_keys=True) + '\n')
+    with state_lock(fdir):
+        atomic_write(fdir / 'groups' / f'{g["name"]}.json', (json.dumps(g, indent=2, sort_keys=True) + '\n').encode())
 
 
-def load_group(fdir, name):
+def load_group(fdir, name, allow_incomplete=False):
+    if not allow_incomplete:
+        require_complete(fdir)
     path = fdir / 'groups' / f'{name}.json'
     refuse(path.is_file(), f'no review group {name} (python3 tools/flow.py status lists them)')
     return json.loads(path.read_text())
@@ -211,13 +218,17 @@ def origin_matched(root, branch='main'):
             for fn in data.get('functions', []) if fn.get('status') == 'matched'}
 
 
-def review_path(root, task_id):
-    return Path(root) / REVIEWS / f'{task_id}.md'
+def review_path(root, task):
+    # Imported reviews keep their signed-off title and bytes, with a distinct filename.
+    rel = (task.get('saved_review') or f'{REVIEWS}/{task["task_id"]}.md') if isinstance(task, dict) else f'{REVIEWS}/{task}.md'
+    path = Path(root) / rel
+    refuse(path.resolve().is_relative_to((Path(root) / REVIEWS).resolve()), 'review path escapes private reviews')
+    return path
 
 
 def read_review(root, g, functions):
     """(status, {rva: block}) of a group's saved review: status 'missing', 'malformed: <why>' or 'ok'."""
-    path = review_path(root, g['task_id'])
+    path = review_path(root, g)
     if not path.is_file():
         return 'missing', {}
     try:
@@ -414,7 +425,7 @@ def family_reviewed_gate(root, fdir, required, data, target):
                       and rva in g['functions'] and g['task_id'] == rv['review_task_id']]
         fr.require(bool(candidates), f'{fid}: reviewed member lacks its sampling safeguard group')
         g = candidates[-1]
-        review_file = review_path(root, g['task_id'])
+        review_file = review_path(root, g)
         fr.require(review_file.is_file() and hashlib.sha256(review_file.read_bytes()).hexdigest() == rv['review_sha256'],
                    f'{fid}: saved sample review hash differs from its approval')
         status, blocks = read_review(root, g, data['functions'])
@@ -551,12 +562,14 @@ def supersede_family(root, fdir, old_path, family, first, data, target):
         raise
     return path
 
-def family_brief(root, path, profile=None, fdir=None):
+def family_brief(root, path, profile=None, fdir=None, render_only=False, attached_group=None):
     family = fr.read(root, path)
     profile = profile or session_profile(flow_dir(root))
     task = 'review-family-' + fr.family_key(family)[:20]
     attached = [g for g in groups(fdir or flow_dir(root)).values()
                 if g.get('family_review_path') == path and g['kind'] == 'review']
+    if attached_group is not None:
+        attached = [attached_group]
     if attached:
         task = attached[0]['task_id']
     brief = f'.local/briefs/{task}.md'
@@ -579,6 +592,8 @@ Output: `.local/reviews/{task}.family.json`, exactly the JSON schema in the fami
 Profile: {profile}. Do not edit anything else, push, post publicly,
 mark matched, use verifier hosts or start agents. Limit: 40 minutes, one pass; escalate doubts.
 """
+    if render_only:
+        return text
     (root / brief).parent.mkdir(parents=True, exist_ok=True)
     (root / brief).write_text(text)
     return task, brief
@@ -939,7 +954,7 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
     return made
 
 
-def write_review_brief(root, g, by_rva):
+def write_review_brief(root, g, by_rva, render_only=False):
     root = Path(root)
     rows, units, packs = [], {}, []
     for rva in g['functions']:
@@ -995,20 +1010,23 @@ source files it identifies, under the maintainer's recorded FNV reuse and model-
 
 Do not push, post publicly, mark `matched`, edit any other file, or start further agents.
 """
+    if render_only:
+        return text
     path = root / BRIEFS / f'{g["task_id"]}.md'
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
     return path.relative_to(root).as_posix()
 
 
-def write_rerun_brief(root, g, by_rva):
+def write_rerun_brief(root, g, by_rva, render_only=False):
     root = Path(root)
     units = sorted({unit_of(root, by_rva[r])[0] for r in g['sampled']})
     sample = {'seed': f'flow:{g["name"]}', 'reviewed': {u: [r for r in g['sampled'] if unit_of(root, by_rva[r])[0] == u]
                                                         for u in units}, 'label_only': {}}
     sdir = root / '.local/flow/rerun' / g['name']
-    sdir.mkdir(parents=True, exist_ok=True)
-    (sdir / 'sample.json').write_text(json.dumps(sample, indent=2) + '\n')
+    if not render_only:
+        sdir.mkdir(parents=True, exist_ok=True)
+        (sdir / 'sample.json').write_text(json.dumps(sample, indent=2) + '\n')
     text = f"""# Brief rerun-{g['name']}
 
 Role: Engineer (or the routine orchestrator with a shell). Task: the sampling safeguard's
@@ -1026,6 +1044,8 @@ checkout (docs/verification.md, Sampling safeguard). Gates: as recorded for conf
 Never edit the comparator, the records or the compare file to get AGREE; a DISAGREE is escalated.
 Do not push, post publicly, mark `matched`, or start further agents.
 """
+    if render_only:
+        return text, (json.dumps(sample, indent=2) + '\n').encode()
     path = root / BRIEFS / f'rerun-{g["name"]}.md'
     path.write_text(text)
     return path.relative_to(root).as_posix()
@@ -1081,7 +1101,7 @@ def void_review(root, fdir, name, reason, setup_failure, selected=None):
                'group is superseded or integrated')
         refuse(not (group.get('rerun') or {}).get('not_agree'),
                'comparator non-reproduction must be resolved independently')
-        path = review_path(root, group['task_id'])
+        path = review_path(root, group)
         if not path.exists():
             continue
         status, _ = read_review(root, group, data['functions'])
@@ -1122,6 +1142,7 @@ def redo_review(root, fdir, name):
     m = re.fullmatch(r'(.*?)(?:-r(\d+))?', g['task_id'])
     g['task_id'] = f'{m.group(1)}-r{int(m.group(2) or 1) + 1}'
     g['dispatched'] = None
+    g.pop('saved_review', None)
     data = inventory(root)
     by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == data['target_build_id']}
     g['brief'] = write_review_brief(root, g, by_rva)
@@ -1610,7 +1631,11 @@ Return a five-line summary. Do not push, post publicly, mark `matched`, or start
 
 def run(cmd, root, step, env=None):
     """Run one integration step; raise FlowError with its output on failure."""
-    r = subprocess.run(cmd, cwd=root, capture_output=True, text=True, env=env)
+    fd = inherited_lock() if 'tools/accept_function.py' in cmd else None
+    if fd is not None:
+        env = dict(os.environ if env is None else env, SKYRIM_FLOW_LOCK_FD=str(fd))
+    r = subprocess.run(cmd, cwd=root, capture_output=True, text=True, env=env,
+                       pass_fds=() if fd is None else (fd,))
     if r.returncode:
         tail = '\n'.join((r.stderr.strip() + '\n' + r.stdout.strip()).strip().splitlines()[-15:])
         raise FlowError(f'STOPPED at {step} (exit {r.returncode}); nothing after it ran.\n{tail}')
@@ -1707,7 +1732,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     family_group_hold(root, fdir, [fn['id'] for fn in data['functions'] if hexrva(fn['rva']) in approved])
     integ = g.get('integrated') or {}
     refuse(not integ or bool(integ.get('approved_only')) == approved_only, 'resume with the same --approved-only mode')
-    review_file = str((root / REVIEWS / f'{g["task_id"]}.md').resolve())
+    review_file = str(review_path(root, g).resolve())
     tree = integration_tree(fdir, name)
     if not integ.get('commit'):
         git(root, 'fetch', '--quiet', 'origin', branch)
@@ -1723,14 +1748,14 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         done = all(by_rva[r]['status'] == 'matched' for r in approved)
         printed = list(carried)
         if not done:
+            private = tree / REVIEWS
+            private.parent.mkdir(parents=True, exist_ok=True)
+            private.symlink_to((root / REVIEWS).resolve(), target_is_directory=True)
             if family_group:
                 batch = fr.read(root, g['batch_path'])
                 for path in (g['batch_path'], batch['family_path']):
                     fr.committed(root, path, fr.read(root, path))
                     fr.committed(tree, path, fr.read(root, path))
-                private = tree / REVIEWS
-                private.parent.mkdir(parents=True, exist_ok=True)
-                private.symlink_to((root / REVIEWS).resolve(), target_is_directory=True)
                 cmd = [python, 'tools/accept_function.py', '--family-batch', g['batch_path'],
                        '--family-flow-dir', str(fdir.resolve()), '--profile', g.get('profile', profiles.DEFAULT)]
             else:
@@ -1885,6 +1910,9 @@ def parser():
     p.add_argument('--root', type=Path, default=ROOT, help=argparse.SUPPRESS)
     p.add_argument('--offline', action='store_true', help='do not read origin (pushed state unknown)')
     sub = p.add_subparsers(dest='cmd', required=True)
+    s = sub.add_parser('import-state')
+    s.add_argument('source', type=Path)
+    s.add_argument('--reviews', type=Path, required=True)
     s = sub.add_parser('session-start')
     s.add_argument('--profile', default=profiles.DEFAULT, choices=sorted(profiles.PROFILES))
     sub.add_parser('next-actions')
@@ -1961,8 +1989,22 @@ def main(argv=None):
     a = parser().parse_args(argv)
     root = a.root
     fdir = flow_dir(root, a.flow_dir)
+    if a.cmd == 'import-state':
+        fdir = af.active_flow_dir(root)
+    # Readers take the same lock so multi-file mutations cannot expose partial state.
+    with state_lock(fdir):
+        return execute(a, root, fdir)
+
+
+def execute(a, root, fdir):
     try:
-        if a.cmd == 'session-start':
+        if a.cmd != 'import-state':
+            require_complete(fdir)
+        if a.cmd == 'import-state':
+            from flow_import import import_state
+            receipt = import_state(root, fdir, a.source, a.reviews)
+            print(json.dumps({k: receipt[k] for k in ('source', 'groups', 'review_files', 'complete')}, indent=2, sort_keys=True))
+        elif a.cmd == 'session-start':
             log_event(fdir, 'session-start', profile=a.profile)
             print(f'session started with profile {a.profile}; next: python3 tools/flow.py next-actions')
             print('\n'.join(profiles.show(a.profile)))
@@ -2057,13 +2099,13 @@ def main(argv=None):
             v = versions(fdir)
             v.setdefault('baseline', {}).setdefault(a.component, {})[a.value] = a.count
             fdir.mkdir(parents=True, exist_ok=True)
-            (fdir / 'versions.json').write_text(json.dumps(v, indent=2, sort_keys=True) + '\n')
+            atomic_write(fdir / 'versions.json', (json.dumps(v, indent=2, sort_keys=True) + '\n').encode())
             log_event(fdir, 'baseline', component=a.component, value=a.value, count=a.count)
             print(f'baseline {a.component}={a.value}: {a.count}')
         elif a.cmd == 'event':
             log_event(fdir, a.kind, note=a.note)
             print(f'recorded {a.kind}')
-    except (FlowError, wq.QueueError, ValueError, KeyError, TypeError, OSError) as exc:
+    except (FlowError, af.Refused, wq.QueueError, ValueError, KeyError, TypeError, OSError) as exc:
         print(f'flow: {exc}', file=sys.stderr)
         return 1
     return 0
