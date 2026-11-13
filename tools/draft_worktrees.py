@@ -520,7 +520,34 @@ def accepted_baseline_emissions(tree, base, closure, symbols, final, bind):
     return set()
 
 
-def harvest(qdir, unit, claim, records):
+def accepted_emitted_regressions(tree, task, data, symbols):
+    """Identify out-of-task definitions whose integrated identities can be compared again.
+
+    A matched name is not an exemption. These entries still need a fresh passing comparison
+    in this unit. This path never selects unpassed task targets.
+    """
+    own = {int(str(fn['rva']), 0) for fn in task['functions']}
+    found = {}
+    for fn in data.get('functions', []):
+        if (fn.get('status') != 'matched' or fn['build_id'] != task['build_id']
+                or fn['rva'] in own or not fn.get('report')):
+            continue
+        record = read(tree / fn['report'], {})
+        functions = [run.get('report', {}).get('function', {}) for run in record.get('runs', [])]
+        if not functions:
+            continue
+        symbol = functions[0].get('symbol')
+        if symbol not in symbols or any(
+                f.get('symbol') != symbol or f.get('build_id') != task['build_id']
+                or f.get('rva') != fn['rva'] or f.get('size') != fn['size'] for f in functions):
+            continue
+        found[symbol] = {'rva': hex(fn['rva']), 'size': fn['size'], 'symbol': symbol,
+                         'function_id': fn['id'], 'community_name': fn.get('name'),
+                         'role': 'regression', 'accepted_record': fn['report']}
+    return list(found.values()) if set(found) == symbols else []
+
+
+def harvest(qdir, unit, claim, records, _accepted_emissions=()):
     """Snapshot only after a fresh all-pass compile and comparison of the retained unit.
 
     The full task is preserved for later tiers. The clean task selects passing additions and all
@@ -541,6 +568,7 @@ def harvest(qdir, unit, claim, records):
     queued = {int(r, 16) for r in unit['functions']}
     selected = [f for f in raw['functions'] if int(str(f['rva']), 0) in passing
                 or int(str(f['rva']), 0) not in queued]
+    selected += list(_accepted_emissions)
     data = read(tree / 'data/progress.json', {})
     if not passing <= {int(str(f['rva']), 0) for f in selected}:
         raise ValueError('passing function missing from task.json')
@@ -592,6 +620,13 @@ def harvest(qdir, unit, claim, records):
                                            extra | (candidates - allowed), final, bind)
     extra -= baseline
     if extra:
+        if not _accepted_emissions:
+            regressions = accepted_emitted_regressions(tree, original, data, extra)
+            if regressions:
+                # Rebuild an empty clean attempt with the emitted accepted definitions selected.
+                # Their results bind the same complete unit; no earlier record substitutes for
+                # comparing this copy, and neither the original task nor passing set is changed.
+                return harvest(qdir, unit, claim, records, _accepted_emissions=regressions)
         raise ValueError('unit still defines target functions without passing attempts; remove failed additions: '
                          + ', '.join(sorted(extra)))
     # Only the task names identify source candidates; unrelated inventory overloads do not
@@ -622,6 +657,8 @@ def harvest(qdir, unit, claim, records):
          'attempt': str(dest), 'queue': str(Path(qdir).resolve()), 'unit': unit['dir']}
     if baseline:
         h.update(baseline_commit=state['base'], baseline_definitions=sorted(baseline))
+    if _accepted_emissions:
+        h['accepted_emissions'] = list(_accepted_emissions)
     save(directory / f'harvest-{tier}.json', h)
     save(directory / 'harvest.json', h)
     return h

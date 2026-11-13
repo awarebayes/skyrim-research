@@ -463,6 +463,71 @@ class DraftWorktrees(unittest.TestCase):
             with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
                 self.finish()
 
+    def accepted_emission(self, rva=0x2000):
+        sys.path.insert(0, str(ROOT / 'tools/verifier'))
+        data = drafts.read(self.root / 'data/progress.json')
+        fn = next(f for f in data['functions'] if f['rva'] == rva)
+        fn['status'] = 'matched'
+        record = drafts.read(self.root / fn['report'])
+        identity = {'build_id': BUILD, 'rva': rva, 'size': fn['size'], 'symbol': 'AcceptedBase'}
+        for run in record['runs']:
+            run['report'] = {'function': identity}
+        drafts.save(self.root / fn['report'], record)
+        drafts.save(self.root / 'data/progress.json', data)
+        git(self.root, 'add', 'data/progress.json', fn['report'])
+        git(self.root, 'commit', '-m', 'synthetic accepted base definition in another unit')
+        git(self.root, 'push', 'origin', 'main')
+        tree = Path(self.claim()['draft']['tree'])
+        (tree / self.unit['sources'][-1]).write_text('int AcceptedBase() { return 3; }\n')
+        return tree
+
+    def test_new_copy_of_accepted_definition_is_freshly_compared_and_frozen(self):
+        self.accepted_emission()
+        original = (self.directory / 'task.json').read_bytes()
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, 'AcceptedBase': 2}):
+            self.finish()
+        h = drafts.current(self.root, self.unit)
+        self.assertEqual(h['passing'], [0x1000])
+        self.assertEqual(h['compared'], [0x1000, 0x2000])
+        self.assertEqual(h['accepted_emissions'][0]['symbol'], 'AcceptedBase')
+        checks = list((self.directory / 'harvest-checks').iterdir())
+        self.assertEqual(len(checks), 2)
+        final = drafts.read(Path(h['task']) / 'task.json')
+        self.assertEqual(final['functions'][-1]['role'], 'regression')
+        self.assertTrue((Path(h['attempt']) / '0x2000/report.json').exists())
+        self.assertEqual((self.directory / 'task.json').read_bytes(), original)
+
+    def test_accepted_definition_with_failing_comparison_does_not_harvest(self):
+        self.accepted_emission()
+        fake = self.clean_attempt
+
+        def fail_dependency(command, cwd=None, **kwargs):
+            if str(command[1]).endswith('/tools/verifier/attempt'):
+                task = drafts.read(Path(command[2]) / 'task.json')
+                if any(f['symbol'] == 'AcceptedBase' for f in task['functions']):
+                    return subprocess.CompletedProcess(command, 1, '', 'accepted base copy differs')
+            return fake(command, cwd=cwd, **kwargs)
+
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, 'AcceptedBase': 2}), \
+                patch.object(self, 'clean_attempt', side_effect=fail_dependency):
+            with self.assertRaisesRegex(wq.QueueError, 'clean harvest attempt failed'):
+                self.finish()
+        self.assertIsNone(drafts.current(self.root, self.unit))
+        self.assertFalse((self.q / 'done/g-foo.json').exists())
+        self.assertTrue((self.q / 'holds/g-foo.json').exists())
+
+    def test_auto_regression_cannot_substitute_for_an_unpassed_task_target(self):
+        self.accepted_emission(rva=0x1010)
+        task = drafts.read(self.directory / 'task.json')
+        task['functions'][1]['symbol'] = 'AcceptedBase'
+        drafts.save(self.directory / 'task.json', task)
+        import bind
+        with patch.object(bind, 'defined_functions', return_value={fx.FUNCTION: 1, 'AcceptedBase': 2}):
+            with self.assertRaisesRegex(wq.QueueError, 'target functions without passing attempts'):
+                self.finish()
+
     def existing_header(self):
         symbol = '??_GExisting@@UEAAPEAXI@Z'
         (self.root / self.unit['sources'][0]).write_text('class Existing { public: virtual ~Existing(); };\n')

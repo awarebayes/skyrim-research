@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -32,6 +33,12 @@ class PushLane(unittest.TestCase):
     # Reuse the synthetic fixture; the old integration remains the equality reference.
     def setUp(self):
         _setup_reference(self)
+        # These tiny queue fixtures do not depend on the host volume's free space.
+        # The disk-preflight tests below exercise the real threshold separately.
+        self.disk_patch = patch.object(lane.shutil, 'disk_usage',
+                                       return_value=SimpleNamespace(free=10_000_000_000))
+        self.disk_patch.start()
+        self.addCleanup(self.disk_patch.stop)
         self.accept_patch = patch.object(lane, 'accept', side_effect=stub_accept)
         self.accept_patch.start()
         self.addCleanup(self.accept_patch.stop)
@@ -167,7 +174,8 @@ class PushLane(unittest.TestCase):
     def test_cli_busy_lane_returns_normal_refusal_without_traceback(self):
         with lane.lane_lock(self.fdir):
             result = subprocess.run([sys.executable, str(flow.TOOLS / 'flow.py'), '--root', str(self.root),
-                                     '--flow-dir', str(self.fdir), 'lane-run'], capture_output=True, text=True, timeout=10)
+                                     '--flow-dir', str(self.fdir), 'lane-run', '--min-free-gb', '0'],
+                                    capture_output=True, text=True, timeout=10)
         self.assertEqual(result.returncode, 1)
         self.assertIn('flow: push lane already running', result.stderr)
         self.assertNotIn('Traceback', result.stderr)

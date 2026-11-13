@@ -109,7 +109,11 @@ every other document are optional: an unread document is never a reason to stop.
    passing function and the prepared task's regressions, checks for leftover untested target candidates, then
    commits exactly the unit files through tooling. This is the only sanctioned git operation for
    a Drafter; never run git yourself. Failed additions must already be removed. The clean check
-   is separate from retry budgets. A failure writes `harvest-error-<tier>.json`, creates no new
+   is separate from retry budgets. A newly emitted definition of an already accepted function
+   outside the task is selected as a regression in another fresh clean attempt. Its accepted
+   name alone never exempts this copy from comparison. This step does not select unpassed task targets.
+   These extra comparisons stay in the frozen task for confirmation and integration.
+   A failure writes `harvest-error-<tier>.json`, creates no new
    harvest, retains the claim and holds the unit so `next` can continue elsewhere: report the
    refusal for Engineer triage. A successful retry clears that harvest-refusal hold; other holds
    need an explicit Engineer release. A unit with no passing
