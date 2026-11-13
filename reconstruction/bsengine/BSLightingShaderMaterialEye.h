@@ -1,22 +1,37 @@
-// BSLightingShaderMaterialEye::GetFeature, build sse-steam-1-7-104, RVA 0x1525760, 6 bytes.
+// BSLightingShaderMaterialEye declarations for build sse-steam-1-7-104.
+//
 // Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"meh321/AddressLibraryDatabase","revision":"0379cb6fdaa0d68e69ef9ad1a2d39caa6611ac91","source":"meh321"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// BSLightingShaderMaterialEye: EXE_RTTI
-// GetFeature: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-// member, padding: GUESS(low); storage names invented for the measured member offset
+// Task: p46-n-bslightingshadermaterialeye
+// Source exposure: mixed (names and declarations from community headers; base classes, sizes and
+// the compared functions from the pinned image).
+// Started from a tools/skeleton.py skeleton: stand-ins carry only what the compared code needs, and
+// community names are unverified.
+// Base form: shared header ../bsengine/BSLightingShaderMaterialBase.h for
+// BSLightingShaderMaterialBase.
+// BSLightingShaderMaterialEye: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) EXE_RTTI
+// BSLightingShaderMaterialEye::SaveBinary, BSLightingShaderMaterialEye::LoadBinary, BSLightingShaderMaterialEye::ReceiveValuesFromRootMaterial, BSLightingShaderMaterialEye::Ctor, BSLightingShaderMaterialEye::ComputeCRC32: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// eyeEnvMask, eyeCubemap, unkB0, colorB4, colorC0, pad_CC: GUESS(low)
 #pragma once
+
 #include <cstdint>
-// GetFeature: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-class BSLightingShaderMaterialEye
+#include <cstddef>
+#include "../bsengine/BSLightingShaderMaterialBase.h"
+
+class BSLightingShaderMaterialEye : public BSLightingShaderMaterialBase
 {
 public:
-    virtual std::uint32_t GetFeature() const;
+    Feature GetFeature() const override;
+    virtual void SaveBinary(NiStream& a_stream);  // compared: 0x1525770
+    virtual void LoadBinary(NiStream& a_stream);  // compared: 0x15257f0
+    virtual void ReceiveValuesFromRootMaterial(bool a_skinned, bool a_rimLighting, bool a_softLighting, bool a_backLighting, bool a_MSN);  // compared: 0x1525640
+    BSLightingShaderMaterialEye* Ctor();  // compared: 0x15250e0
+    virtual std::uint32_t ComputeCRC32();  // compared: 0x15253e0
+
+    NiPointer<NiSourceTexture> eyeEnvMask;  // A0
+    NiPointer<NiSourceTexture> eyeCubemap;  // A8
+    float                      unkB0;       // B0
+    NiColor                    colorB4;     // B4
+    NiColor                    colorC0;     // C0
+    std::uint32_t              pad_CC;      // CC
 };
+static_assert(sizeof(BSLightingShaderMaterialEye) == 0xD0, "BSLightingShaderMaterialEye size");

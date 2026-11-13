@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92.json",
+  "versions": [
+    {
+      "sha256": "95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92",
+      "base": null,
+      "added": [
+        "?SaveBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z",
+        "?GetFeature@BSLightingShaderMaterialEye@@UEBA?AW4Feature@BSShaderMaterial@@XZ"
+      ]
+    }
+  ]
+}

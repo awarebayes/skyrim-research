@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/2f39120d9744c53da3a611230345f2e5f8f5f9e2ec2442486aea30847a2c0f9d.json",
+  "versions": [
+    {
+      "sha256": "2f39120d9744c53da3a611230345f2e5f8f5f9e2ec2442486aea30847a2c0f9d",
+      "base": null,
+      "added": [
+        "?Unk_07@BGSPackageDataBool@@UEAAXPEAVBGSSaveGameBuffer@@@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "?Unk_05@BGSPackageDataBool@@UEBAEXZ"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SaveBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22173552,
+      "size": 121
+    },
+    "?LoadBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22173680,
+      "size": 121
+    },
+    "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22167600,
+      "size": null
+    },
+    "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z": {
+      "rva": 15581296,
+      "size": null
+    },
+    "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22168016,
+      "size": null
+    },
+    "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z": {
+      "rva": 15581104,
+      "size": null
+    },
+    "?GetFeature@BSLightingShaderMaterialEye@@UEBA?AW4Feature@BSShaderMaterial@@XZ": {
+      "rva": 22173536,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1525770",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x15257f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1524030",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z",
+        "rva": "0xedc070",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x15241d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z",
+        "rva": "0xedbfb0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialEye@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "rva": "0x1525760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

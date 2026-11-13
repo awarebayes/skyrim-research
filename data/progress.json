@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-13T12:50:48Z",
+  "updated_at": "2026-11-13T13:05:18Z",
   "phase": "First matches",
   "target_build_id": "sse-steam-1-7-104",
   "scope": {
@@ -9470,24 +9470,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 22173552,
       "size": 121,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSLightingShaderMaterialEye::SaveBinary",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 12. RVA 0x1525770; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1525770.json"
     },
     {
       "id": "sse-steam-1-7-104-0x15257f0",
       "build_id": "sse-steam-1-7-104",
       "rva": 22173680,
       "size": 121,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSLightingShaderMaterialEye::LoadBinary",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 13. RVA 0x15257f0; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x15257f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1525640",
@@ -9918,12 +9922,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 4512128,
       "size": 54,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSPackageDataBool::Unk_07",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 7. RVA 0x44d980; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-normal-selection.md"
+      "evidence": "findings/queue-normal-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x44d980.json"
     },
     {
       "id": "sse-steam-1-7-104-0x44e660",
@@ -16532,24 +16538,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 22232016,
       "size": 8,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSParticleShaderProperty::GetBaseTexture",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 55. RVA 0x1533bd0; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-small-upstream-selection.md"
+      "evidence": "findings/queue-small-upstream-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1533bd0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1532ca0",
       "build_id": "sse-steam-1-7-104",
       "rva": 22228128,
       "size": 10,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSParticleShaderProperty::SetupGeometry",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 39. RVA 0x1532ca0; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/queue-small-upstream-selection.md"
+      "evidence": "findings/queue-small-upstream-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x1532ca0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x151d6d0",
@@ -110316,36 +110326,42 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 5476432,
       "size": 143,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSStoryManagerQuestNode::SaveGame",
       "name_origin": "COMMUNITY",
       "name_source": "Unverified community method name from CharmedBaryon/CommonLibSSE-NG at b93280e832f263dbef44e44cbe2936622a02f91a (MIT), joined to the pinned image during local task preparation; the name is not proved by comparison.",
       "owner": "awarebayes",
-      "evidence": "findings/p85-mid-enrollment.md"
+      "evidence": "findings/p85-mid-enrollment.md",
+      "report": "reports/sse-steam-1-7-104/0x539050.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1e1380",
       "build_id": "sse-steam-1-7-104",
       "rva": 1971072,
       "size": 420,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "TESDescription::GetDescription",
       "name_origin": "COMMUNITY",
       "name_source": "Unverified community method name from CharmedBaryon/CommonLibSSE-NG at b93280e832f263dbef44e44cbe2936622a02f91a (MIT), joined to the pinned image during local task preparation; the name is not proved by comparison.",
       "owner": "awarebayes",
-      "evidence": "findings/p85-mid-enrollment.md"
+      "evidence": "findings/p85-mid-enrollment.md",
+      "report": "reports/sse-steam-1-7-104/0x1e1380.json"
     },
     {
       "id": "sse-steam-1-7-104-0x26b760",
       "build_id": "sse-steam-1-7-104",
       "rva": 2537312,
       "size": 180,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "TESEffectShader::InitItemImpl",
       "name_origin": "COMMUNITY",
       "name_source": "Unverified community method name from CharmedBaryon/CommonLibSSE-NG at b93280e832f263dbef44e44cbe2936622a02f91a (MIT), joined to the pinned image during local task preparation; the name is not proved by comparison.",
       "owner": "awarebayes",
-      "evidence": "findings/p85-mid-enrollment.md"
+      "evidence": "findings/p85-mid-enrollment.md",
+      "report": "reports/sse-steam-1-7-104/0x26b760.json"
     },
     {
       "id": "sse-steam-1-7-104-0x3b7240",

@@ -86,6 +86,7 @@ static_assert(sizeof(BSTArray<float>) == 0x18, "layout");
 class BGSStoryManagerQuestNode : public BGSStoryManagerNodeBase {
 public:
     void Revert(BGSLoadFormBuffer* a_buf) override;  // 12
+    void SaveGame(BGSSaveFormBuffer* a_buf) override;  // 0E
 
     // members
     BSTArray<TESQuest*> quests;           // 48
@@ -95,3 +96,7 @@ public:
     BSTArray<float>     childrenLastRun;  // C8
 };
 static_assert(sizeof(BGSStoryManagerQuestNode) == 0xE0, "layout");
+
+// BGSStoryManagerNodeBaseSaveGame: GUESS(low); the non-virtual base save that SaveGame calls first
+// (RVA 0x1e5700), declared without a body.
+void BGSStoryManagerNodeBaseSaveGame(BGSStoryManagerQuestNode* a_node, BGSSaveFormBuffer* a_buf);

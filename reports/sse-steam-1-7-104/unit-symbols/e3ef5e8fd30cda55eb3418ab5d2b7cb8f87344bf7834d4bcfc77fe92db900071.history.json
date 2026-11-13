@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e3ef5e8fd30cda55eb3418ab5d2b7cb8f87344bf7834d4bcfc77fe92db900071.json",
+  "versions": [
+    {
+      "sha256": "e3ef5e8fd30cda55eb3418ab5d2b7cb8f87344bf7834d4bcfc77fe92db900071",
+      "base": null,
+      "added": [
+        "?Initialize@EffectShaderData@@QEAAXXZ",
+        "?InitializeData@TESEffectShader@@UEAAXXZ",
+        "__RTDynamicCast",
+        "??_R0?AVTESForm@@@8",
+        "?InitItemImpl@TESEffectShader@@UEAAXXZ",
+        "?GetCompileIndexForOwner@@YA_KPEAVTESEffectShader@@I@Z",
+        "?RecordFlags_AddCompileIndex@@YAXPEAI_K@Z",
+        "?GetFormForID@@YAPEAVTESForm@@I@Z",
+        "??_R0?AVBGSDebris@@@8",
+        "?LoadFormForID@@YAPEAXI@Z",
+        "?FinishInitItem@@YAXPEAVTESEffectShader@@_N@Z"
+      ]
+    }
+  ]
+}

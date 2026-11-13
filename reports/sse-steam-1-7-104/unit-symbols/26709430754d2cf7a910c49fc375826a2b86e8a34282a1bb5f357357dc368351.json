@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Revert@BGSStoryManagerQuestNode@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 5476384,
+      "size": 40
+    },
+    "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z": {
+      "rva": 6528768,
+      "size": null
+    },
+    "?SaveGame@BGSStoryManagerQuestNode@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 5476432,
+      "size": 143
+    },
+    "?BGSStoryManagerNodeBaseSaveGame@@YAXPEAVBGSStoryManagerQuestNode@@PEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Revert@BGSStoryManagerQuestNode@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x539020",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "rva": "0x639f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@BGSStoryManagerQuestNode@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x539050",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BGSStoryManagerNodeBaseSaveGame@@YAXPEAVBGSStoryManagerQuestNode@@PEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

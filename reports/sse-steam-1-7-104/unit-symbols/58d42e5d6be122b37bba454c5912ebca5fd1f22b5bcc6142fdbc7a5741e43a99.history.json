@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/58d42e5d6be122b37bba454c5912ebca5fd1f22b5bcc6142fdbc7a5741e43a99.json",
+  "versions": [
+    {
+      "sha256": "58d42e5d6be122b37bba454c5912ebca5fd1f22b5bcc6142fdbc7a5741e43a99",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "?SeekNextSubrecord@TESFile@@QEAA_NXZ",
+        "?Duplicate@TESFile@@QEAAPEAV1@I@Z",
+        "?InitializeDataComponent@TESDescription@@UEAAXXZ",
+        "__RTDynamicCast",
+        "??_R0?AVTESForm@@@8",
+        "?singleton@TESDataHandler@@2PEAV1@EA",
+        "?GetDescription@TESDescription@@QEAAXAEAVBSString@@PEAVTESForm@@I@Z",
+        "?tlsSlot@@3IA",
+        "??_R0?AVTESDescription@@@8",
+        "?TESFileIsCompressed@@YA_NPEAVTESFile@@@Z",
+        "?TESDescriptionAllocBuffer@@YAXPEAPEAXII@Z",
+        "??1TESDescriptionBuffer@@QEAA@XZ",
+        "??1TESDescriptionTlsScope@@QEAA@XZ",
+        "?BSStringSetFromBuffer@@YAXPEAVBSString@@PEBDI@Z",
+        "?TESDescriptionReadText@@YAPEBDPEAIPEAVTESFile@@PEAPEAXI@Z",
+        "?Seek@TESFile@@QEAAXI@Z"
+      ]
+    }
+  ]
+}

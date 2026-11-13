@@ -27,6 +27,10 @@ public:
 };
 static_assert(sizeof(BaseFormComponent) == 0x8, "layout");
 
+// BSString, TESForm: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+class BSString;
+class TESForm;
+// TESDescription::GetDescription: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // TESDescription: EXE_RTTI; class name and base from the image RTTI, 4 primary vftable slots
 // sizeof TESDescription 0x10: OBSERVED; size argument of operator delete in the deleting destructor (slot 0)
 class TESDescription : public ::BaseFormComponent
@@ -40,6 +44,7 @@ public:
 	void ClearDataComponent() override;  // 02
 	// TESDescription::CopyComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 3, target 0x1e1260, inherited name
 	void CopyComponent() override;  // 03
+    void GetDescription(BSString&, TESForm*, std::uint32_t);
 
 	// fileOffset: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 	std::uint32_t fileOffset;  // 08

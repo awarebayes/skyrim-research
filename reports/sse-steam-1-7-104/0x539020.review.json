@@ -4,21 +4,21 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x539020",
   "naming_findings": [
-    "unk60 is a guessed opaque region standing for two community hash-map members that are not modelled",
-    "the story-manager base chain, TESCondition and BSTArray are stand-ins duplicated across four unit headers rather than shared"
+    "The opaque region stands for two community hash-map members that are not modelled.",
+    "The story-manager base chain and container stand-ins are duplicated across unit headers."
   ],
   "previous_code_section_sha256": null,
   "previous_review_sha256": null,
   "previous_source_digest": null,
-  "review_date": "2026-11-12",
+  "review_date": "2026-11-13",
   "review_kind": "full",
   "review_record_schema": 3,
-  "review_sha256": "1df7a7e73959756ef646f02f00ea0cd549883ca7f5c57e2dc01881f433c26590",
-  "review_task_id": "review-p18-wave1-3",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "f7f0c3f177d2cb418371f1fbb9cd4c747ef87ca609e524f62d582051312e254f",
+  "review_task_id": "review-p85-reconcile-d",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 5476384,
   "size": 40,
-  "source_digest": "4d1408942a035438e6e089ef0b54bc2af5377cbe9c2a62cc3a87a0b10b8bcc6f",
+  "source_digest": "a7a568bb1549bed8f0eb5a037afba10983ab027f03c946f87cc553127466a7e9",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "3cea964c9701939c8597d68fa3a752ff492c940b45f614a56405f0b3e172265e",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1525770",
+  "naming_findings": [
+    "The shared reference-count methods have sibling source declarations but lack corresponding sibling name labels."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "f7f0c3f177d2cb418371f1fbb9cd4c747ef87ca609e524f62d582051312e254f",
+  "review_task_id": "review-p85-reconcile-d",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 22173552,
+  "size": 121,
+  "source_digest": "37e6ed7debb953934f5e80800840cb4d5ed13c12ed2b0d651e80269dfc2abfcc",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

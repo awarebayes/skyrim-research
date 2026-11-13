@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/26709430754d2cf7a910c49fc375826a2b86e8a34282a1bb5f357357dc368351.json",
+  "versions": [
+    {
+      "sha256": "26709430754d2cf7a910c49fc375826a2b86e8a34282a1bb5f357357dc368351",
+      "base": null,
+      "added": [
+        "?Revert@BGSStoryManagerQuestNode@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "?SaveGame@BGSStoryManagerQuestNode@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?BGSStoryManagerNodeBaseSaveGame@@YAXPEAVBGSStoryManagerQuestNode@@PEAVBGSSaveFormBuffer@@@Z"
+      ]
+    }
+  ]
+}

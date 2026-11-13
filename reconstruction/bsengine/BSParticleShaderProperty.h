@@ -1,18 +1,3 @@
-// BSParticleShaderProperty::QShader, build sse-steam-1-7-104, RVA 0x1532c90, 6 bytes.
-// Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"CharmedBaryon/CommonLibSSE-NG","revision":"b93280e832f263dbef44e44cbe2936622a02f91a","source":"ng-slot"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// BSParticleShaderProperty: EXE_RTTI
-// QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-// member, padding: GUESS(low); storage names invented for the measured member offset
-// Public naming source notice:
 // MIT License
 //
 // Copyright (c) 2018 Ryan-rsm-McKenzie
@@ -34,11 +19,40 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+// BSParticleShaderProperty declarations for build sse-steam-1-7-104.
+//
+// Labels: v2
+// Task: p46-c2-s08-nirefobject-bsparticleshaderproperty
+// Source exposure: mixed (names and declarations from community headers; base classes, sizes and
+// the compared functions from the pinned image).
+// Started from a tools/skeleton.py skeleton: stand-ins carry only what the compared code needs, and
+// community names are unverified.
+// Base form: shared header ../bsengine/BSShaderProperty.h for BSShaderProperty.
+// BSParticleShaderProperty: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) EXE_RTTI
+// BSParticleShaderProperty::GetBaseTexture, BSParticleShaderProperty::SetupGeometry: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// BSParticleShaderProperty::particleShaderTexture: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG declares NiPointer<NiSourceTexture>, a raw pointer here, same size
+// BSParticleShaderProperty::particleShaderGeometry: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG declares NiPointer<BSParticleShaderGeometry>, the compared code stores the BSGeometry* parameter as given
+// BSGeometry: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); forward declaration only
+// unknown88, unknown148, unknown170: GUESS(low)
 #pragma once
+
 #include <cstdint>
-// QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-class BSParticleShaderProperty
+#include <cstddef>
+#include "../bsengine/BSShaderProperty.h"
+
+class BSGeometry;
+
+class BSParticleShaderProperty : public BSShaderProperty
 {
 public:
     virtual std::uint32_t QShader() const;
+    virtual NiSourceTexture* GetBaseTexture();  // compared: 0x1533bd0
+    virtual bool SetupGeometry(BSGeometry* a_geometry);  // compared: 0x1532ca0
+
+    std::uint8_t     unknown88[0xB8];       // 88
+    NiSourceTexture* particleShaderTexture;  // 140
+    std::uint8_t     unknown148[0x20];      // 148
+    BSGeometry*      particleShaderGeometry;  // 168
+    std::uint8_t     unknown170[0x28];      // 170
 };
+static_assert(sizeof(BSParticleShaderProperty) == 0x198, "BSParticleShaderProperty size");

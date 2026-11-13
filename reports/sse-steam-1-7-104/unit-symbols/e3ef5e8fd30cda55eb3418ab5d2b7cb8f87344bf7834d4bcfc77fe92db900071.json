@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Initialize@EffectShaderData@@QEAAXXZ": {
+      "rva": 2534208,
+      "size": null
+    },
+    "?InitializeData@TESEffectShader@@UEAAXXZ": {
+      "rva": 2536416,
+      "size": 9
+    },
+    "__RTDynamicCast": {
+      "rva": 22714330,
+      "size": null
+    },
+    "??_R0?AVTESForm@@@8": {
+      "rva": 34454008,
+      "size": null
+    },
+    "?InitItemImpl@TESEffectShader@@UEAAXXZ": {
+      "rva": 2537312,
+      "size": 180
+    },
+    "?GetCompileIndexForOwner@@YA_KPEAVTESEffectShader@@I@Z": {
+      "rva": 1989344,
+      "size": null
+    },
+    "?RecordFlags_AddCompileIndex@@YAXPEAI_K@Z": {
+      "rva": 1993984,
+      "size": null
+    },
+    "?GetFormForID@@YAPEAVTESForm@@I@Z": {
+      "rva": 1988704,
+      "size": null
+    },
+    "??_R0?AVBGSDebris@@@8": {
+      "rva": 34470856,
+      "size": null
+    },
+    "?LoadFormForID@@YAPEAXI@Z": {
+      "rva": 5610000,
+      "size": null
+    },
+    "?FinishInitItem@@YAXPEAVTESEffectShader@@_N@Z": {
+      "rva": 1990832,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Initialize@EffectShaderData@@QEAAXXZ",
+        "rva": "0x26ab40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESEffectShader@@UEAAXXZ",
+        "rva": "0x26b3e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__RTDynamicCast",
+        "rva": "0x15a97da",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESForm@@@8",
+        "rva": "0x20db9f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitItemImpl@TESEffectShader@@UEAAXXZ",
+        "rva": "0x26b760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCompileIndexForOwner@@YA_KPEAVTESEffectShader@@I@Z",
+        "rva": "0x1e5ae0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RecordFlags_AddCompileIndex@@YAXPEAI_K@Z",
+        "rva": "0x1e6d00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFormForID@@YAPEAVTESForm@@I@Z",
+        "rva": "0x1e5860",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVBGSDebris@@@8",
+        "rva": "0x20dfbc8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadFormForID@@YAPEAXI@Z",
+        "rva": "0x559a10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishInitItem@@YAXPEAVTESEffectShader@@_N@Z",
+        "rva": "0x1e60b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

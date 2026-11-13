@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetBaseTexture@BSParticleShaderProperty@@UEAAPEAVNiSourceTexture@@XZ": {
+      "rva": 22232016,
+      "size": 8
+    },
+    "?SetupGeometry@BSParticleShaderProperty@@UEAA_NPEAVBSGeometry@@@Z": {
+      "rva": 22228128,
+      "size": 10
+    },
+    "?QShader@BSParticleShaderProperty@@UEBAIXZ": {
+      "rva": 22228112,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetBaseTexture@BSParticleShaderProperty@@UEAAPEAVNiSourceTexture@@XZ",
+        "rva": "0x1533bd0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetupGeometry@BSParticleShaderProperty@@UEAA_NPEAVBSGeometry@@@Z",
+        "rva": "0x1532ca0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?QShader@BSParticleShaderProperty@@UEBAIXZ",
+        "rva": "0x1532c90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
