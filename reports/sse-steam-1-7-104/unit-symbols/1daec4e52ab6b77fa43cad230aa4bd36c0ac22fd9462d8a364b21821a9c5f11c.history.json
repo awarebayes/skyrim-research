@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/1daec4e52ab6b77fa43cad230aa4bd36c0ac22fd9462d8a364b21821a9c5f11c.json",
+  "versions": [
+    {
+      "sha256": "1daec4e52ab6b77fa43cad230aa4bd36c0ac22fd9462d8a364b21821a9c5f11c",
+      "base": null,
+      "added": [
+        "?GetFeature@BSLightingShaderMaterialFacegenTint@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "?Ctor@BSLightingShaderMaterialFacegenTint@@QEAAPEAV1@XZ",
+        "?CopyMembers@BSLightingShaderMaterialFacegenTint@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "??_GBSLightingShaderMaterialFacegenTint@@UEAAPEAXI@Z",
+        "??0BSLightingShaderMaterial@@QEAA@XZ",
+        "??_7BSLightingShaderMaterialFacegenTint@@6B@",
+        "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "??1BSLightingShaderMaterial@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

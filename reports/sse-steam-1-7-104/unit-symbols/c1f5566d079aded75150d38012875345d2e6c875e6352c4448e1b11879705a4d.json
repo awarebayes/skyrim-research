@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetFeature@BSLightingShaderMaterialLandscape@@UEBA?AW4Feature@BSShaderMaterial@@XZ": {
+      "rva": 22182528,
+      "size": 6
+    },
+    "??_GBSLightingShaderMaterialLandscape@@UEAAPEAXI@Z": {
+      "rva": 22188080,
+      "size": 52
+    },
+    "??1BSLightingShaderMaterialLandscape@@UEAA@XZ": {
+      "rva": 22180832,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialLandscape@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "rva": "0x1527a80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSLightingShaderMaterialLandscape@@UEAAPEAXI@Z",
+        "rva": "0x1529030",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSLightingShaderMaterialLandscape@@UEAA@XZ",
+        "rva": "0x15273e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

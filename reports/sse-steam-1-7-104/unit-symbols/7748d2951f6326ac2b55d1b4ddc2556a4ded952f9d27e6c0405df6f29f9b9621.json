@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetFeature@BSLightingShaderMaterialSnow@@UEBA?AW4Feature@BSShaderMaterial@@XZ": {
+      "rva": 22184208,
+      "size": 6
+    },
+    "?CopyMembers@BSLightingShaderMaterialSnow@@UEAAXPEAVBSShaderMaterial@@@Z": {
+      "rva": 22184080,
+      "size": 46
+    },
+    "?Ctor@BSLightingShaderMaterialSnow@@QEAAPEAV1@XZ": {
+      "rva": 22183872,
+      "size": 47
+    },
+    "?ComputeCRC32@BSLightingShaderMaterialSnow@@UEAAIXZ": {
+      "rva": 22184144,
+      "size": 55
+    },
+    "??_7BSLightingShaderMaterialSnow@@6B@": {
+      "rva": 28574480,
+      "size": null
+    },
+    "?g_snowDefaults@@3USnowData@BSLightingShaderMaterialSnow@@A": {
+      "rva": 34402000,
+      "size": null
+    },
+    "?SnowCRCSeed@@YAIXZ": {
+      "rva": 22166064,
+      "size": null
+    },
+    "?CRC32Size@@YAXPEAIPEBXI@Z": {
+      "rva": 13509904,
+      "size": null
+    },
+    "?BaseCopyHelper@@YAXPEAVBSLightingShaderMaterialBase@@PEAVBSShaderMaterial@@@Z": {
+      "rva": 22165472,
+      "size": null
+    },
+    "??0BSLightingShaderMaterialBase@@QEAA@XZ": {
+      "rva": 22164976,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialSnow@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "rva": "0x1528110",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopyMembers@BSLightingShaderMaterialSnow@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "rva": "0x1528090",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Ctor@BSLightingShaderMaterialSnow@@QEAAPEAV1@XZ",
+        "rva": "0x1527fc0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ComputeCRC32@BSLightingShaderMaterialSnow@@UEAAIXZ",
+        "rva": "0x15280d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSLightingShaderMaterialSnow@@6B@",
+        "rva": "0x1b40310",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_snowDefaults@@3USnowData@BSLightingShaderMaterialSnow@@A",
+        "rva": "0x20ceed0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SnowCRCSeed@@YAIXZ",
+        "rva": "0x1523a30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CRC32Size@@YAXPEAIPEBXI@Z",
+        "rva": "0xce2510",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseCopyHelper@@YAXPEAVBSLightingShaderMaterialBase@@PEAVBSShaderMaterial@@@Z",
+        "rva": "0x15237e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0BSLightingShaderMaterialBase@@QEAA@XZ",
+        "rva": "0x15235f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

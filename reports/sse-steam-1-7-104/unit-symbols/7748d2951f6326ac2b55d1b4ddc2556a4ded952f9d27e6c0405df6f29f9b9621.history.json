@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/7748d2951f6326ac2b55d1b4ddc2556a4ded952f9d27e6c0405df6f29f9b9621.json",
+  "versions": [
+    {
+      "sha256": "7748d2951f6326ac2b55d1b4ddc2556a4ded952f9d27e6c0405df6f29f9b9621",
+      "base": null,
+      "added": [
+        "?GetFeature@BSLightingShaderMaterialSnow@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "?CopyMembers@BSLightingShaderMaterialSnow@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "?Ctor@BSLightingShaderMaterialSnow@@QEAAPEAV1@XZ",
+        "?ComputeCRC32@BSLightingShaderMaterialSnow@@UEAAIXZ",
+        "??_7BSLightingShaderMaterialSnow@@6B@",
+        "?g_snowDefaults@@3USnowData@BSLightingShaderMaterialSnow@@A",
+        "?SnowCRCSeed@@YAIXZ",
+        "?CRC32Size@@YAXPEAIPEBXI@Z",
+        "?BaseCopyHelper@@YAXPEAVBSLightingShaderMaterialBase@@PEAVBSShaderMaterial@@@Z",
+        "??0BSLightingShaderMaterialBase@@QEAA@XZ"
+      ]
+    }
+  ]
+}

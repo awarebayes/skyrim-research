@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GBSLightingShaderMaterialHairTint@@UEAAPEAXI@Z": {
+      "rva": 22187952,
+      "size": 52
+    },
+    "?Ctor@BSLightingShaderMaterialHairTint@@QEAAPEAV1@XZ": {
+      "rva": 22179920,
+      "size": 61
+    },
+    "??1BSLightingShaderMaterialHairTint@@UEAA@XZ": {
+      "rva": 22165120,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??0BSLightingShaderMaterial@@QEAA@XZ": {
+      "rva": 22164976,
+      "size": null
+    },
+    "??_7BSLightingShaderMaterialHairTint@@6B@": {
+      "rva": 28574120,
+      "size": null
+    },
+    "?g_hairTintDefaultA@@3NA": {
+      "rva": 34401872,
+      "size": null
+    },
+    "?g_hairTintDefaultB@@3IA": {
+      "rva": 34401880,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GBSLightingShaderMaterialHairTint@@UEAAPEAXI@Z",
+        "rva": "0x1528fb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Ctor@BSLightingShaderMaterialHairTint@@QEAAPEAV1@XZ",
+        "rva": "0x1527050",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSLightingShaderMaterialHairTint@@UEAA@XZ",
+        "rva": "0x1523680",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0BSLightingShaderMaterial@@QEAA@XZ",
+        "rva": "0x15235f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSLightingShaderMaterialHairTint@@6B@",
+        "rva": "0x1b401a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_hairTintDefaultA@@3NA",
+        "rva": "0x20cee50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_hairTintDefaultB@@3IA",
+        "rva": "0x20cee58",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
