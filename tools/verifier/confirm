@@ -153,8 +153,10 @@ def source_state(task, closure):
     head = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=REPO, capture_output=True, text=True)
     if head.returncode != 0:
         raise PipelineError('git rev-parse failed; run from a git checkout')
+    internal = any('internal_selector' in fn for fn in task['functions'])
+    engine = check.compare_internal if internal else check.legacy_comparator
     return (head.stdout.strip(), pipeline.git_dirty(closure + [task['recipe'], task['symbols_repo']] + RESULT_TOOLS),
-            check.comparator_source_sha256())
+            engine.comparator_source_sha256())
 
 
 def source_note(base, dirty, comparator):

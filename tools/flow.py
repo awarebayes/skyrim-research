@@ -197,7 +197,13 @@ def record_state(root, fn):
 
 
 def git(root, *args, check=True):
-    r = subprocess.run(['git', *args], cwd=root, capture_output=True, text=True)
+    command, extra = ['git', *args], {}
+    if args[:2] == ('add', '--') and len(args) > 2:
+        paths = [os.fsdecode(path) for path in args[2:]]
+        refuse(all('\0' not in path for path in paths), 'NUL in git add pathspec')
+        command = ['git', 'add', '--pathspec-from-file=-', '--pathspec-file-nul']
+        extra['input'] = ''.join(path + '\0' for path in paths)
+    r = subprocess.run(command, cwd=root, capture_output=True, text=True, **extra)
     if check and r.returncode:
         raise FlowError(f'git {" ".join(args)} failed: {r.stderr.strip() or r.stdout.strip()}')
     return r.stdout.strip()
@@ -493,8 +499,7 @@ def supersede_family(root, fdir, old_path, family, first, data, target):
     fr.validate_family(old, approved=old['review'] is not None)
     fr.require(old['review'] is None and not old.get('superseded_by'),
                'only a never-approved family can be superseded')
-    fr.require(old['origin'] == family['origin'] and old['binding'] == family['binding'],
-               'replacement must preserve family origin and binding')
+    fr.supersession_binding(old, family)
     fr.require(set(old['first_members']) == set(first), 'replacement must preserve the first 20')
     by_id = {fn['id']: fn for fn in data['functions']}
     fr.require(all(by_id[fid]['status'] != 'matched' and record_state(root, by_id[fid]) == 'confirmed'
@@ -1347,7 +1352,8 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
                     if ('run', command) not in acts:
                         acts.append(('run', command))
                 else:
-                    acts.append(('run', f'python3 tools/flow.py integrate {name}'))
+                    mode = ' --with-metadata' if integ.get('with_metadata') else ''
+                    acts.append(('run', f'python3 tools/flow.py integrate {name}{mode}'))
             elif problem.startswith('DISAGREE'):
                 stops.append(('stop', f'ESCALATE to the maintainer (sampling disagreement, systemic): {name}: {problem}; '
                               f'pause group {name}'))
@@ -1772,15 +1778,39 @@ def run(cmd, root, step, env=None):
     return r.stdout
 
 
+PATHSPEC_ARG_BYTES = 32768
+
+
+def path_batches(paths):
+    """Bound path arguments, including pointer overhead, independently of inventory size."""
+    batch, size = [], 0
+    for path in sorted(set(paths)):
+        cost = len(os.fsencode(path)) + 16
+        refuse(cost <= PATHSPEC_ARG_BYTES, 'git pathspec exceeds argument budget')
+        if batch and size + cost > PATHSPEC_ARG_BYTES:
+            yield batch
+            batch, size = [], 0
+        batch.append(path)
+        size += cost
+    if batch:
+        yield batch
+
+
 def changed(root, paths):
     """The paths among `paths` that differ from HEAD (new, modified or deleted)."""
     if not paths:
         return []
     # Raw -z output: the status columns are positional, so the output must not be stripped.
-    r = subprocess.run(['git', 'status', '--porcelain', '-z', '--no-renames', '--untracked-files=all', '--',
-                        *sorted(set(paths))], cwd=root, capture_output=True, text=True)
-    refuse(r.returncode == 0, f'git status failed: {r.stderr.strip()}')
-    return sorted({entry[3:] for entry in r.stdout.split('\0') if len(entry) > 3})
+    batches = list(path_batches(paths))
+    refuse(len(batches) < 2 or not any(path.startswith(':') for batch in batches for path in batch),
+           'Git magic pathspecs are not supported across status batches')
+    result = set()
+    for batch in batches:
+        r = subprocess.run(['git', 'status', '--porcelain', '-z', '--no-renames', '--untracked-files=all', '--',
+                            *batch], cwd=root, capture_output=True, text=True)
+        refuse(r.returncode == 0, f'git status failed: {r.stderr.strip()}')
+        result.update(entry[3:] for entry in r.stdout.split('\0') if len(entry) > 3)
+    return sorted(result)
 
 
 def integration_tree(fdir, name):
@@ -1838,7 +1868,50 @@ def carry_into_tree(root, tree, approved, by_rva, harvests=None):
     return sorted(files)
 
 
-def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable, approved_only=False):
+def integration_base(root, branch, with_metadata=False):
+    """Carry explicit, precommitted family metadata without carrying unpublished source."""
+    remote = f'origin/{branch}'
+    ahead = git(root, 'rev-list', '--count', f'{remote}..HEAD')
+    if ahead == '0':
+        return remote
+    refuse(with_metadata, f'the checkout holds {ahead} commit(s) {remote} lacks; push or drop them first')
+    refuse(subprocess.run(['git', 'merge-base', '--is-ancestor', remote, 'HEAD'], cwd=root).returncode == 0,
+           'metadata commits must descend from current origin; merge moving main first')
+    commits = git(root, 'rev-list', f'{remote}..HEAD').splitlines()
+    paths = set()
+    snapshots = {}
+    for commit in commits:
+        parents = git(root, 'rev-list', '--parents', '-n', '1', commit).split()
+        refuse(len(parents) in (2, 3), 'metadata commits must be ordinary commits or public-base merges')
+        public = [p for p in parents[1:] if subprocess.run(
+            ['git', 'merge-base', '--is-ancestor', p, remote], cwd=root).returncode == 0]
+        refuse(len(parents) == 2 or public, 'metadata merge must have a parent already on origin')
+        parent = parents[1] if len(parents) == 2 else public[-1]
+        names = git(root, 'diff-tree', '--no-commit-id', '--name-only', '-r', '--no-renames', parent, commit).splitlines()
+        deleted = git(root, 'diff-tree', '--no-commit-id', '--name-only', '-r', '--diff-filter=D', parent, commit)
+        refuse(names and not deleted and all(re.fullmatch(
+            r'reports/[a-z0-9][a-z0-9-]*/(?:families/[0-9a-f]{64}|family-batches/[a-z0-9][a-z0-9-]*)\.json', p)
+            for p in names), 'unpublished commits contain changes other than family metadata')
+        for path in names:
+            if path not in snapshots:
+                tip = subprocess.check_output(['git', 'show', f'HEAD:{path}'], cwd=root)
+                snapshots[path] = [tip]
+                if '/family-batches/' in path:
+                    planned = dict(fr.read(root, path), commitment=None, sample=None)
+                    snapshots[path].append((json.dumps(planned, indent=2, sort_keys=True,
+                                                       allow_nan=False) + '\n').encode())
+            historical = subprocess.check_output(['git', 'show', f'{commit}:{path}'], cwd=root)
+            refuse(historical in snapshots[path],
+                   'unpublished metadata history differs from the reviewed tip or canonical planned batch')
+        paths.update(names)
+    fr.validate_metadata(root)
+    for path in paths:
+        fr.committed(root, path, fr.read(root, path))
+    return git(root, 'rev-parse', 'HEAD')
+
+
+def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable, approved_only=False,
+              with_metadata=False):
     """Accept the approve blocks of one group's saved review, check, commit, push and watch CI.
 
     --approved-only leaves reject and escalation blocks held while integrating only approvals;
@@ -1850,7 +1923,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     is left as it was; `flow.py sync` brings it up to origin afterwards.
 
     Refuses before any change when the review is missing, malformed or holds a blocking escalation,
-    when the sampling gate is not met, or when the shared checkout holds commits origin lacks.
+    when the sampling gate is not met, or when unpublished commits are not explicitly admitted metadata.
     Each later step stops at its first failure. Re-running resumes after the last finished step.
     """
     root = Path(root)
@@ -1877,16 +1950,16 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     family_group_hold(root, fdir, [fn['id'] for fn in data['functions'] if hexrva(fn['rva']) in approved])
     integ = g.get('integrated') or {}
     refuse(not integ or bool(integ.get('approved_only')) == approved_only, 'resume with the same --approved-only mode')
+    refuse(not integ or bool(integ.get('with_metadata')) == with_metadata, 'resume with the same --with-metadata mode')
     review_file = str(review_path(root, g).resolve())
     tree = integration_tree(fdir, name)
     if not integ.get('commit'):
         build_started = time.monotonic()
         git(root, 'fetch', '--quiet', 'origin', branch)
-        ahead = git(root, 'rev-list', '--count', f'origin/{branch}..HEAD')
-        refuse(ahead == '0', f'the checkout holds {ahead} commit(s) origin/{branch} lacks; push or drop them first')
+        base = integration_base(root, branch, with_metadata)
         remove_tree(root, tree)
         tree.parent.mkdir(parents=True, exist_ok=True)
-        git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), f'origin/{branch}')
+        git(root, 'worktree', 'add', '--quiet', '--detach', str(tree), base)
         drafts.label(tree, 'flow-integrate', name, 'integration')
         by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == g['build_id']}
         carried = carry_into_tree(root, tree, approved, by_rva, g.get('harvests'))
@@ -1951,7 +2024,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         run(['git', 'commit', '--quiet', '-m', msg], tree, 'git commit',
             env=dict(os.environ, GIT_COMMITTER_DATE=commit_date))
         integ = {'commit': git(tree, 'rev-parse', 'HEAD'), 'files': files, 'accepted': accepted, 'checks': None,
-                 'pushed': None, 'ci': None, 'approved_only': approved_only,
+                 'pushed': None, 'ci': None, 'approved_only': approved_only, 'with_metadata': with_metadata,
                  'wall_seconds': {'build': time.monotonic() - build_started}}
         g['integrated'] = integ
         save_group(fdir, g)
@@ -2319,6 +2392,7 @@ def parser():
     s = sub.add_parser('integrate')
     s.add_argument('group')
     s.add_argument('--approved-only', action='store_true', help='integrate approvals while leaving other functions held')
+    s.add_argument('--with-metadata', action='store_true', help='carry only committed family metadata before acceptance')
     s.add_argument('--no-push', action='store_true', help='stop after the clean-tree checks')
     s.add_argument('--branch', default='main')
     s = sub.add_parser('integrate-groups')
@@ -2441,7 +2515,8 @@ def execute(a, root, fdir):
             print(f'{g["name"]}: {len(g["functions"])} functions; parent and saved reviews unchanged')
             print(f'next: python3 tools/flow.py integrate {g["name"]} --approved-only')
         elif a.cmd == 'integrate':
-            g = integrate(root, fdir, a.group, a.branch, push=not a.no_push, approved_only=a.approved_only)
+            g = integrate(root, fdir, a.group, a.branch, push=not a.no_push, approved_only=a.approved_only,
+                          with_metadata=a.with_metadata)
             integ = g['integrated']
             print(f'{a.group}: accepted {integ["accepted"]}, commit {integ["commit"]}, checks {integ["checks"]}, '
                   f'pushed {integ.get("pushed") or "no"}, CI {integ.get("ci") or "not checked"}')

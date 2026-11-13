@@ -23062,9 +23062,10 @@
     "path": "tools/static_resource_generate.py",
     "sha256": "8b64c32beca06338189ebc006bd317454cc602fc25101ca5162ead8ff0b418db"
   },
-  "pause_reason": "Family review escalated provenance and parameter verification.",
+  "pause_reason": "Superseded by a corrected unapproved family.",
   "paused": true,
   "review": null,
+  "superseded_by": "reports/sse-steam-1-7-104/families/27e857d001c6b0129ab2a7d2684066144ba780567b84908194102da1744d8cce.json",
   "template_source": {
     "path": "tools/static_resource_template_v1.py",
     "sha256": "eb1a3ad1190a68b1aa546ca90ef35717e7baa2ce6f49300b79d8b5294ca6886c"

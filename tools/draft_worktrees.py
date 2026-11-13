@@ -422,16 +422,17 @@ def audit_source(tree, sources, allowed, targets, bind):
                          + ', '.join(sorted(failed)))
 
 
-def existing_header_emissions(tree, base, closure, symbols, task_targets, bind):
+def existing_header_emissions(tree, base, closure, symbols, task_targets, bind, explicit_only=False):
     """Untouched stand-ins can emit incidental functions, just as in an ordinary attempt."""
     from check_origin import brace_pairs, clean, functions
     existing_classes, existing_bodies, changed_bodies = set(), set(), set()
 
     def bodies(text):
         out = {}
-        for fn in functions(text):
+        for fn in functions(text, with_heads=explicit_only):
             name = (fn['class'] + '::' if fn['class'] else '') + fn['name']
-            out.setdefault(name, set()).add((json.dumps(fn['params']), fn['body']))
+            signature = re.sub(r'\s+', ' ', fn['head']).strip() if explicit_only else json.dumps(fn['params'])
+            out.setdefault(name, set()).add((signature, fn['body']))
         return out
 
     def classes(text):
@@ -489,9 +490,34 @@ def existing_header_emissions(tree, base, closure, symbols, task_targets, bind):
         if name in changed_bodies:
             continue
         owner = name.rsplit('::', 1)[0] if '::' in name else None
-        if owner in existing_classes or name in existing_bodies:
+        if name in existing_bodies or (not explicit_only and owner in existing_classes):
             exempt.add(symbol)
     return exempt
+
+
+def accepted_baseline_emissions(tree, base, closure, symbols, final, bind):
+    """Keep unchanged definitions supporting an integrated, freshly passing regression.
+
+    This does not pass those definitions as targets. The accepted record must bind the exact
+    baseline unit, and only explicit bodies unchanged from that baseline can be incidental.
+    """
+    if not symbols:
+        return set()
+    from review_packet import digest_at
+    data = json.loads(git(tree, 'show', f'{base}:data/progress.json'))
+    compared = {int(str(fn['rva']), 0) for fn in final['functions']}
+    for fn in data.get('functions', []):
+        if (fn.get('status') != 'matched' or fn['build_id'] != final['build_id']
+                or fn['rva'] not in compared or not fn.get('report')):
+            continue
+        record = json.loads(git(tree, 'show', f'{base}:{fn["report"]}'))
+        source = record.get('source', {})
+        files = source.get('translation_unit', [])
+        if (source.get('compiled') == final['compiled'] and files
+                and digest_at(tree, base, files) == source.get('digest')):
+            return existing_header_emissions(tree, base, closure, symbols, set(), bind,
+                                             explicit_only=True)
+    return set()
 
 
 def harvest(qdir, unit, claim, records):
@@ -561,13 +587,16 @@ def harvest(qdir, unit, claim, records):
     extra = (defined & targets) - allowed
     task_targets = target_symbols(tree, directory, original, final, {'functions': []})
     extra -= existing_header_emissions(tree, state['base'], closure, extra, task_targets, bind)
+    candidates = {f['symbol'] for f in original['functions'] + final['functions']}
+    baseline = accepted_baseline_emissions(tree, state['base'], closure,
+                                           extra | (candidates - allowed), final, bind)
+    extra -= baseline
     if extra:
         raise ValueError('unit still defines target functions without passing attempts; remove failed additions: '
                          + ', '.join(sorted(extra)))
     # Only the task names identify source candidates; unrelated inventory overloads do not
     # establish a source binding by name alone. Emitted inventory bindings were checked above.
-    candidates = {f['symbol'] for f in original['functions'] + final['functions']}
-    audit_source(tree, unit['sources'], allowed, candidates, bind)
+    audit_source(tree, unit['sources'], allowed | baseline, candidates, bind)
     import lint_reconstruction
     findings = lint_reconstruction.lint_tree(tree, closure)
     if findings:
@@ -591,6 +620,8 @@ def harvest(qdir, unit, claim, records):
          'digest': digest, 'passing': sorted(passing), 'task': str(clean), 'build_id': raw['build_id'],
          'compared': [int(str(f['rva']), 0) for f in final['functions']],
          'attempt': str(dest), 'queue': str(Path(qdir).resolve()), 'unit': unit['dir']}
+    if baseline:
+        h.update(baseline_commit=state['base'], baseline_definitions=sorted(baseline))
     save(directory / f'harvest-{tier}.json', h)
     save(directory / 'harvest.json', h)
     return h

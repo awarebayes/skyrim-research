@@ -171,7 +171,9 @@ Engineer setup (no verifier or acceptance is performed by these metadata command
 To correct a family before approval, `python3 tools/flow.py family-plan --spec <corrected-spec>
 --supersede <old-manifest>` preserves the old paused manifest with a replacement pointer, archives
 its saved review files under `.local/reviews/superseded/`, releases its review groups and creates a
-fresh family plan and briefs. The replacement keeps the same origin, binding and first 20. The
+fresh family plan and briefs. The replacement keeps the same family name, binding and first 20.
+If its source origin changes, both its version and template digest must change; its members need
+fresh confirmation and review under that new origin. No old approval carries into the replacement. The
 command refuses an approved family, a family with a batch, or accepted first-20 members; use the
 pause and revocation procedure for accepted evidence. Archived reviews are not approvals of the
 replacement. Resolve any independent provenance or policy escalation under the existing rule.
@@ -182,6 +184,16 @@ population, member hashes, pre-draw commit and sample. The gate checks that the 
 was committed before selection, the draw was committed before acceptance, and no population
 member had already been accepted at that exact origin and row in that history. Never redraw,
 shrink a population or change a seed after seeing the sample.
+
+An Engineer may combine the committed family metadata and sampled acceptance in one push with
+`flow.py integrate <sample-group> --with-metadata`. Unpublished commits may change only family
+manifests or batch JSON, without deletions. The tip must descend from current origin; a merge may
+preserve moving main only through a parent already on origin, with only metadata added to that base.
+The metadata must validate and match its committed content. The seed/population and draw commits
+may contain only the exact tip snapshots or the canonical pre-draw batch (null commitment/sample),
+so an invalid intermediate blob cannot hide behind a repaired tip. These commits
+remain separate ancestors before acceptance; source, tooling and other unpublished changes are
+refused. All ordinary review, comparison, staged, clean-tree and CI gates still run.
 
 The ordinary `review-group` excludes eligible unsampled members, reviews all sampled members
 and all parameters outside the approved ranges, and keeps every existing second-pass safeguard.
