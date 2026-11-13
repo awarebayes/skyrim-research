@@ -100,6 +100,11 @@ the input root, selection and options under `.local/flow/lane/`; `lane-status` p
 Label-only re-acceptances use `integrate-labels --functions <ids or RVAs...>`; their existing
 code-section, provenance and sampling requirements remain unchanged.
 
+`lane-run` checks free disk space before taking locks or changing queue state, refusing below
+3 GB (decimal) by default. Set `lane-run --min-free-gb <number>` or
+`SKYRIM_LANE_MIN_FREE_GB` to a finite nonnegative threshold; the CLI option takes precedence.
+The environment setting also applies to integration commands with `--run` or `--no-push`.
+
 Run `python3 tools/flow.py lane-run` after enqueueing all ready work. One runner takes everything
 queued at its start, carries only the approved input through the existing acceptance path into
 one isolated local clone at current `origin/main`, rebuilds the index once, stages named files,

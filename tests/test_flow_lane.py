@@ -1,6 +1,7 @@
 """The lane batches workers, frees scheduling, retains candidates and checks every pushed tree."""
 import datetime
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -303,3 +304,54 @@ class LaneLabels(TwoTierFixture, unittest.TestCase):
         self.assertFalse(result['dropped'])
         self.assertEqual(index.call_count, 1)
         self.assertEqual(expected, self.unchanged())
+
+
+class DiskPreflight(unittest.TestCase):
+    def setUp(self):
+        import tempfile
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.root = Path(self.directory.name)
+        self.fdir = self.root / 'absent/flow'
+        self.environment = patch.dict(os.environ, {}, clear=False)
+        self.environment.start()
+        self.addCleanup(self.environment.stop)
+        os.environ.pop('SKYRIM_LANE_MIN_FREE_GB', None)
+
+    def free(self, gb):
+        from types import SimpleNamespace
+        return patch.object(lane.shutil, 'disk_usage', return_value=SimpleNamespace(free=gb * 1_000_000_000))
+
+    def test_default_refuses_before_locks_or_state_mutation(self):
+        with self.free(2.9), patch.object(lane, 'lane_lock') as lock:
+            with self.assertRaisesRegex(flow.FlowError, r'2.90 GB free; need 3 GB'):
+                lane.run_lane(self.root, self.fdir)
+        lock.assert_not_called()
+        self.assertFalse(self.fdir.exists())
+
+    def test_exact_default_boundary_allows_empty_lane(self):
+        with self.free(3):
+            self.assertEqual(lane.run_lane(self.root, self.fdir)['state'], 'empty')
+
+    def test_environment_and_explicit_override(self):
+        with patch.dict(os.environ, {'SKYRIM_LANE_MIN_FREE_GB': '5'}), self.free(4):
+            with self.assertRaisesRegex(flow.FlowError, 'need 5 GB'):
+                lane.disk_preflight(self.fdir)
+            lane.disk_preflight(self.fdir, min_free_gb=4)
+
+    def test_invalid_thresholds_are_clear_refusals(self):
+        for setting in ('garbage', 'nan', 'inf', '-1'):
+            with self.subTest(setting=setting), patch.dict(os.environ, {'SKYRIM_LANE_MIN_FREE_GB': setting}):
+                with self.assertRaisesRegex(flow.FlowError, 'finite nonnegative'):
+                    lane.disk_preflight(self.fdir)
+
+    def test_cli_override_is_wired_and_reports_failure_without_traceback(self):
+        import contextlib
+        import io
+        error = io.StringIO()
+        with patch.dict(os.environ, {'SKYRIM_LANE_MIN_FREE_GB': '1'}), self.free(3), contextlib.redirect_stderr(error):
+            rc = flow.main(['--root', str(self.root), '--flow-dir', str(self.fdir), 'lane-run', '--min-free-gb', '4'])
+        self.assertEqual(rc, 1)
+        self.assertIn('3.00 GB free; need 4 GB', error.getvalue())
+        self.assertNotIn('Traceback', error.getvalue())
+        self.assertFalse(self.fdir.exists())

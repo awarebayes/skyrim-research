@@ -7,6 +7,7 @@ from contextlib import contextmanager
 import fcntl
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -361,8 +362,27 @@ def settle_legacy_ci(root, fdir, python, ci_wait):
         f.refuse(ci == 'green', f'CI {ci.upper()} for previous integration {commit}: {result.stdout.strip()}')
 
 
-def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.executable):
+def disk_preflight(fdir, min_free_gb=None):
+    """Refuse expensive lane work below the configured free-space threshold (decimal GB)."""
+    setting = min_free_gb if min_free_gb is not None else os.environ.get('SKYRIM_LANE_MIN_FREE_GB', '3')
+    try:
+        threshold = float(setting)
+    except (TypeError, ValueError):
+        raise f.FlowError('minimum free disk space must be a finite nonnegative number of GB') from None
+    f.refuse(math.isfinite(threshold) and threshold >= 0,
+             'minimum free disk space must be a finite nonnegative number of GB')
+    path = Path(fdir)
+    while not path.exists():
+        path = path.parent
+    free = shutil.disk_usage(path).free / 1_000_000_000
+    f.refuse(free >= threshold,
+             f'insufficient free disk space for push lane: {free:.2f} GB free; need {threshold:g} GB. '
+             'Free disk space or configure --min-free-gb / SKYRIM_LANE_MIN_FREE_GB.')
+
+
+def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.executable, min_free_gb=None):
     root, fdir = Path(root).resolve(), Path(fdir).resolve()
+    disk_preflight(fdir, min_free_gb)
     with lane_lock(fdir):
         settle_legacy_ci(root, fdir, python, ci_wait)
         with state_lock(fdir):

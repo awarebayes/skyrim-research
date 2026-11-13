@@ -2457,6 +2457,7 @@ def parser():
     s.add_argument('--run', action='store_true')
     s.add_argument('--no-push', action='store_true')
     s = sub.add_parser('lane-run')
+    s.add_argument('--min-free-gb', type=float, help='minimum free disk space (GB); default 3, or SKYRIM_LANE_MIN_FREE_GB')
     s.add_argument('--branch', default='main')
     s.add_argument('--no-push', action='store_true')
     s.add_argument('--ci-wait', type=int, default=600)
@@ -2601,7 +2602,7 @@ def execute(a, root, fdir):
                     print(json.dumps(flow_lane.run_lane(root, fdir, a.branch, not a.no_push), indent=2))
         elif a.cmd == 'lane-run':
             import flow_lane
-            print(json.dumps(flow_lane.run_lane(root, fdir, a.branch, not a.no_push, a.ci_wait), indent=2))
+            print(json.dumps(flow_lane.run_lane(root, fdir, a.branch, not a.no_push, a.ci_wait, min_free_gb=a.min_free_gb), indent=2))
         elif a.cmd == 'lane-status':
             import flow_lane
             with state_lock(fdir):
