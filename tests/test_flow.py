@@ -238,6 +238,21 @@ class FlowTests(unittest.TestCase):
         self.assertIn('complete a source-only review', text)
         self.assertIn('decompiler_output_read: no', text)
 
+    def test_void_missing_review_resets_only_unfulfilled_dispatch(self):
+        name = flow.review_group(self.root, self.fdir)[0]
+        g = flow.load_group(self.fdir, name)
+        pair = flow.load_group(self.fdir, g['pair'])
+        pair['dispatched'] = 'started'
+        flow.save_group(self.fdir, pair)
+        before = flow.load_group(self.fdir, name)
+        self.assertEqual(flow.void_review(self.root, self.fdir, pair['name'], 'brief unavailable', True), [])
+        self.assertIsNone(flow.load_group(self.fdir, pair['name'])['dispatched'])
+        self.assertEqual(flow.load_group(self.fdir, name), before)
+        self.assertEqual(flow.events(self.fdir)[-1]['event'], 'dispatch-reset')
+        self.assertFalse(flow.review_path(self.root, pair['task_id']).exists())
+        with self.assertRaises(flow.FlowError):
+            flow.void_review(self.root, self.fdir, pair['name'], 'brief unavailable', True)
+
     def test_session_start_comes_first_then_grouping(self):
         acts = self.actions()
         self.assertEqual(acts[0], ('run', 'python3 tools/flow.py session-start'))
@@ -585,6 +600,25 @@ class FlowTests(unittest.TestCase):
         self.assertIn(history, integ['files'])
         self.assertNotIn(f'reports/{BUILD}/unit-symbols/unrelated.json', integ['files'])
         self.assertEqual(git(self.origin, 'show', f'main:{rel}'), '{}')
+
+    def test_integrate_approved_only_preserves_legal_escalations_and_review(self):
+        g = self.integrate_ready()
+        blocks = [(r, size, self.repo.digest(r), 'escalate' if r == 0x2000 else 'approve',
+                   'legal' if r == 0x2000 else 'none') for r, size, _ in FUNCS]
+        path = self.repo.save_review(g['task_id'], blocks)
+        before = path.read_bytes()
+        with self.assertRaisesRegex(flow.FlowError, 'blocking escalation'):
+            flow.integrate(self.root, self.fdir, g['name'], push=False)
+        flow.integrate(self.root, self.fdir, g['name'], push=False, approved_only=True)
+        integ = flow.load_group(self.fdir, g['name'])['integrated']
+        self.assertEqual(integ['accepted'], 2)
+        self.assertEqual(path.read_bytes(), before)
+        self.assertTrue(integ['approved_only'])
+        tree = flow.integration_tree(self.fdir, g['name'])
+        data = flow.inventory(tree)
+        held = next(f for f in data['functions'] if f['rva'] == 0x2000)
+        self.assertNotEqual(held['status'], 'matched')
+        self.assertFalse((tree / f'reports/{BUILD}/0x2000.review.json').exists())
 
     def test_integration_passes_recorded_group_to_acceptance(self):
         probe = '''import os, json

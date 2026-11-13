@@ -9,7 +9,7 @@
     python3 tools/flow.py void-review <group> --setup-failure --reason TEXT  # retire specified setup-failure verdicts
     python3 tools/flow.py redo-review <group>            # new task id after a review the parser refused
     python3 tools/flow.py record-rerun <group> --compare FILE   # sampling re-run result (AGREE/DISAGREE rows)
-    python3 tools/flow.py integrate <group> [--no-push]  # accept, check, commit, push, watch CI, in its own worktree; stops at the first failure
+    python3 tools/flow.py integrate <group> [--no-push] [--approved-only]  # accept, check, commit, push, watch CI, in its own worktree; stops at the first failure
     python3 tools/flow.py sync                           # fast-forward the shared checkout after an integration
     python3 tools/flow.py brief drafter|confirm|triage|rerun|direction ...   # write a brief file under .local/briefs/
     python3 tools/flow.py baseline <component> <value> <count>  # versions already past their first 20 (a strong-role call)
@@ -1058,6 +1058,15 @@ def void_review(root, fdir, name, reason, setup_failure, selected=None):
     refuse(g['kind'] in ('review', 'sampling'), 'only individual review groups may be voided')
     data = inventory(root)
     status, blocks = read_review(root, g, data['functions'])
+    if status == 'missing':
+        refuse(not g.get('superseded_by') and not g.get('integrated'), 'group is superseded or integrated')
+        refuse(selected is None and bool(g.get('dispatched')), 'only an unfulfilled dispatch may be reset')
+        refuse(not review_path(root, g['task_id']).exists() and not review_path(root, g['task_id']).is_symlink(),
+               'a review path already exists')
+        g['dispatched'] = None
+        save_group(fdir, g)
+        log_event(fdir, 'dispatch-reset', group=name, task_id=g['task_id'], reason=reason)
+        return []
     refuse(status == 'ok', 'a complete saved review is required')
     chosen = set(selected if selected is not None else blocks)
     refuse(bool(chosen) and chosen <= blocks.keys(), 'select verdicts present in the saved review')
@@ -1662,8 +1671,11 @@ def carry_into_tree(root, tree, approved, by_rva):
     return sorted(files)
 
 
-def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable):
+def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sys.executable, approved_only=False):
     """Accept the approve blocks of one group's saved review, check, commit, push and watch CI.
+
+    --approved-only leaves reject and escalation blocks held while integrating only approvals;
+    the full sampling gate and all acceptance checks remain mandatory.
 
     The commit is built in its own worktree (under the flow dir) at origin's `branch`, never in the
     shared checkout: only the approved functions' entries, records and unit files are carried over,
@@ -1679,6 +1691,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
     refuse(g['kind'] in ('review', 'family'), f'{name} is a sampling group; integrate its primary group {g.get("pair")}')
     data = inventory(root)
     family_group = g['kind'] == 'family'
+    refuse(not (family_group and approved_only), '--approved-only applies only to individual review groups')
     if family_group:
         blocks = {r: {'verdict': 'approve'} for r in g['functions']}
     else:
@@ -1686,13 +1699,14 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
         refuse(status != 'missing', f'review {REVIEWS}/{g["task_id"]}.md is not saved yet; wait for the Reviewer')
         refuse(status == 'ok', f'review {g["task_id"]} {status}; run: python3 tools/flow.py redo-review {name}')
         esc = [r for r, b in blocks.items() if b.get('verdict') == 'escalate' and b.get('escalation_category') in BLOCKING_ESCALATIONS]
-        refuse(not esc, f'blocking escalation for {", ".join(esc)}: escalate to the maintainer; group held')
+        refuse(approved_only or not esc, f'blocking escalation for {", ".join(esc)}: escalate to the maintainer; group held')
         ok, problem = sampling_gate(root, fdir, g, data)
         refuse(ok, f'sampling gate: {problem}')
     approved = sorted((r for r, b in blocks.items() if b.get('verdict') == 'approve'), key=lambda r: int(r, 16))
     refuse(approved, 'the review has no approve block; nothing to integrate')
     family_group_hold(root, fdir, [fn['id'] for fn in data['functions'] if hexrva(fn['rva']) in approved])
     integ = g.get('integrated') or {}
+    refuse(not integ or bool(integ.get('approved_only')) == approved_only, 'resume with the same --approved-only mode')
     review_file = str((root / REVIEWS / f'{g["task_id"]}.md').resolve())
     tree = integration_tree(fdir, name)
     if not integ.get('commit'):
@@ -1756,7 +1770,7 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
                'Co-Authored-By: Claude <noreply@anthropic.com>\n')
         git(tree, 'commit', '--quiet', '-m', msg)
         integ = {'commit': git(tree, 'rev-parse', 'HEAD'), 'files': files, 'accepted': accepted, 'checks': None,
-                 'pushed': None, 'ci': None}
+                 'pushed': None, 'ci': None, 'approved_only': approved_only}
         g['integrated'] = integ
         save_group(fdir, g)
     if not integ.get('checks'):
@@ -1916,6 +1930,7 @@ def parser():
     s.add_argument('--compare', required=True)
     s = sub.add_parser('integrate')
     s.add_argument('group')
+    s.add_argument('--approved-only', action='store_true', help='integrate approvals while leaving other functions held')
     s.add_argument('--no-push', action='store_true', help='stop after the clean-tree checks')
     s.add_argument('--branch', default='main')
     s = sub.add_parser('sync')
@@ -2002,7 +2017,8 @@ def main(argv=None):
             print(f'{a.group} marked {"re-run " if a.rerun else ""}dispatched')
         elif a.cmd == 'void-review':
             done = void_review(root, fdir, a.group, a.reason, a.setup_failure, a.functions)
-            print(f'{a.group}: retired {len(done)} verdict(s); regroup for a fresh review')
+            print(f'{a.group}: retired {len(done)} verdict(s); regroup for a fresh review' if done
+                  else f'{a.group}: reset unfulfilled dispatch; no saved verdict was changed')
         elif a.cmd == 'redo-review':
             g = redo_review(root, fdir, a.group)
             print(f'{a.group}: new task id {g["task_id"]}, brief {g["brief"]}; dispatch a fresh Reviewer with it')
@@ -2011,7 +2027,7 @@ def main(argv=None):
             print(f'{a.group}: {len(agree)} AGREE' + (f'; NOT AGREE {", ".join(other)}: escalate' if other else ''))
             return 1 if other else 0
         elif a.cmd == 'integrate':
-            g = integrate(root, fdir, a.group, a.branch, push=not a.no_push)
+            g = integrate(root, fdir, a.group, a.branch, push=not a.no_push, approved_only=a.approved_only)
             integ = g['integrated']
             print(f'{a.group}: accepted {integ["accepted"]}, commit {integ["commit"]}, checks {integ["checks"]}, '
                   f'pushed {integ.get("pushed") or "no"}, CI {integ.get("ci") or "not checked"}')
