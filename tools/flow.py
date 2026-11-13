@@ -1920,7 +1920,8 @@ def integrate(root, fdir, name, branch='main', push=True, ci_wait=600, python=sy
                     printed.append(line.strip().split('  ')[0])
                 elif take:
                     take = False
-        run([python, 'tools/build_index.py'], tree, 'build_index.py')
+        if done:
+            run([python, 'tools/build_index.py'], tree, 'build_index.py')
         run([python, 'tools/build_progress_svg.py'], tree, 'build_progress_svg.py')
         data = inventory(tree)
         paths = set(printed) | {'data/progress.json', 'reconstruction/INDEX.md', 'docs/progress.svg', 'docs/progress-map.svg'}
@@ -2086,20 +2087,22 @@ def integrate_groups(root, fdir, names, batch_name, branch='main', push=True,
         private = tree / REVIEWS
         private.parent.mkdir(parents=True, exist_ok=True)
         private.symlink_to((root / REVIEWS).resolve(), target_is_directory=True)
-        for group, approved, review_file in selected:
-            out = run([python, 'tools/accept_function.py', '--all-approved', '--review', review_file,
-                       '--profile', group.get('profile', profiles.DEFAULT), '--functions', *approved],
-                      tree, 'accept_function.py ' + group['name'],
-                      env=dict(os.environ, SKYRIM_FLOW_DIR=str(fdir.resolve())))
-            take = False
-            for line in out.splitlines():
-                if line.startswith('changed files'):
-                    take = True
-                elif take and line.startswith('  '):
-                    printed.append(line.strip().split('  ')[0])
-                elif take:
-                    take = False
-        run([python, 'tools/build_index.py'], tree, 'build_index.py')
+        requests = [dict(review=review_file, functions=approved,
+                         profile=group.get('profile', profiles.DEFAULT))
+                    for group, approved, review_file in selected]
+        request_file = tree / '.local' / 'accept-reviews.json'
+        request_file.write_text(json.dumps(requests) + '\n')
+        out = run([python, 'tools/accept_function.py', '--review-batch', str(request_file)],
+                  tree, 'accept_function.py review batch',
+                  env=dict(os.environ, SKYRIM_FLOW_DIR=str(fdir.resolve())))
+        take = False
+        for line in out.splitlines():
+            if line.startswith('changed files'):
+                take = True
+            elif take and line.startswith('  '):
+                printed.append(line.strip().split('  ')[0])
+            elif take:
+                take = False
         run([python, 'tools/build_progress_svg.py'], tree, 'build_progress_svg.py')
         paths = set(printed) | {'data/progress.json', 'reconstruction/INDEX.md', 'docs/progress.svg', 'docs/progress-map.svg'}
         for fn in inventory(tree)['functions']:

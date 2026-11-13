@@ -107,6 +107,65 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.unsampled = sorted(set(self.later) - set(self.batch['sample']))
         self.assertEqual(len(self.unsampled), 1)
 
+    def test_individual_and_multi_review_acceptance_are_byte_identical(self):
+        from datetime import datetime, timezone
+        from test_acceptance_flow import review_text
+        when = datetime(2000, 1, 3, tzinfo=timezone.utc)
+        requests = []
+        for i, fid in enumerate(self.later):
+            fn = next(fn for fn in self.data['functions'] if fn['id'] == fid)
+            review = self.root / f'.local/reviews/batch-{i}.md'
+            review.write_text(review_text(f'batch-{i}', [dict(rva=fn['rva'], size=fn['size'],
+                                                           digest=self.records[fid]['source']['digest'])]))
+            requests.append(dict(review=str(review), functions=[fid]))
+        tracked = self.git('ls-files').splitlines()
+        before = {name: (self.root / name).read_bytes() for name in tracked}
+        # The old path invokes a complete acceptance transaction for each function, uncached.
+        with patch.object(check, 'include_closure', __import__('source_digest').include_closure):
+            for request in requests:
+                af.accept_many(self.root, request['review'], select=set(request['functions']), when=when)
+        paths = set(tracked) | {p.relative_to(self.root).as_posix()
+                               for p in (self.root / 'reports').rglob('*.json')}
+        expected = {name: (self.root / name).read_bytes() for name in paths}
+        for name in paths:
+            if name in before:
+                (self.root / name).write_bytes(before[name])
+            else:
+                (self.root / name).unlink()
+        with patch.object(af, 'write_index', wraps=af.write_index) as index, \
+                patch.object(af, 'validate_review', wraps=af.validate_review) as review_check:
+            changed, skipped = af.accept_reviews(self.root, requests, when=when)
+        self.assertEqual(index.call_count, 1)
+        self.assertEqual(review_check.call_count, len(requests))
+        self.assertEqual(skipped, [])
+        self.assertEqual(sum(p.endswith('.review.json') for p in changed), len(requests))
+        self.assertEqual(expected, {name: (self.root / name).read_bytes() for name in paths})
+        check.validate(fr.read(self.root, 'data/progress.json'), self.target, self.root)
+
+    def test_multi_review_failure_restores_every_tracked_file(self):
+        from test_acceptance_flow import review_text
+        requests = []
+        for i, fid in enumerate(self.later[:2]):
+            fn = next(fn for fn in self.data['functions'] if fn['id'] == fid)
+            review = self.root / f'.local/reviews/batch-{i}.md'
+            review.write_text(review_text(f'batch-{i}', [dict(rva=fn['rva'], size=fn['size'],
+                                                           digest=self.records[fid]['source']['digest'])]))
+            requests.append(dict(review=str(review), functions=[fid]))
+        before = {name: (self.root / name).read_bytes() for name in self.git('ls-files').splitlines()}
+        with patch.object(af, 'write_index', side_effect=OSError('synthetic index failure')):
+            with self.assertRaisesRegex(OSError, 'synthetic index failure'):
+                af.accept_reviews(self.root, requests)
+        self.assertEqual(before, {name: (self.root / name).read_bytes() for name in before})
+        for fid in self.later[:2]:
+            fn = next(fn for fn in self.data['functions'] if fn['id'] == fid)
+            self.assertFalse((self.root / check.review_record_path(fn)).exists())
+
+    def test_family_acceptance_rebuilds_index_once(self):
+        self.ready()
+        with patch.object(af, 'write_index', wraps=af.write_index) as index:
+            self.accept_batch()
+        self.assertEqual(index.call_count, 1)
+
     def test_generator_record_family_plan_roundtrip(self):
         from types import SimpleNamespace
         import importlib.util
@@ -539,7 +598,7 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
             group = flow.integrate_family(self.root, self.fdir, self.batch_path, push=False)
         result = group['integrated']
         self.assertIsNone(result['pushed'])
-        self.assertEqual(ran, ['accept_function.py', 'build_index.py', 'build_progress_svg.py', 'build_model_trend.py', 'check.py --staged', 'git commit'])
+        self.assertEqual(ran, ['accept_function.py', 'build_progress_svg.py', 'build_model_trend.py', 'check.py --staged', 'git commit'])
         checks.assert_called_once()
         integrated = json.loads(self.git('show', result['commit'] + ':data/progress.json'))
         self.assertTrue(all(fn['status'] == 'matched' for fn in integrated['functions']))

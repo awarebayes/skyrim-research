@@ -72,6 +72,7 @@ from check import (ROOT, LABEL_ONLY, MAX_NAMING_FINDINGS, REVIEW_RECORD_SCHEMA, 
                    is_hash, naming_finding_problem, record_code_section, review_record_path, validate,
                    validate_match, validate_review, check_internal_admission)
 from build_index import INDEX, write_index  # noqa: E402
+from check_source_digest import source_digest_cache  # noqa: E402
 from lint_reconstruction import LABELS_VERSION, lint_tree  # noqa: E402
 from source_digest import DIGEST_METHOD  # noqa: E402
 import review_packet  # noqa: E402
@@ -670,21 +671,10 @@ def review_profile(root, task_id, requested):
     return profile
 
 
-def accept_many(root, review_source, targets=None, verdict='approve', when=None, select=None, profile=None):
-    """Accept the approve blocks of one review: `targets` [(build id, rva)], or the approve blocks of
-    the functions in `select` (inventory ids), or None for all of them.
-
-    Returns (changed files, skipped block headings). All-or-nothing: every check runs before the
-    first write, and any failure after it restores every file it touched.
-    """
-    root = Path(root)
+def prepare_many(root, data, target, review_source, targets, verdict, when, select, profile):
+    """Prepare one review's acceptances; all per-function checks remain on this path."""
     refuse(verdict == 'approve', f'verdict {verdict!r}: only approve is accepted; '
            'reject goes back to the Drafter or Engineer, escalate per docs/verification.md')
-    data, target = load(root)
-    # Stale acceptances are what a delta or re-review clears, so they may be present before; the
-    # final validation below is strict except for entries outside this run that were stale already.
-    validate(data, target, root, stale_ok=True)
-    stale_before = stale_ids(root, data)
     review_file, blob = private_review(root, review_source)
     title, header, blocks = review_blocks(blob.decode('utf-8'))
     refuse(title is not None and TASK_ID.fullmatch(title),
@@ -718,19 +708,51 @@ def accept_many(root, review_source, targets=None, verdict='approve', when=None,
             missing = sorted(select - found)
             refuse(not missing, f'selected functions without an approve block in this review: {", ".join(missing)}')
         refuse(targets, 'review has no approve block')
-    when = when or now_utc()
     prepared = []
     for build_id, rva in targets:
         index = entry_index(data, build_id, rva)
         refuse(index not in [i for i, *_ in prepared], f'{build_id} 0x{rva:x} is named twice')
         _, _, block = parse_review(blob.decode('utf-8'), build_id, rva, data['functions'][index]['size'])
         prepared.append((index, *prepare(root, data, target, index, title, header, block, blob, when)))
+    return prepared, skipped
+
+
+@source_digest_cache()
+def accept_reviews(root, requests, when=None):
+    """Accept several reviews in one transaction with one inventory validation and index rebuild.
+
+    Each request names a review, optional functions and profile. Review parsing, admission and
+    every function's match and review checks are the same as for individual acceptance.
+    """
+    root = Path(root)
+    refuse(bool(requests), 'no reviews to accept')
+    data, target = load(root)
+    validate(data, target, root, stale_ok=True)
+    stale_before = stale_ids(root, data)
+    when = when or now_utc()
+    prepared, skipped, selected = [], [], set()
+    for request in requests:
+        select = request.get('select')
+        if request.get('functions') is not None:
+            select = resolve_selection(root, data, request['functions'])
+        rows, omitted = prepare_many(root, data, target, request['review'], request.get('targets'),
+                                     request.get('verdict', 'approve'), when, select, request.get('profile'))
+        ids = {fn['id'] for _, fn, _, _ in rows}
+        refuse(not selected & ids, 'reviews select the same function more than once')
+        selected.update(ids)
+        prepared.extend(rows)
+        skipped.extend(omitted)
     new = copy.deepcopy(data)
     for index, _, record, review in prepared:
         new['functions'][index]['status'] = 'matched'
         set_named(new['functions'], index, named_value(root, record, review['naming_findings']))
-    selected = {fn['id'] for _, fn, _, _ in prepared}
     return apply(root, data, new, target, prepared, stale_before - selected, when), skipped
+
+
+def accept_many(root, review_source, targets=None, verdict='approve', when=None, select=None, profile=None):
+    """Accept the selected approve blocks of one review, all or nothing."""
+    return accept_reviews(root, [dict(review=review_source, targets=targets, verdict=verdict,
+                                     select=select, profile=profile)], when)
 
 
 def accept(root, build_id, rva, review_file, verdict, when=None, profile=None):
@@ -738,6 +760,7 @@ def accept(root, build_id, rva, review_file, verdict, when=None, profile=None):
     return accept_many(root, review_file, [(build_id, rva)], verdict, when, profile=profile)[0]
 
 
+@source_digest_cache()
 def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None):
     """Accept unsampled members only after all required individual reviews and safeguards passed."""
     import flow
@@ -932,6 +955,7 @@ def main(argv=None):
     p.add_argument('--verdict', choices=['approve', 'reject', 'escalate'], help='Verdict parsed from the review')
     p.add_argument('--family-flow-dir', type=Path, help=argparse.SUPPRESS)
     p.add_argument('--family-batch', help='Accept unsampled members of a precommitted family batch')
+    p.add_argument('--review-batch', type=Path, help='JSON list of review, functions and profile requests')
     p.add_argument('--all-approved', action='store_true', help='Accept every approve block of the review')
     p.add_argument('--label-only', action='store_true',
                    help='Re-accept review-behind entries whose compared code section is unchanged, without a review')
@@ -955,14 +979,25 @@ def main(argv=None):
 def execute(args):
     skipped = []
     try:
-        modes = sum(map(bool, (args.revoke, args.all_approved, args.label_only, args.refresh_named, args.family_batch)))
-        refuse(modes <= 1, 'choose one of --revoke, --all-approved, --label-only, --refresh-named, --family-batch')
+        modes = sum(map(bool, (args.revoke, args.all_approved, args.label_only, args.refresh_named, args.family_batch, args.review_batch)))
+        refuse(modes <= 1, 'choose one of --revoke, --all-approved, --label-only, --refresh-named, --family-batch, --review-batch')
         selecting = bool(args.functions or args.units)
         refuse(not selecting or args.all_approved or args.label_only or args.refresh_named,
                '--functions and --units go with --all-approved, --label-only or --refresh-named')
         refuse(args.family_flow_dir is None or args.family_batch, '--family-flow-dir requires --family-batch')
         select = resolve_selection(args.root, load(args.root)[0], args.functions, args.units) if selecting else None
-        if args.family_batch:
+        if args.review_batch:
+            refuse(not selecting and args.review is None and args.verdict is None
+                   and args.build_id is None and args.rva is None and args.profile is None,
+                   '--review-batch takes its selections and profiles from the request file')
+            requests = json.loads(args.review_batch.read_text())
+            refuse(isinstance(requests, list) and bool(requests), 'review batch must be a nonempty list')
+            for request in requests:
+                refuse(isinstance(request, dict) and 'review' in request
+                       and set(request) <= {'review', 'functions', 'profile'}, 'invalid review batch request')
+            changed, skipped = accept_reviews(args.root, requests)
+            print(f'accepted {sum(n.endswith(".review.json") for n in changed)} function(s) from review batch')
+        elif args.family_batch:
             refuse(not selecting and args.review is None and args.verdict is None
                    and args.build_id is None and args.rva is None, '--family-batch takes no function or review selection')
             changed = accept_family_batch(args.root, args.family_batch, profile=args.profile, fdir=args.family_flow_dir)

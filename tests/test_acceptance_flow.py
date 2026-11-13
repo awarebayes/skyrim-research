@@ -316,6 +316,29 @@ class ReviewRecordSchemaTests(FlowFixture, unittest.TestCase):
 
 
 class BatchAndInputTests(FlowFixture, unittest.TestCase):
+    def test_later_batch_request_refusal_leaves_earlier_approval_unwritten(self):
+        good = self.review_file('review-good', [self.block()])
+        bad = self.review_file('review-bad', [self.block(digest='e' * 64)])
+        before = (self.root / 'data/progress.json').read_bytes()
+        with self.assertRaisesRegex(af.Refused, 'source_digest differs'):
+            af.accept_reviews(self.root, [dict(review=good), dict(review=bad)], when=WHEN)
+        self.assertEqual(before, (self.root / 'data/progress.json').read_bytes())
+        self.assertFalse((self.root / REVIEW).exists() or (self.root / build_index.INDEX).exists())
+
+    def test_overlapping_batch_requests_refused(self):
+        review = self.review_file('review-overlap', [self.block()])
+        with self.assertRaisesRegex(af.Refused, 'same function more than once'):
+            af.accept_reviews(self.root, [dict(review=review), dict(review=review)], when=WHEN)
+        self.assertFalse((self.root / REVIEW).exists())
+
+    def test_batch_cli_uses_the_same_acceptance_checks(self):
+        review = self.review_file('review-request', [self.block()])
+        request = self.root / '.local/requests.json'
+        request.write_text(json.dumps([dict(review=str(review), functions=[self.fn['id']])]))
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(af.main(['--root', str(self.root), '--review-batch', str(request)]), 0)
+        self.validate()
+
     def test_all_approved_accepts_approves_and_lists_the_rest(self):
         blocks = [self.block(), {'rva': 0x3000, 'size': 8, 'digest': 'e' * 64, 'verdict': 'reject'}]
         changed, skipped = af.accept_many(self.root, str(self.review_file('review-batch', blocks)), when=WHEN)

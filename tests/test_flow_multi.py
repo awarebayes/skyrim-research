@@ -43,8 +43,13 @@ class MultiGroupIntegration(unittest.TestCase):
         old = git(self.repo.origin, 'rev-parse', 'main')
         reviews = {p: p.read_bytes() for p in (self.root / '.local/reviews').glob('*.md')}
         (self.root / 'reconstruction/x/Unrelated.cpp').write_text('int untouched;\n')
-        with patch.object(flow, 'pre_push_checks', wraps=flow.pre_push_checks) as checks:
+        with patch.object(flow, 'pre_push_checks', wraps=flow.pre_push_checks) as checks, \
+                patch.object(flow, 'run', wraps=flow.run) as commands:
             result = self.integrate()
+        accepts = [call.args[0] for call in commands.call_args_list if 'tools/accept_function.py' in call.args[0]]
+        self.assertEqual(len(accepts), 1)
+        self.assertIn('--review-batch', accepts[0])
+        self.assertFalse(any('tools/build_index.py' in call.args[0] for call in commands.call_args_list))
         integ = result['integrated']
         self.assertEqual(checks.call_count, 1)
         self.assertEqual(integ['accepted'], 3)
