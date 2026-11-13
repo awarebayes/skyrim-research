@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Revert@BeamProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8258528,
+      "size": 27
+    },
+    "?SaveGame@BeamProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 8258336,
+      "size": 64
+    },
+    "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8371440,
+      "size": null
+    },
+    "?SaveGame@Projectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 8368128,
+      "size": null
+    },
+    "?Slot165@BeamProjectile@@UEBAEXZ": {
+      "rva": 8257200,
+      "size": 3
+    },
+    "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z": {
+      "rva": 6528768,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Revert@BeamProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7e03e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@BeamProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x7e0320",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7fbcf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@Projectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x7fb000",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot165@BeamProjectile@@UEBAEXZ",
+        "rva": "0x7dfeb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "rva": "0x639f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/a370d44e51bebafdc9b4d8fbb55088e1ff4bf2c6a31250ffacc99bdb1446dc97.json",
+  "versions": [
+    {
+      "sha256": "a370d44e51bebafdc9b4d8fbb55088e1ff4bf2c6a31250ffacc99bdb1446dc97",
+      "base": null,
+      "added": [
+        "__real@3f800000",
+        "?GetActorCause@Projectile@@UEBAPEAVActorCause@@XZ",
+        "?Set3D@Projectile@@UEAAXPEAVNiAVObject@@_N@Z",
+        "?GetPowerSpeedMult@Projectile@@QEBAMXZ",
+        "?IsPermanent@Projectile@@QEBA_NXZ",
+        "?GetGravity@Projectile@@QEAAMXZ",
+        "?SetActorCause@Projectile@@UEAAXPEAVActorCause@@@Z",
+        "?HasKeywordHelper@Projectile@@UEBA_NPEBVBGSKeyword@@@Z",
+        "?Update3D@Projectile@@QEAAXXZ",
+        "?Set3DBase@Projectile@@QEAAXPEAVNiAVObject@@_N@Z",
+        "?singleton@TESDataHandler@@2PEAV1@EA",
+        "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
+        "?ReleaseActorCause@@YAXPEAVActorCause@@@Z",
+        "?g_updateDelta@@3MA",
+        "?Update@NiAVObject@@QEAAXAEAUNiUpdateData@@@Z",
+        "?Slot184@Projectile@@UEBAEXZ"
+      ]
+    }
+  ]
+}

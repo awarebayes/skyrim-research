@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "8f0440a195acf2d764adfa10701533f8c504dc7eb4dae80a9b75e91bbc85908c",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x151d6d0",
+  "naming_findings": [
+    "The completed IsEqual body retains a TODO comment."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "75870d5dfa9264a59ca929429fcc62752352be13501fc37a6571eadcd28f6f2a",
+  "review_task_id": "review-p85-reconcile-bc2",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 22140624,
+  "size": 7,
+  "source_digest": "23e8180b6e131f233ba9f5fd8a806b8b3d7da8a386df2a24553b2ed3cd70e87f",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

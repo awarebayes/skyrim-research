@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Handle3DLoaded@FlameProjectile@@UEAAXXZ": {
+      "rva": 8303664,
+      "size": 19
+    },
+    "?Revert@FlameProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8303168,
+      "size": 29
+    },
+    "??_GFlameProjectile@@UEAAPEAXI@Z": {
+      "rva": 8303888,
+      "size": 52
+    },
+    "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8371440,
+      "size": null
+    },
+    "??1FlameProjectile@@UEAA@XZ": {
+      "rva": 8359472,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?Slot164@FlameProjectile@@UEBAEXZ": {
+      "rva": 8299104,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Handle3DLoaded@FlameProjectile@@UEAAXXZ",
+        "rva": "0x7eb430",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@FlameProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7eb240",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GFlameProjectile@@UEAAPEAXI@Z",
+        "rva": "0x7eb510",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7fbcf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1FlameProjectile@@UEAA@XZ",
+        "rva": "0x7f8e30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot164@FlameProjectile@@UEBAEXZ",
+        "rva": "0x7ea260",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

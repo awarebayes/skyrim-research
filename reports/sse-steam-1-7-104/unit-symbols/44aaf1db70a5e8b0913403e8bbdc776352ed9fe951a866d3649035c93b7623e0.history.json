@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/44aaf1db70a5e8b0913403e8bbdc776352ed9fe951a866d3649035c93b7623e0.json",
+  "versions": [
+    {
+      "sha256": "44aaf1db70a5e8b0913403e8bbdc776352ed9fe951a866d3649035c93b7623e0",
+      "base": null,
+      "added": [
+        "?SetSkipCheckCast@ActorMagicCaster@@UEAAXXZ",
+        "?GetCasterStatsObject@ActorMagicCaster@@UEBAPEAVTESObjectREFR@@XZ",
+        "?GetIsDualCasting@ActorMagicCaster@@UEBA_NXZ",
+        "?ClearMagicNode@ActorMagicCaster@@UEAAXXZ",
+        "?SetDualCasting@ActorMagicCaster@@UEAAX_N@Z",
+        "?PrepareSound@ActorMagicCaster@@UEAAXW4SoundID@MagicSystem@@PEAVMagicItem@@@Z",
+        "?Cast@ActorMagicCaster@@QEAAXXZ",
+        "?PlaySpellSound@ActorMagicCaster@@QEAAXW4SoundID@MagicSystem@@PEAVMagicItem@@@Z",
+        "?StartCast@ActorMagicCaster@@QEAAXI@Z",
+        "?GetCastingSource@ActorMagicCaster@@UEBAIXZ"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/241f314d82ff18e07762d4960e4217399e4b8f994c06bc023fd34c1fda881bfb.json",
+  "versions": [
+    {
+      "sha256": "241f314d82ff18e07762d4960e4217399e4b8f994c06bc023fd34c1fda881bfb",
+      "base": null,
+      "added": [
+        "?GetKillOnCollision@MissileProjectile@@UEAA_NXZ",
+        "?LoadGame@MissileProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@MissileProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@MissileProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?PrepareLoad@MissileProjectile@@QEAAXXZ",
+        "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "?PrepareFinishLoad@MissileProjectile@@QEAAXXZ",
+        "?ContinueFinishLoad@MissileProjectile@@QEAAXXZ",
+        "?PrepareSave@MissileProjectile@@QEAAXXZ",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "?Slot162@MissileProjectile@@UEBAEXZ"
+      ]
+    }
+  ]
+}

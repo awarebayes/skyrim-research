@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetKillOnCollision@MissileProjectile@@UEAA_NXZ": {
+      "rva": 8342848,
+      "size": 11
+    },
+    "?LoadGame@MissileProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8342976,
+      "size": 55
+    },
+    "?FinishLoadGame@MissileProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8343056,
+      "size": 57
+    },
+    "?SaveGame@MissileProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 8342896,
+      "size": 64
+    },
+    "?PrepareLoad@MissileProjectile@@QEAAXXZ": {
+      "rva": 8369072,
+      "size": null
+    },
+    "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z": {
+      "rva": 6520432,
+      "size": null
+    },
+    "?PrepareFinishLoad@MissileProjectile@@QEAAXXZ": {
+      "rva": 8371056,
+      "size": null
+    },
+    "?ContinueFinishLoad@MissileProjectile@@QEAAXXZ": {
+      "rva": 8343168,
+      "size": null
+    },
+    "?PrepareSave@MissileProjectile@@QEAAXXZ": {
+      "rva": 8368128,
+      "size": null
+    },
+    "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z": {
+      "rva": 6528768,
+      "size": null
+    },
+    "?Slot162@MissileProjectile@@UEBAEXZ": {
+      "rva": 8331584,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetKillOnCollision@MissileProjectile@@UEAA_NXZ",
+        "rva": "0x7f4d40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@MissileProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7f4dc0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishLoadGame@MissileProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7f4e10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@MissileProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x7f4d70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareLoad@MissileProjectile@@QEAAXXZ",
+        "rva": "0x7fb3b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "rva": "0x637e70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareFinishLoad@MissileProjectile@@QEAAXXZ",
+        "rva": "0x7fbb70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ContinueFinishLoad@MissileProjectile@@QEAAXXZ",
+        "rva": "0x7f4e80",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareSave@MissileProjectile@@QEAAXXZ",
+        "rva": "0x7fb000",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "rva": "0x639f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot162@MissileProjectile@@UEBAEXZ",
+        "rva": "0x7f2140",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

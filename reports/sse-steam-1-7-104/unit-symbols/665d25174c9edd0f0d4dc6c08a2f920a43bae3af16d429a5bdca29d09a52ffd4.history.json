@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/665d25174c9edd0f0d4dc6c08a2f920a43bae3af16d429a5bdca29d09a52ffd4.json",
+  "versions": [
+    {
+      "sha256": "665d25174c9edd0f0d4dc6c08a2f920a43bae3af16d429a5bdca29d09a52ffd4",
+      "base": null,
+      "added": [
+        "?Handle3DLoaded@FlameProjectile@@UEAAXXZ",
+        "?Revert@FlameProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "??_GFlameProjectile@@UEAAPEAXI@Z",
+        "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "??1FlameProjectile@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "?Slot164@FlameProjectile@@UEBAEXZ"
+      ]
+    }
+  ]
+}

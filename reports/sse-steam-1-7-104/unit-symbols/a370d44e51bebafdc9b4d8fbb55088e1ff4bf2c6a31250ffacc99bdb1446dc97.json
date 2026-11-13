@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__real@3f800000": {
+      "rva": 28687912,
+      "size": null
+    },
+    "?GetActorCause@Projectile@@UEBAPEAVActorCause@@XZ": {
+      "rva": 8372336,
+      "size": 8
+    },
+    "?Set3D@Projectile@@UEAAXPEAVNiAVObject@@_N@Z": {
+      "rva": 8365488,
+      "size": 20
+    },
+    "?GetPowerSpeedMult@Projectile@@QEBAMXZ": {
+      "rva": 8372224,
+      "size": 28
+    },
+    "?IsPermanent@Projectile@@QEBA_NXZ": {
+      "rva": 8373312,
+      "size": 29
+    },
+    "?GetGravity@Projectile@@QEAAMXZ": {
+      "rva": 8373824,
+      "size": 35
+    },
+    "?SetActorCause@Projectile@@UEAAXPEAVActorCause@@@Z": {
+      "rva": 8372288,
+      "size": 41
+    },
+    "?HasKeywordHelper@Projectile@@UEBA_NPEBVBGSKeyword@@@Z": {
+      "rva": 8381104,
+      "size": 45
+    },
+    "?Update3D@Projectile@@QEAAXXZ": {
+      "rva": 8367952,
+      "size": 58
+    },
+    "?Set3DBase@Projectile@@QEAAXPEAVNiAVObject@@_N@Z": {
+      "rva": 3058992,
+      "size": null
+    },
+    "?singleton@TESDataHandler@@2PEAV1@EA": {
+      "rva": 35249880,
+      "size": null
+    },
+    "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z": {
+      "rva": 1848960,
+      "size": null
+    },
+    "?ReleaseActorCause@@YAXPEAVActorCause@@@Z": {
+      "rva": 4464432,
+      "size": null
+    },
+    "?g_updateDelta@@3MA": {
+      "rva": 35251696,
+      "size": null
+    },
+    "?Update@NiAVObject@@QEAAXAEAUNiUpdateData@@@Z": {
+      "rva": 15599920,
+      "size": null
+    },
+    "?Slot184@Projectile@@UEBAEXZ": {
+      "rva": 8381792,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__real@3f800000",
+        "rva": "0x1b5be28",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetActorCause@Projectile@@UEBAPEAVActorCause@@XZ",
+        "rva": "0x7fc070",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Set3D@Projectile@@UEAAXPEAVNiAVObject@@_N@Z",
+        "rva": "0x7fa5b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetPowerSpeedMult@Projectile@@QEBAMXZ",
+        "rva": "0x7fc000",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsPermanent@Projectile@@QEBA_NXZ",
+        "rva": "0x7fc440",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetGravity@Projectile@@QEAAMXZ",
+        "rva": "0x7fc640",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetActorCause@Projectile@@UEAAXPEAVActorCause@@@Z",
+        "rva": "0x7fc040",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HasKeywordHelper@Projectile@@UEBA_NPEBVBGSKeyword@@@Z",
+        "rva": "0x7fe2b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Update3D@Projectile@@QEAAXXZ",
+        "rva": "0x7faf50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Set3DBase@Projectile@@QEAAXPEAVNiAVObject@@_N@Z",
+        "rva": "0x2ead30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?singleton@TESDataHandler@@2PEAV1@EA",
+        "rva": "0x219ded8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
+        "rva": "0x1c3680",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReleaseActorCause@@YAXPEAVActorCause@@@Z",
+        "rva": "0x441f30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_updateDelta@@3MA",
+        "rva": "0x219e5f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Update@NiAVObject@@QEAAXAEAUNiUpdateData@@@Z",
+        "rva": "0xee0930",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot184@Projectile@@UEBAEXZ",
+        "rva": "0x7fe560",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

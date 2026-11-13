@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SetSkipCheckCast@ActorMagicCaster@@UEAAXXZ": {
+      "rva": 6034016,
+      "size": 8
+    },
+    "?GetCasterStatsObject@ActorMagicCaster@@UEBAPEAVTESObjectREFR@@XZ": {
+      "rva": 6036240,
+      "size": 8
+    },
+    "?GetIsDualCasting@ActorMagicCaster@@UEBA_NXZ": {
+      "rva": 6040832,
+      "size": 10
+    },
+    "?ClearMagicNode@ActorMagicCaster@@UEAAXXZ": {
+      "rva": 6040448,
+      "size": 12
+    },
+    "?SetDualCasting@ActorMagicCaster@@UEAAX_N@Z": {
+      "rva": 6041872,
+      "size": 31
+    },
+    "?PrepareSound@ActorMagicCaster@@UEAAXW4SoundID@MagicSystem@@PEAVMagicItem@@@Z": {
+      "rva": 6035456,
+      "size": 42
+    },
+    "?Cast@ActorMagicCaster@@QEAAXXZ": {
+      "rva": 6085504,
+      "size": 50
+    },
+    "?PlaySpellSound@ActorMagicCaster@@QEAAXW4SoundID@MagicSystem@@PEAVMagicItem@@@Z": {
+      "rva": 6085008,
+      "size": null
+    },
+    "?StartCast@ActorMagicCaster@@QEAAXI@Z": {
+      "rva": 6085200,
+      "size": null
+    },
+    "?GetCastingSource@ActorMagicCaster@@UEBAIXZ": {
+      "rva": 6031440,
+      "size": 7
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SetSkipCheckCast@ActorMagicCaster@@UEAAXXZ",
+        "rva": "0x5c1260",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCasterStatsObject@ActorMagicCaster@@UEBAPEAVTESObjectREFR@@XZ",
+        "rva": "0x5c1b10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetIsDualCasting@ActorMagicCaster@@UEBA_NXZ",
+        "rva": "0x5c2d00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearMagicNode@ActorMagicCaster@@UEAAXXZ",
+        "rva": "0x5c2b80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetDualCasting@ActorMagicCaster@@UEAAX_N@Z",
+        "rva": "0x5c3110",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PrepareSound@ActorMagicCaster@@UEAAXW4SoundID@MagicSystem@@PEAVMagicItem@@@Z",
+        "rva": "0x5c1800",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Cast@ActorMagicCaster@@QEAAXXZ",
+        "rva": "0x5cdb80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PlaySpellSound@ActorMagicCaster@@QEAAXW4SoundID@MagicSystem@@PEAVMagicItem@@@Z",
+        "rva": "0x5cd990",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StartCast@ActorMagicCaster@@QEAAXI@Z",
+        "rva": "0x5cda50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCastingSource@ActorMagicCaster@@UEBAIXZ",
+        "rva": "0x5c0850",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

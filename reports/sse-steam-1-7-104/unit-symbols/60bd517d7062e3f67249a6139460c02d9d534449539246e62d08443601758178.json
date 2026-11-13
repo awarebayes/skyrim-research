@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?UpdateImpl@BarrierProjectile@@UEAAXM@Z": {
+      "rva": 8255120,
+      "size": 26
+    },
+    "?Revert@BarrierProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8255328,
+      "size": 30
+    },
+    "?Kill@Projectile@@QEAAXXZ": {
+      "rva": 8363376,
+      "size": null
+    },
+    "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8371440,
+      "size": null
+    },
+    "?Slot167@BarrierProjectile@@UEBAEXZ": {
+      "rva": 8256912,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?UpdateImpl@BarrierProjectile@@UEAAXM@Z",
+        "rva": "0x7df690",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@BarrierProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7df760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Kill@Projectile@@QEAAXXZ",
+        "rva": "0x7f9d70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7fbcf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot167@BarrierProjectile@@UEBAEXZ",
+        "rva": "0x7dfd90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

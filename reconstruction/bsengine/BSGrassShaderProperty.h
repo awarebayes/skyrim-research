@@ -1,18 +1,3 @@
-// BSGrassShaderProperty::QShader, build sse-steam-1-7-104, RVA 0x151d9a0, 6 bytes.
-// Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"CharmedBaryon/CommonLibSSE-NG","revision":"b93280e832f263dbef44e44cbe2936622a02f91a","source":"ng-slot"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// BSGrassShaderProperty: EXE_RTTI
-// QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-// member, padding: GUESS(low); storage names invented for the measured member offset
-// Public naming source notice:
 // MIT License
 //
 // Copyright (c) 2018 Ryan-rsm-McKenzie
@@ -34,11 +19,39 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+// BSGrassShaderProperty declarations for build sse-steam-1-7-104.
+//
+// Labels: v2
+// Task: p46-c2-s08-nirefobject-bsgrassshaderproperty
+// Source exposure: mixed (names and declarations from community headers; base classes, sizes and
+// the compared functions from the pinned image).
+// Declarations derived from powerof3/CommonLibSSE are GPL-3.0 (its licence).
+// Started from a tools/skeleton.py skeleton: stand-ins carry only what the compared code needs, and
+// community names are unverified.
+// Base form: shared header ../bsengine/BSShaderProperty.h for BSShaderProperty.
+// BSGrassShaderProperty: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0) EXE_RTTI
+// BSLightingShaderProperty: STANDIN EXE_RTTI
+// BSGrassShaderProperty::IsEqual: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+// unknown88: GUESS(low)
 #pragma once
+
 #include <cstdint>
-// QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-class BSGrassShaderProperty
+#include <cstddef>
+#include "../bsengine/BSShaderProperty.h"
+
+class BSLightingShaderProperty : public BSShaderProperty
+{
+public:
+};
+
+class BSGrassShaderProperty : public BSLightingShaderProperty
 {
 public:
     virtual std::uint32_t QShader() const;
+    virtual bool IsEqual(NiObject* a_object);  // compared: 0x151d6d0
+
+    // TODO members: replace part of the padding with the members the bodies read,
+    // keeping every offset and the size check true.
+    std::uint8_t unknown88[0x148];  // 88
 };
+static_assert(sizeof(BSGrassShaderProperty) == 0x1D0, "BSGrassShaderProperty size");

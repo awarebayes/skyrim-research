@@ -1,23 +1,48 @@
-// FlameProjectile::Slot164, build sse-steam-1-7-104, RVA 0x7ea260, 3 bytes.
+// FlameProjectile declarations for build sse-steam-1-7-104.
+//
 // Labels: v2
-// Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
-// Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
-// Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"low","kind":"guess","owner":"FlameProjectile","rationale":"vtable owner and slot; method spelling invented","slot":164},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
-// Only the named leaf is compared. Types are minimal stand-ins; names are unverified.
-// Adapted bodies: none. Body synthesized from the bounded leaf template.
-// A comparator pass verifies code under the recipe, not names or original source form.
-// Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
-// FlameProjectile: EXE_RTTI
-// Slot164: GUESS(low)
-// member, padding: GUESS(low); storage names invented for the measured member offset
-// Method name is a guess built from the vtable owner and slot, not a public symbol.
+// Task: p46-c2-s06-projectile-flameprojectile
+// Source exposure: mixed (names and declarations from community headers; base classes, sizes and
+// the compared functions from the pinned image).
+// Declarations derived from powerof3/CommonLibSSE are GPL-3.0 (its licence).
+// Started from a tools/skeleton.py skeleton: stand-ins carry only what the compared code needs, and
+// community names are unverified.
+// Base form: shared header ../forms/TESObjectREFR.h for TESObjectREFR and TESForm. It defines TESForm
+// itself, so ../forms/TESForm.h is not included here (the two shared headers cannot be combined).
+// FlameProjectile: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) EXE_RTTI
+// Projectile: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); pads the base to the flags word at 0x1D4
+// FlameProjectile::Handle3DLoaded, FlameProjectile::Revert, FlameProjectile::~FlameProjectile: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+// Projectile::Revert: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); called non-virtually by the compared code
+// Projectile::flags: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) OBSERVED; NG declares flags at 0x1CC, this build uses 0x1D4
+// FlameProjectile size 0x1E8: OBSERVED; the compared deleting destructor passes it to operator delete
+// unk1E0: GUESS(low)
 #pragma once
+
 #include <cstdint>
-// Slot164: GUESS(low); method name inferred from vtable owner and slot
-class FlameProjectile
+#include <cstddef>
+#include "../forms/TESObjectREFR.h"
+
+class BGSLoadFormBuffer;
+
+class Projectile : public TESObjectREFR
+{
+public:
+    virtual void Revert(BGSLoadFormBuffer* a_buf);  // compared base call: 0x7fbcf0
+
+    std::uint8_t unkBase[0x1D4 - sizeof(TESObjectREFR)];  // pads to flags
+    std::uint32_t flags;  // 1D4
+};
+
+class FlameProjectile : public Projectile
 {
 public:
     virtual std::uint8_t Slot164() const;
+    FlameProjectile();
+    virtual void Handle3DLoaded();  // compared: 0x7eb430
+    virtual void Revert(BGSLoadFormBuffer* a_buf);  // compared: 0x7eb240
+    virtual ~FlameProjectile();  // compared: 0x7eb510 (scalar deleting destructor)
+
+    std::uint8_t  unk1D8[0x8];  // 1D8
+    std::uint64_t unk1E0;       // 1E0
 };
+static_assert(sizeof(FlameProjectile) == 0x1E8, "FlameProjectile size");

@@ -2,28 +2,22 @@
   "build_id": "sse-steam-1-7-104",
   "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
   "escalation_category": "none",
-  "family_evidence": {
-    "batch_path": "reports/sse-steam-1-7-104/family-batches/p81-const-return-v2-01.json",
-    "batch_sha256": "aa935b2d5750bc0effa9b35568dca41f9c16a927819f247bb5dbadbae9498ff0",
-    "family_path": "reports/sse-steam-1-7-104/families/e5d3f654f509c5398369bf78e9b5a3aeb68cbd4946222f94633f53a55f41d040.json",
-    "member_sha256": "e2f3488a39f155a7addcd816c655432bcf5d990251d5ac936d4a5f4d0ea4830a"
-  },
   "function_id": "sse-steam-1-7-104-0x7dfeb0",
   "naming_findings": [
-    "Family approval does not assess individual names."
+    "Slot165 is a placeholder name."
   ],
   "previous_code_section_sha256": null,
   "previous_review_sha256": null,
   "previous_source_digest": null,
   "review_date": "2026-11-13",
-  "review_kind": "family",
-  "review_record_schema": 4,
-  "review_sha256": "689a7a0686e17d106b0ace5daaa03767ba0017390e807f80c2f000da33e0c58d",
-  "review_task_id": "review-family-e5d3f654f509c5398369",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "75870d5dfa9264a59ca929429fcc62752352be13501fc37a6571eadcd28f6f2a",
+  "review_task_id": "review-p85-reconcile-bc2",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 8257200,
   "size": 3,
-  "source_digest": "778d649eebdc3bb19524416f398be88d97db8e1daad2783e0508ea0a3891c5f4",
+  "source_digest": "a23929652c5d8f29669dd356c58334753c2f3d86d64ed5a0b87305f9675fc5fd",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

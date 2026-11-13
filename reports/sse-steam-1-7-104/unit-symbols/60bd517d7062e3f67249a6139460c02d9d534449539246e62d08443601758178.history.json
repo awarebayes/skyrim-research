@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/60bd517d7062e3f67249a6139460c02d9d534449539246e62d08443601758178.json",
+  "versions": [
+    {
+      "sha256": "60bd517d7062e3f67249a6139460c02d9d534449539246e62d08443601758178",
+      "base": null,
+      "added": [
+        "?UpdateImpl@BarrierProjectile@@UEAAXM@Z",
+        "?Revert@BarrierProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Kill@Projectile@@QEAAXXZ",
+        "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Slot167@BarrierProjectile@@UEBAEXZ"
+      ]
+    }
+  ]
+}

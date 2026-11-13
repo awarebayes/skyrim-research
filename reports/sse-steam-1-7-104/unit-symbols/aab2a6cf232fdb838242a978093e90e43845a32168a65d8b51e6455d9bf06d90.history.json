@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/aab2a6cf232fdb838242a978093e90e43845a32168a65d8b51e6455d9bf06d90.json",
+  "versions": [
+    {
+      "sha256": "aab2a6cf232fdb838242a978093e90e43845a32168a65d8b51e6455d9bf06d90",
+      "base": null,
+      "added": [
+        "?Revert@BeamProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@BeamProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?Revert@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@Projectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?Slot165@BeamProjectile@@UEBAEXZ",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z"
+      ]
+    }
+  ]
+}
