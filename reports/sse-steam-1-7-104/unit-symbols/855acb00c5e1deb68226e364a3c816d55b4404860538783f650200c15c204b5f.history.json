@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/855acb00c5e1deb68226e364a3c816d55b4404860538783f650200c15c204b5f.json",
+  "versions": [
+    {
+      "sha256": "855acb00c5e1deb68226e364a3c816d55b4404860538783f650200c15c204b5f",
+      "base": null,
+      "added": [
+        "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?ProcessClone@NiTimeController@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?IsStreamable@NiTimeController@@UEAA_NXZ",
+        "?IsTransformController@NiTimeController@@UEAA_NXZ",
+        "?IsVertexController@NiTimeController@@UEAA_NXZ"
+      ]
+    }
+  ]
+}

@@ -9,6 +9,8 @@
 // Adapted bodies: none. Body synthesized from the bounded leaf template.
 // A comparator pass verifies code under the recipe, not names or original source form.
 // Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
+// Task p92-s-bsimusictrack: RVA 0x325530, 0x325540 and 0x325560 are compared with the TestCanPlay body above.
+// Evidence: findings/fifth-batch-selection.md
 // BSIMusicTrack: EXE_RTTI
 // TestCanPlay: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 // member, padding: GUESS(low); storage names invented for the measured member offset
@@ -17,4 +19,18 @@
 std::uint8_t BSIMusicTrack::TestCanPlay() const
 {
     return 0x1;
+}
+
+// DoClearDucking, DoSetDuckingAttenuation, GetMusicStatus: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BSIMusicTrack::DoClearDucking()
+{
+}
+
+void BSIMusicTrack::DoSetDuckingAttenuation(std::uint16_t a_ducking)
+{
+}
+
+std::uint32_t BSIMusicTrack::GetMusicStatus() const
+{
+    return musicStatus;
 }

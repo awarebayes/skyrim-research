@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "9df8ce9baa596ffb9274ad3fd33d624ee0eb5044f097e0b112fe34d529ec640e",
+        "object_sha256": "4e39d952178550ffcdb772132d03afc04f83451e5357210bca94263cd58f8608",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSLightingShaderMaterial.h",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "edfaa5d37bea355587619b6760418ffff8ff3c3acf8cf40970c63d613d93a0da",
+        "object_sha256": "bce9da5d43ff179dc8469e64db955d2c319b6cc3573987ae549bda5d5ef24422",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSLightingShaderMaterial.h",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 7e48c6d918ff9267a936f03344ae1b650fc2effd, with uncommitted changes to reconstruction/bsengine/BSLightingShaderMaterial.h, reconstruction/bsengine/BSLightingShaderMaterialParallaxOcc.cpp, reconstruction/bsengine/BSLightingShaderMaterialParallaxOcc.h, reports/sse-steam-1-7-104/unit-symbols/d5e6fb0c742b39ccad96e85643a28aaf5f96489c0833f5c06c3dbe79ed20cd10.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/bsengine/BSLightingShaderMaterialBase.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "a7a92b9f7a0b376e7e28b8ab3e4c92ad543212b44e4006330d3f002d9d4a30a4",
           "code_sections": 1,
-          "object_sha256": "9df8ce9baa596ffb9274ad3fd33d624ee0eb5044f097e0b112fe34d529ec640e"
+          "object_sha256": "4e39d952178550ffcdb772132d03afc04f83451e5357210bca94263cd58f8608"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -147,7 +147,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialParallaxOcc.cpp",
-          "source_revision": "45cc65601c2bcf977b44125071236ad5dba48d5e8300b8dd7f3ef35916ea1f64"
+          "source_revision": "5a37a212901c9bd2f5c04c31d27d1d886b311af34f5157a05cae9492e15008f7"
         },
         "symbol_map_sha256": "d5e6fb0c742b39ccad96e85643a28aaf5f96489c0833f5c06c3dbe79ed20cd10",
         "target": {
@@ -165,7 +165,7 @@
         "candidate": {
           "code_section_sha256": "a7a92b9f7a0b376e7e28b8ab3e4c92ad543212b44e4006330d3f002d9d4a30a4",
           "code_sections": 1,
-          "object_sha256": "edfaa5d37bea355587619b6760418ffff8ff3c3acf8cf40970c63d613d93a0da"
+          "object_sha256": "bce9da5d43ff179dc8469e64db955d2c319b6cc3573987ae549bda5d5ef24422"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -228,7 +228,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialParallaxOcc.cpp",
-          "source_revision": "45cc65601c2bcf977b44125071236ad5dba48d5e8300b8dd7f3ef35916ea1f64"
+          "source_revision": "5a37a212901c9bd2f5c04c31d27d1d886b311af34f5157a05cae9492e15008f7"
         },
         "symbol_map_sha256": "d5e6fb0c742b39ccad96e85643a28aaf5f96489c0833f5c06c3dbe79ed20cd10",
         "target": {
@@ -246,7 +246,7 @@
         "candidate": {
           "code_section_sha256": "a7a92b9f7a0b376e7e28b8ab3e4c92ad543212b44e4006330d3f002d9d4a30a4",
           "code_sections": 1,
-          "object_sha256": "edfaa5d37bea355587619b6760418ffff8ff3c3acf8cf40970c63d613d93a0da"
+          "object_sha256": "bce9da5d43ff179dc8469e64db955d2c319b6cc3573987ae549bda5d5ef24422"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -309,7 +309,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialParallaxOcc.cpp",
-          "source_revision": "45cc65601c2bcf977b44125071236ad5dba48d5e8300b8dd7f3ef35916ea1f64"
+          "source_revision": "5a37a212901c9bd2f5c04c31d27d1d886b311af34f5157a05cae9492e15008f7"
         },
         "symbol_map_sha256": "d5e6fb0c742b39ccad96e85643a28aaf5f96489c0833f5c06c3dbe79ed20cd10",
         "target": {
@@ -322,7 +322,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSLightingShaderMaterialParallaxOcc.cpp",
-    "digest": "45cc65601c2bcf977b44125071236ad5dba48d5e8300b8dd7f3ef35916ea1f64",
+    "digest": "5a37a212901c9bd2f5c04c31d27d1d886b311af34f5157a05cae9492e15008f7",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSLightingShaderMaterial.h",

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/aa98296d4150bb63d40fadf24dde5ad29d3d9baa79bb2ec0b759453dabffc7c3.json",
+  "versions": [
+    {
+      "sha256": "aa98296d4150bb63d40fadf24dde5ad29d3d9baa79bb2ec0b759453dabffc7c3",
+      "base": null,
+      "added": [
+        "?GetOwner@ExtraDataList@@QEAAPEAVTESForm@@XZ",
+        "?GetEncounterZone@ExtraDataList@@QEBAPEAVBGSEncounterZone@@XZ",
+        "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ",
+        "?GetbhkWorld@ExtraDataList@@QEBAPEAVbhkWorld@@XZ",
+        "?Lock@BSSpinLock@@QEAAXI@Z",
+        "?LookupByID@TESForm@@SAPEAV1@I@Z",
+        "?GetFile@TESForm@@QEBAPEAVTESFile@@H@Z",
+        "?AddCompileIndex@TESForm@@SAXAEAIPEAVTESFile@@@Z",
+        "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ",
+        "?GetCoordinates@TESObjectCELL@@QEAAXAEAH0@Z",
+        "?GetOwner@TESObjectCELL@@QEAAPEAVTESForm@@XZ",
+        "?GetEncounterZone@TESObjectCELL@@QEBAPEAVBGSEncounterZone@@XZ",
+        "?GetbhkWorld@TESObjectCELL@@QEBAPEAVbhkWorld@@XZ",
+        "?EnterReferenceListLock@TESObjectCELL@@QEAAXXZ",
+        "?ExitReferenceListLock@TESObjectCELL@@QEAAXXZ",
+        "?GetLocation@TESWorldSpace@@QEAAPEAVBGSLocation@@XZ",
+        "__RTDynamicCast",
+        "__imp_GetCurrentThreadId",
+        "??_R0?AVTESForm@@@8",
+        "??_R0?AVBGSEncounterZone@@@8",
+        "??_R0?AVBGSLocation@@@8",
+        "?gExteriorbhkWorld@@3PEAPEAVbhkWorld@@EA",
+        "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA",
+        "?CreateDuplicateForm@TESObjectCELL@@QEAAPEAVTESForm@@_NPEAX@Z",
+        "?IsParentForm@TESObjectCELL@@QEAA_NXZ",
+        "?GetWorldSpaceOfExteriorCell@TESObjectCELL@@QEAAPEAVTESWorldSpace@@XZ"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?TestCanPlay@BSIMusicTrack@@UEBAEXZ": {
+      "rva": 3305280,
+      "size": 3
+    },
+    "?DoClearDucking@BSIMusicTrack@@UEAAXXZ": {
+      "rva": 3298608,
+      "size": 3
+    },
+    "?DoSetDuckingAttenuation@BSIMusicTrack@@UEAAXG@Z": {
+      "rva": 3298624,
+      "size": 3
+    },
+    "?GetMusicStatus@BSIMusicTrack@@UEBAIXZ": {
+      "rva": 3298656,
+      "size": 4
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?TestCanPlay@BSIMusicTrack@@UEBAEXZ",
+        "rva": "0x326f40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoClearDucking@BSIMusicTrack@@UEAAXXZ",
+        "rva": "0x325530",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DoSetDuckingAttenuation@BSIMusicTrack@@UEAAXG@Z",
+        "rva": "0x325540",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetMusicStatus@BSIMusicTrack@@UEBAIXZ",
+        "rva": "0x325560",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

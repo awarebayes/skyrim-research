@@ -41,4 +41,9 @@ class BSShadowLight
 {
 public:
     virtual std::uint8_t Unk_03() const;
+    // Unk_04, Unk_06, Unk_08: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    // return type: GUESS(low); the listing returns a zero byte in AL
+    virtual std::uint8_t Unk_04();
+    virtual std::uint8_t Unk_06();
+    virtual std::uint8_t Unk_08();
 };

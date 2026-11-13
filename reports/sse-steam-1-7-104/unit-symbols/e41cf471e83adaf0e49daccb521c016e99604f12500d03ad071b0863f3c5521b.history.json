@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e41cf471e83adaf0e49daccb521c016e99604f12500d03ad071b0863f3c5521b.json",
+  "versions": [
+    {
+      "sha256": "e41cf471e83adaf0e49daccb521c016e99604f12500d03ad071b0863f3c5521b",
+      "base": null,
+      "added": [
+        "?ClearDataComponent@BGSPerkRankArray@@UEAAXXZ",
+        "?FreePerks@BGSPerkRankArray@@QEAAX_N@Z",
+        "?InitializeDataComponent@BGSPerkRankArray@@UEAAXXZ"
+      ]
+    }
+  ]
+}

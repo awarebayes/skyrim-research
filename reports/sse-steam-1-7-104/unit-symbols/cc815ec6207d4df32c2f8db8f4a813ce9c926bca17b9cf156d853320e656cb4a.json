@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?LoadDataHeader@TESRegionData@@UEAA_NPEAX@Z": {
+      "rva": 2424544,
+      "size": 29
+    },
+    "?LoadData@TESRegionData@@UEAAXPEAX@Z": {
+      "rva": 2424656,
+      "size": 3
+    },
+    "??_GTESRegionData@@UEAAPEAXI@Z": {
+      "rva": 2424608,
+      "size": 43
+    },
+    "??_7TESRegionData@@6B@": {
+      "rva": 25203968,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?LoadDataHeader@TESRegionData@@UEAA_NPEAX@Z",
+        "rva": "0x24fee0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadData@TESRegionData@@UEAAXPEAX@Z",
+        "rva": "0x24ff50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GTESRegionData@@UEAAPEAXI@Z",
+        "rva": "0x24ff20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7TESRegionData@@6B@",
+        "rva": "0x1809500",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

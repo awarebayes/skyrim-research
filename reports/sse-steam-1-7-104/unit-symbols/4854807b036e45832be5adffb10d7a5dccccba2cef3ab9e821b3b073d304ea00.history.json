@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/4854807b036e45832be5adffb10d7a5dccccba2cef3ab9e821b3b073d304ea00.json",
+  "versions": [
+    {
+      "sha256": "4854807b036e45832be5adffb10d7a5dccccba2cef3ab9e821b3b073d304ea00",
+      "base": null,
+      "added": [
+        "?TestCanPlay@BSIMusicTrack@@UEBAEXZ",
+        "?DoClearDucking@BSIMusicTrack@@UEAAXXZ",
+        "?DoSetDuckingAttenuation@BSIMusicTrack@@UEAAXG@Z",
+        "?GetMusicStatus@BSIMusicTrack@@UEBAIXZ"
+      ]
+    }
+  ]
+}

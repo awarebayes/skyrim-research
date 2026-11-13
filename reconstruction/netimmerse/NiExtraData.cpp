@@ -36,6 +36,21 @@ bool NiExtraData::RegisterStreamables(NiStream& a_stream)
 	return false;
 }
 
+// LinkObject, IsStreamable, IsCloneable: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void NiExtraData::LinkObject(NiStream& a_stream)
+{
+}
+
+bool NiExtraData::IsStreamable() const
+{
+	return true;
+}
+
+bool NiExtraData::IsCloneable() const
+{
+	return true;
+}
+
 bool NiExtraData::IsEqual(NiObject* a_object)
 {
 	if (NiObject::IsEqual(a_object) && name._data == static_cast<NiExtraData*>(a_object)->name._data) {

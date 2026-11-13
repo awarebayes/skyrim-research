@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "b122237dc84b574c4654459e2b9ced1b57cf1bb0945fcce699694e6bf86aad60",
+        "object_sha256": "1cb4a981e150e0e644360c0d337ec7ce3ee066333741221d7768a6dfcc8d08bf",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSImagespaceShader.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "1713ffd3cebc31fdda3c871e4135a1e80f01109f3061ae263656464e3987c59e",
+        "object_sha256": "e66825eb9f81278672761417bd48e2c2e1a123281adb9a1a1e0c99e9f774b6e4",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSImagespaceShader.cpp",
@@ -64,13 +64,13 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 1254a46adf85f88d4b59f6071454e22da0bd59ce, with uncommitted changes to reconstruction/bsengine/BSImagespaceShader.cpp, reconstruction/bsengine/BSImagespaceShader.h, reports/sse-steam-1-7-104/unit-symbols/953d53b41ab9fd17a7d8098187e5adf16f76f97509855427d371204b0e1b56c9.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/bsengine/BSImagespaceShader.cpp, reports/sse-steam-1-7-104/unit-symbols/0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
     "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
   },
-  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSImagespaceShader.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSImagespaceShader.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x1564d90 --symbol '?UpdateParams@BSImagespaceShader@@UEAAXPEAVImageSpaceEffectParam@@@Z' --compiled reconstruction/bsengine/BSImagespaceShader.cpp --unit reconstruction/bsengine/BSImagespaceShader.cpp reconstruction/bsengine/BSImagespaceShader.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/953d53b41ab9fd17a7d8098187e5adf16f76f97509855427d371204b0e1b56c9.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSImagespaceShader.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSImagespaceShader.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x1564d90 --symbol '?UpdateParams@BSImagespaceShader@@UEAAXPEAVImageSpaceEffectParam@@@Z' --compiled reconstruction/bsengine/BSImagespaceShader.cpp --unit reconstruction/bsengine/BSImagespaceShader.cpp reconstruction/bsengine/BSImagespaceShader.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
   "runs": [
     {
       "compared_on": "mac-wine",
@@ -80,7 +80,7 @@
         "candidate": {
           "code_section_sha256": "36ba8310722e433132cc675071f28b3debb14314c64b0f44a012490f6cb94605",
           "code_sections": 1,
-          "object_sha256": "b122237dc84b574c4654459e2b9ced1b57cf1bb0945fcce699694e6bf86aad60"
+          "object_sha256": "1cb4a981e150e0e644360c0d337ec7ce3ee066333741221d7768a6dfcc8d08bf"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -143,9 +143,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSImagespaceShader.cpp",
-          "source_revision": "1d7fc35b44c7bf43c217ed38eed84fadcb6f8ac757f5b94e343b1d9c610f9222"
+          "source_revision": "fe9cec3abea97dc9dd871f07a0b3f5c1ef21521d141a60f550499ac8934c0b5c"
         },
-        "symbol_map_sha256": "953d53b41ab9fd17a7d8098187e5adf16f76f97509855427d371204b0e1b56c9",
+        "symbol_map_sha256": "0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -161,7 +161,7 @@
         "candidate": {
           "code_section_sha256": "36ba8310722e433132cc675071f28b3debb14314c64b0f44a012490f6cb94605",
           "code_sections": 1,
-          "object_sha256": "1713ffd3cebc31fdda3c871e4135a1e80f01109f3061ae263656464e3987c59e"
+          "object_sha256": "e66825eb9f81278672761417bd48e2c2e1a123281adb9a1a1e0c99e9f774b6e4"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -224,9 +224,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSImagespaceShader.cpp",
-          "source_revision": "1d7fc35b44c7bf43c217ed38eed84fadcb6f8ac757f5b94e343b1d9c610f9222"
+          "source_revision": "fe9cec3abea97dc9dd871f07a0b3f5c1ef21521d141a60f550499ac8934c0b5c"
         },
-        "symbol_map_sha256": "953d53b41ab9fd17a7d8098187e5adf16f76f97509855427d371204b0e1b56c9",
+        "symbol_map_sha256": "0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -242,7 +242,7 @@
         "candidate": {
           "code_section_sha256": "36ba8310722e433132cc675071f28b3debb14314c64b0f44a012490f6cb94605",
           "code_sections": 1,
-          "object_sha256": "1713ffd3cebc31fdda3c871e4135a1e80f01109f3061ae263656464e3987c59e"
+          "object_sha256": "e66825eb9f81278672761417bd48e2c2e1a123281adb9a1a1e0c99e9f774b6e4"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -305,9 +305,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSImagespaceShader.cpp",
-          "source_revision": "1d7fc35b44c7bf43c217ed38eed84fadcb6f8ac757f5b94e343b1d9c610f9222"
+          "source_revision": "fe9cec3abea97dc9dd871f07a0b3f5c1ef21521d141a60f550499ac8934c0b5c"
         },
-        "symbol_map_sha256": "953d53b41ab9fd17a7d8098187e5adf16f76f97509855427d371204b0e1b56c9",
+        "symbol_map_sha256": "0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -318,7 +318,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSImagespaceShader.cpp",
-    "digest": "1d7fc35b44c7bf43c217ed38eed84fadcb6f8ac757f5b94e343b1d9c610f9222",
+    "digest": "fe9cec3abea97dc9dd871f07a0b3f5c1ef21521d141a60f550499ac8934c0b5c",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSImagespaceShader.cpp",
@@ -326,8 +326,8 @@
     ]
   },
   "symbol_map": {
-    "path": "reports/sse-steam-1-7-104/unit-symbols/953d53b41ab9fd17a7d8098187e5adf16f76f97509855427d371204b0e1b56c9.json",
-    "sha256": "953d53b41ab9fd17a7d8098187e5adf16f76f97509855427d371204b0e1b56c9"
+    "path": "reports/sse-steam-1-7-104/unit-symbols/0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0.json",
+    "sha256": "0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

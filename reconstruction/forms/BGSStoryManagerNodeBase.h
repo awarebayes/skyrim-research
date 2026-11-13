@@ -26,8 +26,16 @@ public:
 
 class TESCondition {
 public:
+    // Clear: GUESS(low); the image clears the condition list, called from ClearData
+    void Clear();
+    // ~TESCondition: declared without a body; the destructor calls the out-of-line release
+    ~TESCondition();
+
     void* head;  // 00
 };
+
+// IsDataHandlerBusy: GUESS(low); a predicate on the data handler singleton, returns nonzero while the handler is busy
+bool IsDataHandlerBusy(TESDataHandler* a_handler);
 
 class BGSStoryManagerTreeForm : public TESForm {
 public:
@@ -46,6 +54,9 @@ static_assert(sizeof(BGSStoryManagerTreeForm) == 0x28, "layout");
 
 class BGSStoryManagerBranchNode;
 
+// BranchRemoveChild: GUESS(low); the image tail-calls it from ClearData with the parent, this node and a zero flag
+void BranchRemoveChild(BGSStoryManagerBranchNode* a_parent, class BGSStoryManagerNodeBase* a_child, std::uint32_t a_flag);
+
 class BGSStoryManagerNodeBase : public BGSStoryManagerTreeForm {
 public:
     struct Flags {
@@ -54,7 +65,11 @@ public:
     };
     static_assert(sizeof(Flags) == 0x4, "layout");
 
+    BGSStoryManagerNodeBase();
+    ~BGSStoryManagerNodeBase() override;  // compared: 0x1c7260 (scalar deleting destructor)
+
     void          InitializeData() override;  // 04
+    void          ClearData() override;       // compared: 0x536120
     TESCondition* QConditions() override;     // 3D
 
     // members

@@ -16,6 +16,11 @@
 // community names or that the original source looked like this.
 #include "BSParticleShaderCubeEmitter.h"
 
+bool BSParticleShaderCubeEmitter::Generate(bool, NiPoint3&, NiPoint3&)
+{
+    return false;
+}
+
 // Not compared: defined so that the compiler emits the vftable and, beside it, the
 // deleting destructor that is compared (cookbook rule 14).
 BSParticleShaderCubeEmitter::BSParticleShaderCubeEmitter()

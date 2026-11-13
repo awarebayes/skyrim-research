@@ -18,3 +18,21 @@ std::uint32_t BGSAbilityPerkEntry::GetType() const
 {
     return 0x1;
 }
+
+// BGSAbilityPerkEntry::ApplyPerkEntry: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BGSAbilityPerkEntry::ApplyPerkEntry(Actor* a_actor)
+{
+    if (spell) {
+        a_actor->AddSpell(spell);
+        a_actor->ResetPerkSpells(0.0f);
+    }
+}
+
+// BGSAbilityPerkEntry::RemovePerkEntry: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BGSAbilityPerkEntry::RemovePerkEntry(Actor* a_actor)
+{
+    if (spell) {
+        a_actor->RemoveSpell(spell);
+        a_actor->ResetPerkSpells(0.0f);
+    }
+}

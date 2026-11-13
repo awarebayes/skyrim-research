@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/b2a8b2a708cd03d34d452c7e2e93bdb065ecd6025086b513eb673ea31964ed30.json",
+  "versions": [
+    {
+      "sha256": "b2a8b2a708cd03d34d452c7e2e93bdb065ecd6025086b513eb673ea31964ed30",
+      "base": null,
+      "added": [
+        "?CreateClone@NiObject@@UEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiObject@@UEAA_NPEAV1@@Z",
+        "?Clone@NiInterpolator@@QEAAPEAV1@XZ",
+        "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?StreamCanSkip@NiObject@@UEAA_NXZ",
+        "?GetGroup@NiObject@@UEBAPEAVNiObjectGroup@@XZ",
+        "??0NiObject@@QEAA@XZ",
+        "?RegisterStreamables@NiInterpolator@@UEAA_NAEAVNiStream@@@Z",
+        "?GetActiveTimeRange@NiInterpolator@@UEBAXAEAM0@Z",
+        "?GetSequenceInterpolator@NiInterpolator@@UEAAPEAV1@MM@Z",
+        "?ResolveDependencies@NiInterpolator@@UEAA_NPEAVNiAVObjectPalette@@@Z",
+        "??_GNiInterpolator@@UEAAPEAXI@Z",
+        "?GetRTTI@NiInterpolator@@UEBAPEBVNiRTTI@@XZ",
+        "??3@YAXPEAX_K@Z",
+        "??_7NiRefObject@@6B@",
+        "??_7NiObject@@6B@",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "?NiRTTI_NiInterpolator@@3VNiRTTI@@A",
+        "?AsNiBoolInterpolator@NiInterpolator@@UEAAPEAVNiBoolInterpolator@@XZ",
+        "?Update6@NiInterpolator@@UEAA_NMPEAVNiObjectNET@@AEA_N@Z",
+        "?Update5@NiInterpolator@@UEAA_NMPEAVNiObjectNET@@AEAM@Z"
+      ]
+    }
+  ]
+}

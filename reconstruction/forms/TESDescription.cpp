@@ -15,6 +15,14 @@
 //   Retained accepted regression 0x1e1240: TESDescription::InitializeDataComponent
 #include "TESDescription.h"
 
+TESDescription::TESDescription()
+{
+}
+
+void TESDescription::ClearDataComponent()
+{
+}
+
 void TESDescription::InitializeDataComponent()
 {
     fileOffset = 0;

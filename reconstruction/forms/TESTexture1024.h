@@ -57,6 +57,8 @@ class TESTexture1024 : public TESTexture
 public:
 	// TESTexture1024::~TESTexture1024: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 0
 	~TESTexture1024() override;  // 00
+		// TESTexture1024::TESTexture1024: GUESS(low); defined so the vftable and the deleting destructor are emitted
+		TESTexture1024();
 	// TESTexture1024::GetMaxAllowedSize: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 4
 	std::uint32_t GetMaxAllowedSize() override;  // 04
 };

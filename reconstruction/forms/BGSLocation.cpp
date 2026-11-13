@@ -11,7 +11,7 @@
 // A byte match shows that this source and recipe produce the checked code; it does not verify the
 // community method names or that the original source looked like this.
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The destructor is compared.
-// InitializeData is defined here but not compared: a name it binds clashes with an existing symbol-map entry.
+// RVA 0x2984a0, 49 bytes (InitializeData): compared.
 #include "BGSLocation.h"
 
 // The constructor is not compared: it is defined so that this unit emits the vftables and with
@@ -28,7 +28,6 @@ void BGSLocation::InitializeData()
     worldLocMarker = gNullHandle;
     horseLocMarker = gNullHandle;
     worldLocRadius = 0.0f;
-    cleared = false;
-    everCleared = false;
+    clearedFlags = 0;
     lastChecked = 0;
 }

@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "6a554f7962a097cefa976e422347b7d0a63c31b26517832abe546d687d8bed7a",
+        "object_sha256": "7b7e580540b4f1af7d26e184c4aa36d1a44bb8599bf39b011a938a00080233ef",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSShaderProperty.h",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "e226bff74c20827456a8e98bc0cb4580551e72a6c91ca2f7c1f3979e2cee6a46",
+        "object_sha256": "3b375b56ddd68a068d50e0b6da5b1b0e46e73fbbd2bc96d23cef8b78566f60e8",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSShaderProperty.h",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 22290fdcd1f39c4054dbbdbbdfa47886553557d8, with uncommitted changes to reconstruction/bsengine/BSShaderProperty.h, reconstruction/bsengine/BSSkyShaderProperty.cpp, reconstruction/bsengine/BSSkyShaderProperty.h, reports/sse-steam-1-7-104/unit-symbols/5a68c97ea25681a69e8f0b448d10b5aee107985e30a60116c3263716c1b9b30d.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/netimmerse/NiObject.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "b1913a68b34f2810068b2a5c97f1a48d884cb04a20a0d9545ff281140b8b58ec",
           "code_sections": 1,
-          "object_sha256": "6a554f7962a097cefa976e422347b7d0a63c31b26517832abe546d687d8bed7a"
+          "object_sha256": "7b7e580540b4f1af7d26e184c4aa36d1a44bb8599bf39b011a938a00080233ef"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -145,7 +145,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSSkyShaderProperty.cpp",
-          "source_revision": "47f7587da2118e00087cc51f0489887a7ed23ee97dfa6ac63645b909d78fd789"
+          "source_revision": "ed2f520105f89c061584389777d2b65d57133a432e4f1273f102d47ae226c158"
         },
         "symbol_map_sha256": "5a68c97ea25681a69e8f0b448d10b5aee107985e30a60116c3263716c1b9b30d",
         "target": {
@@ -163,7 +163,7 @@
         "candidate": {
           "code_section_sha256": "b1913a68b34f2810068b2a5c97f1a48d884cb04a20a0d9545ff281140b8b58ec",
           "code_sections": 1,
-          "object_sha256": "e226bff74c20827456a8e98bc0cb4580551e72a6c91ca2f7c1f3979e2cee6a46"
+          "object_sha256": "3b375b56ddd68a068d50e0b6da5b1b0e46e73fbbd2bc96d23cef8b78566f60e8"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -224,7 +224,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSSkyShaderProperty.cpp",
-          "source_revision": "47f7587da2118e00087cc51f0489887a7ed23ee97dfa6ac63645b909d78fd789"
+          "source_revision": "ed2f520105f89c061584389777d2b65d57133a432e4f1273f102d47ae226c158"
         },
         "symbol_map_sha256": "5a68c97ea25681a69e8f0b448d10b5aee107985e30a60116c3263716c1b9b30d",
         "target": {
@@ -242,7 +242,7 @@
         "candidate": {
           "code_section_sha256": "b1913a68b34f2810068b2a5c97f1a48d884cb04a20a0d9545ff281140b8b58ec",
           "code_sections": 1,
-          "object_sha256": "e226bff74c20827456a8e98bc0cb4580551e72a6c91ca2f7c1f3979e2cee6a46"
+          "object_sha256": "3b375b56ddd68a068d50e0b6da5b1b0e46e73fbbd2bc96d23cef8b78566f60e8"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -303,7 +303,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSSkyShaderProperty.cpp",
-          "source_revision": "47f7587da2118e00087cc51f0489887a7ed23ee97dfa6ac63645b909d78fd789"
+          "source_revision": "ed2f520105f89c061584389777d2b65d57133a432e4f1273f102d47ae226c158"
         },
         "symbol_map_sha256": "5a68c97ea25681a69e8f0b448d10b5aee107985e30a60116c3263716c1b9b30d",
         "target": {
@@ -316,7 +316,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSSkyShaderProperty.cpp",
-    "digest": "47f7587da2118e00087cc51f0489887a7ed23ee97dfa6ac63645b909d78fd789",
+    "digest": "ed2f520105f89c061584389777d2b65d57133a432e4f1273f102d47ae226c158",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSShaderProperty.h",

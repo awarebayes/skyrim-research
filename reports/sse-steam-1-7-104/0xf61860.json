@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "c095177d927c5765590c4f289177ae8817847a33e287fe0d58786832b87806b2",
+        "object_sha256": "5172f58685a1b9c23b0bf8ab06363eb3ec46c38789e526324faea23fb258e3b9",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiFloatInterpolator.cpp",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "bb29eda5b0596c2771999223b2c88b35b5c071506f0821329f39a81dc22d1c16",
+        "object_sha256": "69cfeaf133b6081e848720d461f2cd4f481fc380c1f47804a17d347869a95f78",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiFloatInterpolator.cpp",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 2d834816263e41d7cfd8e3e4b4169cfd02d31a99, with uncommitted changes to reconstruction/netimmerse/NiFloatInterpolator.cpp, reconstruction/netimmerse/NiFloatInterpolator.h, reconstruction/netimmerse/NiKeyBasedInterpolator.h, reports/sse-steam-1-7-104/unit-symbols/f67fd51f0e949aafb4db24ee513976d05f65793d15f73689fa5ed922d3f11159.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/netimmerse/NiInterpolator.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/o2-fpfast.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "8115386db6fde06c1837d89aefe0597add0016d0ea72edab6c31ae1c04918006",
           "code_sections": 1,
-          "object_sha256": "c095177d927c5765590c4f289177ae8817847a33e287fe0d58786832b87806b2"
+          "object_sha256": "5172f58685a1b9c23b0bf8ab06363eb3ec46c38789e526324faea23fb258e3b9"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -147,7 +147,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiFloatInterpolator.cpp",
-          "source_revision": "9f0b2d7b1a5fbdebe2f6023da748851bbd23dc2f65974e3f6917a031f0ea663a"
+          "source_revision": "237795337ea6db6afa6eeb7c0c266f34c57c5f0235777b6e9096c5eb11dee19a"
         },
         "symbol_map_sha256": "f67fd51f0e949aafb4db24ee513976d05f65793d15f73689fa5ed922d3f11159",
         "target": {
@@ -165,7 +165,7 @@
         "candidate": {
           "code_section_sha256": "8115386db6fde06c1837d89aefe0597add0016d0ea72edab6c31ae1c04918006",
           "code_sections": 1,
-          "object_sha256": "bb29eda5b0596c2771999223b2c88b35b5c071506f0821329f39a81dc22d1c16"
+          "object_sha256": "69cfeaf133b6081e848720d461f2cd4f481fc380c1f47804a17d347869a95f78"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -228,7 +228,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiFloatInterpolator.cpp",
-          "source_revision": "9f0b2d7b1a5fbdebe2f6023da748851bbd23dc2f65974e3f6917a031f0ea663a"
+          "source_revision": "237795337ea6db6afa6eeb7c0c266f34c57c5f0235777b6e9096c5eb11dee19a"
         },
         "symbol_map_sha256": "f67fd51f0e949aafb4db24ee513976d05f65793d15f73689fa5ed922d3f11159",
         "target": {
@@ -246,7 +246,7 @@
         "candidate": {
           "code_section_sha256": "8115386db6fde06c1837d89aefe0597add0016d0ea72edab6c31ae1c04918006",
           "code_sections": 1,
-          "object_sha256": "bb29eda5b0596c2771999223b2c88b35b5c071506f0821329f39a81dc22d1c16"
+          "object_sha256": "69cfeaf133b6081e848720d461f2cd4f481fc380c1f47804a17d347869a95f78"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -309,7 +309,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiFloatInterpolator.cpp",
-          "source_revision": "9f0b2d7b1a5fbdebe2f6023da748851bbd23dc2f65974e3f6917a031f0ea663a"
+          "source_revision": "237795337ea6db6afa6eeb7c0c266f34c57c5f0235777b6e9096c5eb11dee19a"
         },
         "symbol_map_sha256": "f67fd51f0e949aafb4db24ee513976d05f65793d15f73689fa5ed922d3f11159",
         "target": {
@@ -322,7 +322,7 @@
   ],
   "source": {
     "compiled": "reconstruction/netimmerse/NiFloatInterpolator.cpp",
-    "digest": "9f0b2d7b1a5fbdebe2f6023da748851bbd23dc2f65974e3f6917a031f0ea663a",
+    "digest": "237795337ea6db6afa6eeb7c0c266f34c57c5f0235777b6e9096c5eb11dee19a",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/netimmerse/NiFloatInterpolator.cpp",

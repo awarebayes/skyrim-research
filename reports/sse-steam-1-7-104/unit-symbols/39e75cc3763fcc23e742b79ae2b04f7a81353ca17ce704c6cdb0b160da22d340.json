@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SetFormEditorID@BGSHeadPart@@UEAA_NPEBD@Z": {
+      "rva": 3740176,
+      "size": 23
+    },
+    "??4BSFixedString@@QEAAAEAV0@PEBD@Z": {
+      "rva": 15405344,
+      "size": null
+    },
+    "?GetFormEditorID@BGSHeadPart@@UEBAPEBDXZ": {
+      "rva": 3739680,
+      "size": 22
+    },
+    "??_C@_00CNPNBAHC@@": {
+      "rva": 28672032,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SetFormEditorID@BGSHeadPart@@UEAA_NPEBD@Z",
+        "rva": "0x391210",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??4BSFixedString@@QEAAAEAV0@PEBD@Z",
+        "rva": "0xeb1120",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFormEditorID@BGSHeadPart@@UEBAPEBDXZ",
+        "rva": "0x391020",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_00CNPNBAHC@@",
+        "rva": "0x1b58020",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -9,10 +9,24 @@
 // Adapted bodies: none. Body synthesized from the bounded leaf template.
 // A comparator pass verifies code under the recipe, not names or original source form.
 // Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
+// Task p92-s-bswatershadermaterial: RVA 0x155ae20 (GetDefault) and 0x155aef0 (deleting destructor) are compared alongside GetType.
+// Evidence: findings/fifth-batch-selection.md
 // BSWaterShaderMaterial: EXE_RTTI
 // GetType: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 // member, padding: GUESS(low); storage names invented for the measured member offset
 #include "BSWaterShaderMaterial.h"
+
+// BSWaterShaderMaterial::BSWaterShaderMaterial: GUESS(low); defined so the vftable and the deleting destructor are emitted
+BSWaterShaderMaterial::BSWaterShaderMaterial()
+{
+}
+
+// BSWaterShaderMaterial::GetDefault: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+BSWaterShaderMaterial* BSWaterShaderMaterial::GetDefault()
+{
+    return g_BSWaterShaderMaterialDefault;
+}
+
 // GetType: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 std::uint32_t BSWaterShaderMaterial::GetType() const
 {

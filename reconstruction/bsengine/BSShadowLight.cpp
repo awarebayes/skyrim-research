@@ -1,7 +1,7 @@
 // BSShadowLight::Unk_03, build sse-steam-1-7-104, RVA 0x155dbd0, 3 bytes.
 // Labels: v2
 // Source exposure: mixed (local binary analysis and public names).
-// Evidence: findings/generator-leaves-selection.md
+// Evidence: findings/generator-leaves-selection.md for 0x155dbd0; Unk_04, Unk_06 and Unk_08 (BSShadowLight, RVAs 0x155d960, 0x155db90, 0x155dba0) are evidenced by the unit p92-s-bsshadowlight attempt log only
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
 // Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
 // Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"CharmedBaryon/CommonLibSSE-NG","revision":"b93280e832f263dbef44e44cbe2936622a02f91a","source":"ng-slot"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
@@ -39,4 +39,22 @@
 std::uint8_t BSShadowLight::Unk_03() const
 {
     return 0x1;
+}
+
+// Unk_04: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+std::uint8_t BSShadowLight::Unk_04()
+{
+    return 0;
+}
+
+// Unk_06: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+std::uint8_t BSShadowLight::Unk_06()
+{
+    return 0;
+}
+
+// Unk_08: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+std::uint8_t BSShadowLight::Unk_08()
+{
+    return 0;
 }

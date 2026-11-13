@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x2e5a60",
   "naming_findings": [
-    "the .cpp header shortens the meh321 permission wording; the authorizations file asks for \"as reported by the maintainer\", which only the .h carries"
+    "The source header shortens the name-source permission wording."
   ],
   "previous_code_section_sha256": "067e154992d8430be38b337e4af9acaaaefc60e79c981ceaabc14cef3b967935",
   "previous_review_sha256": "2cd94c34daf4fe01e6d2999ed19ad37a6302ae587441012e6264c094f61a543d",
-  "previous_source_digest": "c2080d8928071fa76425204d51cbd5141ad8b944315137fdd230ab53165199ec",
-  "review_date": "2026-11-12",
-  "review_kind": "label-only",
+  "previous_source_digest": "9f259ca0f8713d95fba202b23880944f5a4f04eb56be3e48768b47d05828aab6",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "2cd94c34daf4fe01e6d2999ed19ad37a6302ae587441012e6264c094f61a543d",
-  "review_task_id": "review-p15-rereview-1",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "9334bb226f2b78129ef11867e46e7c63e260861939d7c2b747622e0eb5ae9e22",
+  "review_task_id": "review-p85-haiku-wave1-3",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 3037792,
   "size": 86,
-  "source_digest": "9f259ca0f8713d95fba202b23880944f5a4f04eb56be3e48768b47d05828aab6",
+  "source_digest": "43786d9d02067878608acde4ee73ae35b791bc8417393706bf16400f8e68700f",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

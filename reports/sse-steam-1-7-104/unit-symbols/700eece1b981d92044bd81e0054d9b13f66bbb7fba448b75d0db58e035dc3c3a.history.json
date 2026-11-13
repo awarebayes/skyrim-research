@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/700eece1b981d92044bd81e0054d9b13f66bbb7fba448b75d0db58e035dc3c3a.json",
+  "versions": [
+    {
+      "sha256": "700eece1b981d92044bd81e0054d9b13f66bbb7fba448b75d0db58e035dc3c3a",
+      "base": null,
+      "added": [
+        "__real@40000000",
+        "?GetBipedObjectForm@TESBoundObject@@QEAAPEAXXZ",
+        "?SendActorItemEquippedEvent@TESBoundObject@@QEAAXPEAVTESObjectREFR@@@Z",
+        "?CalculateDoFavor@TESBoundObject@@UEAA_NPEAVActor@@_NPEAVTESObjectREFR@@M@Z",
+        "?g_itemEventFilter@@3PEAVTESObjectREFR@@EA",
+        "?GetItemEventSource@@YAPEAXXZ",
+        "?SendItemEvent@@YAXPEAXPEAUItemEquippedEvent@@@Z",
+        "?g_playerCharacterSingleton@@3PEAVPlayerCharacter@@EA",
+        "?NotifyFavorEvent@@YAXPEAXPEAVActor@@IIPEAVPlayerCharacter@@0_N333@Z",
+        "?LoadObjectBound@TESBoundObject@@UEAAXPEAVTESFile@@@Z",
+        "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "?ReadData@TESFile@@QEAA_NPEAXI@Z",
+        "?IsBoundObject@TESBoundObject@@UEBA_NXZ",
+        "?Activate@TESBoundObject@@UEAA_NPEAVTESObjectREFR@@0EPEAV1@H@Z",
+        "?g_actorType@@3URuntimeTypeDescriptor@@A",
+        "?g_referenceType@@3URuntimeTypeDescriptor@@A",
+        "?CastReferenceToActor@@YAPEAVActorActivateView@@PEAVTESObjectREFR@@HPEAURuntimeTypeDescriptor@@1H@Z"
+      ]
+    }
+  ]
+}

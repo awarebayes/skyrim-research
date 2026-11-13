@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__real@40000000": {
+      "rva": 28687940,
+      "size": null
+    },
+    "?GetBipedObjectForm@TESBoundObject@@QEAAPEAXXZ": {
+      "rva": 1909184,
+      "size": 33
+    },
+    "?SendActorItemEquippedEvent@TESBoundObject@@QEAAXPEAVTESObjectREFR@@@Z": {
+      "rva": 7041264,
+      "size": 51
+    },
+    "?CalculateDoFavor@TESBoundObject@@UEAA_NPEAVActor@@_NPEAVTESObjectREFR@@M@Z": {
+      "rva": 2592656,
+      "size": 104
+    },
+    "?g_itemEventFilter@@3PEAVTESObjectREFR@@EA": {
+      "rva": 52294400,
+      "size": null
+    },
+    "?GetItemEventSource@@YAPEAXXZ": {
+      "rva": 7080672,
+      "size": null
+    },
+    "?SendItemEvent@@YAXPEAXPEAUItemEquippedEvent@@@Z": {
+      "rva": 7073264,
+      "size": null
+    },
+    "?g_playerCharacterSingleton@@3PEAVPlayerCharacter@@EA": {
+      "rva": 52627320,
+      "size": null
+    },
+    "?NotifyFavorEvent@@YAXPEAXPEAVActor@@IIPEAVPlayerCharacter@@0_N333@Z": {
+      "rva": 7292352,
+      "size": null
+    },
+    "?LoadObjectBound@TESBoundObject@@UEAAXPEAVTESFile@@@Z": {
+      "rva": 2587408,
+      "size": 150
+    },
+    "?GetCurrentSubRecordType@TESFile@@QEAAIXZ": {
+      "rva": 1891344,
+      "size": null
+    },
+    "?ReadData@TESFile@@QEAA_NPEAXI@Z": {
+      "rva": 1891600,
+      "size": null
+    },
+    "?IsBoundObject@TESBoundObject@@UEBA_NXZ": {
+      "rva": 1337504,
+      "size": 3
+    },
+    "?Activate@TESBoundObject@@UEAA_NPEAVTESObjectREFR@@0EPEAV1@H@Z": {
+      "rva": 2592336,
+      "size": 115
+    },
+    "?g_actorType@@3URuntimeTypeDescriptor@@A": {
+      "rva": 34469416,
+      "size": null
+    },
+    "?g_referenceType@@3URuntimeTypeDescriptor@@A": {
+      "rva": 34464376,
+      "size": null
+    },
+    "?CastReferenceToActor@@YAPEAVActorActivateView@@PEAVTESObjectREFR@@HPEAURuntimeTypeDescriptor@@1H@Z": {
+      "rva": 22714330,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__real@40000000",
+        "rva": "0x1b5be44",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetBipedObjectForm@TESBoundObject@@QEAAPEAXXZ",
+        "rva": "0x1d21c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SendActorItemEquippedEvent@TESBoundObject@@QEAAXPEAVTESObjectREFR@@@Z",
+        "rva": "0x6b70f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CalculateDoFavor@TESBoundObject@@UEAA_NPEAVActor@@_NPEAVTESObjectREFR@@M@Z",
+        "rva": "0x278f90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_itemEventFilter@@3PEAVTESObjectREFR@@EA",
+        "rva": "0x31df300",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetItemEventSource@@YAPEAXXZ",
+        "rva": "0x6c0ae0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SendItemEvent@@YAXPEAXPEAUItemEquippedEvent@@@Z",
+        "rva": "0x6bedf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_playerCharacterSingleton@@3PEAVPlayerCharacter@@EA",
+        "rva": "0x3230778",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NotifyFavorEvent@@YAXPEAXPEAVActor@@IIPEAVPlayerCharacter@@0_N333@Z",
+        "rva": "0x6f45c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadObjectBound@TESBoundObject@@UEAAXPEAVTESFile@@@Z",
+        "rva": "0x277b10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "rva": "0x1cdc10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadData@TESFile@@QEAA_NPEAXI@Z",
+        "rva": "0x1cdd10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsBoundObject@TESBoundObject@@UEBA_NXZ",
+        "rva": "0x1468a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Activate@TESBoundObject@@UEAA_NPEAVTESObjectREFR@@0EPEAV1@H@Z",
+        "rva": "0x278e50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_actorType@@3URuntimeTypeDescriptor@@A",
+        "rva": "0x20df628",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_referenceType@@3URuntimeTypeDescriptor@@A",
+        "rva": "0x20de278",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CastReferenceToActor@@YAPEAVActorActivateView@@PEAVTESObjectREFR@@HPEAURuntimeTypeDescriptor@@1H@Z",
+        "rva": "0x15a97da",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

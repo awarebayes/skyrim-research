@@ -18,6 +18,7 @@ class BGSVolumetricLighting : public TESForm
 {
 public:
     BGSVolumetricLighting();
+    void ClearData() override;  // 05
     virtual ~BGSVolumetricLighting();  // compared: 0x263d40 (scalar deleting destructor)
 
     // unknown20: GUESS(low); the padding to the size the sized operator delete receives

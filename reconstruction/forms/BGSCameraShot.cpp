@@ -33,3 +33,22 @@ void BGSCameraShot::InitializeData()
     data.globalTimeMult = 1.0f;
     data.flags = 3;
 }
+
+// TestBit: GUESS(low); the same by-value bit test as TESObjectREFR.h, kept file-local so this unit does not pull that header in
+static inline bool TestBit(std::uint32_t a_flags, std::uint32_t a_bit)
+{
+    return ((a_flags >> a_bit) & 1) != 0;
+}
+
+// InitItemImpl: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); skips the work once the form's flag bit 3 is set
+void BGSCameraShot::InitItemImpl()
+{
+    if (TestBit(formFlags, 3)) {
+        return;
+    }
+    ResetImageSpaceModifier(static_cast<TESImageSpaceModifiableForm*>(this), this);
+    if (data.globalTimeMult < 0.0001f) {
+        data.globalTimeMult = 0.1f;
+    }
+    SetInitialized(true);
+}

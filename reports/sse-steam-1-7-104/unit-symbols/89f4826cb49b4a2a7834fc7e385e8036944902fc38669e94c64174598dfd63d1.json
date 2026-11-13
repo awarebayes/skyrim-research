@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?RegisterStreamables@BSMultiBoundRoom@@UEBAEXZ": {
+      "rva": 16571200,
+      "size": 3
+    },
+    "?CreateClone@BSMultiBoundRoom@@UEAAPEAXPEAX@Z": {
+      "rva": 16571152,
+      "size": 3
+    },
+    "?LoadBinary@BSMultiBoundRoom@@UEAAXPEAX@Z": {
+      "rva": 16571168,
+      "size": 3
+    },
+    "?LinkObject@BSMultiBoundRoom@@UEAAXPEAX@Z": {
+      "rva": 16571184,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?RegisterStreamables@BSMultiBoundRoom@@UEBAEXZ",
+        "rva": "0xfcdb40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CreateClone@BSMultiBoundRoom@@UEAAPEAXPEAX@Z",
+        "rva": "0xfcdb10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSMultiBoundRoom@@UEAAXPEAX@Z",
+        "rva": "0xfcdb20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@BSMultiBoundRoom@@UEAAXPEAX@Z",
+        "rva": "0xfcdb30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

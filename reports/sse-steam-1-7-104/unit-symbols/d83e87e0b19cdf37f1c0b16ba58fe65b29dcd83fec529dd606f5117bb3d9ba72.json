@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z": {
+      "rva": 13510128,
+      "size": null
+    },
+    "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15583120,
+      "size": null
+    },
+    "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15583136,
+      "size": null
+    },
+    "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 15583152,
+      "size": null
+    },
+    "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 15583184,
+      "size": null
+    },
+    "?IsEqual@NiObject@@UEAA_NPEAV1@@Z": {
+      "rva": 15583200,
+      "size": 91
+    },
+    "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z": {
+      "rva": 15583744,
+      "size": null
+    },
+    "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z": {
+      "rva": 15616400,
+      "size": null
+    },
+    "?SaveFixedString@NiStream@@QEAAXAEBVBSFixedString@@@Z": {
+      "rva": 15616592,
+      "size": null
+    },
+    "?LoadFixedStringLegacy@NiStream@@QEAAXAEAVBSFixedString@@@Z": {
+      "rva": 15616752,
+      "size": null
+    },
+    "?LoadLinkID@NiStream@@QEAAXXZ": {
+      "rva": 15618288,
+      "size": null
+    },
+    "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ": {
+      "rva": 15618960,
+      "size": null
+    },
+    "?LoadBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16387904,
+      "size": 187
+    },
+    "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16388112,
+      "size": 27
+    },
+    "?RegisterStreamables@NiPSysModifier@@UEAA_NAEAVNiStream@@@Z": {
+      "rva": 16388160,
+      "size": 62
+    },
+    "?SaveBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 16388240,
+      "size": 170
+    },
+    "?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z": {
+      "rva": 16388416,
+      "size": 78
+    },
+    "?SetSystemPointer@NiPSysModifier@@UEAAXPEAVNiParticleSystem@@@Z": {
+      "rva": 16388544,
+      "size": 5
+    },
+    "?ProcessClone@NiPSysModifier@@UEAAXAEAVNiCloningProcess@@@Z": {
+      "rva": 16388560,
+      "size": 210
+    },
+    "?Initialize@NiPSysModifier@@UEAAXPEAVNiPSysData@@GPEAVNiPoint3@@@Z": {
+      "rva": 16388512,
+      "size": 3
+    },
+    "?HandleReset@NiPSysModifier@@UEAAXXZ": {
+      "rva": 16388528,
+      "size": 3
+    },
+    "?SetActive@NiPSysModifier@@UEAAX_N@Z": {
+      "rva": 16373680,
+      "size": 4
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z",
+        "rva": "0xce25f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xedc790",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xedc7a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xedc7b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xedc7d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiObject@@UEAA_NPEAV1@@Z",
+        "rva": "0xedc7e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "rva": "0xedca00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "rva": "0xee4990",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveFixedString@NiStream@@QEAAXAEBVBSFixedString@@@Z",
+        "rva": "0xee4a50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadFixedStringLegacy@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "rva": "0xee4af0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadLinkID@NiStream@@QEAAXXZ",
+        "rva": "0xee50f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ",
+        "rva": "0xee5390",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfa0f40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfa1010",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RegisterStreamables@NiPSysModifier@@UEAA_NAEAVNiStream@@@Z",
+        "rva": "0xfa1040",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0xfa1090",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z",
+        "rva": "0xfa1140",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetSystemPointer@NiPSysModifier@@UEAAXPEAVNiParticleSystem@@@Z",
+        "rva": "0xfa11c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProcessClone@NiPSysModifier@@UEAAXAEAVNiCloningProcess@@@Z",
+        "rva": "0xfa11d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Initialize@NiPSysModifier@@UEAAXPEAVNiPSysData@@GPEAVNiPoint3@@@Z",
+        "rva": "0xfa11a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HandleReset@NiPSysModifier@@UEAAXXZ",
+        "rva": "0xfa11b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetActive@NiPSysModifier@@UEAAX_N@Z",
+        "rva": "0xf9d7b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

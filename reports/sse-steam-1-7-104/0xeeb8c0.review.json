@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0xeeb8c0",
   "naming_findings": [
-    "the FNV-derived local variable shape could carry a SIBLING note on the function itself, not only the header line"
+    "The function could also carry its sibling label locally."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
-  "review_date": "2026-11-12",
-  "review_kind": "full",
+  "previous_code_section_sha256": "95ba25ae67e670c93dc1c3daa8fa870ce1364d27162785bb64fdcd14b7000126",
+  "previous_review_sha256": "6686fd60e3c0ddd89888d122bebb4f52e017bb995bf3c1c7346a4319def2e608",
+  "previous_source_digest": "19dbf2c66e5e4f990c14c02ac09bf22afd456c216d53617466f6c5a5a9d9fe9a",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "6686fd60e3c0ddd89888d122bebb4f52e017bb995bf3c1c7346a4319def2e608",
-  "review_task_id": "review-p18-wave1-1",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "9334bb226f2b78129ef11867e46e7c63e260861939d7c2b747622e0eb5ae9e22",
+  "review_task_id": "review-p85-haiku-wave1-3",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 15644864,
   "size": 122,
-  "source_digest": "19dbf2c66e5e4f990c14c02ac09bf22afd456c216d53617466f6c5a5a9d9fe9a",
+  "source_digest": "65fbb2195247a3900546a56cdf855fc2cd856302e8aea3e0d852f6f34f989ffd",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

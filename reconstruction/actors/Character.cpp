@@ -90,3 +90,9 @@ void Character::SetCrimeFaction(TESFaction* a_faction)
     }
     extraList.RemoveFactionChange(a_faction);
 }
+
+// Character::Unk_129: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+std::uint8_t Character::Unk_129()
+{
+	return 1;
+}

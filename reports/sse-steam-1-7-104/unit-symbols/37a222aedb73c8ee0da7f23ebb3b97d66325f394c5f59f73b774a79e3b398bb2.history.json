@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/37a222aedb73c8ee0da7f23ebb3b97d66325f394c5f59f73b774a79e3b398bb2.json",
+  "versions": [
+    {
+      "sha256": "37a222aedb73c8ee0da7f23ebb3b97d66325f394c5f59f73b774a79e3b398bb2",
+      "base": null,
+      "added": [
+        "?InitializeDataComponent@TESLeveledList@@UEAAXXZ",
+        "?GetChanceNone@TESLeveledList@@UEAAEXZ",
+        "?GetMultCalc@TESLeveledList@@UEAA_NXZ",
+        "?GetUseAll@TESLeveledList@@QEAA_NXZ",
+        "?GetLevDifferenceMax@TESLeveledList@@UEAAHXZ"
+      ]
+    }
+  ]
+}

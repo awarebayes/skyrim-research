@@ -27,6 +27,10 @@ std::uint16_t TESAttackDamageForm::GetAttackDamage() const
     return attackDamage;
 }
 
+void TESAttackDamageForm::ClearDataComponent()
+{
+}
+
 void TESAttackDamageForm::InitializeDataComponent()
 {
     attackDamage = 0;

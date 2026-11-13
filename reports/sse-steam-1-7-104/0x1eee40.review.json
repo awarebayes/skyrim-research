@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x1eee40",
   "naming_findings": [
-    "The constructor name is labelled GUESS although it is fixed by the class name; the sibling unit TESEnchantableForm labels its constructor differently"
+    "The constructor name retains a GUESS label."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
-  "review_date": "2026-11-12",
-  "review_kind": "full",
+  "previous_code_section_sha256": "28a7b71f50a97ea45057119e4be053331011aa98ddecdabadb61a562c74f0961",
+  "previous_review_sha256": "23ec578140928d6ef50bb043db2435493570f696f3f1bddd6fa6ececd368ed3a",
+  "previous_source_digest": "4afc87c93905ca6ddaf1fcf98cc3447267796c270f41dab912825b0957eded25",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "23ec578140928d6ef50bb043db2435493570f696f3f1bddd6fa6ececd368ed3a",
-  "review_task_id": "review-p18-wave1-4",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "9334bb226f2b78129ef11867e46e7c63e260861939d7c2b747622e0eb5ae9e22",
+  "review_task_id": "review-p85-haiku-wave1-3",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 2027072,
   "size": 43,
-  "source_digest": "4afc87c93905ca6ddaf1fcf98cc3447267796c270f41dab912825b0957eded25",
+  "source_digest": "d7bed7a16d8110e2d4730583876c127d6cbb9d9e5f3f4e84f00a4f9ad55e3a5a",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

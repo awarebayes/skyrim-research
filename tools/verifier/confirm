@@ -154,7 +154,7 @@ def source_state(task, closure):
     if head.returncode != 0:
         raise PipelineError('git rev-parse failed; run from a git checkout')
     internal = any('internal_selector' in fn for fn in task['functions'])
-    engine = check.compare_internal if internal else check.legacy_comparator
+    engine = check.compare_internal if internal else check.compare_runtime
     return (head.stdout.strip(), pipeline.git_dirty(closure + [task['recipe'], task['symbols_repo']] + RESULT_TOOLS),
             engine.comparator_source_sha256())
 

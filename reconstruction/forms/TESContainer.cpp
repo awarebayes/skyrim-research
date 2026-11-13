@@ -22,3 +22,8 @@ std::int32_t TESContainer::GetItemCount(TESBoundObject* a_object) const
     }
     return total;
 }
+
+// TESContainer::InitializeDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void TESContainer::InitializeDataComponent()
+{
+}

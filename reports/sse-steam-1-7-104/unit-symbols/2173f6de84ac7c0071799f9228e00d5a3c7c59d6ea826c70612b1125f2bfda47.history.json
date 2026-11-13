@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/2173f6de84ac7c0071799f9228e00d5a3c7c59d6ea826c70612b1125f2bfda47.json",
+  "versions": [
+    {
+      "sha256": "2173f6de84ac7c0071799f9228e00d5a3c7c59d6ea826c70612b1125f2bfda47",
+      "base": null,
+      "added": [
+        "?Set@BSStringT@@QEAA_NPEBDI@Z",
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "??1TESImageSpaceModifier@@UEAA@XZ",
+        "??_GTESImageSpaceModifier@@UEAAPEAXI@Z",
+        "?SetFormEditorID@TESImageSpaceModifier@@UEAA_NPEBD@Z",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?GetFormEditorID@TESImageSpaceModifier@@UEBAPEBDXZ",
+        "?EMPTY@BSStringT@@2QBDB"
+      ]
+    }
+  ]
+}

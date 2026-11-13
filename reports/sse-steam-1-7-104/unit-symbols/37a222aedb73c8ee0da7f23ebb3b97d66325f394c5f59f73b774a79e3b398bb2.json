@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?InitializeDataComponent@TESLeveledList@@UEAAXXZ": {
+      "rva": 2000976,
+      "size": 18
+    },
+    "?GetChanceNone@TESLeveledList@@UEAAEXZ": {
+      "rva": 2001024,
+      "size": 20
+    },
+    "?GetMultCalc@TESLeveledList@@UEAA_NXZ": {
+      "rva": 2001136,
+      "size": 9
+    },
+    "?GetUseAll@TESLeveledList@@QEAA_NXZ": {
+      "rva": 2001200,
+      "size": 10
+    },
+    "?GetLevDifferenceMax@TESLeveledList@@UEAAHXZ": {
+      "rva": 2009152,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?InitializeDataComponent@TESLeveledList@@UEAAXXZ",
+        "rva": "0x1e8850",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetChanceNone@TESLeveledList@@UEAAEXZ",
+        "rva": "0x1e8880",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetMultCalc@TESLeveledList@@UEAA_NXZ",
+        "rva": "0x1e88f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetUseAll@TESLeveledList@@QEAA_NXZ",
+        "rva": "0x1e8930",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetLevDifferenceMax@TESLeveledList@@UEAAHXZ",
+        "rva": "0x1ea840",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

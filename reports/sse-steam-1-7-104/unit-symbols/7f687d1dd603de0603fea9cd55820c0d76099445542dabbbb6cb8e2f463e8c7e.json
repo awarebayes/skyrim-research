@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?InitializeDataComponent@TESActorBaseData@@UEAAXXZ": {
+      "rva": 1951200,
+      "size": 59
+    },
+    "?ClearDataComponent@TESActorBaseData@@UEAAXXZ": {
+      "rva": 1951280,
+      "size": 38
+    },
+    "?GetInvulnerable@TESActorBaseData@@UEBA_NXZ": {
+      "rva": 1959360,
+      "size": 7
+    },
+    "?GetIsGhost@TESActorBaseData@@UEBA_NXZ": {
+      "rva": 1959376,
+      "size": 9
+    },
+    "?Unk_07@TESActorBaseData@@UEAA_NXZ": {
+      "rva": 1959392,
+      "size": 3
+    },
+    "?GetVoiceType@TESActorBaseData@@UEAAPEAVBGSVoiceType@@XZ": {
+      "rva": 1959408,
+      "size": 5
+    },
+    "?FreeFactions@@YAXPEAUFactionRankArray@@@Z": {
+      "rva": 13504208,
+      "size": null
+    },
+    "?gDefaultBaseDisposition@@3EA": {
+      "rva": 34046200,
+      "size": null
+    },
+    "?CopyFromTemplateForms@TESActorBaseData@@UEAAXXZ": {
+      "rva": 1959296,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?InitializeDataComponent@TESActorBaseData@@UEAAXXZ",
+        "rva": "0x1dc5e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearDataComponent@TESActorBaseData@@UEAAXXZ",
+        "rva": "0x1dc630",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetInvulnerable@TESActorBaseData@@UEBA_NXZ",
+        "rva": "0x1de5c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetIsGhost@TESActorBaseData@@UEBA_NXZ",
+        "rva": "0x1de5d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_07@TESActorBaseData@@UEAA_NXZ",
+        "rva": "0x1de5e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetVoiceType@TESActorBaseData@@UEAAPEAVBGSVoiceType@@XZ",
+        "rva": "0x1de5f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FreeFactions@@YAXPEAUFactionRankArray@@@Z",
+        "rva": "0xce0ed0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?gDefaultBaseDisposition@@3EA",
+        "rva": "0x20780f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopyFromTemplateForms@TESActorBaseData@@UEAAXXZ",
+        "rva": "0x1de580",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

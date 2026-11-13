@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetFileSize@BSMemStorage@@UEBAIXZ": {
+      "rva": 15472400,
+      "size": 4
+    },
+    "?GetPosition@BSMemStorage@@UEBA_KXZ": {
+      "rva": 15472416,
+      "size": 4
+    },
+    "??_GBSMemStorage@@UEAAPEAXI@Z": {
+      "rva": 1996544,
+      "size": 52
+    },
+    "??1BSMemStorage@@UEAA@XZ": {
+      "rva": 15472320,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetFileSize@BSMemStorage@@UEBAIXZ",
+        "rva": "0xec1710",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetPosition@BSMemStorage@@UEBA_KXZ",
+        "rva": "0xec1720",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSMemStorage@@UEAAPEAXI@Z",
+        "rva": "0x1e7700",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSMemStorage@@UEAA@XZ",
+        "rva": "0xec16c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "49238185185cef6be15d9b1398dfe4f51fb2cef68e0c7a68f2ad6989b3f461f9",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x340be0",
+  "naming_findings": [
+    "The string stand-in is duplicated and its Set name comes from a sibling source."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 3410912,
+  "size": 19,
+  "source_digest": "c1179b42845dd3efc13828ca5074620a0b9ba1e415f71eef311bad71b8ee0bee",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

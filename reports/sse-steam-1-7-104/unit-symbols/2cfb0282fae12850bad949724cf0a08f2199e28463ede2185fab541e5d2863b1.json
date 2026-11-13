@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Slot38@BSOcclusionBox@@UEBAEXZ": {
+      "rva": 16679184,
+      "size": 3
+    },
+    "?IsOcclusionPlane@BSOcclusionBox@@UEBA_NXZ": {
+      "rva": 16679168,
+      "size": 3
+    },
+    "?GetRTTI@BSOcclusionBox@@UEBAPEBVNiRTTI@@XZ": {
+      "rva": 16679712,
+      "size": 8
+    },
+    "?NiRTTI_BSOcclusionBox@@3VNiRTTI@@A": {
+      "rva": 53666368,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Slot38@BSOcclusionBox@@UEBAEXZ",
+        "rva": "0xfe8110",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsOcclusionPlane@BSOcclusionBox@@UEBA_NXZ",
+        "rva": "0xfe8100",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetRTTI@BSOcclusionBox@@UEBAPEBVNiRTTI@@XZ",
+        "rva": "0xfe8320",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiRTTI_BSOcclusionBox@@3VNiRTTI@@A",
+        "rva": "0x332e240",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

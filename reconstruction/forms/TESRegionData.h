@@ -17,6 +17,12 @@ class TESRegionData
 {
 public:
     virtual bool LoadDataHeader(void* a_arg1);  // compared: 0x24fee0
+    // TESRegionData::TESRegionData: GUESS(low); defined so the vftable and the deleting destructor are emitted
+    TESRegionData();
+    // TESRegionData::~TESRegionData: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the listing inlines the teardown, so the body is empty
+    virtual ~TESRegionData() {}
+    // TESRegionData::LoadData: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    virtual void LoadData(void* a_arg1);  // compared: 0x24ff50
 
     std::uint8_t unk08;      // 08
     std::uint8_t unknown09;  // 09

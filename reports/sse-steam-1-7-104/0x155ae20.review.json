@@ -1,0 +1,21 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "3742e3fc811e00ada9b50f021e461da820d85f39022dd9c5a394fa6d49edd877",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x155ae20",
+  "naming_findings": [],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "f04cf62e77ac45d87981f7d8164f870c44ced86441b8ba76d5d431dc40261163",
+  "review_task_id": "review-p85-haiku-wave1-1",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 22392352,
+  "size": 8,
+  "source_digest": "da74d562bdf0ab987f438b70cd08654545b3f7becb83662ced6c69392720e536",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/8264dfb509000bbb4118fd31c3d9085eacff723dc5dcc75dba8740cf805cfb59.json",
+  "versions": [
+    {
+      "sha256": "8264dfb509000bbb4118fd31c3d9085eacff723dc5dcc75dba8740cf805cfb59",
+      "base": null,
+      "added": [
+        "?GetModel@TESModel@@UEBAPEAXXZ",
+        "?GetAsModelTextureSwap@TESModel@@UEAAPEAVTESModelTextureSwap@@XZ"
+      ]
+    }
+  ]
+}

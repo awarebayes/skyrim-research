@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?QConditions@BGSStoryManagerNodeBase@@UEAAPEAVTESCondition@@XZ": {
+      "rva": 1869088,
+      "size": 5
+    },
+    "?InitializeData@TESForm@@UEAAXXZ": {
+      "rva": 1979824,
+      "size": null
+    },
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": 3
+    },
+    "?Clear@TESCondition@@QEAAXXZ": {
+      "rva": 4877712,
+      "size": null
+    },
+    "?InitializeData@BGSStoryManagerNodeBase@@UEAAXXZ": {
+      "rva": 5464304,
+      "size": 34
+    },
+    "?singleton@TESDataHandler@@2PEAV1@EA": {
+      "rva": 35249880,
+      "size": null
+    },
+    "?ClearData@BGSStoryManagerNodeBase@@UEAAXXZ": {
+      "rva": 5464352,
+      "size": 80
+    },
+    "?IsDataHandlerBusy@@YA_NPEAVTESDataHandler@@@Z": {
+      "rva": 1843840,
+      "size": null
+    },
+    "?BranchRemoveChild@@YAXPEAVBGSStoryManagerBranchNode@@PEAVBGSStoryManagerNodeBase@@I@Z": {
+      "rva": 5461920,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?QConditions@BGSStoryManagerNodeBase@@UEAAPEAVTESCondition@@XZ",
+        "rva": "0x1c8520",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESForm@@UEAAXXZ",
+        "rva": "0x1e35b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Clear@TESCondition@@QEAAXXZ",
+        "rva": "0x4a6d90",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "rva": "0x5360f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?singleton@TESDataHandler@@2PEAV1@EA",
+        "rva": "0x219ded8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "rva": "0x536120",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsDataHandlerBusy@@YA_NPEAVTESDataHandler@@@Z",
+        "rva": "0x1c2280",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BranchRemoveChild@@YAXPEAVBGSStoryManagerBranchNode@@PEAVBGSStoryManagerNodeBase@@I@Z",
+        "rva": "0x5357a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

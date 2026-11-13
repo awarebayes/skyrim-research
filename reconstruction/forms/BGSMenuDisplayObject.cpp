@@ -9,10 +9,29 @@
 // Adapted bodies: none. Body synthesized from the bounded leaf template.
 // A comparator pass verifies code under the recipe, not names or original source form.
 // Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
+// Task p92-s-bgsmenudisplayobject: RVA 0x1d8f80 (InitializeDataComponent), 0x1d8f90 (ClearDataComponent) and 0x1d9120 (the deleting destructor) are compared.
+// Evidence: findings/fifth-batch-selection.md
 // BGSMenuDisplayObject: EXE_RTTI
 // GetMenuDisplayObject: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 // member, padding: GUESS(low); storage names invented for the measured member offset
 #include "BGSMenuDisplayObject.h"
+
+// BGSMenuDisplayObject::BGSMenuDisplayObject: GUESS(low); defined so the vftable and the deleting destructor are emitted
+BGSMenuDisplayObject::BGSMenuDisplayObject()
+{
+}
+
+// BGSMenuDisplayObject::InitializeDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BGSMenuDisplayObject::InitializeDataComponent()
+{
+    member = nullptr;
+}
+
+// BGSMenuDisplayObject::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BGSMenuDisplayObject::ClearDataComponent()
+{
+}
+
 // GetMenuDisplayObject: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 void* BGSMenuDisplayObject::GetMenuDisplayObject() const
 {

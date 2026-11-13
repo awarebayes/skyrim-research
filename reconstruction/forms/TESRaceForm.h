@@ -17,7 +17,7 @@ class BaseFormComponent
 {
 public:
 	// BaseFormComponent::~BaseFormComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 0
-	virtual ~BaseFormComponent();  // 00
+	virtual ~BaseFormComponent() {}  // 00
 	// BaseFormComponent::InitializeDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 1
 	virtual void InitializeDataComponent();  // 01
 	// BaseFormComponent::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 2
@@ -35,8 +35,10 @@ class TESRace;
 class TESRaceForm : public BaseFormComponent
 {
 public:
+	// TESRaceForm::TESRaceForm: SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence); name only, declared so that the vftable and the deleting destructor are emitted in this unit
+	TESRaceForm();
 	// TESRaceForm::~TESRaceForm: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 00
-	~TESRaceForm() override;  // 00
+	~TESRaceForm() override {}  // 00
 	// TESRaceForm::InitializeDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 01
 	void InitializeDataComponent() override;  // 01
 	// TESRaceForm::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 02

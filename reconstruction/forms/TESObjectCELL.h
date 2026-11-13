@@ -5,6 +5,7 @@
 // Names follow CharmedBaryon/CommonLibSSE-NG b93280e832f263dbef44e44cbe2936622a02f91a (MIT)
 // and the meh321/AddressLibraryDatabase 0379cb6 name list (used with the author's permission as
 // reported by the maintainer).
+// The names CreateDuplicateForm and IsParentForm come from powerof3/CommonLibSSE 654e55f, which is GPL-3.0; that licence applies to those declarations.
 // Adapted bodies: none declared; tools/check_origin.py reports none above its threshold (0.75)
 // at CommonLibSSE-NG b93280e, powerof3/CommonLibSSE 654e55f and momusdigital/fnv_decomp 91e1b6e8.
 // Every class other than TESObjectCELL is a minimal stand-in that declares only
@@ -258,6 +259,11 @@ public:
     BGSEncounterZone*  GetEncounterZone() const;
     BGSLocation*       GetLocation() const;
     TESForm*           GetOwner();
+    // CreateDuplicateForm, IsParentForm: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); base virtuals in TESForm
+    TESForm*           CreateDuplicateForm(bool a_createEditorID, void* a_arg2);
+    bool               IsParentForm();
+    // GetWorldSpaceOfExteriorCell: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); returns the cell's world space
+    TESWorldSpace*     GetWorldSpaceOfExteriorCell();
 
     std::uint8_t       unk20[0x20];        // 20 - TESFullName base
     std::uint16_t      cellFlags;          // 40

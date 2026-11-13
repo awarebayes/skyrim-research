@@ -31,8 +31,12 @@ struct BGSDirectionalAmbientLightingColors {
 
 class BGSLightingTemplate : public TESForm {
 public:
-    void InitializeData() override;  // 04
+    // BGSLightingTemplate::BGSLightingTemplate: SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence); name only; declared so the vftable and the deleting destructor are emitted in this unit
+    BGSLightingTemplate();
+    ~BGSLightingTemplate() override {}  // 00
+    void InitializeData() override;     // 04
 
     INTERIOR_DATA                       data;                              // 20
     BGSDirectionalAmbientLightingColors directionalAmbientLightingColors;  // 80
 };
+static_assert(sizeof(BGSLightingTemplate) == 0xA0, "layout");

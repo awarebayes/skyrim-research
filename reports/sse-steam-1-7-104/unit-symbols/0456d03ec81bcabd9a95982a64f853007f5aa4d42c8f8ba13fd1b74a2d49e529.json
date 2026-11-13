@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?InitializeDataComponent@TESModel@@UEAAXXZ": {
+      "rva": 2009840,
+      "size": null
+    },
+    "?InitializeDataComponent@TESModelTextureSwap@@UEAAXXZ": {
+      "rva": 2018672,
+      "size": 14
+    },
+    "?ClearDataComponent@TESModelTextureSwap@@UEAAXXZ": {
+      "rva": 2018704,
+      "size": 27
+    },
+    "?ReleaseAlternateTextures@TESModelTextureSwap@@QEAAXXZ": {
+      "rva": 2020400,
+      "size": null
+    },
+    "?ClearDataComponent@TESModel@@UEAAXXZ": {
+      "rva": 2010048,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?InitializeDataComponent@TESModel@@UEAAXXZ",
+        "rva": "0x1eaaf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeDataComponent@TESModelTextureSwap@@UEAAXXZ",
+        "rva": "0x1ecd70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearDataComponent@TESModelTextureSwap@@UEAAXXZ",
+        "rva": "0x1ecd90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReleaseAlternateTextures@TESModelTextureSwap@@QEAAXXZ",
+        "rva": "0x1ed430",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearDataComponent@TESModel@@UEAAXXZ",
+        "rva": "0x1eabc0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

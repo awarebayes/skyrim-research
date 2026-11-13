@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "2947fd17f2305d990f1c6fdd8c77f8aa225ea91ef60d8d49bde019c92cedf744",
+        "object_sha256": "51c6689290f5e4e9313487402ccc4226e7649cf280a96ac7d2180a788fa4d25c",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSTempEffect.h",
@@ -47,7 +47,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "6b7d3c47cefbb3a63c4438a3b9b9f8aae193940bf14029fdd34e82d88c2bdff2",
+        "object_sha256": "11cb212bde8f5671ce1c6e628a5f225e9c9d4505d16e3a61906f00e241ee8285",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSTempEffect.h",
@@ -66,7 +66,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 2d834816263e41d7cfd8e3e4b4169cfd02d31a99, with uncommitted changes to reconstruction/bsengine/BSTerrainEffect.cpp, reconstruction/bsengine/BSTerrainEffect.h, reports/sse-steam-1-7-104/unit-symbols/2a650aa1fb92939b98d05162838ba52c44730b06d4c3c8e606212b48d8e7bb3e.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/bsengine/BSTempEffect.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -82,7 +82,7 @@
         "candidate": {
           "code_section_sha256": "ce65a8faf00c3760056df96ba5b2ebae3ba02a409f67ae604a1241cb35cbaf88",
           "code_sections": 1,
-          "object_sha256": "2947fd17f2305d990f1c6fdd8c77f8aa225ea91ef60d8d49bde019c92cedf744"
+          "object_sha256": "51c6689290f5e4e9313487402ccc4226e7649cf280a96ac7d2180a788fa4d25c"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -143,7 +143,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSTerrainEffect.cpp",
-          "source_revision": "73c875aad3b0d39261874bdb5ca87bbd4d279fbcf9bb304d67ece6bc0d1873f1"
+          "source_revision": "12a0a6bbda6bba8bacb0cef85b59b9d880af2462ff6952c836335fbcc27f9b59"
         },
         "symbol_map_sha256": "2a650aa1fb92939b98d05162838ba52c44730b06d4c3c8e606212b48d8e7bb3e",
         "target": {
@@ -161,7 +161,7 @@
         "candidate": {
           "code_section_sha256": "ce65a8faf00c3760056df96ba5b2ebae3ba02a409f67ae604a1241cb35cbaf88",
           "code_sections": 1,
-          "object_sha256": "6b7d3c47cefbb3a63c4438a3b9b9f8aae193940bf14029fdd34e82d88c2bdff2"
+          "object_sha256": "11cb212bde8f5671ce1c6e628a5f225e9c9d4505d16e3a61906f00e241ee8285"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -222,7 +222,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSTerrainEffect.cpp",
-          "source_revision": "73c875aad3b0d39261874bdb5ca87bbd4d279fbcf9bb304d67ece6bc0d1873f1"
+          "source_revision": "12a0a6bbda6bba8bacb0cef85b59b9d880af2462ff6952c836335fbcc27f9b59"
         },
         "symbol_map_sha256": "2a650aa1fb92939b98d05162838ba52c44730b06d4c3c8e606212b48d8e7bb3e",
         "target": {
@@ -240,7 +240,7 @@
         "candidate": {
           "code_section_sha256": "ce65a8faf00c3760056df96ba5b2ebae3ba02a409f67ae604a1241cb35cbaf88",
           "code_sections": 1,
-          "object_sha256": "6b7d3c47cefbb3a63c4438a3b9b9f8aae193940bf14029fdd34e82d88c2bdff2"
+          "object_sha256": "11cb212bde8f5671ce1c6e628a5f225e9c9d4505d16e3a61906f00e241ee8285"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -301,7 +301,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSTerrainEffect.cpp",
-          "source_revision": "73c875aad3b0d39261874bdb5ca87bbd4d279fbcf9bb304d67ece6bc0d1873f1"
+          "source_revision": "12a0a6bbda6bba8bacb0cef85b59b9d880af2462ff6952c836335fbcc27f9b59"
         },
         "symbol_map_sha256": "2a650aa1fb92939b98d05162838ba52c44730b06d4c3c8e606212b48d8e7bb3e",
         "target": {
@@ -314,7 +314,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSTerrainEffect.cpp",
-    "digest": "73c875aad3b0d39261874bdb5ca87bbd4d279fbcf9bb304d67ece6bc0d1873f1",
+    "digest": "12a0a6bbda6bba8bacb0cef85b59b9d880af2462ff6952c836335fbcc27f9b59",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSTempEffect.h",

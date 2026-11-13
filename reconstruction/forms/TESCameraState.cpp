@@ -27,3 +27,15 @@ void TESCameraState::GetTranslation(NiPoint3& a_translation)
     a_translation.y = niPointZero.y;
     a_translation.z = niPointZero.z;
 }
+
+void TESCameraState::Begin()
+{
+}
+
+void TESCameraState::End()
+{
+}
+
+void TESCameraState::LoadGame(BGSLoadFormBuffer*)
+{
+}

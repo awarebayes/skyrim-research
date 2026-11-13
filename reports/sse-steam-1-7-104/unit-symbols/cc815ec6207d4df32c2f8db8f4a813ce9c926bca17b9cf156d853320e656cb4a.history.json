@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a.json",
+  "versions": [
+    {
+      "sha256": "cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a",
+      "base": null,
+      "added": [
+        "?LoadDataHeader@TESRegionData@@UEAA_NPEAX@Z",
+        "?LoadData@TESRegionData@@UEAAXPEAX@Z",
+        "??_GTESRegionData@@UEAAPEAXI@Z",
+        "??_7TESRegionData@@6B@",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

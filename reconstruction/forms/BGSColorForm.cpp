@@ -17,3 +17,9 @@ void BGSColorForm::InitializeData()
     color.value = 0;
     flags = 0;
 }
+
+void BGSColorForm::ClearData()
+{
+    color.value = 0;
+    flags = 0;
+}

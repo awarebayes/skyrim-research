@@ -5,6 +5,7 @@
 // Source exposure: mixed. Drafted by claude-sonnet-5-5 from local listings of the pinned image
 // with types from the header beside this file.
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone).
+// The names CreateDuplicateForm and IsParentForm come from powerof3/CommonLibSSE 654e55f, which is GPL-3.0; that licence applies to those functions.
 // Compared functions (RVA, size):
 //   EnterReferenceListLock RVA 0x2cbed0, 14 bytes
 //   GetbhkWorld            RVA 0x2be9b0, 26 bytes
@@ -88,4 +89,25 @@ BGSLocation* TESObjectCELL::GetLocation() const
         return worldSpace->GetLocation();
     }
     return location;
+}
+
+// CreateDuplicateForm: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+TESForm* TESObjectCELL::CreateDuplicateForm(bool a_createEditorID, void* a_arg2)
+{
+    return nullptr;
+}
+
+// IsParentForm: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+bool TESObjectCELL::IsParentForm()
+{
+    return true;
+}
+
+// GetWorldSpaceOfExteriorCell: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+TESWorldSpace* TESObjectCELL::GetWorldSpaceOfExteriorCell()
+{
+    if (cellFlags & 1) {
+        return nullptr;
+    }
+    return worldSpace;
 }

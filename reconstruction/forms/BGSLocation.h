@@ -7,7 +7,7 @@
 // Bodies adapted from community sources: none; tools/check_origin.py reports none above its
 // threshold at the pinned checkouts.
 // BGSLocation, BGSLocation::InitializeData, BGSLocation::~BGSLocation, BGSLocation::parentLoc, BGSLocation::unreportedCrimeFaction, BGSLocation::musicType, BGSLocation::worldLocMarker, BGSLocation::worldLocRadius, BGSLocation::horseLocMarker, BGSLocation::lastChecked, BGSLocation::cleared, BGSLocation::everCleared: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
-// BGSLocation::everCleared at offset 0xED: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the listing clears cleared and everCleared with one word store
+// BGSLocation::clearedFlags: GUESS(low); one 16-bit field for the two flag bytes, which the listing clears with one word store
 // gNullHandle: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); the 32-bit null reference handle at RVA 0x219e55c, id 400312; the name there is gNullHandle_*
 // BGSLocation::unk70: GUESS(low); opaque bytes for specialRefs to keywordData (offset 0x70 to 0xE8)
 // TESFullName, TESFullName::GetFullNameLength, TESFullName::GetFullName: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); size 0x10 and slots only
@@ -76,8 +76,8 @@ public:
     std::uint32_t pad6C;                   // 6C
     std::uint8_t  unk70[0x78];             // 70
     std::uint32_t lastChecked;             // E8
-    bool          cleared;                 // EC
-    bool          everCleared;             // ED
+    // clearedFlags: GUESS(low); the two bytes EC and ED that the listing clears with one word store (cleared and everCleared)
+    std::uint16_t clearedFlags;            // EC
     std::uint16_t padEE;                   // EE
 };
 static_assert(sizeof(BGSLocation) == 0xF0, "layout");

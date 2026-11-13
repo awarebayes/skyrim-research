@@ -21,3 +21,13 @@ BGSStoryManagerTreeForm::BGSStoryManagerTreeForm()
 {
 }
 
+BGSStoryManagerTreeForm* BGSStoryManagerTreeForm::GetChild(std::uint32_t) const
+{
+    return nullptr;
+}
+
+std::uint32_t BGSStoryManagerTreeForm::QChildCount() const
+{
+    return 0;
+}
+

@@ -8,8 +8,7 @@
 // pinned image. Names are from CharmedBaryon/CommonLibSSE-NG b93280e (MIT).
 // A byte match shows that this source and recipe produce the checked code; it does not verify the
 // community method names or that the original source looked like this.
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. SetFormEditorID is compared.
-// GetFormEditorID is defined here but not compared: a name it binds clashes with an existing symbol-map entry.
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. GetFormEditorID and SetFormEditorID are both compared.
 #include "TESGlobal.h"
 
 const char* TESGlobal::GetFormEditorID() const

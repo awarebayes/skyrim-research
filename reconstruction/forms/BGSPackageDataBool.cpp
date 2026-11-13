@@ -37,7 +37,7 @@
 #include "BGSPackageDataBool.h"
 
 // RVA 0x44d7b0, 40 bytes
-
+// Near-miss: near-miss/0x44d7b0.cpp
 
 // RVA 0x44d980, 54 bytes
 void BGSPackageDataBool::Unk_07(BGSSaveGameBuffer* a_buf)
@@ -47,10 +47,31 @@ void BGSPackageDataBool::Unk_07(BGSSaveGameBuffer* a_buf)
 }
 
 // RVA 0x44d9c0, 85 bytes
-
+// Near-miss: near-miss/0x44d9c0.cpp
 
 // RVA 0x44d8e0, 107 bytes
+void BGSPackageDataBool::LoadPackage(TESFile* a_mod)
+{
+    BGSNamedPackageData_VIPackageData::LoadPackage(a_mod);
+    // subrecord type "CNAM" read as a little-endian uint32
+    if (a_mod->GetCurrentSubRecordType() == 0x4d414e43) {
+        bool value = false;
+        a_mod->ReadData(&value, 1);
+        a_mod->SeekNextSubrecord();
+        const std::uint64_t set = flags08 | 2;
+        const std::uint64_t cleared = flags08 & ~std::uint64_t{2};
+        flags08 = value ? set : cleared;
+    }
+}
 
+// RVA 0x44d7e0, 87 bytes
+// Near-miss: near-miss/0x44d7e0.cpp
+
+// RVA 0x44d840, 151 bytes
+// Near-miss: near-miss/0x44d840.cpp
+
+// RVA 0x44e660, 81 bytes
+// Near-miss: near-miss/0x44e660.cpp
 
 // Accepted leaf retained from the integrated version.
 // Unk_05: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)

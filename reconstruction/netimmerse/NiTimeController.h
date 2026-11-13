@@ -54,6 +54,12 @@ public:
 class NiTimeController : public NiObject {
 public:
     void ProcessClone(NiCloningProcess& a_cloning) override;  // 1D
+    // NiTimeController::IsStreamable: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); constant true
+    virtual bool IsStreamable();
+    // NiTimeController::IsTransformController: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); constant false
+    virtual bool IsTransformController();
+    // NiTimeController::IsVertexController: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); constant false
+    virtual bool IsVertexController();
 
     std::uint8_t      unk10[0x30];  // 0x10
     NiTimeController* next;         // 0x40

@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_03@BSShadowLight@@UEBAEXZ": {
+      "rva": 22404048,
+      "size": 3
+    },
+    "?Unk_04@BSShadowLight@@UEAAEXZ": {
+      "rva": 22403424,
+      "size": 3
+    },
+    "?Unk_06@BSShadowLight@@UEAAEXZ": {
+      "rva": 22403984,
+      "size": 3
+    },
+    "?Unk_08@BSShadowLight@@UEAAEXZ": {
+      "rva": 22404000,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_03@BSShadowLight@@UEBAEXZ",
+        "rva": "0x155dbd0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_04@BSShadowLight@@UEAAEXZ",
+        "rva": "0x155d960",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_06@BSShadowLight@@UEAAEXZ",
+        "rva": "0x155db90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_08@BSShadowLight@@UEAAEXZ",
+        "rva": "0x155dba0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

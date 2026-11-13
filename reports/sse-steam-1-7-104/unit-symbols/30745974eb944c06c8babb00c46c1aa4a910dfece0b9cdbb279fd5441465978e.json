@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetRotation@TESCameraState@@UEAAXAEAVNiQuaternion@@@Z": {
+      "rva": 2400288,
+      "size": 11
+    },
+    "?GetTranslation@TESCameraState@@UEAAXAEAVNiPoint3@@@Z": {
+      "rva": 2400304,
+      "size": 39
+    },
+    "niQuatDefault": {
+      "rva": 53598096,
+      "size": null
+    },
+    "niPointZero": {
+      "rva": 53593176,
+      "size": null
+    },
+    "?Begin@TESCameraState@@UEAAXXZ": {
+      "rva": 2400256,
+      "size": 3
+    },
+    "?End@TESCameraState@@UEAAXXZ": {
+      "rva": 2400272,
+      "size": 3
+    },
+    "?LoadGame@TESCameraState@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 2400352,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetRotation@TESCameraState@@UEAAXAEAVNiQuaternion@@@Z",
+        "rva": "0x24a020",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetTranslation@TESCameraState@@UEAAXAEAVNiPoint3@@@Z",
+        "rva": "0x24a030",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "niQuatDefault",
+        "rva": "0x331d790",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "niPointZero",
+        "rva": "0x331c458",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Begin@TESCameraState@@UEAAXXZ",
+        "rva": "0x24a000",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?End@TESCameraState@@UEAAXXZ",
+        "rva": "0x24a010",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@TESCameraState@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x24a060",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

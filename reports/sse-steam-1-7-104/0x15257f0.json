@@ -26,10 +26,9 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "438f6e337cebeeada1050b517abd41f892c67b8b9842cf67a55055fbaa8e81be",
+        "object_sha256": "161882730261b5900e7e68116e19cc335d0f9ea5e6c44229c6fc2182019722a3",
         "opened_equals_closure": true,
         "repository_files_opened": [
-          "reconstruction/bsengine/BSLightingShaderMaterialBase.h",
           "reconstruction/bsengine/BSLightingShaderMaterialEye.cpp",
           "reconstruction/bsengine/BSLightingShaderMaterialEye.h"
         ]
@@ -47,10 +46,9 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "41e649de8285864092e65edc507662276bdfb7949e9af67138063833c627c07a",
+        "object_sha256": "3dd50e378de805ca007086bfec86c1ee88381a50dc42d2dfefaf044ea9f4e218",
         "opened_equals_closure": true,
         "repository_files_opened": [
-          "reconstruction/bsengine/BSLightingShaderMaterialBase.h",
           "reconstruction/bsengine/BSLightingShaderMaterialEye.cpp",
           "reconstruction/bsengine/BSLightingShaderMaterialEye.h"
         ]
@@ -66,13 +64,13 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit cf607b2dc469e479f4db4682a66a27abe44acd19, with uncommitted changes to reconstruction/bsengine/BSLightingShaderMaterialEye.cpp, reconstruction/bsengine/BSLightingShaderMaterialEye.h, reports/sse-steam-1-7-104/unit-symbols/95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 416f1acd7f47a19c21fd749d8f3fba81a07b272a, with uncommitted changes to reconstruction/bsengine/BSLightingShaderMaterialEye.cpp, reconstruction/bsengine/BSLightingShaderMaterialEye.h, reports/sse-steam-1-7-104/unit-symbols/a2ab33d1bf22fa5992a78e70441e5a26104e8f71d87a5b635b741328072e5325.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
     "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
   },
-  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSLightingShaderMaterialEye.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSLightingShaderMaterialEye.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x15257f0 --symbol '?LoadBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z' --compiled reconstruction/bsengine/BSLightingShaderMaterialEye.cpp --unit reconstruction/bsengine/BSLightingShaderMaterialBase.h reconstruction/bsengine/BSLightingShaderMaterialEye.cpp reconstruction/bsengine/BSLightingShaderMaterialEye.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSLightingShaderMaterialEye.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSLightingShaderMaterialEye.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x15257f0 --symbol '?LoadBinary@BSLightingShaderMaterialEye@@UEAAXAEAVNiStream@@@Z' --compiled reconstruction/bsengine/BSLightingShaderMaterialEye.cpp --unit reconstruction/bsengine/BSLightingShaderMaterialEye.cpp reconstruction/bsengine/BSLightingShaderMaterialEye.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/a2ab33d1bf22fa5992a78e70441e5a26104e8f71d87a5b635b741328072e5325.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
   "runs": [
     {
       "compared_on": "mac-wine",
@@ -82,11 +80,11 @@
         "candidate": {
           "code_section_sha256": "bf358c2e33979d00504972bfff823b2721bcbfacf0ab160de6d1e919b710d1a1",
           "code_sections": 1,
-          "object_sha256": "438f6e337cebeeada1050b517abd41f892c67b8b9842cf67a55055fbaa8e81be"
+          "object_sha256": "161882730261b5900e7e68116e19cc335d0f9ea5e6c44229c6fc2182019722a3"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -145,9 +143,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialEye.cpp",
-          "source_revision": "37e6ed7debb953934f5e80800840cb4d5ed13c12ed2b0d651e80269dfc2abfcc"
+          "source_revision": "31c7c98968f63681d007f3968304af915994c5c8f8452de99fd46cd69c2c542a"
         },
-        "symbol_map_sha256": "95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92",
+        "symbol_map_sha256": "a2ab33d1bf22fa5992a78e70441e5a26104e8f71d87a5b635b741328072e5325",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -163,11 +161,11 @@
         "candidate": {
           "code_section_sha256": "bf358c2e33979d00504972bfff823b2721bcbfacf0ab160de6d1e919b710d1a1",
           "code_sections": 1,
-          "object_sha256": "41e649de8285864092e65edc507662276bdfb7949e9af67138063833c627c07a"
+          "object_sha256": "3dd50e378de805ca007086bfec86c1ee88381a50dc42d2dfefaf044ea9f4e218"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -226,9 +224,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialEye.cpp",
-          "source_revision": "37e6ed7debb953934f5e80800840cb4d5ed13c12ed2b0d651e80269dfc2abfcc"
+          "source_revision": "31c7c98968f63681d007f3968304af915994c5c8f8452de99fd46cd69c2c542a"
         },
-        "symbol_map_sha256": "95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92",
+        "symbol_map_sha256": "a2ab33d1bf22fa5992a78e70441e5a26104e8f71d87a5b635b741328072e5325",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -244,11 +242,11 @@
         "candidate": {
           "code_section_sha256": "bf358c2e33979d00504972bfff823b2721bcbfacf0ab160de6d1e919b710d1a1",
           "code_sections": 1,
-          "object_sha256": "41e649de8285864092e65edc507662276bdfb7949e9af67138063833c627c07a"
+          "object_sha256": "3dd50e378de805ca007086bfec86c1ee88381a50dc42d2dfefaf044ea9f4e218"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -307,9 +305,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialEye.cpp",
-          "source_revision": "37e6ed7debb953934f5e80800840cb4d5ed13c12ed2b0d651e80269dfc2abfcc"
+          "source_revision": "31c7c98968f63681d007f3968304af915994c5c8f8452de99fd46cd69c2c542a"
         },
-        "symbol_map_sha256": "95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92",
+        "symbol_map_sha256": "a2ab33d1bf22fa5992a78e70441e5a26104e8f71d87a5b635b741328072e5325",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -320,17 +318,16 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSLightingShaderMaterialEye.cpp",
-    "digest": "37e6ed7debb953934f5e80800840cb4d5ed13c12ed2b0d651e80269dfc2abfcc",
+    "digest": "31c7c98968f63681d007f3968304af915994c5c8f8452de99fd46cd69c2c542a",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
-      "reconstruction/bsengine/BSLightingShaderMaterialBase.h",
       "reconstruction/bsengine/BSLightingShaderMaterialEye.cpp",
       "reconstruction/bsengine/BSLightingShaderMaterialEye.h"
     ]
   },
   "symbol_map": {
-    "path": "reports/sse-steam-1-7-104/unit-symbols/95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92.json",
-    "sha256": "95df20256e31791af2bf8852d5ace351b6a4840cf775f9a009a919385e482f92"
+    "path": "reports/sse-steam-1-7-104/unit-symbols/a2ab33d1bf22fa5992a78e70441e5a26104e8f71d87a5b635b741328072e5325.json",
+    "sha256": "a2ab33d1bf22fa5992a78e70441e5a26104e8f71d87a5b635b741328072e5325"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

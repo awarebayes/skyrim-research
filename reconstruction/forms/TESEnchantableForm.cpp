@@ -32,3 +32,7 @@ void TESEnchantableForm::InitializeDataComponent()
     amountofEnchantment = 0;
     formEnchanting = nullptr;
 }
+
+void TESEnchantableForm::ClearDataComponent()
+{
+}

@@ -36,8 +36,10 @@ class BGSMaterialType;
 class BGSBlockBashData : public ::BaseFormComponent
 {
 public:
+	// BGSBlockBashData::BGSBlockBashData: GUESS(low); declared so that the vftable and the deleting destructor are emitted in this unit
+	BGSBlockBashData();
 	// BGSBlockBashData::~BGSBlockBashData: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 0, target 0x1d23c0, inherited name
-	~BGSBlockBashData() override;  // 00
+	~BGSBlockBashData() override {}  // 00
 	// BGSBlockBashData::InitializeDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 1, target 0x1d2240, inherited name
 	void InitializeDataComponent() override;  // 01
 	// BGSBlockBashData::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 2, target 0x1d2260, inherited name

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/89f4826cb49b4a2a7834fc7e385e8036944902fc38669e94c64174598dfd63d1.json",
+  "versions": [
+    {
+      "sha256": "89f4826cb49b4a2a7834fc7e385e8036944902fc38669e94c64174598dfd63d1",
+      "base": null,
+      "added": [
+        "?RegisterStreamables@BSMultiBoundRoom@@UEBAEXZ",
+        "?CreateClone@BSMultiBoundRoom@@UEAAPEAXPEAX@Z",
+        "?LoadBinary@BSMultiBoundRoom@@UEAAXPEAX@Z",
+        "?LinkObject@BSMultiBoundRoom@@UEAAXPEAX@Z"
+      ]
+    }
+  ]
+}

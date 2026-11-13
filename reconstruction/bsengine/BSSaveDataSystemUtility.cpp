@@ -28,3 +28,20 @@ std::uint32_t BSSaveDataSystemUtility::Unk_0A(void* a_obj)
     LookupValue(a_obj, &value);
     return value;
 }
+
+// RVA 0x159a9e0, 3 bytes: returns true.
+bool BSSaveDataSystemUtility::Unk_08()
+{
+    return true;
+}
+
+// RVA 0x159a9f0, 3 bytes: returns true.
+bool BSSaveDataSystemUtility::Unk_07()
+{
+    return true;
+}
+
+// RVA 0x159aa00, 3 bytes: an empty slot body.
+void BSSaveDataSystemUtility::Unk_05()
+{
+}

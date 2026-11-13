@@ -46,6 +46,22 @@ std::uint16_t TESGrass::GetDistanceFromWaterLevel() const
     return data.distanceFromWaterLevel;
 }
 
+// SetDistanceFromWaterLevel, GetHeightRange, GetColorRange: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void TESGrass::SetDistanceFromWaterLevel(std::uint16_t a_unitsFromWater)
+{
+    data.distanceFromWaterLevel = a_unitsFromWater;
+}
+
+float TESGrass::GetHeightRange() const
+{
+    return data.heightRange;
+}
+
+float TESGrass::GetColorRange() const
+{
+    return data.colorRange;
+}
+
 TESGrass::GRASS_WATER_STATE TESGrass::GetUnderwaterState() const
 {
     return data.underwater;

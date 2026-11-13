@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x44d960",
   "naming_findings": [
-    "The earlier family approval did not assess individual names."
+    "The slot name remains a placeholder."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
+  "previous_code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
+  "previous_review_sha256": "f7f0c3f177d2cb418371f1fbb9cd4c747ef87ca609e524f62d582051312e254f",
+  "previous_source_digest": "eac23043dc1b646e5359d3f6a1bdfadc4c330a6e15ab53a44eb3dd110693cf1f",
   "review_date": "2026-11-13",
-  "review_kind": "full",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "f7f0c3f177d2cb418371f1fbb9cd4c747ef87ca609e524f62d582051312e254f",
-  "review_task_id": "review-p85-reconcile-d",
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 4512096,
   "size": 3,
-  "source_digest": "eac23043dc1b646e5359d3f6a1bdfadc4c330a6e15ab53a44eb3dd110693cf1f",
+  "source_digest": "d4c0db71e0218e991d4f936f085b3d3119001d300462d71c6391526515848adc",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

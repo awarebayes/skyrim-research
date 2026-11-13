@@ -39,3 +39,8 @@ bool TESLeveledList::GetUseAll()
 {
     return TestBit(llFlags, 2);
 }
+
+std::int32_t TESLeveledList::GetLevDifferenceMax()
+{
+    return 0;
+}

@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "ec43df7efe915c4f7b24c79a05f77dbac5aa7d4215d209aa8c819eaf740cae1a",
+        "object_sha256": "f9f7e3796c6c3a3dc89707fbced2e3718d6eded8e05ad75ce9bf4a208bea8602",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSGeometry.cpp",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "dcd465eccfc210f6e296bae41574585d3b14b486c6d7e25679f06779ba23440e",
+        "object_sha256": "4b425dc839db41acad0fdcbdfc6077b6b2ca5ae1ef68d5d95e1ddb3a482944f1",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSGeometry.cpp",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 1254a46adf85f88d4b59f6071454e22da0bd59ce, with uncommitted changes to reconstruction/bsengine/BSGeometry.cpp, reconstruction/bsengine/BSGeometry.h, reports/sse-steam-1-7-104/unit-symbols/10e0789daa8c2f5c184c05e98f0f9465a5ea99aa754fc4a1592ece73bb4d574e.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/netimmerse/NiObject.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/o2-fpfast.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "2c5bf1fd12e33d993fa5039e2fc4763bbe1df74d1242553624af10e21fd59994",
           "code_sections": 1,
-          "object_sha256": "ec43df7efe915c4f7b24c79a05f77dbac5aa7d4215d209aa8c819eaf740cae1a"
+          "object_sha256": "f9f7e3796c6c3a3dc89707fbced2e3718d6eded8e05ad75ce9bf4a208bea8602"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -147,7 +147,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSGeometry.cpp",
-          "source_revision": "c6afd236e90439436ca63bb80da8bd2c298c92c2832a479f6f98be284b17bb80"
+          "source_revision": "aa31cdf493558ed204b6deb5319a726cbbc1946eb2658b00c1b235c4be554720"
         },
         "symbol_map_sha256": "10e0789daa8c2f5c184c05e98f0f9465a5ea99aa754fc4a1592ece73bb4d574e",
         "target": {
@@ -165,7 +165,7 @@
         "candidate": {
           "code_section_sha256": "2c5bf1fd12e33d993fa5039e2fc4763bbe1df74d1242553624af10e21fd59994",
           "code_sections": 1,
-          "object_sha256": "dcd465eccfc210f6e296bae41574585d3b14b486c6d7e25679f06779ba23440e"
+          "object_sha256": "4b425dc839db41acad0fdcbdfc6077b6b2ca5ae1ef68d5d95e1ddb3a482944f1"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -228,7 +228,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSGeometry.cpp",
-          "source_revision": "c6afd236e90439436ca63bb80da8bd2c298c92c2832a479f6f98be284b17bb80"
+          "source_revision": "aa31cdf493558ed204b6deb5319a726cbbc1946eb2658b00c1b235c4be554720"
         },
         "symbol_map_sha256": "10e0789daa8c2f5c184c05e98f0f9465a5ea99aa754fc4a1592ece73bb4d574e",
         "target": {
@@ -246,7 +246,7 @@
         "candidate": {
           "code_section_sha256": "2c5bf1fd12e33d993fa5039e2fc4763bbe1df74d1242553624af10e21fd59994",
           "code_sections": 1,
-          "object_sha256": "dcd465eccfc210f6e296bae41574585d3b14b486c6d7e25679f06779ba23440e"
+          "object_sha256": "4b425dc839db41acad0fdcbdfc6077b6b2ca5ae1ef68d5d95e1ddb3a482944f1"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -309,7 +309,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSGeometry.cpp",
-          "source_revision": "c6afd236e90439436ca63bb80da8bd2c298c92c2832a479f6f98be284b17bb80"
+          "source_revision": "aa31cdf493558ed204b6deb5319a726cbbc1946eb2658b00c1b235c4be554720"
         },
         "symbol_map_sha256": "10e0789daa8c2f5c184c05e98f0f9465a5ea99aa754fc4a1592ece73bb4d574e",
         "target": {
@@ -322,7 +322,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSGeometry.cpp",
-    "digest": "c6afd236e90439436ca63bb80da8bd2c298c92c2832a479f6f98be284b17bb80",
+    "digest": "aa31cdf493558ed204b6deb5319a726cbbc1946eb2658b00c1b235c4be554720",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSGeometry.cpp",

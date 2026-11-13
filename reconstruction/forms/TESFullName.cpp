@@ -10,6 +10,15 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The one function above is compared.
 #include "TESFullName.h"
 
+void TESFullName::ClearDataComponent()
+{
+}
+
+std::uint32_t TESFullName::GetFullNameLength() const
+{
+    return BSFixedStringLength(&fullName);
+}
+
 const char* TESFullName::GetFullName() const
 {
     return fullName.data();

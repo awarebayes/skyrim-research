@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?IsOcclusionMarker@TESObject@@UEAA_NXZ": {
+      "rva": 2580192,
+      "size": 39
+    },
+    "?g_occlusionMarkerA@@3PEAVTESObject@@EA": {
+      "rva": 52294224,
+      "size": null
+    },
+    "?g_occlusionMarkerB@@3PEAVTESObject@@EA": {
+      "rva": 52294216,
+      "size": null
+    },
+    "?g_occlusionMarkerC@@3PEAVTESObject@@EA": {
+      "rva": 52294232,
+      "size": null
+    },
+    "?DecRef@TESObject@@UEAAIXZ": {
+      "rva": 1336896,
+      "size": 3
+    },
+    "?GetRefCount@TESObject@@UEBAIXZ": {
+      "rva": 1337360,
+      "size": 3
+    },
+    "?GetWaterType@TESObject@@UEBAPEAVTESWaterForm@@XZ": {
+      "rva": 1337408,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?IsOcclusionMarker@TESObject@@UEAA_NXZ",
+        "rva": "0x275ee0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_occlusionMarkerA@@3PEAVTESObject@@EA",
+        "rva": "0x31df250",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_occlusionMarkerB@@3PEAVTESObject@@EA",
+        "rva": "0x31df248",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_occlusionMarkerC@@3PEAVTESObject@@EA",
+        "rva": "0x31df258",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DecRef@TESObject@@UEAAIXZ",
+        "rva": "0x146640",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetRefCount@TESObject@@UEBAIXZ",
+        "rva": "0x146810",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetWaterType@TESObject@@UEBAPEAVTESWaterForm@@XZ",
+        "rva": "0x146840",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

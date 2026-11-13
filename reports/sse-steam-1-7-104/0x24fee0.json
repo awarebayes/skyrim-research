@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "75e36b646028c965150a2e3df42ffd2fb1010edfb98665fdfbb5911d64b72891",
+        "object_sha256": "b74f8fbc5cc19faa7f3f4ccb71e94d42ec76043df67802adbc68c6344a646a6e",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/TESRegionData.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "2f23129f1141050d3968f0a80e13f0c712c94d4b29a932aa8d4573e92fedf0c0",
+        "object_sha256": "f2cd3aa6d1c1b0e7039988ae533c3f0028947eb143a3305db23ec0fd838057d5",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/TESRegionData.cpp",
@@ -64,13 +64,13 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 1254a46adf85f88d4b59f6071454e22da0bd59ce, with uncommitted changes to reconstruction/forms/TESRegionData.cpp, reconstruction/forms/TESRegionData.h, reports/sse-steam-1-7-104/unit-symbols/2ad06f5833262441bf7f0043e38f3c290ca247a2670aa097af2a08ffe1d3fb4d.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/forms/TESRegionData.cpp, reconstruction/forms/TESRegionData.h, reports/sse-steam-1-7-104/unit-symbols/cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
     "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
   },
-  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/forms/TESRegionData.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/forms/TESRegionData.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x24fee0 --symbol '?LoadDataHeader@TESRegionData@@UEAA_NPEAX@Z' --compiled reconstruction/forms/TESRegionData.cpp --unit reconstruction/forms/TESRegionData.cpp reconstruction/forms/TESRegionData.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/2ad06f5833262441bf7f0043e38f3c290ca247a2670aa097af2a08ffe1d3fb4d.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/forms/TESRegionData.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/forms/TESRegionData.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0x24fee0 --symbol '?LoadDataHeader@TESRegionData@@UEAA_NPEAX@Z' --compiled reconstruction/forms/TESRegionData.cpp --unit reconstruction/forms/TESRegionData.cpp reconstruction/forms/TESRegionData.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
   "runs": [
     {
       "compared_on": "mac-wine",
@@ -80,7 +80,7 @@
         "candidate": {
           "code_section_sha256": "97174eaf7463333e09094b84445818e335fc8ca1f59028555f82b16a2fdf7498",
           "code_sections": 1,
-          "object_sha256": "75e36b646028c965150a2e3df42ffd2fb1010edfb98665fdfbb5911d64b72891"
+          "object_sha256": "b74f8fbc5cc19faa7f3f4ccb71e94d42ec76043df67802adbc68c6344a646a6e"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -141,9 +141,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESRegionData.cpp",
-          "source_revision": "e39fe42fc2461aaec984e3684594575152906b33df3a94e26818ff576b2efd8b"
+          "source_revision": "9c7214edb70271cd6d5c69dc3e7caf8d92a10d5517a2dd3b78af64754d2dfc97"
         },
-        "symbol_map_sha256": "2ad06f5833262441bf7f0043e38f3c290ca247a2670aa097af2a08ffe1d3fb4d",
+        "symbol_map_sha256": "cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -159,7 +159,7 @@
         "candidate": {
           "code_section_sha256": "97174eaf7463333e09094b84445818e335fc8ca1f59028555f82b16a2fdf7498",
           "code_sections": 1,
-          "object_sha256": "2f23129f1141050d3968f0a80e13f0c712c94d4b29a932aa8d4573e92fedf0c0"
+          "object_sha256": "f2cd3aa6d1c1b0e7039988ae533c3f0028947eb143a3305db23ec0fd838057d5"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -220,9 +220,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESRegionData.cpp",
-          "source_revision": "e39fe42fc2461aaec984e3684594575152906b33df3a94e26818ff576b2efd8b"
+          "source_revision": "9c7214edb70271cd6d5c69dc3e7caf8d92a10d5517a2dd3b78af64754d2dfc97"
         },
-        "symbol_map_sha256": "2ad06f5833262441bf7f0043e38f3c290ca247a2670aa097af2a08ffe1d3fb4d",
+        "symbol_map_sha256": "cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -238,7 +238,7 @@
         "candidate": {
           "code_section_sha256": "97174eaf7463333e09094b84445818e335fc8ca1f59028555f82b16a2fdf7498",
           "code_sections": 1,
-          "object_sha256": "2f23129f1141050d3968f0a80e13f0c712c94d4b29a932aa8d4573e92fedf0c0"
+          "object_sha256": "f2cd3aa6d1c1b0e7039988ae533c3f0028947eb143a3305db23ec0fd838057d5"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -299,9 +299,9 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/TESRegionData.cpp",
-          "source_revision": "e39fe42fc2461aaec984e3684594575152906b33df3a94e26818ff576b2efd8b"
+          "source_revision": "9c7214edb70271cd6d5c69dc3e7caf8d92a10d5517a2dd3b78af64754d2dfc97"
         },
-        "symbol_map_sha256": "2ad06f5833262441bf7f0043e38f3c290ca247a2670aa097af2a08ffe1d3fb4d",
+        "symbol_map_sha256": "cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -312,7 +312,7 @@
   ],
   "source": {
     "compiled": "reconstruction/forms/TESRegionData.cpp",
-    "digest": "e39fe42fc2461aaec984e3684594575152906b33df3a94e26818ff576b2efd8b",
+    "digest": "9c7214edb70271cd6d5c69dc3e7caf8d92a10d5517a2dd3b78af64754d2dfc97",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/forms/TESRegionData.cpp",
@@ -320,8 +320,8 @@
     ]
   },
   "symbol_map": {
-    "path": "reports/sse-steam-1-7-104/unit-symbols/2ad06f5833262441bf7f0043e38f3c290ca247a2670aa097af2a08ffe1d3fb4d.json",
-    "sha256": "2ad06f5833262441bf7f0043e38f3c290ca247a2670aa097af2a08ffe1d3fb4d"
+    "path": "reports/sse-steam-1-7-104/unit-symbols/cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a.json",
+    "sha256": "cc815ec6207d4df32c2f8db8f4a813ce9c926bca17b9cf156d853320e656cb4a"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

@@ -36,8 +36,10 @@ class TESForm;
 class TESDescription : public ::BaseFormComponent
 {
 public:
+	// TESDescription::TESDescription: SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence); name only; declared so the vftable and the deleting destructor are emitted in this unit
+	TESDescription();
 	// TESDescription::~TESDescription: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 0, target 0x1e1e00, inherited name
-	~TESDescription() override;  // 00
+	~TESDescription() override {}  // 00
 	// TESDescription::InitializeDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 1, target 0x1e1240, inherited name
 	void InitializeDataComponent() override;  // 01
 	// TESDescription::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 2, target 0x1e1250, inherited name

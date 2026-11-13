@@ -40,6 +40,9 @@ public:
 };
 static_assert(sizeof(BSFixedString) == 0x8, "layout");
 
+// BSFixedStringLength: GUESS(low); callee at RVA 0x20d280 that GetFullNameLength tail-calls with the address of its name; the meaning is inferred from that caller
+std::uint32_t BSFixedStringLength(const BSFixedString* a_str);
+
 // TESFullName: EXE_RTTI; class name and base from the image RTTI, 6 primary vftable slots
 class TESFullName : public BaseFormComponent
 {

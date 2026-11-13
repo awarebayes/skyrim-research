@@ -74,6 +74,9 @@ class bhkAttachmentCollisionObject;
 class bhkRigidBody;
 class bhkLimitedHingeConstraint;
 
+// NiCloningProcess is opaque here; each unit supplies the observed view it needs.
+class NiCloningProcess;
+
 // NiRTTI: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) OBSERVED; only the name pointer is
 // declared, at offset 0 (IsEqual reads a byte string through the first member).
 // name: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)

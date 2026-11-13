@@ -10,6 +10,19 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The functions above are compared.
 #include "TESRaceForm.h"
 
+TESRaceForm::TESRaceForm()
+{
+}
+
+void TESRaceForm::ClearDataComponent()
+{
+}
+
+void TESRaceForm::InitializeDataComponent()
+{
+    race = nullptr;
+}
+
 void TESRaceForm::CopyComponent(BaseFormComponent* a_rhs)
 {
     TESRaceForm* rhs = dynamic_cast<TESRaceForm*>(a_rhs);

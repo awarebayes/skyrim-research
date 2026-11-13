@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/5111b5b08f89d870179758a5554ed126d632d9bce119643d8a4dbfd6319d7ce0.json",
+  "versions": [
+    {
+      "sha256": "5111b5b08f89d870179758a5554ed126d632d9bce119643d8a4dbfd6319d7ce0",
+      "base": null,
+      "added": [
+        "?IsGrenadeProjectile@GrenadeProjectile@@UEBAEXZ",
+        "?TargetsWholeBody@GrenadeProjectile@@UEAA_NXZ",
+        "?GetDecalGroup@GrenadeProjectile@@UEBAPEAVBGSDecalGroup@@XZ",
+        "?OnTriggerEnter@GrenadeProjectile@@UEAAXXZ"
+      ]
+    }
+  ]
+}

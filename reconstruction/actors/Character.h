@@ -1449,7 +1449,8 @@ public:
 	virtual void Unk_128();  // 128
 	// Character::Unk_129: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); slot 297, target 0x73ad80
 	// community declaration: virtual void Unk_129(void);
-	virtual void Unk_129();  // 129
+	// Unk_129 return type: GUESS(low); the listing returns 1 in AL
+	virtual std::uint8_t Unk_129();  // 129
 
 	Character();
 

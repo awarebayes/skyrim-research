@@ -9,6 +9,7 @@
 // Adapted bodies: none. Body synthesized from the bounded leaf template.
 // A comparator pass verifies code under the recipe, not names or original source form.
 // Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
+// Task p92-s-bsmultiboundroom: CreateClone (0xfcdb10), LoadBinary (0xfcdb20) and LinkObject (0xfcdb30) are added beside RegisterStreamables.
 // BSMultiBoundRoom: EXE_RTTI
 // RegisterStreamables: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 // member, padding: GUESS(low); storage names invented for the measured member offset
@@ -19,4 +20,8 @@ class BSMultiBoundRoom
 {
 public:
     virtual std::uint8_t RegisterStreamables() const;
+    // CreateClone, LoadBinary, LinkObject: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); declared on NiObject there and inherited, not declared on this class
+    virtual void* CreateClone(void* a_cloning);
+    virtual void LoadBinary(void* a_stream);
+    virtual void LinkObject(void* a_stream);
 };

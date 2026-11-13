@@ -13,11 +13,20 @@
 // Slot38: GUESS(low)
 // member, padding: GUESS(low); storage names invented for the measured member offset
 // Method name is a guess built from the vtable owner and slot, not a public symbol.
+// Licence: these names come from powerof3/CommonLibSSE (GPL-3.0), so this file is GPL-3.0.
 #pragma once
 #include <cstdint>
 // Slot38: GUESS(low); method name inferred from vtable owner and slot
+class NiRTTI;
+
+// BSOcclusionBox::IsOcclusionPlane, BSOcclusionBox::GetRTTI: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); GPL-3.0 applies to these names in this file; compared at RVA 0xfe8100, 0xfe8320
+// NiRTTI_BSOcclusionBox: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the RTTI global at RVA 0x332e240, bound by hint
+extern NiRTTI NiRTTI_BSOcclusionBox;
+
 class BSOcclusionBox
 {
 public:
     virtual std::uint8_t Slot38() const;
+    virtual bool IsOcclusionPlane() const;  // compared: 0xfe8100
+    virtual const NiRTTI* GetRTTI() const;  // compared: 0xfe8320
 };

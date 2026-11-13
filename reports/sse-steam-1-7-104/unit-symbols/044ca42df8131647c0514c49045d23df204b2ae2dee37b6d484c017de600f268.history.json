@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/044ca42df8131647c0514c49045d23df204b2ae2dee37b6d484c017de600f268.json",
+  "versions": [
+    {
+      "sha256": "044ca42df8131647c0514c49045d23df204b2ae2dee37b6d484c017de600f268",
+      "base": null,
+      "added": [
+        "?GetPassExtraParam@BSShadowDirectionalLight@@UEAAII@Z",
+        "?GetIsFrustumOrDirectionalLight@BSShadowDirectionalLight@@UEAA_NXZ",
+        "?GetIsDirectionalLight@BSShadowDirectionalLight@@UEAA_NXZ",
+        "?GetNeedsClipPlanes@BSShadowDirectionalLight@@UEAA_NXZ"
+      ]
+    }
+  ]
+}

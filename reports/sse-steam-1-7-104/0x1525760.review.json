@@ -7,18 +7,18 @@
     "The earlier family approval did not assess individual names.",
     "The shared reference-count methods have sibling source declarations but lack corresponding sibling name labels."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
+  "previous_code_section_sha256": "fbd626fc0efd26110f1be1171c81fc805f312888e0b19989507754c5932c954a",
+  "previous_review_sha256": "f7f0c3f177d2cb418371f1fbb9cd4c747ef87ca609e524f62d582051312e254f",
+  "previous_source_digest": "37e6ed7debb953934f5e80800840cb4d5ed13c12ed2b0d651e80269dfc2abfcc",
   "review_date": "2026-11-13",
-  "review_kind": "full",
+  "review_kind": "label-only",
   "review_record_schema": 3,
   "review_sha256": "f7f0c3f177d2cb418371f1fbb9cd4c747ef87ca609e524f62d582051312e254f",
   "review_task_id": "review-p85-reconcile-d",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 22173536,
   "size": 6,
-  "source_digest": "37e6ed7debb953934f5e80800840cb4d5ed13c12ed2b0d651e80269dfc2abfcc",
+  "source_digest": "31c7c98968f63681d007f3968304af915994c5c8f8452de99fd46cd69c2c542a",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

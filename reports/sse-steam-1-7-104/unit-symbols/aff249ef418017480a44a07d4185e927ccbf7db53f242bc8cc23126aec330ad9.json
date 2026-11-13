@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?AddFactionChanges@ExtraDataList@@QEAAXXZ": {
+      "rva": 1511184,
+      "size": null
+    },
+    "?GetFactionChanges@ExtraDataList@@QEAAPEAVExtraFactionChanges@@XZ": {
+      "rva": 1511680,
+      "size": null
+    },
+    "?RemoveFactionChange@ExtraDataList@@QEAAXPEAVTESFaction@@@Z": {
+      "rva": 1511808,
+      "size": null
+    },
+    "?SetFactionRank@ExtraFactionChanges@@QEAAXPEAVTESFaction@@H@Z": {
+      "rva": 1595632,
+      "size": null
+    },
+    "?AddFaction@TESActorBaseData@@QEAAXPEAVTESFaction@@C@Z": {
+      "rva": 1955584,
+      "size": null
+    },
+    "??1Character@@UEAA@XZ": {
+      "rva": 6753824,
+      "size": null
+    },
+    "?SetCrimeFaction@Character@@QEAAXPEAVTESFaction@@@Z": {
+      "rva": 6810288,
+      "size": 234
+    },
+    "?GetRotationX@Character@@QEBAMXZ": {
+      "rva": 6893216,
+      "size": 6
+    },
+    "?Revert@Actor@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 6927808,
+      "size": null
+    },
+    "?UpdateFactionsA@Actor@@QEAAX_N@Z": {
+      "rva": 6934272,
+      "size": null
+    },
+    "?UpdateFactionsB@Actor@@QEAAXXZ": {
+      "rva": 6999184,
+      "size": null
+    },
+    "?StartDeferredKill@Character@@QEAAXXZ": {
+      "rva": 7129360,
+      "size": 17
+    },
+    "?StartDeferredKill@AIProcess@@QEAAXXZ": {
+      "rva": 7505312,
+      "size": null
+    },
+    "?GetBiped2@Character@@UEBAAEBV?$BSTSmartPointer@VBipedAnim@@@@XZ": {
+      "rva": 7579488,
+      "size": 8
+    },
+    "?Revert@Character@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 7579824,
+      "size": 49
+    },
+    "??_GCharacter@@UEAAPEAXI@Z": {
+      "rva": 7580608,
+      "size": 52
+    },
+    "?Unk_C4@Character@@UEAAXE@Z": {
+      "rva": 7581040,
+      "size": 7
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_R0?AVBaseFormComponent@@@8": {
+      "rva": 34453928,
+      "size": null
+    },
+    "??_R0?AVTESForm@@@8": {
+      "rva": 34454008,
+      "size": null
+    },
+    "?Unk_129@Character@@UEAAEXZ": {
+      "rva": 7581056,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?AddFactionChanges@ExtraDataList@@QEAAXXZ",
+        "rva": "0x170f10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFactionChanges@ExtraDataList@@QEAAPEAVExtraFactionChanges@@XZ",
+        "rva": "0x171100",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemoveFactionChange@ExtraDataList@@QEAAXPEAVTESFaction@@@Z",
+        "rva": "0x171180",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFactionRank@ExtraFactionChanges@@QEAAXPEAVTESFaction@@H@Z",
+        "rva": "0x1858f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AddFaction@TESActorBaseData@@QEAAXPEAVTESFaction@@C@Z",
+        "rva": "0x1dd700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1Character@@UEAA@XZ",
+        "rva": "0x670e20",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetCrimeFaction@Character@@QEAAXPEAVTESFaction@@@Z",
+        "rva": "0x67eab0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetRotationX@Character@@QEBAMXZ",
+        "rva": "0x692ea0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@Actor@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x69b5c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateFactionsA@Actor@@QEAAX_N@Z",
+        "rva": "0x69cf00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateFactionsB@Actor@@QEAAXXZ",
+        "rva": "0x6acc90",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StartDeferredKill@Character@@QEAAXXZ",
+        "rva": "0x6cc910",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StartDeferredKill@AIProcess@@QEAAXXZ",
+        "rva": "0x7285a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetBiped2@Character@@UEBAAEBV?$BSTSmartPointer@VBipedAnim@@@@XZ",
+        "rva": "0x73a760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@Character@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x73a8b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GCharacter@@UEAAPEAXI@Z",
+        "rva": "0x73abc0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_C4@Character@@UEAAXE@Z",
+        "rva": "0x73ad70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVBaseFormComponent@@@8",
+        "rva": "0x20db9a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESForm@@@8",
+        "rva": "0x20db9f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_129@Character@@UEAAEXZ",
+        "rva": "0x73ad80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

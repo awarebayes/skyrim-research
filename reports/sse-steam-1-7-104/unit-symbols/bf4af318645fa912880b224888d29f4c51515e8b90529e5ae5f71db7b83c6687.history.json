@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/bf4af318645fa912880b224888d29f4c51515e8b90529e5ae5f71db7b83c6687.json",
+  "versions": [
+    {
+      "sha256": "bf4af318645fa912880b224888d29f4c51515e8b90529e5ae5f71db7b83c6687",
+      "base": null,
+      "added": [
+        "?Unk_07@BGSPackageDataBool@@UEAAXPEAVBGSSaveGameBuffer@@@Z",
+        "?LoadPackage@BGSPackageDataBool@@UEAAXPEAVTESFile@@@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "?LoadPackage@BGSNamedPackageData_VIPackageData@@QEAAXPEAVTESFile@@@Z",
+        "?GetCurrentSubRecordType@TESFile@@QEAAIXZ",
+        "?ReadData@TESFile@@QEAA_NPEAXI@Z",
+        "?SeekNextSubrecord@TESFile@@QEAA_NXZ",
+        "?Unk_05@BGSPackageDataBool@@UEBAEXZ"
+      ]
+    }
+  ]
+}

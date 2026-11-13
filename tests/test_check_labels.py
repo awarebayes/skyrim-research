@@ -336,7 +336,7 @@ class ConfirmNoteTests(unittest.TestCase):
         self.assertIn('comparator source sha256 ' + 'c' * 64, note)
 
     def test_source_state_uses_the_tasks_comparator_engine(self):
-        for functions, expected in (([{'rva': 16}], self.confirm.check.legacy_comparator),
+        for functions, expected in (([{'rva': 16}], self.confirm.check.compare_runtime),
                                     ([{'rva': 16, 'internal_selector': {}}],
                                      self.confirm.check.compare_internal)):
             task = {'functions': functions, 'recipe': 'recipe.json', 'symbols_repo': 'map.json'}

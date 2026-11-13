@@ -27,6 +27,7 @@
 // kRecordFormType: GUESS(low); global byte at RVA 0x20788b8, the record type a world space is stored under.
 // kEmptyString: GUESS(low); global at RVA 0x1b58020, the empty text a BSString returns when it holds nothing.
 // FloorToCell: GUESS(low); the cell-grid coordinate of a world position, 4096 units per cell.
+// TESWorldSpace::IsParentForm, TESForm::IsParentForm: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 34 of TESForm
 #pragma once
 
 #include <cstdint>
@@ -140,7 +141,7 @@ public:
     virtual void Unk_31();
     virtual const char* GetFormEditorID() const;  // 32
     virtual bool SetFormEditorID(const char* a_str);  // 33
-    virtual void Unk_34();
+    virtual bool IsParentForm();
     virtual void Unk_35();
     virtual bool IsFormTypeChild(std::uint8_t a_type);  // 36
     virtual void Unk_37();
@@ -176,6 +177,7 @@ public:
     const char* GetFormEditorID() const override;        // 32
     bool        SetFormEditorID(const char* a_str) override;  // 33
     bool        IsFormTypeChild(std::uint8_t a_type) override;  // 36
+    bool        IsParentForm() override;            // 34
 
     TESObjectCELL* GetCellByPosition(const NiPoint3& a_pos) const;
 

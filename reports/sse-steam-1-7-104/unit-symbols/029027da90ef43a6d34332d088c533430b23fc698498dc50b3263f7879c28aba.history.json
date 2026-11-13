@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/029027da90ef43a6d34332d088c533430b23fc698498dc50b3263f7879c28aba.json",
+  "versions": [
+    {
+      "sha256": "029027da90ef43a6d34332d088c533430b23fc698498dc50b3263f7879c28aba",
+      "base": null,
+      "added": [
+        "?ClearData@TESForm@@UEAAXXZ",
+        "??1TESModel@@UEAA@XZ",
+        "?InitializeDataComponent@TESModel@@UEAAXXZ",
+        "??_GTESGrass@@UEAAPEAXI@Z",
+        "?GetDensity@TESGrass@@UEBAEXZ",
+        "?GetDistanceFromWaterLevel@TESGrass@@UEBAGXZ",
+        "?GetMaxSlopeDegrees@TESGrass@@UEBAEXZ",
+        "?GetMinSlopeDegrees@TESGrass@@UEBAEXZ",
+        "?GetUnderwaterState@TESGrass@@UEBA?AW4GRASS_WATER_STATE@1@XZ",
+        "?SetUnderwaterState@TESGrass@@UEAAXW4GRASS_WATER_STATE@1@@Z",
+        "??1TESBoundObject@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "__CxxFrameHandler3",
+        "??_7TESGrass@@6BTESBoundObject@@@",
+        "??_7TESGrass@@6BTESModel@@@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?SetDistanceFromWaterLevel@TESGrass@@UEAAXG@Z",
+        "?GetColorRange@TESGrass@@UEBAMXZ",
+        "?GetHeightRange@TESGrass@@UEBAMXZ"
+      ]
+    }
+  ]
+}

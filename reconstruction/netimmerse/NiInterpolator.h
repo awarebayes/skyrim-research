@@ -45,6 +45,8 @@ class bhkAttachmentCollisionObject;
 class bhkRigidBody;
 class bhkLimitedHingeConstraint;
 class NiControllerManager;
+class NiBoolInterpolator;
+class NiObjectNET;
 
 // NiRefObject: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // ms_totalObjects: GUESS(low); NG reaches the counter through GetTotalObjectCount()
@@ -133,8 +135,8 @@ public:
 	virtual void  Update2();  // 26
 	virtual void  Update3();  // 27
 	virtual void  Update4();  // 28
-	virtual void  Update5();  // 29
-	virtual void  Update6();  // 2A
+	virtual bool  Update5(float a_time, NiObjectNET* a_interpTarget, float& a_value);  // 29
+	virtual bool  Update6(float a_time, NiObjectNET* a_interpTarget, bool& a_value);  // 2A
 	virtual void  IsBoolValueSupported();  // 2B
 	virtual void  IsFloatValueSupported();  // 2C
 	virtual void  IsQuaternionValueSupported();  // 2D
@@ -148,7 +150,7 @@ public:
 	virtual bool  ResolveDependencies(NiAVObjectPalette* a_palette);  // 35
 	virtual void  SetUpDependencies();  // 36
 	virtual void  AlwaysUpdate();  // 37
-	virtual void  AsNiBoolInterpolator();  // 38
+	virtual NiBoolInterpolator* AsNiBoolInterpolator();  // 38
 
 	NiInterpolator* Clone();
 

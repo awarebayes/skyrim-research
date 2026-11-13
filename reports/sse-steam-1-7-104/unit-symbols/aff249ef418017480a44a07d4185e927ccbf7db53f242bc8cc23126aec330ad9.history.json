@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/aff249ef418017480a44a07d4185e927ccbf7db53f242bc8cc23126aec330ad9.json",
+  "versions": [
+    {
+      "sha256": "aff249ef418017480a44a07d4185e927ccbf7db53f242bc8cc23126aec330ad9",
+      "base": null,
+      "added": [
+        "?AddFactionChanges@ExtraDataList@@QEAAXXZ",
+        "?GetFactionChanges@ExtraDataList@@QEAAPEAVExtraFactionChanges@@XZ",
+        "?RemoveFactionChange@ExtraDataList@@QEAAXPEAVTESFaction@@@Z",
+        "?SetFactionRank@ExtraFactionChanges@@QEAAXPEAVTESFaction@@H@Z",
+        "?AddFaction@TESActorBaseData@@QEAAXPEAVTESFaction@@C@Z",
+        "??1Character@@UEAA@XZ",
+        "?SetCrimeFaction@Character@@QEAAXPEAVTESFaction@@@Z",
+        "?GetRotationX@Character@@QEBAMXZ",
+        "?Revert@Actor@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?UpdateFactionsA@Actor@@QEAAX_N@Z",
+        "?UpdateFactionsB@Actor@@QEAAXXZ",
+        "?StartDeferredKill@Character@@QEAAXXZ",
+        "?StartDeferredKill@AIProcess@@QEAAXXZ",
+        "?GetBiped2@Character@@UEBAAEBV?$BSTSmartPointer@VBipedAnim@@@@XZ",
+        "?Revert@Character@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "??_GCharacter@@UEAAPEAXI@Z",
+        "?Unk_C4@Character@@UEAAXE@Z",
+        "??3@YAXPEAX_K@Z",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?Unk_129@Character@@UEAAEXZ"
+      ]
+    }
+  ]
+}

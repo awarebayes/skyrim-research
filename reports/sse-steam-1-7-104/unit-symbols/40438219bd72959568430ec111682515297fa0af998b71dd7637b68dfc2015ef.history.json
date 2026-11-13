@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/40438219bd72959568430ec111682515297fa0af998b71dd7637b68dfc2015ef.json",
+  "versions": [
+    {
+      "sha256": "40438219bd72959568430ec111682515297fa0af998b71dd7637b68dfc2015ef",
+      "base": null,
+      "added": [
+        "?GetFullName@TESFullName@@UEBAPEBDXZ",
+        "?data@BSFixedString@@QEBAPEBDXZ",
+        "?ClearDataComponent@TESFullName@@UEAAXXZ",
+        "?GetFullNameLength@TESFullName@@UEBAIXZ",
+        "?BSFixedStringLength@@YAIPEBVBSFixedString@@@Z"
+      ]
+    }
+  ]
+}

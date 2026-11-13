@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0.json",
+  "versions": [
+    {
+      "sha256": "0efd1a89a00e72e44bfa60550f5299bfb5182c76f6a086afa3a40580ad96d9b0",
+      "base": null,
+      "added": [
+        "?Unk_0D@BSImagespaceShader@@UEAAPEA_KPEA_K@Z",
+        "?RestoreRenderStates@BSImagespaceShader@@UEAA_NPEAVImageSpaceEffectParam@@@Z",
+        "?Unk_0C@BSImagespaceShader@@UEAAXIII@Z",
+        "?ShutDown@BSImagespaceShader@@UEAAXXZ",
+        "?ResetRenderStates@BSImagespaceShader@@QEAA_NXZ",
+        "?ApplyRenderStates@@YA_NPEAVImageSpaceRenderState@@@Z",
+        "?SetSlotIndex@@YAXPEAVImageSpaceSlot@@I@Z",
+        "?FinalizeCommit@@YAX_N@Z",
+        "?g_shadowDirtyB@@3_NA",
+        "?g_shadowFlags@@3IA",
+        "?g_shadowSlotB@@3IA",
+        "?g_shadowModeA@@3IA",
+        "?g_shadowModeB@@3IA",
+        "?ApplyShadowState@@YAXXZ",
+        "?g_renderer@@3VRenderer@@A",
+        "?SetFlagA@Renderer@@QEAAXI_K@Z",
+        "?SetFlagB@Renderer@@QEAAXI_K@Z",
+        "?SetFlagC@Renderer@@QEAAXII@Z",
+        "?SetFlagD@Renderer@@QEAAXII@Z",
+        "?SetFlagE@Renderer@@QEAAXII@Z",
+        "?SetFlagF@Renderer@@QEAAXII@Z",
+        "?CopyBytes@Renderer@@QEAAXPEAXI@Z",
+        "?CopySubRegionToTarget@@YAXPEAVSubRegionTarget@@PEBUSubRegion@@@Z",
+        "?DispatchCopySubRegion@BSImagespaceShader@@SAIPEAUCopySubRegionRequest@@@Z",
+        "?UpdateParams@BSImagespaceShader@@UEAAXPEAVImageSpaceEffectParam@@@Z",
+        "?Unk_0B@BSImagespaceShader@@UEAAXXZ",
+        "?Unk_0A@BSImagespaceShader@@UEAAXXZ"
+      ]
+    }
+  ]
+}

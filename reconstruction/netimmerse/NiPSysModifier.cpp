@@ -30,6 +30,19 @@ void NiPSysModifier::SetSystemPointer(NiParticleSystem* a_target)
     target = a_target;
 }
 
+void NiPSysModifier::Initialize(NiPSysData*, std::uint16_t, NiPoint3*)
+{
+}
+
+void NiPSysModifier::HandleReset()
+{
+}
+
+void NiPSysModifier::SetActive(bool a_active)
+{
+    active = a_active;
+}
+
 void NiPSysModifier::LinkObject(NiStream& a_stream)
 {
     NiObject::LinkObject(a_stream);

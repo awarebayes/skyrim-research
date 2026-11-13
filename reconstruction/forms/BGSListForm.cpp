@@ -18,3 +18,11 @@ std::uint32_t BGSListForm::GetCount() const
 {
     return member;
 }
+
+void BGSListForm::Revert(BGSLoadFormBuffer* a_buf)
+{
+    RevertBase(a_buf);
+    if (a_buf->value44 < 0) {
+        ClearList();
+    }
+}

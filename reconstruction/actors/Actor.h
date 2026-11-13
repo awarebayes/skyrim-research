@@ -77,10 +77,14 @@
 // AIProcess::GetVoiceRecoveryTime: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) GUESS(medium); NG declares it with an inline body and no address; that the callee at RVA 0x700100 is it is the guess
 // ActorValueStorage::GetModifiers: GUESS; callee at RVA 0x6e3500 that looks up the modifier block of one actor value
 // The layout of this stand-in is not claimed to match the game beyond the offsets above.
+// Licence: three member names come from powerof3/CommonLibSSE (GPL-3.0), so this file is GPL-3.0.
 #pragma once
 
 #include <cstddef>
 #include <cstdint>
+
+class BGSPerk;
+class TESForm;
 
 template <class T>
 struct BSSimpleList {
@@ -419,6 +423,10 @@ public:
     float         GetVoiceRecoveryTime();
     bool          IsInRagdollState() const;
     float         GetActorValueModifier(ACTOR_VALUE_MODIFIER a_modifier, ActorValue a_value) const;
+    // Actor::SetAvoidanceDisabled, Actor::UseSkill, Actor::AddPerk: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); compared at RVA 0x675350, 0x6990e0, 0x69f8e0
+    void SetAvoidanceDisabled(bool a_set);  // compared: 0x675350
+    void UseSkill(ActorValue a_av, float a_points, TESForm* a_arg3);  // compared: 0x6990e0
+    void AddPerk(BGSPerk* a_perk, std::uint32_t a_rank = 0);  // compared: 0x69f8e0
 };
 
 static_assert(offsetof(Actor, boolBits) == 0xe8, "Actor::boolBits offset");

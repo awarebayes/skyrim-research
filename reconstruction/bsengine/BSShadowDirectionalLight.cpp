@@ -22,3 +22,21 @@ std::uint32_t BSShadowDirectionalLight::GetPassExtraParam(std::uint32_t a_accumF
 {
     return a_accumFlag;
 }
+
+// GetIsFrustumOrDirectionalLight: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+bool BSShadowDirectionalLight::GetIsFrustumOrDirectionalLight()
+{
+    return true;
+}
+
+// GetIsDirectionalLight: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+bool BSShadowDirectionalLight::GetIsDirectionalLight()
+{
+    return true;
+}
+
+// GetNeedsClipPlanes: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+bool BSShadowDirectionalLight::GetNeedsClipPlanes()
+{
+    return true;
+}

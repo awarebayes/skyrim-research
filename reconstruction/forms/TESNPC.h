@@ -15,6 +15,7 @@
 class BGSVoiceType;
 class PlayerCharacter;
 class TESNPC;
+class TESCombatStyle;
 
 // BGSVoiceType: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only named, never dereferenced
 // TESRace: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); only the two height values GetScale reads
@@ -525,10 +526,10 @@ public:
 	virtual void GetHasPLSpecTex();  // 53
 	// TESActorBase::GetCombatStyle: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 84, target 0x3cc650
 	// community declaration: virtual TESCombatStyle* GetCombatStyle();
-	virtual void GetCombatStyle();  // 54
+	virtual TESCombatStyle* GetCombatStyle();  // 54
 	// TESActorBase::SetCombatStyle: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 85, target 0x3cd8c0
 	// community declaration: virtual void SetCombatStyle(TESCombatStyle* a_combatStyle);
-	virtual void SetCombatStyle();  // 55
+	virtual void SetCombatStyle(TESCombatStyle* a_combatStyle);  // 55
 	// TESActorBase::GetAsForm: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 86, target 0x3cc620
 	// community declaration: virtual TESForm* GetAsForm();
 	virtual void GetAsForm();  // 56
@@ -607,10 +608,10 @@ public:
 	void CalculateDoFavor() override;  // 4D
 	// TESNPC::GetCombatStyle: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 84, target 0x3c6150, inherited name
 	// community declaration: virtual TESCombatStyle* GetCombatStyle();
-	void GetCombatStyle() override;  // 54
+	TESCombatStyle* GetCombatStyle() override;  // 54
 	// TESNPC::SetCombatStyle: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 85, target 0x3c9100, inherited name
 	// community declaration: virtual void SetCombatStyle(TESCombatStyle* a_combatStyle);
-	void SetCombatStyle() override;  // 55
+	void SetCombatStyle(TESCombatStyle* a_combatStyle) override;  // 55
 
 	// TESNPC::IsFemale: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission); target 0x3afeb0
 	std::int32_t IsFemale();
@@ -630,7 +631,11 @@ public:
 	// headRelatedData: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 	HeadRelatedData* headRelatedData;  // 1C8
 	// unk1D0: GUESS(low); members not recovered yet
-	std::uint8_t unk1D0[0x18];  // 1D0
+	std::uint8_t unk1D0[0x8];  // 1D0
+    // combatStyle: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the pointer at 0x1D8 that both combat style accessors read and write, name as reported by the label check
+    TESCombatStyle* combatStyle;  // 1D8
+    // unk1E0: GUESS(low); padding up to originalRace
+    std::uint8_t unk1E0[0x8];  // 1E0
 	// originalRace: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 	TESRace* originalRace;  // 1E8
 	// unk1F0: GUESS(low); faceNPC in the community header

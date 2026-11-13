@@ -15,9 +15,13 @@
 #pragma once
 #include <cstdint>
 // GetModel: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+class TESModelTextureSwap;
+
+// TESModel::GetAsModelTextureSwap: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); compared at RVA 0x1dfd80
 class TESModel
 {
 public:
     virtual void* GetModel() const;
+    virtual TESModelTextureSwap* GetAsModelTextureSwap();  // compared: 0x1dfd80
     void* member;
 };

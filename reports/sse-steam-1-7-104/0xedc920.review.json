@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0xedc920",
   "naming_findings": [
-    "Clone takes a cloning process where po3 declares none; the label notes it, kept as a note"
+    "The Clone stand-in signature differs from a community declaration."
   ],
   "previous_code_section_sha256": "efdfa870ffcf543ccaf579c23b05bde954b27dbd9c1991aebb54fd492bba3319",
   "previous_review_sha256": "c39c901b0fffe964e1821bc94c57a509c391425c9f0275333e0a73a10cc797b2",
-  "previous_source_digest": "b440091d9782e7eff30979222f64884d60e781a706db80df03412b83d3b6ff50",
-  "review_date": "2026-11-12",
-  "review_kind": "label-only",
+  "previous_source_digest": "318258dc7cefac96dab7e282ba4bbb39ccd395c31df186989163421046a67923",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "c39c901b0fffe964e1821bc94c57a509c391425c9f0275333e0a73a10cc797b2",
-  "review_task_id": "review-p15-rereview-2",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "9334bb226f2b78129ef11867e46e7c63e260861939d7c2b747622e0eb5ae9e22",
+  "review_task_id": "review-p85-haiku-wave1-3",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 15583520,
   "size": 68,
-  "source_digest": "318258dc7cefac96dab7e282ba4bbb39ccd395c31df186989163421046a67923",
+  "source_digest": "f7cfa63973746095d750bb7af044f9c28cc65514ed3ae7338282d33c802ca263",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

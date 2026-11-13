@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/67b22e45535f5d15e4ed67e9d8eca06ae583e0abcf8c35512e8f4942f8324fe3.json",
+  "versions": [
+    {
+      "sha256": "67b22e45535f5d15e4ed67e9d8eca06ae583e0abcf8c35512e8f4942f8324fe3",
+      "base": null,
+      "added": [
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "?DoPause@BGSMusicType@@UEAAXXZ",
+        "?SetFormEditorID@BGSMusicType@@UEAA_NPEBD@Z",
+        "??_EBGSMusicType@@WCA@EAAPEAXI@Z",
+        "??_EBGSMusicType@@UEAAPEAXI@Z",
+        "??4BSFixedString@@QEAAAEAV0@PEBD@Z",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?GetFormEditorID@BGSMusicType@@UEBAPEBDXZ",
+        "??_C@_00CNPNBAHC@@"
+      ]
+    }
+  ]
+}

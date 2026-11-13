@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "5c1bdf3f3ca1ae03f2f0f517496c23677a11a446259c4094f432e9387be9b9cb",
+        "object_sha256": "5537206d82f7e7873bb6dfc3247a69ede2cf4f5cb27fce57322c625905e2bb77",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/FlameProjectile.cpp",
@@ -47,7 +47,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "78cf6424483754e0e1358cd5b22d94008c4a50b1fd01e07514bcc8cb9d2985a2",
+        "object_sha256": "1faa9b04aa825295861ed0add16e4e81de4387293ba76ed6b876af1f4e411c92",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/forms/FlameProjectile.cpp",
@@ -66,7 +66,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit cf607b2dc469e479f4db4682a66a27abe44acd19, with uncommitted changes to reconstruction/forms/FlameProjectile.cpp, reconstruction/forms/FlameProjectile.h, reports/sse-steam-1-7-104/unit-symbols/665d25174c9edd0f0d4dc6c08a2f920a43bae3af16d429a5bdca29d09a52ffd4.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/forms/TESObjectREFR.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -82,7 +82,7 @@
         "candidate": {
           "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
           "code_sections": 1,
-          "object_sha256": "5c1bdf3f3ca1ae03f2f0f517496c23677a11a446259c4094f432e9387be9b9cb"
+          "object_sha256": "5537206d82f7e7873bb6dfc3247a69ede2cf4f5cb27fce57322c625905e2bb77"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -143,7 +143,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/FlameProjectile.cpp",
-          "source_revision": "380dfb7220d211e5e19406469dcaca195760f1134a9e75c5329c7d2d050d80df"
+          "source_revision": "7f7c567134a09cc9f4e9a362d7e999ceafc0d42c67480dcece967952e767fbba"
         },
         "symbol_map_sha256": "665d25174c9edd0f0d4dc6c08a2f920a43bae3af16d429a5bdca29d09a52ffd4",
         "target": {
@@ -161,7 +161,7 @@
         "candidate": {
           "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
           "code_sections": 1,
-          "object_sha256": "78cf6424483754e0e1358cd5b22d94008c4a50b1fd01e07514bcc8cb9d2985a2"
+          "object_sha256": "1faa9b04aa825295861ed0add16e4e81de4387293ba76ed6b876af1f4e411c92"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -222,7 +222,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/FlameProjectile.cpp",
-          "source_revision": "380dfb7220d211e5e19406469dcaca195760f1134a9e75c5329c7d2d050d80df"
+          "source_revision": "7f7c567134a09cc9f4e9a362d7e999ceafc0d42c67480dcece967952e767fbba"
         },
         "symbol_map_sha256": "665d25174c9edd0f0d4dc6c08a2f920a43bae3af16d429a5bdca29d09a52ffd4",
         "target": {
@@ -240,7 +240,7 @@
         "candidate": {
           "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
           "code_sections": 1,
-          "object_sha256": "78cf6424483754e0e1358cd5b22d94008c4a50b1fd01e07514bcc8cb9d2985a2"
+          "object_sha256": "1faa9b04aa825295861ed0add16e4e81de4387293ba76ed6b876af1f4e411c92"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -301,7 +301,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/forms/FlameProjectile.cpp",
-          "source_revision": "380dfb7220d211e5e19406469dcaca195760f1134a9e75c5329c7d2d050d80df"
+          "source_revision": "7f7c567134a09cc9f4e9a362d7e999ceafc0d42c67480dcece967952e767fbba"
         },
         "symbol_map_sha256": "665d25174c9edd0f0d4dc6c08a2f920a43bae3af16d429a5bdca29d09a52ffd4",
         "target": {
@@ -314,7 +314,7 @@
   ],
   "source": {
     "compiled": "reconstruction/forms/FlameProjectile.cpp",
-    "digest": "380dfb7220d211e5e19406469dcaca195760f1134a9e75c5329c7d2d050d80df",
+    "digest": "7f7c567134a09cc9f4e9a362d7e999ceafc0d42c67480dcece967952e767fbba",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/forms/FlameProjectile.cpp",

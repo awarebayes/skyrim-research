@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/7cc2889b26d326c2fddb4c60ba5611f36e5d5521a0689b6e9a2ffcbd295226ce.json",
+  "versions": [
+    {
+      "sha256": "7cc2889b26d326c2fddb4c60ba5611f36e5d5521a0689b6e9a2ffcbd295226ce",
+      "base": null,
+      "added": [
+        "?GetItemCount@TESContainer@@QEBAHPEAVTESBoundObject@@@Z",
+        "?InitializeDataComponent@TESContainer@@UEAAXXZ"
+      ]
+    }
+  ]
+}

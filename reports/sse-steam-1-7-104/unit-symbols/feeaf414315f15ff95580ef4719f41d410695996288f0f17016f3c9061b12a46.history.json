@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/feeaf414315f15ff95580ef4719f41d410695996288f0f17016f3c9061b12a46.json",
+  "versions": [
+    {
+      "sha256": "feeaf414315f15ff95580ef4719f41d410695996288f0f17016f3c9061b12a46",
+      "base": null,
+      "added": [
+        "?FindOutfitExtra@@YAPEAUOutfitExtra@@PEAVExtraDataList@@@Z",
+        "?GetLevel@TESActorBaseData@@QEBAGXZ",
+        "?HasShout@TESSpellList@@QEBA_NPEAVTESShout@@@Z",
+        "?MakeInventoryChanges@TESObjectREFR@@QEAAPEAVInventoryChanges@@XZ",
+        "?HasOutfitItems@Actor@@QEAA_NPEAVBGSOutfit@@@Z",
+        "?GetLevel@Actor@@QEBAGXZ",
+        "?IsInRagdollState@Actor@@QEBA_NXZ",
+        "?GetMoveDirectionRelativeToFacing@Actor@@QEAAMXZ",
+        "?GetActorValueModifier@Actor@@QEBAMW4ACTOR_VALUE_MODIFIER@@W4ActorValue@@@Z",
+        "?IsAttacking@Actor@@QEBA_NXZ",
+        "?HasShout@Actor@@QEBA_NPEAVTESShout@@@Z",
+        "?GetVoiceRecoveryTime@Actor@@QEAAMXZ",
+        "?GetModifiers@ActorValueStorage@@QEBAPEBUModifiers@@W4ActorValue@@@Z",
+        "?GetVoiceRecoveryTime@AIProcess@@QEBAMXZ",
+        "?GetMoveDirectionRelativeToFacing@AIProcess@@QEAAMXZ",
+        "?SetAvoidanceDisabled@Actor@@QEAAX_N@Z",
+        "?UseSkill@Actor@@QEAAXW4ActorValue@@MPEAVTESForm@@@Z",
+        "?AddPerk@Actor@@QEAAXPEAVBGSPerk@@I@Z"
+      ]
+    }
+  ]
+}

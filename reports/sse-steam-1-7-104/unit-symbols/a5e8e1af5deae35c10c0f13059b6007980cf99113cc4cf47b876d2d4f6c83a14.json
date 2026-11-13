@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?CalculateCost@MagicItem@@QEBAMPEAVActor@@@Z": {
+      "rva": 1382272,
+      "size": null
+    },
+    "?GetEnchantment@ExtraDataList@@QEAAPEAVEnchantmentItem@@XZ": {
+      "rva": 1520304,
+      "size": null
+    },
+    "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z": {
+      "rva": 1848960,
+      "size": null
+    },
+    "?GetEnchantment@TESForm@@QEAAPEAVEnchantmentItem@@PEAVExtraDataList@@@Z": {
+      "rva": 1974224,
+      "size": 91
+    },
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": 3
+    },
+    "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": 91
+    },
+    "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988464,
+      "size": 185
+    },
+    "?IsTemporaryFormID@TESForm@@QEBA_NXZ": {
+      "rva": 1990672,
+      "size": 15
+    },
+    "?GetGoldValue@TESForm@@QEBAHXZ": {
+      "rva": 2045280,
+      "size": 157
+    },
+    "?IsPersistent@TESForm@@QEBA_NXZ": {
+      "rva": 3033792,
+      "size": 9
+    },
+    "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z": {
+      "rva": 6520432,
+      "size": null
+    },
+    "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z": {
+      "rva": 6528768,
+      "size": null
+    },
+    "__RTDynamicCast": {
+      "rva": 22714330,
+      "size": null
+    },
+    "??_R0?AVTESForm@@@8": {
+      "rva": 34454008,
+      "size": null
+    },
+    "??_R0?AVAlchemyItem@@@8": {
+      "rva": 34454072,
+      "size": null
+    },
+    "??_R0?AVMagicItem@@@8": {
+      "rva": 34454112,
+      "size": null
+    },
+    "??_R0?AVTESEnchantableForm@@@8": {
+      "rva": 34456360,
+      "size": null
+    },
+    "??_R0?AVTESValueForm@@@8": {
+      "rva": 34456688,
+      "size": null
+    },
+    "?singleton@TESDataHandler@@2PEAV1@EA": {
+      "rva": 35249880,
+      "size": null
+    },
+    "?GetIgnoredBySandbox@TESForm@@UEBA_NXZ": {
+      "rva": 1337152,
+      "size": 3
+    },
+    "?IsHeadingMarker@TESForm@@UEBA_NXZ": {
+      "rva": 1337248,
+      "size": 3
+    },
+    "?IsFormTypeChild@TESForm@@UEAA_NW4FormType@@@Z": {
+      "rva": 1337584,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?CalculateCost@MagicItem@@QEBAMPEAVActor@@@Z",
+        "rva": "0x151780",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEnchantment@ExtraDataList@@QEAAPEAVEnchantmentItem@@XZ",
+        "rva": "0x1732b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
+        "rva": "0x1c3680",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEnchantment@TESForm@@QEAAPEAVEnchantmentItem@@PEAVExtraDataList@@@Z",
+        "rva": "0x1e1fd0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5770",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsTemporaryFormID@TESForm@@QEBA_NXZ",
+        "rva": "0x1e6010",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetGoldValue@TESForm@@QEBAHXZ",
+        "rva": "0x1f3560",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsPersistent@TESForm@@QEBA_NXZ",
+        "rva": "0x2e4ac0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "rva": "0x637e70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "rva": "0x639f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__RTDynamicCast",
+        "rva": "0x15a97da",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESForm@@@8",
+        "rva": "0x20db9f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVAlchemyItem@@@8",
+        "rva": "0x20dba38",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVMagicItem@@@8",
+        "rva": "0x20dba60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESEnchantableForm@@@8",
+        "rva": "0x20dc328",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESValueForm@@@8",
+        "rva": "0x20dc470",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?singleton@TESDataHandler@@2PEAV1@EA",
+        "rva": "0x219ded8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetIgnoredBySandbox@TESForm@@UEBA_NXZ",
+        "rva": "0x146740",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsHeadingMarker@TESForm@@UEBA_NXZ",
+        "rva": "0x1467a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsFormTypeChild@TESForm@@UEAA_NW4FormType@@@Z",
+        "rva": "0x1468f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

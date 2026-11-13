@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "77a459e2262f7f102405c3b47d2a46b03590fc6ce1a5398eaa23f3c3e2cc9947",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1ecd90",
+  "naming_findings": [
+    "The release-helper name is a low-confidence guess."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 2018704,
+  "size": 27,
+  "source_digest": "e65ead5cf10d8907df301c6aeb3004f2b27fc40f6e4f9ed533ce4e6e3a198926",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

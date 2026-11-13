@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?IsGrenadeProjectile@GrenadeProjectile@@UEBAEXZ": {
+      "rva": 8305440,
+      "size": 3
+    },
+    "?TargetsWholeBody@GrenadeProjectile@@UEAA_NXZ": {
+      "rva": 8308864,
+      "size": 3
+    },
+    "?GetDecalGroup@GrenadeProjectile@@UEBAPEAVBGSDecalGroup@@XZ": {
+      "rva": 8308880,
+      "size": 8
+    },
+    "?OnTriggerEnter@GrenadeProjectile@@UEAAXXZ": {
+      "rva": 8308928,
+      "size": 11
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?IsGrenadeProjectile@GrenadeProjectile@@UEBAEXZ",
+        "rva": "0x7ebb20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?TargetsWholeBody@GrenadeProjectile@@UEAA_NXZ",
+        "rva": "0x7ec880",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDecalGroup@GrenadeProjectile@@UEBAPEAVBGSDecalGroup@@XZ",
+        "rva": "0x7ec890",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?OnTriggerEnter@GrenadeProjectile@@UEAAXXZ",
+        "rva": "0x7ec8c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/b2ed5ac2849258d7d5fac12a3c109f58c176d0f994a3fb2a3317bfe80c610007.json",
+  "versions": [
+    {
+      "sha256": "b2ed5ac2849258d7d5fac12a3c109f58c176d0f994a3fb2a3317bfe80c610007",
+      "base": null,
+      "added": [
+        "?CreateClone@NiObject@@UEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiObject@@UEAA_NPEAV1@@Z",
+        "?Clone@NiObject@@QEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?StreamCanSkip@NiObject@@UEAA_NXZ",
+        "?GetGroup@NiObject@@UEBAPEAVNiObjectGroup@@XZ",
+        "??0NiObject@@QEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "??_7NiRefObject@@6B@",
+        "??_7NiObject@@6B@",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "?AsBhkAttachmentCollisionObject@NiObject@@UEAAPEAVbhkAttachmentCollisionObject@@XZ",
+        "?AsBhkBlendCollisionObject@NiObject@@UEAAPEAVbhkBlendCollisionObject@@XZ",
+        "?Visit@NiCloneMap@@QEAAXPEAPEAVNiObject@@PEA_N1@Z"
+      ]
+    }
+  ]
+}

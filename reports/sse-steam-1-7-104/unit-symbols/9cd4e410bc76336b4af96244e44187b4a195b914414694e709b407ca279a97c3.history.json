@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/9cd4e410bc76336b4af96244e44187b4a195b914414694e709b407ca279a97c3.json",
+  "versions": [
+    {
+      "sha256": "9cd4e410bc76336b4af96244e44187b4a195b914414694e709b407ca279a97c3",
+      "base": null,
+      "added": [
+        "?GetEquipSlot@BGSEquipType@@UEBAPEAVBGSEquipSlot@@XZ",
+        "?SetEquipSlot@BGSEquipType@@UEAAXPEAVBGSEquipSlot@@@Z",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "?ClearDataComponent@BGSEquipType@@UEAAXXZ",
+        "?InitializeDataComponent@BGSEquipType@@UEAAXXZ",
+        "??_GBGSEquipType@@UEAAPEAXI@Z"
+      ]
+    }
+  ]
+}

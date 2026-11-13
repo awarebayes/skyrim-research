@@ -18,3 +18,8 @@ void* TESModel::GetModel() const
 {
     return member;
 }
+
+TESModelTextureSwap* TESModel::GetAsModelTextureSwap()
+{
+    return nullptr;
+}

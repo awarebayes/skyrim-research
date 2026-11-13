@@ -254,6 +254,8 @@ extern NiPointer<NiSourceTexture> g_defaultBackLightingTexture;
 class BSLightingShaderMaterialBase : public BSShaderMaterial
 {
 public:
+	// constructor: GUESS(low); declared so the deleting destructor and vftable are emitted
+	BSLightingShaderMaterialBase();
 	~BSLightingShaderMaterialBase() override;  // 00
 	BSShaderMaterial* Create() override;  // 01
 	void CopyMembers(BSShaderMaterial* a_other) override;  // 02

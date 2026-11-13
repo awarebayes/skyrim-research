@@ -11,10 +11,13 @@
 // BSParticleShaderEmitter: STANDIN EXE_RTTI
 // BSParticleShaderCubeEmitter::~BSParticleShaderCubeEmitter: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // unknown10, unknownED0: GUESS(low)
+// Generate: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); signature from the sheet, not checked against the community header
 #pragma once
 
 #include <cstdint>
 #include "../netimmerse/NiRefObject.h"
+
+class NiPoint3;
 
 class BSParticleShaderEmitter : public NiRefObject
 {
@@ -27,6 +30,7 @@ class BSParticleShaderCubeEmitter : public BSParticleShaderEmitter
 {
 public:
     BSParticleShaderCubeEmitter();
+    virtual bool Generate(bool a_arg1, NiPoint3& a_arg2, NiPoint3& a_arg3);
     virtual ~BSParticleShaderCubeEmitter();  // compared: 0x2a0b60 (scalar deleting destructor)
 
     // TODO members: replace part of the padding with the members the bodies read,

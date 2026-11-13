@@ -416,7 +416,7 @@ public:
 	virtual std::uint16_t GetDistanceFromWaterLevel() const;  // 5B
 	// TESGrass::SetDistanceFromWaterLevel: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 92, target 0x2709f0
 	// community declaration: virtual void SetDistanceFromWaterLevel(std::uint16_t a_unitsFromWater);
-	virtual void SetDistanceFromWaterLevel();  // 5C
+	virtual void SetDistanceFromWaterLevel(std::uint16_t a_unitsFromWater);  // 5C
 	// TESGrass::GetUnderwaterState: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 93, target 0x2709b0
 	// community declaration: virtual GRASS_WATER_STATE GetUnderwaterState() const;
 	virtual GRASS_WATER_STATE GetUnderwaterState() const;  // 5D
@@ -431,13 +431,13 @@ public:
 	virtual void SetPositionRange();  // 60
 	// TESGrass::GetHeightRange: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 97, target 0x270930
 	// community declaration: virtual float GetHeightRange() const;
-	virtual void GetHeightRange();  // 61
+	virtual float GetHeightRange() const;  // 61
 	// TESGrass::SetHeightRange: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 98, target 0x270460
 	// community declaration: virtual bool SetHeightRange(float a_heightRange);
 	virtual void SetHeightRange();  // 62
 	// TESGrass::GetColorRange: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 99, target 0x2708f0
 	// community declaration: virtual float GetColorRange() const;
-	virtual void GetColorRange();  // 63
+	virtual float GetColorRange() const;  // 63
 	// TESGrass::SetColorRange: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 100, target 0x270490
 	// community declaration: virtual bool SetColorRange(float a_colorRange);
 	virtual void SetColorRange();  // 64
@@ -477,7 +477,11 @@ public:
 		std::uint16_t pad06;                   // 06
 		GRASS_WATER_STATE underwater;          // 08
 		// unk0C: GUESS(low); NG names positionRange, heightRange, colorRange, wavePeriod, flags are not needed here
-		std::uint8_t  unk0C[0x20 - 0x0C];      // 0C
+		std::uint8_t  unk0C[0x4];  // 0C
+		// heightRange, colorRange: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); offsets within DATA as in NG
+		float heightRange;  // 10
+		float colorRange;  // 14
+		std::uint8_t unk18[0x20 - 0x18];  // 18
 	};
 	static_assert((sizeof(GRASS_DATA) == 0x20), "layout");
 

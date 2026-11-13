@@ -18,6 +18,10 @@
 #include "TESForm.h"
 
 class BGSImpactDataSet;
+class TESFile;
+
+// AddCompileIndex, GetFile, LookupByID: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); NG declares them on TESForm, declared here because TESForm.h has none (header-gap TESForm)
+// SetFormFlag: GUESS(low); a non-virtual TESForm helper at 0x1e60b0 called at the end of InitItemImpl (header-gap TESForm)
 
 class BSFixedString {
 public:
@@ -29,6 +33,14 @@ public:
 class BGSFootstep : public TESForm {
 public:
     BGSFootstep();
+
+    void InitializeData() override;  // compared: 0x31c770
+    void InitItemImpl() override;    // compared: 0x31ca20
+
+    static void     AddCompileIndex(std::uint32_t& a_id, TESFile* a_file);
+    TESFile*        GetFile(std::int32_t a_idx = -1) const;
+    static TESForm* LookupByID(std::uint32_t a_formID);
+    void            SetFormFlag(bool a_set);
 
     BSFixedString     tag;        // 20
     BGSImpactDataSet* impactSet;  // 28

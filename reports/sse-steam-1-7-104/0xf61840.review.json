@@ -6,18 +6,18 @@
   "naming_findings": [
     "The data fields retain placeholder names."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
+  "previous_code_section_sha256": "fe605a2e45f42686a501da6c62ba3bcdc07b2ffcbdcf1183c840de5c90fb93a6",
+  "previous_review_sha256": "95e59a186ff5d68ff9b7e131772c5f2092c7e9b550ea623595bf746db7376ef1",
+  "previous_source_digest": "9f0b2d7b1a5fbdebe2f6023da748851bbd23dc2f65974e3f6917a031f0ea663a",
   "review_date": "2026-11-13",
-  "review_kind": "full",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "95e59a186ff5d68ff9b7e131772c5f2092c7e9b550ea623595bf746db7376ef1",
-  "review_task_id": "review-flow-g026",
+  "review_sha256": "9334bb226f2b78129ef11867e46e7c63e260861939d7c2b747622e0eb5ae9e22",
+  "review_task_id": "review-p85-haiku-wave1-3",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 16128064,
   "size": 15,
-  "source_digest": "9f0b2d7b1a5fbdebe2f6023da748851bbd23dc2f65974e3f6917a031f0ea663a",
+  "source_digest": "237795337ea6db6afa6eeb7c0c266f34c57c5f0235777b6e9096c5eb11dee19a",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

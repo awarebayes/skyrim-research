@@ -19,3 +19,13 @@ std::uint8_t BSOcclusionBox::Slot38() const
 {
     return 0x1;
 }
+
+bool BSOcclusionBox::IsOcclusionPlane() const
+{
+    return false;
+}
+
+const NiRTTI* BSOcclusionBox::GetRTTI() const
+{
+    return &NiRTTI_BSOcclusionBox;
+}

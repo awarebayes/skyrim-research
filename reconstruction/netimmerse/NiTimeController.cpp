@@ -15,3 +15,18 @@ void NiTimeController::ProcessClone(NiCloningProcess& a_cloning)
         next->ProcessClone(a_cloning);
     }
 }
+
+bool NiTimeController::IsStreamable()
+{
+    return true;
+}
+
+bool NiTimeController::IsTransformController()
+{
+    return false;
+}
+
+bool NiTimeController::IsVertexController()
+{
+    return false;
+}

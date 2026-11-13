@@ -14,7 +14,16 @@
 // member, padding: GUESS(low); storage names invented for the measured member offset
 #include "BSMemStorage.h"
 // GetFileSize: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+BSMemStorage::BSMemStorage()
+{
+}
+
 std::uint32_t BSMemStorage::GetFileSize() const
 {
     return member;
+}
+
+std::size_t BSMemStorage::GetPosition() const
+{
+    return position;
 }
