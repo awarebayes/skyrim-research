@@ -1,5 +1,6 @@
 """Read-only worktree inventory and conservative cleanup."""
 import datetime as dt
+from functools import lru_cache
 import os
 import re
 from pathlib import Path
@@ -30,6 +31,19 @@ def disk_info(path):
     return size, latest
 
 
+@lru_cache(maxsize=None)
+def references(file):
+    content = file.read_text(errors='replace')
+    resolved = set()
+    for token in re.findall(r'[^\s\x00"\'<>]+', content):
+        if token.startswith('/'):
+            try:
+                resolved.add(Path(token).resolve())
+            except OSError:
+                continue
+    return content, resolved
+
+
 def in_use(path, fdir, original):
     # Treat flow-managed trees and explicit path references as in use.
     if path == fdir or fdir in path.parents:
@@ -41,12 +55,9 @@ def in_use(path, fdir, original):
         if not file.is_file() or file.is_symlink():
             continue
         try:
-            content = file.read_text(errors='replace')
-            if any(n in content for n in needles):
+            content, resolved = references(file)
+            if any(n in content for n in needles) or path in resolved:
                 return True
-            for token in re.findall(r'[^\s"\'<>]+', content):
-                if token.startswith('/') and Path(token).resolve() == path:
-                    return True
         except OSError:
             return True
     return False
@@ -124,6 +135,7 @@ def display_path(path, root):
 
 
 def run(root, fdir, action, dry_run=False):
+    references.cache_clear()
     root, fdir = Path(root).resolve(), Path(fdir).resolve()
     trees, branches, stashes = inventory(root, fdir)
     prunable = [t for t in trees if not t['reasons']]

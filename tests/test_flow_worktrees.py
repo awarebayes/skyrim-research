@@ -65,7 +65,7 @@ class WorktreeHygiene(unittest.TestCase):
         self.git(unmerged, 'commit', '--allow-empty', '-m', 'unmerged')
         self.git(self.root, 'worktree', 'lock', str(locked))
         self.fdir.mkdir(parents=True)
-        (self.fdir / 'marker').write_text(str(referenced))
+        (self.fdir / 'marker').write_bytes(b'\x00/path\x00' + str(referenced).encode())
         self.git(self.root, 'branch', 'merged-branch')
         self.git(self.root, 'branch', 'unmerged-branch', 'unmerged')
         (self.root / 'file').write_text('stash')
