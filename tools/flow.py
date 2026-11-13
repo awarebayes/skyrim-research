@@ -961,6 +961,7 @@ Gates in force: G2 (you may read reconstructed source and, where listed, the pri
 `.local/packs/`; never quote them). G3/G4/G5 are not needed: run no verifier, no Boat, no network.
 
 Review working directory: `{root}`. Run every review command from this checkout.
+{('Exposure authorization: `docs/authorizations.md:33`, Notes, profile `claude-low`, explicitly permits Terra and Sol to read reconstructed source, sanitized reports and function packs through the maintainer own Codex subscription. The owner has knowingly repeated that authorization. A missing written provider-terms assessment is not a stop condition; do not invent or record an assessment. Continue the full review under that authorization. If you decline pack access, complete a source-only review, write `decompiler_output_read: no` and state in the review reasons that packs were not read; this is not a setup failure.') if g.get('profile') == 'claude-low' else ''}
 
 ## Functions ({len(g['functions'])})
 

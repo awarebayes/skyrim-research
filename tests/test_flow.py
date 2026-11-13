@@ -228,6 +228,16 @@ class FlowTests(unittest.TestCase):
         self.assertIn('outside the group', text)
         self.assertIn('instead of writing verdicts', text)
 
+    def test_claude_low_brief_cites_authorization_and_source_only_fallback(self):
+        (self.root / 'docs/verification.md').write_text((ROOT / 'docs/verification.md').read_text())
+        flow.log_event(self.fdir, 'session-start', profile='claude-low')
+        name = flow.review_group(self.root, self.fdir)[0]
+        text = (self.root / flow.load_group(self.fdir, name)['brief']).read_text()
+        self.assertIn('docs/authorizations.md:33', text)
+        self.assertIn('missing written provider-terms assessment is not a stop condition', text)
+        self.assertIn('complete a source-only review', text)
+        self.assertIn('decompiler_output_read: no', text)
+
     def test_session_start_comes_first_then_grouping(self):
         acts = self.actions()
         self.assertEqual(acts[0], ('run', 'python3 tools/flow.py session-start'))
