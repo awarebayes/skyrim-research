@@ -604,7 +604,8 @@ def prepare(item, frozen):
             requests.append(dict(kind='review', group=name, review=str(f.review_path(root, group).resolve()),
                                  functions=approved, build_id=group['build_id'],
                                  profile=group.get('profile', f.profiles.DEFAULT), harvests=group.get('harvests'),
-                                 record_refresh=group.get('record_refresh', [])))
+                                 record_refresh=group.get('record_refresh', []),
+                                 **({'contributor': group['contributor']} if group.get('contributor') else {})))
     return requests, bindings
 
 
@@ -776,6 +777,76 @@ def merge_metadata(tree, source, revision):
     # integration_base validated the metadata-only history before this transport step.
     f.git(tree, 'fetch', '--quiet', str(source), revision)
     f.git(tree, 'merge', '--quiet', '--no-edit', revision)
+
+
+def contributor_history(tree, source, contribution):
+    """Validate the ancestry that a contributor merge will retain, without checking it out.
+
+    Only accepted requests reach this path. The Engineer's AI screen and fresh reviews are
+    recorded in the pinned group; this repeats the mechanical scope/resource checks for the
+    exact parent being published. The acceptance tree still contains only carried inputs.
+    """
+    import re
+    from contrib_autopilot import SHA, UNIT
+    from contrib_screen import MAX_BYTES, screen
+    f.refuse(isinstance(contribution, dict) and set(contribution) == {'head', 'base', 'authors', 'paths'},
+             'invalid contributor ancestry metadata')
+    head, base = contribution['head'], contribution['base']
+    f.refuse(isinstance(head, str) and SHA.fullmatch(head) and isinstance(base, str) and SHA.fullmatch(base),
+             'invalid contributor ancestry revisions')
+    f.git(tree, 'fetch', '--quiet', str(source), head)
+    paths = f.git(tree, 'diff', '--name-only', '--no-renames', f'{base}...{head}').splitlines()
+    f.refuse(paths and sorted(paths) == sorted(contribution['paths']) and all(UNIT.fullmatch(p) for p in paths),
+             'contributor ancestry changes files outside its screened scope')
+    commits = f.git(tree, 'rev-list', '--reverse', f'{base}..{head}').splitlines()
+    f.refuse(0 < len(commits) <= 100, 'contributor history resource cap')
+    for commit in commits:
+        parents = f.git(tree, 'rev-list', '--parents', '-n', '1', commit).split()
+        f.refuse(len(parents) == 2, 'unreviewed contributor merge history')
+        names = f.git(tree, 'diff-tree', '--no-commit-id', '--name-only', '--no-renames', '-r', commit).splitlines()
+        f.refuse(all(UNIT.fullmatch(p) for p in names), 'contributor history leaves source scope')
+        for name in names:
+            mode = f.git(tree, 'ls-tree', commit, '--', name).split()
+            f.refuse(mode and mode[0] == '100644', 'contributor history has a non-regular source or deletion')
+            f.refuse(int(f.git(tree, 'cat-file', '-s', f'{commit}:{name}')) <= MAX_BYTES,
+                     'contributor history file-size cap')
+            blob = f.drafts.git(tree, 'show', f'{commit}:{name}')
+            f.refuse(not screen(blob, name), 'contributor history failed the deterministic screen')
+    authors = sorted(set(f.git(tree, 'log', '--format=%an <%ae>', f'{base}..{head}').splitlines()))
+    f.refuse(authors and authors == contribution['authors'] and all(
+        re.fullmatch(r'[^<>\r\n]{1,100} <[^<>\s]+@[^<>\s]+>', a) for a in authors),
+        'contributor attribution differs from original commits')
+    return head, authors
+
+
+def commit_acceptance(tree, requests, items, message, commit_date):
+    """An ordinary acceptance commit, or a merge with the original contributor parent(s).
+
+    commit-tree retains those exact commits and authors without ever checking out their trees,
+    running their hooks, or pulling rejected files into the accepted tree. This also supports a
+    partially accepted PR. Source acceptance and the staged guard have already passed unchanged.
+    """
+    contributions = {}
+    for request in requests:
+        if request.get('contributor'):
+            value = request['contributor']
+            source = Path(next(i['root'] for i in items if i['id'] == request['item']))
+            head, authors = contributor_history(tree, source, value)
+            contributions[head] = authors
+    env = dict(os.environ, GIT_COMMITTER_DATE=commit_date)
+    if not contributions:
+        f.run(['git', 'commit', '--quiet', '-m', message], tree, 'git commit', env=env)
+        return
+    previous = f.git(tree, 'rev-parse', 'HEAD')
+    parents = [previous] + [h for h in sorted(contributions) if h != previous]
+    trailers = sorted({a for names in contributions.values() for a in names})
+    message += '\n\n' + '\n'.join('Co-authored-by: ' + author for author in trailers) + '\n'
+    command = ['git', 'commit-tree', f.git(tree, 'write-tree')]
+    for parent in parents:
+        command += ['-p', parent]
+    result = subprocess.run(command, cwd=tree, env=env, input=message, capture_output=True, text=True)
+    f.refuse(result.returncode == 0, 'contributor merge commit failed')
+    f.git(tree, 'update-ref', 'HEAD', result.stdout.strip(), previous)
 
 
 def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk=False, hard_free_gb=None):
@@ -969,8 +1040,8 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
     trend = ['README.md', 'docs/model-trend.svg', 'docs/progress-trend.svg']
     f.git(tree, 'add', '--', *trend)
     f.run([python, 'tools/check.py', '--staged'], tree, 'check.py --staged')
-    f.run(['git', 'commit', '--quiet', '-m', f'Accept queued work in push lane {receipt["id"]}'], tree, 'git commit',
-          env=dict(os.environ, GIT_COMMITTER_DATE=commit_date))
+    commit_acceptance(tree, result['accepted'], receipt['items'],
+                      f'Accept queued work in push lane {receipt["id"]}', commit_date)
     integ = dict(commit=f.git(tree, 'rev-parse', 'HEAD'), accepted=sum(len(r['functions']) for r in result['accepted']),
                  files=sorted(set(files) | set(trend)), checks=None, pushed=None, ci=None,
                  wall_seconds={'build': time.monotonic() - started}, base_revision=base)

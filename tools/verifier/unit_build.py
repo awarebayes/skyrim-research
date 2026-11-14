@@ -45,9 +45,11 @@ import os
 from pathlib import Path, PurePosixPath
 import platform
 import re
+import signal
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 TOOLS = Path(__file__).resolve().parents[1]
@@ -62,6 +64,7 @@ NOTE_PREFIX = 'Note: including file:'
 KEEP_IN_COPY = {'.unit', '.local'}
 EXIT_IMAGE, EXIT_SYNC, EXIT_TOOLCHAIN = 42, 43, 44
 LOADERS = ('wine', 'native')
+COMPILE_TIMEOUT = 180
 # The include directories the msvc-wine wrapper (msvcenv.sh) puts in INCLUDE, in its order; a native
 # compile uses the same list so both loaders search the same unpacked toolset and SDK.
 MSVC_INCLUDE_DIRS = (('msvc', 'atlmfc\\include'), ('msvc', 'include'), ('sdk', 'shared'), ('sdk', 'ucrt'),
@@ -85,6 +88,137 @@ def sha256_file(path):
 def clean_env(environ):
     """The compile environment: everything but the variables that steer include search or flags."""
     return {k: v for k, v in environ.items() if k not in CLEARED_ENV}
+
+
+def windows_compile_job():
+    """Put this dedicated supervisor in a non-breakaway, kill-on-close Windows job.
+
+    No compiler starts until assignment succeeds; only the supervisor owns the job handle.
+    API/layout reference: https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects
+    """
+    import ctypes as c
+    class Basic(c.Structure):
+        _fields_ = [('PerProcessUserTimeLimit', c.c_int64), ('PerJobUserTimeLimit', c.c_int64),
+                    ('LimitFlags', c.c_uint32), ('MinimumWorkingSetSize', c.c_size_t),
+                    ('MaximumWorkingSetSize', c.c_size_t), ('ActiveProcessLimit', c.c_uint32),
+                    ('Affinity', c.c_size_t), ('PriorityClass', c.c_uint32), ('SchedulingClass', c.c_uint32)]
+    class IO(c.Structure):
+        _fields_ = [(name, c.c_uint64) for name in ('ReadOperationCount', 'WriteOperationCount',
+                    'OtherOperationCount', 'ReadTransferCount', 'WriteTransferCount', 'OtherTransferCount')]
+    class Limits(c.Structure):
+        _fields_ = [('BasicLimitInformation', Basic), ('IoInfo', IO), ('ProcessMemoryLimit', c.c_size_t),
+                    ('JobMemoryLimit', c.c_size_t), ('PeakProcessMemoryUsed', c.c_size_t),
+                    ('PeakJobMemoryUsed', c.c_size_t)]
+    api = c.WinDLL('kernel32', use_last_error=True)
+    api.CreateJobObjectW.argtypes, api.CreateJobObjectW.restype = [c.c_void_p, c.c_wchar_p], c.c_void_p
+    api.SetInformationJobObject.argtypes = [c.c_void_p, c.c_int, c.c_void_p, c.c_uint32]
+    api.SetInformationJobObject.restype = c.c_int
+    api.AssignProcessToJobObject.argtypes = [c.c_void_p, c.c_void_p]
+    api.AssignProcessToJobObject.restype = c.c_int
+    api.GetCurrentProcess.argtypes, api.GetCurrentProcess.restype = [], c.c_void_p
+    api.TerminateJobObject.argtypes, api.TerminateJobObject.restype = [c.c_void_p, c.c_uint32], c.c_int
+    api.CloseHandle.argtypes, api.CloseHandle.restype = [c.c_void_p], c.c_int
+    handle = api.CreateJobObjectW(None, None)  # non-inheritable handle, no shared job name
+    if not handle:
+        raise c.WinError(c.get_last_error())
+    limits = Limits()
+    limits.BasicLimitInformation.LimitFlags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+    if (not api.SetInformationJobObject(handle, 9, c.byref(limits), c.sizeof(limits))
+            or not api.AssignProcessToJobObject(handle, api.GetCurrentProcess())):
+        error = c.get_last_error()
+        api.CloseHandle(handle)
+        raise c.WinError(error)
+    return api, handle
+
+
+def compile_supervisor(command, timeout, result_path):
+    """Dedicated child owns the deadline even if unit_build/SSH dies.
+
+    The compiler inherits this supervisor's POSIX process group or Windows job. On *every*
+    outcome, kill the whole owned tree, including a child retaining stdout after cl exits.
+    Result metadata is private and flushed before cleanup kills the supervisor itself.
+    """
+    job = None
+    result = dict(returncode=None, timeout=False, supervisor_error=False)
+    try:
+        if sys.platform == 'win32':
+            job = windows_compile_job()
+        elif os.getpgrp() != os.getpid():
+            raise OSError('compile supervisor needs its own process group')
+        try:
+            result['returncode'] = subprocess.run(command, timeout=timeout).returncode
+        except subprocess.TimeoutExpired:
+            result['timeout'] = True
+    except (OSError, subprocess.SubprocessError):
+        result['supervisor_error'] = True
+    finally:
+        try:
+            with open(result_path, 'w', encoding='utf-8') as output:
+                json.dump(result, output)
+                output.flush()
+                os.fsync(output.fileno())
+        finally:
+            if job is not None:
+                api, handle = job
+                api.TerminateJobObject(handle, 0)
+                # If termination failed, process exit closes the sole handle and kills the job.
+                os._exit(125)
+            if sys.platform != 'win32' and os.getpgrp() == os.getpid():
+                os.killpg(os.getpid(), signal.SIGKILL)
+    return 125
+
+
+def compile_bounded(cmd, repo, env, timeout=COMPILE_TIMEOUT):
+    private = Path(repo) / '.local'
+    private.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='compile-supervisor-', dir=private) as directory:
+        result_path = Path(directory) / 'result.json'
+        argv = [sys.executable, '-I', str(Path(__file__).resolve()), '--compile-child',
+                str(timeout), str(result_path), json.dumps(cmd)]
+        windows = sys.platform == 'win32'
+        proc = subprocess.Popen(argv, cwd=repo, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                text=True, errors='replace', **({} if windows else {'start_new_session': True}))
+        def kill_owned():
+            if windows:
+                # Killing the supervisor closes its non-inheritable job handle, killing children.
+                proc.kill()
+            else:
+                try:
+                    os.killpg(proc.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+        expired = False
+        try:
+            try:
+                stdout, stderr = proc.communicate(timeout=timeout + 15)
+            except subprocess.TimeoutExpired:
+                expired = True
+                kill_owned()
+                try:
+                    stdout, stderr = proc.communicate(timeout=15)
+                except subprocess.TimeoutExpired:
+                    # A failed cleanup must itself be bounded; never enter Popen.__exit__.wait().
+                    proc.stdout.close()
+                    proc.stderr.close()
+                    proc.wait(timeout=15)
+                    stdout, stderr = '', ''
+            if expired:
+                raise UnitError(3, 'compile-timeout', f'compiler exceeded {timeout} seconds')
+            try:
+                result = json.loads(result_path.read_text())
+            except (OSError, ValueError):
+                raise UnitError(4, 'compile-supervisor', 'compile supervisor produced no complete result') from None
+            if result.get('timeout'):
+                raise UnitError(3, 'compile-timeout', f'compiler exceeded {timeout} seconds')
+            if result.get('supervisor_error') or type(result.get('returncode')) is not int:
+                raise UnitError(4, 'compile-supervisor', 'compile supervisor could not contain the compiler')
+            return subprocess.CompletedProcess(cmd, result['returncode'], stdout, stderr)
+        finally:
+            if proc.poll() is None:
+                kill_owned()
+                proc.wait(timeout=15)
+            proc.stdout.close()
+            proc.stderr.close()
 
 
 def wrapper_settings(msvc, env):
@@ -403,7 +537,7 @@ def run(args):
     obj = work / 'candidate.obj'
     cl = str(Path(wrapper['BINDIR']) / 'cl.exe') if loader == 'native' else str(msvc / 'bin/x64/cl')
     cmd = [cl] + recipe['flags'] + [SHOW_INCLUDES, f'/Fo{obj}', compiled]
-    proc = subprocess.run(cmd, cwd=repo, env=env, capture_output=True, text=True, errors='replace')
+    proc = compile_bounded(cmd, repo, env)
     (work / 'compile-command.json').write_text(json.dumps(cmd[1:], indent=1) + '\n')
     opened, rest = parse_show_includes(proc.stdout)
     (work / 'compile.log').write_text('\n'.join(rest) + '\n' + proc.stderr)
@@ -495,4 +629,6 @@ def main():
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 5 and sys.argv[1] == '--compile-child':
+        raise SystemExit(compile_supervisor(json.loads(sys.argv[4]), float(sys.argv[2]), sys.argv[3]))
     raise SystemExit(main())
