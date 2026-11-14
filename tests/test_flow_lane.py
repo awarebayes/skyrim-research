@@ -150,6 +150,69 @@ class PushLane(unittest.TestCase):
                 self.lane()
         self.assertEqual(before, git(self.repo.origin, 'rev-parse', 'main'))
 
+    def family_lane(self, change):
+        # Reuse the stub acceptance fixture; the carry, dependency pins and final guard are real.
+        group = flow.load_group(self.fdir, self.names[0])
+        family_path = 'reports/synthetic-build/families/leaf.json'
+        batch_path = 'reports/synthetic-build/family-batches/leaf.json'
+        functions = [fn for fn in flow.inventory(self.root)['functions']
+                     if flow.hexrva(fn['rva']) in group['functions']]
+        family = dict(origin={'family': 'synthetic-leaf'}, binding={}, first_members=[],
+                      review={'review_task_id': 'synthetic-family'},
+                      template_source={'path': 'reconstruction/x/Foo.cpp'},
+                      parameter_source={'path': 'reconstruction/x/Foo.cpp'})
+        batch = dict(family_path=family_path, population=[fn['id'] for fn in functions], sample=[])
+        for path, doc in ((family_path, family), (batch_path, batch)):
+            (self.root / path).parent.mkdir(parents=True, exist_ok=True)
+            lane.write(self.root / path, doc)
+        approval = self.root / '.local/reviews/synthetic-family.family.json'
+        lane.write(approval, {'verdict': 'approve'})
+        git(self.root, 'add', family_path, batch_path)
+        git(self.root, 'commit', '--quiet', '-m', 'synthetic family metadata')
+        git(self.root, 'push', '--quiet', 'origin', 'main')
+        lane.enqueue(self.root, self.fdir, 'family', [batch_path])
+        request = dict(kind='family', path=batch_path, functions=group['functions'],
+                       build_id=group['build_id'], review=str(flow.review_path(self.root, group)), profile='cheap')
+        original = flow.pre_push_checks
+        def during(root, commit, python, **kwargs):
+            original(root, commit, python, **kwargs)
+            change(batch_path, approval)
+        with patch.object(lane, 'prepare', return_value=([request], {})), \
+                patch.object(flow, 'pre_push_checks', side_effect=during):
+            return self.lane()
+
+    def test_family_unrelated_group_and_review_change_does_not_abort(self):
+        unrelated = flow.load_group(self.fdir, self.names[-1])
+        def change(batch, approval):
+            unrelated['rerun']['not_agree'] = list(unrelated['sampled'])
+            flow.save_group(self.fdir, unrelated)
+            flow.review_path(self.root, unrelated).write_text('unrelated worker saved a new review\n')
+        result = self.family_lane(change)
+        self.assertEqual(result['state'], 'done')
+        self.assertNotIn(unrelated['name'], result['bindings'])
+        self.assertNotIn(str(flow.review_path(self.root, unrelated)), result['input_pins'])
+
+    def test_family_carried_sampling_group_change_aborts(self):
+        group = flow.load_group(self.fdir, self.names[0])
+        def change(batch, approval):
+            paired = flow.load_group(self.fdir, group['pair'])
+            paired['reviewer_model'] = 'changed'
+            flow.save_group(self.fdir, paired)
+        with self.assertRaisesRegex(flow.FlowError, 'gate state changed during lane run: ' + group['pair']):
+            self.family_lane(change)
+
+    def test_family_carried_sample_draw_change_aborts(self):
+        def change(batch_path, approval):
+            batch = lane.read(self.root / batch_path)
+            batch['sample'] = batch['population'][:1]
+            lane.write(self.root / batch_path, batch)
+        with self.assertRaisesRegex(flow.FlowError, 'queued input changed during lane run: .*family-batches'):
+            self.family_lane(change)
+
+    def test_family_carried_approval_change_aborts(self):
+        with self.assertRaisesRegex(flow.FlowError, 'queued input changed during lane run: .*family.json'):
+            self.family_lane(lambda batch, approval: lane.write(approval, {'verdict': 'reject'}))
+
     def test_public_frontends_enqueue_without_running_checks(self):
         with patch.object(flow, 'pre_push_checks', side_effect=AssertionError('must only enqueue')):
             self.assertEqual(flow.integrate(self.root, self.fdir, self.names[0])['state'], 'queued')

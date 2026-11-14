@@ -443,6 +443,71 @@ def signature(fdir, group):
     return value
 
 
+def gate_inputs(root, frozen, requests):
+    """Pin the complete evidence consulted for these members, not other workers' gates."""
+    data = f.inventory(root)
+    by_id = {fn['id']: fn for fn in data['functions']}
+    selected = {(r['build_id'], rva) for r in requests for rva in r['functions']}
+    members = {fid for fid, fn in by_id.items() if (fn['build_id'], f.hexrva(fn['rva'])) in selected}
+    records = {}
+
+    def record(fid):
+        if fid not in records:
+            records[fid] = f.fr.read(root, by_id[fid]['report'])
+        return records[fid]
+
+    families, batches = f.family_manifests(root), f.family_batches(root)
+    paths, relevant_families = set(), set()
+    for request in requests:
+        if request['kind'] == 'family':
+            paths.add(request['path'])
+            batch = batches[request['path']]
+            members.update(batch['population'])
+            relevant_families.add(batch['family_path'])
+    # Individual reviews also consult family holds and the samples of bound batches.
+    for path, family in families.items():
+        if any(record(fid).get('origin') == family['origin']
+               and f.fr.binding(by_id[fid], record(fid)) == family['binding'] for fid in members):
+            relevant_families.add(path)
+    sample_members = set()
+    for path, batch in batches.items():
+        if path in paths or any(fid in batch['population']
+                                and f.fr.member_digest(by_id[fid], record(fid)) == batch['members'][fid]
+                                for fid in members):
+            paths.add(path)
+            relevant_families.add(batch['family_path'])
+            sample_members.update(batch['sample'] or [])
+    members.update(sample_members)
+    for path in relevant_families:
+        family = families[path]
+        paths.add(path)
+        members.update(family['first_members'])
+        if family.get('review'):
+            paths.add(f.REVIEWS + '/' + family['review']['review_task_id'] + '.family.json')
+        for field in ('template_source', 'parameter_source'):
+            paths.add(family[field]['path'])
+    referenced = {(by_id[fid]['build_id'], f.hexrva(by_id[fid]['rva'])) for fid in members}
+    all_groups = f.groups(frozen)
+    names = {r['group'] for r in requests if r.get('group')}
+    names.update(name for name, group in all_groups.items()
+                 if group.get('family_review_path') in relevant_families
+                 or any((group['build_id'], rva) in referenced for rva in group['functions']))
+    names.update(all_groups[name]['pair'] for name in list(names) if all_groups[name].get('pair'))
+    bindings = {name: signature(frozen, name) for name in names}
+    for group in bindings.values():
+        paths.add(str(f.review_path(root, group).resolve()))
+        if group.get('family_review_path') in relevant_families:
+            paths.add(f.REVIEWS + '/' + group['task_id'] + '.family.json')
+    for fid in members:
+        paths.add(by_id[fid]['report'])
+        paths.add(str(Path(by_id[fid]['report']).with_suffix('.review.json')))
+    pins = {}
+    for rel in paths:
+        path = root / rel
+        pins[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+    return bindings, pins
+
+
 def prepare(item, frozen):
     root = Path(item['root'])
     data = f.inventory(root)
@@ -714,20 +779,15 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
         before_item = f.git(tree, 'rev-parse', 'HEAD')
         try:
             selected, bound = prepare(item, frozen)
+            dependencies, evidence = gate_inputs(source, frozen, selected)
+            bound.update(dependencies)
+            input_pins.update(evidence)
             for review in sorted((source / f.REVIEWS).rglob('*')):
                 if not review.is_file():
                     continue
                 f.review_path(source, dict(saved_review=str(review)))
                 dest = copy_private_review(source, tree, review)
-                input_pins[str(review.resolve())] = hashlib.sha256(review.read_bytes()).hexdigest()
                 review_copies[str(review.resolve())] = dest.relative_to(tree).as_posix()
-            for request in selected:
-                if request['kind'] == 'family':
-                    batch = f.fr.read(source, request['path'])
-                    for rel in (request['path'], batch['family_path']):
-                        input_pins[str(source / rel)] = hashlib.sha256((source / rel).read_bytes()).hexdigest()
-                    # Family sampling checks may consult any individually reviewed population member.
-                    bound.update({n: signature(frozen, n) for n in f.groups(frozen)})
 
             f.git(source, 'fetch', '--quiet', 'origin', branch)
             metadata_origin = f.git(source, 'merge-base', 'HEAD', f'origin/{branch}') if item['with_metadata'] else None
