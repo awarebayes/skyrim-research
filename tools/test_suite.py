@@ -41,8 +41,17 @@ def execute(root, ids, result):
     return proc.returncode, proc.stdout + proc.stderr, report
 
 
-def run(root, jobs, listing=False):
+def shard_modules(modules, index, count):
+    """Partition whole modules so their fixtures and test order remain unchanged."""
+    if count < 1 or not 0 <= index < count:
+        raise ValueError('require --shard-count > 0 and 0 <= --shard-index < --shard-count')
+    return {name: modules[name] for offset, name in enumerate(sorted(modules)) if offset % count == index}
+
+
+def run(root, jobs, listing=False, shard_index=0, shard_count=1):
     modules = inventory(root)
+    discovered = sum(map(len, modules.values()))
+    modules = shard_modules(modules, shard_index, shard_count)
     if listing:
         print(json.dumps(modules, indent=2))
         return 0
@@ -64,11 +73,15 @@ def run(root, jobs, listing=False):
                 skipped += report['skipped']
     failed |= total != expected
     seconds = time.monotonic()-started
-    report = root / '.local/test-suite-results.json'
+    report = root / ('.local/test-suite-results.json' if shard_count == 1 else
+                     f'.local/test-suite-results-{shard_index}-of-{shard_count}.json')
     report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(json.dumps(dict(discovered=expected, executed=total, skipped=skipped, failed=failed,
+    report.write_text(json.dumps(dict(discovered=discovered, selected=expected, executed=total,
+                                      shard_index=shard_index, shard_count=shard_count,
+                                      skipped=skipped, failed=failed,
                                       jobs=jobs, seconds=seconds, python=sys.version.split()[0]), indent=2)+'\n')
-    print(f'\nRan {total} tests in {time.monotonic()-started:.3f}s; discovered {expected}; module processes {jobs}')
+    print(f'\nRan {total} tests in {time.monotonic()-started:.3f}s; discovered {discovered}; '
+          f'selected {expected}; shard {shard_index}/{shard_count}; module processes {jobs}')
     print('FAILED' if failed else f'OK (skipped={skipped}; existing unittest decorators only)')
     return int(failed)
 
@@ -78,11 +91,15 @@ def main():
     p.add_argument('--root', type=Path, default=Path.cwd())
     p.add_argument('--jobs', type=int, default=min(4, os.cpu_count() or 1))
     p.add_argument('--list', action='store_true')
+    p.add_argument('--shard-index', type=int, default=0, help='zero-based CI shard (whole modules)')
+    p.add_argument('--shard-count', type=int, default=1)
     p.add_argument('--worker', action='store_true', help=argparse.SUPPRESS)
     p.add_argument('--result', type=Path, help=argparse.SUPPRESS)
     a = p.parse_args()
     if a.jobs < 1:
         p.error('--jobs must be positive')
+    if a.shard_count < 1 or not 0 <= a.shard_index < a.shard_count:
+        p.error('require --shard-count > 0 and 0 <= --shard-index < --shard-count')
     root = a.root.resolve()
     os.chdir(root)
     sys.path.insert(0, str(root / 'tests'))
@@ -95,7 +112,7 @@ def main():
         result = unittest.TextTestRunner(stream=sys.stdout, verbosity=2).run(suite)
         a.result.write_text(json.dumps(dict(run=result.testsRun, skipped=len(result.skipped))))
         return 0 if result.wasSuccessful() else 1
-    return run(root, a.jobs, a.list)
+    return run(root, a.jobs, a.list, a.shard_index, a.shard_count)
 
 
 if __name__ == '__main__':
