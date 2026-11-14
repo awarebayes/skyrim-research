@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "8fd6f9f26dec2195eee57539b67796ffb9918e16ed218877604d982360e2c016",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x266430",
+  "naming_findings": [
+    "Several projectile helper and stand-in names lack individual origin labels."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-14",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "793fa7726b89b2cc5682dd67676033d6ec161a494bd14dc7d8cc6e01b601ca89",
+  "review_task_id": "review-flow-g101",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 2516016,
+  "size": 193,
+  "source_digest": "ebeccde3a85375877ee88b173041874999c197b7d132788f2565cac98b21164e",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

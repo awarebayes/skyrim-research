@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "71d2cb42674425900f314c34011f65c361795bc0708664294170aeaea29cc2f4",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x14b100",
+  "naming_findings": [
+    "Several supporting declarations in the localized header lack individual origin labels."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-14",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "23e032e6f6add91295fc3f22379a4a4e460a6e7a3d44b81904e7da51da0fd38f",
+  "review_task_id": "review-flow-g100",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 1356032,
+  "size": 67,
+  "source_digest": "0eaa049e7add4b9caa7141b0e259cf66e439cd21ac7151287ccabcc853c2e48e",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

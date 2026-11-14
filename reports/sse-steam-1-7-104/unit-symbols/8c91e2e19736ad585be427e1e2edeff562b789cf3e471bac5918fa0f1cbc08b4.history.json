@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/8c91e2e19736ad585be427e1e2edeff562b789cf3e471bac5918fa0f1cbc08b4.json",
+  "versions": [
+    {
+      "sha256": "8c91e2e19736ad585be427e1e2edeff562b789cf3e471bac5918fa0f1cbc08b4",
+      "base": null,
+      "added": [
+        "?UnClone3D@BGSProjectile@@UEAAXPEAVTESObjectREFR@@@Z",
+        "?UnCloneProjectile@@YAXPEAVBGSProjectile@@PEAVTESObjectREFR@@@Z",
+        "?RemoveProjectileClone@@YAXPEAVBGSProjectile@@PEAVTESObjectREFR@@@Z",
+        "?ProjectileCount@@YAFPEAX@Z",
+        "?ProjectileCrime@@YA_NPEAVTESObjectREFR@@@Z",
+        "?ProjectileName@@YAPEBDPEAVTESObjectREFR@@@Z",
+        "?TakeProjectileText@@3PEBDEB",
+        "?StealProjectileText@@3PEBDEB",
+        "?FormatProjectileText@@YAXPEAVBSString@@PEBDZZ",
+        "?GetActivateText@BGSProjectile@@UEAA_NPEAVTESObjectREFR@@AEAVBSString@@@Z",
+        "??_C@_0L@OFEECOLM@?$CFs?6?$CFs?5?$CI?$CFi?$CJ@",
+        "??_C@_05PCAHBOJM@?$CFs?6?$CFs@"
+      ]
+    }
+  ]
+}

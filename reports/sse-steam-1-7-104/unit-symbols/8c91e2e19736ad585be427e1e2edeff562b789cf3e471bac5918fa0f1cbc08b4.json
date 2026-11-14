@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?UnClone3D@BGSProjectile@@UEAAXPEAVTESObjectREFR@@@Z": {
+      "rva": 2514992,
+      "size": 84
+    },
+    "?UnCloneProjectile@@YAXPEAVBGSProjectile@@PEAVTESObjectREFR@@@Z": {
+      "rva": 2579664,
+      "size": null
+    },
+    "?RemoveProjectileClone@@YAXPEAVBGSProjectile@@PEAVTESObjectREFR@@@Z": {
+      "rva": 2579296,
+      "size": null
+    },
+    "?ProjectileCount@@YAFPEAX@Z": {
+      "rva": 1460464,
+      "size": null
+    },
+    "?ProjectileCrime@@YA_NPEAVTESObjectREFR@@@Z": {
+      "rva": 3099216,
+      "size": null
+    },
+    "?ProjectileName@@YAPEBDPEAVTESObjectREFR@@@Z": {
+      "rva": 3082448,
+      "size": null
+    },
+    "?TakeProjectileText@@3PEBDEB": {
+      "rva": 34270592,
+      "size": null
+    },
+    "?StealProjectileText@@3PEBDEB": {
+      "rva": 34263656,
+      "size": null
+    },
+    "?FormatProjectileText@@YAXPEAVBSString@@PEBDZZ": {
+      "rva": 1208720,
+      "size": null
+    },
+    "?GetActivateText@BGSProjectile@@UEAA_NPEAVTESObjectREFR@@AEAVBSString@@@Z": {
+      "rva": 2516016,
+      "size": 193
+    },
+    "??_C@_0L@OFEECOLM@?$CFs?6?$CFs?5?$CI?$CFi?$CJ@": {
+      "rva": 25226536,
+      "size": null
+    },
+    "??_C@_05PCAHBOJM@?$CFs?6?$CFs@": {
+      "rva": 25226548,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?UnClone3D@BGSProjectile@@UEAAXPEAVTESObjectREFR@@@Z",
+        "rva": "0x266030",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UnCloneProjectile@@YAXPEAVBGSProjectile@@PEAVTESObjectREFR@@@Z",
+        "rva": "0x275cd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemoveProjectileClone@@YAXPEAVBGSProjectile@@PEAVTESObjectREFR@@@Z",
+        "rva": "0x275b60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProjectileCount@@YAFPEAX@Z",
+        "rva": "0x1648f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProjectileCrime@@YA_NPEAVTESObjectREFR@@@Z",
+        "rva": "0x2f4a50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProjectileName@@YAPEBDPEAVTESObjectREFR@@@Z",
+        "rva": "0x2f08d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?TakeProjectileText@@3PEBDEB",
+        "rva": "0x20aed80",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StealProjectileText@@3PEBDEB",
+        "rva": "0x20ad268",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FormatProjectileText@@YAXPEAVBSString@@PEBDZZ",
+        "rva": "0x127190",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetActivateText@BGSProjectile@@UEAA_NPEAVTESObjectREFR@@AEAVBSString@@@Z",
+        "rva": "0x266430",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_0L@OFEECOLM@?$CFs?6?$CFs?5?$CI?$CFi?$CJ@",
+        "rva": "0x180ed28",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_05PCAHBOJM@?$CFs?6?$CFs@",
+        "rva": "0x180ed34",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

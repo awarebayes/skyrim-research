@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "5fa44f4e3b57cba9efaffc05c7592b22bec0e7629c7f4576e3323d6c5ec3c080",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x11723b0",
+  "naming_findings": [
+    "Several stand-in base and translation map names lack individual origin labels."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-14",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "793fa7726b89b2cc5682dd67676033d6ec161a494bd14dc7d8cc6e01b601ca89",
+  "review_task_id": "review-flow-g101",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 18293680,
+  "size": 102,
+  "source_digest": "bafc10bd226542cbee32075a521d4c8e38706c6f7ffc51f9e30eef3a39d69a2e",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

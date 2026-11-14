@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/05ec1f994e348ae0054ba2206a8036294f86ba3a7429fd8f869d83951d1081fa.json",
+  "versions": [
+    {
+      "sha256": "05ec1f994e348ae0054ba2206a8036294f86ba3a7429fd8f869d83951d1081fa",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "??_GBSScaleformTranslator@@UEAAPEAXI@Z",
+        "??1BSScaleformTranslator@@UEAA@XZ",
+        "??1GRefCountImpl@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "__std_terminate",
+        "?GlobalHeap@@3PEAVGMemoryHeap@@EA",
+        "??_7BSScaleformTranslator@@6B@",
+        "?__global_delete@@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

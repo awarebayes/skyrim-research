@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/c0eb43abf31670979fb56df1b401506a488791e6d917b425bc88b242761fd560.json",
+  "versions": [
+    {
+      "sha256": "c0eb43abf31670979fb56df1b401506a488791e6d917b425bc88b242761fd560",
+      "base": null,
+      "added": [
+        "?ClearData@EffectSetting@@UEAAXXZ",
+        "?ClearArray@@YAXPEAX@Z",
+        "?Clear@TESCondition@@QEAAXXZ"
+      ]
+    }
+  ]
+}

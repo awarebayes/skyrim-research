@@ -4282,7 +4282,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `leaves/Leaf149c30` | `Leaf149c30::Invoke` (GUESS) | `sse-steam-1-7-104` / `0x149c30` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x149c30.json` | matched | full | checked |
 | `leaves/Leaf149cb0` | `Leaf149cb0::Invoke` (GUESS) | `sse-steam-1-7-104` / `0x149cb0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x149cb0.json` | matched | full | checked |
 | `leaves/Leaf149cc0` | `Leaf149cc0::Invoke` (GUESS) | `sse-steam-1-7-104` / `0x149cc0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x149cc0.json` | matched | full | checked |
-| - | `EffectSetting::ClearData` (COMMUNITY) | `sse-steam-1-7-104` / `0x14b100` / 67 | - | - | mapped | - | - |
+| `forms/EffectSetting` | `EffectSetting::ClearData` (COMMUNITY) | `sse-steam-1-7-104` / `0x14b100` / 67 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x14b100.json` | matched | full | open |
 | - | `EffectSetting::GetObjectTypeName` (COMMUNITY) | `sse-steam-1-7-104` / `0x14b490` / 23 | - | - | mapped | - | - |
 | - | `EffectSetting::GetEffectShader` (COMMUNITY) | `sse-steam-1-7-104` / `0x14b700` / 53 | - | - | mapped | - | - |
 | `leaves/LeafForward14c670` | `LeafForward14c670::Forward` (GUESS) | `sse-steam-1-7-104` / `0x14c670` / 5 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x14c670.json` | matched | full | checked |
@@ -5209,7 +5209,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | `leaves/Leaf265170` | `Leaf265170::Invoke` (GUESS) | `sse-steam-1-7-104` / `0x265170` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x265170.json` | matched | family | open |
 | - | `BGSProjectile::InitializeData` (COMMUNITY) | `sse-steam-1-7-104` / `0x2656c0` / 197 | - | - | mapped | - | - |
 | - | `BGSProjectile::UnClone3D` (COMMUNITY) | `sse-steam-1-7-104` / `0x266030` / 84 | - | - | mapped | - | - |
-| - | `BGSProjectile::GetActivateText` (COMMUNITY) | `sse-steam-1-7-104` / `0x266430` / 193 | - | - | mapped | - | - |
+| `forms/BGSProjectile` | `BGSProjectile::GetActivateText` (COMMUNITY) | `sse-steam-1-7-104` / `0x266430` / 193 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x266430.json` | matched | full | open |
 | `leaves/Leaf266920` | `Leaf266920::Invoke` (GUESS) | `sse-steam-1-7-104` / `0x266920` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x266920.json` | matched | family | open |
 | `leaves/Leaf2669a0` | `Leaf2669a0::Invoke` (GUESS) | `sse-steam-1-7-104` / `0x2669a0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2669a0.json` | matched | family | open |
 | `leaves/Leaf2669b0` | `Leaf2669b0::Invoke` (GUESS) | `sse-steam-1-7-104` / `0x2669b0` / 6 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x2669b0.json` | matched | family | open |
@@ -14073,7 +14073,7 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TableStoreLeaf1172250::~TableStoreLeaf1172250` (GUESS) | `sse-steam-1-7-104` / `0x1172250` / 11 | - | - | mapped | - | - |
 | - | `TableStoreLeaf1172270::~TableStoreLeaf1172270` (GUESS) | `sse-steam-1-7-104` / `0x1172270` / 11 | - | - | mapped | - | - |
 | - | `DeletingLeaf1172380::~DeletingLeaf1172380` (GUESS) | `sse-steam-1-7-104` / `0x1172380` / 43 | - | - | mapped | - | - |
-| - | `BSScaleformTranslator::~BSScaleformTranslator` (COMMUNITY) | `sse-steam-1-7-104` / `0x11723b0` / 102 | - | - | mapped | - | - |
+| `bsengine/BSScaleformTranslator` | `BSScaleformTranslator::~BSScaleformTranslator` (COMMUNITY) | `sse-steam-1-7-104` / `0x11723b0` / 102 | `msvc-19.16.27054-o2` | `reports/sse-steam-1-7-104/0x11723b0.json` | matched | full | open |
 | - | `DeletingWrapper1172420::~DeletingWrapper1172420` (GUESS) | `sse-steam-1-7-104` / `0x1172420` / 52 | - | - | mapped | - | - |
 | - | `DeletingLeaf1172640::~DeletingLeaf1172640` (GUESS) | `sse-steam-1-7-104` / `0x1172640` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf1172670::~DeletingLeaf1172670` (GUESS) | `sse-steam-1-7-104` / `0x1172670` / 43 | - | - | mapped | - | - |

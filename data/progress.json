@@ -59757,12 +59757,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 1356032,
       "size": 67,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "EffectSetting::ClearData",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 5. RVA 0x14b100; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x14b100.json"
     },
     {
       "id": "sse-steam-1-7-104-0x14b490",
@@ -71904,12 +71906,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 2516016,
       "size": 193,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSProjectile::GetActivateText",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 76. RVA 0x266430; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x266430.json"
     },
     {
       "id": "sse-steam-1-7-104-0x266920",
@@ -187431,12 +187435,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 18293680,
       "size": 102,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BSScaleformTranslator::~BSScaleformTranslator",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 0. RVA 0x11723b0; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x11723b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1172420",
@@ -287880,7 +287886,7 @@
   ],
   "phase": "First matches",
   "schema_version": 1,
-  "updated_at": "2026-11-14T12:52:42Z",
+  "updated_at": "2026-11-14T17:04:42Z",
   "scope": {
     "functions": null,
     "bytes": null,
