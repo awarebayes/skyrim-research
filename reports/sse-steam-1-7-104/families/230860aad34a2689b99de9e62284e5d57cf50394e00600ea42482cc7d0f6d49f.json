@@ -1,0 +1,82 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+      "version": "0.6.1-runtime"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy"
+      ],
+      "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x1258570": "5454edec6921e3be8d0e470c85c957129603dbc3eabee83f83a76774010fff88",
+    "sse-steam-1-7-104-0x12585b0": "b2c2311c38a5869626557d0f15641417185351b8258660767b7566f652694a37",
+    "sse-steam-1-7-104-0x12585f0": "ca3b4d10335ed97253ed721ca92f659bfaf26555c21023b63cff272e2aaf8cba",
+    "sse-steam-1-7-104-0x1258630": "2f74d89ffd40e4cad3991c6bd88d1f928d567e8d41c94bc82fa75be5f66e78a4",
+    "sse-steam-1-7-104-0x127ef40": "d316d10396fae5ce5a331094bc2ce2f0f6d229c8cc874eb9642226048cb40ea8",
+    "sse-steam-1-7-104-0x127ef80": "1ed272d25a466d05be7a4e2e3c101c762dab13b17cbdbe5777e791bafb8ed2c7",
+    "sse-steam-1-7-104-0x127efc0": "d8c71ec8324825e6ed6ea72b37e1982a118116523dcd25ceadb4a8d25922d106",
+    "sse-steam-1-7-104-0x127f000": "6036be766122a570150ca9e9d45019be09aab1cce46349e110eee9213cd1f2b8",
+    "sse-steam-1-7-104-0x127f040": "371f7bb22cfed623a3c02bb287d50e3403939184483d857b46a44625f5740515",
+    "sse-steam-1-7-104-0x127f080": "f1467af4e0d6a0ef35df3b8ae367f617374b71f8be3849326448c69f0690e5a1",
+    "sse-steam-1-7-104-0x127f0c0": "f7054c8fa5b2ea5f9e166c47331134f9266e407da9d925e4c8e18b6d9b93cabc",
+    "sse-steam-1-7-104-0x127f100": "2d7f03679a3b05c1704e4fd32636d38c59a5f5638c12112cc02a3ef7037ecd76",
+    "sse-steam-1-7-104-0x127f140": "d77b31a7ff62cea1bac648103cfb12561a7d643ea134f950ae023bf84f85e5ad",
+    "sse-steam-1-7-104-0x127f180": "ab30425f971e70c3f34313dffa6ae53beaa9370218b3ceb6f82f5dba04555c11",
+    "sse-steam-1-7-104-0x127f1c0": "fa652d3cfd11f9f1cbc0a926529ff71746e72b59ea3e956f4841240a6b9eebdc",
+    "sse-steam-1-7-104-0x127f200": "55dbaf80f9a58150e127cec18320111dc4f32a549a8fa44cdf1a6313e4dad61d",
+    "sse-steam-1-7-104-0x127f240": "1f150e21b6ae78de3e2f2b640e199692a301dfa084f77dcb9406f4f9d05f8468",
+    "sse-steam-1-7-104-0x127f280": "075394e6b52cbd6239349e6dfd24ee78245e6a7574a3e1d41a1c9de0850b2f58",
+    "sse-steam-1-7-104-0x127f2c0": "af128c6bde8ca29dade3cf918d3e04c4ac8e0ad7d9b835cc9c89e84bafc2b4a0",
+    "sse-steam-1-7-104-0x127f300": "cb50be92125090932e23f168b1db67c44d92509a21cdd38fe0b36360f7b8ed2c"
+  },
+  "origin": {
+    "family": "conditional-virtual-call",
+    "template_digest": "515cad7efd61e3cbe6648662464331cb71f8f377a954c38661ed60b1325ef864",
+    "version": "1"
+  },
+  "parameter_ranges": {
+    "rows": [
+      {
+        "callback-target": 53830512,
+        "shape": "conditional-call",
+        "state-target": 53830504
+      }
+    ]
+  },
+  "parameter_source": {
+    "path": "tools/conditional_call_family.py",
+    "sha256": "515cad7efd61e3cbe6648662464331cb71f8f377a954c38661ed60b1325ef864"
+  },
+  "pause_reason": "",
+  "paused": false,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "61dd8a0ed511c53e6fd6beaf03332fda98460faed52b2574d81bb6a2e7ff14f4",
+    "review_task_id": "review-family-230860aad34a2689b99d-r2",
+    "reviewer_model": "gpt-6.1-terra",
+    "spec_sha256": "5cff6f1a4a136e6e5431a174395d117661996eee487ef4bf91a8a93a0cf339e3"
+  },
+  "template_source": {
+    "path": "tools/conditional_call_family.py",
+    "sha256": "515cad7efd61e3cbe6648662464331cb71f8f377a954c38661ed60b1325ef864"
+  }
+}
