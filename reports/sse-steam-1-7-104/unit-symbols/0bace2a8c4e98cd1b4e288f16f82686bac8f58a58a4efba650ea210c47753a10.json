@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "__std_terminate": {
+      "rva": 22714318,
+      "size": 6
+    },
+    "??_GBGSAssociationType@@UEAAPEAXI@Z": {
+      "rva": 3708928,
+      "size": 109
+    },
+    "?InitializeData@BGSAssociationType@@UEAAXXZ": {
+      "rva": 3707952,
+      "size": 131
+    },
+    "??_7BGSAssociationType@@6B@": {
+      "rva": 25505600,
+      "size": null
+    },
+    "??1BSFixedString@@QEAA@XZ": {
+      "rva": 15405312,
+      "size": null
+    },
+    "??1TESForm@@UEAA@XZ": {
+      "rva": 1979216,
+      "size": null
+    },
+    "??0BSFixedString@@QEAA@PEBD@Z": {
+      "rva": 15404944,
+      "size": null
+    },
+    "??4BSFixedString@@QEAAAEAV0@AEBV0@@Z": {
+      "rva": 15405648,
+      "size": null
+    },
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": null
+    },
+    "??_M@YAXPEAX_K1P6AX0@Z@Z": {
+      "rva": 22707804,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__std_terminate",
+        "rva": "0x15a97ce",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSAssociationType@@UEAAPEAXI@Z",
+        "rva": "0x389800",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@BGSAssociationType@@UEAAXXZ",
+        "rva": "0x389430",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSAssociationType@@6B@",
+        "rva": "0x1852f40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSFixedString@@QEAA@XZ",
+        "rva": "0xeb1100",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESForm@@UEAA@XZ",
+        "rva": "0x1e3350",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0BSFixedString@@QEAA@PEBD@Z",
+        "rva": "0xeb0f90",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??4BSFixedString@@QEAAAEAV0@AEBV0@@Z",
+        "rva": "0xeb1250",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_M@YAXPEAX_K1P6AX0@Z@Z",
+        "rva": "0x15a7e5c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -93,6 +93,8 @@ blocks; list what you find as `naming_findings` and still approve.
    - no byte steering: no nonsensical control flow, dead code, helper, attribute or intrinsic
      whose only plausible reason is forcing bytes; a justification comment that is not a reason a
      programmer had counts here;
+   - opaque storage used to force allocation size is banned; require the represented layout
+     (maintainer decision, 2026-11-14);
    - nothing that cannot be what it claims: an unreachable branch or impossible type use that
      signals a wrong binding or a wrong class.
 2. **Provenance.** No code from unlicensed projects other than the FNV decompilation

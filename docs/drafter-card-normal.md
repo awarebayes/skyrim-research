@@ -57,6 +57,8 @@ and shared class context; preserve the existing layout and function bodies.
   correction, then preserve the near-miss. Never use assembly, raw bytes, codegen pragmas or remove
   an assertion to silence a layout error.
 
+Opaque storage used to force allocation size is banned; declare the represented layout.
+
 ## TLS scopes and polymorphic subobjects
 
 - **TLS save/set/restore.** A saved thread-local value restored after the body is a scoped object,
