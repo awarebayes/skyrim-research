@@ -318,9 +318,10 @@
     "path": "tools/deleting_layout_leaf_v2.py",
     "sha256": "c33e297cfc05a40c93d0a1165f3507172be2c064f498593ede6fbdb9cfba8eb5"
   },
-  "pause_reason": "",
-  "paused": false,
+  "pause_reason": "Superseded by a corrected unapproved family.",
+  "paused": true,
   "review": null,
+  "superseded_by": "reports/sse-steam-1-7-104/families/d37faf1ed8a46c175ad9291d23ebcdfea7859c606863229d50e7ae16fc5bdb20.json",
   "template_source": {
     "path": "tools/deleting_layout_leaf_v2.py",
     "sha256": "c33e297cfc05a40c93d0a1165f3507172be2c064f498593ede6fbdb9cfba8eb5"
