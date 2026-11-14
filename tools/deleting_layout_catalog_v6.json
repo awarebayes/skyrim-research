@@ -1,0 +1,2115 @@
+{
+  "base_layout_commit": "5f41e5eab792a65a4e2e64bdb13c140e09315149",
+  "build_id": "sse-steam-1-7-104",
+  "headers": {
+    "reconstruction/bsengine/ActiveEffectCaptureBase.h": "3ef5101fde3602f336ca17ea4f3739563188761cd098bb723918e576c66cb0df",
+    "reconstruction/bsengine/InventoryVisitorCaptureBase.h": "0df57ebd080da1ac4b2ee59318cbca68480ef56bdf3d791b89a2d237c5c5fa07",
+    "reconstruction/bsengine/MagicTraversalCaptureBase.h": "a2cef0f77456f8bfd81d2f57cd84036b731bd8f9729e7b6c051d2245be10ccaf",
+    "reconstruction/bsengine/MessageCallbackCaptureBase.h": "b9e7ab0e0dce6e71e9778a1ec84696b4ddd67743b92adc757f6d0d99ea45e55c",
+    "reconstruction/bsengine/MovementMessageCaptureBase.h": "230eb0bc0a3ff74c21ff2d909c9282c2f164a90e29295c9e9e9b846d64c4dd82"
+  },
+  "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+  "members": [
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout152570::~CaptureLayout152570() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 32,
+      "owner": "FindEqualsFunctor",
+      "owner_rtti": ".?AVFindEqualsFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 25048280,
+      "rva": 1385840,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout152570@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25048280,
+          "symbol": "??_7CaptureLayout152570@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout152570"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout1525d0::~CaptureLayout1525d0() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 40,
+      "owner": "GetCostliestEffectFunctor",
+      "owner_rtti": ".?AVGetCostliestEffectFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 25048312,
+      "rva": 1385936,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout1525d0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25048312,
+          "symbol": "??_7CaptureLayout1525d0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout1525d0"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout152600::~CaptureLayout152600() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 16,
+      "owner": "LargestAreaFunctor",
+      "owner_rtti": ".?AVLargestAreaFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 25048360,
+      "rva": 1385984,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout152600@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25048360,
+          "symbol": "??_7CaptureLayout152600@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout152600"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout152630::~CaptureLayout152630() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 16,
+      "owner": "LongestDurationFunctor",
+      "owner_rtti": ".?AVLongestDurationFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 25048336,
+      "rva": 1386032,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout152630@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25048336,
+          "symbol": "??_7CaptureLayout152630@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout152630"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout1543d0::~CaptureLayout1543d0() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 48,
+      "owner": "GetMagicItemDescriptionFunctor",
+      "owner_rtti": ".?AVGetMagicItemDescriptionFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 25055448,
+      "rva": 1393616,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout1543d0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25055448,
+          "symbol": "??_7CaptureLayout1543d0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout1543d0"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout2405c0::~CaptureLayout2405c0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::CountObjectsWithKeywordFunctor",
+      "owner_rtti": ".?AVCountObjectsWithKeywordFunctor@?A0x3f954fdf@@",
+      "owner_slot": 0,
+      "owner_table": 25188696,
+      "rva": 2360768,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout2405c0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25188696,
+          "symbol": "??_7CaptureLayout2405c0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout2405c0"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout2405f0::~CaptureLayout2405f0() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 32,
+      "owner": "FindByEffectSettingFunctor",
+      "owner_rtti": ".?AVFindByEffectSettingFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 25188984,
+      "rva": 2360816,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout2405f0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25188984,
+          "symbol": "??_7CaptureLayout2405f0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout2405f0"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout240620::~CaptureLayout240620() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::GetArmorInSlotFunctor",
+      "owner_rtti": ".?AVGetArmorInSlotFunctor@?A0x3f954fdf@@",
+      "owner_slot": 0,
+      "owner_table": 25188736,
+      "rva": 2360864,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout240620@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25188736,
+          "symbol": "??_7CaptureLayout240620@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout240620"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout240650::~CaptureLayout240650() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "InventoryUtils::(anonymous)::GetWornMaskVisitor",
+      "owner_rtti": ".?AVGetWornMaskVisitor@?A0x3f954fdf@InventoryUtils@@",
+      "owner_slot": 0,
+      "owner_table": 25189096,
+      "rva": 2360912,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout240650@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25189096,
+          "symbol": "??_7CaptureLayout240650@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout240650"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout2406b0::~CaptureLayout2406b0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "InventoryUtils::(anonymous)::IsFavoriteVisitor",
+      "owner_rtti": ".?AVIsFavoriteVisitor@?A0x3f954fdf@InventoryUtils@@",
+      "owner_slot": 0,
+      "owner_table": 25189136,
+      "rva": 2361008,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout2406b0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25189136,
+          "symbol": "??_7CaptureLayout2406b0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout2406b0"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout2406e0::~CaptureLayout2406e0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "InventoryUtils::(anonymous)::IsWornVisitor",
+      "owner_rtti": ".?AVIsWornVisitor@?A0x3f954fdf@InventoryUtils@@",
+      "owner_slot": 0,
+      "owner_table": 25189056,
+      "rva": 2361056,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout2406e0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25189056,
+          "symbol": "??_7CaptureLayout2406e0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout2406e0"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout2407d0::~CaptureLayout2407d0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::UnequipArmorFunctor",
+      "owner_rtti": ".?AVUnequipArmorFunctor@?A0x3f954fdf@@",
+      "owner_slot": 0,
+      "owner_table": 25188776,
+      "rva": 2361296,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout2407d0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25188776,
+          "symbol": "??_7CaptureLayout2407d0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout2407d0"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout240800::~CaptureLayout240800() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "InventoryUtils::(anonymous)::WornHasKeywordVisitor",
+      "owner_rtti": ".?AVWornHasKeywordVisitor@?A0x3f954fdf@InventoryUtils@@",
+      "owner_slot": 0,
+      "owner_table": 25189176,
+      "rva": 2361344,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout240800@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25189176,
+          "symbol": "??_7CaptureLayout240800@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout240800"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout3cbc30::~CaptureLayout3cbc30() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::ShouldRunDefaultWornVisitor",
+      "owner_rtti": ".?AVShouldRunDefaultWornVisitor@?A0xf44e5ea0@@",
+      "owner_slot": 0,
+      "owner_table": 25555856,
+      "rva": 3980336,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout3cbc30@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25555856,
+          "symbol": "??_7CaptureLayout3cbc30@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout3cbc30"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout41e650::~CaptureLayout41e650() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::WarmthCalcFunc",
+      "owner_rtti": ".?AVWarmthCalcFunc@?A0x2dbbcb74@@",
+      "owner_slot": 0,
+      "owner_table": 25651456,
+      "rva": 4318800,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout41e650@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25651456,
+          "symbol": "??_7CaptureLayout41e650@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout41e650"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout575ba0::~CaptureLayout575ba0() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 24,
+      "owner": "ContentMenu::errorCallback",
+      "owner_rtti": ".?AUerrorCallback@ContentMenu@@",
+      "owner_slot": 0,
+      "owner_table": 26144216,
+      "rva": 5725088,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout575ba0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26144216,
+          "symbol": "??_7CaptureLayout575ba0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout575ba0"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout57dff0::~CaptureLayout57dff0() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 24,
+      "owner": "LoginMenu::errorCallback",
+      "owner_rtti": ".?AUerrorCallback@LoginMenu@@",
+      "owner_slot": 0,
+      "owner_table": 26147368,
+      "rva": 5758960,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout57dff0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26147368,
+          "symbol": "??_7CaptureLayout57dff0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout57dff0"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout5824b0::~CaptureLayout5824b0() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 16,
+      "owner": ".?AUdoNothingCallback@?7??Start@MarketplaceMenu@@SAXW4MarketplaceMode@2@@Z@",
+      "owner_rtti": ".?AUdoNothingCallback@?7??Start@MarketplaceMenu@@SAXW4MarketplaceMode@2@@Z@",
+      "owner_slot": 0,
+      "owner_table": 26149864,
+      "rva": 5776560,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout5824b0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26149864,
+          "symbol": "??_7CaptureLayout5824b0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5824b0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5ba920::~CaptureLayout5ba920() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "FinishActiveEffectVisitor",
+      "owner_rtti": ".?AVFinishActiveEffectVisitor@@",
+      "owner_slot": 0,
+      "owner_table": 26170696,
+      "rva": 6007072,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5ba920@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26170696,
+          "symbol": "??_7CaptureLayout5ba920@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5ba920"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5bec70::~CaptureLayout5bec70() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::FindAppropriateDisplaceEffect",
+      "owner_rtti": ".?AUFindAppropriateDisplaceEffect@?A0xfba8dc38@@",
+      "owner_slot": 0,
+      "owner_table": 26172544,
+      "rva": 6024304,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5bec70@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26172544,
+          "symbol": "??_7CaptureLayout5bec70@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5bec70"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5c67b0::~CaptureLayout5c67b0() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::DispelAppropriateEffectsVisitor",
+      "owner_rtti": ".?AUDispelAppropriateEffectsVisitor@?A0x3c34b62b@@",
+      "owner_slot": 0,
+      "owner_table": 26178440,
+      "rva": 6055856,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5c67b0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26178440,
+          "symbol": "??_7CaptureLayout5c67b0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5c67b0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d46c0::~CaptureLayout5d46c0() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 40,
+      "owner": "(anonymous)::DispelBoundItemEffects",
+      "owner_rtti": ".?AUDispelBoundItemEffects@?A0x9a252de4@@",
+      "owner_slot": 0,
+      "owner_table": 26185184,
+      "rva": 6112960,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d46c0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185184,
+          "symbol": "??_7CaptureLayout5d46c0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d46c0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d46f0::~CaptureLayout5d46f0() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::DispelEffectFunctor",
+      "owner_rtti": ".?AVDispelEffectFunctor@?A0x9a252de4@@",
+      "owner_slot": 0,
+      "owner_table": 26185304,
+      "rva": 6113008,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d46f0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185304,
+          "symbol": "??_7CaptureLayout5d46f0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d46f0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d4720::~CaptureLayout5d4720() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 56,
+      "owner": "MagicTarget::DispelFromBoundObject",
+      "owner_rtti": ".?AUDispelFromBoundObject@MagicTarget@@",
+      "owner_slot": 0,
+      "owner_table": 26185008,
+      "rva": 6113056,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d4720@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185008,
+          "symbol": "??_7CaptureLayout5d4720@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d4720"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d4850::~CaptureLayout5d4850() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 16,
+      "owner": "EffectsCausingDamageFunctor",
+      "owner_rtti": ".?AUEffectsCausingDamageFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 26185352,
+      "rva": 6113360,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d4850@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185352,
+          "symbol": "??_7CaptureLayout5d4850@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d4850"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d4880::~CaptureLayout5d4880() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "FindActiveEffectByIDFunctor",
+      "owner_rtti": ".?AVFindActiveEffectByIDFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 26185328,
+      "rva": 6113408,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d4880@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185328,
+          "symbol": "??_7CaptureLayout5d4880@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d4880"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d48f0::~CaptureLayout5d48f0() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::HasSameUsageEffect",
+      "owner_rtti": ".?AUHasSameUsageEffect@?A0x9a252de4@@",
+      "owner_slot": 0,
+      "owner_table": 26185160,
+      "rva": 6113520,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d48f0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185160,
+          "symbol": "??_7CaptureLayout5d48f0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d48f0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d4920::~CaptureLayout5d4920() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "IsSpellTargetFunctor",
+      "owner_rtti": ".?AVIsSpellTargetFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 26185056,
+      "rva": 6113568,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d4920@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185056,
+          "symbol": "??_7CaptureLayout5d4920@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d4920"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d4950::~CaptureLayout5d4950() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 16,
+      "owner": "IsSpellTypeTargetFunctor",
+      "owner_rtti": ".?AVIsSpellTypeTargetFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 26185080,
+      "rva": 6113616,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d4950@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185080,
+          "symbol": "??_7CaptureLayout5d4950@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d4950"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d4980::~CaptureLayout5d4980() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "KeywordDispelFunctor",
+      "owner_rtti": ".?AVKeywordDispelFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 26185032,
+      "rva": 6113664,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d4980@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185032,
+          "symbol": "??_7CaptureLayout5d4980@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d4980"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d49b0::~CaptureLayout5d49b0() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 48,
+      "owner": "(anonymous)::ResetElapsedTimeMatchingEffects",
+      "owner_rtti": ".?AUResetElapsedTimeMatchingEffects@?A0x9a252de4@@",
+      "owner_slot": 0,
+      "owner_table": 26185208,
+      "rva": 6113712,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d49b0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26185208,
+          "symbol": "??_7CaptureLayout5d49b0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d49b0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout5d6010::~CaptureLayout5d6010() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::CountActorValueEffects",
+      "owner_rtti": ".?AUCountActorValueEffects@?A0x69accfbb@@",
+      "owner_slot": 0,
+      "owner_table": 26186064,
+      "rva": 6119440,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout5d6010@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26186064,
+          "symbol": "??_7CaptureLayout5d6010@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d6010"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout5d6040::~CaptureLayout5d6040() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::DispelWornItemEnchantsVisitor",
+      "owner_rtti": ".?AVDispelWornItemEnchantsVisitor@?A0x69accfbb@@",
+      "owner_slot": 0,
+      "owner_table": 26186128,
+      "rva": 6119488,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout5d6040@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26186128,
+          "symbol": "??_7CaptureLayout5d6040@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout5d6040"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc240::~CaptureLayout6bc240() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageActivateDoor@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageActivateDoor@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330696,
+      "rva": 7062080,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc240@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330696,
+          "symbol": "??_7CaptureLayout6bc240@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc240"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc270::~CaptureLayout6bc270() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageActorCollision@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageActorCollision@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330768,
+      "rva": 7062128,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc270@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330768,
+          "symbol": "??_7CaptureLayout6bc270@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc270"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc2a0::~CaptureLayout6bc2a0() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageApproachingDoor@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageApproachingDoor@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330960,
+      "rva": 7062176,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc2a0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330960,
+          "symbol": "??_7CaptureLayout6bc2a0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc2a0"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc2d0::~CaptureLayout6bc2d0() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageBlocked@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageBlocked@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330720,
+      "rva": 7062224,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc2d0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330720,
+          "symbol": "??_7CaptureLayout6bc2d0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc2d0"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc300::~CaptureLayout6bc300() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageFreezeDirection@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageFreezeDirection@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330864,
+      "rva": 7062272,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc300@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330864,
+          "symbol": "??_7CaptureLayout6bc300@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc300"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc330::~CaptureLayout6bc330() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageJump@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageJump@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330936,
+      "rva": 7062320,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc330@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330936,
+          "symbol": "??_7CaptureLayout6bc330@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc330"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc360::~CaptureLayout6bc360() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageMovementTypeChange@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageMovementTypeChange@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330912,
+      "rva": 7062368,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc360@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330912,
+          "symbol": "??_7CaptureLayout6bc360@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc360"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc390::~CaptureLayout6bc390() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageNewPath@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageNewPath@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330792,
+      "rva": 7062416,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc390@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330792,
+          "symbol": "??_7CaptureLayout6bc390@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc390"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc3c0::~CaptureLayout6bc3c0() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessagePathComplete@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessagePathComplete@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330816,
+      "rva": 7062464,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc3c0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330816,
+          "symbol": "??_7CaptureLayout6bc3c0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc3c0"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc3f0::~CaptureLayout6bc3f0() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessagePathFailed@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessagePathFailed@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330840,
+      "rva": 7062512,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc3f0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330840,
+          "symbol": "??_7CaptureLayout6bc3f0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc3f0"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc420::~CaptureLayout6bc420() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessagePlayIdle@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessagePlayIdle@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330744,
+      "rva": 7062560,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc420@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330744,
+          "symbol": "??_7CaptureLayout6bc420@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc420"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc450::~CaptureLayout6bc450() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageSetStaticPath@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageSetStaticPath@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330888,
+      "rva": 7062608,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc450@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330888,
+          "symbol": "??_7CaptureLayout6bc450@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc450"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc480::~CaptureLayout6bc480() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageWarpToLocation@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageWarpToLocation@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330672,
+      "rva": 7062656,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc480@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330672,
+          "symbol": "??_7CaptureLayout6bc480@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc480"
+    },
+    {
+      "definitions": [
+        "inline MovementMessageCaptureBase::~MovementMessageCaptureBase() {}",
+        "inline CaptureLayout6bc4b0::~CaptureLayout6bc4b0() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementMessageCaptureBase.h",
+      "object_size": 24,
+      "owner": "MessageHandlerWrapper<VMovementMessageWarpToMultiple@@@?$ActorMovementMessageMap@$0BA@>",
+      "owner_rtti": ".?AU?$MessageHandlerWrapper@VMovementMessageWarpToMultiple@@@?$ActorMovementMessageMap@$0BA@@@",
+      "owner_slot": 0,
+      "owner_table": 26330984,
+      "rva": 7062704,
+      "size": 43,
+      "stored_rtti": "ActorMovementMessageMap<16>::IMessageHandlerWrapper",
+      "stored_table": 26330568,
+      "symbol": "??_GCaptureLayout6bc4b0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26330568,
+          "symbol": "??_7MovementMessageCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26330984,
+          "symbol": "??_7CaptureLayout6bc4b0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6bc4b0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout6daab0::~CaptureLayout6daab0() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::CanCastWornEnchantmentVisitor",
+      "owner_rtti": ".?AUCanCastWornEnchantmentVisitor@?A0xf43600f6@@",
+      "owner_slot": 0,
+      "owner_table": 26337000,
+      "rva": 7187120,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout6daab0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26337000,
+          "symbol": "??_7CaptureLayout6daab0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6daab0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout6dab10::~CaptureLayout6dab10() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::CheckSummonedActorEffect",
+      "owner_rtti": ".?AUCheckSummonedActorEffect@?A0xf43600f6@@",
+      "owner_slot": 0,
+      "owner_table": 26337144,
+      "rva": 7187216,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout6dab10@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26337144,
+          "symbol": "??_7CaptureLayout6dab10@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6dab10"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout6dab70::~CaptureLayout6dab70() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::DispelFirstOnlyFunctor",
+      "owner_rtti": ".?AVDispelFirstOnlyFunctor@?A0xf43600f6@@",
+      "owner_slot": 0,
+      "owner_table": 26337168,
+      "rva": 7187312,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout6dab70@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26337168,
+          "symbol": "??_7CaptureLayout6dab70@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6dab70"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout6daba0::~CaptureLayout6daba0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "InventoryChanges::FindBestSoulGemVisitor",
+      "owner_rtti": ".?AVFindBestSoulGemVisitor@InventoryChanges@@",
+      "owner_slot": 0,
+      "owner_table": 26336960,
+      "rva": 7187360,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout6daba0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26336960,
+          "symbol": "??_7CaptureLayout6daba0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6daba0"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout6dac30::~CaptureLayout6dac30() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::StopStartEquipabilityFunctor",
+      "owner_rtti": ".?AVStopStartEquipabilityFunctor@?A0xf43600f6@@",
+      "owner_slot": 0,
+      "owner_table": 26337192,
+      "rva": 7187504,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout6dac30@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26337192,
+          "symbol": "??_7CaptureLayout6dac30@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6dac30"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout6dac60::~CaptureLayout6dac60() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 32,
+      "owner": "SumHostileEffectsFunctor",
+      "owner_rtti": ".?AVSumHostileEffectsFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 26337120,
+      "rva": 7187552,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout6dac60@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26337120,
+          "symbol": "??_7CaptureLayout6dac60@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6dac60"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout6df8f0::~CaptureLayout6df8f0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::UnequipAllVisitor",
+      "owner_rtti": ".?AVUnequipAllVisitor@?A0x2e88eb60@@",
+      "owner_slot": 0,
+      "owner_table": 26337768,
+      "rva": 7207152,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout6df8f0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26337768,
+          "symbol": "??_7CaptureLayout6df8f0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout6df8f0"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout735a20::~CaptureLayout735a20() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::UpdateArmorWornVisitor",
+      "owner_rtti": ".?AVUpdateArmorWornVisitor@?A0xc0bcb154@@",
+      "owner_slot": 0,
+      "owner_table": 26355840,
+      "rva": 7559712,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout735a20@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26355840,
+          "symbol": "??_7CaptureLayout735a20@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout735a20"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout73ab90::~CaptureLayout73ab90() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::ArmorRatingVisitorBase",
+      "owner_rtti": ".?AVArmorRatingVisitorBase@?A0xf083785a@@",
+      "owner_slot": 0,
+      "owner_table": 26361400,
+      "rva": 7580560,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout73ab90@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26361400,
+          "symbol": "??_7CaptureLayout73ab90@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout73ab90"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout73ac00::~CaptureLayout73ac00() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::GetClothingValueVisitor",
+      "owner_rtti": ".?AVGetClothingValueVisitor@?A0xf083785a@@",
+      "owner_slot": 0,
+      "owner_table": 26361512,
+      "rva": 7580672,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout73ac00@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26361512,
+          "symbol": "??_7CaptureLayout73ac00@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout73ac00"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout804ca0::~CaptureLayout804ca0() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 32,
+      "owner": "HealthDamageFunctor",
+      "owner_rtti": ".?AVHealthDamageFunctor@@",
+      "owner_slot": 0,
+      "owner_table": 26489080,
+      "rva": 8408224,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout804ca0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26489080,
+          "symbol": "??_7CaptureLayout804ca0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout804ca0"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout84db10::~CaptureLayout84db10() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::MagicCastOnTarget",
+      "owner_rtti": ".?AUMagicCastOnTarget@?A0xce40b4d9@@",
+      "owner_slot": 0,
+      "owner_table": 26556848,
+      "rva": 8706832,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout84db10@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26556848,
+          "symbol": "??_7CaptureLayout84db10@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout84db10"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout9426d0::~CaptureLayout9426d0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::RefreshEnchantedWeaponsVisitor",
+      "owner_rtti": ".?AVRefreshEnchantedWeaponsVisitor@?A0x76f1ac9e@@",
+      "owner_slot": 0,
+      "owner_table": 26704904,
+      "rva": 9709264,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout9426d0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26704904,
+          "symbol": "??_7CaptureLayout9426d0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout9426d0"
+    },
+    {
+      "definitions": [
+        "inline MagicTraversalCaptureBase::~MagicTraversalCaptureBase() {}",
+        "inline CaptureLayout94a8f0::~CaptureLayout94a8f0() {}"
+      ],
+      "header": "reconstruction/bsengine/MagicTraversalCaptureBase.h",
+      "object_size": 56,
+      "owner": "(anonymous)::GetMagicItemDescriptionFunctor",
+      "owner_rtti": ".?AVGetMagicItemDescriptionFunctor@?A0x9360c2e5@@",
+      "owner_slot": 0,
+      "owner_table": 26707760,
+      "rva": 9742576,
+      "size": 43,
+      "stored_rtti": "MagicItemTraversalFunctor",
+      "stored_table": 25047712,
+      "symbol": "??_GCaptureLayout94a8f0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25047712,
+          "symbol": "??_7MagicTraversalCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26707760,
+          "symbol": "??_7CaptureLayout94a8f0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout94a8f0"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout94ae80::~CaptureLayout94ae80() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::ConfirmLevelUpAttributeCallback",
+      "owner_rtti": ".?AVConfirmLevelUpAttributeCallback@?A0xdcfb5256@@",
+      "owner_slot": 0,
+      "owner_table": 26708224,
+      "rva": 9744000,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout94ae80@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26708224,
+          "symbol": "??_7CaptureLayout94ae80@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout94ae80"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout956770::~CaptureLayout956770() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::SpendSoulCallback",
+      "owner_rtti": ".?AVSpendSoulCallback@?A0x705fd51e@@",
+      "owner_slot": 0,
+      "owner_table": 26716264,
+      "rva": 9791344,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout956770@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26716264,
+          "symbol": "??_7CaptureLayout956770@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout956770"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout95e3d0::~CaptureLayout95e3d0() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 16,
+      "owner": "(anonymous)::DeviceSelectCallback",
+      "owner_rtti": ".?AVDeviceSelectCallback@?A0xea65e547@@",
+      "owner_slot": 0,
+      "owner_table": 26720952,
+      "rva": 9823184,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout95e3d0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26720952,
+          "symbol": "??_7CaptureLayout95e3d0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout95e3d0"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout95e760::~CaptureLayout95e760() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 16,
+      "owner": ".?AUerrorCallback@?7??OpenCreationClubMenu@MainMenu@@SAXXZ@",
+      "owner_rtti": ".?AUerrorCallback@?7??OpenCreationClubMenu@MainMenu@@SAXXZ@",
+      "owner_slot": 0,
+      "owner_table": 26721136,
+      "rva": 9824096,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout95e760@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26721136,
+          "symbol": "??_7CaptureLayout95e760@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout95e760"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout964230::~CaptureLayout964230() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::OldMessageBoxCallback",
+      "owner_rtti": ".?AVOldMessageBoxCallback@?A0x7c6875df@@",
+      "owner_slot": 0,
+      "owner_table": 26724312,
+      "rva": 9847344,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout964230@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26724312,
+          "symbol": "??_7CaptureLayout964230@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout964230"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout972e50::~CaptureLayout972e50() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::ConfirmAndNameCallback",
+      "owner_rtti": ".?AVConfirmAndNameCallback@?A0xb19e5bb3@@",
+      "owner_slot": 0,
+      "owner_table": 26734232,
+      "rva": 9907792,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout972e50@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26734232,
+          "symbol": "??_7CaptureLayout972e50@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout972e50"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout972e80::~CaptureLayout972e80() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::ConfirmCloseRaceSexMenuCallback",
+      "owner_rtti": ".?AVConfirmCloseRaceSexMenuCallback@?A0xb19e5bb3@@",
+      "owner_slot": 0,
+      "owner_table": 26734256,
+      "rva": 9907840,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout972e80@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26734256,
+          "symbol": "??_7CaptureLayout972e80@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout972e80"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout972eb0::~CaptureLayout972eb0() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::ConfirmDestructiveChangesCallback",
+      "owner_rtti": ".?AVConfirmDestructiveChangesCallback@?A0xb19e5bb3@@",
+      "owner_slot": 0,
+      "owner_table": 26734280,
+      "rva": 9907888,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout972eb0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26734280,
+          "symbol": "??_7CaptureLayout972eb0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout972eb0"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout983730::~CaptureLayout983730() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::LegendarySkillResetConfirmCallback",
+      "owner_rtti": ".?AVLegendarySkillResetConfirmCallback@?A0xd9af04ff@@",
+      "owner_slot": 0,
+      "owner_table": 26739672,
+      "rva": 9975600,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout983730@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26739672,
+          "symbol": "??_7CaptureLayout983730@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout983730"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout9837d0::~CaptureLayout9837d0() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 24,
+      "owner": "(anonymous)::PerkSelectConfirmCallback",
+      "owner_rtti": ".?AVPerkSelectConfirmCallback@?A0xd9af04ff@@",
+      "owner_slot": 0,
+      "owner_table": 26739648,
+      "rva": 9975760,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout9837d0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26739648,
+          "symbol": "??_7CaptureLayout9837d0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout9837d0"
+    },
+    {
+      "definitions": [
+        "inline MessageCallbackCaptureBase::~MessageCallbackCaptureBase() {}",
+        "inline CaptureLayout99fa20::~CaptureLayout99fa20() {}"
+      ],
+      "header": "reconstruction/bsengine/MessageCallbackCaptureBase.h",
+      "object_size": 32,
+      "owner": "(anonymous)::PlacePlayerMarkerCallbackFunctor",
+      "owner_rtti": ".?AVPlacePlayerMarkerCallbackFunctor@?A0xf5b877cc@@",
+      "owner_slot": 0,
+      "owner_table": 26768352,
+      "rva": 10091040,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GCaptureLayout99fa20@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7MessageCallbackCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26768352,
+          "symbol": "??_7CaptureLayout99fa20@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout99fa20"
+    },
+    {
+      "definitions": [
+        "inline ActiveEffectCaptureBase::~ActiveEffectCaptureBase() {}",
+        "inline CaptureLayout9bb490::~CaptureLayout9bb490() {}"
+      ],
+      "header": "reconstruction/bsengine/ActiveEffectCaptureBase.h",
+      "object_size": 24,
+      "owner": "SkyrimScript::(anonymous)::FindActiveEffectFunctor",
+      "owner_rtti": ".?AVFindActiveEffectFunctor@?A0x74852251@SkyrimScript@@",
+      "owner_slot": 0,
+      "owner_table": 26783448,
+      "rva": 10204304,
+      "size": 43,
+      "stored_rtti": "MagicTarget::ForEachActiveEffectVisitor",
+      "stored_table": 25428280,
+      "symbol": "??_GCaptureLayout9bb490@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25428280,
+          "symbol": "??_7ActiveEffectCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26783448,
+          "symbol": "??_7CaptureLayout9bb490@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout9bb490"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout9bb4c0::~CaptureLayout9bb4c0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "SkyrimScript::(anonymous)::FindBaseObjVisitor",
+      "owner_rtti": ".?AVFindBaseObjVisitor@?A0x74852251@SkyrimScript@@",
+      "owner_slot": 0,
+      "owner_table": 26783368,
+      "rva": 10204352,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout9bb4c0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26783368,
+          "symbol": "??_7CaptureLayout9bb4c0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout9bb4c0"
+    },
+    {
+      "definitions": [
+        "inline InventoryVisitorCaptureBase::~InventoryVisitorCaptureBase() {}",
+        "inline CaptureLayout9bb4f0::~CaptureLayout9bb4f0() {}"
+      ],
+      "header": "reconstruction/bsengine/InventoryVisitorCaptureBase.h",
+      "object_size": 24,
+      "owner": "SkyrimScript::(anonymous)::FindRefrObjVisitor",
+      "owner_rtti": ".?AVFindRefrObjVisitor@?A0x74852251@SkyrimScript@@",
+      "owner_slot": 0,
+      "owner_table": 26783408,
+      "rva": 10204400,
+      "size": 43,
+      "stored_rtti": "InventoryChanges::IItemChangeVisitor",
+      "stored_table": 25188504,
+      "symbol": "??_GCaptureLayout9bb4f0@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25188504,
+          "symbol": "??_7InventoryVisitorCaptureBase@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26783408,
+          "symbol": "??_7CaptureLayout9bb4f0@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CaptureLayout9bb4f0"
+    }
+  ],
+  "schema": 1
+}
