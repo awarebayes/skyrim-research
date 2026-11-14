@@ -88,6 +88,58 @@ class Base(unittest.TestCase):
         return contrib.Ctx(**kw)
 
 
+class LocalDirectoryTests(Base):
+    def test_default_and_shared_worktree_storage(self):
+        shared = (self.tmp / 'shared').resolve()
+        shared.mkdir()
+        first = contrib.Ctx(repo=self.tmp / 'one', env={'SR_LOCAL_DIR': str(shared)})
+        second = contrib.Ctx(repo=self.tmp / 'two', env={'SR_LOCAL_DIR': str(shared)})
+        self.assertEqual(contrib.Ctx(repo=self.tmp, env={}).private, self.tmp / '.local/contrib')
+        self.assertEqual(first.private, shared / 'contrib')
+        self.assertEqual(first.private, second.private)
+        contrib.save_config(first, drafted_by='synthetic tester')
+        self.assertEqual(contrib.load_config(second)['drafted_by'], 'synthetic tester')
+        self.assertEqual(contrib.toolchain_root(first), shared / 'contrib/msvc')
+        self.assertFalse((self.tmp / 'one/.local').exists())
+
+    def test_override_must_exist_and_be_a_directory(self):
+        file = self.tmp / 'file'
+        file.write_text('synthetic')
+        for path in (self.tmp / 'absent', file):
+            with self.subTest(path=path):
+                ctx = contrib.Ctx(repo=ROOT, env={'SR_LOCAL_DIR': str(path)}, as_json=True)
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    code = contrib.main(['--json', '--redact', 'doctor'], ctx=ctx)
+                self.assertEqual(code, contrib.MISSING)
+                self.assertIn('existing directory', json.loads(out.getvalue())['error'])
+                self.assertFalse((self.tmp / 'absent').exists())
+
+    def test_redact_hides_shared_storage_outside_checkout(self):
+        ctx = contrib.Ctx(repo=ROOT, env={'SR_LOCAL_DIR': str(self.tmp)}, as_json=True)
+        ctx.redact = True
+        self.assertEqual(ctx.scrub(str(ctx.local / 'contrib/config.json')), '<local>/contrib/config.json')
+
+    def test_source_fetch_uses_shared_storage_and_passes_environment(self):
+        calls = []
+        ctx = contrib.Ctx(repo=ROOT, env={'SR_LOCAL_DIR': str(self.tmp)}, as_json=True,
+                          runner=lambda cmd, **kw: calls.append((cmd, kw)) or
+                          subprocess.CompletedProcess(cmd, 0, '', ''))
+        contrib.fetch_sources(ctx, {'Example/Headers': ('.local/sources/headers', 'abc1234', 'MIT')})
+        self.assertTrue(calls)
+        self.assertTrue(all(kw['cwd'] == ctx.local / 'sources/headers' for _, kw in calls))
+        self.assertTrue(all(kw['env']['SR_LOCAL_DIR'] == str(self.tmp) for _, kw in calls))
+
+    def test_sibling_pointers_are_generic_when_requested(self):
+        import export_pack
+        ctx = self.ctx(env={'SR_NO_SIBLING_NAMES': '1'})
+        with unittest.mock.patch.object(export_pack, 'sibling_lines', return_value=['SecretClass::SecretMethod secret.cpp']):
+            self.assertEqual(contrib.sibling_section(ctx, 'PublicClass', [0x1000]),
+                             ['A sibling declaration exists for this name (details omitted).'])
+        with unittest.mock.patch.object(export_pack, 'sibling_lines', return_value=[]):
+            self.assertEqual(contrib.sibling_section(ctx, 'PublicClass', [0x1000]), [])
+
+
 class ExecutableTests(Base):
     def test_hash_and_version(self):
         blob = bytearray(b'MZ' + bytes(200))
@@ -391,6 +443,49 @@ class CompareTests(Base):
         text = json.dumps({k: v for k, v in data.items() if k != 'private_dir'})
         self.assertNotIn(sp.CODE.hex()[:16], text)
 
+    def test_shared_storage_compare_preserves_results_and_diagnostics(self):
+        default_code, default_data, _ = contrib.run_compare(self.ctx_, 'contrib-synthetic')
+        shared = (self.tmp / 'shared').resolve()
+        (shared / 'contrib').mkdir(parents=True)
+        shutil.copytree(self.private / 'tasks', shared / 'contrib/tasks')
+        ctx = contrib.Ctx(repo=self.repo, env=dict(self.ctx_.env, SR_LOCAL_DIR=str(shared)), as_json=True)
+        code, data, _ = contrib.run_compare(ctx, 'contrib-synthetic')
+        self.assertEqual(code, default_code)
+        self.assertEqual(data['functions'], default_data['functions'])
+        self.assertEqual(data['comparator'], default_data['comparator'])
+        self.assertTrue((shared / f'contrib/diagnostics/contrib-synthetic-{sp.LAYOUT[sp.FUNCTION]:x}.json').is_file())
+        self.assertTrue(Path(data['private_dir']).is_relative_to(shared))
+        # A failure must also agree with the default path, not merely a successful fixture.
+        code = bytearray(sp.CODE)
+        code[0x17] = 2  # Synthetic add operand differs, with the same instruction shape.
+        inputs = sp.inputs(image=sp.pe_image(code=bytes(code)))
+        self.image.write_bytes(inputs['image_bytes'])
+        manifest = self.repo / 'builds/target.json'
+        manifest.write_text(json.dumps(dict(inputs['manifest'], version='synthetic', store='none')))
+        default_code, default_data, _ = contrib.run_compare(self.ctx_, 'contrib-synthetic')
+        code, data, _ = contrib.run_compare(ctx, 'contrib-synthetic')
+        self.assertEqual((code, data['functions']), (default_code, default_data['functions']))
+        self.assertEqual(code, contrib.FAILED)
+
+    def test_shared_compare_keeps_diagnostics_containment(self):
+        import verify_function
+        shared = (self.tmp / 'shared').resolve()
+        shared.mkdir()
+        ctx = contrib.Ctx(repo=self.repo, env={'SR_LOCAL_DIR': str(shared)}, as_json=True)
+        outside = self.tmp / 'outside.json'
+        outside.write_text('must remain intact')
+        task_file = self.private / 'tasks/contrib-synthetic/task.json'
+        # The adapter reads the same verifier task-file format as the default path.
+        description = self.tmp / 'description.json'
+        description.write_text(json.dumps({
+            'verify_task_schema': 1, 'task': json.loads(task_file.read_text()),
+            'recipe': 'unused.json', 'symbols': 'unused.json'}))
+        with self.assertRaises(verify_function.TaskFileError):
+            contrib.compare_with_local_dir(ctx, description, {}, self.image, shared / 'report.json', outside)
+        self.assertEqual(outside.read_text(), 'must remain intact')
+        with self.assertRaises(verify_function.TaskFileError):
+            contrib.compare_with_local_dir(ctx, description, {}, self.image, shared / 'same.json', shared / 'same.json')
+
     def test_compile_failure(self):
         self.ctx_.env['SR_STUB_FAIL'] = '1'
         with self.assertRaises(contrib.Stop) as cm:
@@ -466,9 +561,9 @@ class SubmitTests(Base):
             return subprocess.CompletedProcess(cmd, 0, '', '')
         return subprocess.run(cmd, **kw)
 
-    def submit(self, gh=None, *extra):
+    def submit(self, gh=None, *extra, env=None):
         ctx = self.ctx(repo=self.repo, github=gh or FakeGitHub(), runner=self.runner,
-                       env={'PATH': '/usr/bin:/bin', 'HOME': str(self.tmp)})
+                       env=dict({'PATH': '/usr/bin:/bin', 'HOME': str(self.tmp)}, **(env or {})))
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             code = contrib.main(['--json', 'submit', '--dry-run', '--base', 'HEAD', *extra], ctx=ctx)
@@ -534,6 +629,22 @@ class SubmitTests(Base):
         with unittest.mock.patch.object(check_origin, 'check_unit', return_value=[hit]), \
                 unittest.mock.patch.object(check_origin, 'describe', return_value='close to a community body'):
             self.assertIn('not declared in the unit header', self.blockers())
+
+    def test_sibling_origin_suppression_preserves_blockers_and_hides_identifiers(self):
+        import check_origin
+        hit = {'function': 'SiblingClass::HiddenMethod', 'repo': 'momusdigital/fnv_decomp',
+               'revision': 'abcdef12', 'path': 'secret/sibling.cpp', 'upstream_line': 99,
+               'similarity': 0.98, 'trivial': False, 'fork_of': None, 'declared': False}
+        with unittest.mock.patch.object(check_origin, 'check_unit', return_value=[hit]):
+            plain_code, plain = self.submit()
+            code, out = self.submit(env={'SR_NO_SIBLING_NAMES': '1'})
+        self.assertEqual((code, out['blockers']), (plain_code, plain['blockers']))
+        self.assertEqual(code, contrib.FAILED)
+        text = json.dumps(out) + (self.tdir / 'pr-body.md').read_text()
+        self.assertIn('sibling body similarity finding', text)
+        self.assertNotIn('momusdigital/fnv_decomp', json.dumps(out))
+        for identifier in ('SiblingClass', 'HiddenMethod', 'secret/sibling.cpp'):
+            self.assertNotIn(identifier, text)
 
     def test_fresh_foreign_claim_blocks_on_any_function(self):
         self.task['functions'].append({'rva': '0xf2120', 'size': 3, 'symbol': 'y', 'community_name': 'A::B'})

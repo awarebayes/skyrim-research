@@ -49,6 +49,7 @@ import urllib.parse
 import urllib.request
 
 import profiles
+from local_paths import local_dir, local_path, no_sibling_names
 
 REPO = Path(__file__).resolve().parents[1]
 TOOLS = REPO / 'tools'
@@ -118,11 +119,22 @@ class Ctx:
             interactive = sys.stdin.isatty() and sys.stdout.isatty()
         self.interactive = bool(interactive) and not as_json
         self.as_json, self.assume_yes = as_json, assume_yes
-        self.private = Path(private) if private else self.repo / '.local' / 'contrib'
+        self._private = Path(private) if private else None
         self.runner = runner or subprocess.run
         self._github = github
         self.log = []
         self.redact = False
+
+    @property
+    def local(self):
+        try:
+            return local_dir(self.repo, self.env)
+        except ValueError as exc:
+            raise Stop(MISSING, str(exc), 'set SR_LOCAL_DIR to an existing private directory') from None
+
+    @property
+    def private(self):
+        return self._private if self._private is not None else self.local / 'contrib'
 
     @property
     def windows(self):
@@ -133,6 +145,8 @@ class Ctx:
         # sr.cmd names itself: a newcomer it bootstrapped has no `py` launcher on PATH.
         if self.windows and self.env.get('SR_LAUNCHER') == '.\\sr.cmd':
             return '.\\sr.cmd'
+        if not self.windows and self.env.get('SR_LAUNCHER') == './sr':
+            return './sr'
         return 'py tools\\contrib.py' if self.windows else 'python3 tools/contrib.py'
 
     def which(self, name):
@@ -147,7 +161,13 @@ class Ctx:
         if not self.redact:
             return text
         home = self.env.get('USERPROFILE' if self.windows else 'HOME') or str(Path.home())
-        for path, mark in ((str(self.repo), '<repo>'), (home, '~')):
+        paths = [(str(self.repo), '<repo>'), (home, '~')]
+        if self.env.get('SR_LOCAL_DIR'):
+            shared = Path(self.env['SR_LOCAL_DIR']).expanduser()
+            if not shared.is_absolute():
+                shared = self.repo / shared
+            paths[0:0] = [(str(shared.resolve()), '<local>'), (str(shared), '<local>')]
+        for path, mark in paths:
             if path and len(path) > 1:
                 text = text.replace(path, mark).replace(path.replace('\\', '\\\\'), mark)
                 if self.windows or self.platform == 'darwin':
@@ -1002,7 +1022,7 @@ def cmd_doctor(ctx, args):
         f'{ctx.cli} setup --yes', required=False)
     gh = ctx.which('gh')
     add('gh (GitHub CLI)', bool(gh), gh or 'not found; claims and PRs open as browser links', None, required=False)
-    missing_src = [r for r, (p, _rev, _l) in COMMUNITY_SOURCES.items() if not (ctx.repo / p).is_dir()]
+    missing_src = [r for r, (p, _rev, _l) in COMMUNITY_SOURCES.items() if not local_path(ctx.repo, p, ctx.env).is_dir()]
     add('community sources (label checks)', not missing_src,
         'present' if not missing_src else 'missing: ' + ', '.join(missing_src), f'{ctx.cli} setup --yes', required=False)
     index = sibling_analysis_dir(ctx) / 'fnv_index.jsonl'
@@ -1145,7 +1165,7 @@ def fetch_sources(ctx, sources=None):
     """Shallow clones of the pinned community naming sources, for the label and origin checks."""
     done = []
     for repo, (rel, rev, _lic) in (COMMUNITY_SOURCES if sources is None else sources).items():
-        dest = ctx.repo / rel
+        dest = local_path(ctx.repo, rel, ctx.env)
         if (dest / '.git').is_dir():
             head = git(ctx, 'rev-parse', 'HEAD', check=False, cwd=dest)
             if head == rev:
@@ -1170,7 +1190,7 @@ def build_sibling_index(ctx):
     inventory, since a contributor has no Ghidra tables: `start` then lists the same-named FNV
     method and the class's small methods. Returns the number of our functions joined, or None."""
     repo, rel, _rev = SIBLING_SOURCE
-    clone = ctx.repo / rel
+    clone = local_path(ctx.repo, rel, ctx.env)
     if not (clone / 'build/units.json').is_file():
         return None
     out = sibling_analysis_dir(ctx)
@@ -1194,7 +1214,10 @@ def sibling_section(ctx, cls, rvas):
         from export_pack import sibling_lines
     except Exception:  # noqa: BLE001 - the section is optional help, never required
         return []
-    return sibling_lines(cls, rvas, root=sibling_analysis_dir(ctx))
+    lines = sibling_lines(cls, rvas, root=sibling_analysis_dir(ctx))
+    if lines and no_sibling_names(ctx.env):
+        return ['A sibling declaration exists for this name (details omitted).']
+    return lines
 
 
 def licence_url(vsman):
@@ -1723,6 +1746,37 @@ def candidate_size(obj_path, symbol):
         return None
 
 
+def compare_with_local_dir(ctx, task_file, built, exe, report_path, diagnostics):
+    """Use the unchanged comparator API's existing private_root argument for shared storage.
+
+    The verifier CLI fixes that argument to its own checkout's .local. Keep its default path
+    unchanged; contributors with an override use the same engine and report validator here.
+    """
+    import compare_runtime
+    import verify_function
+    from pecoff import Reject
+    task, recipe, symbols, manifest = verify_function.load_task_file(task_file)
+    if not verify_function.under(diagnostics, ctx.local):
+        raise verify_function.TaskFileError(f'diagnostics must stay under {ctx.local}')
+    if report_path.resolve() == diagnostics.resolve():
+        raise verify_function.TaskFileError('report and diagnostics paths must differ')
+    for stale in (report_path, diagnostics):
+        if stale.exists():
+            stale.unlink()
+    try:
+        report = compare_runtime.compare(
+            task, json.loads(manifest.read_text()), recipe.read_bytes(),
+            json.loads(built['build_record'].read_text()), built['object'].read_bytes(),
+            Path(exe).read_bytes(), symbols.read_bytes(), diagnostics=diagnostics, private_root=ctx.local)
+        report = verify_function.check_report(report)
+    except (OSError, ValueError, Reject) as exc:
+        report = verify_function.error_record(task, 2, str(exc))
+        report_path.write_text(json.dumps(report, indent=2) + '\n')
+        return 2
+    report_path.write_text(json.dumps(report, indent=2) + '\n')
+    return 0 if report['result'] == 'pass' else 1
+
+
 def run_compare(ctx, ident=None, root=None):
     """Compile the task's unit and compare each function; returns (code, data, next)."""
     import bind
@@ -1753,9 +1807,13 @@ def run_compare(ctx, ident=None, root=None):
         (fdir / 'task-file.json').write_text(json.dumps({
             'verify_task_schema': 1, 'task': vtask, 'recipe': str(root / task['recipe']),
             'symbols': str(tdir / 'symbols.json'), 'manifest': str(root / 'builds/target.json')}, indent=2))
-        diag = verify_function.PRIVATE_ROOT / 'contrib' / 'diagnostics' / f'{task["task_id"]}-{rva:x}.json'
-        status, _text = verify_function.run(fdir / 'task-file.json', built['object'], built['build_record'], exe,
-                                            fdir / 'report.json', diag)
+        diag_root = ctx.local if ctx.env.get('SR_LOCAL_DIR') else verify_function.PRIVATE_ROOT
+        diag = diag_root / 'contrib' / 'diagnostics' / f'{task["task_id"]}-{rva:x}.json'
+        if ctx.env.get('SR_LOCAL_DIR'):
+            status = compare_with_local_dir(ctx, fdir / 'task-file.json', built, exe, fdir / 'report.json', diag)
+        else:
+            status, _text = verify_function.run(fdir / 'task-file.json', built['object'], built['build_record'], exe,
+                                                fdir / 'report.json', diag)
         report = json.loads((fdir / 'report.json').read_text())
         m = re.search(r'at \+0x([0-9a-f]+)', report.get('detail') or '')
         cov = report.get('coverage') or {}
@@ -1950,16 +2008,18 @@ def cmd_submit(ctx, args):
     blockers += problems
     import check_labels
     import check_origin
-    labels = check_labels.check([ctx.repo / n for n in unit], root=ctx.repo)
+    labels = check_labels.check([ctx.repo / n for n in unit], root=ctx.repo, env=ctx.env)
     warnings += [f'label: {x}' for x in labels]
-    clones, missing = check_origin.open_clones(ctx.repo)
+    clones, missing = check_origin.open_clones(ctx.repo, env=ctx.env)
     hits = check_origin.check_unit([ctx.repo / n for n in unit], clones, root=ctx.repo)
-    origin = [check_origin.describe(h) for h in hits]
+    origin = [check_origin.describe(h, no_sibling_names=no_sibling_names(ctx.env)) for h in hits]
     if any(not h['trivial'] and not h['fork_of'] and not h['declared'] for h in hits):
         blockers.append('a body close to a community body is not declared in the unit header '
                         '(docs/drafter-card.md, "Declare adapted bodies")')
     if missing:
-        warnings.append('origin check ran without: ' + ', '.join(missing))
+        warnings.append('origin check ran without: ' + ', '.join(
+            'a sibling checkout' if no_sibling_names(ctx.env) and r in check_origin.SIBLINGS else r
+            for r in missing))
     full = ctx.run([sys.executable, str(ctx.repo / 'tools/check.py')], cwd=ctx.repo, capture_output=True, text=True)
     if full.returncode != 0:
         blockers.append('tools/check.py: ' + (full.stderr or full.stdout).strip()[-300:])
@@ -2153,8 +2213,9 @@ def main(argv=None, ctx=None):
     ctx.interactive = ctx.interactive and not ctx.as_json
     ctx.assume_yes = ctx.assume_yes or args.yes
     ctx.redact = ctx.redact or args.redact
-    apply_wine_env(ctx)
     try:
+        ctx.local  # Validate an explicit override before any command writes private files.
+        apply_wine_env(ctx)
         code, data, nxt = COMMANDS[args.command](ctx, args)
         message = None
     except Stop as exc:

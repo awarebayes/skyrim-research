@@ -1,0 +1,44 @@
+#!/bin/sh
+# POSIX entry point for macOS/Linux. Prefer a working versioned Python over system python3.
+SR_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || exit 1
+SR_LAUNCHER=./sr
+PYTHONUTF8=1
+export SR_LAUNCHER PYTHONUTF8
+
+sr_try_python() {
+    [ -n "$1" ] && command -v "$1" >/dev/null 2>&1 || return 1
+    # Some Homebrew Python builds lack a working pyexpat, which toolchain setup needs.
+    "$1" -c 'import sys, pyexpat; sys.exit(sys.version_info < (3, 11))' >/dev/null 2>&1 || return 1
+    sr_python=$1
+    shift
+    exec "$sr_python" "$SR_ROOT/tools/contrib.py" "$@"
+}
+
+for sr_name in python3.13 python3.12 python3.11 python3; do
+    # PATH first, then common Homebrew, python.org, pyenv and uv installation locations.
+    for sr_candidate in "$sr_name" \
+        "/opt/homebrew/bin/$sr_name" "/usr/local/bin/$sr_name" \
+        /opt/homebrew/opt/python@*/bin/"$sr_name" \
+        /usr/local/opt/python@*/bin/"$sr_name" \
+        /Library/Frameworks/Python.framework/Versions/*/bin/"$sr_name" \
+        "${PYENV_ROOT:-$HOME/.pyenv}"/versions/*/bin/"$sr_name" \
+        "${UV_PYTHON_INSTALL_DIR:-$HOME/.local/share/uv/python}"/*/bin/"$sr_name"; do
+        sr_try_python "$sr_candidate" "$@"
+    done
+done
+
+printf '%s\n' 'No working Python 3.11 or newer found. Install it, then run ./sr again:' >&2
+case "$(uname -s)" in
+    Darwin) printf '%s\n' 'brew install python@3.13' >&2 ;;
+    Linux)
+        if command -v apt-get >/dev/null 2>&1; then
+            printf '%s\n' 'sudo apt update && sudo apt install python3' >&2
+        elif command -v dnf >/dev/null 2>&1; then
+            printf '%s\n' 'sudo dnf install python3' >&2
+        else
+            printf '%s\n' 'Debian/Ubuntu: sudo apt update && sudo apt install python3' \
+                'Fedora: sudo dnf install python3' >&2
+        fi ;;
+    *) printf '%s\n' 'Install Python 3.11 or newer using your package manager.' >&2 ;;
+esac
+exit 5

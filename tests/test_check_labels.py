@@ -1,6 +1,9 @@
 """tools/check_labels.py on original synthetic units and a synthetic community checkout."""
 from importlib.machinery import SourceFileLoader
 import json
+import contextlib
+import io
+import os
 import importlib.util
 from pathlib import Path
 import subprocess
@@ -311,6 +314,44 @@ public:
                                       siblings={'momusdigital/fnv_decomp': str(self.root / 'absent')})
         self.assertEqual(len(findings), 1)
         self.assertIn('its SIBLING labels were not verified', findings[0])
+
+    def test_suppressed_sibling_findings_keep_cli_exit_codes_and_counts(self):
+        siblings, rev = self.sibling()
+        h = self.root / 'reconstruction/area/Unit.h'
+        label = f'SIBLING(momusdigital/fnv_decomp@{rev}, no-licence)'
+        cases = [
+            ('// Widget::Rebuild: GUESS\n', siblings),
+            ('class Widget {\n// Rebuild: GUESS\nvoid Rebuild();\n};\n', siblings),
+            (f'// Widget::Tick: {label}\n', siblings),
+            (f'// Widget::Flush: {label}\n', siblings),
+            (f'// Widget::Tick: {label.replace(rev, "00000000")}\n', siblings),
+            (f'// Widget::Tick: {label}\n', {'momusdigital/fnv_decomp': str(self.root / 'absent')}),
+            (f'// Sibling source: momusdigital/fnv_decomp@{rev} src/secret.cpp:1\n', siblings),
+            (f'// Sibling source: momusdigital/fnv_decomp@{rev} src/core/widget.cpp:300\n', siblings),
+            (f'// Sibling source: momusdigital/fnv_decomp@{rev} ../secret.cpp:1\n', siblings),
+        ]
+        codes = set()
+        for header, sources in cases:
+            with self.subTest(header=header):
+                h.write_text('// Labels: v2\n' + header)
+                results = []
+                for mode in ('plain', 'flag', 'env'):
+                    out = io.StringIO()
+                    with patch.dict(os.environ, {'SR_NO_SIBLING_NAMES': '1' if mode == 'env' else '0'}), \
+                            patch.object(check_labels, 'configured_checkouts', return_value=self.checkouts), \
+                            patch.object(check_labels, 'configured_siblings', return_value=sources), \
+                            contextlib.redirect_stdout(out):
+                        code = check_labels.main((["--no-sibling-names"] if mode == 'flag' else []) + [str(h)])
+                    text = out.getvalue()
+                    results.append((code, text.splitlines()[-1]))
+                    if mode != 'plain':
+                        for identifier in ('Widget', 'Rebuild', 'Tick', 'Flush', 'secret.cpp', 'widget.cpp',
+                                           'momusdigital/fnv_decomp', rev):
+                            self.assertNotIn(identifier, text)
+                codes.add(results[0][0])
+                self.assertEqual(results[0], results[1])
+                self.assertEqual(results[0], results[2])
+        self.assertEqual(codes, {0, 1})
 
     def test_files_without_v2_labels_are_skipped(self):
         h = self.root / 'reconstruction/area/Old.h'

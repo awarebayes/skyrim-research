@@ -9,8 +9,9 @@ instructions elsewhere in this repository (`AGENTS.md` "Multi-agent execution",
 project's own machines. Never use Boat, the project's internal verifier hosts or its runner tools.
 Everything below runs on the contributor's computer.
 
-Drive one tool, `tools/contrib.py` (Windows: `.\sr.cmd`, which finds Python 3.11+ or unpacks a
-pinned private copy), always with `--json`. Each call prints one JSON object with `ok`, `exit_code`, `error` and `next` (the one next action). Do what
+Drive one tool, `tools/contrib.py` (macOS/Linux: `./sr`, which finds a working Python 3.11+
+on PATH or in common Homebrew, pyenv and uv locations and otherwise prints the install command;
+Windows: `.\sr.cmd`, which finds Python 3.11+ or unpacks a pinned private copy), always with `--json`. Each call prints one JSON object with `ok`, `exit_code`, `error` and `next` (the one next action). Do what
 `next` says. Exit codes: 0 ok, 1 a check failed, 2 usage, 3 compile failed, 4 unit or include
 problem, 5 input missing, 6 claimed by someone else, 7 a person must decide, 8 offline.
 
@@ -60,6 +61,7 @@ the FNV decompilation and its index, the pinned MSVC 19.16.27054 toolset and SDK
 servers, then compiles and compares a function the project already matched as a self-test) +
 `next` + `claim` + `start`. Run it again after any fix; finished steps are skipped. When you show
 the person output to post publicly, add `--redact` (it replaces their checkout and home paths).
+`setup` may also upgrade unrelated Homebrew packages as dependencies are installed.
 Then:
 
 1. Read the private pack named in the `packs` field: `bytes.txt` (offsets, bytes with relocated
@@ -71,7 +73,7 @@ Then:
    (its Boat and attempt-budget parts do not apply to you; its sibling rules do).
 3. Edit the unit the skeleton created (`reconstruction/<area>/<Class>.h` and `.cpp`). Declare only
    the members the function needs, at the offsets the listing uses. Names come from the community
-   headers in `.local/sources/` (search them; label `COMMUNITY(...)`), `GUESS` only for names you
+   headers in the explicit search roots below (label `COMMUNITY(...)`), `GUESS` only for names you
    invent. If `start` reported a `sibling` file, it points at the same-named method in the FNV
    decompilation (`.local/sources/fnv_decomp`): read it for shape and names, never for offsets,
    layouts or slots (another game, older engine, 32-bit). Label what you take
@@ -88,6 +90,51 @@ Then:
 
 A pass on this machine is not acceptance. Tell the person that the project re-runs the comparison
 on its own two hosts and a Reviewer checks the source before the function counts as matched.
+
+## Several agents on one machine
+
+Give each agent its own Git worktree and assign disjoint classes/units so they do not edit the
+same source files or contributor task. Point each worktree at the same **existing** private
+storage directory with `SR_LOCAL_DIR` (an absolute path is best):
+
+```sh
+export SR_LOCAL_DIR="<absolute path to the shared .local directory>"
+export SR_CONTRIB_OFFLINE=1
+export SR_NO_SIBLING_NAMES=1
+./sr --json claim 0x<rva> --offline-ok
+./sr --json start 0x<rva> --no-branch --drafted-by "<person>, assisted by <model>"
+./sr --json compare <task-id>
+./sr --json submit <task-id> --dry-run
+```
+
+Without `SR_LOCAL_DIR`, storage stays in this checkout's `.local`. The override shares toolchains,
+sources, config, claims, packs and tasks without a symlink; the source under `reconstruction/`
+stays in each worktree. Run `setup` once before dispatching agents. Avoid simultaneous writes to
+shared config/claims or the same task; coordinate claims and allocate work before the agents start.
+`SR_CONTRIB_OFFLINE=1` with `claim --offline-ok` records unpublished local claims; it does not
+reserve anything on GitHub. Unset it and run `claim` online before submitting. `start --no-branch`
+keeps the worktree's existing branch. When several tasks exist, name the task explicitly in
+`compare <task-id>` and `submit <task-id>`; `start` prints its id.
+
+For an agent assigned community headers only, allow searches in the assigned unit, its private
+pack, the profile's documents, and these explicit source roots (relative to `SR_LOCAL_DIR`, or to
+`.local` without an override):
+
+- `sources/CommonLibSSE-NG/include` and `sources/CommonLibSSE-NG/src`;
+- `sources/CommonLibSSE-po3/include` and `sources/CommonLibSSE-po3/src`;
+- `sources/AddressLibraryDatabase` (the community name lists).
+
+Exclude `sources/fnv_decomp`, the sibling decompilation directory. Never recursively search all
+of `.local`, `SR_LOCAL_DIR` or `sources/`: that includes sibling content. `setup --no-sibling`
+skips fetching the optional sibling clone. `SR_NO_SIBLING_NAMES=1` suppresses identifiers in
+sibling lookup output from `start` and submit's label/origin advice; for the label tool alone,
+`python3 tools/check_labels.py --no-sibling-names <files>` does the same. Findings and exit codes
+are unchanged: this controls message text, and does not grant permission to read sibling files.
+
+Adding new functions to an existing unit is fine. Never change the bodies of already matched
+functions; add new ones alongside them. Intake re-confirms **every accepted function in a touched
+unit** with the unchanged comparator on two hosts. If an accepted function stops matching, that
+part is dropped and sent back. A local pass is still not project acceptance.
 
 ## The game executable
 
