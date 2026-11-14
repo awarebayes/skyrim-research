@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "__std_terminate": {
+      "rva": 22714318,
+      "size": 6
+    },
+    "??_GBGSMenuIcon@@UEAAPEAXI@Z": {
+      "rva": 3289952,
+      "size": 115
+    },
+    "??_7BGSMenuIcon@@6BTESForm@@@": {
+      "rva": 25374144,
+      "size": null
+    },
+    "??_7BGSMenuIcon@@6BTESIcon@@@": {
+      "rva": 25374624,
+      "size": null
+    },
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": null
+    },
+    "??1TESIcon@@UEAA@XZ": {
+      "rva": 2042400,
+      "size": null
+    },
+    "??1TESForm@@UEAA@XZ": {
+      "rva": 1979216,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__std_terminate",
+        "rva": "0x15a97ce",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSMenuIcon@@UEAAPEAXI@Z",
+        "rva": "0x323360",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSMenuIcon@@6BTESForm@@@",
+        "rva": "0x1832dc0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSMenuIcon@@6BTESIcon@@@",
+        "rva": "0x1832fa0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESIcon@@UEAA@XZ",
+        "rva": "0x1f2a20",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESForm@@UEAA@XZ",
+        "rva": "0x1e3350",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
