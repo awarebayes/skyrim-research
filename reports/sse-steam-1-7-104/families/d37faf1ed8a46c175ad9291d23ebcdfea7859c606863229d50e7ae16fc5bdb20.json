@@ -1,0 +1,934 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+      "version": "0.6.1-runtime"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy"
+      ],
+      "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x17c3d0": "5617f93de947e986af76ec3f9b4635aa2abf6f7ea540c1ba292e5b74a2f1d0c0",
+    "sse-steam-1-7-104-0x17c400": "04899f2039af62e373c57604c93acd0375d6907ab999a387a49c2eb6ce255a24",
+    "sse-steam-1-7-104-0x17c4a0": "1c2b868ec5012c6723c05085107f44a96fa057d78504ee11e7587dd047e9b04d",
+    "sse-steam-1-7-104-0x17c4d0": "fb06abe5044b2720dd9b912246b916b275cdebd036a052983580216bee949772",
+    "sse-steam-1-7-104-0x17c500": "608470f0b5084c419279f4c55eed1fd0e4df09d5114be1b8e96fbfec5fb541c7",
+    "sse-steam-1-7-104-0x17c530": "c0ae2a418177f5e1614ce6e0804a1cd52c5ab4af4862a1d63615461c41f95e97",
+    "sse-steam-1-7-104-0x17c5b0": "0588afb0f182e250265ae4587c4f4a5db7098ac79aaa30290ba6a1086062618e",
+    "sse-steam-1-7-104-0x17c5e0": "293bbd477cb0562596907a36b0d86a4cf26abf73f79b94303482e2c680b3629c",
+    "sse-steam-1-7-104-0x17c650": "c6bcd8bc1ec9ecdbbbae9a3de78beccaaf0f1de3b800dda9f309e323304b2214",
+    "sse-steam-1-7-104-0x17c680": "909b4671f33d9f4b1cefdecdce57365d3d0ab02afe608c16c73515e78ac45b65",
+    "sse-steam-1-7-104-0x17c6b0": "5a535298dd5f5dbcba5630bec18933b194559263a1c8cc4c92d5c495b9390586",
+    "sse-steam-1-7-104-0x17c6e0": "10b27052a79979aef622b4986373e2835a7e9b8ab7573687055d78629f5b9134",
+    "sse-steam-1-7-104-0x17d8f0": "2bb204746c4365e881dc75cba15ecb08e6dc1de385332ae84e4a48fc279b0cee",
+    "sse-steam-1-7-104-0x18f220": "76ee828a1fd5eb541a64fdf434b216aa4da288a76efae7a990ee83aaa0fb4e22",
+    "sse-steam-1-7-104-0x226f70": "2666b5b81ca1f45de5dc3bc12a78c447a0cd5d8f7d4eacd5c5ff47f799d95bc1",
+    "sse-steam-1-7-104-0x326f10": "8a6de0d0103a09cc9cec5a9d7ecc4ea699d51b5e03d613b2b200376595bcb69b",
+    "sse-steam-1-7-104-0x3ab190": "77ca22962e3496273104722d6b142f25b31b30a6e93028ea799408fcde81efc5",
+    "sse-steam-1-7-104-0x7b1990": "f33a4c1054ebf7f9f74712b22ee862a7095e4b65dc38cb31ce20f323e721a624",
+    "sse-steam-1-7-104-0x7b1cb0": "6bc762d3537ba0af44f032112b19c547785c654884b87481c95abccf0f7f622b",
+    "sse-steam-1-7-104-0x960b80": "9e590b39921c33d265045614572b19c2de3495dcbb137f54c82035e003c61456"
+  },
+  "origin": {
+    "family": "scalar-deleting-leaf",
+    "template_digest": "c33e297cfc05a40c93d0a1165f3507172be2c064f498593ede6fbdb9cfba8eb5",
+    "version": "2"
+  },
+  "parameter_ranges": {
+    "rows": [
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 10017072,
+        "layout-index": 97,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 26143768
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 10090736,
+        "layout-index": 98,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 10090784,
+        "layout-index": 99,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 10090944,
+        "layout-index": 100,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 10090992,
+        "layout-index": 101,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 10125568,
+        "layout-index": 102,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26143768
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 10540048,
+        "layout-index": 103,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26824384
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 13454304,
+        "layout-index": 104,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 27395272
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 13608192,
+        "layout-index": 105,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 26431696
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 13608240,
+        "layout-index": 106,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 26431696
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1556688,
+        "layout-index": 0,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557024,
+        "layout-index": 1,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557072,
+        "layout-index": 2,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557360,
+        "layout-index": 3,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557456,
+        "layout-index": 4,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557504,
+        "layout-index": 5,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557664,
+        "layout-index": 6,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557712,
+        "layout-index": 7,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557760,
+        "layout-index": 8,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557808,
+        "layout-index": 9,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557936,
+        "layout-index": 10,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1557984,
+        "layout-index": 11,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558096,
+        "layout-index": 12,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558144,
+        "layout-index": 13,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558192,
+        "layout-index": 14,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558240,
+        "layout-index": 15,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558352,
+        "layout-index": 16,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558464,
+        "layout-index": 17,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558624,
+        "layout-index": 18,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558672,
+        "layout-index": 19,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558848,
+        "layout-index": 20,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1558896,
+        "layout-index": 21,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559296,
+        "layout-index": 22,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559440,
+        "layout-index": 23,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559616,
+        "layout-index": 24,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559664,
+        "layout-index": 25,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559760,
+        "layout-index": 26,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559808,
+        "layout-index": 27,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559904,
+        "layout-index": 28,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1559952,
+        "layout-index": 29,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1560256,
+        "layout-index": 30,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1560352,
+        "layout-index": 31,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1560800,
+        "layout-index": 32,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1560848,
+        "layout-index": 33,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1561216,
+        "layout-index": 34,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1561376,
+        "layout-index": 35,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1561472,
+        "layout-index": 36,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1561520,
+        "layout-index": 37,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1561776,
+        "layout-index": 38,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1562352,
+        "layout-index": 39,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1562464,
+        "layout-index": 40,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1562512,
+        "layout-index": 41,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1562864,
+        "layout-index": 42,
+        "object-size": 104,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1562912,
+        "layout-index": 43,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1562960,
+        "layout-index": 44,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1563312,
+        "layout-index": 45,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1563360,
+        "layout-index": 46,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1563536,
+        "layout-index": 47,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1563680,
+        "layout-index": 48,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1563792,
+        "layout-index": 49,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1563840,
+        "layout-index": 50,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1563968,
+        "layout-index": 51,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1564336,
+        "layout-index": 52,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1564384,
+        "layout-index": 53,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1564432,
+        "layout-index": 54,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1564480,
+        "layout-index": 55,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1633504,
+        "layout-index": 56,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1634512,
+        "layout-index": 57,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1634848,
+        "layout-index": 58,
+        "object-size": 56,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1635040,
+        "layout-index": 59,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1635392,
+        "layout-index": 60,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1635584,
+        "layout-index": 61,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1635904,
+        "layout-index": 62,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1635952,
+        "layout-index": 63,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1637360,
+        "layout-index": 64,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1637408,
+        "layout-index": 65,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 1644368,
+        "layout-index": 66,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 2256752,
+        "layout-index": 67,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25183368
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 2963808,
+        "layout-index": 68,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 25059104
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 3305232,
+        "layout-index": 69,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 25377992
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 3846544,
+        "layout-index": 70,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 25531776
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 5625008,
+        "layout-index": 71,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 5724880,
+        "layout-index": 72,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26143784
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 5724928,
+        "layout-index": 73,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26143768
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 5776512,
+        "layout-index": 74,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 7920144,
+        "layout-index": 75,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26400888
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 7941632,
+        "layout-index": 76,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26403800
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8067472,
+        "layout-index": 77,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8067680,
+        "layout-index": 78,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8067808,
+        "layout-index": 79,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8067936,
+        "layout-index": 80,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26431696
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8067984,
+        "layout-index": 81,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8068112,
+        "layout-index": 82,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8068224,
+        "layout-index": 83,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8068272,
+        "layout-index": 84,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8068480,
+        "layout-index": 85,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8068528,
+        "layout-index": 86,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8068576,
+        "layout-index": 87,
+        "object-size": 32,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8068624,
+        "layout-index": 88,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26135496
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9823856,
+        "layout-index": 89,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26143784
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9833248,
+        "layout-index": 90,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9833296,
+        "layout-index": 91,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9833344,
+        "layout-index": 92,
+        "object-size": 48,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9833392,
+        "layout-index": 93,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9833504,
+        "layout-index": 94,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9833552,
+        "layout-index": 95,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26149600
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 9833600,
+        "layout-index": 96,
+        "object-size": 24,
+        "size": 43,
+        "table-rva": 26149600
+      }
+    ]
+  },
+  "parameter_source": {
+    "path": "tools/deleting_layout_leaf_v2.py",
+    "sha256": "c33e297cfc05a40c93d0a1165f3507172be2c064f498593ede6fbdb9cfba8eb5"
+  },
+  "pause_reason": "",
+  "paused": false,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "158907cc99959e6915f991fd9f576b58c71a8fda9d9de6e0d27314331ff5e1f5",
+    "review_task_id": "review-family-d37faf1ed8a46c175ad9",
+    "reviewer_model": "gpt-6.1-terra",
+    "spec_sha256": "6ed8ad5f4434f12c8532547f3236171e32851eb75d31be59e14e0a4c2b72d0aa"
+  },
+  "supersedes": "reports/sse-steam-1-7-104/families/3bde3e87d168ee39434b95837801cb4c209b2bb69858733acb7fe640549f4f33.json",
+  "template_source": {
+    "path": "tools/deleting_layout_leaf_v2.py",
+    "sha256": "c33e297cfc05a40c93d0a1165f3507172be2c064f498593ede6fbdb9cfba8eb5"
+  }
+}
