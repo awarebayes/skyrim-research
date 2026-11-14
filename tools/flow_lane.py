@@ -508,6 +508,49 @@ def gate_inputs(root, frozen, requests):
     return bindings, pins
 
 
+def request_key(request):
+    return (request['item'], request['kind'], request.get('group'), request.get('path'))
+
+
+def requeue_changed_gates(root, fdir, receipt):
+    """Retain changed selections for a fresh gate pass; rebuild the rest normally."""
+    if 'gate_dependencies' not in receipt:
+        # Old receipts lack scoped dependencies. Reproduce acceptance from live gates
+        # instead of publishing their old candidate without its original guard.
+        receipt['attempts'].append(receipt['integrated'])
+        receipt['integrated'] = None
+        save_run(fdir, receipt)
+        return True
+    affected = []
+    with state_lock(fdir):
+        for dependency in receipt.get('gate_dependencies', []):
+            try:
+                groups_changed = any(signature(fdir, name) != pinned
+                                     for name, pinned in dependency['bindings'].items())
+                files_changed = any((hashlib.sha256(Path(path).read_bytes()).hexdigest()
+                                     if Path(path).is_file() else None) != digest
+                                    for path, digest in dependency['pins'].items())
+            except (f.FlowError, OSError, ValueError, KeyError, TypeError):
+                groups_changed, files_changed = True, True
+            if groups_changed or files_changed:
+                affected.append(dependency['request'])
+        if not affected:
+            return False
+        for request in affected:
+            item = next(i for i in receipt['items'] if i['id'] == request['item'])
+            selection = [request['group']] if request.get('group') else item['selection']
+            retry = enqueue(Path(item['root']), fdir, item['kind'], selection, item['branch'],
+                            item['approved_only'], item['with_metadata'],
+                            name='gate-changed-' + receipt['id'] + '-' + hashlib.sha256(
+                                json.dumps(selection).encode()).hexdigest()[:12])
+            receipt.setdefault('gate_dropped', []).append(dict(request=request, reason='gate-changed: requeue',
+                                                               requeued=retry['id']))
+        receipt['attempts'].append(receipt['integrated'])
+        receipt.update(integrated=None, accepted=[])
+        save_run(fdir, receipt)
+    return True
+
+
 def prepare(item, frozen):
     root = Path(item['root'])
     data = f.inventory(root)
@@ -740,18 +783,25 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
     frozen = tree / '.local/flow'
     snapshot(fdir, frozen)
     requests, bindings, origins, carried, pins = [], {}, [], set(), {}
-    input_pins, review_copies = {}, {}
-    dropped = []
+    input_pins, review_copies, gate_dependencies = {}, {}, []
+    dropped = list(receipt.get('gate_dropped', []))
+    excluded = {request_key(d['request']) for d in dropped}
     parts = [dict(item, selection=[name]) if item['kind'] == 'groups' else item
              for item in receipt['items'] for name in (item['selection'] if item['kind'] == 'groups' else [None])]
     for item in parts:
         source = Path(item['root'])
         before_item = f.git(tree, 'rev-parse', 'HEAD')
         try:
-            selected, bound = prepare(item, frozen)
-            dependencies, evidence = gate_inputs(source, frozen, selected)
-            bound.update(dependencies)
-            input_pins.update(evidence)
+            if item['kind'] in ('family', 'label'):
+                key = (item['id'], item['kind'], None, item['selection'][0] if item['kind'] == 'family' else None)
+                if key in excluded:
+                    continue
+            elif all((item['id'], 'review', name, None) in excluded for name in item['selection']):
+                continue
+            selected, _ = prepare(item, frozen)
+            selected = [r for r in selected if request_key(dict(r, item=item['id'])) not in excluded]
+            if not selected:
+                continue
             for review in sorted((source / f.REVIEWS).rglob('*')):
                 if not review.is_file():
                     continue
@@ -770,6 +820,10 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
             if item['with_metadata'] and metadata_base != f'origin/{branch}':
                 merge_metadata(tree, source, metadata_base)
             for request in selected:
+                dependencies, evidence = gate_inputs(source, frozen, [request])
+                bound = dependencies
+                request_pins = dict(evidence)
+                input_pins.update(evidence)
                 by_rva, paths = _source_files(source, request)
                 f._integration_origin_unchanged(source, f.git(source, 'rev-parse', 'HEAD'), base,
                                                sorted(paths), request['build_id'], request['functions'])
@@ -782,19 +836,19 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
                     f.refuse(rel not in pins or pins[rel] == digest, 'incompatible queued inputs: ' + rel)
                     pins[rel] = digest
                     input_pins[str(source / rel)] = digest
+                    request_pins[str(source / rel)] = digest
                 carried.update(f.carry_into_tree(source, tree, request['functions'], by_rva, request.get('harvests')))
                 request['item'] = item['id']
                 if request.get('review'):
                     src = Path(request['review'])
                     dest = copy_private_review(source, tree, src, item['id'] + '-' + src.name)
                     input_pins[str(src)] = hashlib.sha256(src.read_bytes()).hexdigest()
+                    request_pins[str(src)] = input_pins[str(src)]
                     request['review'] = str(dest)
                 # The validated recursive copy above already preserves family approval filenames.
                 requests.append(request)
-            bindings.update(bound)
-            for group in bound.values():
-                path = f.review_path(source, group).resolve()
-                input_pins[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+                bindings.update(bound)
+                gate_dependencies.append(dict(request=request, bindings=bound, pins=request_pins))
 
         except (f.FlowError, f.af.Refused, ValueError, KeyError, TypeError, OSError) as error:
             if (tree / '.git/MERGE_HEAD').exists():
@@ -854,7 +908,18 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
         f.refuse(not result['dropped'], 'accepted member changed during re-carry')
         result['dropped'] = failures
     f.refuse(result['accepted'] or active_tools or receipt.get('baseline_check'), 'no member passed acceptance')
+    accepted_by_key = {}
+    for request in result['accepted']:
+        key = request_key(request)
+        if key not in accepted_by_key:
+            accepted_by_key[key] = dict(request, functions=[])
+        accepted_by_key[key]['functions'].extend(request['functions'])
+    gate_dependencies = [dict(d, request=accepted_by_key[request_key(d['request'])]) for d in gate_dependencies
+                         if request_key(d['request']) in accepted_by_key]
+    bindings = {name: value for d in gate_dependencies for name, value in d['bindings'].items()}
+    input_pins = {path: value for d in gate_dependencies for path, value in d['pins'].items()}
     receipt.update(accepted=result['accepted'], dropped=dropped + result['dropped'], bindings=bindings,
+                   gate_dependencies=gate_dependencies,
                    origins=origins, input_pins=input_pins, tree=str(tree))
     if not result['accepted']:
         receipt['integrated'] = dict(commit=carry_base, accepted=0, files=[], checks=None, pushed=None, ci=None,
@@ -996,19 +1061,15 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                     return receipt
                 if not integ['pushed']:
                     require_green(tree, integ['base_revision'], python, ci_wait)
-                    # Re-read the live scheduling gates just before publishing the frozen tree.
-                    with state_lock(fdir):
-                        for name, pinned in receipt['bindings'].items():
-                            f.refuse(signature(fdir, name) == pinned, 'gate state changed during lane run: ' + name)
+                    # Changed evidence drops/requeues only its dependants. The fresh build
+                    # revalidates every retained member through the unchanged current gates.
+                    if requeue_changed_gates(root, fdir, receipt):
+                        continue
                     for origin in receipt['origins']:
                         current = {f.hexrva(fn['rva']): fn for fn in f.inventory(Path(origin['root']))['functions']
                                    if fn['build_id'] == origin['build_id']}
                         f.refuse(all(current.get(r) == row for r, row in origin['entries'].items()),
                                  'selected inventory changed during lane run')
-                    for path, digest in receipt['input_pins'].items():
-                        actual = hashlib.sha256(Path(path).read_bytes()).hexdigest() if Path(path).is_file() else None
-                        f.refuse(actual == digest,
-                                 'queued input changed during lane run: ' + path)
                     f.git(tree, 'fetch', '--quiet', 'origin', branch)
                     destination = f.git(tree, 'rev-parse', f'origin/{branch}')
                     if destination != integ['base_revision']:
