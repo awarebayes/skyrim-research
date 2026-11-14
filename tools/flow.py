@@ -723,9 +723,9 @@ def family_sample_problem(root, fdir, batch, data):
     return None
 
 
-def family_group_hold(root, fdir, ids):
+def family_group_hold(root, fdir, ids, *, data=None):
     """A sample rejection or disagreement freezes every member of that family."""
-    data = inventory(root)
+    data = inventory(root) if data is None else data
     by_id = {fn['id']: fn for fn in data['functions']}
     for path, family in family_manifests(root).items():
         if family.get('superseded_by'):

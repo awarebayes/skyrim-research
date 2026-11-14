@@ -387,9 +387,11 @@ suite and the site build; Pages consumes only its successful artifact for the ex
 then deploys. This removes duplicated work across workflows, with no check removed.
 
 A lane run may carry approved sampled members and their family bulk together. It applies the
-prepared individual reviews through the normal validator first, without rebuilding the derived
-index, then runs the unchanged family gates against that provisional state. The final transaction
-validates everything and rebuilds the index once. Planning, dropped requests or any final failure
+prepared individual reviews through the normal validator first, staging their records and a
+validated inventory snapshot in memory. The unchanged family gates read that provisional snapshot.
+Preparation shares inventory parsing, global validation, review parsing and hashes within each
+stable snapshot; per-member gates still run. The final transaction validates everything, writes
+progress once and rebuilds the index once. Planning, dropped requests or any final failure
 restore all provisional public files; no sampled or unsampled member gains an exemption.
 
 Function-only lane runs rely on the lane acceptance checks, check.py and CI. The lane compares its exact candidate with its pinned origin base: only `reconstruction/`, `reports/`, `data/progress.json` and the generated progress/model SVGs qualify (README changes qualify only inside the generated model totals markers). Those runs skip the local full unit suite and site build; exact-SHA CI still runs both before a successor may push. Any tooling, test, workflow, prose documentation or other path change keeps all local checks. Acceptance records, bindings, digests, harvest equality and Reviewer admission are unchanged.
