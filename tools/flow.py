@@ -2561,6 +2561,8 @@ def parser():
     s.add_argument('--allow-low-disk', action='store_true')
     s = sub.add_parser('cleanup')
     s.add_argument('--dry-run', action='store_true')
+    s.add_argument('--prune-claims', action='store_true', help='also prune clean completed harvest checkouts; preserve refs')
+    s.add_argument('--keep-task-prefix', action='append', default=[], help='retain draft tasks with this prefix')
     s = sub.add_parser('sync')
     s.add_argument('--branch', default='main')
     s = sub.add_parser('brief')
@@ -2732,7 +2734,7 @@ def execute(a, root, fdir):
                              soft_free_gb=a.soft_free_gb, allow_low_disk=a.allow_low_disk), indent=2))
         elif a.cmd == 'cleanup':
             import flow_cleanup
-            print(json.dumps(flow_cleanup.cleanup(root, fdir, a.dry_run), indent=2))
+            print(json.dumps(flow_cleanup.cleanup(root, fdir, a.dry_run, a.prune_claims, a.keep_task_prefix), indent=2))
         elif a.cmd == 'sync':
             dropped = sync(root, a.branch)
             print(f'checkout at origin/{a.branch}; {len(dropped)} identical local cop(ies) replaced by the integrated files')
