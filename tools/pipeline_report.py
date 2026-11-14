@@ -405,7 +405,8 @@ def refusals(receipts, logs, now):
 def report(root, fdir, handoffs, now=None, offline=False, inspect_processes=True, log_paths=()):
     root, fdir, handoffs = Path(root), Path(fdir), Path(handoffs)
     now = time.time() if now is None else now
-    receipts = [(p, r) for d in ('runs', 'tooling') for p, r in json_rows(fdir / 'lane' / d)]
+    receipts = [(p, r) for d in ('runs', 'tooling') for p, r in json_rows(fdir / 'lane' / d)
+                if r.get('kind') != 'tooling-request']
     commits = {(r.get('integrated') or {}).get('commit') for _, r in receipts} - {None}
     jobs = {} if offline else github_jobs(root, commits)
     timeline = sorted([timeline_row(p, r, 'tooling' if p.parent.name == 'tooling' else 'lane', jobs)
