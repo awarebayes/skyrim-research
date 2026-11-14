@@ -408,3 +408,23 @@ The final transaction validates everything, writes progress once and rebuilds th
 restore all provisional public files; no sampled or unsampled member gains an exemption.
 
 Function-only lane runs rely on the lane acceptance checks, check.py and CI. The lane compares its exact candidate with its pinned origin base: only `reconstruction/`, `reports/`, `data/progress.json` and the generated progress/model SVGs qualify (README changes qualify only inside the generated model totals markers). Those runs skip the local full unit suite and site build; exact-SHA CI still runs both before a successor may push. Any tooling, test, workflow, prose documentation or other path change keeps all local checks. Acceptance records, bindings, digests, harvest equality and Reviewer admission are unchanged.
+
+
+### Re-confirm dropped shared units
+
+`python3 tools/flow.py --flow-dir <shared-flow> reconfirm-dropped --dry-run` lists distinct
+stale-sibling and changed-carried-file targets from finished receipts. Without `--dry-run`, it
+creates a retained worktree on current origin/main, merges each dropped unit, and confirms every
+reported function sharing a changed unit on the configured independent runners. No live receipt
+or chunk controller is changed. Conflicting inputs and failed comparisons stay held with logs;
+failed comparisons are never retried into a pass. `--wake-mac <MAC>` sends Wake-on-LAN only if the
+native runner is unreachable; it changes no host settings. Disk admission keeps the normal floors.
+
+The result names private review briefs, full/delta review modes and a single
+`reconfirm-dropped --resume <id>` command. Dispatch the fresh admitted Reviewers named in those
+briefs; unchanged approvals are reused only when their bindings still validate. Required second
+reviews and clean comparator sampling reruns still apply. Resume checks the saved reviews through
+the existing parser and gates, accepts through `accept_function`, then enqueues approved groups
+for the next normal lane chunk. Other re-confirmed, still-unmatched records from the same units
+travel as validated report refreshes, without marking those companion functions matched. All
+inputs, approvals, reports and logs remain under the retained re-confirm receipt.
