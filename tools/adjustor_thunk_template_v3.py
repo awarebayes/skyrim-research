@@ -15,7 +15,7 @@ EVIDENCE = 'findings/ghidra-import.md'
 
 
 def origin():
-    return dict(family='represented-adjustor-thunk', version='2',
+    return dict(family='represented-adjustor-thunk', version='3',
                 template_digest=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
 
 
@@ -29,7 +29,7 @@ def prefix():
     return f'''// Build: {BUILD}
 // Evidence: {EVIDENCE}
 // Source exposure: binary-analysis (RTTI inheritance and measured deletion sizes).
-// Drafted by tools/adjustor_thunk_template_v2.py (GPT-6.1 Sol).
+// Drafted by tools/adjustor_thunk_template_v3.py (GPT-6.1 Sol).
 // Labels: v2
 // Original declarations inferred from local RTTI; no external implementation copied.
 // Only declared inheritance and sizes are represented; method sets remain incomplete.
@@ -56,6 +56,7 @@ template<class Inventory, class Caster> class CombatInventoryItemMagicT;
 template<class Product>
 class AutoRegisterCombatObjectLayout {
 public:
+    AutoRegisterCombatObjectLayout();
     virtual ~AutoRegisterCombatObjectLayout();
 };
 static_assert(sizeof(AutoRegisterCombatObjectLayout<void>) == sizeof(void*), "fieldless registration base");
@@ -83,6 +84,7 @@ class {caster};
 class {cls} :
     public '''+',\n    public '.join(bases)+f''' {{
 public:
+    {cls}();
     ~{cls}() override;
 }};
 static_assert(sizeof({cls}) == {size}, "reconciled registration owner size");
@@ -103,24 +105,17 @@ def emit(rva, size, offset, layout, layout_size):
     identifier(layout)
     if any(type(v) is not int or v <= 0 for v in (rva, size, offset, layout_size)):
         raise ValueError('positive member parameters required')
-    cls = f'Adjustor{rva:x}'
-    lead = prefix()+f'''// RVA 0x{rva:x}; {size} bytes
-// Recipe: {RECIPE}
-// {cls}, object: GUESS(low) STANDIN
-// This derived type adds no storage and overrides its represented owner's destructor.
-// Its external override and the referenced deletion helper are not reconstructed here.
-// The global object requests ordinary compiler emission; initialization is not compared.
-// Only the selected secondary adjustor is compared; a pass proves no original name.
-// Origin: {json.dumps(origin(), sort_keys=True)}
-'''
-    header = lead+f'''#pragma once
-#include "{layout}.h"
-class {cls} : public ResearchLayouts::{layout} {{
-public:
-    ~{cls}() override;
-}};
-static_assert(sizeof({cls}) == {layout_size}, "represented owner layout");
-'''
-    return dict(cls=cls, header=header, source=lead+f'#include "{cls}.h"\nstatic {cls} object;\n',
-                symbol=f'??_E{cls}@@W{msvc_number(offset)}EAAPEAXI@Z',
-                callee=f'??_E{cls}@@UEAAPEAXI@Z')
+    return dict(cls=layout,
+                symbol=f'??_E{layout}@ResearchLayouts@@W{msvc_number(offset)}EAAPEAXI@Z',
+                callee=f'??_E{layout}@ResearchLayouts@@UEAAPEAXI@Z')
+
+
+def owner_source(layout, members):
+    identifier(layout)
+    lead = prefix()+''.join(f'// RVA 0x{r["entry-rva"]:x}; {r["size"]} bytes\n' for r in members)
+    lead += f"// Recipe: {RECIPE}\n// Origin: {json.dumps(origin(), sort_keys=True)}\n"
+    lead += '// The ordinary owner constructor initializes each product-registration base.\n'
+    lead += '// Base registration operations and the owner destructor remain external.\n'
+    lead += '// The constructor itself is outside the compared scope; only listed secondary destructor adjustors are compared.\n'
+    lead += '// No added derived type, static object, helper body or emission-forcing attribute is used.\n'
+    return lead+f'#include "{layout}.h"\nnamespace ResearchLayouts {{\n{layout}::{layout}() = default;\n}}\n'

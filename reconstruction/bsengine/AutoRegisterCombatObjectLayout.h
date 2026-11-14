@@ -1,7 +1,7 @@
 // Build: sse-steam-1-7-104
 // Evidence: findings/ghidra-import.md
 // Source exposure: binary-analysis (RTTI inheritance and measured deletion sizes).
-// Drafted by tools/adjustor_thunk_template_v2.py (GPT-6.1 Sol).
+// Drafted by tools/adjustor_thunk_template_v3.py (GPT-6.1 Sol).
 // Labels: v2
 // Original declarations inferred from local RTTI; no external implementation copied.
 // Only declared inheritance and sizes are represented; method sets remain incomplete.
@@ -24,6 +24,7 @@ template<class Inventory, class Caster> class CombatInventoryItemMagicT;
 template<class Product>
 class AutoRegisterCombatObjectLayout {
 public:
+    AutoRegisterCombatObjectLayout();
     virtual ~AutoRegisterCombatObjectLayout();
 };
 static_assert(sizeof(AutoRegisterCombatObjectLayout<void>) == sizeof(void*), "fieldless registration base");

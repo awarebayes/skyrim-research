@@ -20,7 +20,7 @@ import disasm
 from export_pack import ImageFacts
 import bind
 import symbol_map
-import adjustor_thunk_template_v2 as template
+import adjustor_thunk_template_v3 as template
 
 
 def extract(rows, rva, size, image_base):
@@ -97,28 +97,31 @@ def prepare(selection):
         return m,reconcile(image,m,extract(disasm.target_rows(objdump,config['image'],m['rva'],m['size']),m['rva'],m['size'],image.pe.image_base))
     with ThreadPoolExecutor(max_workers=6) as pool:
         decoded=list(pool.map(decode,selection['members']))
-    tasks=[];params=[]
+    groups={}
     for member,row in decoded:
-        rva=member['rva']
-        if existing.get(rva,{}).get('status')=='matched':
-            raise ValueError('selected entry is already accepted')
-        emitted=template.emit(rva,member['size'],row['this-offset'],member['layout'],member['layout_size'])
-        source=f'reconstruction/bsengine/{emitted["cls"]}.cpp'
-        for path,content in ((root/source,emitted['source']),((root/source).with_suffix('.h'),emitted['header'])):
-            if path.exists() and path.read_text()!=content:
-                raise ValueError('different source already exists')
-            path.write_text(content)
-        entries={emitted['symbol']:dict(rva=rva,size=member['size']),emitted['callee']:dict(rva=row['callee-rva'],size=None)}
-        smap=dict(schema=1,build_id=template.BUILD,symbols=entries,folds=[],_provenance=dict(entries=[dict(name=n,rva=hex(v['rva']),community_name=None,note='Member-local decoded tailcall and RTTI slot binding; compiler ABI spelling is a guessed stand-in.') for n,v in entries.items()]))
+        groups.setdefault(member['layout'],[]).append((member,row))
+    tasks=[];params=[]
+    for layout,values in groups.items():
+        source=f'reconstruction/bsengine/{layout}.cpp'
+        (root/source).write_text(template.owner_source(layout,[row for _,row in values]))
+        entries={};functions=[]
+        for member,row in values:
+            rva=member['rva'];emitted=template.emit(rva,member['size'],row['this-offset'],layout,member['layout_size'])
+            if existing[rva]['status']=='matched':raise ValueError('selected member already accepted')
+            entries[emitted['symbol']]=dict(rva=rva,size=member['size'])
+            helper=dict(rva=row['callee-rva'],size=None)
+            if emitted['callee'] in entries and entries[emitted['callee']]!=helper:raise ValueError('owner primary callee differs among members')
+            entries[emitted['callee']]=helper
+            functions.append(dict(rva=rva,size=member['size'],symbol=emitted['symbol'],family_metadata=dict(origin=template.origin(),family_parameters=row,name_source='GUESS(low)')))
+            params.append(row);existing[rva]['name']=f'{layout} destructor adjustor from +{row["this-offset"]}'
+        smap=dict(schema=1,build_id=template.BUILD,symbols=entries,folds=[],_provenance=dict(entries=[dict(name=n,rva=hex(v['rva']),community_name=None,note='Direct registration-class ABI spelling; member-local decoded transfer agrees with independent RTTI slot binding.') for n,v in entries.items()]))
         digest=hashlib.sha256(symbol_map.serialize(smap)).hexdigest();map_path=f'reports/{template.BUILD}/unit-symbols/{digest}.json';symbol_map.create(root,map_path,smap)
-        taskdir=out/'tasks'/f'p110-{rva:x}';taskdir.mkdir(parents=True,exist_ok=True)
-        task=dict(task_schema=1,task_id=taskdir.name,build_id=template.BUILD,compiled=source,recipe=template.RECIPE,symbols=map_path,functions=[dict(rva=rva,size=member['size'],symbol=emitted['symbol'],family_metadata=dict(origin=template.origin(),family_parameters=row,name_source='GUESS(low)'))])
-        (taskdir/'task.json').write_text(json.dumps(task,indent=2)+'\n');tasks.append(str(taskdir));params.append(row)
-        if rva not in existing:
-            progress['functions'].append(dict(id=f'{template.BUILD}-0x{rva:x}',build_id=template.BUILD,rva=rva,size=member['size'],status='mapped',name=f'{emitted["cls"]} secondary destructor adjustor',name_origin='GUESS',name_source='GUESS(low): compiler-emitted override over represented RTTI bases; names do not establish target identity.',owner='awarebayes',evidence=template.EVIDENCE))
+        taskdir=out/'tasks'/('p110-v3-'+layout.lower());taskdir.mkdir(parents=True,exist_ok=True)
+        task=dict(task_schema=1,task_id=taskdir.name,build_id=template.BUILD,compiled=source,recipe=template.RECIPE,symbols=map_path,functions=functions)
+        (taskdir/'task.json').write_text(json.dumps(task,indent=2)+'\n');tasks.append(str(taskdir))
     (root/'data/progress.json').write_text(json.dumps(progress,indent=2)+'\n');bind.preflight(tasks,root)
     (out/'all.txt').write_text(''.join(t+'\n' for t in tasks));(out/'rows.json').write_text(json.dumps(params,indent=2)+'\n')
-    print(f'prepared {len(tasks)}; independent RTTI/transfer reconciliation and whole-list preflight passed')
+    print(f'prepared {len(tasks)} direct-owner units / {len(params)} members; independent row reconciliation passed')
 
 
 if __name__=='__main__':
