@@ -40,3 +40,18 @@ std::uint8_t GrenadeProjectile::IsGrenadeProjectile() const
 {
     return 0x1;
 }
+
+bool GrenadeProjectile::TargetsWholeBody()
+{
+    return true;
+}
+
+BGSDecalGroup* GrenadeProjectile::GetDecalGroup() const
+{
+    return decalGroup;
+}
+
+void GrenadeProjectile::OnTriggerEnter()
+{
+    flags1D4 |= 0x40000000;
+}

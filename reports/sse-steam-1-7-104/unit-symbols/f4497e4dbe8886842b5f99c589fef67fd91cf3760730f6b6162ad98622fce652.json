@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": 3
+    },
+    "?ClearData@TESLoadScreen@@UEAAXXZ": {
+      "rva": 3411648,
+      "size": 51
+    },
+    "?Clear@TESCondition@@QEAAXXZ": {
+      "rva": 4877712,
+      "size": null
+    },
+    "?InitializeData@TESLoadScreen@@UEAAXXZ": {
+      "rva": 3411632,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESLoadScreen@@UEAAXXZ",
+        "rva": "0x340ec0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Clear@TESCondition@@QEAAXXZ",
+        "rva": "0x4a6d90",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESLoadScreen@@UEAAXXZ",
+        "rva": "0x340eb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

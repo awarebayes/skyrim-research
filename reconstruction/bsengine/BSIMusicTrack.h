@@ -9,6 +9,7 @@
 // Adapted bodies: none. Body synthesized from the bounded leaf template.
 // A comparator pass verifies code under the recipe, not names or original source form.
 // Reconstruction carries no general licence grant; see LEGAL.md and PROVENANCE.md.
+// Task p92-s-bsimusictrack: DoClearDucking (0x325530), DoSetDuckingAttenuation (0x325540) and GetMusicStatus (0x325560) are added beside TestCanPlay.
 // BSIMusicTrack: EXE_RTTI
 // TestCanPlay: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
 // member, padding: GUESS(low); storage names invented for the measured member offset
@@ -19,4 +20,11 @@ class BSIMusicTrack
 {
 public:
     virtual std::uint8_t TestCanPlay() const;
+    // DoClearDucking, DoSetDuckingAttenuation, GetMusicStatus: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    virtual void DoClearDucking();
+    virtual void DoSetDuckingAttenuation(std::uint16_t a_ducking);
+    virtual std::uint32_t GetMusicStatus() const;
+
+    // musicStatus: GUESS(low); the dword at 0x8 that GetMusicStatus returns, name invented
+    std::uint32_t musicStatus;
 };

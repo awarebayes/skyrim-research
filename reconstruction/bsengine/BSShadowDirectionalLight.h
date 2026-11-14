@@ -35,6 +35,10 @@ class BSShadowDirectionalLight : public BSShadowLight
 {
 public:
     virtual std::uint32_t GetPassExtraParam(std::uint32_t a_accumFlag);  // compared: 0x157ed10
+    // GetIsFrustumOrDirectionalLight, GetIsDirectionalLight, GetNeedsClipPlanes: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); each returns true
+    virtual bool GetIsFrustumOrDirectionalLight();
+    virtual bool GetIsDirectionalLight();
+    virtual bool GetNeedsClipPlanes();
 
     // TODO members: replace part of the padding with the members the bodies read,
     // keeping every offset and the size check true.

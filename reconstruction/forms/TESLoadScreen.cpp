@@ -10,6 +10,10 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The functions above are compared.
 #include "TESLoadScreen.h"
 
+void TESLoadScreen::InitializeData()
+{
+}
+
 void TESLoadScreen::ClearData()
 {
     conditions.Clear();

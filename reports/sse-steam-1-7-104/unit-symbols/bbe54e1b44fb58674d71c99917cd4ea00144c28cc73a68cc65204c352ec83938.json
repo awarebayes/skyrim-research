@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??0BSTempEffect@@QEAA@PEAVTESObjectCELL@@M@Z": {
+      "rva": 4888672,
+      "size": 112
+    },
+    "?Update@BSTempEffect@@UEAA_NM@Z": {
+      "rva": 4888848,
+      "size": 18
+    },
+    "?SaveGame@BSTempEffect@@UEAAXPEAVBGSSaveGameBuffer@@@Z": {
+      "rva": 4888896,
+      "size": 139
+    },
+    "?LoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z": {
+      "rva": 4889056,
+      "size": 110
+    },
+    "??_GBSTempEffect@@UEAAPEAXI@Z": {
+      "rva": 4890400,
+      "size": 65
+    },
+    "?GetType@BSTempEffect@@UEBA?AW4TEMP_EFFECT_TYPE@@XZ": {
+      "rva": 4890560,
+      "size": 6
+    },
+    "?Initialize@BSTempEffect@@UEAAXXZ": {
+      "rva": 4890576,
+      "size": 5
+    },
+    "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z": {
+      "rva": 6520432,
+      "size": null
+    },
+    "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z": {
+      "rva": 6528768,
+      "size": null
+    },
+    "?StreamCanSkip@NiObject@@UEAA_NXZ": {
+      "rva": 15584096,
+      "size": 3
+    },
+    "??0NiObject@@QEAA@XZ": {
+      "rva": 15584192,
+      "size": 38
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7NiRefObject@@6B@": {
+      "rva": 25165752,
+      "size": null
+    },
+    "??_7BSTempEffect@@6B@": {
+      "rva": 26044792,
+      "size": null
+    },
+    "?ms_nextEffectID@BSTempEffect@@2IA": {
+      "rva": 34287264,
+      "size": null
+    },
+    "?ms_totalObjects@NiRefObject@@2JC": {
+      "rva": 53593632,
+      "size": null
+    },
+    "?Get3D@BSTempEffect@@UEBAPEAVNiAVObject@@XZ": {
+      "rva": 4888880,
+      "size": 3
+    },
+    "?FinishLoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z": {
+      "rva": 4889184,
+      "size": 3
+    },
+    "?IsInterfaceEffect@BSTempEffect@@UEBA_NXZ": {
+      "rva": 4889312,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??0BSTempEffect@@QEAA@PEAVTESObjectCELL@@M@Z",
+        "rva": "0x4a9860",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Update@BSTempEffect@@UEAA_NM@Z",
+        "rva": "0x4a9910",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@BSTempEffect@@UEAAXPEAVBGSSaveGameBuffer@@@Z",
+        "rva": "0x4a9940",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z",
+        "rva": "0x4a99e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSTempEffect@@UEAAPEAXI@Z",
+        "rva": "0x4a9f20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetType@BSTempEffect@@UEBA?AW4TEMP_EFFECT_TYPE@@XZ",
+        "rva": "0x4a9fc0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Initialize@BSTempEffect@@UEAAXXZ",
+        "rva": "0x4a9fd0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "rva": "0x637e70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "rva": "0x639f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?StreamCanSkip@NiObject@@UEAA_NXZ",
+        "rva": "0xedcb60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0NiObject@@QEAA@XZ",
+        "rva": "0xedcbc0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiRefObject@@6B@",
+        "rva": "0x17fffb8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSTempEffect@@6B@",
+        "rva": "0x18d6978",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ms_nextEffectID@BSTempEffect@@2IA",
+        "rva": "0x20b2ea0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ms_totalObjects@NiRefObject@@2JC",
+        "rva": "0x331c620",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Get3D@BSTempEffect@@UEBAPEAVNiAVObject@@XZ",
+        "rva": "0x4a9930",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishLoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z",
+        "rva": "0x4a9a60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsInterfaceEffect@BSTempEffect@@UEBA_NXZ",
+        "rva": "0x4a9ae0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

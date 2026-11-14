@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/8ca5165e40993535ec3aa19d01f78c3d6121ccd9a518f6b0910b66808c2384e0.json",
+  "versions": [
+    {
+      "sha256": "8ca5165e40993535ec3aa19d01f78c3d6121ccd9a518f6b0910b66808c2384e0",
+      "base": null,
+      "added": [
+        "?InitializeDataComponent@TESEnchantableForm@@UEAAXXZ",
+        "??_GTESEnchantableForm@@UEAAPEAXI@Z",
+        "?GetCastingType@TESEnchantableForm@@UEBAGXZ",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESEnchantableForm@@@8",
+        "?ClearDataComponent@TESEnchantableForm@@UEAAXXZ"
+      ]
+    }
+  ]
+}

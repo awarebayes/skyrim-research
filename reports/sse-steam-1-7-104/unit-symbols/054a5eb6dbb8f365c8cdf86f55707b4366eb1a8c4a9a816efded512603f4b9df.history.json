@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/054a5eb6dbb8f365c8cdf86f55707b4366eb1a8c4a9a816efded512603f4b9df.json",
+  "versions": [
+    {
+      "sha256": "054a5eb6dbb8f365c8cdf86f55707b4366eb1a8c4a9a816efded512603f4b9df",
+      "base": null,
+      "added": [
+        "?GetType@BGSAbilityPerkEntry@@UEBAIXZ",
+        "?ApplyPerkEntry@BGSAbilityPerkEntry@@UEAAXPEAVActor@@@Z",
+        "?RemovePerkEntry@BGSAbilityPerkEntry@@UEAAXPEAVActor@@@Z",
+        "?AddSpell@Actor@@QEAAXPEAVSpellItem@@@Z",
+        "?ResetPerkSpells@Actor@@QEAAXM@Z",
+        "?RemoveSpell@Actor@@QEAAXPEAVSpellItem@@@Z"
+      ]
+    }
+  ]
+}

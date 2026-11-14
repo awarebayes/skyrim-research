@@ -1,0 +1,421 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetTeleportData@ExtraDataList@@QEBAPEAUDoorTeleportData@@XZ": {
+      "rva": 1459376,
+      "size": null
+    },
+    "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ": {
+      "rva": 1483248,
+      "size": null
+    },
+    "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z": {
+      "rva": 1848960,
+      "size": null
+    },
+    "?GetFormName@TESForm@@QEBAPEBDXZ": {
+      "rva": 1999968,
+      "size": null
+    },
+    "?GetInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z": {
+      "rva": 2273984,
+      "size": null
+    },
+    "?HasQuestItem@InventoryChanges@@QEAA_NXZ": {
+      "rva": 2313248,
+      "size": null
+    },
+    "?GetLevel@BGSEncounterZone@@QEBAGXZ": {
+      "rva": 2685408,
+      "size": null
+    },
+    "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ": {
+      "rva": 2863488,
+      "size": 320
+    },
+    "?SameWorldspace@TESObjectREFR@@QEBA_NPEBV1@_N@Z": {
+      "rva": 3003360,
+      "size": null
+    },
+    "?HasQuestObject@TESObjectREFR@@QEBA_NXZ": {
+      "rva": 3037792,
+      "size": 86
+    },
+    "?GetScale@TESObjectREFR@@QEBAMXZ": {
+      "rva": 3043120,
+      "size": 68
+    },
+    "?CanBeMoved@TESObjectREFR@@QEAA_NXZ": {
+      "rva": 3044256,
+      "size": 84
+    },
+    "?GetContainer@TESObjectREFR@@QEBAPEAVTESContainer@@XZ": {
+      "rva": 3049056,
+      "size": 38
+    },
+    "?GetTransform@TESObjectREFR@@QEBAXAEAUNiTransform@@@Z": {
+      "rva": 3075616,
+      "size": 152
+    },
+    "?GetReferenceName@TESObjectREFR@@QEBAPEBDXZ": {
+      "rva": 3083056,
+      "size": 9
+    },
+    "?GetCurrentLocation@TESObjectREFR@@QEBAPEAVBGSLocation@@XZ": {
+      "rva": 3095408,
+      "size": 117
+    },
+    "?GetWorldSpace@TESObjectREFR@@QEBAPEAVTESWorldSpace@@XZ": {
+      "rva": 3096064,
+      "size": 52
+    },
+    "?GetDistanceBetweenSquared@TESObjectREFR@@QEBAMPEBV1@_N1@Z": {
+      "rva": 3097056,
+      "size": 165
+    },
+    "?GetEncounterZone@TESObjectREFR@@QEBAPEAVBGSEncounterZone@@XZ": {
+      "rva": 3148464,
+      "size": null
+    },
+    "?GetCalcLevel@TESObjectREFR@@QEBAG_N@Z": {
+      "rva": 3148688,
+      "size": 143
+    },
+    "?GetTeleportData@TESObjectREFR@@QEBAPEAUDoorTeleportData@@XZ": {
+      "rva": 3149968,
+      "size": 9
+    },
+    "?GetLocationFromPosition@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z": {
+      "rva": 3215344,
+      "size": null
+    },
+    "?GetScale@TESNPC@@QEAAMXZ": {
+      "rva": 3958208,
+      "size": 95
+    },
+    "?GetLevel@PlayerCharacter@@QEAAGXZ": {
+      "rva": 6789024,
+      "size": null
+    },
+    "?SetEulerAngles@NiMatrix3@@QEAAXMMM@Z": {
+      "rva": 15590016,
+      "size": null
+    },
+    "__real@7f7fffff": {
+      "rva": 25089704,
+      "size": null
+    },
+    "__real@3c23d70a": {
+      "rva": 28687824,
+      "size": null
+    },
+    "?iCalcLevelAdjustDown@@3GA": {
+      "rva": 34061512,
+      "size": null
+    },
+    "?iCalcLevelAdjustUp@@3HA": {
+      "rva": 34061536,
+      "size": null
+    },
+    "?singleton@TESDataHandler@@2PEAV1@EA": {
+      "rva": 35249880,
+      "size": null
+    },
+    "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA": {
+      "rva": 52057896,
+      "size": null
+    },
+    "?gCalcLevelCounter@@3GA": {
+      "rva": 52294712,
+      "size": null
+    },
+    "?singleton@PlayerCharacter@@2PEAV1@EA": {
+      "rva": 52627320,
+      "size": null
+    },
+    "?Get3D2@TESObjectREFR@@UEBAPEAVNiAVObject@@XZ": {
+      "rva": 3063008,
+      "size": 55
+    },
+    "?GetAllowPromoteToPersistent@TESObjectREFR@@QEBA_NXZ": {
+      "rva": 3035008,
+      "size": 3
+    },
+    "?tlsOverrideRef@@3PEBVTESObjectREFR@@EB": {
+      "kind": "thread-local",
+      "tls_offset": 1528,
+      "size": null
+    },
+    "?tlsOverrideNode@@3PEAVNiAVObject@@EA": {
+      "kind": "thread-local",
+      "tls_offset": 1520,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetTeleportData@ExtraDataList@@QEBAPEAUDoorTeleportData@@XZ",
+        "rva": "0x1644b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetExtraLocation@ExtraDataList@@QEBAPEAVBGSLocation@@XZ",
+        "rva": "0x16a1f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
+        "rva": "0x1c3680",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFormName@TESForm@@QEBAPEBDXZ",
+        "rva": "0x1e8460",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetInventoryChanges@TESObjectREFR@@QEBAPEAVInventoryChanges@@W4FormType@@@Z",
+        "rva": "0x22b2c0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HasQuestItem@InventoryChanges@@QEAA_NXZ",
+        "rva": "0x234c20",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetLevel@BGSEncounterZone@@QEBAGXZ",
+        "rva": "0x28f9e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetLocation@TESObjectCELL@@QEBAPEAVBGSLocation@@XZ",
+        "rva": "0x2bb180",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SameWorldspace@TESObjectREFR@@QEBA_NPEBV1@_N@Z",
+        "rva": "0x2dd3e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HasQuestObject@TESObjectREFR@@QEBA_NXZ",
+        "rva": "0x2e5a60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetScale@TESObjectREFR@@QEBAMXZ",
+        "rva": "0x2e6f30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CanBeMoved@TESObjectREFR@@QEAA_NXZ",
+        "rva": "0x2e73a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetContainer@TESObjectREFR@@QEBAPEAVTESContainer@@XZ",
+        "rva": "0x2e8660",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetTransform@TESObjectREFR@@QEBAXAEAUNiTransform@@@Z",
+        "rva": "0x2eee20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetReferenceName@TESObjectREFR@@QEBAPEBDXZ",
+        "rva": "0x2f0b30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCurrentLocation@TESObjectREFR@@QEBAPEAVBGSLocation@@XZ",
+        "rva": "0x2f3b70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetWorldSpace@TESObjectREFR@@QEBAPEAVTESWorldSpace@@XZ",
+        "rva": "0x2f3e00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDistanceBetweenSquared@TESObjectREFR@@QEBAMPEBV1@_N1@Z",
+        "rva": "0x2f41e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEncounterZone@TESObjectREFR@@QEBAPEAVBGSEncounterZone@@XZ",
+        "rva": "0x300ab0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCalcLevel@TESObjectREFR@@QEBAG_N@Z",
+        "rva": "0x300b90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetTeleportData@TESObjectREFR@@QEBAPEAUDoorTeleportData@@XZ",
+        "rva": "0x301090",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetLocationFromPosition@TESWorldSpace@@QEBAPEAVBGSLocation@@AEBUNiPoint3@@@Z",
+        "rva": "0x310ff0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetScale@TESNPC@@QEAAMXZ",
+        "rva": "0x3c65c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetLevel@PlayerCharacter@@QEAAGXZ",
+        "rva": "0x6797a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetEulerAngles@NiMatrix3@@QEAAXMMM@Z",
+        "rva": "0xede280",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__real@7f7fffff",
+        "rva": "0x17ed6a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__real@3c23d70a",
+        "rva": "0x1b5bdd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?iCalcLevelAdjustDown@@3GA",
+        "rva": "0x207bcc8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?iCalcLevelAdjustUp@@3HA",
+        "rva": "0x207bce0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?singleton@TESDataHandler@@2PEAV1@EA",
+        "rva": "0x219ded8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?gDefaultEncounterZone@@3PEAVBGSEncounterZone@@EA",
+        "rva": "0x31a5728",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?gCalcLevelCounter@@3GA",
+        "rva": "0x31df438",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?singleton@PlayerCharacter@@2PEAV1@EA",
+        "rva": "0x3230778",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Get3D2@TESObjectREFR@@UEBAPEAVNiAVObject@@XZ",
+        "rva": "0x2ebce0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetAllowPromoteToPersistent@TESObjectREFR@@QEBA_NXZ",
+        "rva": "0x2e4f80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?tlsOverrideRef@@3PEBVTESObjectREFR@@EB",
+        "tls_offset": "0x5f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from a tls: bind hint; the offset is the one the target code adds to the TLS block, the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?tlsOverrideNode@@3PEAVNiAVObject@@EA",
+        "tls_offset": "0x5f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from a tls: bind hint; the offset is the one the target code adds to the TLS block, the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

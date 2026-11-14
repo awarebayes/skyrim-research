@@ -18,6 +18,22 @@
 // community names or that the original source looked like this.
 #include "BSShadowParabolicLight.h"
 
+// GetIsParabolicLight, GetNeedsClipPlanes, GetPassExtraParam: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+bool BSShadowParabolicLight::GetIsParabolicLight()
+{
+    return true;
+}
+
+bool BSShadowParabolicLight::GetNeedsClipPlanes()
+{
+    return true;
+}
+
+std::uint32_t BSShadowParabolicLight::GetPassExtraParam()
+{
+    return 0;
+}
+
 // TODO body: RVA 0x1588e20, 11 bytes, BSShadowParabolicLight::GetIsOmniLight.
 bool BSShadowParabolicLight::GetIsOmniLight()
 {

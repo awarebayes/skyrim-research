@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/d83e87e0b19cdf37f1c0b16ba58fe65b29dcd83fec529dd606f5117bb3d9ba72.json",
+  "versions": [
+    {
+      "sha256": "d83e87e0b19cdf37f1c0b16ba58fe65b29dcd83fec529dd606f5117bb3d9ba72",
+      "base": null,
+      "added": [
+        "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z",
+        "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiObject@@UEAA_NPEAV1@@Z",
+        "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "?SaveFixedString@NiStream@@QEAAXAEBVBSFixedString@@@Z",
+        "?LoadFixedStringLegacy@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "?LoadLinkID@NiStream@@QEAAXXZ",
+        "?ReadLinkID@NiStream@@QEAAPEAVNiAVObject@@XZ",
+        "?LoadBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiPSysModifier@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiPSysModifier@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiPSysModifier@@UEAA_NPEAVNiObject@@@Z",
+        "?SetSystemPointer@NiPSysModifier@@UEAAXPEAVNiParticleSystem@@@Z",
+        "?ProcessClone@NiPSysModifier@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?Initialize@NiPSysModifier@@UEAAXPEAVNiPSysData@@GPEAVNiPoint3@@@Z",
+        "?HandleReset@NiPSysModifier@@UEAAXXZ",
+        "?SetActive@NiPSysModifier@@UEAAX_N@Z"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/bbe54e1b44fb58674d71c99917cd4ea00144c28cc73a68cc65204c352ec83938.json",
+  "versions": [
+    {
+      "sha256": "bbe54e1b44fb58674d71c99917cd4ea00144c28cc73a68cc65204c352ec83938",
+      "base": null,
+      "added": [
+        "??0BSTempEffect@@QEAA@PEAVTESObjectCELL@@M@Z",
+        "?Update@BSTempEffect@@UEAA_NM@Z",
+        "?SaveGame@BSTempEffect@@UEAAXPEAVBGSSaveGameBuffer@@@Z",
+        "?LoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z",
+        "??_GBSTempEffect@@UEAAPEAXI@Z",
+        "?GetType@BSTempEffect@@UEBA?AW4TEMP_EFFECT_TYPE@@XZ",
+        "?Initialize@BSTempEffect@@UEAAXXZ",
+        "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "?StreamCanSkip@NiObject@@UEAA_NXZ",
+        "??0NiObject@@QEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "??_7NiRefObject@@6B@",
+        "??_7BSTempEffect@@6B@",
+        "?ms_nextEffectID@BSTempEffect@@2IA",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "?Get3D@BSTempEffect@@UEBAPEAVNiAVObject@@XZ",
+        "?FinishLoadGame@BSTempEffect@@UEAAXPEAVBGSLoadGameBuffer@@@Z",
+        "?IsInterfaceEffect@BSTempEffect@@UEBA_NXZ"
+      ]
+    }
+  ]
+}

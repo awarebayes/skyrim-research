@@ -14,6 +14,10 @@
 
 #include <cstring>
 
+BGSLightingTemplate::BGSLightingTemplate()
+{
+}
+
 void BGSLightingTemplate::InitializeData()
 {
     std::memset(&data, 0, sizeof(data));

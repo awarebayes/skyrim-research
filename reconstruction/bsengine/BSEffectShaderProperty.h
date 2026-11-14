@@ -37,8 +37,17 @@
 #pragma once
 #include <cstdint>
 // QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+class NiRTTI;
+// NiRTTI_BSEffectShaderProperty: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the RTTI object at RVA 0x33d4dc0 that GetRTTI addresses, bound by hint
+extern const NiRTTI NiRTTI_BSEffectShaderProperty;
+// QShader: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 class BSEffectShaderProperty
 {
 public:
     virtual std::uint32_t QShader() const;
+    // Unk_3C: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the slot's listing returns true
+    virtual bool Unk_3C() const;
+    // GetMaterialType, GetRTTI: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    virtual std::uint32_t GetMaterialType() const;
+    virtual const NiRTTI* GetRTTI() const;
 };

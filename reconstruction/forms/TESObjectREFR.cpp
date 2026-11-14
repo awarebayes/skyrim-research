@@ -215,3 +215,8 @@ float TESObjectREFR::GetDistanceBetweenSquared(const TESObjectREFR* a_other, boo
     }
     return distance;
 }
+
+bool TESObjectREFR::GetAllowPromoteToPersistent() const
+{
+    return true;
+}

@@ -68,3 +68,12 @@ void BSLightingShaderMaterialBase::LoadBinary(NiStream& a_stream)
 	a_stream.iStr->read(&subSurfaceLightRolloff, 1);
 	a_stream.iStr->read(&rimLightPower, 1);
 }
+
+// constructor: GUESS(low)
+BSLightingShaderMaterialBase::BSLightingShaderMaterialBase() {}
+
+// GetFeature: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+BSLightingShaderMaterialBase::Feature BSLightingShaderMaterialBase::GetFeature() const
+{
+	return Feature::kDefault;
+}

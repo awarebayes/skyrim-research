@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x73a8b0",
   "naming_findings": [
-    "the cleared flag word and the reset byte are GUESS placeholders with an unnamed bit constant"
+    "The cleared flag word and reset byte use guessed placeholders."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
-  "review_date": "2026-11-12",
-  "review_kind": "full",
+  "previous_code_section_sha256": "3e581f9cacbe1ba97eee618a1739a52db07bf7ed5ffd7df188e1c6efdf0cba1d",
+  "previous_review_sha256": "7a330b647191cdc56b3a39a7eaaaa782e1a3a128b770d975c08a9616b10b46f1",
+  "previous_source_digest": "f1350179283e019a50ceb69a08998bfaebc78b7631072ef65dfeeb8bff34b444",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "7a330b647191cdc56b3a39a7eaaaa782e1a3a128b770d975c08a9616b10b46f1",
-  "review_task_id": "review-p15-rereview-3",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "f04cf62e77ac45d87981f7d8164f870c44ced86441b8ba76d5d431dc40261163",
+  "review_task_id": "review-p85-haiku-wave1-1",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 7579824,
   "size": 49,
-  "source_digest": "f1350179283e019a50ceb69a08998bfaebc78b7631072ef65dfeeb8bff34b444",
+  "source_digest": "34c75bf3ce820a24af63bca8148e47052c03505cad833d1e9d01b5a5793416a9",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

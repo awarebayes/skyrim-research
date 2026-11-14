@@ -21,6 +21,21 @@ BSShaderMaterial::BSShaderMaterial()
 {
 }
 
+BSShaderMaterial::Feature BSShaderMaterial::GetFeature() const
+{
+    return Feature::kDefault;
+}
+
+BSShaderMaterial::Type BSShaderMaterial::GetType() const
+{
+    return static_cast<Type>(0);
+}
+
+BSShaderMaterial* BSShaderMaterial::GetDefault()
+{
+    return gDefaultShaderMaterial;
+}
+
 void BSShaderMaterial::CopyMembers(BSShaderMaterial* a_other)
 {
     RawAt<BSShaderPair>(this, 0x0c) = RawAt<BSShaderPair>(a_other, 0x0c);

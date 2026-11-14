@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/ff7d1a3fde419125414aa89287d94d913967bfc729fcba0bec8e768c851d9efd.json",
+  "versions": [
+    {
+      "sha256": "ff7d1a3fde419125414aa89287d94d913967bfc729fcba0bec8e768c851d9efd",
+      "base": null,
+      "added": [
+        "?GetCount@BGSListForm@@UEBAIXZ",
+        "?Revert@BGSListForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?RevertBase@BGSListForm@@QEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?ClearList@BGSListForm@@QEAAXXZ"
+      ]
+    }
+  ]
+}

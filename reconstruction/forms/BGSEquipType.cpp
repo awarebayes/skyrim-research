@@ -13,6 +13,19 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The functions listed above are compared.
 #include "BGSEquipType.h"
 
+BGSEquipType::BGSEquipType()
+{
+}
+
+void BGSEquipType::InitializeDataComponent()
+{
+    equipSlot = nullptr;
+}
+
+void BGSEquipType::ClearDataComponent()
+{
+}
+
 BGSEquipSlot* BGSEquipType::GetEquipSlot() const
 {
     return equipSlot;

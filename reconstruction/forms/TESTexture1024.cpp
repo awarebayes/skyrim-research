@@ -10,6 +10,11 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The one function above is compared.
 #include "TESTexture1024.h"
 
+// TESTexture1024::TESTexture1024: GUESS(low); defined so the vftable and the deleting destructor are emitted
+TESTexture1024::TESTexture1024()
+{
+}
+
 std::uint32_t TESTexture1024::GetMaxAllowedSize()
 {
     return 1024;

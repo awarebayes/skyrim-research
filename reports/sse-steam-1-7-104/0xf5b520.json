@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "23e3bf59ed9a4672c1f67a2779fa99c5329428570108387a0debc0b3c578c0c4",
+        "object_sha256": "7b37a448a544e7f73dcf85b4c7f4dd7a8743bb36d869904eb848f91ec4b60c0f",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiMultiTargetTransformController.cpp",
@@ -47,7 +47,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "500cc974a4a11f8dc4e684a2a2834a7391f54822724039d053f357862a4ab2da",
+        "object_sha256": "4b202f3017851c66bd6aae9fa7f46f1abccc7bbe85052f5b1eb330ab11152ea1",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiMultiTargetTransformController.cpp",
@@ -66,7 +66,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit c6a2d310f6aadb15814a64e4046d2dac88169bc5, with uncommitted changes to reconstruction/netimmerse/NiMultiTargetTransformController.cpp, reconstruction/netimmerse/NiMultiTargetTransformController.h, reports/sse-steam-1-7-104/unit-symbols/839c3b455951b2dd9f42fe3ff78dbc8cd94007bcfd4167465962cae694a40de8.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/netimmerse/NiTimeController.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/o2-fpfast.json",
@@ -82,7 +82,7 @@
         "candidate": {
           "code_section_sha256": "748291d6d713998f70231e20ff1ae119a9fa3971d60cb3b9b4d370927dde45ea",
           "code_sections": 1,
-          "object_sha256": "23e3bf59ed9a4672c1f67a2779fa99c5329428570108387a0debc0b3c578c0c4"
+          "object_sha256": "7b37a448a544e7f73dcf85b4c7f4dd7a8743bb36d869904eb848f91ec4b60c0f"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -145,7 +145,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiMultiTargetTransformController.cpp",
-          "source_revision": "007f975b46683c71b881870c89a21bd87cda3435827781ffbb05e83e707ffdb2"
+          "source_revision": "9ad74c9e7d68e7584a10396a514dd95a68da876b8b2ff68cef5af60c4351a9c9"
         },
         "symbol_map_sha256": "839c3b455951b2dd9f42fe3ff78dbc8cd94007bcfd4167465962cae694a40de8",
         "target": {
@@ -163,7 +163,7 @@
         "candidate": {
           "code_section_sha256": "748291d6d713998f70231e20ff1ae119a9fa3971d60cb3b9b4d370927dde45ea",
           "code_sections": 1,
-          "object_sha256": "500cc974a4a11f8dc4e684a2a2834a7391f54822724039d053f357862a4ab2da"
+          "object_sha256": "4b202f3017851c66bd6aae9fa7f46f1abccc7bbe85052f5b1eb330ab11152ea1"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -226,7 +226,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiMultiTargetTransformController.cpp",
-          "source_revision": "007f975b46683c71b881870c89a21bd87cda3435827781ffbb05e83e707ffdb2"
+          "source_revision": "9ad74c9e7d68e7584a10396a514dd95a68da876b8b2ff68cef5af60c4351a9c9"
         },
         "symbol_map_sha256": "839c3b455951b2dd9f42fe3ff78dbc8cd94007bcfd4167465962cae694a40de8",
         "target": {
@@ -244,7 +244,7 @@
         "candidate": {
           "code_section_sha256": "748291d6d713998f70231e20ff1ae119a9fa3971d60cb3b9b4d370927dde45ea",
           "code_sections": 1,
-          "object_sha256": "500cc974a4a11f8dc4e684a2a2834a7391f54822724039d053f357862a4ab2da"
+          "object_sha256": "4b202f3017851c66bd6aae9fa7f46f1abccc7bbe85052f5b1eb330ab11152ea1"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -307,7 +307,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiMultiTargetTransformController.cpp",
-          "source_revision": "007f975b46683c71b881870c89a21bd87cda3435827781ffbb05e83e707ffdb2"
+          "source_revision": "9ad74c9e7d68e7584a10396a514dd95a68da876b8b2ff68cef5af60c4351a9c9"
         },
         "symbol_map_sha256": "839c3b455951b2dd9f42fe3ff78dbc8cd94007bcfd4167465962cae694a40de8",
         "target": {
@@ -320,7 +320,7 @@
   ],
   "source": {
     "compiled": "reconstruction/netimmerse/NiMultiTargetTransformController.cpp",
-    "digest": "007f975b46683c71b881870c89a21bd87cda3435827781ffbb05e83e707ffdb2",
+    "digest": "9ad74c9e7d68e7584a10396a514dd95a68da876b8b2ff68cef5af60c4351a9c9",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/netimmerse/NiMultiTargetTransformController.cpp",

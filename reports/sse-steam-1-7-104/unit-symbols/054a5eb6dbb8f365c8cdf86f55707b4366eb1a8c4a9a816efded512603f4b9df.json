@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetType@BGSAbilityPerkEntry@@UEBAIXZ": {
+      "rva": 3769536,
+      "size": 6
+    },
+    "?ApplyPerkEntry@BGSAbilityPerkEntry@@UEAAXPEAVActor@@@Z": {
+      "rva": 3760000,
+      "size": 48
+    },
+    "?RemovePerkEntry@BGSAbilityPerkEntry@@UEAAXPEAVActor@@@Z": {
+      "rva": 3760064,
+      "size": 48
+    },
+    "?AddSpell@Actor@@QEAAXPEAVSpellItem@@@Z": {
+      "rva": 7159136,
+      "size": null
+    },
+    "?ResetPerkSpells@Actor@@QEAAXM@Z": {
+      "rva": 7174224,
+      "size": null
+    },
+    "?RemoveSpell@Actor@@QEAAXPEAVSpellItem@@@Z": {
+      "rva": 7159664,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetType@BGSAbilityPerkEntry@@UEBAIXZ",
+        "rva": "0x3984c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ApplyPerkEntry@BGSAbilityPerkEntry@@UEAAXPEAVActor@@@Z",
+        "rva": "0x395f80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemovePerkEntry@BGSAbilityPerkEntry@@UEAAXPEAVActor@@@Z",
+        "rva": "0x395fc0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AddSpell@Actor@@QEAAXPEAVSpellItem@@@Z",
+        "rva": "0x6d3d60",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResetPerkSpells@Actor@@QEAAXM@Z",
+        "rva": "0x6d7850",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemoveSpell@Actor@@QEAAXPEAVSpellItem@@@Z",
+        "rva": "0x6d3f70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

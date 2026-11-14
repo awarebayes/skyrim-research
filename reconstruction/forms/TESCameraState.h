@@ -15,6 +15,8 @@
 
 // NiPoint3, NiQuaternion: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
 // NiPoint3::x, ::y, ::z, NiQuaternion::w, ::x, ::y, ::z: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+class BGSLoadFormBuffer;
+
 class NiPoint3
 {
 public:
@@ -44,6 +46,10 @@ class TESCameraState
 public:
     virtual void GetRotation(NiQuaternion& a_rotation);  // compared: 0x24a020
     virtual void GetTranslation(NiPoint3& a_translation);  // compared: 0x24a030
+    // TESCameraState::Begin, TESCameraState::End, TESCameraState::LoadGame: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); compared at RVA 0x24a000, 0x24a010, 0x24a060
+    virtual void Begin();  // compared: 0x24a000
+    virtual void End();  // compared: 0x24a010
+    virtual void LoadGame(BGSLoadFormBuffer* a_buf);  // compared: 0x24a060
 
     std::uint8_t unknown08[0x18];  // 08
 };

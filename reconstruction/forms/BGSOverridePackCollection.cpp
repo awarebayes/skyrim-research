@@ -28,3 +28,8 @@ void BGSOverridePackCollection::InitializeDataComponent()
     guardWarnOverRidePackList = nullptr;
     enterCombatOverRidePackList = nullptr;
 }
+
+// BGSOverridePackCollection::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BGSOverridePackCollection::ClearDataComponent()
+{
+}

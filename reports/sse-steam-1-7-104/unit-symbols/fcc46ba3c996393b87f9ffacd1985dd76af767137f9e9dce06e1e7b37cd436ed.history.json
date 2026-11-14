@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/fcc46ba3c996393b87f9ffacd1985dd76af767137f9e9dce06e1e7b37cd436ed.json",
+  "versions": [
+    {
+      "sha256": "fcc46ba3c996393b87f9ffacd1985dd76af767137f9e9dce06e1e7b37cd436ed",
+      "base": null,
+      "added": [
+        "??1BSFixedString@@QEAA@XZ",
+        "?CreateClone@NiObject@@UEAAPEAV1@AEAVNiCloningProcess@@@Z",
+        "?LoadBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?LinkObject@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiObject@@UEAA_NAEAVNiStream@@@Z",
+        "?SaveBinary@NiObject@@UEAAXAEAVNiStream@@@Z",
+        "?IsEqual@NiObject@@UEAA_NPEAV1@@Z",
+        "?ProcessClone@NiObject@@UEAAXAEAVNiCloningProcess@@@Z",
+        "?StreamCanSkip@NiObject@@UEAA_NXZ",
+        "?GetGroup@NiObject@@UEBAPEAVNiObjectGroup@@XZ",
+        "??0NiObject@@QEAA@XZ",
+        "?LoadFixedString@NiStream@@QEAAXAEAVBSFixedString@@@Z",
+        "?LoadBinary@NiExtraData@@UEAAXAEAVNiStream@@@Z",
+        "?RegisterStreamables@NiExtraData@@UEAA_NAEAVNiStream@@@Z",
+        "?IsEqual@NiExtraData@@UEAA_NPEAVNiObject@@@Z",
+        "??_GNiExtraData@@UEAAPEAXI@Z",
+        "??3@YAXPEAX_K@Z",
+        "??_7NiRefObject@@6B@",
+        "??_7NiObject@@6B@",
+        "??_7NiExtraData@@6B@",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "?LinkObject@NiExtraData@@UEAAXAEAVNiStream@@@Z",
+        "?IsStreamable@NiExtraData@@UEBA_NXZ",
+        "?IsCloneable@NiExtraData@@UEBA_NXZ"
+      ]
+    }
+  ]
+}

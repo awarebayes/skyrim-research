@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "b6d3528c4c681b8895660773c2bba49defd5f4fa48e2477773113d336133ceb4",
+        "object_sha256": "29542280d8fe178007b2bf4e5c705ae6003fc80ed30deb2cc3e33b370d06b100",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSLightingShaderMaterial.h",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "872707bff13202418b09c2a4a9f8789aaa8d873d0f23a0fda03070a08cb76796",
+        "object_sha256": "34f920ee067a7ae4ae0ff335152e4412a7ac41668ca5c9d26852d548035b1fe4",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSLightingShaderMaterial.h",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 7e48c6d918ff9267a936f03344ae1b650fc2effd, with uncommitted changes to reconstruction/bsengine/BSLightingShaderMaterial.h, reconstruction/bsengine/BSLightingShaderMaterialHairTint.cpp, reconstruction/bsengine/BSLightingShaderMaterialHairTint.h, reports/sse-steam-1-7-104/unit-symbols/c517091b36b4112250b9c09d7ab2eaf1656b3e368db3eaba79c582f7e8e9bafa.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/bsengine/BSLightingShaderMaterialBase.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "6fc0f19a907248ed6d041b5d56a33809c439be3553e1f7246ba6364c5cea73d3",
           "code_sections": 1,
-          "object_sha256": "b6d3528c4c681b8895660773c2bba49defd5f4fa48e2477773113d336133ceb4"
+          "object_sha256": "29542280d8fe178007b2bf4e5c705ae6003fc80ed30deb2cc3e33b370d06b100"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -147,7 +147,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialHairTint.cpp",
-          "source_revision": "b6a87c0304816213477e66302b182c7688642f673572f50c177cb1561825b473"
+          "source_revision": "0f35a3c68d23e7a8e1258f3308592768605d07179a68052d3c8b44723d5f048b"
         },
         "symbol_map_sha256": "c517091b36b4112250b9c09d7ab2eaf1656b3e368db3eaba79c582f7e8e9bafa",
         "target": {
@@ -165,7 +165,7 @@
         "candidate": {
           "code_section_sha256": "6fc0f19a907248ed6d041b5d56a33809c439be3553e1f7246ba6364c5cea73d3",
           "code_sections": 1,
-          "object_sha256": "872707bff13202418b09c2a4a9f8789aaa8d873d0f23a0fda03070a08cb76796"
+          "object_sha256": "34f920ee067a7ae4ae0ff335152e4412a7ac41668ca5c9d26852d548035b1fe4"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -228,7 +228,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialHairTint.cpp",
-          "source_revision": "b6a87c0304816213477e66302b182c7688642f673572f50c177cb1561825b473"
+          "source_revision": "0f35a3c68d23e7a8e1258f3308592768605d07179a68052d3c8b44723d5f048b"
         },
         "symbol_map_sha256": "c517091b36b4112250b9c09d7ab2eaf1656b3e368db3eaba79c582f7e8e9bafa",
         "target": {
@@ -246,7 +246,7 @@
         "candidate": {
           "code_section_sha256": "6fc0f19a907248ed6d041b5d56a33809c439be3553e1f7246ba6364c5cea73d3",
           "code_sections": 1,
-          "object_sha256": "872707bff13202418b09c2a4a9f8789aaa8d873d0f23a0fda03070a08cb76796"
+          "object_sha256": "34f920ee067a7ae4ae0ff335152e4412a7ac41668ca5c9d26852d548035b1fe4"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -309,7 +309,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSLightingShaderMaterialHairTint.cpp",
-          "source_revision": "b6a87c0304816213477e66302b182c7688642f673572f50c177cb1561825b473"
+          "source_revision": "0f35a3c68d23e7a8e1258f3308592768605d07179a68052d3c8b44723d5f048b"
         },
         "symbol_map_sha256": "c517091b36b4112250b9c09d7ab2eaf1656b3e368db3eaba79c582f7e8e9bafa",
         "target": {
@@ -322,7 +322,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSLightingShaderMaterialHairTint.cpp",
-    "digest": "b6a87c0304816213477e66302b182c7688642f673572f50c177cb1561825b473",
+    "digest": "0f35a3c68d23e7a8e1258f3308592768605d07179a68052d3c8b44723d5f048b",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSLightingShaderMaterial.h",

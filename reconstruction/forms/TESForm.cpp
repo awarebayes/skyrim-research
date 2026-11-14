@@ -25,6 +25,21 @@ void TESForm::ClearData()
 {
 }
 
+bool TESForm::GetIgnoredBySandbox() const
+{
+    return false;
+}
+
+bool TESForm::IsHeadingMarker() const
+{
+    return false;
+}
+
+bool TESForm::IsFormTypeChild(FormType)
+{
+    return false;
+}
+
 bool TESForm::IsPersistent() const
 {
     return (formFlags & RecordFlags::kPersistent) != 0;

@@ -1,0 +1,276 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??0TESForm@@QEAA@XZ": {
+      "rva": 1978400,
+      "size": null
+    },
+    "??1TESForm@@UEAA@XZ": {
+      "rva": 1979216,
+      "size": null
+    },
+    "?InitializeData@TESForm@@UEAAXXZ": {
+      "rva": 1979824,
+      "size": null
+    },
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": 3
+    },
+    "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z": {
+      "rva": 1986976,
+      "size": null
+    },
+    "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": 91
+    },
+    "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988464,
+      "size": 185
+    },
+    "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988672,
+      "size": null
+    },
+    "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988688,
+      "size": null
+    },
+    "?SetAltered@TESForm@@UEAAX_N@Z": {
+      "rva": 1990864,
+      "size": null
+    },
+    "?SetFormID@TESForm@@UEAAXI_N@Z": {
+      "rva": 1993680,
+      "size": null
+    },
+    "??1TESModel@@UEAA@XZ": {
+      "rva": 2009568,
+      "size": null
+    },
+    "?InitializeDataComponent@TESModel@@UEAAXXZ": {
+      "rva": 2009840,
+      "size": null
+    },
+    "??1BGSCameraShot@@UEAA@XZ": {
+      "rva": 3246560,
+      "size": null
+    },
+    "?InitializeData@BGSCameraShot@@UEAAXXZ": {
+      "rva": 3247120,
+      "size": 44
+    },
+    "??_GBGSCameraShot@@UEAAPEAXI@Z": {
+      "rva": 3252416,
+      "size": 52
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7BaseFormComponent@@6B@": {
+      "rva": 25032008,
+      "size": null
+    },
+    "??_R0?AVBaseFormComponent@@@8": {
+      "rva": 34453928,
+      "size": null
+    },
+    "??_R0?AVTESForm@@@8": {
+      "rva": 34454008,
+      "size": null
+    },
+    "__real@38d1b717": {
+      "rva": 25089688,
+      "size": null
+    },
+    "?InitItemImpl@BGSCameraShot@@UEAAXXZ": {
+      "rva": 3247184,
+      "size": 73
+    },
+    "?ResetImageSpaceModifier@@YAXPEAVTESImageSpaceModifiableForm@@PEAVBGSCameraShot@@@Z": {
+      "rva": 2000496,
+      "size": null
+    },
+    "?SetInitialized@BGSCameraShot@@QEAAX_N@Z": {
+      "rva": 1990832,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??0TESForm@@QEAA@XZ",
+        "rva": "0x1e3020",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESForm@@UEAA@XZ",
+        "rva": "0x1e3350",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESForm@@UEAAXXZ",
+        "rva": "0x1e35b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "rva": "0x1e51a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5770",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5840",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5850",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetAltered@TESForm@@UEAAX_N@Z",
+        "rva": "0x1e60d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "rva": "0x1e6bd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESModel@@UEAA@XZ",
+        "rva": "0x1ea9e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeDataComponent@TESModel@@UEAAXXZ",
+        "rva": "0x1eaaf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BGSCameraShot@@UEAA@XZ",
+        "rva": "0x3189e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@BGSCameraShot@@UEAAXXZ",
+        "rva": "0x318c10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSCameraShot@@UEAAPEAXI@Z",
+        "rva": "0x31a0c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BaseFormComponent@@6B@",
+        "rva": "0x17df548",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVBaseFormComponent@@@8",
+        "rva": "0x20db9a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESForm@@@8",
+        "rva": "0x20db9f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__real@38d1b717",
+        "rva": "0x17ed698",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitItemImpl@BGSCameraShot@@UEAAXXZ",
+        "rva": "0x318c50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResetImageSpaceModifier@@YAXPEAVTESImageSpaceModifiableForm@@PEAVBGSCameraShot@@@Z",
+        "rva": "0x1e8670",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetInitialized@BGSCameraShot@@QEAAX_N@Z",
+        "rva": "0x1e60b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -2,6 +2,7 @@
 // Labels: v2
 // Source exposure: mixed (local binary analysis and public names).
 // Evidence: findings/generator-leaves-selection.md
+// Task p92-s-bseffectshaderproperty: RVA 0x152add0 (Unk_3C), 0x152adb0 (GetMaterialType) and 0x152adc0 (GetRTTI) added to BSEffectShaderProperty; evidence findings/fifth-batch-selection.md names the unit.
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
 // Drafted by tools/stamp.py (Codex GPT-6.1 Sol).
 // Origin: {"generator_family":"const-return","generator_version":"2","name_source":{"confidence":"medium","kind":"public","repository":"CharmedBaryon/CommonLibSSE-NG","revision":"b93280e832f263dbef44e44cbe2936622a02f91a","source":"ng-slot"},"template_digest":"df32415c55896040a11705484c0f0da5801925ec042c4cc3a23c954179756459"}
@@ -39,4 +40,19 @@
 std::uint32_t BSEffectShaderProperty::QShader() const
 {
     return 0x1;
+}
+
+bool BSEffectShaderProperty::Unk_3C() const
+{
+    return true;
+}
+
+std::uint32_t BSEffectShaderProperty::GetMaterialType() const
+{
+    return 0x1;
+}
+
+const NiRTTI* BSEffectShaderProperty::GetRTTI() const
+{
+    return &NiRTTI_BSEffectShaderProperty;
 }

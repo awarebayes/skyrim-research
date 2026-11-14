@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "2a82607324ce3dc0d5970b55083828475a450566223e3b05bbebd679e2bfb938",
+        "object_sha256": "c3782dcb72f1240e4cf80713b328461b335c983ef9e3f50b6593ebe41617e0e2",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSFogProperty.cpp",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "89f84cd0bc8902509c49bc94a999542dcf324ed2f4028b7f6f5e99409967233f",
+        "object_sha256": "6fa9f2739184fa5586ea7098afc512baa919ad9d244f19040f7fe70b55436ad8",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSFogProperty.cpp",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 7e48c6d918ff9267a936f03344ae1b650fc2effd, with uncommitted changes to reconstruction/bsengine/BSFogProperty.cpp, reconstruction/bsengine/BSFogProperty.h, reports/sse-steam-1-7-104/unit-symbols/f21403df90b7decf0918b200c43559001a57d5024e81d2ed8f8fd583ba79f36c.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/netimmerse/NiObject.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "83d6adb92211f6b9f97ec7bef948ad425cfbc28b02e2804d13773babc7b27f8b",
           "code_sections": 1,
-          "object_sha256": "2a82607324ce3dc0d5970b55083828475a450566223e3b05bbebd679e2bfb938"
+          "object_sha256": "c3782dcb72f1240e4cf80713b328461b335c983ef9e3f50b6593ebe41617e0e2"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -147,7 +147,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSFogProperty.cpp",
-          "source_revision": "0e555f57be134e2e5e1613819e1087a0934c79fc96cb1240c1cfd9f3c0d86208"
+          "source_revision": "58230a354c41327a205aea2bd7f8a9b25eb0d0e55ecaf4ddbca38299c901d008"
         },
         "symbol_map_sha256": "f21403df90b7decf0918b200c43559001a57d5024e81d2ed8f8fd583ba79f36c",
         "target": {
@@ -165,7 +165,7 @@
         "candidate": {
           "code_section_sha256": "83d6adb92211f6b9f97ec7bef948ad425cfbc28b02e2804d13773babc7b27f8b",
           "code_sections": 1,
-          "object_sha256": "89f84cd0bc8902509c49bc94a999542dcf324ed2f4028b7f6f5e99409967233f"
+          "object_sha256": "6fa9f2739184fa5586ea7098afc512baa919ad9d244f19040f7fe70b55436ad8"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -228,7 +228,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSFogProperty.cpp",
-          "source_revision": "0e555f57be134e2e5e1613819e1087a0934c79fc96cb1240c1cfd9f3c0d86208"
+          "source_revision": "58230a354c41327a205aea2bd7f8a9b25eb0d0e55ecaf4ddbca38299c901d008"
         },
         "symbol_map_sha256": "f21403df90b7decf0918b200c43559001a57d5024e81d2ed8f8fd583ba79f36c",
         "target": {
@@ -246,7 +246,7 @@
         "candidate": {
           "code_section_sha256": "83d6adb92211f6b9f97ec7bef948ad425cfbc28b02e2804d13773babc7b27f8b",
           "code_sections": 1,
-          "object_sha256": "89f84cd0bc8902509c49bc94a999542dcf324ed2f4028b7f6f5e99409967233f"
+          "object_sha256": "6fa9f2739184fa5586ea7098afc512baa919ad9d244f19040f7fe70b55436ad8"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -309,7 +309,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSFogProperty.cpp",
-          "source_revision": "0e555f57be134e2e5e1613819e1087a0934c79fc96cb1240c1cfd9f3c0d86208"
+          "source_revision": "58230a354c41327a205aea2bd7f8a9b25eb0d0e55ecaf4ddbca38299c901d008"
         },
         "symbol_map_sha256": "f21403df90b7decf0918b200c43559001a57d5024e81d2ed8f8fd583ba79f36c",
         "target": {
@@ -322,7 +322,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSFogProperty.cpp",
-    "digest": "0e555f57be134e2e5e1613819e1087a0934c79fc96cb1240c1cfd9f3c0d86208",
+    "digest": "58230a354c41327a205aea2bd7f8a9b25eb0d0e55ecaf4ddbca38299c901d008",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSFogProperty.cpp",

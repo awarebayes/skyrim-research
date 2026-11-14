@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/b20d45616f0b1ef47e4e7f03e382efd798fae041e19d7433eecc1a64043694bb.json",
+  "versions": [
+    {
+      "sha256": "b20d45616f0b1ef47e4e7f03e382efd798fae041e19d7433eecc1a64043694bb",
+      "base": null,
+      "added": [
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "??_GBGSFootstep@@UEAAPEAXI@Z",
+        "??1BSFixedString@@QEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?InitializeData@BGSFootstep@@UEAAXXZ",
+        "?InitItemImpl@BGSFootstep@@UEAAXXZ",
+        "??_7BGSFootstep@@6B@",
+        "?GetFile@BGSFootstep@@QEBAPEAVTESFile@@H@Z",
+        "?AddCompileIndex@BGSFootstep@@SAXAEAIPEAVTESFile@@@Z",
+        "?LookupByID@BGSFootstep@@SAPEAVTESForm@@I@Z",
+        "?SetFormFlag@BGSFootstep@@QEAAX_N@Z"
+      ]
+    }
+  ]
+}

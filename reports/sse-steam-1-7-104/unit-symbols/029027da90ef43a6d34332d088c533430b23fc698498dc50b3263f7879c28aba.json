@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": 3
+    },
+    "??1TESModel@@UEAA@XZ": {
+      "rva": 2009568,
+      "size": null
+    },
+    "?InitializeDataComponent@TESModel@@UEAAXXZ": {
+      "rva": 2009840,
+      "size": null
+    },
+    "??_GTESGrass@@UEAAPEAXI@Z": {
+      "rva": 2558096,
+      "size": 84
+    },
+    "?GetDensity@TESGrass@@UEBAEXZ": {
+      "rva": 2558208,
+      "size": 5
+    },
+    "?GetDistanceFromWaterLevel@TESGrass@@UEBAGXZ": {
+      "rva": 2558224,
+      "size": 5
+    },
+    "?GetMaxSlopeDegrees@TESGrass@@UEBAEXZ": {
+      "rva": 2558304,
+      "size": 5
+    },
+    "?GetMinSlopeDegrees@TESGrass@@UEBAEXZ": {
+      "rva": 2558352,
+      "size": 5
+    },
+    "?GetUnderwaterState@TESGrass@@UEBA?AW4GRASS_WATER_STATE@1@XZ": {
+      "rva": 2558384,
+      "size": 4
+    },
+    "?SetUnderwaterState@TESGrass@@UEAAXW4GRASS_WATER_STATE@1@@Z": {
+      "rva": 2558512,
+      "size": 4
+    },
+    "??1TESBoundObject@@UEAA@XZ": {
+      "rva": 2582912,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "??_7TESGrass@@6BTESBoundObject@@@": {
+      "rva": 25239072,
+      "size": null
+    },
+    "??_7TESGrass@@6BTESModel@@@": {
+      "rva": 25239952,
+      "size": null
+    },
+    "??_R0?AVBaseFormComponent@@@8": {
+      "rva": 34453928,
+      "size": null
+    },
+    "??_R0?AVTESForm@@@8": {
+      "rva": 34454008,
+      "size": null
+    },
+    "?SetDistanceFromWaterLevel@TESGrass@@UEAAXG@Z": {
+      "rva": 2558448,
+      "size": 5
+    },
+    "?GetColorRange@TESGrass@@UEBAMXZ": {
+      "rva": 2558192,
+      "size": 6
+    },
+    "?GetHeightRange@TESGrass@@UEBAMXZ": {
+      "rva": 2558256,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESModel@@UEAA@XZ",
+        "rva": "0x1ea9e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeDataComponent@TESModel@@UEAAXXZ",
+        "rva": "0x1eaaf0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GTESGrass@@UEAAPEAXI@Z",
+        "rva": "0x270890",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDensity@TESGrass@@UEBAEXZ",
+        "rva": "0x270900",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDistanceFromWaterLevel@TESGrass@@UEBAGXZ",
+        "rva": "0x270910",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetMaxSlopeDegrees@TESGrass@@UEBAEXZ",
+        "rva": "0x270960",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetMinSlopeDegrees@TESGrass@@UEBAEXZ",
+        "rva": "0x270990",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetUnderwaterState@TESGrass@@UEBA?AW4GRASS_WATER_STATE@1@XZ",
+        "rva": "0x2709b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetUnderwaterState@TESGrass@@UEAAXW4GRASS_WATER_STATE@1@@Z",
+        "rva": "0x270a30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESBoundObject@@UEAA@XZ",
+        "rva": "0x276980",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7TESGrass@@6BTESBoundObject@@@",
+        "rva": "0x1811e20",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7TESGrass@@6BTESModel@@@",
+        "rva": "0x1812190",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVBaseFormComponent@@@8",
+        "rva": "0x20db9a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESForm@@@8",
+        "rva": "0x20db9f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetDistanceFromWaterLevel@TESGrass@@UEAAXG@Z",
+        "rva": "0x2709f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetColorRange@TESGrass@@UEBAMXZ",
+        "rva": "0x2708f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetHeightRange@TESGrass@@UEBAMXZ",
+        "rva": "0x270930",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -76,6 +76,9 @@ class BSString;
 // SetStringLiteral: GUESS(low); the image calls it with the destination, the text and a zero flag, and returns its result
 bool SetStringLiteral(BSString* a_dst, const char* a_text, std::uint32_t a_flag);
 
+// ReleaseFlags08Slot: GUESS(low); the image calls it with the address of flags08 from the destructor, after clearing its low two bits
+void ReleaseFlags08Slot(std::uint64_t* a_slot);
+
 class IPackageData
 {
 public:

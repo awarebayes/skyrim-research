@@ -42,6 +42,18 @@ float Actor::GetVoiceRecoveryTime()
     return currentProcess ? currentProcess->GetVoiceRecoveryTime() : 0.0f;
 }
 
+void Actor::SetAvoidanceDisabled(bool)
+{
+}
+
+void Actor::UseSkill(ActorValue, float, TESForm*)
+{
+}
+
+void Actor::AddPerk(BGSPerk*, std::uint32_t)
+{
+}
+
 bool Actor::IsInRagdollState() const
 {
     if (IsParalyzed()) {

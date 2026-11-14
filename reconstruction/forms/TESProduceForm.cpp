@@ -28,3 +28,7 @@ void TESProduceForm::InitializeDataComponent()
         produceChance[i] = 0;
     }
 }
+
+void TESProduceForm::ClearDataComponent()
+{
+}

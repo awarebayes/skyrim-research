@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0xefbff0",
   "naming_findings": [
-    "The TODO comment remains after the body was filled."
+    "A TODO comment remains after the body was filled."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
+  "previous_code_section_sha256": "fe357c128f94ccb7f2ad8c82e3195ef8ecda28572aef954ebf89f7e6ae7f3aa5",
+  "previous_review_sha256": "95e59a186ff5d68ff9b7e131772c5f2092c7e9b550ea623595bf746db7376ef1",
+  "previous_source_digest": "d12d2880e11cd84bf93c12609feb262b9d4789b837e75ea3ade5713d7afc6b35",
   "review_date": "2026-11-13",
-  "review_kind": "full",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "95e59a186ff5d68ff9b7e131772c5f2092c7e9b550ea623595bf746db7376ef1",
-  "review_task_id": "review-flow-g026",
+  "review_sha256": "9334bb226f2b78129ef11867e46e7c63e260861939d7c2b747622e0eb5ae9e22",
+  "review_task_id": "review-p85-haiku-wave1-3",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 15712240,
   "size": 5,
-  "source_digest": "d12d2880e11cd84bf93c12609feb262b9d4789b837e75ea3ade5713d7afc6b35",
+  "source_digest": "abb168a228280d2c0235f56b95342647650e118e0b49c414469e17ca3b33873a",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

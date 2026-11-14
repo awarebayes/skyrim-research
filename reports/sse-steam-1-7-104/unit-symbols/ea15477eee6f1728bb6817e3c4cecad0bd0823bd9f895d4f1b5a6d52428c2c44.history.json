@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/ea15477eee6f1728bb6817e3c4cecad0bd0823bd9f895d4f1b5a6d52428c2c44.json",
+  "versions": [
+    {
+      "sha256": "ea15477eee6f1728bb6817e3c4cecad0bd0823bd9f895d4f1b5a6d52428c2c44",
+      "base": null,
+      "added": [
+        "?GetIsOmniLight@BSShadowParabolicLight@@UEAA_NXZ",
+        "?ReturnShadowmaps@BSShadowParabolicLight@@UEAAXXZ",
+        "?ReturnShadowmapsTarget@BSShadowParabolicLight@@QEAAXXZ",
+        "?GetIsParabolicLight@BSShadowParabolicLight@@UEAA_NXZ",
+        "?GetNeedsClipPlanes@BSShadowParabolicLight@@UEAA_NXZ",
+        "?GetPassExtraParam@BSShadowParabolicLight@@UEAAIXZ"
+      ]
+    }
+  ]
+}

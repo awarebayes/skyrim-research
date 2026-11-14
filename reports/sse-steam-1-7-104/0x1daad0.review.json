@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x1daad0",
   "naming_findings": [
-    "label comment above the first member is indented one tab deeper than its neighbours"
+    "The first member's label comment has inconsistent indentation."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
-  "review_date": "2026-11-12",
-  "review_kind": "full",
+  "previous_code_section_sha256": "53ab879c22bd9d113aa4d522a1cf36454c6a13586f0fd6707539452243ca21e3",
+  "previous_review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
+  "previous_source_digest": "ffdc8f5edc76add50dc25cdb21c2c77a958c1b8a2e018d3717031a0b78381268",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
-  "review_task_id": "review-p18-wave1-2",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 1944272,
   "size": 19,
-  "source_digest": "ffdc8f5edc76add50dc25cdb21c2c77a958c1b8a2e018d3717031a0b78381268",
+  "source_digest": "abb2a3eda75b13a9ed6a1c4730684663694ab0db1b2cb25ffa2946e20c041b5a",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

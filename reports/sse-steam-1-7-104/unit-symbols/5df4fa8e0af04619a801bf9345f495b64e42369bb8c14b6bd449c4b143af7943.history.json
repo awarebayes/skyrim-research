@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/5df4fa8e0af04619a801bf9345f495b64e42369bb8c14b6bd449c4b143af7943.json",
+  "versions": [
+    {
+      "sha256": "5df4fa8e0af04619a801bf9345f495b64e42369bb8c14b6bd449c4b143af7943",
+      "base": null,
+      "added": [
+        "?GetDefaultObject@BGSDefaultObjectManager@@SAPEAVTESForm@@I@Z",
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?LookupByID@TESForm@@SAPEAV1@I@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "??0BGSDefaultObjectManager@@QEAA@XZ",
+        "??_GBGSDefaultObjectManager@@UEAAPEAXI@Z",
+        "?GetLeftHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetRightHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetVoiceEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "?GetEquipSlot@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@I@Z",
+        "??3@YAXPEAX_K@Z",
+        "__CxxFrameHandler3",
+        "memset",
+        "??_7BGSDefaultObjectManager@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?InitItemImpl@BGSDefaultObjectManager@@UEAAXXZ",
+        "?defaultObjectTable@@3PAUDEFAULT_OBJECT_DATA@@A",
+        "??_C@_0L@EDFPIDDP@It?5is?5time@",
+        "?LogProgressMarker@@YAXPEBD@Z",
+        "?ResolveFormRedirect@@YAPEAVTESForm@@I@Z",
+        "?SetInitialized@TESForm@@QEAAX_N@Z",
+        "?GetDefaultObjectEventSource@@YAPEAVDefaultObjectEventSource@@XZ",
+        "?SendDefaultObjectEvent@@YAXPEAVDefaultObjectEventSource@@PEAUDefaultObjectsInitializedEvent@@@Z"
+      ]
+    }
+  ]
+}

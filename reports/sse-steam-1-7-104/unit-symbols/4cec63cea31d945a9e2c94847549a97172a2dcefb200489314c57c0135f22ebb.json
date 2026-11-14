@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetElapsedTime@ActiveEffectReferenceEffectController@@UEAAMXZ": {
+      "rva": 6145744,
+      "size": 10
+    },
+    "?GetNoInitialFlare@ActiveEffectReferenceEffectController@@UEAA_NXZ": {
+      "rva": 6146032,
+      "size": 13
+    },
+    "?GetSourcePosition@ActiveEffectReferenceEffectController@@UEAAAEBVNiPoint3@@XZ": {
+      "rva": 6145888,
+      "size": 15
+    },
+    "?GetEffectPersists@ActiveEffectReferenceEffectController@@UEAA_NXZ": {
+      "rva": 6146064,
+      "size": 26
+    },
+    "?GetGoryVisuals@ActiveEffectReferenceEffectController@@UEAA_NXZ": {
+      "rva": 6146096,
+      "size": 26
+    },
+    "?GetHitEffectShader@ActiveEffectReferenceEffectController@@UEAAPEAVTESEffectShader@@XZ": {
+      "rva": 6146448,
+      "size": 56
+    },
+    "?GetHitEffectArt@ActiveEffectReferenceEffectController@@UEAAPEAVBGSArtObject@@XZ": {
+      "rva": 6146384,
+      "size": 57
+    },
+    "?GetEffectRefData@@YAPEAVReferenceEffectRefData@@PEAVActiveEffectOwner@@@Z": {
+      "rva": 6008976,
+      "size": null
+    },
+    "?GetEffectShaderForRef@@YAPEAVTESEffectShader@@PEAVReferenceEffectRefData@@_N@Z": {
+      "rva": 1357568,
+      "size": null
+    },
+    "?GetEffectArtForRef@@YAPEAVBGSArtObject@@PEAVReferenceEffectRefData@@_N@Z": {
+      "rva": 1357632,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetElapsedTime@ActiveEffectReferenceEffectController@@UEAAMXZ",
+        "rva": "0x5dc6d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetNoInitialFlare@ActiveEffectReferenceEffectController@@UEAA_NXZ",
+        "rva": "0x5dc7f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetSourcePosition@ActiveEffectReferenceEffectController@@UEAAAEBVNiPoint3@@XZ",
+        "rva": "0x5dc760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEffectPersists@ActiveEffectReferenceEffectController@@UEAA_NXZ",
+        "rva": "0x5dc810",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetGoryVisuals@ActiveEffectReferenceEffectController@@UEAA_NXZ",
+        "rva": "0x5dc830",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetHitEffectShader@ActiveEffectReferenceEffectController@@UEAAPEAVTESEffectShader@@XZ",
+        "rva": "0x5dc990",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetHitEffectArt@ActiveEffectReferenceEffectController@@UEAAPEAVBGSArtObject@@XZ",
+        "rva": "0x5dc950",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEffectRefData@@YAPEAVReferenceEffectRefData@@PEAVActiveEffectOwner@@@Z",
+        "rva": "0x5bb090",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEffectShaderForRef@@YAPEAVTESEffectShader@@PEAVReferenceEffectRefData@@_N@Z",
+        "rva": "0x14b700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEffectArtForRef@@YAPEAVBGSArtObject@@PEAVReferenceEffectRefData@@_N@Z",
+        "rva": "0x14b740",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

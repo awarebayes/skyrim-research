@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/754d677b64522fe5afd400422e72b544548211455f03c228fa1856d20554967c.json",
+  "versions": [
+    {
+      "sha256": "754d677b64522fe5afd400422e72b544548211455f03c228fa1856d20554967c",
+      "base": null,
+      "added": [
+        "?Slot4@BSShadowFrustumLight@@UEBAEXZ",
+        "?GetIsFrustumLight@BSShadowFrustumLight@@UEAA_NXZ"
+      ]
+    }
+  ]
+}

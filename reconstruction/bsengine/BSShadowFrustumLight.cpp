@@ -19,3 +19,8 @@ std::uint8_t BSShadowFrustumLight::Slot4() const
 {
     return 0x1;
 }
+
+bool BSShadowFrustumLight::GetIsFrustumLight()
+{
+    return true;
+}

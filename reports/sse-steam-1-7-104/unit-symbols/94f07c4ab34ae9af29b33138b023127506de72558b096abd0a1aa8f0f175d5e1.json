@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ": {
+      "rva": 4934352,
+      "size": 6
+    },
+    "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z": {
+      "rva": 15675152,
+      "size": null
+    },
+    "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z": {
+      "rva": 15675344,
+      "size": null
+    },
+    "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z": {
+      "rva": 22165472,
+      "size": 384
+    },
+    "?GetDefault@BSLightingShaderMaterialBase@@UEAAPEAVBSShaderMaterial@@XZ": {
+      "rva": 22166800,
+      "size": 8
+    },
+    "?OnLoadTextureSet@BSLightingShaderMaterialBase@@UEAAX_KPEAVBSTextureSet@@@Z": {
+      "rva": 22166816,
+      "size": 286
+    },
+    "?ClearTextures@BSLightingShaderMaterialBase@@UEAAXXZ": {
+      "rva": 22167120,
+      "size": 163
+    },
+    "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialBase@@UEAAX_N0000@Z": {
+      "rva": 22167296,
+      "size": 191
+    },
+    "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22167600,
+      "size": 396
+    },
+    "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z": {
+      "rva": 22168016,
+      "size": 396
+    },
+    "?CopyMembers@BSShaderMaterial@@UEAAXPEAV1@@Z": {
+      "rva": 22501120,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?g_defaultBackLightingTexture@@3V?$NiPointer@VNiSourceTexture@@@@A": {
+      "rva": 53699624,
+      "size": null
+    },
+    "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A": {
+      "rva": 53699656,
+      "size": null
+    },
+    "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA": {
+      "rva": 54349232,
+      "size": null
+    },
+    "?GetFeature@BSLightingShaderMaterialBase@@UEBA?AW4Feature@BSShaderMaterial@@XZ": {
+      "rva": 22188624,
+      "size": 3
+    },
+    "??_GBSLightingShaderMaterialBase@@UEAAPEAXI@Z": {
+      "rva": 22187104,
+      "size": 52
+    },
+    "??1BSLightingShaderMaterialBase@@UEAA@XZ": {
+      "rva": 22165120,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ",
+        "rva": "0x4b4ad0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z",
+        "rva": "0xef2f10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z",
+        "rva": "0xef2fd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "rva": "0x15237e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDefault@BSLightingShaderMaterialBase@@UEAAPEAVBSShaderMaterial@@XZ",
+        "rva": "0x1523d10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?OnLoadTextureSet@BSLightingShaderMaterialBase@@UEAAX_KPEAVBSTextureSet@@@Z",
+        "rva": "0x1523d20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearTextures@BSLightingShaderMaterialBase@@UEAAXXZ",
+        "rva": "0x1523e50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialBase@@UEAAX_N0000@Z",
+        "rva": "0x1523f00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x1524030",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "rva": "0x15241d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopyMembers@BSShaderMaterial@@UEAAXPEAV1@@Z",
+        "rva": "0x1575700",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultBackLightingTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "rva": "0x3336428",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "rva": "0x3336448",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA",
+        "rva": "0x33d4db0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFeature@BSLightingShaderMaterialBase@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "rva": "0x1529250",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSLightingShaderMaterialBase@@UEAAPEAXI@Z",
+        "rva": "0x1528c60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSLightingShaderMaterialBase@@UEAA@XZ",
+        "rva": "0x1523680",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

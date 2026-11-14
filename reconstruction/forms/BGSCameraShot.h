@@ -62,6 +62,11 @@ struct CAMERA_SHOT_DATA {
 };
 static_assert(sizeof(CAMERA_SHOT_DATA) == 0x2C, "layout");
 
+class BGSCameraShot;
+
+// ResetImageSpaceModifier: GUESS(low); the function at 0x1e8670 that InitItemImpl calls with the image-space base and the shot
+void ResetImageSpaceModifier(TESImageSpaceModifiableForm* a_mod, BGSCameraShot* a_owner);
+
 class BGSCameraShot :
     public TESForm,                      // 00
     public TESModel,                     // 20
@@ -72,6 +77,10 @@ public:
     ~BGSCameraShot() override;  // 00
 
     void InitializeData() override;  // 04
+    // InitItemImpl: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); vtable slot 13, compared 0x318c50
+    void InitItemImpl() override;  // 13
+    // SetInitialized: GUESS(low); the TESForm member at 0x1e60b0 that marks the form initialised, not declared in TESForm.h
+    void SetInitialized(bool a_set);
 
     CAMERA_SHOT_DATA data;       // 58
     std::uint8_t     unk84[0x3C];  // 84

@@ -133,14 +133,13 @@ static_assert(sizeof(TESForm) == 0x20, "layout");
 class BGSEquipSlot : public TESForm {
 };
 
+// DEFAULT_OBJECT_DATA::type: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); at offset 00 here, the byte InitItemImpl compares at stride 0x18
 struct DEFAULT_OBJECT_DATA {
-    const char*   name;         // 00
-    FormType      type;         // 08
-    std::uint8_t  pad09;        // 09
-    std::uint16_t pad0A;        // 0A
-    char          uniqueID[4];  // 0C
-    std::uint32_t doType;       // 10
-    std::uint32_t pad14;        // 14
+    FormType      type;         // 00
+    std::uint8_t  pad01[7];     // 01
+    const char*   name;         // 08
+    char          uniqueID[4];  // 10
+    std::uint32_t doType;       // 14
 };
 static_assert(sizeof(DEFAULT_OBJECT_DATA) == 0x18, "layout");
 

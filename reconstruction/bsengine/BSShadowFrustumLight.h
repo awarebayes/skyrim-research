@@ -13,11 +13,14 @@
 // Slot4: GUESS(low)
 // member, padding: GUESS(low); storage names invented for the measured member offset
 // Method name is a guess built from the vtable owner and slot, not a public symbol.
+// Licence: the name GetIsFrustumLight comes from powerof3/CommonLibSSE (GPL-3.0), so this file is GPL-3.0.
 #pragma once
 #include <cstdint>
 // Slot4: GUESS(low); method name inferred from vtable owner and slot
+// BSShadowFrustumLight::GetIsFrustumLight: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); GPL-3.0 applies to the name in this file; compared at RVA 0x1587f80
 class BSShadowFrustumLight
 {
 public:
     virtual std::uint8_t Slot4() const;
+    virtual bool GetIsFrustumLight();  // compared: 0x1587f80
 };

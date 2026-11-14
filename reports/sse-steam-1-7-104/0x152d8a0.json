@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "1a9c654be2903960e309ab7a0d3b84890196b3e02689813af158bc8cf57e5703",
+        "object_sha256": "7020d287680aa4cbe9bae47c0f7310f12f7b79c95236b74d5e36ec6a1ec03c82",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "ef8b0f69e77b195327d2c5c42b24c9fa0b66243c3810bcf25ba822a968f863af",
+        "object_sha256": "70400c2c49f68352d3e101dff409c79cdb869a22ae5af96e21b0237b85616cd7",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 22290fdcd1f39c4054dbbdbbdfa47886553557d8, with uncommitted changes to reconstruction/bsengine/BSShaderProperty.h, reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp, reconstruction/bsengine/BSBloodSplatterShaderProperty.h, reports/sse-steam-1-7-104/unit-symbols/ced402a9b2c4c3f9aefdcfee8e87bcb1b6a59e0fac4dc392f6c3e13edfa8b311.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/netimmerse/NiObject.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "df900293b501e959cc829fa25cd8f32f14070ad5317953be6078bc29aa0a77f1",
           "code_sections": 1,
-          "object_sha256": "1a9c654be2903960e309ab7a0d3b84890196b3e02689813af158bc8cf57e5703"
+          "object_sha256": "7020d287680aa4cbe9bae47c0f7310f12f7b79c95236b74d5e36ec6a1ec03c82"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -145,7 +145,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp",
-          "source_revision": "a08e4345c7bbe33c1cd86be8dad5b3088794155182381461662489b27efd743a"
+          "source_revision": "9917b400ce4ef7f70bdf0690ef95f4df9c5bb9a2eff21257bf88e6c1727e6b50"
         },
         "symbol_map_sha256": "ced402a9b2c4c3f9aefdcfee8e87bcb1b6a59e0fac4dc392f6c3e13edfa8b311",
         "target": {
@@ -163,7 +163,7 @@
         "candidate": {
           "code_section_sha256": "df900293b501e959cc829fa25cd8f32f14070ad5317953be6078bc29aa0a77f1",
           "code_sections": 1,
-          "object_sha256": "ef8b0f69e77b195327d2c5c42b24c9fa0b66243c3810bcf25ba822a968f863af"
+          "object_sha256": "70400c2c49f68352d3e101dff409c79cdb869a22ae5af96e21b0237b85616cd7"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -224,7 +224,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp",
-          "source_revision": "a08e4345c7bbe33c1cd86be8dad5b3088794155182381461662489b27efd743a"
+          "source_revision": "9917b400ce4ef7f70bdf0690ef95f4df9c5bb9a2eff21257bf88e6c1727e6b50"
         },
         "symbol_map_sha256": "ced402a9b2c4c3f9aefdcfee8e87bcb1b6a59e0fac4dc392f6c3e13edfa8b311",
         "target": {
@@ -242,7 +242,7 @@
         "candidate": {
           "code_section_sha256": "df900293b501e959cc829fa25cd8f32f14070ad5317953be6078bc29aa0a77f1",
           "code_sections": 1,
-          "object_sha256": "ef8b0f69e77b195327d2c5c42b24c9fa0b66243c3810bcf25ba822a968f863af"
+          "object_sha256": "70400c2c49f68352d3e101dff409c79cdb869a22ae5af96e21b0237b85616cd7"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -303,7 +303,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp",
-          "source_revision": "a08e4345c7bbe33c1cd86be8dad5b3088794155182381461662489b27efd743a"
+          "source_revision": "9917b400ce4ef7f70bdf0690ef95f4df9c5bb9a2eff21257bf88e6c1727e6b50"
         },
         "symbol_map_sha256": "ced402a9b2c4c3f9aefdcfee8e87bcb1b6a59e0fac4dc392f6c3e13edfa8b311",
         "target": {
@@ -316,7 +316,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp",
-    "digest": "a08e4345c7bbe33c1cd86be8dad5b3088794155182381461662489b27efd743a",
+    "digest": "9917b400ce4ef7f70bdf0690ef95f4df9c5bb9a2eff21257bf88e6c1727e6b50",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSBloodSplatterShaderProperty.cpp",

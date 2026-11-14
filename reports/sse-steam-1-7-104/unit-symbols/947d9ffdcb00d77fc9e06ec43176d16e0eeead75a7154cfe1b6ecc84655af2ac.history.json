@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/947d9ffdcb00d77fc9e06ec43176d16e0eeead75a7154cfe1b6ecc84655af2ac.json",
+  "versions": [
+    {
+      "sha256": "947d9ffdcb00d77fc9e06ec43176d16e0eeead75a7154cfe1b6ecc84655af2ac",
+      "base": null,
+      "added": [
+        "?IsOcclusionMarker@TESObject@@UEAA_NXZ",
+        "?g_occlusionMarkerA@@3PEAVTESObject@@EA",
+        "?g_occlusionMarkerB@@3PEAVTESObject@@EA",
+        "?g_occlusionMarkerC@@3PEAVTESObject@@EA",
+        "?DecRef@TESObject@@UEAAIXZ",
+        "?GetRefCount@TESObject@@UEBAIXZ",
+        "?GetWaterType@TESObject@@UEBAPEAVTESWaterForm@@XZ"
+      ]
+    }
+  ]
+}

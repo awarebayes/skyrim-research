@@ -12,6 +12,10 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. The functions listed above are compared.
 #include "BGSPerkRankArray.h"
 
+void BGSPerkRankArray::InitializeDataComponent()
+{
+}
+
 void BGSPerkRankArray::ClearDataComponent()
 {
     FreePerks(false);

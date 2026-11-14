@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "c219b9164084eaa28d5a701ac0cad19fcc028c8958bb669187d4bcb45b71f802",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x294230",
+  "naming_findings": [
+    "The interior flag is represented by a bare constant."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "9334bb226f2b78129ef11867e46e7c63e260861939d7c2b747622e0eb5ae9e22",
+  "review_task_id": "review-p85-haiku-wave1-3",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 2703920,
+  "size": 17,
+  "source_digest": "4b1f0a3807c13704a5850fb4a097ca889f4841f6729f23d8c3fdc1a365f4ed26",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

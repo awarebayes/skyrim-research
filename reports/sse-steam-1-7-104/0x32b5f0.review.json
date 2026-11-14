@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "676d85bd7f6fc91db5a363ea023aa3775acfdede8edce0a8e403ce5bfb789a73",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x32b5f0",
+  "naming_findings": [
+    "Storage names and types remain low-confidence guesses."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 3323376,
+  "size": 8,
+  "source_digest": "f66eca325821b8814515bc2fcab242050cbb34369397c6f7cfef0018c52adbf5",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e1432f2dee515a5c20079789d780add0bcef0de8749320d8bd5eb39d1e1dec74.json",
+  "versions": [
+    {
+      "sha256": "e1432f2dee515a5c20079789d780add0bcef0de8749320d8bd5eb39d1e1dec74",
+      "base": null,
+      "added": [
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "?InitializeData@BGSEncounterZone@@UEAAXXZ",
+        "?SaveGame@BGSEncounterZone@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@BGSEncounterZone@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@BGSEncounterZone@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "??_GBGSEncounterZone@@UEAAPEAXI@Z",
+        "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "??3@YAXPEAX_K@Z",
+        "__RTDynamicCast",
+        "??_7BaseFormComponent@@6B@",
+        "??_7BGSEncounterZone@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "??_R0?AVBGSEncounterZone@@@8",
+        "??_R0?AVBGSLocation@@@8",
+        "?InitItemImpl@BGSEncounterZone@@UEAAXXZ",
+        "?GetFile@BGSEncounterZone@@QEBAPEAVTESFile@@H@Z",
+        "?AddCompileIndex@BGSEncounterZone@@SAXAEAIPEAVTESFile@@@Z",
+        "?LookupByID@BGSEncounterZone@@SAPEAVTESForm@@I@Z",
+        "?SetFormFlag@BGSEncounterZone@@QEAAX_N@Z"
+      ]
+    }
+  ]
+}

@@ -21,6 +21,16 @@
 // community names or that the original source looked like this.
 #include "BSImagespaceShader.h"
 
+// RVA 0x150b490, 3 bytes: an empty slot body.
+void BSImagespaceShader::Unk_0B()
+{
+}
+
+// RVA 0x150b510, 3 bytes: an empty slot body.
+void BSImagespaceShader::Unk_0A()
+{
+}
+
 // RVA 0x15651e0, 13 bytes: the out-pointer is zeroed in place and returned unchanged.
 std::uint64_t* BSImagespaceShader::Unk_0D(std::uint64_t* a_out)
 {

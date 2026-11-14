@@ -38,6 +38,21 @@ void NiInterpolator::GetActiveTimeRange(float& a_beginKeyTime, float& a_endKeyTi
 // RVA 0xf6cde0, 8 bytes
 const NiRTTI* NiInterpolator::GetRTTI() const { return &NiRTTI_NiInterpolator; }
 
+NiBoolInterpolator* NiInterpolator::AsNiBoolInterpolator()
+{
+	return nullptr;
+}
+
+bool NiInterpolator::Update5(float, NiObjectNET*, float&)
+{
+	return false;
+}
+
+bool NiInterpolator::Update6(float, NiObjectNET*, bool&)
+{
+	return false;
+}
+
 // RVA 0xf6cd10, 35 bytes
 NiInterpolator* NiInterpolator::GetSequenceInterpolator(float, float)
 {

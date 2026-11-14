@@ -2,28 +2,20 @@
   "build_id": "sse-steam-1-7-104",
   "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
   "escalation_category": "none",
-  "family_evidence": {
-    "batch_path": "reports/sse-steam-1-7-104/family-batches/p81-const-return-v2-01.json",
-    "batch_sha256": "aa935b2d5750bc0effa9b35568dca41f9c16a927819f247bb5dbadbae9498ff0",
-    "family_path": "reports/sse-steam-1-7-104/families/e5d3f654f509c5398369bf78e9b5a3aeb68cbd4946222f94633f53a55f41d040.json",
-    "member_sha256": "5824a095e685d95a74f600611070504b8868e58aadb9020e8a2f7e24210dd259"
-  },
   "function_id": "sse-steam-1-7-104-0xfcdb40",
-  "naming_findings": [
-    "Family approval does not assess individual names."
-  ],
+  "naming_findings": [],
   "previous_code_section_sha256": null,
   "previous_review_sha256": null,
   "previous_source_digest": null,
   "review_date": "2026-11-13",
-  "review_kind": "family",
-  "review_record_schema": 4,
-  "review_sha256": "689a7a0686e17d106b0ace5daaa03767ba0017390e807f80c2f000da33e0c58d",
-  "review_task_id": "review-family-e5d3f654f509c5398369",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "f04cf62e77ac45d87981f7d8164f870c44ced86441b8ba76d5d431dc40261163",
+  "review_task_id": "review-p85-haiku-wave1-1",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 16571200,
   "size": 3,
-  "source_digest": "a0c7145f4743a5918cda9b46f7d90ac7df457960468e3f1a1f78062926a6bfe5",
+  "source_digest": "35631a9d62684fa6c9de5aa1ef3066a01fb6c81b1da57adcce5b1301a95562e7",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/2f5ae872eb88bec571d58975555de8d1ac2990a03d9e368464a0ded475102155.json",
+  "versions": [
+    {
+      "sha256": "2f5ae872eb88bec571d58975555de8d1ac2990a03d9e368464a0ded475102155",
+      "base": null,
+      "added": [
+        "?Set@BSStringT@@QEAA_NPEBDI@Z",
+        "?SetFormEditorID@TESGlobal@@UEAA_NPEBD@Z",
+        "?GetFormEditorID@TESGlobal@@UEBAPEBDXZ",
+        "?EMPTY@BSStringT@@2QBDB"
+      ]
+    }
+  ]
+}

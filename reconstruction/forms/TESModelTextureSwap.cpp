@@ -17,3 +17,10 @@ void TESModelTextureSwap::InitializeDataComponent()
     numAlternateTextures = 0;
     TESModel::InitializeDataComponent();
 }
+
+// TESModelTextureSwap::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void TESModelTextureSwap::ClearDataComponent()
+{
+    ReleaseAlternateTextures();
+    TESModel::ClearDataComponent();
+}

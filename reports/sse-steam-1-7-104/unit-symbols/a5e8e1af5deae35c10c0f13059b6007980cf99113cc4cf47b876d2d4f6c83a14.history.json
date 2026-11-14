@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/a5e8e1af5deae35c10c0f13059b6007980cf99113cc4cf47b876d2d4f6c83a14.json",
+  "versions": [
+    {
+      "sha256": "a5e8e1af5deae35c10c0f13059b6007980cf99113cc4cf47b876d2d4f6c83a14",
+      "base": null,
+      "added": [
+        "?CalculateCost@MagicItem@@QEBAMPEAVActor@@@Z",
+        "?GetEnchantment@ExtraDataList@@QEAAPEAVEnchantmentItem@@XZ",
+        "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z",
+        "?GetEnchantment@TESForm@@QEAAPEAVEnchantmentItem@@PEAVExtraDataList@@@Z",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?IsTemporaryFormID@TESForm@@QEBA_NXZ",
+        "?GetGoldValue@TESForm@@QEBAHXZ",
+        "?IsPersistent@TESForm@@QEBA_NXZ",
+        "?LoadDataEndian@BGSLoadGameBuffer@@QEAAXPEAXII@Z",
+        "?SaveDataEndian@BGSSaveGameBuffer@@QEAAXPEBXIII@Z",
+        "__RTDynamicCast",
+        "??_R0?AVTESForm@@@8",
+        "??_R0?AVAlchemyItem@@@8",
+        "??_R0?AVMagicItem@@@8",
+        "??_R0?AVTESEnchantableForm@@@8",
+        "??_R0?AVTESValueForm@@@8",
+        "?singleton@TESDataHandler@@2PEAV1@EA",
+        "?GetIgnoredBySandbox@TESForm@@UEBA_NXZ",
+        "?IsHeadingMarker@TESForm@@UEBA_NXZ",
+        "?IsFormTypeChild@TESForm@@UEAA_NW4FormType@@@Z"
+      ]
+    }
+  ]
+}

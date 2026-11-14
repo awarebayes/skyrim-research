@@ -4,21 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x28fbc0",
   "naming_findings": [
-    "The GetChangeFlags helper reads a 32-bit value through a byte member of the save-buffer stand-in; model the change-flag field in the stand-in (header-gap BGSSaveFormBuffer) instead of the reinterpreting read.",
-    "The zone-flag change bit is tested by index, where the class already names it kZoneFlags."
+    "The save-buffer stand-in and indexed flag test could be named more clearly."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
-  "review_date": "2026-11-12",
-  "review_kind": "full",
+  "previous_code_section_sha256": "dd7a2bfb7594b5fe6dc6524b33f4ede3e96bbd0e0e36ad28157a1e8f8a16e372",
+  "previous_review_sha256": "6e67711f78f3af16710c3b4aba7b16cc3e45c5ce574f403485a55248e6ba9135",
+  "previous_source_digest": "f83665c731ab4ebcbd8ff00975c2f7795d066403b89c3d335685a0624b73cac4",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "6e67711f78f3af16710c3b4aba7b16cc3e45c5ce574f403485a55248e6ba9135",
-  "review_task_id": "review-p19-wave2-2",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 2685888,
   "size": 120,
-  "source_digest": "f83665c731ab4ebcbd8ff00975c2f7795d066403b89c3d335685a0624b73cac4",
+  "source_digest": "ef343e1f166f2aff5ab021b30ed82c069650d82a1523d4866943a9396835eea8",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

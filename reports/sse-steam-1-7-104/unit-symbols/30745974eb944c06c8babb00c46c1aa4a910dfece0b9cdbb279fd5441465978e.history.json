@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/30745974eb944c06c8babb00c46c1aa4a910dfece0b9cdbb279fd5441465978e.json",
+  "versions": [
+    {
+      "sha256": "30745974eb944c06c8babb00c46c1aa4a910dfece0b9cdbb279fd5441465978e",
+      "base": null,
+      "added": [
+        "?GetRotation@TESCameraState@@UEAAXAEAVNiQuaternion@@@Z",
+        "?GetTranslation@TESCameraState@@UEAAXAEAVNiPoint3@@@Z",
+        "niQuatDefault",
+        "niPointZero",
+        "?Begin@TESCameraState@@UEAAXXZ",
+        "?End@TESCameraState@@UEAAXXZ",
+        "?LoadGame@TESCameraState@@UEAAXPEAVBGSLoadFormBuffer@@@Z"
+      ]
+    }
+  ]
+}

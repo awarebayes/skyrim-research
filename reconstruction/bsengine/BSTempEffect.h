@@ -120,6 +120,9 @@ public:
 	virtual TEMP_EFFECT_TYPE GetType() const;    // 2C
 	virtual void             SaveGame(BGSSaveGameBuffer* a_buf);  // 2D
 	virtual void             LoadGame(BGSLoadGameBuffer* a_buf);  // 2E
+	// FinishLoadGame, IsInterfaceEffect: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+	virtual void FinishLoadGame(BGSLoadGameBuffer* a_buf);
+	virtual bool IsInterfaceEffect() const;
 
 	static std::uint32_t ms_nextEffectID;
 

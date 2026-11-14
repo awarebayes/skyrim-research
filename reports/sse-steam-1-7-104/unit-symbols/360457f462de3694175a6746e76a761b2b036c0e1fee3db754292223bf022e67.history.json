@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/360457f462de3694175a6746e76a761b2b036c0e1fee3db754292223bf022e67.json",
+  "versions": [
+    {
+      "sha256": "360457f462de3694175a6746e76a761b2b036c0e1fee3db754292223bf022e67",
+      "base": null,
+      "added": [
+        "?GetFullName@TESFullName@@UEBAPEBDXZ",
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "??1BGSLocation@@UEAA@XZ",
+        "??_GBGSLocation@@UEAAPEAXI@Z",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "??_R0?AVBGSLocation@@@8",
+        "?InitializeData@BGSLocation@@UEAAXXZ",
+        "?gNullHandle@@3IA"
+      ]
+    }
+  ]
+}

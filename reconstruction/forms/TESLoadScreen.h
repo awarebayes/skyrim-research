@@ -46,7 +46,8 @@ public:
     };
     static_assert(sizeof(LoadNIFData) == 0x50, "layout");
 
-    void ClearData() override;  // 05
+    void InitializeData() override;  // 04
+    void ClearData() override;       // 05
 
     TESCondition  conditions;   // 20
     LoadNIFData*  loadNIFData;  // 28

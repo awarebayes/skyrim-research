@@ -6,7 +6,9 @@ The end-to-end cases reuse the synthetic two-tier repository; nothing is game-de
 """
 import json
 import sys
+import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -265,10 +267,18 @@ class LegacyRecordTests(unittest.TestCase):
                 self.assertTrue(check.legacy_review_allowed(name, record), name)
 
     def test_edited_or_unlisted_legacy_record_is_refused(self):
-        # A listed record still in the tree (no git history needed, so a shallow clone runs this).
-        name, record = next((n, r) for n, r in ((n, json.loads((ROOT / n).read_text()))
-                                                 for n in sorted(self.listed()) if (ROOT / n).is_file())
-                            if r['review_record_schema'] < check.REVIEW_RECORD_SCHEMA)
+        name = 'reports/synthetic-fixture/0x1010.review.json'
+        record = {'review_record_schema': 2, 'review_date': '2020-01-01',
+                  'reviewer_model': 'synthetic-reviewer', 'review_sha256': 'a' * 64}
+        fixture = tempfile.TemporaryDirectory()
+        self.addCleanup(fixture.cleanup)
+        allowlist = Path(fixture.name) / 'legacy_review_records.json'
+        allowlist.write_text(json.dumps({'records': {name: check.legacy_review_digest(record)}}))
+        check._legacy_review_records.cache_clear()
+        self.addCleanup(check._legacy_review_records.cache_clear)
+        listed = patch.object(check, 'LEGACY_REVIEW_RECORDS', allowlist)
+        listed.start()
+        self.addCleanup(listed.stop)
         self.assertTrue(check.legacy_review_allowed(name, record))
         self.assertTrue(check.legacy_review_allowed(name, json.loads(json.dumps(record, indent=7))))
         for key, value in (('review_date', '2000-01-01'), ('reviewer_model', 'someone-else'),

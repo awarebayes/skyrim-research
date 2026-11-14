@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetFullName@TESFullName@@UEBAPEBDXZ": {
+      "rva": 1337120,
+      "size": 9
+    },
+    "?data@BSFixedString@@QEBAPEBDXZ": {
+      "rva": 2150656,
+      "size": null
+    },
+    "?ClearDataComponent@TESFullName@@UEAAXXZ": {
+      "rva": 1999552,
+      "size": 3
+    },
+    "?GetFullNameLength@TESFullName@@UEBAIXZ": {
+      "rva": 1337136,
+      "size": 9
+    },
+    "?BSFixedStringLength@@YAIPEBVBSFixedString@@@Z": {
+      "rva": 2151040,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetFullName@TESFullName@@UEBAPEBDXZ",
+        "rva": "0x146720",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?data@BSFixedString@@QEBAPEBDXZ",
+        "rva": "0x20d100",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearDataComponent@TESFullName@@UEAAXXZ",
+        "rva": "0x1e82c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetFullNameLength@TESFullName@@UEBAIXZ",
+        "rva": "0x146730",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BSFixedStringLength@@YAIPEBVBSFixedString@@@Z",
+        "rva": "0x20d280",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

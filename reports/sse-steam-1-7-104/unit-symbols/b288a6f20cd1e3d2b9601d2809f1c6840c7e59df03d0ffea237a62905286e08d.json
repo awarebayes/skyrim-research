@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetRelationshipRankIndex@TESNPC@@SAHPEAV1@0@Z": {
+      "rva": 3821056,
+      "size": 36
+    },
+    "?GetRelationship@BGSRelationship@@SAPEAV1@PEAVTESNPC@@0@Z": {
+      "rva": 3822224,
+      "size": null
+    },
+    "?IsFemale@TESNPC@@QEAAHXZ": {
+      "rva": 3866288,
+      "size": 20
+    },
+    "?GetScale@TESNPC@@QEAAMXZ": {
+      "rva": 3958208,
+      "size": 95
+    },
+    "?HasOverlays@TESNPC@@QEAA_NXZ": {
+      "rva": 3968000,
+      "size": 238
+    },
+    "?SetObjectVoiceType@TESNPC@@UEAAXPEAVBGSVoiceType@@@Z": {
+      "rva": 3987664,
+      "size": 5
+    },
+    "?GetPlayerBaseNPC@@YAPEBXPEAVPlayerCharacter@@@Z": {
+      "rva": 6937808,
+      "size": null
+    },
+    "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z": {
+      "rva": 13510128,
+      "size": null
+    },
+    "__real@3f800000": {
+      "rva": 28687912,
+      "size": null
+    },
+    "?g_overlayCapacity@@3IA": {
+      "rva": 34195652,
+      "size": null
+    },
+    "?g_overlaySentinel@@3PEAUOverlayEntry@@EA": {
+      "rva": 34195664,
+      "size": null
+    },
+    "?g_overlayEntries@@3PEAUOverlayEntry@@EA": {
+      "rva": 34195680,
+      "size": null
+    },
+    "?singleton@PlayerCharacter@@2PEAV1@EA": {
+      "rva": 52627320,
+      "size": null
+    },
+    "?GetCombatStyle@TESNPC@@UEAAPEAVTESCombatStyle@@XZ": {
+      "rva": 3957072,
+      "size": 8
+    },
+    "?SetCombatStyle@TESNPC@@UEAAXPEAVTESCombatStyle@@@Z": {
+      "rva": 3969280,
+      "size": 8
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetRelationshipRankIndex@TESNPC@@SAHPEAV1@0@Z",
+        "rva": "0x3a4e00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetRelationship@BGSRelationship@@SAPEAV1@PEAVTESNPC@@0@Z",
+        "rva": "0x3a5290",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsFemale@TESNPC@@QEAAHXZ",
+        "rva": "0x3afeb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetScale@TESNPC@@QEAAMXZ",
+        "rva": "0x3c65c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HasOverlays@TESNPC@@QEAA_NXZ",
+        "rva": "0x3c8c00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetObjectVoiceType@TESNPC@@UEAAXPEAVBGSVoiceType@@@Z",
+        "rva": "0x3cd8d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetPlayerBaseNPC@@YAPEBXPEAVPlayerCharacter@@@Z",
+        "rva": "0x69dcd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z",
+        "rva": "0xce25f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__real@3f800000",
+        "rva": "0x1b5be28",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_overlayCapacity@@3IA",
+        "rva": "0x209c8c4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_overlaySentinel@@3PEAUOverlayEntry@@EA",
+        "rva": "0x209c8d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_overlayEntries@@3PEAUOverlayEntry@@EA",
+        "rva": "0x209c8e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?singleton@PlayerCharacter@@2PEAV1@EA",
+        "rva": "0x3230778",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCombatStyle@TESNPC@@UEAAPEAVTESCombatStyle@@XZ",
+        "rva": "0x3c6150",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetCombatStyle@TESNPC@@UEAAXPEAVTESCombatStyle@@@Z",
+        "rva": "0x3c9100",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

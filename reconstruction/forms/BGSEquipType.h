@@ -36,7 +36,10 @@ class BGSEquipType : public ::BaseFormComponent
 {
 public:
 	// BGSEquipType::~BGSEquipType: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 0, target 0x1d75c0, inherited name
-	~BGSEquipType() override;  // 00
+	// BGSEquipType::BGSEquipType: GUESS(low); defined only so the unit emits the vftable and with it the deleting destructor
+	BGSEquipType();
+	// the listing inlines the complete destructor (the base teardown stores its vftable), so the body is empty
+	~BGSEquipType() override {}  // 00
 	// BGSEquipType::InitializeDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 1, target 0x1d7220, inherited name
 	void InitializeDataComponent() override;  // 01
 	// BGSEquipType::ClearDataComponent: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 2, target 0x1d7230, inherited name

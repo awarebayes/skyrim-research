@@ -47,6 +47,10 @@ class BSShadowParabolicLight : public BSShadowLight
 public:
     virtual bool GetIsOmniLight();  // compared: 0x1588e20
     virtual void ReturnShadowmaps();  // compared: 0x1588d50
+    // GetIsParabolicLight, GetNeedsClipPlanes, GetPassExtraParam: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+    virtual bool GetIsParabolicLight();  // compared: 0x1588e30
+    virtual bool GetNeedsClipPlanes();  // compared: 0x1588e40
+    virtual std::uint32_t GetPassExtraParam();  // compared: 0x1588e50
     // ReturnShadowmapsTarget: GUESS(low)
     void ReturnShadowmapsTarget();
 };

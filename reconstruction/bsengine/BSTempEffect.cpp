@@ -75,3 +75,19 @@ void BSTempEffect::LoadGame(BGSLoadGameBuffer* a_buf)
 	a_buf->LoadDataEndian(&initialized, 1, 1);
 	a_buf->LoadDataEndian(&effectID, 4, 4);
 }
+
+// FinishLoadGame, IsInterfaceEffect: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BSTempEffect::FinishLoadGame(BGSLoadGameBuffer* a_buf)
+{
+}
+
+bool BSTempEffect::IsInterfaceEffect() const
+{
+	return false;
+}
+
+// Get3D: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+NiAVObject* BSTempEffect::Get3D() const
+{
+	return nullptr;
+}

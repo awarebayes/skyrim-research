@@ -15,6 +15,16 @@
 // community names or that the original source looked like this.
 #include "TESRegionData.h"
 
+// TESRegionData::TESRegionData: GUESS(low); defined so the vftable and the deleting destructor are emitted
+TESRegionData::TESRegionData()
+{
+}
+
+// TESRegionData::LoadData: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void TESRegionData::LoadData(void* a_arg1)
+{
+}
+
 bool TESRegionData::LoadDataHeader(void* a_arg1)
 {
     if (a_arg1 == nullptr) {

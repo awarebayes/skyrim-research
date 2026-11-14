@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetPassExtraParam@BSShadowDirectionalLight@@UEAAII@Z": {
+      "rva": 22539536,
+      "size": 3
+    },
+    "?GetIsFrustumOrDirectionalLight@BSShadowDirectionalLight@@UEAA_NXZ": {
+      "rva": 22552592,
+      "size": 3
+    },
+    "?GetIsDirectionalLight@BSShadowDirectionalLight@@UEAA_NXZ": {
+      "rva": 22552608,
+      "size": 3
+    },
+    "?GetNeedsClipPlanes@BSShadowDirectionalLight@@UEAA_NXZ": {
+      "rva": 22552624,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetPassExtraParam@BSShadowDirectionalLight@@UEAAII@Z",
+        "rva": "0x157ed10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetIsFrustumOrDirectionalLight@BSShadowDirectionalLight@@UEAA_NXZ",
+        "rva": "0x1582010",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetIsDirectionalLight@BSShadowDirectionalLight@@UEAA_NXZ",
+        "rva": "0x1582020",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetNeedsClipPlanes@BSShadowDirectionalLight@@UEAA_NXZ",
+        "rva": "0x1582030",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

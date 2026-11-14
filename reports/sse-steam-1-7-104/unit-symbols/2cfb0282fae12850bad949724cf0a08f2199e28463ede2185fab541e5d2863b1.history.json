@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/2cfb0282fae12850bad949724cf0a08f2199e28463ede2185fab541e5d2863b1.json",
+  "versions": [
+    {
+      "sha256": "2cfb0282fae12850bad949724cf0a08f2199e28463ede2185fab541e5d2863b1",
+      "base": null,
+      "added": [
+        "?Slot38@BSOcclusionBox@@UEBAEXZ",
+        "?IsOcclusionPlane@BSOcclusionBox@@UEBA_NXZ",
+        "?GetRTTI@BSOcclusionBox@@UEBAPEBVNiRTTI@@XZ",
+        "?NiRTTI_BSOcclusionBox@@3VNiRTTI@@A"
+      ]
+    }
+  ]
+}

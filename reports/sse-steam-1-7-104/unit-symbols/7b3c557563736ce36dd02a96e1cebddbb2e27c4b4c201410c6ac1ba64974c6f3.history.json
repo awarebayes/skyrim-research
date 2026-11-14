@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/7b3c557563736ce36dd02a96e1cebddbb2e27c4b4c201410c6ac1ba64974c6f3.json",
+  "versions": [
+    {
+      "sha256": "7b3c557563736ce36dd02a96e1cebddbb2e27c4b4c201410c6ac1ba64974c6f3",
+      "base": null,
+      "added": [
+        "?QConditions@BGSStoryManagerNodeBase@@UEAAPEAVTESCondition@@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?Clear@TESCondition@@QEAAXXZ",
+        "?InitializeData@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "?singleton@TESDataHandler@@2PEAV1@EA",
+        "?ClearData@BGSStoryManagerNodeBase@@UEAAXXZ",
+        "?IsDataHandlerBusy@@YA_NPEAVTESDataHandler@@@Z",
+        "?BranchRemoveChild@@YAXPEAVBGSStoryManagerBranchNode@@PEAVBGSStoryManagerNodeBase@@I@Z"
+      ]
+    }
+  ]
+}

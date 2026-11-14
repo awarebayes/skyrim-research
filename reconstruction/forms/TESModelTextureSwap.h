@@ -65,6 +65,8 @@ public:
 	void CopyComponent() override;  // 03
 	// TESModelTextureSwap::GetAsModelTextureSwap: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); slot 6
 	void GetAsModelTextureSwap() override;  // 06
+	// ReleaseAlternateTextures: GUESS(low); the helper the target calls first in ClearDataComponent, takes this in RCX
+	void ReleaseAlternateTextures();
 
 	// alternateTextures: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT) OBSERVED; NG declares AlternateTexture*, an opaque pointer here
 	void* alternateTextures;  // 28

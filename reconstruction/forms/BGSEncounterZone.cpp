@@ -85,21 +85,7 @@ void BGSEncounterZone::SaveGame(BGSSaveFormBuffer* a_buf)
     }
 }
 
-std::uint16_t BGSEncounterZone::GetLevel()
-{
-    std::uint16_t level = PlayerCharacter::singleton->GetLevel();
-    if (level < data.minLevel) {
-        if (!TestBit(static_cast<std::int32_t>(static_cast<std::int8_t>(data.flags)), 1)) {
-            level = data.minLevel;
-        }
-    } else {
-        level = static_cast<std::uint16_t>(static_cast<float>(level - data.minLevel) * kLevelScale + static_cast<float>(data.minLevel));
-    }
-    if (data.maxLevel) {
-        return data.maxLevel < level ? data.maxLevel : level;
-    }
-    return level;
-}
+// BGSEncounterZone::GetLevel (0x28f9e0): near-miss at near-miss/0x28f9e0.cpp
 
 void BGSEncounterZone::InitItemImpl()
 {

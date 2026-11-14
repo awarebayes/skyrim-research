@@ -11,6 +11,25 @@
 // Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json. Both functions above are compared.
 #include "BGSStoryManagerNodeBase.h"
 
+// TestBit: GUESS(low); a flag-word bit test by bit index, taking the word by value.
+inline bool TestBit(std::uint32_t a_flags, std::uint32_t a_bit)
+{
+    return ((a_flags >> a_bit) & 1) != 0;
+}
+
+// RVA 0x536120, 80 bytes
+void BGSStoryManagerNodeBase::ClearData()
+{
+    TESForm::ClearData();
+    conditions.Clear();
+    if (!IsDataHandlerBusy(TESDataHandler::singleton) && TestBit(formFlags, 3) && parent != nullptr) {
+        BranchRemoveChild(parent, this, 0);
+    }
+}
+
+// RVA 0x1c7260, 93 bytes
+// Near-miss: near-miss/0x1c7260.cpp
+
 TESCondition* BGSStoryManagerNodeBase::QConditions()
 {
     return &conditions;

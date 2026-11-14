@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/4f68d0e51ce84ece9868fe2ee19dbb4b1a28253fc23b5c983e81b0531da88d78.json",
+  "versions": [
+    {
+      "sha256": "4f68d0e51ce84ece9868fe2ee19dbb4b1a28253fc23b5c983e81b0531da88d78",
+      "base": null,
+      "added": [
+        "?GetFileSize@BSMemStorage@@UEBAIXZ",
+        "?GetPosition@BSMemStorage@@UEBA_KXZ",
+        "??_GBSMemStorage@@UEAAPEAXI@Z",
+        "??1BSMemStorage@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

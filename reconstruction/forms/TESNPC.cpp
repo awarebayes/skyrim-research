@@ -4,6 +4,7 @@
 // RVA 0x3cd8d0, 5 bytes (SetObjectVoiceType); RVA 0x3afeb0, 20 bytes (IsFemale);
 // RVA 0x3a4e00, 36 bytes (GetRelationshipRankIndex); RVA 0x3c65c0, 95 bytes (GetScale);
 // RVA 0x3c8c00, 238 bytes (HasOverlays).
+// Task p92-s-tesnpc: RVA 0x3c6150, 8 bytes (GetCombatStyle); RVA 0x3c9100, 8 bytes (SetCombatStyle).
 // Evidence: findings/fourth-batch-selection.md.
 // Source exposure: mixed. Drafted by claude-sonnet-5-5 from local instruction listings of the
 // pinned image, with the class layout from the header beside this file. Names are from
@@ -80,6 +81,17 @@ static __forceinline bool FindOverlays(const void* a_key, BSTArray<BGSHeadPart*>
 		entry = entry->next;
 	} while (entry != g_overlaySentinel);
 	return false;
+}
+
+// GetCombatStyle, SetCombatStyle: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+TESCombatStyle* TESNPC::GetCombatStyle()
+{
+	return combatStyle;
+}
+
+void TESNPC::SetCombatStyle(TESCombatStyle* a_combatStyle)
+{
+	combatStyle = a_combatStyle;
 }
 
 bool TESNPC::HasOverlays()

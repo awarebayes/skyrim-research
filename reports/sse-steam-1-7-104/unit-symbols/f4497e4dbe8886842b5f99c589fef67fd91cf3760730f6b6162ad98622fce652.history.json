@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/f4497e4dbe8886842b5f99c589fef67fd91cf3760730f6b6162ad98622fce652.json",
+  "versions": [
+    {
+      "sha256": "f4497e4dbe8886842b5f99c589fef67fd91cf3760730f6b6162ad98622fce652",
+      "base": null,
+      "added": [
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?ClearData@TESLoadScreen@@UEAAXXZ",
+        "?Clear@TESCondition@@QEAAXXZ",
+        "?InitializeData@TESLoadScreen@@UEAAXXZ"
+      ]
+    }
+  ]
+}

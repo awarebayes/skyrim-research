@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e569ebab396db08fd610e361f6997e2bc6bec7b576e85341bbfaf843004f6250.json",
+  "versions": [
+    {
+      "sha256": "e569ebab396db08fd610e361f6997e2bc6bec7b576e85341bbfaf843004f6250",
+      "base": null,
+      "added": [
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "?data@BSFixedString@@QEBAPEBDXZ",
+        "?GetDefaultMovementType@BGSDefaultObjectManager@@SAPEAVBGSMovementType@@H@Z",
+        "??1TESRace@@UEAA@XZ",
+        "?GetBodyPartData@TESRace@@QEAAPEAVBGSBodyPartData@@XZ",
+        "?GetMovementType@TESRace@@QEAAPEAVBGSMovementType@@H@Z",
+        "??_GTESRace@@UEAAPEAXI@Z",
+        "?GetPlayable@TESRace@@UEBA_NXZ",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "?defaultBodyPartData@@3PEAVBGSBodyPartData@@EA",
+        "?GetFormEditorID@TESRace@@UEBAPEBDXZ",
+        "?EMPTY@BSFixedString@@2QBDB"
+      ]
+    }
+  ]
+}

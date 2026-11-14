@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/b850fc066fceceb66411b0b3d6b46609a0198345fb6019d98b0af33da2d5ae8e.json",
+  "versions": [
+    {
+      "sha256": "b850fc066fceceb66411b0b3d6b46609a0198345fb6019d98b0af33da2d5ae8e",
+      "base": null,
+      "added": [
+        "?GetMenuDisplayObject@BGSMenuDisplayObject@@UEBAPEAXXZ",
+        "?ClearDataComponent@BGSMenuDisplayObject@@UEAAXXZ",
+        "?InitializeDataComponent@BGSMenuDisplayObject@@UEAAXXZ",
+        "??_GBGSMenuDisplayObject@@UEAAPEAXI@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

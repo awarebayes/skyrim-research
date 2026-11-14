@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GBGSStoryManagerTreeForm@@UEAAPEAXI@Z": {
+      "rva": 1864384,
+      "size": 52
+    },
+    "??1BGSStoryManagerTreeForm@@UEAA@XZ": {
+      "rva": 1979216,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?GetChild@BGSStoryManagerTreeForm@@UEBAPEAV1@I@Z": {
+      "rva": 1866976,
+      "size": 3
+    },
+    "?QChildCount@BGSStoryManagerTreeForm@@UEBAIXZ": {
+      "rva": 1869072,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GBGSStoryManagerTreeForm@@UEAAPEAXI@Z",
+        "rva": "0x1c72c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BGSStoryManagerTreeForm@@UEAA@XZ",
+        "rva": "0x1e3350",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetChild@BGSStoryManagerTreeForm@@UEBAPEAV1@I@Z",
+        "rva": "0x1c7ce0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?QChildCount@BGSStoryManagerTreeForm@@UEBAIXZ",
+        "rva": "0x1c8510",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

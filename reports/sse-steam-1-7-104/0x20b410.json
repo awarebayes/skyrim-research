@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "1ba12a8d8ef1b5cb4f0202e1af89a57098e9c0791350c5ead6605756cbb13351",
+        "object_sha256": "e95ee286be3f28bd99ad6bf35dfeaf537d05bf626cde253724aeac664f3c0276",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiObject.h",
@@ -48,7 +48,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "8bf0b963389e0b1aa7f9285d20c6f7d812a8dfb321113a97bffbe0af18a29653",
+        "object_sha256": "228ac412509026a6796beb58acbafd3e9305926af1d06e582e25fc54dca7816d",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/netimmerse/NiObject.h",
@@ -68,7 +68,7 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 2d834816263e41d7cfd8e3e4b4169cfd02d31a99, with uncommitted changes to reconstruction/netimmerse/NiProperty.cpp, reconstruction/netimmerse/NiProperty.h, reports/sse-steam-1-7-104/unit-symbols/ebe6c2814d1650a834e0b5c661414f55ec3f7194810980d5b673f414a6101d8c.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit 43cad82eab6c31d4fa0b69b0a80ea63ac8dae836, with uncommitted changes to reconstruction/netimmerse/NiObject.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
@@ -84,7 +84,7 @@
         "candidate": {
           "code_section_sha256": "7ab2a5d86adab49656e0d9f9151c51c501a0d6306bea89362e2b53f6e4286454",
           "code_sections": 1,
-          "object_sha256": "1ba12a8d8ef1b5cb4f0202e1af89a57098e9c0791350c5ead6605756cbb13351"
+          "object_sha256": "e95ee286be3f28bd99ad6bf35dfeaf537d05bf626cde253724aeac664f3c0276"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -147,7 +147,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiProperty.cpp",
-          "source_revision": "29e2d588e94fe9798d067cdbadc876346c2dd74ae8734eadf83e9bc6ec28be48"
+          "source_revision": "e4bab89bbf27b05f2a1a08f557b985ce144fff44d23605fad8ab84dc6b4f86f3"
         },
         "symbol_map_sha256": "ebe6c2814d1650a834e0b5c661414f55ec3f7194810980d5b673f414a6101d8c",
         "target": {
@@ -165,7 +165,7 @@
         "candidate": {
           "code_section_sha256": "7ab2a5d86adab49656e0d9f9151c51c501a0d6306bea89362e2b53f6e4286454",
           "code_sections": 1,
-          "object_sha256": "8bf0b963389e0b1aa7f9285d20c6f7d812a8dfb321113a97bffbe0af18a29653"
+          "object_sha256": "228ac412509026a6796beb58acbafd3e9305926af1d06e582e25fc54dca7816d"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -228,7 +228,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiProperty.cpp",
-          "source_revision": "29e2d588e94fe9798d067cdbadc876346c2dd74ae8734eadf83e9bc6ec28be48"
+          "source_revision": "e4bab89bbf27b05f2a1a08f557b985ce144fff44d23605fad8ab84dc6b4f86f3"
         },
         "symbol_map_sha256": "ebe6c2814d1650a834e0b5c661414f55ec3f7194810980d5b673f414a6101d8c",
         "target": {
@@ -246,7 +246,7 @@
         "candidate": {
           "code_section_sha256": "7ab2a5d86adab49656e0d9f9151c51c501a0d6306bea89362e2b53f6e4286454",
           "code_sections": 1,
-          "object_sha256": "8bf0b963389e0b1aa7f9285d20c6f7d812a8dfb321113a97bffbe0af18a29653"
+          "object_sha256": "228ac412509026a6796beb58acbafd3e9305926af1d06e582e25fc54dca7816d"
         },
         "comparator": {
           "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
@@ -309,7 +309,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/netimmerse/NiProperty.cpp",
-          "source_revision": "29e2d588e94fe9798d067cdbadc876346c2dd74ae8734eadf83e9bc6ec28be48"
+          "source_revision": "e4bab89bbf27b05f2a1a08f557b985ce144fff44d23605fad8ab84dc6b4f86f3"
         },
         "symbol_map_sha256": "ebe6c2814d1650a834e0b5c661414f55ec3f7194810980d5b673f414a6101d8c",
         "target": {
@@ -322,7 +322,7 @@
   ],
   "source": {
     "compiled": "reconstruction/netimmerse/NiProperty.cpp",
-    "digest": "29e2d588e94fe9798d067cdbadc876346c2dd74ae8734eadf83e9bc6ec28be48",
+    "digest": "e4bab89bbf27b05f2a1a08f557b985ce144fff44d23605fad8ab84dc6b4f86f3",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/netimmerse/NiObject.h",

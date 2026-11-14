@@ -26,6 +26,11 @@ const char* TESWorldSpace::GetFormEditorID() const
     return editorID.c_str();
 }
 
+bool TESWorldSpace::IsParentForm()
+{
+    return true;
+}
+
 bool TESWorldSpace::FindInFileFast(TESFile* a_mod)
 {
     OffsetData* offsetData = GetOffsetData();

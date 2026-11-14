@@ -4,21 +4,22 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x1dc630",
   "naming_findings": [
-    "FactionRankArray is a GUESS name for what the community declares as a BSTArray of FACTION_RANK; the community array type and its clear could be used",
-    "FreeFactions is a low-confidence guess for the array storage release"
+    "Some storage and helper names are low-confidence guesses.",
+    "Unk_07 uses a different return type from the community declaration.",
+    "The faction array and its release helper use guessed names."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
-  "review_date": "2026-11-12",
-  "review_kind": "full",
+  "previous_code_section_sha256": "77eef23798115eaea5008288727c82276f3415fe1629568c2c7773f226be3787",
+  "previous_review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
+  "previous_source_digest": "e109009262bab03bfc335ebc0756845865e88224131af758c9f5ea274e359895",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "eb721766b8dee0a50f5e31a2ee8ac1534d7f989f715957391599c25e351d42ba",
-  "review_task_id": "review-p18-wave1-2",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 1951280,
   "size": 38,
-  "source_digest": "e109009262bab03bfc335ebc0756845865e88224131af758c9f5ea274e359895",
+  "source_digest": "9a1ba6b4ee36a311a41ce4675aed79a8b80be990cdf74a24ebd25a629dd38a31",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

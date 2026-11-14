@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "3427cb74b6bc72cc04a717342e0bbd5651c1832f8d9a8821694452cb7d273196",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x277b10",
+  "naming_findings": [
+    "LoadObjectBound has a community name source although the implementation labels it a guess."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-13",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "12c46dc2c810bffcfdedc406ade2d2317d1fa54f3c842904532420f78f571e4c",
+  "review_task_id": "review-p85-p94-final5",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 2587408,
+  "size": 150,
+  "source_digest": "3f3cc92500779972bd82f4aa6728a6396199d2faa99ae6436dbef2e38bdb18c3",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

@@ -72,3 +72,8 @@ void TESActorBaseData::InitializeDataComponent()
     actorData.bleedoutOverride = 0;
     unk38 = 0;
 }
+
+// TESActorBaseData::CopyFromTemplateForms: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void TESActorBaseData::CopyFromTemplateForms()
+{
+}

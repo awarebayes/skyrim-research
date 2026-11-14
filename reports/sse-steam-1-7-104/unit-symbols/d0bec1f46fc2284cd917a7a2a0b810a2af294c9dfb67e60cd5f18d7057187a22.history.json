@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/d0bec1f46fc2284cd917a7a2a0b810a2af294c9dfb67e60cd5f18d7057187a22.json",
+  "versions": [
+    {
+      "sha256": "d0bec1f46fc2284cd917a7a2a0b810a2af294c9dfb67e60cd5f18d7057187a22",
+      "base": null,
+      "added": [
+        "??0TESForm@@QEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "?InitializeData@TESForm@@UEAAXXZ",
+        "?ClearData@TESForm@@UEAAXXZ",
+        "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SetAltered@TESForm@@UEAAX_N@Z",
+        "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "??1TESModel@@UEAA@XZ",
+        "?InitializeDataComponent@TESModel@@UEAAXXZ",
+        "??1BGSCameraShot@@UEAA@XZ",
+        "?InitializeData@BGSCameraShot@@UEAAXXZ",
+        "??_GBGSCameraShot@@UEAAPEAXI@Z",
+        "??3@YAXPEAX_K@Z",
+        "??_7BaseFormComponent@@6B@",
+        "??_R0?AVBaseFormComponent@@@8",
+        "??_R0?AVTESForm@@@8",
+        "__real@38d1b717",
+        "?InitItemImpl@BGSCameraShot@@UEAAXXZ",
+        "?ResetImageSpaceModifier@@YAXPEAVTESImageSpaceModifiableForm@@PEAVBGSCameraShot@@@Z",
+        "?SetInitialized@BGSCameraShot@@QEAAX_N@Z"
+      ]
+    }
+  ]
+}

@@ -450,6 +450,9 @@ public:
     // is passed, so it is declared as a parameter.
     InventoryChanges* GetInventoryChanges(FormType a_baseType) const;
 
+    // GetAllowPromoteToPersistent: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); RVA 0x2e4f80. Not virtual here: no vtable slot is known for it, and a new virtual would move the slots after it.
+    bool GetAllowPromoteToPersistent() const;
+
     // GetEncounterZone: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0); RVA 0x300ab0.
     BGSEncounterZone* GetEncounterZone() const;
 

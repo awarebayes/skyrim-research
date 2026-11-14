@@ -3,21 +3,19 @@
   "code_section_sha256": "6a3318fba3f09b9ab2c612070ec0e26dec1dd6d3aa3e3836466de6d26b510e2b",
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x14e7fb0",
-  "naming_findings": [
-    "RenderPassArray is modelled as a single head pointer with no label line."
-  ],
+  "naming_findings": [],
   "previous_code_section_sha256": "6a3318fba3f09b9ab2c612070ec0e26dec1dd6d3aa3e3836466de6d26b510e2b",
-  "previous_review_sha256": "b1c2edce4e5b7a3cddc1198c48a9beb068dded0b2547fc5220bef4fcb7d68549",
-  "previous_source_digest": "24a620e545a7d00cb2ac0b2cec0352f0b2ff209570b952307dac3afecb97a0fc",
-  "review_date": "2026-11-12",
+  "previous_review_sha256": "ca968500056859cf112e761425b9fa940baf0073bcf8e48b4e947d6d02dc8195",
+  "previous_source_digest": "83b348834325a081de6b22850f8defc1ca3264701c4a6a51f6deadc8d289d516",
+  "review_date": "2026-11-13",
   "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "ca968500056859cf112e761425b9fa940baf0073bcf8e48b4e947d6d02dc8195",
-  "review_task_id": "p71-delta-review",
+  "review_sha256": "f04cf62e77ac45d87981f7d8164f870c44ced86441b8ba76d5d431dc40261163",
+  "review_task_id": "review-p85-haiku-wave1-1",
   "reviewer_model": "gpt-6.1-terra",
   "rva": 21921712,
   "size": 66,
-  "source_digest": "83b348834325a081de6b22850f8defc1ca3264701c4a6a51f6deadc8d289d516",
+  "source_digest": "d879ad66cf49644a0afb3a2bfb832fecde73fa9e25b7e061fb6b13bea37efc58",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

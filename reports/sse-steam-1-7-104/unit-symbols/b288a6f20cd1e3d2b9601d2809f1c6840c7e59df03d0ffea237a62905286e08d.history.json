@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/b288a6f20cd1e3d2b9601d2809f1c6840c7e59df03d0ffea237a62905286e08d.json",
+  "versions": [
+    {
+      "sha256": "b288a6f20cd1e3d2b9601d2809f1c6840c7e59df03d0ffea237a62905286e08d",
+      "base": null,
+      "added": [
+        "?GetRelationshipRankIndex@TESNPC@@SAHPEAV1@0@Z",
+        "?GetRelationship@BGSRelationship@@SAPEAV1@PEAVTESNPC@@0@Z",
+        "?IsFemale@TESNPC@@QEAAHXZ",
+        "?GetScale@TESNPC@@QEAAMXZ",
+        "?HasOverlays@TESNPC@@QEAA_NXZ",
+        "?SetObjectVoiceType@TESNPC@@UEAAXPEAVBGSVoiceType@@@Z",
+        "?GetPlayerBaseNPC@@YAPEBXPEAVPlayerCharacter@@@Z",
+        "?SizeOf64@CRC32Calculator@@SAXAEAI_K@Z",
+        "__real@3f800000",
+        "?g_overlayCapacity@@3IA",
+        "?g_overlaySentinel@@3PEAUOverlayEntry@@EA",
+        "?g_overlayEntries@@3PEAUOverlayEntry@@EA",
+        "?singleton@PlayerCharacter@@2PEAV1@EA",
+        "?GetCombatStyle@TESNPC@@UEAAPEAVTESCombatStyle@@XZ",
+        "?SetCombatStyle@TESNPC@@UEAAXPEAVTESCombatStyle@@@Z"
+      ]
+    }
+  ]
+}

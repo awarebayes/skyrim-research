@@ -29,6 +29,7 @@ struct Color {
 class BGSColorForm : public TESForm, public TESFullName {
 public:
     void InitializeData() override;  // 04
+    void ClearData() override;       // 05
 
     Color         color;  // 30
     std::uint32_t flags;  // 34

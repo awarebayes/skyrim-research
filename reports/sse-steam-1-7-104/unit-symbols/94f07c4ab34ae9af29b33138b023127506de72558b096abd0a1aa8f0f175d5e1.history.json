@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/94f07c4ab34ae9af29b33138b023127506de72558b096abd0a1aa8f0f175d5e1.json",
+  "versions": [
+    {
+      "sha256": "94f07c4ab34ae9af29b33138b023127506de72558b096abd0a1aa8f0f175d5e1",
+      "base": null,
+      "added": [
+        "?GetType@BSLightingShaderMaterialBase@@UEBA?AW4Type@BSShaderMaterial@@XZ",
+        "?LoadBinary2@NiColor@@QEAAXAEAVNiStream@@@Z",
+        "?SaveBinary2@NiColor@@QEBAXAEAVNiStream@@@Z",
+        "?CopyMembers@BSLightingShaderMaterialBase@@UEAAXPEAVBSShaderMaterial@@@Z",
+        "?GetDefault@BSLightingShaderMaterialBase@@UEAAPEAVBSShaderMaterial@@XZ",
+        "?OnLoadTextureSet@BSLightingShaderMaterialBase@@UEAAX_KPEAVBSTextureSet@@@Z",
+        "?ClearTextures@BSLightingShaderMaterialBase@@UEAAXXZ",
+        "?ReceiveValuesFromRootMaterial@BSLightingShaderMaterialBase@@UEAAX_N0000@Z",
+        "?SaveBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?LoadBinary@BSLightingShaderMaterialBase@@UEAAXAEAVNiStream@@@Z",
+        "?CopyMembers@BSShaderMaterial@@UEAAXPEAV1@@Z",
+        "??3@YAXPEAX_K@Z",
+        "?g_defaultBackLightingTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?g_defaultTexture@@3V?$NiPointer@VNiSourceTexture@@@@A",
+        "?g_defaultLightingMaterial@@3PEAVBSShaderMaterial@@EA",
+        "?GetFeature@BSLightingShaderMaterialBase@@UEBA?AW4Feature@BSShaderMaterial@@XZ",
+        "??_GBSLightingShaderMaterialBase@@UEAAPEAXI@Z",
+        "??1BSLightingShaderMaterialBase@@UEAA@XZ"
+      ]
+    }
+  ]
+}

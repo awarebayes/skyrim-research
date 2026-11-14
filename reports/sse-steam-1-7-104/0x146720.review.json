@@ -4,20 +4,20 @@
   "escalation_category": "none",
   "function_id": "sse-steam-1-7-104-0x146720",
   "naming_findings": [
-    "BSFixedString data is labelled COMMUNITY OBSERVED, but naming the out-of-line callee data is an inference with no community name at that address; label the binding GUESS"
+    "The BSFixedString data callee binding is inferred and should be labelled as a guess."
   ],
-  "previous_code_section_sha256": null,
-  "previous_review_sha256": null,
-  "previous_source_digest": null,
-  "review_date": "2026-11-12",
-  "review_kind": "full",
+  "previous_code_section_sha256": "94962b6747585e5c28f450dbfb12d8ec60835155cb5bfd692e4fa933dc928a2b",
+  "previous_review_sha256": "23ec578140928d6ef50bb043db2435493570f696f3f1bddd6fa6ececd368ed3a",
+  "previous_source_digest": "8c3957d229b53133f801254015c4443f8da537802a36c4c03db45a6edc51084e",
+  "review_date": "2026-11-13",
+  "review_kind": "delta",
   "review_record_schema": 3,
-  "review_sha256": "23ec578140928d6ef50bb043db2435493570f696f3f1bddd6fa6ececd368ed3a",
-  "review_task_id": "review-p18-wave1-4",
-  "reviewer_model": "claude-opus-5-5",
+  "review_sha256": "03d49d5ff959eba989608b819d27eab4832b0af3d546448be9d1e4dee0b32747",
+  "review_task_id": "review-p85-haiku-wave1-2",
+  "reviewer_model": "gpt-6.1-terra",
   "rva": 1337120,
   "size": 9,
-  "source_digest": "8c3957d229b53133f801254015c4443f8da537802a36c4c03db45a6edc51084e",
+  "source_digest": "1472a5f55c83ccd007b63899ada355ff5c8ba38176555b8b07199121939644aa",
   "source_digest_method": "tu-sha256-v1",
   "verdict": "approve"
 }

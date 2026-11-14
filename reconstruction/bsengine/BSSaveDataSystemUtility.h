@@ -21,6 +21,10 @@ class BSSaveDataSystemUtility
 public:
     virtual std::uint64_t* Unk_0B(std::uint64_t* a_out);  // compared: 0x159af80
     virtual std::uint32_t Unk_0A(void* a_obj);  // compared: 0x159ab30
+    // Unk_05, Unk_07, Unk_08: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); the listings of Unk_07 and Unk_08 return a bool, not the void the sheet declares
+    virtual void Unk_05();  // compared: 0x159aa00
+    virtual bool Unk_07();  // compared: 0x159a9f0
+    virtual bool Unk_08();  // compared: 0x159a9e0
 
     std::uint8_t unknown08[0x220];  // 08
 };

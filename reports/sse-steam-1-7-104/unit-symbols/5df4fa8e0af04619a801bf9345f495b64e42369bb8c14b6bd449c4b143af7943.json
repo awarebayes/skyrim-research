@@ -1,0 +1,375 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetDefaultObject@BGSDefaultObjectManager@@SAPEAVTESForm@@I@Z": {
+      "rva": 1393728,
+      "size": null
+    },
+    "??0TESForm@@QEAA@XZ": {
+      "rva": 1978400,
+      "size": null
+    },
+    "??1TESForm@@UEAA@XZ": {
+      "rva": 1979216,
+      "size": null
+    },
+    "?InitializeData@TESForm@@UEAAXXZ": {
+      "rva": 1979824,
+      "size": null
+    },
+    "?ClearData@TESForm@@UEAAXXZ": {
+      "rva": 1980080,
+      "size": 3
+    },
+    "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z": {
+      "rva": 1986976,
+      "size": null
+    },
+    "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 1988352,
+      "size": 91
+    },
+    "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988464,
+      "size": 185
+    },
+    "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988672,
+      "size": null
+    },
+    "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 1988688,
+      "size": null
+    },
+    "?LookupByID@TESForm@@SAPEAV1@I@Z": {
+      "rva": 1988704,
+      "size": null
+    },
+    "?SetAltered@TESForm@@UEAAX_N@Z": {
+      "rva": 1990864,
+      "size": null
+    },
+    "?SetFormID@TESForm@@UEAAXI_N@Z": {
+      "rva": 1993680,
+      "size": null
+    },
+    "??0BGSDefaultObjectManager@@QEAA@XZ": {
+      "rva": 3258416,
+      "size": 85
+    },
+    "??_GBGSDefaultObjectManager@@UEAAPEAXI@Z": {
+      "rva": 3259728,
+      "size": 62
+    },
+    "?GetLeftHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ": {
+      "rva": 3734064,
+      "size": 10
+    },
+    "?GetRightHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ": {
+      "rva": 3734080,
+      "size": 10
+    },
+    "?GetVoiceEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ": {
+      "rva": 3734112,
+      "size": 10
+    },
+    "?GetEquipSlot@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@I@Z": {
+      "rva": 6118256,
+      "size": 29
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "memset": {
+      "rva": 22714360,
+      "size": null
+    },
+    "??_7BGSDefaultObjectManager@@6B@": {
+      "rva": 25364488,
+      "size": null
+    },
+    "??_R0?AVBaseFormComponent@@@8": {
+      "rva": 34453928,
+      "size": null
+    },
+    "??_R0?AVTESForm@@@8": {
+      "rva": 34454008,
+      "size": null
+    },
+    "?InitItemImpl@BGSDefaultObjectManager@@UEAAXXZ": {
+      "rva": 3259088,
+      "size": 226
+    },
+    "?defaultObjectTable@@3PAUDEFAULT_OBJECT_DATA@@A": {
+      "rva": 34062152,
+      "size": null
+    },
+    "??_C@_0L@EDFPIDDP@It?5is?5time@": {
+      "rva": 25364960,
+      "size": null
+    },
+    "?LogProgressMarker@@YAXPEBD@Z": {
+      "rva": 3261744,
+      "size": null
+    },
+    "?ResolveFormRedirect@@YAPEAVTESForm@@I@Z": {
+      "rva": 5610000,
+      "size": null
+    },
+    "?SetInitialized@TESForm@@QEAAX_N@Z": {
+      "rva": 1990832,
+      "size": null
+    },
+    "?GetDefaultObjectEventSource@@YAPEAVDefaultObjectEventSource@@XZ": {
+      "rva": 3260544,
+      "size": null
+    },
+    "?SendDefaultObjectEvent@@YAXPEAVDefaultObjectEventSource@@PEAUDefaultObjectsInitializedEvent@@@Z": {
+      "rva": 3259968,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetDefaultObject@BGSDefaultObjectManager@@SAPEAVTESForm@@I@Z",
+        "rva": "0x154440",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0TESForm@@QEAA@XZ",
+        "rva": "0x1e3020",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESForm@@UEAA@XZ",
+        "rva": "0x1e3350",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeData@TESForm@@UEAAXXZ",
+        "rva": "0x1e35b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@TESForm@@UEAAXXZ",
+        "rva": "0x1e36b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CreateDuplicateForm@TESForm@@UEAAPEAV1@_NPEAX@Z",
+        "rva": "0x1e51a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@TESForm@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x1e5700",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5770",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishLoadGame@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5840",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Revert@TESForm@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x1e5850",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LookupByID@TESForm@@SAPEAV1@I@Z",
+        "rva": "0x1e5860",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetAltered@TESForm@@UEAAX_N@Z",
+        "rva": "0x1e60d0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFormID@TESForm@@UEAAXI_N@Z",
+        "rva": "0x1e6bd0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0BGSDefaultObjectManager@@QEAA@XZ",
+        "rva": "0x31b830",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSDefaultObjectManager@@UEAAPEAXI@Z",
+        "rva": "0x31bd50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetLeftHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "rva": "0x38fa30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetRightHandEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "rva": "0x38fa40",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetVoiceEquip@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@XZ",
+        "rva": "0x38fa60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetEquipSlot@BGSDefaultObjectManager@@SAPEAVBGSEquipSlot@@I@Z",
+        "rva": "0x5d5b70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "memset",
+        "rva": "0x15a97f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSDefaultObjectManager@@6B@",
+        "rva": "0x1830808",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVBaseFormComponent@@@8",
+        "rva": "0x20db9a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_R0?AVTESForm@@@8",
+        "rva": "0x20db9f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitItemImpl@BGSDefaultObjectManager@@UEAAXXZ",
+        "rva": "0x31bad0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?defaultObjectTable@@3PAUDEFAULT_OBJECT_DATA@@A",
+        "rva": "0x207bf48",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_0L@EDFPIDDP@It?5is?5time@",
+        "rva": "0x18309e0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LogProgressMarker@@YAXPEBD@Z",
+        "rva": "0x31c530",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResolveFormRedirect@@YAPEAVTESForm@@I@Z",
+        "rva": "0x559a10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetInitialized@TESForm@@QEAAX_N@Z",
+        "rva": "0x1e60b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDefaultObjectEventSource@@YAPEAVDefaultObjectEventSource@@XZ",
+        "rva": "0x31c080",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SendDefaultObjectEvent@@YAXPEAVDefaultObjectEventSource@@PEAUDefaultObjectsInitializedEvent@@@Z",
+        "rva": "0x31be40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}
