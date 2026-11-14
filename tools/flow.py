@@ -1888,6 +1888,10 @@ def carry_into_tree(root, tree, approved, by_rva, harvests=None):
         fn = by_rva[rva]
         refuse(fn.get('report'), f'{fn["id"]} names no match record in data/progress.json')
         files.add(fn['report'])
+        if fn.get('status') == 'matched':
+            review = Path(fn['report']).with_suffix('.review.json').as_posix()
+            if (root / review).is_file():
+                files.add(review)
         record = json.loads((root / fn['report']).read_text())
         files.update(record['source']['translation_unit'])
         compiled = record['source']['compiled']
