@@ -53,3 +53,18 @@ class T(unittest.TestCase):
             self.assertEqual(run.returncode, 0)
             self.assertIn('Ran 1 tests', run.stdout)
             self.assertIn('skipped=1', run.stdout)
+
+    def test_workers_preserve_full_discovery_import_environment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'support').mkdir()
+            (root / 'support' / 'synthetic_discovery_dependency.py').write_text('VALUE = 17\n')
+            self.fixture(root, 'test_a_environment',
+                         'import sys\nfrom pathlib import Path\n'
+                         'sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "support"))\n')
+            self.fixture(root, 'test_b_target',
+                         'import unittest\nimport synthetic_discovery_dependency as dep\n'
+                         'class T(unittest.TestCase):\n def test_dependency(self): self.assertEqual(dep.VALUE, 17)\n')
+            run = self.run_suite(root)
+            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+            self.assertIn('Ran 1 tests', run.stdout)

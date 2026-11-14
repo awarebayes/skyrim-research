@@ -88,6 +88,9 @@ def main():
     sys.path.insert(0, str(root / 'tests'))
     if a.worker:
         ids = json.load(sys.stdin)
+        # unittest discovery imports every module before running any test. Preserve that
+        # import environment (including legacy path setup) in each isolated worker.
+        inventory(root)
         suite = unittest.defaultTestLoader.loadTestsFromNames(ids)
         result = unittest.TextTestRunner(stream=sys.stdout, verbosity=2).run(suite)
         a.result.write_text(json.dumps(dict(run=result.testsRun, skipped=len(result.skipped))))
