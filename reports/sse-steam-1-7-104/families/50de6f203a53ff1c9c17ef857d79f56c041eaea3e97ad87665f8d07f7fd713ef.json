@@ -1,0 +1,827 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+      "version": "0.6.1-runtime"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy"
+      ],
+      "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x82fd7c": "339270d1e23d791963f7f96dd00bf3451bf363940ce0d13a4a3aad9f713649b7",
+    "sse-steam-1-7-104-0x82fd88": "8d517b41f9e59c51b484b8a6b4531f77a76075c2fd7c7ad4ad99513b50222404",
+    "sse-steam-1-7-104-0x82fd94": "dc89513cb19e4a8257006a64488bd52934b2ed78fdc3531a8b0ae22554b648ab",
+    "sse-steam-1-7-104-0x82fda0": "3c0ca5db5debd0018674bbf4215c605b4ffa4065434c2864d655b078767ac5cf",
+    "sse-steam-1-7-104-0x82fddc": "70760eb388eb527059cbb13dffde37df4b994b3716612564223b66ca6ae91b5f",
+    "sse-steam-1-7-104-0x830148": "8b7ca3ee7c69ea22e74be8f1ec9802c4a969d105bb5523ca023046af04167438",
+    "sse-steam-1-7-104-0x830154": "73667c09059d8c94921bbe5207d02465477c516c1d1755f1ea27a84f6861e516",
+    "sse-steam-1-7-104-0x830160": "263aeb70381dbca3d05d5c1a66bba28d2a3921f22e5ad58344818a4a5e0de136",
+    "sse-steam-1-7-104-0x83016c": "47b7088285ed5d7fd352be23df8d93aaf083ad55aca137293aa30ea49011d700",
+    "sse-steam-1-7-104-0x8301ac": "eb1def5d39d34699025a9b69979819900aaae03bda0b22896a6da9526c66149a",
+    "sse-steam-1-7-104-0x83038c": "b96d6ae2317321788ade31f89da4d31561b88e7af92f2ec42c2931895cf0fc33",
+    "sse-steam-1-7-104-0x830398": "317b30cfb35195034600c097e028568253cf86c5fff3f7927b180b7a08ac267c",
+    "sse-steam-1-7-104-0x8303a4": "b800739e6270fc2793f49edc2e4c875014dd13d2204c6ed6f29bd8cadd18737c",
+    "sse-steam-1-7-104-0x8303b0": "b82f11573c14f6780d17a9cbeae631640a1270be6ac09fafb404346b324c5bde",
+    "sse-steam-1-7-104-0x8303bc": "6cb82c3aa1ce5a3c8565250329cd728778b507299bff9588478cb4b3f517e5fd",
+    "sse-steam-1-7-104-0x8306bc": "408031efe930e71174bea2884ff46d6d7c3735aa64ac4919261e3500f8d4e7d3",
+    "sse-steam-1-7-104-0x8306fc": "350ad29971e5f64f8572e0c1303e0b1a5cf3c1fc4d0a6afacb556735e317c3e5",
+    "sse-steam-1-7-104-0x830708": "21b31c843b8234430b2c906802adf0d589712b39d595d1e17c7da04388e72590",
+    "sse-steam-1-7-104-0x830714": "99ab3fb5163f08cf364e730a5877cfa9acc2069356c0aaaa839f5fff1fbe146b",
+    "sse-steam-1-7-104-0x830720": "dbf51d1cd599d3c6ec424f1d622e0efdd29d1c5f99259e65ed4fc3875fb611ba"
+  },
+  "origin": {
+    "family": "represented-adjustor-thunk",
+    "template_digest": "197a5390162e8fa5e349274a6d522934c9bd50ae8d74d94f5983234388f85488",
+    "version": "3"
+  },
+  "parameter_ranges": {
+    "rows": [
+      {
+        "callee-rva": 8585808,
+        "entry-rva": 8594796,
+        "layout-size": 48,
+        "primary-table-rva": 26510432,
+        "secondary-table-rva": 26510464,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8585808,
+        "entry-rva": 8594808,
+        "layout-size": 48,
+        "primary-table-rva": 26510432,
+        "secondary-table-rva": 26510496,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8585808,
+        "entry-rva": 8594820,
+        "layout-size": 48,
+        "primary-table-rva": 26510432,
+        "secondary-table-rva": 26510528,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8585808,
+        "entry-rva": 8594876,
+        "layout-size": 48,
+        "primary-table-rva": 26510432,
+        "secondary-table-rva": 26510560,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8585808,
+        "entry-rva": 8594888,
+        "layout-size": 48,
+        "primary-table-rva": 26510432,
+        "secondary-table-rva": 26510592,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8588176,
+        "entry-rva": 8595640,
+        "layout-size": 48,
+        "primary-table-rva": 26511392,
+        "secondary-table-rva": 26511424,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8588176,
+        "entry-rva": 8595652,
+        "layout-size": 48,
+        "primary-table-rva": 26511392,
+        "secondary-table-rva": 26511456,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8588176,
+        "entry-rva": 8595664,
+        "layout-size": 48,
+        "primary-table-rva": 26511392,
+        "secondary-table-rva": 26511488,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8588176,
+        "entry-rva": 8595676,
+        "layout-size": 48,
+        "primary-table-rva": 26511392,
+        "secondary-table-rva": 26511520,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8588176,
+        "entry-rva": 8595740,
+        "layout-size": 48,
+        "primary-table-rva": 26511392,
+        "secondary-table-rva": 26511552,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8590544,
+        "entry-rva": 8620428,
+        "layout-size": 48,
+        "primary-table-rva": 26512352,
+        "secondary-table-rva": 26512384,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8590544,
+        "entry-rva": 8620440,
+        "layout-size": 48,
+        "primary-table-rva": 26512352,
+        "secondary-table-rva": 26512416,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8590544,
+        "entry-rva": 8620452,
+        "layout-size": 48,
+        "primary-table-rva": 26512352,
+        "secondary-table-rva": 26512448,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8590544,
+        "entry-rva": 8620464,
+        "layout-size": 48,
+        "primary-table-rva": 26512352,
+        "secondary-table-rva": 26512480,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8590544,
+        "entry-rva": 8620476,
+        "layout-size": 48,
+        "primary-table-rva": 26512352,
+        "secondary-table-rva": 26512512,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8594960,
+        "entry-rva": 8692156,
+        "layout-size": 48,
+        "primary-table-rva": 26514016,
+        "secondary-table-rva": 26514048,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8594960,
+        "entry-rva": 8692168,
+        "layout-size": 48,
+        "primary-table-rva": 26514016,
+        "secondary-table-rva": 26514080,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8594960,
+        "entry-rva": 8692180,
+        "layout-size": 48,
+        "primary-table-rva": 26514016,
+        "secondary-table-rva": 26514112,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8594960,
+        "entry-rva": 8692236,
+        "layout-size": 48,
+        "primary-table-rva": 26514016,
+        "secondary-table-rva": 26514176,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8594960,
+        "entry-rva": 8692248,
+        "layout-size": 48,
+        "primary-table-rva": 26514016,
+        "secondary-table-rva": 26514208,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8595072,
+        "entry-rva": 8630892,
+        "layout-size": 48,
+        "primary-table-rva": 26514272,
+        "secondary-table-rva": 26514304,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8595072,
+        "entry-rva": 8630904,
+        "layout-size": 48,
+        "primary-table-rva": 26514272,
+        "secondary-table-rva": 26514336,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8595072,
+        "entry-rva": 8630916,
+        "layout-size": 48,
+        "primary-table-rva": 26514272,
+        "secondary-table-rva": 26514368,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8595072,
+        "entry-rva": 8630928,
+        "layout-size": 48,
+        "primary-table-rva": 26514272,
+        "secondary-table-rva": 26514400,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8595072,
+        "entry-rva": 8630940,
+        "layout-size": 48,
+        "primary-table-rva": 26514272,
+        "secondary-table-rva": 26514432,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8630960,
+        "entry-rva": 8584572,
+        "layout-size": 48,
+        "primary-table-rva": 26515232,
+        "secondary-table-rva": 26515264,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8630960,
+        "entry-rva": 8584584,
+        "layout-size": 48,
+        "primary-table-rva": 26515232,
+        "secondary-table-rva": 26515296,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8630960,
+        "entry-rva": 8584596,
+        "layout-size": 48,
+        "primary-table-rva": 26515232,
+        "secondary-table-rva": 26515328,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8630960,
+        "entry-rva": 8584608,
+        "layout-size": 48,
+        "primary-table-rva": 26515232,
+        "secondary-table-rva": 26515360,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8630960,
+        "entry-rva": 8584668,
+        "layout-size": 48,
+        "primary-table-rva": 26515232,
+        "secondary-table-rva": 26515392,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8633296,
+        "entry-rva": 8585544,
+        "layout-size": 48,
+        "primary-table-rva": 26516320,
+        "secondary-table-rva": 26516352,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8633296,
+        "entry-rva": 8585556,
+        "layout-size": 48,
+        "primary-table-rva": 26516320,
+        "secondary-table-rva": 26516384,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8633296,
+        "entry-rva": 8585568,
+        "layout-size": 48,
+        "primary-table-rva": 26516320,
+        "secondary-table-rva": 26516416,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8633296,
+        "entry-rva": 8585580,
+        "layout-size": 48,
+        "primary-table-rva": 26516320,
+        "secondary-table-rva": 26516448,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8633296,
+        "entry-rva": 8585644,
+        "layout-size": 48,
+        "primary-table-rva": 26516320,
+        "secondary-table-rva": 26516480,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8636192,
+        "entry-rva": 8586124,
+        "layout-size": 48,
+        "primary-table-rva": 26518336,
+        "secondary-table-rva": 26518368,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8636192,
+        "entry-rva": 8586136,
+        "layout-size": 48,
+        "primary-table-rva": 26518336,
+        "secondary-table-rva": 26518400,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8636192,
+        "entry-rva": 8586148,
+        "layout-size": 48,
+        "primary-table-rva": 26518336,
+        "secondary-table-rva": 26518432,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8636192,
+        "entry-rva": 8586160,
+        "layout-size": 48,
+        "primary-table-rva": 26518336,
+        "secondary-table-rva": 26518464,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8636192,
+        "entry-rva": 8586172,
+        "layout-size": 48,
+        "primary-table-rva": 26518336,
+        "secondary-table-rva": 26518496,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8645216,
+        "entry-rva": 8586940,
+        "layout-size": 48,
+        "primary-table-rva": 26522152,
+        "secondary-table-rva": 26522184,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8645216,
+        "entry-rva": 8587004,
+        "layout-size": 48,
+        "primary-table-rva": 26522152,
+        "secondary-table-rva": 26522216,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8645216,
+        "entry-rva": 8587016,
+        "layout-size": 48,
+        "primary-table-rva": 26522152,
+        "secondary-table-rva": 26522248,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8645216,
+        "entry-rva": 8587028,
+        "layout-size": 48,
+        "primary-table-rva": 26522152,
+        "secondary-table-rva": 26522400,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8645216,
+        "entry-rva": 8587040,
+        "layout-size": 48,
+        "primary-table-rva": 26522152,
+        "secondary-table-rva": 26522432,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8655344,
+        "entry-rva": 8587912,
+        "layout-size": 48,
+        "primary-table-rva": 26526736,
+        "secondary-table-rva": 26526768,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8655344,
+        "entry-rva": 8587980,
+        "layout-size": 48,
+        "primary-table-rva": 26526736,
+        "secondary-table-rva": 26526800,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8655344,
+        "entry-rva": 8587992,
+        "layout-size": 48,
+        "primary-table-rva": 26526736,
+        "secondary-table-rva": 26526832,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8655344,
+        "entry-rva": 8588004,
+        "layout-size": 48,
+        "primary-table-rva": 26526736,
+        "secondary-table-rva": 26526864,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8655344,
+        "entry-rva": 8588016,
+        "layout-size": 48,
+        "primary-table-rva": 26526736,
+        "secondary-table-rva": 26526896,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8663920,
+        "entry-rva": 8588492,
+        "layout-size": 48,
+        "primary-table-rva": 26530104,
+        "secondary-table-rva": 26530136,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8663920,
+        "entry-rva": 8588504,
+        "layout-size": 48,
+        "primary-table-rva": 26530104,
+        "secondary-table-rva": 26530168,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8663920,
+        "entry-rva": 8588516,
+        "layout-size": 48,
+        "primary-table-rva": 26530104,
+        "secondary-table-rva": 26530392,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8663920,
+        "entry-rva": 8588528,
+        "layout-size": 48,
+        "primary-table-rva": 26530104,
+        "secondary-table-rva": 26530424,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8663920,
+        "entry-rva": 8588540,
+        "layout-size": 48,
+        "primary-table-rva": 26530104,
+        "secondary-table-rva": 26530456,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8672320,
+        "entry-rva": 8589356,
+        "layout-size": 48,
+        "primary-table-rva": 26533560,
+        "secondary-table-rva": 26533592,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8672320,
+        "entry-rva": 8589368,
+        "layout-size": 48,
+        "primary-table-rva": 26533560,
+        "secondary-table-rva": 26533624,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8672320,
+        "entry-rva": 8589380,
+        "layout-size": 48,
+        "primary-table-rva": 26533560,
+        "secondary-table-rva": 26533656,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8672320,
+        "entry-rva": 8589392,
+        "layout-size": 48,
+        "primary-table-rva": 26533560,
+        "secondary-table-rva": 26533688,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8672320,
+        "entry-rva": 8589404,
+        "layout-size": 48,
+        "primary-table-rva": 26533560,
+        "secondary-table-rva": 26533720,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8681280,
+        "entry-rva": 8590332,
+        "layout-size": 48,
+        "primary-table-rva": 26536824,
+        "secondary-table-rva": 26536856,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8681280,
+        "entry-rva": 8590344,
+        "layout-size": 48,
+        "primary-table-rva": 26536824,
+        "secondary-table-rva": 26536888,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8681280,
+        "entry-rva": 8590356,
+        "layout-size": 48,
+        "primary-table-rva": 26536824,
+        "secondary-table-rva": 26536920,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8681280,
+        "entry-rva": 8590368,
+        "layout-size": 48,
+        "primary-table-rva": 26536824,
+        "secondary-table-rva": 26536952,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8681280,
+        "entry-rva": 8590380,
+        "layout-size": 48,
+        "primary-table-rva": 26536824,
+        "secondary-table-rva": 26536984,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8689712,
+        "entry-rva": 8591368,
+        "layout-size": 48,
+        "primary-table-rva": 26540280,
+        "secondary-table-rva": 26540312,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8689712,
+        "entry-rva": 8591380,
+        "layout-size": 48,
+        "primary-table-rva": 26540280,
+        "secondary-table-rva": 26540344,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8689712,
+        "entry-rva": 8591436,
+        "layout-size": 48,
+        "primary-table-rva": 26540280,
+        "secondary-table-rva": 26540376,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8689712,
+        "entry-rva": 8591448,
+        "layout-size": 48,
+        "primary-table-rva": 26540280,
+        "secondary-table-rva": 26540408,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8689712,
+        "entry-rva": 8591460,
+        "layout-size": 48,
+        "primary-table-rva": 26540280,
+        "secondary-table-rva": 26540440,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      },
+      {
+        "callee-rva": 8691888,
+        "entry-rva": 8593020,
+        "layout-size": 48,
+        "primary-table-rva": 26541272,
+        "secondary-table-rva": 26541304,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 8
+      },
+      {
+        "callee-rva": 8691888,
+        "entry-rva": 8593032,
+        "layout-size": 48,
+        "primary-table-rva": 26541272,
+        "secondary-table-rva": 26541336,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 16
+      },
+      {
+        "callee-rva": 8691888,
+        "entry-rva": 8593176,
+        "layout-size": 48,
+        "primary-table-rva": 26541272,
+        "secondary-table-rva": 26541368,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 24
+      },
+      {
+        "callee-rva": 8691888,
+        "entry-rva": 8593224,
+        "layout-size": 48,
+        "primary-table-rva": 26541272,
+        "secondary-table-rva": 26541400,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 32
+      },
+      {
+        "callee-rva": 8691888,
+        "entry-rva": 8593236,
+        "layout-size": 48,
+        "primary-table-rva": 26541272,
+        "secondary-table-rva": 26541432,
+        "size": 9,
+        "slot": 0,
+        "this-offset": 40
+      }
+    ]
+  },
+  "parameter_source": {
+    "path": "tools/adjustor_thunk_generate_v3.py",
+    "sha256": "476b6e604e00f7162ba7f148a67e15202611849b584605c7090c89003ac7cf45"
+  },
+  "pause_reason": "",
+  "paused": false,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "1e3b9a284283974b21735875688a8d635ef2a9423cd776430e2618ad0e991746",
+    "review_task_id": "review-family-50de6f203a53ff1c9c17",
+    "reviewer_model": "gpt-6.1-terra",
+    "spec_sha256": "f45310e926ef1143a251558cd85a98f93664ac226b28ce46cc66f2fa9df6048f"
+  },
+  "template_source": {
+    "path": "tools/adjustor_thunk_template_v3.py",
+    "sha256": "197a5390162e8fa5e349274a6d522934c9bd50ae8d74d94f5983234388f85488"
+  }
+}
