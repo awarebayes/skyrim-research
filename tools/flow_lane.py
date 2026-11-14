@@ -806,8 +806,11 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                         continue
                 if not integ['checks']:
                     started = time.monotonic()
+                    logs = fdir / 'lane/logs' / receipt['id'] / str(len(receipt.get('attempts', [])))
+                    receipt['checks_log_dir'] = str(logs)
+                    save_run(fdir, receipt)
                     try:
-                        f.pre_push_checks(tree, integ['commit'], python, candidate=True)
+                        f.pre_push_checks(tree, integ['commit'], python, candidate=True, log_dir=logs)
                     except f.FlowError as error:
                         if not receipt.get('tooling_accepted'):
                             raise
@@ -881,6 +884,10 @@ def finish_run(root, fdir, receipt, python, ci_wait):
         started = time.monotonic()
         result = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
                                 cwd=tree, capture_output=True, text=True)
+        log = fdir / 'lane/logs' / receipt['id'] / 'ci.log'
+        with state_lock(fdir):
+            atomic_write(log, (result.stdout + result.stderr).encode())
+        receipt['ci_log'] = str(log)
         integ['ci'] = {0: 'green', 1: 'red', 2: 'pending'}.get(result.returncode, 'unavailable')
         integ['wall_seconds']['ci'] = time.monotonic() - started
         save_run(fdir, receipt)

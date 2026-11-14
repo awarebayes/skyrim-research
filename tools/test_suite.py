@@ -63,6 +63,11 @@ def run(root, jobs, listing=False):
                 total += report['run']
                 skipped += report['skipped']
     failed |= total != expected
+    seconds = time.monotonic()-started
+    report = root / '.local/test-suite-results.json'
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(json.dumps(dict(discovered=expected, executed=total, skipped=skipped, failed=failed,
+                                      jobs=jobs, seconds=seconds, python=sys.version.split()[0]), indent=2)+'\n')
     print(f'\nRan {total} tests in {time.monotonic()-started:.3f}s; discovered {expected}; module processes {jobs}')
     print('FAILED' if failed else f'OK (skipped={skipped}; existing unittest decorators only)')
     return int(failed)

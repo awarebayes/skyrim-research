@@ -117,14 +117,16 @@ def isolate_failure(root, fdir, receipt, python, branch, error):
     lane.snapshot(fdir, private)
     accepted, failures = [], list(original.get('tooling_dropped', []))
     best = None
-    for item in [None, *inputs]:
+    for number, item in enumerate([None, *inputs]):
         trial = json.loads(json.dumps(original))
         trial.update(tooling=accepted + ([item] if item else []), integrated=None,
                      baseline_check=True, state='running')
         lane.build(root, private, trial, python, branch)
         integ = trial['integrated']
         try:
-            f.pre_push_checks(Path(trial['tree']), integ['commit'], python, candidate=True)
+            logs = private / 'check-logs' / str(number)
+            trial['checks_log_dir'] = str(logs)
+            f.pre_push_checks(Path(trial['tree']), integ['commit'], python, candidate=True, log_dir=logs)
         except f.FlowError as failure:
             if item is None:
                 raise f.FlowError('whole-tree baseline check failed: ' + str(failure)) from error
