@@ -58,6 +58,8 @@ No mode commits. Stage the printed files by name and commit them with the eviden
 """
 import argparse
 import copy
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -82,6 +84,81 @@ from flow_state import state_lock, require_complete  # noqa: E402
 PROGRESS = 'data/progress.json'
 TARGET = 'builds/target.json'
 REVIEWS = '.local/reviews'
+
+# One isolated, read-only preparation snapshot. Every transactional write invalidates it;
+# the ordinary validator still checks the complete result before any progress is written.
+_BATCH = ContextVar('acceptance_batch', default=None)
+
+
+@contextmanager
+def acceptance_batch(root):
+    state = dict(root=Path(root).resolve(), loaded=None, validated=None, failure=None,
+                 stale=None, inventory=None, malformed={}, reviews={}, hashes={})
+    token = _BATCH.set(state)
+    try:
+        yield
+    finally:
+        _BATCH.reset(token)
+
+
+def _batch(root):
+    state = _BATCH.get()
+    return state if state is not None and state['root'] == Path(root).resolve() else None
+
+
+def invalidate_acceptance_batch(root):
+    state = _batch(root)
+    if state is not None:
+        state.update(loaded=None, validated=None, failure=None, stale=None, inventory=None, malformed={})
+
+
+def validate_snapshot(root, data, target):
+    state = _batch(root)
+    if state is None or state['loaded'] is None or state['loaded'][0] is not data:
+        return validate(data, target, root, stale_ok=True)
+    if state['failure'] is not None:
+        raise state['failure'].with_traceback(None)
+    if state['validated'] is not data:
+        try:
+            validate(data, target, root, stale_ok=True)
+        except (ValueError, KeyError, TypeError, OSError) as error:
+            state['failure'] = error
+            raise
+        state['validated'] = data
+
+
+def _review_sha(blob):
+    state = _BATCH.get()
+    if state is None:
+        return hashlib.sha256(blob).hexdigest()
+    key = id(blob)
+    if key not in state['hashes']:
+        state['hashes'][key] = (blob, hashlib.sha256(blob).hexdigest())
+    return state['hashes'][key][1]
+
+
+def _review_document(root, source):
+    state = _batch(root)
+    key = None
+    if state is not None and source != '-':
+        path = Path(source).resolve()
+        if (Path(root) / REVIEWS).resolve() in path.parents:
+            stat = path.stat()
+            key = (path, stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+            if key in state['reviews']:
+                return state['reviews'][key]
+    path, blob = private_review(root, source)
+    title, header, blocks = review_blocks(blob.decode('utf-8'))
+    indexed = {}
+    for parts, body in blocks:
+        if len(parts) >= 2:
+            indexed.setdefault((parts[0], parts[1]), []).append((parts[2:], body))
+    document = (path, blob, title, header, blocks, indexed)
+    if key is not None:
+        state['reviews'][key] = document
+    return document
+
+
 TASK_ID = re.compile(r'[a-z0-9][a-z0-9-]*')
 # The Reviewer's blocking grounds that have a check line (docs/verification.md, tier 1 item 3);
 # record binding is `report_binding`. An approve must pass all of them.
@@ -388,11 +465,34 @@ def private_review(root, source):
 
 
 def load(root):
-    return json.loads((root / PROGRESS).read_text()), json.loads((root / TARGET).read_text())
+    state = _batch(root)
+    if state is not None and state['loaded'] is not None:
+        return state['loaded']
+    result = json.loads((root / PROGRESS).read_text()), json.loads((root / TARGET).read_text())
+    if state is not None:
+        state['loaded'] = result
+    return result
+
+
+def inventory_index(data):
+    state = _BATCH.get()
+    if state is None:
+        return None
+    cached = state['inventory']
+    if cached is None or cached[0] is not data:
+        addresses, names = {}, {}
+        for i, fn in enumerate(data['functions']):
+            addresses.setdefault((fn['build_id'], fn['rva']), []).append(i)
+            for name in {fn['id'], f'0x{fn["rva"]:x}'}:
+                names.setdefault(name, []).append(fn['id'])
+        cached = state['inventory'] = (data, addresses, names)
+    return cached
 
 
 def entry_index(data, build_id, rva):
-    hits = [i for i, fn in enumerate(data['functions']) if fn['build_id'] == build_id and fn['rva'] == rva]
+    indexed = inventory_index(data)
+    hits = (indexed[1].get((build_id, rva), []) if indexed is not None else
+            [i for i, fn in enumerate(data['functions']) if fn['build_id'] == build_id and fn['rva'] == rva])
     refuse(len(hits) == 1, f'{len(hits)} inventory entries for {build_id} 0x{rva:x}; expected exactly 1')
     return hits[0]
 
@@ -410,7 +510,9 @@ def resolve_selection(root, data, functions=None, units=None):
         return None
     picked = set()
     for name in functions or []:
-        hits = [fn['id'] for fn in data['functions'] if name in (fn['id'], f'0x{fn["rva"]:x}')]
+        indexed = inventory_index(data)
+        hits = (indexed[2].get(name, []) if indexed is not None else
+                [fn['id'] for fn in data['functions'] if name in (fn['id'], f'0x{fn["rva"]:x}')])
         refuse(len(hits) == 1, f'--functions {name}: {len(hits)} inventory entries; expected exactly 1')
         picked.update(hits)
     for name in units or []:
@@ -422,7 +524,13 @@ def resolve_selection(root, data, functions=None, units=None):
 
 
 def stale_ids(root, data):
-    return {fn['id'] for fn in data['functions'] if fn['status'] == 'matched' and acceptance_staleness(fn, root)}
+    state = _batch(root)
+    if state is not None and state['stale'] is not None and state['stale'][0] is data:
+        return set(state['stale'][1])
+    result = {fn['id'] for fn in data['functions'] if fn['status'] == 'matched' and acceptance_staleness(fn, root)}
+    if state is not None:
+        state['stale'] = (data, result)
+    return set(result)
 
 
 def now_utc():
@@ -436,9 +544,10 @@ def write_progress(root, data):
 def unchanged_elsewhere(before, after, indices):
     """The tool may touch the named entries and updated_at; anything else changing is a bug, so refuse."""
     a, b = copy.deepcopy(before), copy.deepcopy(after)
+    indices = set(indices)
     for d in (a, b):
         d.pop('updated_at')
-        d['functions'] = [fn for i, fn in enumerate(d['functions']) if i not in set(indices)]
+        d['functions'] = [fn for i, fn in enumerate(d['functions']) if i not in indices]
     refuse(a == b, 'internal error: other inventory data would change')
 
 
@@ -486,7 +595,7 @@ def review_record(fn, record, header, title, blob, when, kind, naming, previous=
         'source_digest_method': DIGEST_METHOD, 'source_digest': record['source']['digest'],
         'reviewer_model': header['reviewer_model'], 'review_task_id': title,
         'verdict': 'approve', 'escalation_category': 'none',
-        'review_sha256': hashlib.sha256(blob).hexdigest(), 'review_date': when.date().isoformat(),
+        'review_sha256': _review_sha(blob), 'review_date': when.date().isoformat(),
         'review_kind': kind,
         'previous_source_digest': previous['source_digest'] if previous else None,
         'previous_review_sha256': previous['review_sha256'] if previous else None,
@@ -561,12 +670,16 @@ def prepare(root, data, target, index, title, header, block, blob, when):
     return fn, record, review_record(fn, record, header, title, blob, when, 'delta', naming, previous, old)
 
 
-def apply(root, data, new, target, prepared, tolerated, when, *, rebuild_index=True):
+def apply(root, data, new, target, prepared, tolerated, when, *, rebuild_index=True, stage_only=False):
     """Write the prepared review records and the new inventory, all or nothing; returns changed files.
 
     `prepared` is [(index, fn, record, review record or None)]. From the first write on, any failure,
     including an interrupt or a failed progress write, restores every file this touched.
+    `stage_only` retains validated sample records and binds the in-memory batch snapshot;
+    its caller must roll back those records unless the final transaction succeeds.
     """
+    refuse(not stage_only or (_batch(root) is not None and not rebuild_index),
+           'staging sample approvals requires an isolated acceptance batch without an index rebuild')
     new['updated_at'] = when.strftime('%Y-%m-%dT%H:%M:%SZ')
     unchanged_elsewhere(data, new, [i for i, *_ in prepared])
     written = [review_record_path(fn) for _, fn, _, review in prepared if review is not None]
@@ -582,7 +695,8 @@ def apply(root, data, new, target, prepared, tolerated, when, *, rebuild_index=T
             validate(new, target, root, stale_ok=tolerated)
         except (ValueError, KeyError, TypeError) as exc:
             raise Refused(f'validator rejects the result: {exc}') from None
-        write_progress(root, new)
+        if not stage_only:
+            write_progress(root, new)
         if rebuild_index:
             write_index(new, root)
     except BaseException:
@@ -592,7 +706,14 @@ def apply(root, data, new, target, prepared, tolerated, when, *, rebuild_index=T
             else:
                 (root / name).write_bytes(blob_before)
         raise
-    changed = [PROGRESS] + written
+    finally:
+        invalidate_acceptance_batch(root)
+    if stage_only:
+        # The family gates consume the same fully validated sample snapshot, while the public
+        # inventory stays untouched until the final transaction. Review records are staged on disk.
+        state = _batch(root)
+        state.update(loaded=(new, target), validated=new)
+    changed = ([] if stage_only else [PROGRESS]) + written
     if saved[INDEX] != (root / INDEX).read_bytes():
         changed.append(INDEX)
     return changed
@@ -676,11 +797,15 @@ def prepare_many(root, data, target, review_source, targets, verdict, when, sele
     """Prepare one review's acceptances; all per-function checks remain on this path."""
     refuse(verdict == 'approve', f'verdict {verdict!r}: only approve is accepted; '
            'reject goes back to the Drafter or Engineer, escalate per docs/verification.md')
-    review_file, blob = private_review(root, review_source)
-    title, header, blocks = review_blocks(blob.decode('utf-8'))
+    review_file, blob, title, header, blocks, indexed = _review_document(root, review_source)
     refuse(title is not None and TASK_ID.fullmatch(title),
            'review has no "# Review <task-id>" title with a lowercase task id')
-    refuse_malformed(header, blocks, data['functions'])
+    state = _batch(root)
+    key = (id(data), id(header), id(blocks))
+    if state is None or key not in state['malformed']:
+        refuse_malformed(header, blocks, data['functions'])
+        if state is not None:
+            state['malformed'][key] = (data, header, blocks)
     refuse(header.get('fresh_context') == 'yes', 'review does not state fresh_context: yes')
     refuse(header.get('drafted_or_triaged_any_reviewed_function') == 'no',
            'review does not state the Reviewer neither drafted nor triaged the function')
@@ -699,7 +824,10 @@ def prepare_many(root, data, target, review_source, targets, verdict, when, sele
             refuse(len(parts) >= 2 and re.fullmatch(r'0x[0-9a-fA-F]+', parts[1]),
                    f'review block heading "## {" ".join(parts)}" is not "<build id> 0x<rva> <size>"')
             if select is not None:
-                hits = [fn for fn in data['functions'] if fn['build_id'] == parts[0] and fn['rva'] == int(parts[1], 16)]
+                inventory_lookup = inventory_index(data)
+                hits = ([data['functions'][i] for i in inventory_lookup[1].get((parts[0], int(parts[1], 16)), [])]
+                        if inventory_lookup is not None else [fn for fn in data['functions']
+                        if fn['build_id'] == parts[0] and fn['rva'] == int(parts[1], 16)])
                 if not hits or hits[0]['id'] not in select:
                     skipped.append(f'{" ".join(parts)}: not selected')
                     continue
@@ -713,7 +841,12 @@ def prepare_many(root, data, target, review_source, targets, verdict, when, sele
     for build_id, rva in targets:
         index = entry_index(data, build_id, rva)
         refuse(index not in [i for i, *_ in prepared], f'{build_id} 0x{rva:x} is named twice')
-        _, _, block = parse_review(blob.decode('utf-8'), build_id, rva, data['functions'][index]['size'])
+        matches = indexed.get((build_id, f'0x{rva:x}'), [])
+        refuse(len(matches) == 1, f'review has {len(matches)} blocks for {build_id} 0x{rva:x}; expected exactly 1')
+        rest, block = matches[0]
+        size = data['functions'][index]['size']
+        refuse(len(rest) == 1 and rest[0] == str(size),
+               f'review block for {build_id} 0x{rva:x} gives size {" ".join(rest) or "none"}, not the inventory size {size}')
         prepared.append((index, *prepare(root, data, target, index, title, header, block, blob, when)))
     return prepared, skipped
 
@@ -728,7 +861,7 @@ def accept_reviews(root, requests, when=None, *, prepare_only=False):
     root = Path(root)
     refuse(bool(requests), 'no reviews to accept')
     data, target = load(root)
-    validate(data, target, root, stale_ok=True)
+    validate_snapshot(root, data, target)
     stale_before = stale_ids(root, data)
     when = when or now_utc()
     prepared, skipped, selected = [], [], set()
@@ -743,8 +876,10 @@ def accept_reviews(root, requests, when=None, *, prepare_only=False):
         selected.update(ids)
         prepared.extend(rows)
         skipped.extend(omitted)
-    new = copy.deepcopy(data)
+    new = copy.deepcopy(data) if _batch(root) is None else dict(data, functions=list(data['functions']))
     for index, _, record, review in prepared:
+        if _batch(root) is not None:
+            new['functions'][index] = copy.deepcopy(new['functions'][index])
         new['functions'][index]['status'] = 'matched'
         set_named(new['functions'], index, named_value(root, record, review['naming_findings']))
     if prepare_only:
@@ -770,7 +905,7 @@ def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None, *,
     root = Path(root)
     profile = profile or active_profile(root)
     data, target = load(root)
-    validate(data, target, root, stale_ok=True)
+    validate_snapshot(root, data, target)
     batch_path = fr.public_path(batch_path, f'reports/{target["build_id"]}/family-batches/')
     batch = fr.read(root, batch_path)
     family_path = fr.public_path(batch['family_path'], f'reports/{target["build_id"]}/families/')
@@ -780,7 +915,7 @@ def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None, *,
     fr.private_approval(root, family, profile)
     fr.validate_batch(batch, family)
     fr.ordering(root, batch_path, batch)
-    flow.family_group_hold(root, fdir or flow.flow_dir(root), batch['population'])
+    flow.family_group_hold(root, fdir or flow.flow_dir(root), batch['population'], data=data)
     by_id = {fn['id']: fn for fn in data['functions']}
     # Enrollment already checked the first 20 and their safeguards; their frozen row digests
     # are bound by the saved family review. Later batches review only their own required members.
@@ -795,8 +930,10 @@ def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None, *,
     flow.family_reviewed_gate(root, fdir or flow.flow_dir(root), required, data, target)
     when = when or now_utc()
     prepared, new = [], copy.deepcopy(data)
+    positions = {fn['id']: i for i, fn in enumerate(data['functions'])}
+    batch_digest = fr.digest(batch)
     for fid in batch['population']:
-        index = next(i for i, fn in enumerate(data['functions']) if fn['id'] == fid)
+        index = positions[fid]
         fn = data['functions'][index]
         if fid in required:
             continue
@@ -808,7 +945,7 @@ def accept_family_batch(root, batch_path, when=None, profile=None, fdir=None, *,
                            'family', ['Family approval does not assess individual names.'])
         rv.update(review_record_schema=4, review_sha256=family['review']['review_sha256'],
                   family_evidence={'family_path': family_path, 'batch_path': batch_path,
-                                   'batch_sha256': fr.digest(batch), 'member_sha256': fr.member_digest(fn, rec)})
+                                   'batch_sha256': batch_digest, 'member_sha256': fr.member_digest(fn, rec)})
         prepared.append((index, fn, rec, rv))
         new['functions'][index]['status'] = 'matched'
         set_named(new['functions'], index, False)
@@ -842,7 +979,7 @@ def label_only(root, select=None, when=None, *, prepare_only=False):
     `review behind` entries when nothing is selected; any ineligible one refuses the whole run."""
     root = Path(root)
     data, target = load(root)
-    validate(data, target, root, stale_ok=True)
+    validate_snapshot(root, data, target)
     stale_before = stale_ids(root, data)
     candidates = [i for i, fn in enumerate(data['functions'])
                   if (select is None or fn['id'] in select)

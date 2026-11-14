@@ -10,6 +10,11 @@ from check_source_digest import source_digest_cache
 
 @source_digest_cache()
 def accept(root, requests, when=None, *, prepare_only=False):
+    with af.acceptance_batch(root):
+        return _accept(root, requests, when, prepare_only=prepare_only)
+
+
+def _accept(root, requests, when=None, *, prepare_only=False):
     root = Path(root)
     when = when or af.now_utc()
     data, target = af.load(root)
@@ -82,10 +87,11 @@ def accept(root, requests, when=None, *, prepare_only=False):
             new, prepared = combine()
             remember(prepared)
             # Use the ordinary transactional writer and every validator check. Only the derived
-            # index waits until the final combined apply. The family gate then sees real sample
+            # index waits until the final combined apply. The family gate then sees staged sample
             # approvals, including their private parser and second-pass/rerun safeguards.
             provisional = True
-            af.apply(root, data, new, target, prepared, stale_before - selected, when, rebuild_index=False)
+            af.apply(root, data, new, target, prepared, stale_before - selected, when,
+                     rebuild_index=False, stage_only=True)
         for request in families:
             prepare_individually(request)
         if not plans:
@@ -107,6 +113,7 @@ def accept(root, requests, when=None, *, prepare_only=False):
                     path.unlink(missing_ok=True)
                 else:
                     path.write_bytes(before)
+            af.invalidate_acceptance_batch(root)
 
 
 def main():
