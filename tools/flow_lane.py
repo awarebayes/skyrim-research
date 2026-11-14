@@ -524,6 +524,10 @@ def _source_files(root, request):
     for rva in request['functions']:
         fn = by_rva[rva]
         paths.add(fn['report'])
+        if fn.get('status') == 'matched':
+            review = Path(fn['report']).with_suffix('.review.json').as_posix()
+            if (root / review).is_file():
+                paths.add(review)
         record = f.fr.read(root, fn['report'])
         paths.update(record['source']['translation_unit'])
         if record.get('symbol_map', {}).get('path'):
@@ -532,6 +536,27 @@ def _source_files(root, request):
             if (root / f.history_name(name)).exists():
                 paths.add(f.history_name(name))
     return by_rva, paths
+
+
+def copy_private_review(source, tree, review, name=None):
+    """Preserve review bytes and containment without inheriting immutable input modes."""
+    review = f.review_path(source, dict(saved_review=str(review)))
+    relative = review.resolve().relative_to((Path(source) / f.REVIEWS).resolve())
+    destination = Path(tree) / f.REVIEWS / (name if name is not None else relative)
+    destination = f.review_path(tree, dict(saved_review=str(destination)))
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists():
+        f.refuse(destination.read_bytes() == review.read_bytes(),
+                 'conflicting saved review: ' + str(relative))
+    else:
+        shutil.copyfile(review, destination)
+    return destination
+
+
+def merge_metadata(tree, source, revision):
+    # integration_base validated the metadata-only history before this transport step.
+    f.git(tree, 'fetch', '--quiet', str(source), revision)
+    f.git(tree, 'merge', '--quiet', '--no-edit', revision)
 
 
 def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk=False, hard_free_gb=None):
@@ -577,15 +602,11 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
         before_item = f.git(tree, 'rev-parse', 'HEAD')
         try:
             selected, bound = prepare(item, frozen)
-            for review in sorted((source / f.REVIEWS).glob('*')):
+            for review in sorted((source / f.REVIEWS).rglob('*')):
                 if not review.is_file():
                     continue
                 f.review_path(source, dict(saved_review=str(review)))
-                dest = tree / f.REVIEWS / review.name
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                f.refuse(not dest.exists() or dest.read_bytes() == review.read_bytes(),
-                         'conflicting saved review: ' + review.name)
-                shutil.copyfile(review, dest)
+                dest = copy_private_review(source, tree, review)
                 input_pins[str(review.resolve())] = hashlib.sha256(review.read_bytes()).hexdigest()
                 review_copies[str(review.resolve())] = dest.relative_to(tree).as_posix()
             for request in selected:
@@ -605,7 +626,7 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
             metadata_base = (f'origin/{branch}' if pinned_tooling else
                              f.integration_base(source, branch, item['with_metadata'], remote=metadata_origin))
             if item['with_metadata'] and metadata_base != f'origin/{branch}':
-                f.git(tree, 'merge', '--quiet', '--no-edit', metadata_base)
+                merge_metadata(tree, source, metadata_base)
             for request in selected:
                 by_rva, paths = _source_files(source, request)
                 f._integration_origin_unchanged(source, f.git(source, 'rev-parse', 'HEAD'), base,
@@ -623,14 +644,10 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
                 request['item'] = item['id']
                 if request.get('review'):
                     src = Path(request['review'])
-                    dest = tree / '.local/reviews' / (item['id'] + '-' + src.name)
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copyfile(src, dest)
+                    dest = copy_private_review(source, tree, src, item['id'] + '-' + src.name)
                     input_pins[str(src)] = hashlib.sha256(src.read_bytes()).hexdigest()
                     request['review'] = str(dest)
-                # Family approval filenames must retain the names bound by the manifest.
-                if request['kind'] == 'family':
-                    shutil.copytree(source / f.REVIEWS, tree / f.REVIEWS, dirs_exist_ok=True)
+                # The validated recursive copy above already preserves family approval filenames.
                 requests.append(request)
             bindings.update(bound)
             for group in bound.values():
@@ -878,6 +895,7 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
 @ci_serialized('runs')
 def finish_run(root, fdir, receipt, python, ci_wait):
     tree, integ = Path(receipt['tree']), receipt['integrated']
+    integ.setdefault('accepted', sum(len(r.get('functions', [])) for r in receipt.get('accepted', [])))
     branch = receipt['branch']
     receipt['owner'] = process_owner()
     save_run(fdir, receipt)
