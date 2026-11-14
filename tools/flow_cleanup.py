@@ -47,6 +47,8 @@ def cleanup(root, fdir, dry_run=False):
         with lane.state_lock(fdir):
             active = [lane.read(p) for p in (fdir / 'lane/queue').glob('*.json')
                       if lane.read(p)['state'] in ('queued', 'running')]
+            active += [lane.read(p) for p in (fdir / 'lane/tooling-queue').glob('*.json')
+                       if lane.read(p)['state'] in ('queued', 'running')]
             active += [lane.read(p) for p in (fdir / 'lane/tooling').glob('*.json')
                        if lane.read(p)['state'] == 'running']
         for tree, commit, proof, owner, lifecycle_lock in candidates(root, fdir):
@@ -88,7 +90,8 @@ def cleanup(root, fdir, dry_run=False):
                 # Close the enqueue/check/remove race without holding state locks during I/O.
                 reservation = fdir / 'cleanup/claims' / (hashlib.sha256(str(tree).encode()).hexdigest() + '.json')
                 with lane.state_lock(fdir):
-                    queued = [lane.read(p) for p in (fdir / 'lane/queue').glob('*.json')]
+                    queued = [lane.read(p) for name in ('queue', 'tooling-queue')
+                              for p in (fdir / 'lane' / name).glob('*.json')]
                     f.refuse(not any(i['state'] in ('queued', 'running') and
                                      Path(i['root']).resolve().is_relative_to(tree) for i in queued), 'new queued input')
                     if owner and owner[0] == 'rerun':

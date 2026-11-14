@@ -5,6 +5,7 @@ worktree is removed, including failed candidates. A run drains one frozen queue 
 """
 from contextlib import contextmanager
 import fcntl
+from functools import wraps
 import hashlib
 import json
 import math
@@ -65,15 +66,31 @@ def lane_lock(fdir, wait=False, purpose=None):
         if purpose:
             with state_lock(fdir):
                 write(owner_path, dict(process_owner(), kind=purpose, active=True))
+        lease = LaneLease(handle, fdir, owner_path, purpose)
         try:
-            yield
+            yield lease
         finally:
-            if purpose:
-                with state_lock(fdir):
-                    owner = read(owner_path)
-                    owner['active'] = False
-                    write(owner_path, owner)
-            fcntl.flock(handle, fcntl.LOCK_UN)
+            lease.release()
+
+
+class LaneLease:
+    """A build/push lease that may finish before the enclosing CI watch."""
+    def __init__(self, handle, fdir, owner_path, purpose):
+        self.handle, self.fdir, self.owner_path, self.purpose = handle, fdir, owner_path, purpose
+        self.started, self.seconds, self.released = time.monotonic(), None, False
+
+    def release(self):
+        if self.released:
+            return
+        self.seconds = time.monotonic() - self.started
+        if self.purpose:
+            with state_lock(self.fdir):
+                owner = read(self.owner_path)
+                owner.update(active=False, hold_seconds=self.seconds)
+                write(self.owner_path, owner)
+        fcntl.flock(self.handle, fcntl.LOCK_UN)
+        self.seconds = time.monotonic() - self.started
+        self.released = True
 
 
 def running(fdir):
@@ -90,7 +107,7 @@ def snapshot(fdir, destination):
     with state_lock(fdir):
         require_complete(fdir)
         destination.mkdir(parents=True, exist_ok=True)
-        for name in ('groups', 'imports', 'combined', 'lane/queue', 'lane/runs', 'lane/tooling'):
+        for name in ('groups', 'imports', 'combined', 'lane/queue', 'lane/runs', 'lane/tooling', 'lane/tooling-queue'):
             if (fdir / name).exists():
                 shutil.copytree(fdir / name, destination / name)
         for name in ('versions.json', 'events.jsonl', 'lane/owner.json'):
@@ -125,7 +142,7 @@ def run_status(root, fdir, receipt, active=None):
     actual = info.get('flow_dir', str(fdir))
     prefix = ('python3 ' + shlex.quote(str(f.TOOLS / 'flow.py')) + ' --root ' + shlex.quote(str(receipt.get('root') or root))
               + ' --flow-dir ' + shlex.quote(actual))
-    if receipt.get('state') == 'running':
+    if receipt.get('state') in ('running', 'stale', 'failed', 'conflict'):
         active = (info['running'] if 'running' in info else running(fdir)) if active is None else active
         alive = owner_alive(receipt.get('owner'))
         # Legacy receipts have no PID. A held lane lock protects those old runners.
@@ -156,7 +173,7 @@ def retire(root, fdir, run_id, reason):
     with lane_lock(fdir), state_lock(fdir):
         path = receipt_path(fdir, run_id)
         receipt = read(path)
-        f.refuse(receipt['state'] == 'running', 'only an unfinished run can be retired')
+        f.refuse(receipt['state'] in ('running', 'stale', 'failed', 'conflict'), 'only an unfinished or failed run can be retired')
         f.refuse(not (receipt.get('integrated') or {}).get('pushed'), 'pushed run must resume CI; cannot retire it')
         receipt.update(state='retired', retired_at=f.utc(), retirement_reason=reason)
         for item in receipt.get('items', []):
@@ -169,13 +186,103 @@ def retire(root, fdir, run_id, reason):
         return receipt
 
 
+def lane_python(requested):
+    """The worker interpreter is a transport/build prerequisite, never a match predicate."""
+    configured = os.environ.get('SKYRIM_LANE_PYTHON')
+    candidate = configured or (requested if sys.version_info[:2] == (3, 13) else shutil.which('python3.13'))
+    f.refuse(candidate, 'lane requires python3.13 with pyexpat; set SKYRIM_LANE_PYTHON')
+    if Path(candidate).resolve() == Path(sys.executable).resolve() and sys.version_info[:2] == (3, 13):
+        try:
+            import pyexpat
+        except ImportError:
+            raise f.FlowError('lane requires python3.13 with working pyexpat') from None
+        return str(candidate)
+    result = subprocess.run([str(candidate), '-c',
+                             'import sys,pyexpat; sys.exit(0 if sys.version_info[:2] == (3,13) else 1)'],
+                            capture_output=True, text=True)
+    f.refuse(result.returncode == 0, 'lane requires python3.13 with working pyexpat; interpreter refused: ' + str(candidate))
+    return str(candidate)
+
+
+def recover_stale(fdir):
+    """Skip dead local unpublished owners under the build lease; retain every input and candidate."""
+    with state_lock(fdir):
+        for directory in ('runs', 'tooling'):
+            for path in (Path(fdir) / 'lane' / directory).glob('*.json'):
+                receipt = read(path)
+                owner = receipt.get('owner') or {}
+                if (receipt.get('state') != 'running' or not owner or owner.get('host') != socket.gethostname()
+                        or owner_alive(owner) or (receipt.get('integrated') or {}).get('pushed')):
+                    continue
+                receipt.update(state=('conflict' if 'git rebase' in receipt.get('error', '') else 'stale'), stale_at=f.utc(),
+                               recovery_reason='Dead local publisher skipped; inputs and candidate retained')
+                for item in receipt.get('items', []):
+                    item['state'] = 'stale'
+                if directory == 'runs':
+                    save_run(fdir, receipt)
+                else:
+                    write(path, receipt)
+                f.log_event(Path(fdir), 'lane-stale-skipped', lane=receipt['id'])
+
+
+def wait_for_owner(root, fdir, directory, resume, wait):
+    """A live other publisher is a queue wait; own/stale work needs an explicit resume."""
+    while True:
+        with state_lock(fdir):
+            unfinished = [read(p) for p in (Path(fdir) / 'lane' / directory).glob('*.json')
+                          if read(p)['state'] == 'running'
+                          and not (read(p).get('integrated') or {}).get('pushed')]
+        blockers = [r for r in unfinished if r['id'] != resume]
+        blockers = [r for r in blockers if not (r.get('root') == str(root)
+                    and (r.get('owner') or {}).get('pid') == os.getpid() and not running(fdir))]
+        if not blockers:
+            return
+        blockers = [r for r in blockers if owner_alive(r.get('owner'))
+                    or (not r.get('owner') and running(fdir))]
+        if not blockers:
+            return
+        for r in blockers:
+            command = run_status(root, fdir, r)['resume_command']
+            f.refuse(owner_alive(r.get('owner')) or (not r.get('owner') and running(fdir)),
+                     'unfinished ' + ('tooling publication' if directory == 'tooling' else 'lane run')
+                     + '; resume own or stale receipt: ' + command)
+        f.refuse(wait, 'live publisher busy; retry with --wait-lane')
+        time.sleep(0.25)
+
+
+def require_green(root, commit, python, ci_wait):
+    result = subprocess.run([python, 'tools/ci_status.py', '--commit', commit, '--wait', str(ci_wait)],
+                            cwd=root, capture_output=True, text=True)
+    f.refuse(result.returncode == 0, 'origin CI is not green: ' + result.stdout.strip())
+
+
 def publish_tooling(root, fdir, branch='main', ci_wait=600, python=sys.executable, resume=None, wait_lane=False,
                     soft_free_gb=None, allow_low_disk=False):
     """Check and publish committed tooling under the same lane lock as acceptance work."""
     root, fdir = Path(root).resolve(), Path(fdir).resolve()
-    with lane_lock(fdir, wait=wait_lane, purpose='tooling'):
+    python = lane_python(python)
+    if resume and receipt_path(fdir, resume).parent.name == 'runs':
+        return run_lane(root, fdir, branch, True, ci_wait, python, soft_free_gb=soft_free_gb,
+                        allow_low_disk=allow_low_disk, resume=resume, wait_lane=wait_lane)
+    if wait_lane and not resume:
+        import flow_tooling
+        return flow_tooling.publish(root, fdir, branch, ci_wait, python, soft_free_gb, allow_low_disk)
+    if resume:
         with state_lock(fdir):
-            pending = [read(p) for p in (fdir / 'lane/tooling').glob('*.json') if read(p)['state'] == 'running']
+            previous = read(receipt_path(fdir, resume))
+        if (previous.get('integrated') or {}).get('pushed'):
+            f.refuse(previous['root'] == str(root) and previous['branch'] == branch,
+                     'resume tooling publication with its original root and branch')
+            return finish_tooling(root, fdir, previous, python, ci_wait)
+    wait_for_owner(root, fdir, 'tooling', resume, wait_lane)
+    with lane_lock(fdir, wait=wait_lane, purpose='tooling') as lease:
+        recover_stale(fdir)
+        with state_lock(fdir):
+            pending = [read(p) for p in (fdir / 'lane/tooling').glob('*.json') if read(p)['state'] == 'running' and not (read(p).get('integrated') or {}).get('pushed')]
+            if resume:
+                selected = read(receipt_path(fdir, resume))
+                f.refuse(selected['state'] in ('running', 'failed', 'conflict', 'stale'), 'receipt cannot be resumed')
+                pending = [selected]
             f.refuse(len(pending) <= 1, 'multiple unfinished tooling publications')
             if pending:
                 receipt = pending[0]
@@ -187,6 +294,7 @@ def publish_tooling(root, fdir, branch='main', ci_wait=600, python=sys.executabl
                 receipt = dict(id=uuid.uuid4().hex[:16], kind='tooling', root=str(root), branch=branch,
                                state='running', integrated=None)
             receipt['owner'] = process_owner()
+            receipt.update(state='running', python=python)
             path = fdir / 'lane/tooling' / (receipt['id'] + '.json')
             write(path, receipt)
 
@@ -249,23 +357,73 @@ def publish_tooling(root, fdir, branch='main', ci_wait=600, python=sys.executabl
                     save()
                     break
                 f.refuse(integ.get('pushed'), 'origin kept moving; resume tooling-push after coordinating publishers')
-            result = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
-                                    cwd=root, capture_output=True, text=True)
-            integ['ci'] = {0: 'green', 1: 'red', 2: 'pending'}.get(result.returncode, 'unavailable')
-            ci_log = fdir / 'lane/tooling' / receipt['id'] / 'ci.log'
-            with state_lock(fdir):
-                atomic_write(ci_log, (result.stdout + result.stderr).encode())
-            receipt['ci_log'] = str(ci_log)
+            lease.release()
+            receipt['lane_hold_seconds'] = lease.seconds
             save()
-            f.refuse(integ['ci'] == 'green', 'tooling CI ' + integ['ci'] + ': ' + result.stdout.strip())
-            receipt.update(state='done')
-            receipt.pop('error', None)
-            save()
-            return receipt
+            return finish_tooling(root, fdir, receipt, python, ci_wait)
+
         except BaseException as error:
+            if (receipt.get('integrated') or {}).get('pushed'):
+                raise
             receipt['error'] = str(error)
+            if 'git rebase' in str(error) and not (receipt.get('integrated') or {}).get('pushed'):
+                receipt['state'] = 'conflict'
+                receipt['resume_command'] = run_status(root, fdir, receipt).get('resume_command')
             save()
             raise
+
+
+def ci_serialized(directory):
+    """Only one observer updates a pushed receipt; this lock never covers building or pushing."""
+    def decorate(function):
+        @wraps(function)
+        def finish(root, fdir, receipt, python, ci_wait):
+            path = Path(fdir) / 'lane' / directory / (receipt['id'] + '.json')
+            lock = Path(fdir) / 'lane/ci-locks' / (receipt['id'] + '.lock')
+            lock.parent.mkdir(parents=True, exist_ok=True)
+            with lock.open('a') as handle:
+                fcntl.flock(handle, fcntl.LOCK_EX)
+                with state_lock(fdir):
+                    current = read(path)
+                if current.get('state') == 'done' and (current.get('integrated') or {}).get('ci') == 'green':
+                    return current
+                try:
+                    return function(root, fdir, current, python, ci_wait)
+                except BaseException as error:
+                    current['error'] = str(error)
+                    if directory == 'runs':
+                        save_run(fdir, current)
+                    else:
+                        save_tooling(fdir, current)
+                    raise
+        return finish
+    return decorate
+
+
+def save_tooling(fdir, receipt):
+    with state_lock(fdir):
+        write(Path(fdir) / 'lane/tooling' / (receipt['id'] + '.json'), receipt)
+
+
+@ci_serialized('tooling')
+def finish_tooling(root, fdir, receipt, python, ci_wait):
+    integ = receipt['integrated']
+    receipt['owner'] = process_owner()
+    save_tooling(fdir, receipt)
+    result = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
+                            cwd=root, capture_output=True, text=True)
+    integ['ci'] = {0: 'green', 1: 'red', 2: 'pending'}.get(result.returncode, 'unavailable')
+    ci_log = fdir / 'lane/tooling' / receipt['id'] / 'ci.log'
+    with state_lock(fdir):
+        atomic_write(ci_log, (result.stdout + result.stderr).encode())
+    receipt['ci_log'] = str(ci_log)
+    save_tooling(fdir, receipt)
+    f.refuse(integ['ci'] == 'green', 'tooling CI ' + integ['ci'] + ': ' + result.stdout.strip())
+    receipt.update(state='done')
+    receipt.pop('error', None)
+    save_tooling(fdir, receipt)
+    return receipt
+
 
 
 def signature(fdir, group):
@@ -345,6 +503,8 @@ def save_run(fdir, receipt):
         write(fdir / 'lane/runs' / (receipt['id'] + '.json'), receipt)
         for item in receipt['items']:
             write(fdir / 'lane/queue' / (item['id'] + '.json'), item)
+        import flow_tooling
+        flow_tooling.save_items(fdir, receipt, receipt.get('state') == 'done')
         integ = receipt.get('integrated')
         if integ:
             group_members = {}
@@ -401,6 +561,10 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
         value = f.git(root, 'config', key, check=False)
         if value:
             f.git(tree, 'config', key, value)
+    import flow_tooling
+    active_tools, tool_dropped = flow_tooling.merge(tree, receipt.get('tooling', []))
+    receipt['tooling_accepted'], receipt['tooling_dropped'] = active_tools, tool_dropped
+    carry_base = f.git(tree, 'rev-parse', 'HEAD')
     frozen = tree / '.local/flow'
     snapshot(fdir, frozen)
     requests, bindings, origins, carried, pins = [], {}, [], set(), {}
@@ -434,7 +598,12 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
 
             f.git(source, 'fetch', '--quiet', 'origin', branch)
             metadata_origin = f.git(source, 'merge-base', 'HEAD', f'origin/{branch}') if item['with_metadata'] else None
-            metadata_base = f.integration_base(source, branch, item['with_metadata'], remote=metadata_origin)
+            pinned_tooling = any(Path(t['root']).resolve() == source.resolve()
+                                 and t['revision'] == f.git(source, 'rev-parse', 'HEAD') for t in active_tools)
+            # This exact committed tip is already present through an explicit tooling input.
+            # Other unpublished commits still go through the unchanged metadata-only policy.
+            metadata_base = (f'origin/{branch}' if pinned_tooling else
+                             f.integration_base(source, branch, item['with_metadata'], remote=metadata_origin))
             if item['with_metadata'] and metadata_base != f'origin/{branch}':
                 f.git(tree, 'merge', '--quiet', '--no-edit', metadata_base)
             for request in selected:
@@ -484,7 +653,7 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
             if copied:
                 group['saved_review'] = copied
                 f.save_group(frozen, group)
-    if not requests:
+    if not requests and not active_tools and not receipt.get('baseline_check'):
         receipt.update(dropped=dropped, state='done')
         for item in receipt['items']:
             item['state'] = 'dropped'
@@ -505,8 +674,8 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
     # Remove any partial carry of a request that failed before acceptance.
     if dropped:
         recarry(requests)
-    result = accept(tree, requests, python)
-    if not result['accepted']:
+    result = accept(tree, requests, python) if requests else dict(accepted=[], dropped=[], changed=[])
+    if not result['accepted'] and not active_tools and not receipt.get('baseline_check'):
         receipt.update(dropped=dropped + result['dropped'], state='done')
         for item in receipt['items']:
             item['state'] = 'dropped'
@@ -518,9 +687,16 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
         result = accept(tree, result['accepted'], python)
         f.refuse(not result['dropped'], 'accepted member changed during re-carry')
         result['dropped'] = failures
-    f.refuse(result['accepted'], 'no member passed acceptance')
+    f.refuse(result['accepted'] or active_tools or receipt.get('baseline_check'), 'no member passed acceptance')
     receipt.update(accepted=result['accepted'], dropped=dropped + result['dropped'], bindings=bindings,
                    origins=origins, input_pins=input_pins, tree=str(tree))
+    if not result['accepted']:
+        receipt['integrated'] = dict(commit=carry_base, accepted=0, files=[], checks=None, pushed=None, ci=None,
+                                    wall_seconds={'build': time.monotonic()-started}, base_revision=base)
+        if carry_base == base and active_tools and not receipt.get('baseline_check'):
+            receipt['integrated'].update(checks=f.utc(), pushed=f.utc())
+        save_run(fdir, receipt)
+        return tree
     f.run([python, 'tools/build_progress_svg.py'], tree, 'build_progress_svg.py')
     paths = carried | set(result['changed']) | {'data/progress.json', 'reconstruction/INDEX.md',
                                               'docs/progress.svg', 'docs/progress-map.svg'}
@@ -542,38 +718,6 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
     return tree
 
 
-def settle_legacy_ci(root, fdir, python, ci_wait):
-    """Finish pre-lane pushed checkpoints before any new push; never rebuild their acceptances."""
-    with state_lock(fdir):
-        pending = {g['integrated']['commit'] for g in f.groups(fdir).values()
-                   if (g.get('integrated') or {}).get('pushed') and g['integrated'].get('ci') != 'green'}
-        pending.update(r['integrated']['commit'] for p in (fdir / 'lane/tooling').glob('*.json')
-                       if ((r := read(p)).get('integrated') or {}).get('pushed') and r['integrated'].get('ci') != 'green')
-    for commit in sorted(pending):
-        result = subprocess.run([python, 'tools/ci_status.py', '--commit', commit, '--wait', str(ci_wait)],
-                                cwd=root, capture_output=True, text=True)
-        ci = {0: 'green', 1: 'red', 2: 'pending'}.get(result.returncode, 'unavailable')
-        with state_lock(fdir):
-            for group in f.groups(fdir).values():
-                if (group.get('integrated') or {}).get('commit') == commit:
-                    group['integrated']['ci'] = ci
-                    f.save_group(fdir, group)
-            for path in (fdir / 'combined').glob('*.json'):
-                transaction = read(path)
-                if (transaction.get('integrated') or {}).get('commit') == commit:
-                    transaction['integrated']['ci'] = ci
-                    write(path, transaction)
-            for path in (fdir / 'lane/tooling').glob('*.json'):
-                publication = read(path)
-                if (publication.get('integrated') or {}).get('commit') == commit:
-                    publication['integrated']['ci'] = ci
-                    if ci == 'green':
-                        publication['state'] = 'done'
-                        publication.pop('error', None)
-                    write(path, publication)
-        f.refuse(ci == 'green', f'CI {ci.upper()} for previous integration {commit}: {result.stdout.strip()}')
-
-
 def disk_preflight(fdir, min_free_gb=None):
     """Refuse expensive lane work below the configured free-space threshold (decimal GB)."""
     setting = min_free_gb if min_free_gb is not None else os.environ.get('SKYRIM_LANE_MIN_FREE_GB', '3')
@@ -593,18 +737,31 @@ def disk_preflight(fdir, min_free_gb=None):
 
 
 def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.executable, min_free_gb=None,
-             soft_free_gb=None, allow_low_disk=False, resume=None):
+             soft_free_gb=None, allow_low_disk=False, resume=None, wait_lane=False):
     root, fdir = Path(root).resolve(), Path(fdir).resolve()
+    python = lane_python(python)
     if resume and receipt_path(fdir, resume).parent.name == 'tooling':
         f.refuse(push, 'tooling resume requires push/CI mode; use tooling-push --resume ' + resume)
         return publish_tooling(root, fdir, branch, ci_wait, python, resume=resume,
                                soft_free_gb=soft_free_gb, allow_low_disk=allow_low_disk)
+    if resume:
+        with state_lock(fdir):
+            previous = read(receipt_path(fdir, resume))
+        if (previous.get('integrated') or {}).get('pushed'):
+            return finish_run(root, fdir, previous, python, ci_wait)
     disk_preflight(fdir, min_free_gb)
-    with lane_lock(fdir, purpose='integration'):
-        settle_legacy_ci(root, fdir, python, ci_wait)
+    wait_for_owner(root, fdir, 'runs', resume, wait_lane)
+    wait_for_owner(root, fdir, 'tooling', None, wait_lane)
+    with lane_lock(fdir, wait=wait_lane, purpose='integration') as lease:
+        recover_stale(fdir)
         with state_lock(fdir):
             require_complete(fdir)
-            unfinished = [read(p) for p in sorted((fdir / 'lane/runs').glob('*.json')) if read(p)['state'] == 'running']
+            unfinished = [read(p) for p in sorted((fdir / 'lane/runs').glob('*.json')) if read(p)['state'] == 'running' and not (read(p).get('integrated') or {}).get('pushed')]
+            unfinished = [r for r in unfinished if r.get('root') == str(root)]
+            if resume:
+                selected = read(receipt_path(fdir, resume))
+                f.refuse(selected['state'] in ('running', 'failed', 'conflict', 'stale'), 'receipt cannot be resumed')
+                unfinished = [selected]
             f.refuse(len(unfinished) <= 1, 'multiple unfinished lane runs')
             if unfinished:
                 receipt = unfinished[0]
@@ -613,14 +770,21 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
             else:
                 f.refuse(not resume, 'no unfinished lane run with that id')
                 items = [read(p) for p in sorted((fdir / 'lane/queue').glob('*.json')) if read(p)['state'] == 'queued']
-                if not items:
+                import flow_tooling
+                tooling = [read(p) for p in sorted((fdir / 'lane/tooling-queue').glob('*.json'))
+                           if read(p)['state'] == 'queued' and read(p)['branch'] == branch]
+                tooling.sort(key=lambda i: (i['queued_at'], i['id']))
+                if tooling and not flow_tooling.mixed_safe(tooling):
+                    items = []  # Gate-changing tooling publishes before function acceptances.
+                if not items and not tooling:
                     return dict(state='empty')
                 f.refuse(all(i['branch'] == branch for i in items), 'queued requests name different branches')
-                receipt = dict(id=uuid.uuid4().hex[:16], root=str(root), branch=branch, items=items, state='running', integrated=None)
+                receipt = dict(id=uuid.uuid4().hex[:16], root=str(root), branch=branch, items=items, tooling=tooling, state='running', integrated=None)
                 for item in items:
                     item['state'], item['run'] = 'running', receipt['id']
                 save_run(fdir, receipt)
             receipt['owner'] = process_owner()
+            receipt.update(state='running', python=python)
             save_run(fdir, receipt)
         try:
             while True:
@@ -642,13 +806,27 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                         continue
                 if not integ['checks']:
                     started = time.monotonic()
-                    f.pre_push_checks(tree, integ['commit'], python, candidate=True)
+                    logs = fdir / 'lane/logs' / receipt['id'] / str(len(receipt.get('attempts', [])))
+                    receipt['checks_log_dir'] = str(logs)
+                    save_run(fdir, receipt)
+                    try:
+                        f.pre_push_checks(tree, integ['commit'], python, candidate=True, log_dir=logs,
+                                          base_revision=integ['base_revision'])
+                    except f.FlowError as error:
+                        if not receipt.get('tooling_accepted'):
+                            raise
+                        import flow_tooling
+                        flow_tooling.isolate_failure(root, fdir, receipt, python, branch, error)
+                        if receipt['state'] == 'done':
+                            return receipt
+                        tree, integ = Path(receipt['tree']), receipt['integrated']
                     integ['checks'] = f.utc()
                     integ['wall_seconds']['checks'] = time.monotonic() - started
                     save_run(fdir, receipt)
                 if not push:
                     return receipt
                 if not integ['pushed']:
+                    require_green(tree, integ['base_revision'], python, ci_wait)
                     # Re-read the live scheduling gates just before publishing the frozen tree.
                     with state_lock(fdir):
                         for name, pinned in receipt['bindings'].items():
@@ -684,28 +862,48 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                         continue
                     integ['pushed'] = f.utc()
                     save_run(fdir, receipt)
-                if integ['ci'] != 'green':
-                    started = time.monotonic()
-                    result = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
-                                            cwd=tree, capture_output=True, text=True)
-                    integ['ci'] = {0: 'green', 1: 'red', 2: 'pending'}.get(result.returncode, 'unavailable')
-                    integ['wall_seconds']['ci'] = time.monotonic() - started
-                    save_run(fdir, receipt)
-                    f.refuse(integ['ci'] == 'green', f'CI {integ["ci"].upper()} for {integ["commit"]}: {result.stdout.strip()}')
-                # The shared checkout needs the new remote ref so next-actions offers sync.
-                f.git(root, 'fetch', '--quiet', 'origin', branch)
-                receipt.pop('error', None)
-                receipt['state'] = 'done'
-                accepted_items = {r['item'] for r in receipt['accepted']}
-                for item in receipt['items']:
-                    item['state'] = 'done' if item['id'] in accepted_items else 'dropped'
+                lease.release()
+                receipt['lane_hold_seconds'] = lease.seconds
                 save_run(fdir, receipt)
-                f.log_event(fdir, 'integrated', lane=receipt['id'], accepted=integ['accepted'], commit=integ['commit'])
-                f.log_event(fdir, 'ci', lane=receipt['id'], result=integ['ci'], commit=integ['commit'])
-                import claims
-                claims.sync_safe(tree)
-                return receipt
+                return finish_run(root, fdir, receipt, python, ci_wait)
+
         except BaseException as error:
+            if (receipt.get('integrated') or {}).get('pushed'):
+                raise
             receipt['error'] = str(error)
             save_run(fdir, receipt)
             raise
+
+
+@ci_serialized('runs')
+def finish_run(root, fdir, receipt, python, ci_wait):
+    tree, integ = Path(receipt['tree']), receipt['integrated']
+    branch = receipt['branch']
+    receipt['owner'] = process_owner()
+    save_run(fdir, receipt)
+    if integ['ci'] != 'green':
+        started = time.monotonic()
+        result = subprocess.run([python, 'tools/ci_status.py', '--commit', integ['commit'], '--wait', str(ci_wait)],
+                                cwd=tree, capture_output=True, text=True)
+        log = fdir / 'lane/logs' / receipt['id'] / 'ci.log'
+        with state_lock(fdir):
+            atomic_write(log, (result.stdout + result.stderr).encode())
+        receipt['ci_log'] = str(log)
+        integ['ci'] = {0: 'green', 1: 'red', 2: 'pending'}.get(result.returncode, 'unavailable')
+        integ['wall_seconds']['ci'] = time.monotonic() - started
+        save_run(fdir, receipt)
+        f.refuse(integ['ci'] == 'green', f'CI {integ["ci"].upper()} for {integ["commit"]}: {result.stdout.strip()}')
+    # The shared checkout needs the new remote ref so next-actions offers sync.
+    f.git(root, 'fetch', '--quiet', 'origin', branch)
+    receipt.pop('error', None)
+    receipt['state'] = 'done'
+    accepted_items = {r['item'] for r in receipt['accepted']}
+    for item in receipt['items']:
+        item['state'] = 'done' if item['id'] in accepted_items else 'dropped'
+    save_run(fdir, receipt)
+    f.log_event(fdir, 'integrated', lane=receipt['id'], accepted=integ['accepted'], commit=integ['commit'])
+    f.log_event(fdir, 'ci', lane=receipt['id'], result=integ['ci'], commit=integ['commit'])
+    if receipt.get('accepted'):
+        import claims
+        claims.sync_safe(tree)
+    return receipt

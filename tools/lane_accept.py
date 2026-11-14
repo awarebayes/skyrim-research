@@ -30,45 +30,83 @@ def accept(root, requests, when=None, *, prepare_only=False):
         selected.update(ids)
         plans.append((member, plan))
 
-    reviews = [r for r in requests if r['kind'] == 'review']
     errors = (af.Refused, ValueError, KeyError, TypeError, OSError)
-    try:
-        # Normal path: p101's one validation across every individually reviewed request.
-        if reviews:
-            plan = af.accept_reviews(root, reviews, when, prepare_only=True)
-            ids = {fn['id'] for _, fn, _, _ in plan[3]}
-            selected.update(ids)
-            plans.append((reviews, plan))
-        remaining = [r for r in requests if r['kind'] != 'review']
-    except errors:
-        remaining = requests
-    for request in remaining:
+    saved, committed, provisional = {}, False, False
+    stale_before = af.stale_ids(root, data)
+
+    def remember(prepared):
+        names = [af.PROGRESS, af.INDEX] + [af.review_record_path(fn) for _, fn, _, rv in prepared if rv is not None]
+        for name in names:
+            if name not in saved:
+                path = root / name
+                saved[name] = path.read_bytes() if path.is_file() else None
+
+    def combine():
+        new, prepared = copy.deepcopy(data), []
+        for _, plan in plans:
+            for index, fn, record, review in plan[3]:
+                new['functions'][index] = plan[1]['functions'][index]
+                prepared.append((index, fn, record, review))
+        return new, prepared
+
+    def prepare_individually(request):
         try:
             add(request, prepare_request(request))
         except errors as error:
-            # A family defect holds the batch; do not shrink its committed population.
             if request['kind'] == 'family':
                 dropped.append(dict(request=request, reason=str(error)))
-                continue
+                return
             for function in request['functions']:
                 member = dict(request, functions=[function])
                 try:
                     add(member, prepare_request(member))
                 except errors as member_error:
                     dropped.append(dict(request=member, reason=str(member_error)))
-    if not plans:
-        return dict(changed=[], accepted=[], dropped=dropped)
-    new, prepared = copy.deepcopy(data), []
-    for member, plan in plans:
-        for index, fn, record, review in plan[3]:
-            new['functions'][index] = plan[1]['functions'][index]
-            prepared.append((index, fn, record, review))
-    accepted = [member for members, _ in plans for member in (members if isinstance(members, list) else [members])]
-    result = dict(changed=[], accepted=accepted, dropped=dropped)
-    # If any member failed, the runner first re-carries only the successes. No index is written yet.
-    if not prepare_only and not dropped:
-        result['changed'] = af.apply(root, data, new, target, prepared, af.stale_ids(root, data) - selected, when)
-    return result
+
+    try:
+        reviews = [r for r in requests if r['kind'] == 'review']
+        try:
+            # p101's single preparation across individually reviewed requests remains the fast path.
+            if reviews:
+                plan = af.accept_reviews(root, reviews, when, prepare_only=True)
+                selected.update(fn['id'] for _, fn, _, _ in plan[3])
+                plans.append((reviews, plan))
+        except errors:
+            for request in reviews:
+                prepare_individually(request)
+        for request in requests:
+            if request['kind'] == 'label':
+                prepare_individually(request)
+        families = [r for r in requests if r['kind'] == 'family']
+        if families and plans:
+            new, prepared = combine()
+            remember(prepared)
+            # Use the ordinary transactional writer and every validator check. Only the derived
+            # index waits until the final combined apply. The family gate then sees real sample
+            # approvals, including their private parser and second-pass/rerun safeguards.
+            provisional = True
+            af.apply(root, data, new, target, prepared, stale_before - selected, when, rebuild_index=False)
+        for request in families:
+            prepare_individually(request)
+        if not plans:
+            return dict(changed=[], accepted=[], dropped=dropped)
+        new, prepared = combine()
+        remember(prepared)
+        accepted = [member for members, _ in plans for member in (members if isinstance(members, list) else [members])]
+        result = dict(changed=[], accepted=accepted, dropped=dropped)
+        # Failed members are re-carried by the runner; planning never leaves provisional matches.
+        if not prepare_only and not dropped:
+            result['changed'] = af.apply(root, data, new, target, prepared, stale_before - selected, when)
+            committed = True
+        return result
+    finally:
+        if not committed and provisional:
+            for name, before in saved.items():
+                path = root / name
+                if before is None:
+                    path.unlink(missing_ok=True)
+                else:
+                    path.write_bytes(before)
 
 
 def main():
