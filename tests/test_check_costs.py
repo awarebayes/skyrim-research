@@ -1,5 +1,6 @@
 """tools/check.py validates the cost ledger against the inventory, in the normal and --staged paths."""
 import copy
+from concurrent.futures import ProcessPoolExecutor
 import json
 from pathlib import Path
 import sys
@@ -22,6 +23,13 @@ def ledger_for(target):
         'messages': 1, 'tool_uses': 0, 'boat_seconds': None, 'boat_wall_seconds': None,
         'agent_wall_seconds': None, 'allocations': [{'target': target, 'share': 1}], 'boat_allocations': None,
         'estimated': False, 'complete': True, 'source': 'synthetic test'}]}
+
+
+def check_load_path(staged):
+    # Each process has its own mock and fresh frozen-snapshot cache, as before.
+    with mock.patch.object(check, 'check_costs') as called, source_digest_cache():
+        check.load(staged=staged)
+        unittest.TestCase().assertEqual(called.call_count, 1)
 
 
 class CheckCostsTests(unittest.TestCase):
@@ -63,11 +71,12 @@ class CheckCostsTests(unittest.TestCase):
         check.check_costs(ROOT, PROGRESS)
 
     def test_both_load_paths_check_the_ledger(self):
-        for staged in (False, True):
-            # Each load reads a frozen snapshot, just like check.main's cache scope.
-            with self.subTest(staged=staged), mock.patch.object(check, 'check_costs') as called, source_digest_cache():
-                check.load(staged=staged)
-                self.assertEqual(called.call_count, 1)
+        # These independent paths dominate CI; retain both assertions and overlap their I/O.
+        with ProcessPoolExecutor(max_workers=2) as pool:
+            paths = {staged: pool.submit(check_load_path, staged) for staged in (False, True)}
+            for staged, future in paths.items():
+                with self.subTest(staged=staged):
+                    future.result()  # Propagate every worker failure to unittest.
 
 
 if __name__ == '__main__':
