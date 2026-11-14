@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/816404ec4f0ef5144bda9807b14c2d0716d7af20384d12874e1e163d5e1bea8c.json",
+  "versions": [
+    {
+      "sha256": "816404ec4f0ef5144bda9807b14c2d0716d7af20384d12874e1e163d5e1bea8c",
+      "base": null,
+      "added": [
+        "?GetDataSize@SpellItem@@UEBAIXZ",
+        "?GetCastingType@SpellItem@@UEBA?AW4CastingType@MagicSystem@@XZ",
+        "?GetSpellType@SpellItem@@UEBA?AW4SpellType@MagicSystem@@XZ"
+      ]
+    }
+  ]
+}

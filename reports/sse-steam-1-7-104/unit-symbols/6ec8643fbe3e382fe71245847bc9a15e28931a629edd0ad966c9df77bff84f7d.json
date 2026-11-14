@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetTargetStatsObject@MagicTarget@@UEAAPEAVTESObjectREFR@@XZ": {
+      "rva": 1568272,
+      "size": 3
+    },
+    "?IsInvulnerable@MagicTarget@@UEAA_NXZ": {
+      "rva": 1568304,
+      "size": 3
+    },
+    "?MagicTargetIsActor@MagicTarget@@UEBA_NXZ": {
+      "rva": 1568416,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetTargetStatsObject@MagicTarget@@UEAAPEAVTESObjectREFR@@XZ",
+        "rva": "0x17ee10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsInvulnerable@MagicTarget@@UEAA_NXZ",
+        "rva": "0x17ee30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?MagicTargetIsActor@MagicTarget@@UEBA_NXZ",
+        "rva": "0x17eea0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

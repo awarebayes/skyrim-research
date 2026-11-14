@@ -18,3 +18,6 @@ std::uint32_t BGSEntryPointFunctionDataText::GetType() const
 {
     return 0x7;
 }
+
+// Engineer p105: correct base slots and owned string. Adapted bodies: none.
+BGSEntryPointFunctionDataText::BGSEntryPointFunctionDataText() {}

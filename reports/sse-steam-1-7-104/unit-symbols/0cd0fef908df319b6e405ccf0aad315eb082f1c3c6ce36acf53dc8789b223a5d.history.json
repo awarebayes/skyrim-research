@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/0cd0fef908df319b6e405ccf0aad315eb082f1c3c6ce36acf53dc8789b223a5d.json",
+  "versions": [
+    {
+      "sha256": "0cd0fef908df319b6e405ccf0aad315eb082f1c3c6ce36acf53dc8789b223a5d",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "__std_terminate",
+        "??_GBSWin32MouseDevice@@UEAAPEAXI@Z",
+        "?Initialize@BSWin32MouseDevice@@UEAAXXZ",
+        "??_7BSInputDevice@@6B@",
+        "?ResetButtonMaps@BSInputDevice@@QEAAXXZ",
+        "??1NameMapTail@@QEAA@XZ",
+        "??1ButtonMapTail@@QEAA@XZ",
+        "??_7BSIInputDevice@@6B@",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/569b7e0d5d771a9ba672def35e95f04cd29a6c8745a9fe32b69840f81b1dad45.json",
+  "versions": [
+    {
+      "sha256": "569b7e0d5d771a9ba672def35e95f04cd29a6c8745a9fe32b69840f81b1dad45",
+      "base": null,
+      "added": [
+        "?Unk_A3@Hazard@@QEAAXXZ",
+        "?OnAddCellPerformQueueReference@Hazard@@UEBA_NAEAVTESObjectCELL@@@Z",
+        "?IsPermanent@Hazard@@QEBA_NXZ",
+        "?singleton@TESDataHandler@@2PEAV1@EA",
+        "?IsTemporaryFormID@TESDataHandler@@QEAA_NI@Z"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/6ec8643fbe3e382fe71245847bc9a15e28931a629edd0ad966c9df77bff84f7d.json",
+  "versions": [
+    {
+      "sha256": "6ec8643fbe3e382fe71245847bc9a15e28931a629edd0ad966c9df77bff84f7d",
+      "base": null,
+      "added": [
+        "?GetTargetStatsObject@MagicTarget@@UEAAPEAVTESObjectREFR@@XZ",
+        "?IsInvulnerable@MagicTarget@@UEAA_NXZ",
+        "?MagicTargetIsActor@MagicTarget@@UEBA_NXZ"
+      ]
+    }
+  ]
+}

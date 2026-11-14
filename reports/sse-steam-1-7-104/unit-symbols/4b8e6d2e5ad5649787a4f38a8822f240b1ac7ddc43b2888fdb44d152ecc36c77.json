@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetChunkID@EnchantmentItem@@UEAAIXZ": {
+      "rva": 1369952,
+      "size": 6
+    },
+    "?GetDataSize@EnchantmentItem@@UEBAIXZ": {
+      "rva": 1370000,
+      "size": 6
+    },
+    "?GetData1@EnchantmentItem@@UEBAPEBUData@MagicItem@@XZ": {
+      "rva": 1369984,
+      "size": 8
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetChunkID@EnchantmentItem@@UEAAIXZ",
+        "rva": "0x14e760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDataSize@EnchantmentItem@@UEBAIXZ",
+        "rva": "0x14e790",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetData1@EnchantmentItem@@UEBAPEBUData@MagicItem@@XZ",
+        "rva": "0x14e780",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

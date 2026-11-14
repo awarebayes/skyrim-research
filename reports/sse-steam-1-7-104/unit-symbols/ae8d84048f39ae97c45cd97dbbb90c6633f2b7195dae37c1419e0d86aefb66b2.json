@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "__std_terminate": {
+      "rva": 22714318,
+      "size": 6
+    },
+    "??_GMagicMenu@@UEAAPEAXI@Z": {
+      "rva": 9790976,
+      "size": 221
+    },
+    "??_7MagicMenu@@6B@": {
+      "rva": 26716152,
+      "size": null
+    },
+    "?InventoryManager@@3PEAVInventory3DManager@@EA": {
+      "rva": 52627960,
+      "size": null
+    },
+    "?BlurManager@@3PEAXEA": {
+      "rva": 52625432,
+      "size": null
+    },
+    "?DecrementMenuBlur@@YAXPEAX@Z": {
+      "rva": 10013344,
+      "size": null
+    },
+    "??_C@_0O@HHEIEILM@InventoryMode@": {
+      "rva": 26670200,
+      "size": null
+    },
+    "?PopMenuHUD@@YAXPEBD@Z": {
+      "rva": 9654432,
+      "size": null
+    },
+    "?MenuState@@3PEAXEA": {
+      "rva": 35251688,
+      "size": null
+    },
+    "?FinishMagicMenu@@YAXPEAX_N@Z": {
+      "rva": 1669232,
+      "size": null
+    },
+    "?ReleaseMenuObject@@YAXPEAX00@Z": {
+      "rva": 13592720,
+      "size": null
+    },
+    "??1IMenu@@UEAA@XZ": {
+      "rva": 18279808,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 18315904,
+      "size": null
+    },
+    "?GlobalHeap@@3PEAVGMemoryHeap@@EA": {
+      "rva": 52910816,
+      "size": null
+    },
+    "?__global_delete@@YAXPEAX_K@Z": {
+      "rva": 18315904,
+      "size": null
+    }
+  },
+  "folds": [
+    [
+      "??3@YAXPEAX_K@Z",
+      "?__global_delete@@YAXPEAX_K@Z"
+    ]
+  ],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__std_terminate",
+        "rva": "0x15a97ce",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GMagicMenu@@UEAAPEAXI@Z",
+        "rva": "0x956600",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7MagicMenu@@6B@",
+        "rva": "0x197a7f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InventoryManager@@3PEAVInventory3DManager@@EA",
+        "rva": "0x32309f8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BlurManager@@3PEAXEA",
+        "rva": "0x3230018",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?DecrementMenuBlur@@YAXPEAX@Z",
+        "rva": "0x98caa0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_0O@HHEIEILM@InventoryMode@",
+        "rva": "0x196f478",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?PopMenuHUD@@YAXPEBD@Z",
+        "rva": "0x9350a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?MenuState@@3PEAXEA",
+        "rva": "0x219e5e8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?FinishMagicMenu@@YAXPEAX_N@Z",
+        "rva": "0x197870",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ReleaseMenuObject@@YAXPEAX00@Z",
+        "rva": "0xcf6890",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1IMenu@@UEAA@XZ",
+        "rva": "0x116ed80",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x1177a80",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GlobalHeap@@3PEAVGMemoryHeap@@EA",
+        "rva": "0x3275ae0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?__global_delete@@YAXPEAX_K@Z",
+        "rva": "0x1177a80",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

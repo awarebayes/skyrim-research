@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GFlameProjectile@@UEAAPEAXI@Z": {
+      "rva": 8303888,
+      "size": 52
+    },
+    "??1FlameProjectile@@UEAA@XZ": {
+      "rva": 8359472,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "?Slot164@FlameProjectile@@UEBAEXZ": {
+      "rva": 8299104,
+      "size": 3
+    },
+    "?BGSLoadGameBuffer_LoadDataEndian@@YAXPEAVBGSLoadFormBuffer@@PEAXII@Z": {
+      "rva": 6520432,
+      "size": null
+    },
+    "?BGSSaveGameBuffer_SaveDataEndian@@YAXPEAVBGSSaveFormBuffer@@PEAXIII@Z": {
+      "rva": 6528768,
+      "size": null
+    },
+    "??0FlameProjectile@@QEAA@XZ": {
+      "rva": 8299008,
+      "size": 79
+    },
+    "??0Projectile@@QEAA@XZ": {
+      "rva": 8358480,
+      "size": null
+    },
+    "??_7FlameProjectile@@6BTESForm@@@": {
+      "rva": 26473312,
+      "size": null
+    },
+    "??_7FlameProjectile@@6BBSHandleRefObject@@@": {
+      "rva": 26474872,
+      "size": null
+    },
+    "??_7FlameProjectile@@6BIAnimationGraphManagerHolder@@@": {
+      "rva": 26474920,
+      "size": null
+    },
+    "?LoadGame@FlameProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8303040,
+      "size": 79
+    },
+    "?SaveGame@FlameProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 8302928,
+      "size": 96
+    },
+    "??_7FlameProjectile@@6B?$BSTEventSink@VBSAnimationGraphEvent@@@@@": {
+      "rva": 26474896,
+      "size": null
+    },
+    "?LoadGame@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z": {
+      "rva": 8369072,
+      "size": null
+    },
+    "?SaveGame@Projectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z": {
+      "rva": 8368128,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GFlameProjectile@@UEAAPEAXI@Z",
+        "rva": "0x7eb510",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1FlameProjectile@@UEAA@XZ",
+        "rva": "0x7f8e30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Slot164@FlameProjectile@@UEBAEXZ",
+        "rva": "0x7ea260",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BGSLoadGameBuffer_LoadDataEndian@@YAXPEAVBGSLoadFormBuffer@@PEAXII@Z",
+        "rva": "0x637e70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BGSSaveGameBuffer_SaveDataEndian@@YAXPEAVBGSSaveFormBuffer@@PEAXIII@Z",
+        "rva": "0x639f00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0FlameProjectile@@QEAA@XZ",
+        "rva": "0x7ea200",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0Projectile@@QEAA@XZ",
+        "rva": "0x7f8a50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7FlameProjectile@@6BTESForm@@@",
+        "rva": "0x193f360",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7FlameProjectile@@6BBSHandleRefObject@@@",
+        "rva": "0x193f978",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7FlameProjectile@@6BIAnimationGraphManagerHolder@@@",
+        "rva": "0x193f9a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@FlameProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7eb1c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@FlameProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x7eb150",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7FlameProjectile@@6B?$BSTEventSink@VBSAnimationGraphEvent@@@@@",
+        "rva": "0x193f990",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadGame@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "rva": "0x7fb3b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SaveGame@Projectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "rva": "0x7fb000",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

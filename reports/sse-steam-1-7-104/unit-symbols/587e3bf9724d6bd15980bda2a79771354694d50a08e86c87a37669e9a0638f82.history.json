@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/587e3bf9724d6bd15980bda2a79771354694d50a08e86c87a37669e9a0638f82.json",
+  "versions": [
+    {
+      "sha256": "587e3bf9724d6bd15980bda2a79771354694d50a08e86c87a37669e9a0638f82",
+      "base": null,
+      "added": [
+        "?GetRTTI@BSTextureSet@@UEBAPEBVNiRTTI@@XZ",
+        "??_GBSTextureSet@@UEAAPEAXI@Z",
+        "?NiRTTI_BSTextureSet@@3VNiRTTI@@B",
+        "??_7NiRefObject@@6B@",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "??3@YAXPEAX_K@Z",
+        "??0NiObject@@QEAA@XZ",
+        "??_GNiRefObject@@UEAAPEAXI@Z"
+      ]
+    }
+  ]
+}

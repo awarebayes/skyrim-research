@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GDeletingWrapper79a770@@UEAAPEAXI@Z": {
+      "rva": 7972720,
+      "size": 52
+    },
+    "??1DeletingWrapper79a770@@UEAA@XZ": {
+      "rva": 18663104,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GDeletingWrapper79a770@@UEAAPEAXI@Z",
+        "rva": "0x79a770",
+        "community_name": null,
+        "note": "Independent member extraction; guessed ABI stand-in identity."
+      },
+      {
+        "name": "??1DeletingWrapper79a770@@UEAA@XZ",
+        "rva": "0x11cc6c0",
+        "community_name": null,
+        "note": "Independent member extraction; guessed ABI stand-in identity."
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "community_name": null,
+        "note": "Independent member extraction; guessed ABI stand-in identity."
+      }
+    ]
+  }
+}

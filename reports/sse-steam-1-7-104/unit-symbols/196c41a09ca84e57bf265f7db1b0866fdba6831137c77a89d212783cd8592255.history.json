@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/196c41a09ca84e57bf265f7db1b0866fdba6831137c77a89d212783cd8592255.json",
+  "versions": [
+    {
+      "sha256": "196c41a09ca84e57bf265f7db1b0866fdba6831137c77a89d212783cd8592255",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "?InitItemImpl@BGSLensFlare@@UEAAXXZ",
+        "?MemoryTLS@@3IA",
+        "?MarkLensFlare@@YAXPEAVTESForm@@_N@Z",
+        "??1MemoryScope@@QEAA@XZ"
+      ]
+    }
+  ]
+}

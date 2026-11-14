@@ -26,11 +26,11 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "654d9e4db63c3637d0319b073ea2d9302a8b5d9f3c6d4f1934268baa3770a042",
+        "object_sha256": "0832a125c7d8b0b8750ade82dc12a53cde4167e635760e644824906b5fcdbc89",
         "opened_equals_closure": true,
         "repository_files_opened": [
-          "reconstruction/leaves/Leafe12470.cpp",
-          "reconstruction/leaves/Leafe12470.h"
+          "reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp",
+          "reconstruction/bsengine/BSPCGamepadDeviceDelegate.h"
         ]
       },
       "winpc-native": {
@@ -46,23 +46,17 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "f95b7f3b429d3aefbad43ccb3f97002c8f5b487d42ed3d86eda7008816bf2ef2",
+        "object_sha256": "7e49bf15cb1494c38ea6a2992f2b9ca12dd0e221b49dc4218a21f570960dfa6a",
         "opened_equals_closure": true,
         "repository_files_opened": [
-          "reconstruction/leaves/Leafe12470.cpp",
-          "reconstruction/leaves/Leafe12470.h"
+          "reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp",
+          "reconstruction/bsengine/BSPCGamepadDeviceDelegate.h"
         ]
       }
     }
   },
-  "family_parameters": {
-    "entry-rva": 14754928,
-    "kind": "ordinary",
-    "size": 3
-  },
   "function_id": "sse-steam-1-7-104-0xe12470",
   "match_record_schema": 2,
-  "name_source": "GUESS(low)",
   "notes": [
     "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.",
     "independence: separate-machine, different-loader. The compile hosts are the maintainer's own machines, each with its own install of the pinned toolchain, reached by tools/verifier/runners.py: mac-wine (machine maintainer-mac; macos arm64; the pinned compiler run under Wine; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099); winpc-native (machine maintainer-winpc; windows amd64; the pinned compiler run natively; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099). Each host hashed its compiler binaries during this confirm run and checked them against pinned.sha256, checked its own copy of the image against builds/target.json before compiling, and compared its own object; the local host also compared the other hosts' objects. Host facts are self-reported by tools/verifier/unit_build.py.",
@@ -70,19 +64,13 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Source state: working tree on base commit 5cb23730f5d92d8547ef40c2baf080c60b56805f, with uncommitted changes to reconstruction/leaves/Leafe12470.cpp, reconstruction/leaves/Leafe12470.h, reports/sse-steam-1-7-104/unit-symbols/7217619b67c73780c02891b0b551f7cccb929ec80cf2c3a1289fccaf8c890db5.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in.",
-    "Family parameter serialization corrected from entry_rva to entry-rva; source and embedded two-host comparator reports are unchanged."
+    "Source state: working tree on base commit a883f5a93d675f00b3ce90a536f342db60b7e733, with uncommitted changes to reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp, reconstruction/bsengine/BSPCGamepadDeviceDelegate.h, reports/sse-steam-1-7-104/unit-symbols/1a7cf561b1439ad0d981a8519d0d0fc96dc6227c6d99dfea3dce9b00f8f4942d.json at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
-  "origin": {
-    "family": "primitive-empty-entry",
-    "template_digest": "812588f0c8a551ef368c518f786a50eb0d5b0c5e404e6b03e69ae0f406bae752",
-    "version": "1"
-  },
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
     "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
   },
-  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/leaves/Leafe12470.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/leaves/Leafe12470.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0xe12470 --symbol '?Invoke@Leafe12470@@QEAAXXZ' --compiled reconstruction/leaves/Leafe12470.cpp --unit reconstruction/leaves/Leafe12470.cpp reconstruction/leaves/Leafe12470.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/7217619b67c73780c02891b0b551f7cccb929ec80cf2c3a1289fccaf8c890db5.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
+  "reproduction": "From the repository root, on each compile host, with cl 19.16.27054 x64 unpacked at <msvc> (an MSVC toolset and Windows SDK whose compiler binaries match tools/verifier/pinned.sha256; tools/verifier/setup_boat_machine.sh shows one way to unpack them with msvc-wine) and CL, EXTERNAL_INCLUDE, INCLUDE, LIB, LIBPATH, _CL_ removed from the environment. Under Wine: <msvc>/bin/x64/cl /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp (the msvc-wine wrapper sets INCLUDE to toolchain and SDK directories only). Natively on Windows: set INCLUDE to the directories the wrapper uses, in its order, <msvc>/VC/Tools/MSVC/<toolset>/atlmfc/include;<msvc>/VC/Tools/MSVC/<toolset>/include;<msvc>/Windows Kits/10/Include/<sdk>/shared;.../ucrt;.../um;.../winrt;.../km (tools/verifier/unit_build.py, MSVC_INCLUDE_DIRS), then run <msvc>/VC/Tools/MSVC/<toolset>/bin/Hostx64/x64/cl.exe /nologo /c /O2 /MD /GS- /EHsc /GR /fp:precise /Gy /showIncludes /Fo<work>/candidate.obj reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp. On both, the verifier required the repository files /showIncludes lists to equal --unit below ; python3 -I tools/verifier/tu_task.py --function-id sse-steam-1-7-104-0xe12470 --symbol '?Reset@BSPCGamepadDeviceDelegate@@UEAAXXZ' --compiled reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp --unit reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp reconstruction/bsengine/BSPCGamepadDeviceDelegate.h --recipe reconstruction/recipes/msvc-19.16.27054-o2.json --symbols reports/sse-steam-1-7-104/unit-symbols/1a7cf561b1439ad0d981a8519d0d0fc96dc6227c6d99dfea3dce9b00f8f4942d.json --object <work>/candidate.obj --out <work> ; python3 tools/verifier/verify_function.py --task-file <work>/task-file.json --object <work>/candidate.obj --build-record <work>/build-record.json --image <your SkyrimSE.exe> --report <work>/report.json",
   "runs": [
     {
       "compared_on": "mac-wine",
@@ -92,11 +80,11 @@
         "candidate": {
           "code_section_sha256": "2b2924902cd1ad3b60bf27576f86a983864f80d482be4ba1c2dcb4873355682e",
           "code_sections": 1,
-          "object_sha256": "654d9e4db63c3637d0319b073ea2d9302a8b5d9f3c6d4f1934268baa3770a042"
+          "object_sha256": "0832a125c7d8b0b8750ade82dc12a53cde4167e635760e644824906b5fcdbc89"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -130,7 +118,7 @@
           "build_id": "sse-steam-1-7-104",
           "rva": 14754928,
           "size": 3,
-          "symbol": "?Invoke@Leafe12470@@QEAAXXZ"
+          "symbol": "?Reset@BSPCGamepadDeviceDelegate@@UEAAXXZ"
         },
         "reason": "all-checks-passed",
         "recipe": {
@@ -152,10 +140,10 @@
         "report_schema": 1,
         "result": "pass",
         "source": {
-          "path": "reconstruction/leaves/Leafe12470.cpp",
-          "source_revision": "fbca6d5bcee280f51703a4996593329372cc9dc99d0db6342405ac4729114818"
+          "path": "reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp",
+          "source_revision": "671e023ebf8ba61660b709fcf0dc78f37ba8a856f5db8eae4123384faec06bc0"
         },
-        "symbol_map_sha256": "7217619b67c73780c02891b0b551f7cccb929ec80cf2c3a1289fccaf8c890db5",
+        "symbol_map_sha256": "1a7cf561b1439ad0d981a8519d0d0fc96dc6227c6d99dfea3dce9b00f8f4942d",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -171,11 +159,11 @@
         "candidate": {
           "code_section_sha256": "2b2924902cd1ad3b60bf27576f86a983864f80d482be4ba1c2dcb4873355682e",
           "code_sections": 1,
-          "object_sha256": "f95b7f3b429d3aefbad43ccb3f97002c8f5b487d42ed3d86eda7008816bf2ef2"
+          "object_sha256": "7e49bf15cb1494c38ea6a2992f2b9ca12dd0e221b49dc4218a21f570960dfa6a"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -209,7 +197,7 @@
           "build_id": "sse-steam-1-7-104",
           "rva": 14754928,
           "size": 3,
-          "symbol": "?Invoke@Leafe12470@@QEAAXXZ"
+          "symbol": "?Reset@BSPCGamepadDeviceDelegate@@UEAAXXZ"
         },
         "reason": "all-checks-passed",
         "recipe": {
@@ -231,10 +219,10 @@
         "report_schema": 1,
         "result": "pass",
         "source": {
-          "path": "reconstruction/leaves/Leafe12470.cpp",
-          "source_revision": "fbca6d5bcee280f51703a4996593329372cc9dc99d0db6342405ac4729114818"
+          "path": "reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp",
+          "source_revision": "671e023ebf8ba61660b709fcf0dc78f37ba8a856f5db8eae4123384faec06bc0"
         },
-        "symbol_map_sha256": "7217619b67c73780c02891b0b551f7cccb929ec80cf2c3a1289fccaf8c890db5",
+        "symbol_map_sha256": "1a7cf561b1439ad0d981a8519d0d0fc96dc6227c6d99dfea3dce9b00f8f4942d",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -250,11 +238,11 @@
         "candidate": {
           "code_section_sha256": "2b2924902cd1ad3b60bf27576f86a983864f80d482be4ba1c2dcb4873355682e",
           "code_sections": 1,
-          "object_sha256": "f95b7f3b429d3aefbad43ccb3f97002c8f5b487d42ed3d86eda7008816bf2ef2"
+          "object_sha256": "7e49bf15cb1494c38ea6a2992f2b9ca12dd0e221b49dc4218a21f570960dfa6a"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -288,7 +276,7 @@
           "build_id": "sse-steam-1-7-104",
           "rva": 14754928,
           "size": 3,
-          "symbol": "?Invoke@Leafe12470@@QEAAXXZ"
+          "symbol": "?Reset@BSPCGamepadDeviceDelegate@@UEAAXXZ"
         },
         "reason": "all-checks-passed",
         "recipe": {
@@ -310,10 +298,10 @@
         "report_schema": 1,
         "result": "pass",
         "source": {
-          "path": "reconstruction/leaves/Leafe12470.cpp",
-          "source_revision": "fbca6d5bcee280f51703a4996593329372cc9dc99d0db6342405ac4729114818"
+          "path": "reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp",
+          "source_revision": "671e023ebf8ba61660b709fcf0dc78f37ba8a856f5db8eae4123384faec06bc0"
         },
-        "symbol_map_sha256": "7217619b67c73780c02891b0b551f7cccb929ec80cf2c3a1289fccaf8c890db5",
+        "symbol_map_sha256": "1a7cf561b1439ad0d981a8519d0d0fc96dc6227c6d99dfea3dce9b00f8f4942d",
         "target": {
           "expected_image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
           "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f"
@@ -323,17 +311,17 @@
     }
   ],
   "source": {
-    "compiled": "reconstruction/leaves/Leafe12470.cpp",
-    "digest": "fbca6d5bcee280f51703a4996593329372cc9dc99d0db6342405ac4729114818",
+    "compiled": "reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp",
+    "digest": "671e023ebf8ba61660b709fcf0dc78f37ba8a856f5db8eae4123384faec06bc0",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
-      "reconstruction/leaves/Leafe12470.cpp",
-      "reconstruction/leaves/Leafe12470.h"
+      "reconstruction/bsengine/BSPCGamepadDeviceDelegate.cpp",
+      "reconstruction/bsengine/BSPCGamepadDeviceDelegate.h"
     ]
   },
   "symbol_map": {
-    "path": "reports/sse-steam-1-7-104/unit-symbols/7217619b67c73780c02891b0b551f7cccb929ec80cf2c3a1289fccaf8c890db5.json",
-    "sha256": "7217619b67c73780c02891b0b551f7cccb929ec80cf2c3a1289fccaf8c890db5"
+    "path": "reports/sse-steam-1-7-104/unit-symbols/1a7cf561b1439ad0d981a8519d0d0fc96dc6227c6d99dfea3dce9b00f8f4942d.json",
+    "sha256": "1a7cf561b1439ad0d981a8519d0d0fc96dc6227c6d99dfea3dce9b00f8f4942d"
   },
   "toolchain_pin": {
     "path": "tools/verifier/pinned.sha256",

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/d509a95d0eb7e6b7f25670f899c8ca60e1b75b254f82b7dda352f6dd907b2cfe.json",
+  "versions": [
+    {
+      "sha256": "d509a95d0eb7e6b7f25670f899c8ca60e1b75b254f82b7dda352f6dd907b2cfe",
+      "base": null,
+      "added": [
+        "?ClearDataComponent@BGSPreloadable@@UEAAXXZ",
+        "?CopyComponent@BGSPreloadable@@UEAAXPEAVBaseFormComponent@@@Z",
+        "?InitializeDataComponent@BGSPreloadable@@UEAAXXZ"
+      ]
+    }
+  ]
+}

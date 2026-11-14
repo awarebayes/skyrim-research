@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_03@BGSOpenCloseForm@@UEAA_NXZ": {
+      "rva": 2520688,
+      "size": 3
+    },
+    "?HandleClose@BGSOpenCloseForm@@UEAAXPEAVTESObjectREFR@@0@Z": {
+      "rva": 2521056,
+      "size": 3
+    },
+    "?HandleOpen@BGSOpenCloseForm@@UEAAXPEAVTESObjectREFR@@0@Z": {
+      "rva": 2521072,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_03@BGSOpenCloseForm@@UEAA_NXZ",
+        "rva": "0x267670",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HandleClose@BGSOpenCloseForm@@UEAAXPEAVTESObjectREFR@@0@Z",
+        "rva": "0x2677e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?HandleOpen@BGSOpenCloseForm@@UEAAXPEAVTESObjectREFR@@0@Z",
+        "rva": "0x2677f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

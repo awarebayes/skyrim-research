@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/0e104eb92ea25303b7e41e2526df6378afd17b9a7ec747f4cb63985aa34693ba.json",
+  "versions": [
+    {
+      "sha256": "0e104eb92ea25303b7e41e2526df6378afd17b9a7ec747f4cb63985aa34693ba",
+      "base": null,
+      "added": [
+        "?InitItemImpl@Script@@UEAAXXZ",
+        "?GetProcessScripts@Script@@SA_NXZ",
+        "?ScriptInitItemHelper@@YAXPEAVScript@@0@Z",
+        "?g_scriptProcessScripts@@3_NA"
+      ]
+    }
+  ]
+}

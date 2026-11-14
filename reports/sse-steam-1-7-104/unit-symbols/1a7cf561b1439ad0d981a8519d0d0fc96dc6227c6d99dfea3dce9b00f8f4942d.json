@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Reset@BSPCGamepadDeviceDelegate@@UEAAXXZ": {
+      "rva": 14754928,
+      "size": 3
+    },
+    "?Initialize@BSPCGamepadDeviceDelegate@@UEAAXXZ": {
+      "rva": 14754944,
+      "size": 3
+    },
+    "?Process@BSPCGamepadDeviceDelegate@@UEAAXM@Z": {
+      "rva": 14754976,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Reset@BSPCGamepadDeviceDelegate@@UEAAXXZ",
+        "rva": "0xe12470",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Initialize@BSPCGamepadDeviceDelegate@@UEAAXXZ",
+        "rva": "0xe12480",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Process@BSPCGamepadDeviceDelegate@@UEAAXM@Z",
+        "rva": "0xe124a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

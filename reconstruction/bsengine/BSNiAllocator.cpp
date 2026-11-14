@@ -18,3 +18,13 @@ std::uint8_t BSNiAllocator::VerifyAddress() const
 {
     return 0x1;
 }
+
+// BSNiAllocator::Initialize: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BSNiAllocator::Initialize()
+{
+}
+
+// BSNiAllocator::Shutdown: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+void BSNiAllocator::Shutdown()
+{
+}

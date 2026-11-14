@@ -19,4 +19,7 @@ class BSNiAllocator
 {
 public:
     virtual std::uint8_t VerifyAddress() const;
+    // Initialize, Shutdown: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT); empty bodies in the compared image
+    virtual void Initialize();
+    virtual void Shutdown();
 };

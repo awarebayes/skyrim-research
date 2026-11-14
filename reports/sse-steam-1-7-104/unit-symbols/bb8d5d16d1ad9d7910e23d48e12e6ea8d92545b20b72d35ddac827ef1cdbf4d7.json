@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "__std_terminate": {
+      "rva": 22714318,
+      "size": 6
+    },
+    "?InitItemImpl@BGSAddonNode@@UEAAXXZ": {
+      "rva": 2472640,
+      "size": 97
+    },
+    "??_GBGSAddonNode@@UEAAPEAXI@Z": {
+      "rva": 2474208,
+      "size": 130
+    },
+    "?ResolveAddonModels@@YAXPEAVTESModelTextureSwap@@PEAVTESForm@@@Z": {
+      "rva": 2019600,
+      "size": null
+    },
+    "?AddonSourceFile@@YAPEAXPEAVTESForm@@H@Z": {
+      "rva": 1989344,
+      "size": null
+    },
+    "?ResolveAddonID@@YAXPEAIPEAX@Z": {
+      "rva": 1993984,
+      "size": null
+    },
+    "?LookupAddonSound@@YAPEAXI@Z": {
+      "rva": 5610000,
+      "size": null
+    },
+    "?MarkAddonNode@@YAXPEAVTESForm@@_N@Z": {
+      "rva": 1990832,
+      "size": null
+    },
+    "??_7BGSAddonNode@@6BTESBoundObject@@@": {
+      "rva": 25209048,
+      "size": null
+    },
+    "??_7BGSAddonNode@@6BTESModelTextureSwap@@@": {
+      "rva": 25209720,
+      "size": null
+    },
+    "?AddonDataHandler@@3PEAXEA": {
+      "rva": 35249880,
+      "size": null
+    },
+    "?RemoveAddonNode@@YAXPEAXPEAVBGSAddonNode@@@Z": {
+      "rva": 1813200,
+      "size": null
+    },
+    "??1TESModelTextureSwap@@UEAA@XZ": {
+      "rva": 2018608,
+      "size": null
+    },
+    "??1TESBoundObject@@UEAA@XZ": {
+      "rva": 2582912,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__std_terminate",
+        "rva": "0x15a97ce",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitItemImpl@BGSAddonNode@@UEAAXXZ",
+        "rva": "0x25bac0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSAddonNode@@UEAAPEAXI@Z",
+        "rva": "0x25c0e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResolveAddonModels@@YAXPEAVTESModelTextureSwap@@PEAVTESForm@@@Z",
+        "rva": "0x1ed110",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AddonSourceFile@@YAPEAXPEAVTESForm@@H@Z",
+        "rva": "0x1e5ae0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResolveAddonID@@YAXPEAIPEAX@Z",
+        "rva": "0x1e6d00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LookupAddonSound@@YAPEAXI@Z",
+        "rva": "0x559a10",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?MarkAddonNode@@YAXPEAVTESForm@@_N@Z",
+        "rva": "0x1e60b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSAddonNode@@6BTESBoundObject@@@",
+        "rva": "0x180a8d8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSAddonNode@@6BTESModelTextureSwap@@@",
+        "rva": "0x180ab78",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?AddonDataHandler@@3PEAXEA",
+        "rva": "0x219ded8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RemoveAddonNode@@YAXPEAXPEAVBGSAddonNode@@@Z",
+        "rva": "0x1baad0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESModelTextureSwap@@UEAA@XZ",
+        "rva": "0x1ecd30",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESBoundObject@@UEAA@XZ",
+        "rva": "0x276980",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

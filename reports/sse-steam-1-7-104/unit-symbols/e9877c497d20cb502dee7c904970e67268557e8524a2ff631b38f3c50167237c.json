@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Initialize@BSWin32VirtualKeyboardDevice@@UEAAXXZ": {
+      "rva": 14757472,
+      "size": 3
+    },
+    "?Release@BSWin32VirtualKeyboardDevice@@UEAAXXZ": {
+      "rva": 14757488,
+      "size": 3
+    },
+    "?Reset@BSWin32VirtualKeyboardDevice@@UEAAXXZ": {
+      "rva": 14757504,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Initialize@BSWin32VirtualKeyboardDevice@@UEAAXXZ",
+        "rva": "0xe12e60",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Release@BSWin32VirtualKeyboardDevice@@UEAAXXZ",
+        "rva": "0xe12e70",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Reset@BSWin32VirtualKeyboardDevice@@UEAAXXZ",
+        "rva": "0xe12e80",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

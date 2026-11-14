@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GMapMoveHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z": {
+      "rva": 10090944,
+      "size": 43
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26149600,
+      "size": null
+    },
+    "??_7MapInputHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26767656,
+      "size": null
+    },
+    "??_7MapMoveHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26767800,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GMapMoveHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+        "rva": "0x99f9c0",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x18f02e0",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7MapInputHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x1987128",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7MapMoveHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x19871b8",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      }
+    ]
+  }
+}

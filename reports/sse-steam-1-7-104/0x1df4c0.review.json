@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "386787e1e111f87361b083b7b3836b41cf5eebc28f1a13e2167b55f50ab45a77",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x1df4c0",
+  "naming_findings": [
+    "Some helper and stand-in declarations lack individual origin labels."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-14",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "b298e58a3329fc752b0b14fc361104ec8d1d420697bb3fa38ab375df460fb1d0",
+  "review_task_id": "review-p85-p3-p105-2",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 1963200,
+  "size": 194,
+  "source_digest": "d094483ead4b433abeba4097d01cb4be3752e8a3cb138a6d6661a5a7f6b36707",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

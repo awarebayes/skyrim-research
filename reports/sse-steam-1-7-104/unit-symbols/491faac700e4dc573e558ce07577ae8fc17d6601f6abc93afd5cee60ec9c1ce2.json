@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "__std_terminate": {
+      "rva": 22714318,
+      "size": 6
+    },
+    "??_GNavMeshInfoMap@@UEAAPEAXI@Z": {
+      "rva": 5011632,
+      "size": 151
+    },
+    "?SetAltered@NavMeshInfoMap@@UEAAX_N@Z": {
+      "rva": 4997200,
+      "size": 253
+    },
+    "??_7NavMeshInfoMap@@6BTESForm@@@": {
+      "rva": 26060816,
+      "size": null
+    },
+    "??_7NavMeshInfoMap@@6BBSNavmeshInfoMap@@@": {
+      "rva": 26061296,
+      "size": null
+    },
+    "?ClearNavMap@@YAXPEAVNavMeshInfoMap@@@Z": {
+      "rva": 5003760,
+      "size": null
+    },
+    "??1CKMapTail@@QEAA@XZ": {
+      "rva": 5011296,
+      "size": null
+    },
+    "??1NavMapTail@@QEAA@XZ": {
+      "rva": 5011104,
+      "size": null
+    },
+    "??1PrecomputedPaths@@QEAA@XZ": {
+      "rva": 5014400,
+      "size": null
+    },
+    "??1BSNavmeshInfoMap@@UEAA@XZ": {
+      "rva": 18807040,
+      "size": null
+    },
+    "??1TESForm@@UEAA@XZ": {
+      "rva": 1979216,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "__std_terminate",
+        "rva": "0x15a97ce",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GNavMeshInfoMap@@UEAAPEAXI@Z",
+        "rva": "0x4c78b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetAltered@NavMeshInfoMap@@UEAAX_N@Z",
+        "rva": "0x4c4050",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NavMeshInfoMap@@6BTESForm@@@",
+        "rva": "0x18da810",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NavMeshInfoMap@@6BBSNavmeshInfoMap@@@",
+        "rva": "0x18da9f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearNavMap@@YAXPEAVNavMeshInfoMap@@@Z",
+        "rva": "0x4c59f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1CKMapTail@@QEAA@XZ",
+        "rva": "0x4c7760",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1NavMapTail@@QEAA@XZ",
+        "rva": "0x4c76a0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1PrecomputedPaths@@QEAA@XZ",
+        "rva": "0x4c8380",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSNavmeshInfoMap@@UEAA@XZ",
+        "rva": "0x11ef900",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESForm@@UEAA@XZ",
+        "rva": "0x1e3350",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

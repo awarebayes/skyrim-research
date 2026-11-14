@@ -26,7 +26,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "0f1f0cbfa84ba5517d88311fe63c0365bdcac12ce6182ef5aa7af3874e6110f5",
+        "object_sha256": "ebf83e6f4ad0b5c674c747d710156557510fe589de3e48b305f2b2eb1ea5874a",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSNiAllocator.cpp",
@@ -46,7 +46,7 @@
           "/Gy",
           "/showIncludes"
         ],
-        "object_sha256": "18e79d7a677d5a735795378188dc4b56bfef30a782d6d7f775d26d355c943b59",
+        "object_sha256": "1ac91d3ff58eb52f309866c58846ef2f8d867861c75be7825bb0834cac2d3554",
         "opened_equals_closure": true,
         "repository_files_opened": [
           "reconstruction/bsengine/BSNiAllocator.cpp",
@@ -55,15 +55,8 @@
       }
     }
   },
-  "family_parameters": {
-    "family": "constant",
-    "value": 1,
-    "virtual": true,
-    "width": 1
-  },
   "function_id": "sse-steam-1-7-104-0xeae910",
   "match_record_schema": 2,
-  "name_source": "COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)",
   "notes": [
     "Comparator reports are embedded verbatim. Their acceptance field is the comparator's own and stays not-evaluated. Acceptance follows the acceptance rule in docs/verification.md: this record, a sanitized Reviewer approve bound to the same source digest, and integration by tools/accept_function.py.",
     "independence: separate-machine, different-loader. The compile hosts are the maintainer's own machines, each with its own install of the pinned toolchain, reached by tools/verifier/runners.py: mac-wine (machine maintainer-mac; macos arm64; the pinned compiler run under Wine; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099); winpc-native (machine maintainer-winpc; windows amd64; the pinned compiler run natively; compiler binaries sha256: c1xx.dll 4d5f2f8c1ed3384ae15be5b31e2918e4a200913cb58374543b7a05762de234be, c2.dll 03627abf4cde10390bc086ba1a85625ed61c2708838db9fff0dc9830040bbf2b, cl.exe 5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e, link.exe 70e987473cc4c67f65cdcabb82b3dc4827cb9d224d6016843051363b4cacb099). Each host hashed its compiler binaries during this confirm run and checked them against pinned.sha256, checked its own copy of the image against builds/target.json before compiling, and compared its own object; the local host also compared the other hosts' objects. Host facts are self-reported by tools/verifier/unit_build.py.",
@@ -71,14 +64,8 @@
     "/showIncludes was measured once, on the first accepted unit, to change no object section except the object-path record in .debug$S (and the .chks64 checksum of it); it was not re-measured for this unit.",
     "Whole-object hashes differ between compiles in the COFF timestamp, the object path recorded in .debug$S (each host compiles to its own path) and the .chks64 checksum of that section.",
     "A byte match shows that this source and recipe produce the checked code. It does not verify the community name, and it does not show that the original source looked like this.",
-    "Generator selection only; ordinary per-function confirmation and review required.",
-    "Source state: working tree on base commit 2d834816263e41d7cfd8e3e4b4169cfd02d31a99, with uncommitted changes to reconstruction/bsengine/BSNiAllocator.cpp, reconstruction/bsengine/BSNiAllocator.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
+    "Source state: working tree on base commit a883f5a93d675f00b3ce90a536f342db60b7e733, with uncommitted changes to reconstruction/bsengine/BSNiAllocator.cpp, reconstruction/bsengine/BSNiAllocator.h at confirm time. The runs bind the unit digest, recipe and symbol-map hashes above and comparator source sha256 6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46 (each report's comparator.source_sha256), not a commit; tools/check.py recomputes them from whatever tree this record is committed in."
   ],
-  "origin": {
-    "family": "const-return",
-    "template_digest": "ef77800110c657a66ca442774781ea1425190056a513667cffcfe0dddf7c0148",
-    "version": "2"
-  },
   "recipe": {
     "path": "reconstruction/recipes/msvc-19.16.27054-o2.json",
     "sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
@@ -93,11 +80,11 @@
         "candidate": {
           "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
           "code_sections": 1,
-          "object_sha256": "0f1f0cbfa84ba5517d88311fe63c0365bdcac12ce6182ef5aa7af3874e6110f5"
+          "object_sha256": "ebf83e6f4ad0b5c674c747d710156557510fe589de3e48b305f2b2eb1ea5874a"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -154,7 +141,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSNiAllocator.cpp",
-          "source_revision": "e250cd48712ed0eb51b61e77035f15f3d24adfb5db49fd59e29cddb82ab0546d"
+          "source_revision": "ff8b3dc969dabf93f2dd51fda0a0dbcc1151d2472a733314a77e9e5796c67256"
         },
         "symbol_map_sha256": "c08ef12c25b1f5a29ad998b4e565ccb8e59d7314101365b78450ec6850a2decc",
         "target": {
@@ -172,11 +159,11 @@
         "candidate": {
           "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
           "code_sections": 1,
-          "object_sha256": "18e79d7a677d5a735795378188dc4b56bfef30a782d6d7f775d26d355c943b59"
+          "object_sha256": "1ac91d3ff58eb52f309866c58846ef2f8d867861c75be7825bb0834cac2d3554"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -233,7 +220,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSNiAllocator.cpp",
-          "source_revision": "e250cd48712ed0eb51b61e77035f15f3d24adfb5db49fd59e29cddb82ab0546d"
+          "source_revision": "ff8b3dc969dabf93f2dd51fda0a0dbcc1151d2472a733314a77e9e5796c67256"
         },
         "symbol_map_sha256": "c08ef12c25b1f5a29ad998b4e565ccb8e59d7314101365b78450ec6850a2decc",
         "target": {
@@ -251,11 +238,11 @@
         "candidate": {
           "code_section_sha256": "ec261b6e918d1b4881631d19b706b7c3b2541e9048588bb5d8ff60c0b3f4c9ff",
           "code_sections": 1,
-          "object_sha256": "18e79d7a677d5a735795378188dc4b56bfef30a782d6d7f775d26d355c943b59"
+          "object_sha256": "1ac91d3ff58eb52f309866c58846ef2f8d867861c75be7825bb0834cac2d3554"
         },
         "comparator": {
-          "source_sha256": "a9bc14136d2f69195e5062cf3a2652b8caf1b948b2cf9ae57d94502978828b55",
-          "version": "0.6.0"
+          "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+          "version": "0.6.1-runtime"
         },
         "contract_version": 2,
         "coverage": {
@@ -312,7 +299,7 @@
         "result": "pass",
         "source": {
           "path": "reconstruction/bsengine/BSNiAllocator.cpp",
-          "source_revision": "e250cd48712ed0eb51b61e77035f15f3d24adfb5db49fd59e29cddb82ab0546d"
+          "source_revision": "ff8b3dc969dabf93f2dd51fda0a0dbcc1151d2472a733314a77e9e5796c67256"
         },
         "symbol_map_sha256": "c08ef12c25b1f5a29ad998b4e565ccb8e59d7314101365b78450ec6850a2decc",
         "target": {
@@ -325,7 +312,7 @@
   ],
   "source": {
     "compiled": "reconstruction/bsengine/BSNiAllocator.cpp",
-    "digest": "e250cd48712ed0eb51b61e77035f15f3d24adfb5db49fd59e29cddb82ab0546d",
+    "digest": "ff8b3dc969dabf93f2dd51fda0a0dbcc1151d2472a733314a77e9e5796c67256",
     "digest_method": "tu-sha256-v1",
     "translation_unit": [
       "reconstruction/bsengine/BSNiAllocator.cpp",

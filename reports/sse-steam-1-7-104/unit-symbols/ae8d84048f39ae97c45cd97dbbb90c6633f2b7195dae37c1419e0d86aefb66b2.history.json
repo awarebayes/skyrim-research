@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/ae8d84048f39ae97c45cd97dbbb90c6633f2b7195dae37c1419e0d86aefb66b2.json",
+  "versions": [
+    {
+      "sha256": "ae8d84048f39ae97c45cd97dbbb90c6633f2b7195dae37c1419e0d86aefb66b2",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "__std_terminate",
+        "??_GMagicMenu@@UEAAPEAXI@Z",
+        "??_7MagicMenu@@6B@",
+        "?InventoryManager@@3PEAVInventory3DManager@@EA",
+        "?BlurManager@@3PEAXEA",
+        "?DecrementMenuBlur@@YAXPEAX@Z",
+        "??_C@_0O@HHEIEILM@InventoryMode@",
+        "?PopMenuHUD@@YAXPEBD@Z",
+        "?MenuState@@3PEAXEA",
+        "?FinishMagicMenu@@YAXPEAX_N@Z",
+        "?ReleaseMenuObject@@YAXPEAX00@Z",
+        "??1IMenu@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "?GlobalHeap@@3PEAVGMemoryHeap@@EA",
+        "?__global_delete@@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

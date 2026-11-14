@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GFavoritesHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z": {
+      "rva": 9833392,
+      "size": 43
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26149600,
+      "size": null
+    },
+    "??_7FavoritesHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26723224,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GFavoritesHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+        "rva": "0x960bb0",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x18f02e0",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7FavoritesHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x197c398",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      }
+    ]
+  }
+}

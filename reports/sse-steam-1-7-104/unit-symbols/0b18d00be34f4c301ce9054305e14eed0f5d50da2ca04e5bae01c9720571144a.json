@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?UpdateWorldData@NiCamera@@UEAAXXZ": {
+      "rva": 15669104,
+      "size": 27
+    },
+    "?UpdateWorldBound@NiCamera@@UEAAXXZ": {
+      "rva": 15669584,
+      "size": 37
+    },
+    "??_GNiCamera@@UEAAPEAXI@Z": {
+      "rva": 15669776,
+      "size": 62
+    },
+    "?BaseUpdateWorldData@NiCamera@@QEAAXXZ": {
+      "rva": 15646528,
+      "size": null
+    },
+    "?UpdateCameraWorldData@NiCamera@@QEAAXXZ": {
+      "rva": 15667984,
+      "size": null
+    },
+    "??_7NiCamera@@6B@": {
+      "rva": 27559352,
+      "size": null
+    },
+    "??1NiCameraBase@@UEAA@XZ": {
+      "rva": 15599760,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?UpdateWorldData@NiCamera@@UEAAXXZ",
+        "rva": "0xef1770",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateWorldBound@NiCamera@@UEAAXXZ",
+        "rva": "0xef1950",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GNiCamera@@UEAAPEAXI@Z",
+        "rva": "0xef1a10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseUpdateWorldData@NiCamera@@QEAAXXZ",
+        "rva": "0xeebf40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateCameraWorldData@NiCamera@@QEAAXXZ",
+        "rva": "0xef1310",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7NiCamera@@6B@",
+        "rva": "0x1a485b8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1NiCameraBase@@UEAA@XZ",
+        "rva": "0xee0890",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

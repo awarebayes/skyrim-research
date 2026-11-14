@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/55001cb7211721133e53f0731357b9ce0d9c54e9484b75143e674f33e28c399d.json",
+  "versions": [
+    {
+      "sha256": "55001cb7211721133e53f0731357b9ce0d9c54e9484b75143e674f33e28c399d",
+      "base": null,
+      "added": [
+        "?GetMaxEffectCount@MagicItem@@UEBAIXZ",
+        "?IsMedicine@MagicItem@@UEBA_NXZ",
+        "?LoadMagicItemChunk@MagicItem@@UEAAXPEAVTESFile@@I@Z"
+      ]
+    }
+  ]
+}

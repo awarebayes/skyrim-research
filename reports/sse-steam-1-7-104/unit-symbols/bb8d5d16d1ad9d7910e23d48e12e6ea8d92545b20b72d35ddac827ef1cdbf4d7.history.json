@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/bb8d5d16d1ad9d7910e23d48e12e6ea8d92545b20b72d35ddac827ef1cdbf4d7.json",
+  "versions": [
+    {
+      "sha256": "bb8d5d16d1ad9d7910e23d48e12e6ea8d92545b20b72d35ddac827ef1cdbf4d7",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "__std_terminate",
+        "?InitItemImpl@BGSAddonNode@@UEAAXXZ",
+        "??_GBGSAddonNode@@UEAAPEAXI@Z",
+        "?ResolveAddonModels@@YAXPEAVTESModelTextureSwap@@PEAVTESForm@@@Z",
+        "?AddonSourceFile@@YAPEAXPEAVTESForm@@H@Z",
+        "?ResolveAddonID@@YAXPEAIPEAX@Z",
+        "?LookupAddonSound@@YAPEAXI@Z",
+        "?MarkAddonNode@@YAXPEAVTESForm@@_N@Z",
+        "??_7BGSAddonNode@@6BTESBoundObject@@@",
+        "??_7BGSAddonNode@@6BTESModelTextureSwap@@@",
+        "?AddonDataHandler@@3PEAXEA",
+        "?RemoveAddonNode@@YAXPEAXPEAVBGSAddonNode@@@Z",
+        "??1TESModelTextureSwap@@UEAA@XZ",
+        "??1TESBoundObject@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetDefaultPath@TESIcon@@UEBAPEBDXZ": {
+      "rva": 2000352,
+      "size": 8
+    },
+    "??_GTESIcon@@UEAAPEAXI@Z": {
+      "rva": 2000368,
+      "size": 52
+    },
+    "??_C@_08FLHNKADJ@Textures@": {
+      "rva": 25117144,
+      "size": null
+    },
+    "??1TESIcon@@UEAA@XZ": {
+      "rva": 2042400,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetDefaultPath@TESIcon@@UEBAPEBDXZ",
+        "rva": "0x1e85e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GTESIcon@@UEAAPEAXI@Z",
+        "rva": "0x1e85f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_08FLHNKADJ@Textures@",
+        "rva": "0x17f41d8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1TESIcon@@UEAA@XZ",
+        "rva": "0x1f2a20",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

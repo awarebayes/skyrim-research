@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/4ebf8420fef9bfd8eceaba64d33f6ad72aeddbace6c5355ad0ee473d7f2b75a4.json",
+  "versions": [
+    {
+      "sha256": "4ebf8420fef9bfd8eceaba64d33f6ad72aeddbace6c5355ad0ee473d7f2b75a4",
+      "base": null,
+      "added": [
+        "?GetDefaultKeyword@BGSKeywordForm@@UEBAPEAVBGSKeyword@@XZ",
+        "?InitializeDataComponent@BGSKeywordForm@@UEAAXXZ"
+      ]
+    }
+  ]
+}

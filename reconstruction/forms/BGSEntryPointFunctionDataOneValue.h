@@ -15,8 +15,23 @@
 #pragma once
 #include <cstdint>
 // GetType: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-class BGSEntryPointFunctionDataOneValue
+// BGSEntryPointFunctionData: GUESS(low); stand-in base whose vtable the deleting destructor stores after the derived one
+class BGSEntryPointFunctionData
 {
 public:
-    virtual std::uint32_t GetType() const;
+    virtual ~BGSEntryPointFunctionData() {}  // 00
 };
+
+// BGSEntryPointFunctionDataOneValue: SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence); name only; the 16-byte object size the deleting destructor frees
+class BGSEntryPointFunctionDataOneValue : public BGSEntryPointFunctionData
+{
+public:
+    // BGSEntryPointFunctionDataOneValue::BGSEntryPointFunctionDataOneValue: SIBLING(momusdigital/fnv_decomp@91e1b6e8, no-licence); name only; declared so the vftable and the deleting destructor are emitted in this unit
+    BGSEntryPointFunctionDataOneValue();
+    ~BGSEntryPointFunctionDataOneValue() override {}
+    virtual std::uint32_t GetType() const;
+
+    // unk08: GUESS(low); padding to the 0x10 size
+    std::uint8_t unk08[0x8];  // 08
+};
+static_assert(sizeof(BGSEntryPointFunctionDataOneValue) == 0x10, "layout");

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/4b8e6d2e5ad5649787a4f38a8822f240b1ac7ddc43b2888fdb44d152ecc36c77.json",
+  "versions": [
+    {
+      "sha256": "4b8e6d2e5ad5649787a4f38a8822f240b1ac7ddc43b2888fdb44d152ecc36c77",
+      "base": null,
+      "added": [
+        "?GetChunkID@EnchantmentItem@@UEAAIXZ",
+        "?GetDataSize@EnchantmentItem@@UEBAIXZ",
+        "?GetData1@EnchantmentItem@@UEBAPEBUData@MagicItem@@XZ"
+      ]
+    }
+  ]
+}

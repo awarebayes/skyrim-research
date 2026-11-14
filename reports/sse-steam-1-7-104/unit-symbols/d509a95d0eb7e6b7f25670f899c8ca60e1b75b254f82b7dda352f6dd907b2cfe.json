@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?ClearDataComponent@BGSPreloadable@@UEAAXXZ": {
+      "rva": 2490832,
+      "size": 3
+    },
+    "?CopyComponent@BGSPreloadable@@UEAAXPEAVBaseFormComponent@@@Z": {
+      "rva": 2490848,
+      "size": 3
+    },
+    "?InitializeDataComponent@BGSPreloadable@@UEAAXXZ": {
+      "rva": 2490864,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?ClearDataComponent@BGSPreloadable@@UEAAXXZ",
+        "rva": "0x2601d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?CopyComponent@BGSPreloadable@@UEAAXPEAVBaseFormComponent@@@Z",
+        "rva": "0x2601e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeDataComponent@BGSPreloadable@@UEAAXXZ",
+        "rva": "0x2601f0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

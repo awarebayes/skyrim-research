@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_09@BSVirtualKeyboardDevice@@UEAAXXZ": {
+      "rva": 15189168,
+      "size": 3
+    },
+    "?Unk_0A@BSVirtualKeyboardDevice@@UEAAXXZ": {
+      "rva": 15189184,
+      "size": 3
+    },
+    "??_GBSVirtualKeyboardDevice@@UEAAPEAXI@Z": {
+      "rva": 15189200,
+      "size": 62
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7BSVirtualKeyboardDevice@@6B@": {
+      "rva": 27525976,
+      "size": null
+    },
+    "??1BSKeyboardDevice@@UEAA@XZ": {
+      "rva": 14755376,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_09@BSVirtualKeyboardDevice@@UEAAXXZ",
+        "rva": "0xe7c4b0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0A@BSVirtualKeyboardDevice@@UEAAXXZ",
+        "rva": "0xe7c4c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSVirtualKeyboardDevice@@UEAAPEAXI@Z",
+        "rva": "0xe7c4d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSVirtualKeyboardDevice@@6B@",
+        "rva": "0x1a40358",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSKeyboardDevice@@UEAA@XZ",
+        "rva": "0xe12630",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

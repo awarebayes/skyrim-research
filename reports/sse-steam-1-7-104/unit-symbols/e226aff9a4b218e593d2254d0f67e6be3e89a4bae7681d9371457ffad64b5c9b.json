@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Process@BSPCGamepadDeviceHandler@@UEAAXM@Z": {
+      "rva": 14753504,
+      "size": 71
+    },
+    "??_GBSPCGamepadDeviceHandler@@UEAAPEAXI@Z": {
+      "rva": 14754704,
+      "size": 87
+    },
+    "?ProcessGamepadEnabledChange@@3_NA": {
+      "rva": 34393424,
+      "size": null
+    },
+    "?InitializeDelegate@BSPCGamepadDeviceHandler@@QEAAXXZ": {
+      "rva": 14753824,
+      "size": null
+    },
+    "??_7BSPCGamepadDeviceHandler@@6B@": {
+      "rva": 27514536,
+      "size": null
+    },
+    "??_7BSIInputDevice@@6B@": {
+      "rva": 27410752,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Process@BSPCGamepadDeviceHandler@@UEAAXM@Z",
+        "rva": "0xe11ee0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSPCGamepadDeviceHandler@@UEAAPEAXI@Z",
+        "rva": "0xe12390",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ProcessGamepadEnabledChange@@3_NA",
+        "rva": "0x20ccd50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?InitializeDelegate@BSPCGamepadDeviceHandler@@QEAAXXZ",
+        "rva": "0xe12020",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSPCGamepadDeviceHandler@@6B@",
+        "rva": "0x1a3d6a8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSIInputDevice@@6B@",
+        "rva": "0x1a24140",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

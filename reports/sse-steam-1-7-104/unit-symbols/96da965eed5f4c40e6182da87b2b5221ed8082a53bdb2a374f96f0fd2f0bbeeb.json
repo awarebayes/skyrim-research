@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetRTTI@BSWindModifier@@UEBAPEBVNiRTTI@@XZ": {
+      "rva": 16617360,
+      "size": 8
+    },
+    "??_GBSWindModifier@@UEAAPEAXI@Z": {
+      "rva": 16617296,
+      "size": 52
+    },
+    "?NiRTTI_BSWindModifier@@3VNiRTTI@@B": {
+      "rva": 53665280,
+      "size": null
+    },
+    "??1BSWindModifier@@UEAA@XZ": {
+      "rva": 16388960,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetRTTI@BSWindModifier@@UEBAPEBVNiRTTI@@XZ",
+        "rva": "0xfd8f90",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBSWindModifier@@UEAAPEAXI@Z",
+        "rva": "0xfd8f50",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiRTTI_BSWindModifier@@3VNiRTTI@@B",
+        "rva": "0x332de00",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSWindModifier@@UEAA@XZ",
+        "rva": "0xfa1360",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e226aff9a4b218e593d2254d0f67e6be3e89a4bae7681d9371457ffad64b5c9b.json",
+  "versions": [
+    {
+      "sha256": "e226aff9a4b218e593d2254d0f67e6be3e89a4bae7681d9371457ffad64b5c9b",
+      "base": null,
+      "added": [
+        "?Process@BSPCGamepadDeviceHandler@@UEAAXM@Z",
+        "??_GBSPCGamepadDeviceHandler@@UEAAPEAXI@Z",
+        "?ProcessGamepadEnabledChange@@3_NA",
+        "?InitializeDelegate@BSPCGamepadDeviceHandler@@QEAAXXZ",
+        "??_7BSPCGamepadDeviceHandler@@6B@",
+        "??_7BSIInputDevice@@6B@",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

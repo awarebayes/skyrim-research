@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e9877c497d20cb502dee7c904970e67268557e8524a2ff631b38f3c50167237c.json",
+  "versions": [
+    {
+      "sha256": "e9877c497d20cb502dee7c904970e67268557e8524a2ff631b38f3c50167237c",
+      "base": null,
+      "added": [
+        "?Initialize@BSWin32VirtualKeyboardDevice@@UEAAXXZ",
+        "?Release@BSWin32VirtualKeyboardDevice@@UEAAXXZ",
+        "?Reset@BSWin32VirtualKeyboardDevice@@UEAAXXZ"
+      ]
+    }
+  ]
+}

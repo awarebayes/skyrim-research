@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_07@NiStream@@UEAAXXZ": {
+      "rva": 15615760,
+      "size": 3
+    },
+    "?Save1@NiStream@@QEAAXPEAVNiBinaryStream@@@Z": {
+      "rva": 15614800,
+      "size": 42
+    },
+    "??_GNiStream@@UEAAPEAXI@Z": {
+      "rva": 15635792,
+      "size": 52
+    },
+    "??1NiStream@@UEAA@XZ": {
+      "rva": 15612896,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_07@NiStream@@UEAAXXZ",
+        "rva": "0xee4710",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Save1@NiStream@@QEAAXPEAVNiBinaryStream@@@Z",
+        "rva": "0xee4350",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GNiStream@@UEAAPEAXI@Z",
+        "rva": "0xee9550",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1NiStream@@UEAA@XZ",
+        "rva": "0xee3be0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

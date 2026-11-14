@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GSprintHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z": {
+      "rva": 8068528,
+      "size": 43
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26135496,
+      "size": null
+    },
+    "??_7HeldStateHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26431496,
+      "size": null
+    },
+    "??_7SprintHandlerStorageLayout@ResearchLayouts@@6B@": {
+      "rva": 26432008,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GSprintHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+        "rva": "0x7b1db0",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x18ecbc8",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7HeldStateHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x1935008",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      },
+      {
+        "name": "??_7SprintHandlerStorageLayout@ResearchLayouts@@6B@",
+        "rva": "0x1935208",
+        "community_name": null,
+        "note": "Independent leaf extraction and primary RTTI/represented-base identity; source aliases are stand-ins."
+      }
+    ]
+  }
+}

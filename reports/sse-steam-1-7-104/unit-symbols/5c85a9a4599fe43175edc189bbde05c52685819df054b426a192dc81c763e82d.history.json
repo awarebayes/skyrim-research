@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/5c85a9a4599fe43175edc189bbde05c52685819df054b426a192dc81c763e82d.json",
+  "versions": [
+    {
+      "sha256": "5c85a9a4599fe43175edc189bbde05c52685819df054b426a192dc81c763e82d",
+      "base": null,
+      "added": [
+        "?VerifyAddress@BSNiAllocator@@UEBAEXZ",
+        "?Initialize@BSNiAllocator@@UEAAXXZ",
+        "?Shutdown@BSNiAllocator@@UEAAXXZ"
+      ]
+    }
+  ]
+}

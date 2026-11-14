@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/dbab98d57a860993655ac025bffc6064a676e207dc95046c2c020e907e9138d7.json",
+  "versions": [
+    {
+      "sha256": "dbab98d57a860993655ac025bffc6064a676e207dc95046c2c020e907e9138d7",
+      "base": null,
+      "added": [
+        "?ClearDataComponent@BGSPickupPutdownSounds@@UEAAXXZ",
+        "?InitializeDataComponent@BGSPickupPutdownSounds@@UEAAXXZ",
+        "??_GBGSPickupPutdownSounds@@UEAAPEAXI@Z",
+        "??_7BGSPickupPutdownSounds@@6B@",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

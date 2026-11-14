@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/d0a933cfb6b0c3d0c916d0b4844ab173794f2321699e26be3430a7326827a230.json",
+  "versions": [
+    {
+      "sha256": "d0a933cfb6b0c3d0c916d0b4844ab173794f2321699e26be3430a7326827a230",
+      "base": null,
+      "added": [
+        "__real@437f0000",
+        "?SetRumble@BSPCOrbisGamepadDevice@@UEAAXMM@Z",
+        "?ApplyRumble@@YAXHPEBURumbleValues@@@Z"
+      ]
+    }
+  ]
+}

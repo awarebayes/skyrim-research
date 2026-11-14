@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_06@BGSMoviePlayer@@UEAAXXZ": {
+      "rva": 6574368,
+      "size": 3
+    },
+    "?Unk_05@BGSMoviePlayer@@UEAAXXZ": {
+      "rva": 6574384,
+      "size": 3
+    },
+    "?Unk_0A@BGSMoviePlayer@@UEAAIXZ": {
+      "rva": 6572320,
+      "size": 7
+    },
+    "?g_bgsMoviePlayerUnk@@3IA": {
+      "rva": 53699528,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_06@BGSMoviePlayer@@UEAAXXZ",
+        "rva": "0x645120",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_05@BGSMoviePlayer@@UEAAXXZ",
+        "rva": "0x645130",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0A@BGSMoviePlayer@@UEAAIXZ",
+        "rva": "0x644920",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_bgsMoviePlayerUnk@@3IA",
+        "rva": "0x33363c8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetDelivery@AlchemyItem@@UEBA?AW4Delivery@MagicSystem@@XZ": {
+      "rva": 1337056,
+      "size": 3
+    },
+    "?GetCastingType@AlchemyItem@@UEBA?AW4CastingType@MagicSystem@@XZ": {
+      "rva": 1336944,
+      "size": 6
+    },
+    "?GetDataSize@AlchemyItem@@UEBAIXZ": {
+      "rva": 1337040,
+      "size": 6
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetDelivery@AlchemyItem@@UEBA?AW4Delivery@MagicSystem@@XZ",
+        "rva": "0x1466e0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCastingType@AlchemyItem@@UEBA?AW4CastingType@MagicSystem@@XZ",
+        "rva": "0x146670",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDataSize@AlchemyItem@@UEBAIXZ",
+        "rva": "0x1466d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

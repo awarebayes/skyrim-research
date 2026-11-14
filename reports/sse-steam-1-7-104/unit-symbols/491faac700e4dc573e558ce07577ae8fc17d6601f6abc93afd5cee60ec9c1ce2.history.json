@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/491faac700e4dc573e558ce07577ae8fc17d6601f6abc93afd5cee60ec9c1ce2.json",
+  "versions": [
+    {
+      "sha256": "491faac700e4dc573e558ce07577ae8fc17d6601f6abc93afd5cee60ec9c1ce2",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "__std_terminate",
+        "??_GNavMeshInfoMap@@UEAAPEAXI@Z",
+        "?SetAltered@NavMeshInfoMap@@UEAAX_N@Z",
+        "??_7NavMeshInfoMap@@6BTESForm@@@",
+        "??_7NavMeshInfoMap@@6BBSNavmeshInfoMap@@@",
+        "?ClearNavMap@@YAXPEAVNavMeshInfoMap@@@Z",
+        "??1CKMapTail@@QEAA@XZ",
+        "??1NavMapTail@@QEAA@XZ",
+        "??1PrecomputedPaths@@QEAA@XZ",
+        "??1BSNavmeshInfoMap@@UEAA@XZ",
+        "??1TESForm@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

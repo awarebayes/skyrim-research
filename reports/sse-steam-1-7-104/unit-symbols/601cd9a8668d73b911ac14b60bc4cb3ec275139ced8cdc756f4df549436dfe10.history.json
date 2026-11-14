@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/601cd9a8668d73b911ac14b60bc4cb3ec275139ced8cdc756f4df549436dfe10.json",
+  "versions": [
+    {
+      "sha256": "601cd9a8668d73b911ac14b60bc4cb3ec275139ced8cdc756f4df549436dfe10",
+      "base": null,
+      "added": [
+        "?SetupMaterial@BSShader@@UEAAXPEBVBSShaderMaterial@@@Z",
+        "?RestoreMaterial@BSShader@@UEAAXPEBVBSShaderMaterial@@@Z",
+        "?GetTechniqueName@BSShader@@UEAAXIPEADI@Z"
+      ]
+    }
+  ]
+}

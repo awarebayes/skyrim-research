@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/c7c8c0c3087037c9161d4ce3473697c4ac1464e02b3ef9311ea087d17b997b5f.json",
+  "versions": [
+    {
+      "sha256": "c7c8c0c3087037c9161d4ce3473697c4ac1464e02b3ef9311ea087d17b997b5f",
+      "base": null,
+      "added": [
+        "?GetMaxAllowedSize@TESTexture@@UEAAIXZ",
+        "?ClearDataComponent@TESTexture@@UEAAXXZ",
+        "?GetDefaultPath@TESTexture@@UEBAPEBDXZ",
+        "??_C@_09EJFAOHPA@Textures?2@"
+      ]
+    }
+  ]
+}

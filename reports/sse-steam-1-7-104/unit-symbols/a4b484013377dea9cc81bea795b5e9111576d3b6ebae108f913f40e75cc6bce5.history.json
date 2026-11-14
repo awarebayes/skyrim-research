@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/a4b484013377dea9cc81bea795b5e9111576d3b6ebae108f913f40e75cc6bce5.json",
+  "versions": [
+    {
+      "sha256": "a4b484013377dea9cc81bea795b5e9111576d3b6ebae108f913f40e75cc6bce5",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "__std_terminate",
+        "??_GBSComputeShader@@UEAAPEAXI@Z",
+        "?Dispatch@BSComputeShader@@UEAAXIIII@Z",
+        "??_7BSComputeShader@@6BNiRefObject@@@",
+        "??_7BSComputeShader@@6BBSReloadShaderI@@@",
+        "?ReleaseShaderName@@YAXPEBD@Z",
+        "??1ShaderTableTail@@QEAA@XZ",
+        "??_7NiRefObject@@6B@",
+        "?ms_totalObjects@NiRefObject@@2JC",
+        "??3@YAXPEAX_K@Z",
+        "??_GNiRefObject@@UEAAPEAXI@Z"
+      ]
+    }
+  ]
+}

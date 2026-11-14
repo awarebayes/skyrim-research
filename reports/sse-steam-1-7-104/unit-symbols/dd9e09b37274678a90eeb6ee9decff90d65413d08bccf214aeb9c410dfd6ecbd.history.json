@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/dd9e09b37274678a90eeb6ee9decff90d65413d08bccf214aeb9c410dfd6ecbd.json",
+  "versions": [
+    {
+      "sha256": "dd9e09b37274678a90eeb6ee9decff90d65413d08bccf214aeb9c410dfd6ecbd",
+      "base": null,
+      "added": [
+        "?Release@BSWin32GamepadDevice@@UEAAXXZ",
+        "?SetRumble@BSWin32GamepadDevice@@UEAAXMM@Z"
+      ]
+    }
+  ]
+}

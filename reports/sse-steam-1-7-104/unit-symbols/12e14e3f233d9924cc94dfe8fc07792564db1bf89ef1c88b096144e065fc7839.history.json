@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/12e14e3f233d9924cc94dfe8fc07792564db1bf89ef1c88b096144e065fc7839.json",
+  "versions": [
+    {
+      "sha256": "12e14e3f233d9924cc94dfe8fc07792564db1bf89ef1c88b096144e065fc7839",
+      "base": null,
+      "added": [
+        "?GetRTTI@NiFloatsExtraData@@UEBAPEBVNiRTTI@@XZ",
+        "?NiRTTI_NiFloatsExtraData@@3VNiRTTI@@B"
+      ]
+    }
+  ]
+}

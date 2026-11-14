@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/c3041e108afea475cdc6ea8d229f32731f7d04b80464a69831efdf5fe93e91d8.json",
+  "versions": [
+    {
+      "sha256": "c3041e108afea475cdc6ea8d229f32731f7d04b80464a69831efdf5fe93e91d8",
+      "base": null,
+      "added": [
+        "?GetDelivery@IngredientItem@@UEBA?AW4Delivery@MagicSystem@@XZ",
+        "?GetCastingType@IngredientItem@@UEBA?AW4CastingType@MagicSystem@@XZ",
+        "?GetChunkID@IngredientItem@@UEAAIXZ"
+      ]
+    }
+  ]
+}

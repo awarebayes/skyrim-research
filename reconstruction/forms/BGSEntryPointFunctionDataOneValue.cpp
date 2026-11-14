@@ -14,6 +14,10 @@
 // member, padding: GUESS(low); storage names invented for the measured member offset
 #include "BGSEntryPointFunctionDataOneValue.h"
 // GetType: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
+BGSEntryPointFunctionDataOneValue::BGSEntryPointFunctionDataOneValue()
+{
+}
+
 std::uint32_t BGSEntryPointFunctionDataOneValue::GetType() const
 {
     return 0x1;

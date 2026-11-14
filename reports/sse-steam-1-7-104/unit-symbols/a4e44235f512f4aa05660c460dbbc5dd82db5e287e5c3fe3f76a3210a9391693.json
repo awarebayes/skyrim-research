@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_0E@BSGamepadDevice@@UEAAXXZ": {
+      "rva": 13614560,
+      "size": 3
+    },
+    "?Unk_0C@BSGamepadDevice@@UEAA_NXZ": {
+      "rva": 13615488,
+      "size": 3
+    },
+    "?ResetLEDColor@BSGamepadDevice@@UEAAXXZ": {
+      "rva": 13615520,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_0E@BSGamepadDevice@@UEAAXXZ",
+        "rva": "0xcfbde0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0C@BSGamepadDevice@@UEAA_NXZ",
+        "rva": "0xcfc180",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ResetLEDColor@BSGamepadDevice@@UEAAXXZ",
+        "rva": "0xcfc1a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

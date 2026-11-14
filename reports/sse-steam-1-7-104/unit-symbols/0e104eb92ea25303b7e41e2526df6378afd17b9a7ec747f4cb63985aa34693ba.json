@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?InitItemImpl@Script@@UEAAXXZ": {
+      "rva": 3426144,
+      "size": 8
+    },
+    "?GetProcessScripts@Script@@SA_NXZ": {
+      "rva": 3433376,
+      "size": 8
+    },
+    "?ScriptInitItemHelper@@YAXPEAVScript@@0@Z": {
+      "rva": 3426160,
+      "size": null
+    },
+    "?g_scriptProcessScripts@@3_NA": {
+      "rva": 34071825,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?InitItemImpl@Script@@UEAAXXZ",
+        "rva": "0x344760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetProcessScripts@Script@@SA_NXZ",
+        "rva": "0x3463a0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ScriptInitItemHelper@@YAXPEAVScript@@0@Z",
+        "rva": "0x344770",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?g_scriptProcessScripts@@3_NA",
+        "rva": "0x207e511",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

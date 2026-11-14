@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?SetupMaterial@BSShader@@UEAAXPEBVBSShaderMaterial@@@Z": {
+      "rva": 22513936,
+      "size": 3
+    },
+    "?RestoreMaterial@BSShader@@UEAAXPEBVBSShaderMaterial@@@Z": {
+      "rva": 22513952,
+      "size": 3
+    },
+    "?GetTechniqueName@BSShader@@UEAAXIPEADI@Z": {
+      "rva": 22514368,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?SetupMaterial@BSShader@@UEAAXPEBVBSShaderMaterial@@@Z",
+        "rva": "0x1578910",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?RestoreMaterial@BSShader@@UEAAXPEBVBSShaderMaterial@@@Z",
+        "rva": "0x1578920",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetTechniqueName@BSShader@@UEAAXIPEADI@Z",
+        "rva": "0x1578ac0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

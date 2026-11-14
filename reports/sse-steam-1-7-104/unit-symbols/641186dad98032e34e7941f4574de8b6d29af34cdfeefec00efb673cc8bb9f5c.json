@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GNiDirectionalLight@@UEAAPEAXI@Z": {
+      "rva": 15746768,
+      "size": 52
+    },
+    "?UpdateWorldData@NiDirectionalLight@@UEAAXXZ": {
+      "rva": 15746496,
+      "size": 53
+    },
+    "?GetRTTI@NiDirectionalLight@@UEBAPEBVNiRTTI@@XZ": {
+      "rva": 15746832,
+      "size": 8
+    },
+    "??1NiLightBase@@UEAA@XZ": {
+      "rva": 15651312,
+      "size": null
+    },
+    "?BaseUpdateWorldData@NiDirectionalLight@@QEAAXXZ": {
+      "rva": 15646528,
+      "size": null
+    },
+    "?NiRTTI_NiDirectionalLight@@3VNiRTTI@@B": {
+      "rva": 53598264,
+      "size": null
+    },
+    "??1NiDirectionalLight@@UEAA@XZ": {
+      "rva": 15651312,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [
+    [
+      "??1NiLightBase@@UEAA@XZ",
+      "??1NiDirectionalLight@@UEAA@XZ"
+    ]
+  ],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GNiDirectionalLight@@UEAAPEAXI@Z",
+        "rva": "0xf046d0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?UpdateWorldData@NiDirectionalLight@@UEAAXXZ",
+        "rva": "0xf045c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetRTTI@NiDirectionalLight@@UEBAPEBVNiRTTI@@XZ",
+        "rva": "0xf04710",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1NiLightBase@@UEAA@XZ",
+        "rva": "0xeed1f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?BaseUpdateWorldData@NiDirectionalLight@@QEAAXXZ",
+        "rva": "0xeebf40",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?NiRTTI_NiDirectionalLight@@3VNiRTTI@@B",
+        "rva": "0x331d838",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1NiDirectionalLight@@UEAA@XZ",
+        "rva": "0xeed1f0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

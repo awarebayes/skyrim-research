@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/c10de542b0098ffa8b11c9bcb61b3642f516f3e6b2b111af30c9e7d79d788635.json",
+  "versions": [
+    {
+      "sha256": "c10de542b0098ffa8b11c9bcb61b3642f516f3e6b2b111af30c9e7d79d788635",
+      "base": null,
+      "added": [
+        "?SetFormEditorID@BGSSoundDescriptorForm@@UEAA_NPEBD@Z",
+        "?SetEditorIDFromString@@YAXPEBDPEAVBGSSoundDescriptorForm@@@Z"
+      ]
+    }
+  ]
+}

@@ -1,30 +1,36 @@
-// BGSHazard::InitializeData, build sse-steam-1-7-104.
-//
+// Build: sse-steam-1-7-104
 // Labels: v2
-// Task: p92-n-bgshazard
-// Source exposure: mixed (names and declarations from community headers; the listing of the pinned
-// image).
+// Source exposure: mixed (community headers and pinned-image analysis).
+// Drafted by gpt-6.1-sol, Engineer p105 box3. Adapted bodies: none.
+// Declarations adapt CharmedBaryon/CommonLibSSE-NG@b93280e832f263dbef44e44cbe2936622a02f91a (MIT).
+// Helper spellings and local variable names are inferred; individual labels accompany declarations.
+// MIT License
+// 
+// Copyright (c) 2018 Ryan-rsm-McKenzie
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 // Evidence: findings/p92-unit-supply-selection.md
-// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json (compile this file alone).
-// Drafted by claude-haiku-5-5 from the compared listing.
-// Compared functions:
-//   RVA 0x261fc0, 67 bytes: BGSHazard::InitializeData
-// Adapted bodies: none
-// A byte match shows that this source and recipe produce the checked code; it does not verify the
-// community names or that the original source looked like this.
+// Recipe: reconstruction/recipes/msvc-19.16.27054-o2.json
+// RVA 0x261fc0, 67 bytes: BGSHazard::InitializeData
+// RVA 0x262730, 144 bytes: BGSHazard::~BGSHazard
 #include "BGSHazard.h"
+BGSHazard::BGSHazard() {}
+BGSHazard::~BGSHazard() {}
+void BGSHazard::InitializeData() { limit=0; radius=0; lifetime=0; imageSpaceRadius=0; targetInterval=hazardDefaultFloat; hazardFlags=0; spell=nullptr; light=nullptr; sound=nullptr; impactDataSet=nullptr; }
 
-// Not compared: defined so that the compiler emits the vftable.
-
-
-void BGSHazard::InitializeData()
-{
-    hazard80 = 0;
-    hazard88 = 0;
-    hazard90 = hazardDefaultFloat;
-    hazard94 = 0;
-    hazard98 = 0;
-    hazardA0 = 0;
-    hazardB0 = 0;
-    hazardA8 = 0;
-}

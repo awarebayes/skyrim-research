@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetMaxAllowedSize@TESTexture@@UEAAIXZ": {
+      "rva": 1337184,
+      "size": 3
+    },
+    "?ClearDataComponent@TESTexture@@UEAAXXZ": {
+      "rva": 2042656,
+      "size": 3
+    },
+    "?GetDefaultPath@TESTexture@@UEBAPEBDXZ": {
+      "rva": 2044704,
+      "size": 8
+    },
+    "??_C@_09EJFAOHPA@Textures?2@": {
+      "rva": 25149296,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetMaxAllowedSize@TESTexture@@UEAAIXZ",
+        "rva": "0x146760",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearDataComponent@TESTexture@@UEAAXXZ",
+        "rva": "0x1f2b20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetDefaultPath@TESTexture@@UEBAPEBDXZ",
+        "rva": "0x1f3320",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_C@_09EJFAOHPA@Textures?2@",
+        "rva": "0x17fbf70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

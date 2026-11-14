@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/c616b1c0e244b7648248ea402df78d1349f49e65b492187fa8de557cf1a074f4.json",
+  "versions": [
+    {
+      "sha256": "c616b1c0e244b7648248ea402df78d1349f49e65b492187fa8de557cf1a074f4",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "__std_terminate",
+        "??_GBSKeyboardDevice@@UEAAPEAXI@Z",
+        "??_7BSInputDevice@@6B@",
+        "?ResetButtonMaps@BSInputDevice@@QEAAXXZ",
+        "??1NameMapTail@@QEAA@XZ",
+        "??1ButtonMapTail@@QEAA@XZ",
+        "??_7BSIInputDevice@@6B@",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

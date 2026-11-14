@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_GBSAnimationGraphChannel@@UEAAPEAXI@Z": {
+      "rva": 2224320,
+      "size": 66
+    },
+    "??_7BSAnimationGraphChannel@@6B@": {
+      "rva": 25177968,
+      "size": null
+    },
+    "??1BSAnimationGraphChannelMember@@QEAA@XZ": {
+      "rva": 15405312,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_GBSAnimationGraphChannel@@UEAAPEAXI@Z",
+        "rva": "0x21f0c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BSAnimationGraphChannel@@6B@",
+        "rva": "0x1802f70",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSAnimationGraphChannelMember@@QEAA@XZ",
+        "rva": "0xeb1100",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

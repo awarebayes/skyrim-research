@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/5cd242bbbfe31bc0fd8492e9bb020ed4010576f1d71882f4c5165baba3fb9a3c.json",
+  "versions": [
+    {
+      "sha256": "5cd242bbbfe31bc0fd8492e9bb020ed4010576f1d71882f4c5165baba3fb9a3c",
+      "base": null,
+      "added": [
+        "__CxxFrameHandler3",
+        "??_GBGSImpactDataSet@@UEAAPEAXI@Z",
+        "?InitItemImpl@BGSImpactDataSet@@UEAAXXZ",
+        "?ClearData@BGSImpactDataSet@@UEAAXXZ",
+        "??_7BGSImpactDataSet@@6BTESForm@@@",
+        "??_7BGSImpactDataSet@@6BBGSPreloadable@@@",
+        "??1ImpactTail@@QEAA@XZ",
+        "??_7BaseFormComponent@@6B@",
+        "??1TESForm@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "?MemoryTLS@@3IA",
+        "?ImpactDataHandler@@3PEAXEA",
+        "?ResolveImpactMap@@YAXPEAXEPEAPEAUImpactMap@@@Z",
+        "?MarkImpactSet@@YAXPEAVTESForm@@_N@Z",
+        "??1MemoryScope@@QEAA@XZ"
+      ]
+    }
+  ]
+}

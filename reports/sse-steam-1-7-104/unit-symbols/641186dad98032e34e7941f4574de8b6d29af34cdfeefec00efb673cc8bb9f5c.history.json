@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/641186dad98032e34e7941f4574de8b6d29af34cdfeefec00efb673cc8bb9f5c.json",
+  "versions": [
+    {
+      "sha256": "641186dad98032e34e7941f4574de8b6d29af34cdfeefec00efb673cc8bb9f5c",
+      "base": null,
+      "added": [
+        "??_GNiDirectionalLight@@UEAAPEAXI@Z",
+        "?UpdateWorldData@NiDirectionalLight@@UEAAXXZ",
+        "?GetRTTI@NiDirectionalLight@@UEBAPEBVNiRTTI@@XZ",
+        "??1NiLightBase@@UEAA@XZ",
+        "?BaseUpdateWorldData@NiDirectionalLight@@QEAAXXZ",
+        "?NiRTTI_NiDirectionalLight@@3VNiRTTI@@B",
+        "??1NiDirectionalLight@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z"
+      ]
+    }
+  ]
+}

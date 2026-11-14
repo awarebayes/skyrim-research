@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@W7EAAPEAXI@Z": {
+      "rva": 8595640,
+      "size": 9
+    },
+    "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@UEAAPEAXI@Z": {
+      "rva": 8588176,
+      "size": null
+    },
+    "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WBA@EAAPEAXI@Z": {
+      "rva": 8595652,
+      "size": 9
+    },
+    "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WBI@EAAPEAXI@Z": {
+      "rva": 8595664,
+      "size": 9
+    },
+    "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WCA@EAAPEAXI@Z": {
+      "rva": 8595676,
+      "size": 9
+    },
+    "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WCI@EAAPEAXI@Z": {
+      "rva": 8595740,
+      "size": 9
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@W7EAAPEAXI@Z",
+        "rva": "0x8328b8",
+        "community_name": null,
+        "note": "Direct registration-class ABI spelling; member-local decoded transfer agrees with independent RTTI slot binding."
+      },
+      {
+        "name": "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@UEAAPEAXI@Z",
+        "rva": "0x830b90",
+        "community_name": null,
+        "note": "Direct registration-class ABI spelling; member-local decoded transfer agrees with independent RTTI slot binding."
+      },
+      {
+        "name": "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WBA@EAAPEAXI@Z",
+        "rva": "0x8328c4",
+        "community_name": null,
+        "note": "Direct registration-class ABI spelling; member-local decoded transfer agrees with independent RTTI slot binding."
+      },
+      {
+        "name": "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WBI@EAAPEAXI@Z",
+        "rva": "0x8328d0",
+        "community_name": null,
+        "note": "Direct registration-class ABI spelling; member-local decoded transfer agrees with independent RTTI slot binding."
+      },
+      {
+        "name": "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WCA@EAAPEAXI@Z",
+        "rva": "0x8328dc",
+        "community_name": null,
+        "note": "Direct registration-class ABI spelling; member-local decoded transfer agrees with independent RTTI slot binding."
+      },
+      {
+        "name": "??_EAutoRegisterCombatMagicCasterReanimateLayout@ResearchLayouts@@WCI@EAAPEAXI@Z",
+        "rva": "0x83291c",
+        "community_name": null,
+        "note": "Direct registration-class ABI spelling; member-local decoded transfer agrees with independent RTTI slot binding."
+      }
+    ]
+  }
+}

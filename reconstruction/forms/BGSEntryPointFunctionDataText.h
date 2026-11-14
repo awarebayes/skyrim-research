@@ -15,8 +15,57 @@
 #pragma once
 #include <cstdint>
 // GetType: COMMUNITY(meh321/AddressLibraryDatabase@0379cb6, permission)
-class BGSEntryPointFunctionDataText
-{
+// BGSEntryPointFunctionData, BGSEntryPointFunctionData::~BGSEntryPointFunctionData,
+// LoadFunctionData, ResolveForms, SetPerk, GetPerk: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+class TESFile;
+class BGSPerk;
+class BGSEntryPointFunctionData {
 public:
-    virtual std::uint32_t GetType() const;
+    BGSEntryPointFunctionData();
+    virtual ~BGSEntryPointFunctionData() {}
+    virtual std::uint32_t GetType() const = 0;
+    virtual bool LoadFunctionData(TESFile*) = 0;
+    virtual void ResolveForms(TESFile*);
+    // Unk_04, Unk_05: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    virtual void Unk_04();
+    virtual void Unk_05();
+    virtual void SetPerk(BGSPerk*);
+    virtual BGSPerk* GetPerk();
 };
+// BSFixedString, BSFixedString::~BSFixedString: STANDIN COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+// value: GUESS(low); pooled string pointer.
+class BSFixedString { public: ~BSFixedString(); const char* value; };
+class BGSEntryPointFunctionDataText : public BGSEntryPointFunctionData {
+public:
+    // BGSEntryPointFunctionDataText::BGSEntryPointFunctionDataText: GUESS(low); retained for vftable emission.
+    BGSEntryPointFunctionDataText();
+    // BGSEntryPointFunctionDataText::~BGSEntryPointFunctionDataText,
+    // BGSEntryPointFunctionDataText::text: COMMUNITY(CharmedBaryon/CommonLibSSE-NG@b93280e, MIT)
+    ~BGSEntryPointFunctionDataText() override = default;
+    std::uint32_t GetType() const override;
+    bool LoadFunctionData(TESFile*) override;
+    BSFixedString text;
+};
+static_assert(sizeof(BGSEntryPointFunctionDataText) == 0x10, "function data text size");
+// Public declaration source notice:
+// MIT License
+//
+// Copyright (c) 2018 Ryan-rsm-McKenzie
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.

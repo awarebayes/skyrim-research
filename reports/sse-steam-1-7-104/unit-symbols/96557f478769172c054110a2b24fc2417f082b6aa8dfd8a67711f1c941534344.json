@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?InitItemImpl@BGSMusicTrackFormWrapper@@UEAAXXZ": {
+      "rva": 3306544,
+      "size": 58
+    },
+    "?SetFormHelper@@YAXPEAVTESForm@@_N@Z": {
+      "rva": 1990832,
+      "size": null
+    },
+    "??_EBGSMusicTrackFormWrapper@@WCA@EAAPEAXI@Z": {
+      "rva": 3306836,
+      "size": 9
+    },
+    "??_EBGSMusicTrackFormWrapper@@UEAAPEAXI@Z": {
+      "rva": 3306848,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?InitItemImpl@BGSMusicTrackFormWrapper@@UEAAXXZ",
+        "rva": "0x327430",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?SetFormHelper@@YAXPEAVTESForm@@_N@Z",
+        "rva": "0x1e60b0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_EBGSMusicTrackFormWrapper@@WCA@EAAPEAXI@Z",
+        "rva": "0x327554",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_EBGSMusicTrackFormWrapper@@UEAAPEAXI@Z",
+        "rva": "0x327560",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

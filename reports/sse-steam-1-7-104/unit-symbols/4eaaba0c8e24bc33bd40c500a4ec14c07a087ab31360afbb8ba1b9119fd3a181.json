@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?Unk_09@BSWin32KeyboardDevice@@UEAAXXZ": {
+      "rva": 14756896,
+      "size": 3
+    },
+    "?Unk_0A@BSWin32KeyboardDevice@@UEAAXXZ": {
+      "rva": 14756912,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?Unk_09@BSWin32KeyboardDevice@@UEAAXXZ",
+        "rva": "0xe12c20",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?Unk_0A@BSWin32KeyboardDevice@@UEAAXXZ",
+        "rva": "0xe12c30",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

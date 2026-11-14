@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetType@BGSEntryPointFunctionDataOneValue@@UEBAIXZ": {
+      "rva": 3731120,
+      "size": 6
+    },
+    "??_GBGSEntryPointFunctionDataOneValue@@UEAAPEAXI@Z": {
+      "rva": 3730608,
+      "size": 43
+    },
+    "??_7BGSEntryPointFunctionData@@6B@": {
+      "rva": 25512680,
+      "size": null
+    },
+    "??3@YAXPEAX_K@Z": {
+      "rva": 22705212,
+      "size": null
+    },
+    "??_GBGSEntryPointFunctionData@@UEAAPEAXI@Z": {
+      "rva": 3730352,
+      "size": 43
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetType@BGSEntryPointFunctionDataOneValue@@UEBAIXZ",
+        "rva": "0x38eeb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSEntryPointFunctionDataOneValue@@UEAAPEAXI@Z",
+        "rva": "0x38ecb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_7BGSEntryPointFunctionData@@6B@",
+        "rva": "0x1854ae8",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??3@YAXPEAX_K@Z",
+        "rva": "0x15a743c",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??_GBGSEntryPointFunctionData@@UEAAPEAXI@Z",
+        "rva": "0x38ebb0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

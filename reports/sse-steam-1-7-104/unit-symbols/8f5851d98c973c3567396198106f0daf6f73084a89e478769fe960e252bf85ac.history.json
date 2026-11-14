@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/8f5851d98c973c3567396198106f0daf6f73084a89e478769fe960e252bf85ac.json",
+  "versions": [
+    {
+      "sha256": "8f5851d98c973c3567396198106f0daf6f73084a89e478769fe960e252bf85ac",
+      "base": null,
+      "added": [
+        "?GetDelivery@AlchemyItem@@UEBA?AW4Delivery@MagicSystem@@XZ",
+        "?GetCastingType@AlchemyItem@@UEBA?AW4CastingType@MagicSystem@@XZ",
+        "?GetDataSize@AlchemyItem@@UEBAIXZ"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetMaxEffectCount@MagicItem@@UEBAIXZ": {
+      "rva": 1337200,
+      "size": 3
+    },
+    "?IsMedicine@MagicItem@@UEBA_NXZ": {
+      "rva": 1370048,
+      "size": 3
+    },
+    "?LoadMagicItemChunk@MagicItem@@UEAAXPEAVTESFile@@I@Z": {
+      "rva": 1370160,
+      "size": 3
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetMaxEffectCount@MagicItem@@UEBAIXZ",
+        "rva": "0x146770",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?IsMedicine@MagicItem@@UEBA_NXZ",
+        "rva": "0x14e7c0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?LoadMagicItemChunk@MagicItem@@UEAAXPEAVTESFile@@I@Z",
+        "rva": "0x14e830",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

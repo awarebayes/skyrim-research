@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/61667c6862133a4d6bb84cb13edfbe610729ee070e9842e6dd3f5ec5dbbc9068.json",
+  "versions": [
+    {
+      "sha256": "61667c6862133a4d6bb84cb13edfbe610729ee070e9842e6dd3f5ec5dbbc9068",
+      "base": null,
+      "added": [
+        "??_GBSInvMarker@@UEAAPEAXI@Z",
+        "?CreateClone@BSInvMarker@@UEAAPEAVNiObject@@AEAVNiCloningProcess@@@Z",
+        "?GetRTTI@BSInvMarker@@UEBAPEBVNiRTTI@@XZ",
+        "??_7BSInvMarker@@6B@",
+        "??1NiExtraData@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "?NiRTTI_BSInvMarker@@3VNiRTTI@@A"
+      ]
+    }
+  ]
+}

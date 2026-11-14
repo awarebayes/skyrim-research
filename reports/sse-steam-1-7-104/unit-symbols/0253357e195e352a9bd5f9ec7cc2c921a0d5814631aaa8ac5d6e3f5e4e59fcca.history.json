@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/0253357e195e352a9bd5f9ec7cc2c921a0d5814631aaa8ac5d6e3f5e4e59fcca.json",
+  "versions": [
+    {
+      "sha256": "0253357e195e352a9bd5f9ec7cc2c921a0d5814631aaa8ac5d6e3f5e4e59fcca",
+      "base": null,
+      "added": [
+        "??_GFlameProjectile@@UEAAPEAXI@Z",
+        "??1FlameProjectile@@UEAA@XZ",
+        "??3@YAXPEAX_K@Z",
+        "?Slot164@FlameProjectile@@UEBAEXZ",
+        "?BGSLoadGameBuffer_LoadDataEndian@@YAXPEAVBGSLoadFormBuffer@@PEAXII@Z",
+        "?BGSSaveGameBuffer_SaveDataEndian@@YAXPEAVBGSSaveFormBuffer@@PEAXIII@Z",
+        "??0FlameProjectile@@QEAA@XZ",
+        "??0Projectile@@QEAA@XZ",
+        "??_7FlameProjectile@@6BTESForm@@@",
+        "??_7FlameProjectile@@6BBSHandleRefObject@@@",
+        "??_7FlameProjectile@@6BIAnimationGraphManagerHolder@@@",
+        "?LoadGame@FlameProjectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@FlameProjectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z",
+        "??_7FlameProjectile@@6B?$BSTEventSink@VBSAnimationGraphEvent@@@@@",
+        "?LoadGame@Projectile@@UEAAXPEAVBGSLoadFormBuffer@@@Z",
+        "?SaveGame@Projectile@@UEAAXPEAVBGSSaveFormBuffer@@@Z"
+      ]
+    }
+  ]
+}

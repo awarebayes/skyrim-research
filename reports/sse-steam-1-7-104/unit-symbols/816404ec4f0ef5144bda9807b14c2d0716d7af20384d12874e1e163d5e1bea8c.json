@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?GetDataSize@SpellItem@@UEBAIXZ": {
+      "rva": 1395984,
+      "size": 6
+    },
+    "?GetCastingType@SpellItem@@UEBA?AW4CastingType@MagicSystem@@XZ": {
+      "rva": 1400048,
+      "size": 7
+    },
+    "?GetSpellType@SpellItem@@UEBA?AW4SpellType@MagicSystem@@XZ": {
+      "rva": 1400064,
+      "size": 7
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "?GetDataSize@SpellItem@@UEBAIXZ",
+        "rva": "0x154d10",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetCastingType@SpellItem@@UEBA?AW4CastingType@MagicSystem@@XZ",
+        "rva": "0x155cf0",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?GetSpellType@SpellItem@@UEBA?AW4SpellType@MagicSystem@@XZ",
+        "rva": "0x155d00",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

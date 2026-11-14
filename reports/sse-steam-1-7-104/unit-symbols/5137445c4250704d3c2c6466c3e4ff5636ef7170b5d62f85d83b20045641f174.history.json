@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/5137445c4250704d3c2c6466c3e4ff5636ef7170b5d62f85d83b20045641f174.json",
+  "versions": [
+    {
+      "sha256": "5137445c4250704d3c2c6466c3e4ff5636ef7170b5d62f85d83b20045641f174",
+      "base": null,
+      "added": [
+        "?GetCount@MagicItemData@@UEAAIXZ",
+        "?GetEnabled@MagicItemData@@UEAA_NXZ",
+        "?ReadEnabledFlag@@YA_NPEAX@Z"
+      ]
+    }
+  ]
+}

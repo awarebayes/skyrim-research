@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/a4e44235f512f4aa05660c460dbbc5dd82db5e287e5c3fe3f76a3210a9391693.json",
+  "versions": [
+    {
+      "sha256": "a4e44235f512f4aa05660c460dbbc5dd82db5e287e5c3fe3f76a3210a9391693",
+      "base": null,
+      "added": [
+        "?Unk_0E@BSGamepadDevice@@UEAAXXZ",
+        "?Unk_0C@BSGamepadDevice@@UEAA_NXZ",
+        "?ResetLEDColor@BSGamepadDevice@@UEAAXXZ"
+      ]
+    }
+  ]
+}
