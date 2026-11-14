@@ -6,8 +6,8 @@ from types import SimpleNamespace
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'tools'))
-import adjustor_thunk_generate as gen
-import adjustor_thunk_template_v2 as template
+import adjustor_thunk_generate_v3 as gen
+import adjustor_thunk_template_v3 as template
 
 
 class AdjustorExtractionTests(unittest.TestCase):
