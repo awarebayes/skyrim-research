@@ -1,5 +1,10 @@
 # Drafter runbook (queue sessions)
 
+Before handing reconstructed units to review, run `python3 tools/lint_review_readiness.py
+--functions <selected RVAs or ids>` alongside the existing lint. Each header states code origin
+(for example `Origin: original reconstruction`); retained MIT notices include the complete text.
+This pre-review check does not replace compilation, comparator evidence or any existing gate.
+
 Paste into a fresh session, with your own worker label (and the profile, if not `cheap`):
 `Read docs/drafter-runbook.md in this repository and follow it exactly. Your worker label is <label>.`
 
