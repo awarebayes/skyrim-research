@@ -64,7 +64,8 @@ Cargo/build/cache instructions here or modify its checkout as part of a research
 - No broad staging: inspect `git diff`, then stage named files. Run `python3 tools/check.py --staged`
   immediately before committing. Never bypass a guard to ship suspect material.
 - Before a PR/push run `python3 tools/check.py`, `python3.13 tools/test_suite.py`,
-  and `python3 tools/build_site.py`. Review all staged text for provenance and secrets. The
+  and `python3 tools/build_site.py`; function-only lane runs rely on the lane acceptance checks,
+  check.py and CI. Review all staged text for provenance and secrets. The
   integrating Engineer, or the orchestrator when run with a shell, then commits and pushes; there
   is no per-commit maintainer review.
 - Tooling publications use `python3 tools/flow.py tooling-push` with the shared flow directory.

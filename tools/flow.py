@@ -2376,15 +2376,44 @@ def sync(root, branch='main'):
     return [rel for rel, _ in same]
 
 
-def pre_push_checks(root, commit, python, *, candidate=False, log_dir=None):
+def function_only_diff(root, base_revision, commit):
+    """Only the lane's explicit base permits the function-only local check policy."""
+    if not base_revision:
+        return False
+    paths = git(root, 'diff', '--name-only', base_revision, commit).splitlines()
+    generated = {'data/progress.json', 'docs/progress.svg', 'docs/progress-map.svg',
+                 'docs/model-trend.svg', 'docs/progress-trend.svg'}
+    if 'README.md' in paths:
+        start, end = '<!-- model-trend-totals -->', '<!-- /model-trend-totals -->'
+        before = git(root, 'show', base_revision + ':README.md', check=False)
+        after = git(root, 'show', commit + ':README.md', check=False)
+        def outside(text):
+            if text.count(start) != 1 or text.count(end) != 1:
+                return None
+            prefix, tail = text.split(start)
+            if end not in tail:
+                return None
+            return prefix, tail.split(end)[1]
+        if outside(before) is not None and outside(before) == outside(after):
+            generated.add('README.md')  # Only the generated totals; prose still needs full checks.
+    return bool(paths) and all(p.startswith(('reconstruction/', 'reports/')) or p in generated
+                               for p in paths)
+
+
+def pre_push_checks(root, commit, python, *, candidate=False, log_dir=None, base_revision=None):
     """AGENTS.md checks on a clean exact commit; a lane candidate is already isolated."""
     if candidate:
         refuse(git(root, 'rev-parse', 'HEAD') == commit and not git(root, 'status', '--porcelain', '--untracked-files=no'),
                'lane candidate differs from its commit before checks')
-        for name, cmd in [('check', [python, 'tools/check.py']),
+        commands = [('check', [python, 'tools/check.py']),
                           ('tests', ([python, 'tools/test_suite.py'] if (Path(root) / 'tools/test_suite.py').is_file()
                                      else [python, '-m', 'unittest', 'discover', '-s', 'tests', '-v'])),
-                          ('site', [python, 'tools/build_site.py'])]:
+                          ('site', [python, 'tools/build_site.py'])]
+        if function_only_diff(root, base_revision, commit):
+            commands = commands[:1]
+            print('Function-only lane tree: acceptance checks, check.py and exact-SHA CI; '
+                  'full unit suite and site build run in CI', flush=True)
+        for name, cmd in commands:
             options = {'log_path': Path(log_dir) / (name + '.log')} if log_dir is not None else {}
             run(cmd, root, {'check': 'check.py', 'tests': 'unit tests', 'site': 'build_site.py'}[name] + ' (lane tree)', **options)
         refuse(not git(root, 'status', '--porcelain', '--untracked-files=no'),

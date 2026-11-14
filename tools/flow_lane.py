@@ -810,7 +810,8 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                     receipt['checks_log_dir'] = str(logs)
                     save_run(fdir, receipt)
                     try:
-                        f.pre_push_checks(tree, integ['commit'], python, candidate=True, log_dir=logs)
+                        f.pre_push_checks(tree, integ['commit'], python, candidate=True, log_dir=logs,
+                                          base_revision=integ['base_revision'])
                     except f.FlowError as error:
                         if not receipt.get('tooling_accepted'):
                             raise
