@@ -1,0 +1,32 @@
+// Build: sse-steam-1-7-104
+// Source exposure: community-headers (layout reconciled with target allocation sizes separately).
+// Drafted by GPT-6.1 Sol; p106 represented-layout recovery.
+// Labels: v2
+// Declaration source: powerof3/CommonLibSSE@654e55f7979c1733033d5dbef176e43827bac944 include/RE/B/BSAudio.h; GPL-3.0.
+// BSAudio: COMMUNITY(powerof3/CommonLibSSE@654e55f, GPL-3.0)
+// Member spelling and base declarations adapt that source; unspecified field meanings remain unknown.
+// Omitted methods are not reconstructed. Pointee types are declarations only.
+// Explicit padding fields are omitted; compiler alignment must satisfy every size and field assertion.
+// Size assertions establish represented layout only, never a comparator match.
+// BSAudioLayout: GUESS(medium) STANDIN; represented layout type names
+// Adapted from published p106 represented declaration reconstruction/bsengine/BSAudioLayout.h.
+// Include spelling and local type names changed; all represented fields, bases, size and offset assertions retained.
+// BSAudioStorageLayout: GUESS(medium) STANDIN; compilation-local represented type aliases.
+// Code origin: declarations adapted from the pinned represented community header; no implementation bodies reused.
+// BSAudioBulkLayout: GUESS(medium) STANDIN; represented layout aliases.
+#pragma once
+#include <cstdint>
+#include <cstddef>
+
+namespace ResearchLayouts {
+class BSAudioListener;
+class BSAudioBulkLayout {
+public:
+    virtual ~BSAudioBulkLayout();
+    std::uint64_t unk08;
+    BSAudioListener* audioListener;
+};
+static_assert(sizeof(BSAudioBulkLayout) == 24, "community represented size");
+static_assert(offsetof(BSAudioBulkLayout, unk08) == 8, "unk08 offset");
+static_assert(offsetof(BSAudioBulkLayout, audioListener) == 16, "audioListener offset");
+}

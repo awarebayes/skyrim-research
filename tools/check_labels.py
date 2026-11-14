@@ -31,6 +31,7 @@ proof: a name can exist in a class for another reason, and macro-built members a
 far as their tokens appear in the class body.
 
     python3 tools/check_labels.py [--checkout owner/repo=PATH ...] [files...]
+    # --no-sibling-names (or SR_NO_SIBLING_NAMES=1): generic sibling findings, identical checks
     # default files: every reconstruction/**/*.h and *.cpp with "Labels: v2"
     # default checkouts: .local/verifier/config.json "community_checkouts", else .local/sources/
 """
@@ -39,6 +40,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+from local_paths import local_dir, local_path, no_sibling_names as hide_sibling_names
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -342,11 +344,12 @@ def checkout_head(path):
 
 
 class Checker:
-    def __init__(self, checkouts, root=ROOT, siblings=None):
+    def __init__(self, checkouts, root=ROOT, siblings=None, no_sibling_names=None, env=None):
         self.root = Path(root)
+        self.no_sibling_names = hide_sibling_names(env) if no_sibling_names is None else no_sibling_names
 
         def resolve(path):
-            return self.root / path if not Path(path).is_absolute() else Path(path)
+            return local_path(self.root, path, env)
         self.checkouts = {repo: resolve(path) for repo, path in checkouts.items()}
         self.siblings = {repo: resolve(path)
                          for repo, path in (DEFAULT_SIBLINGS if siblings is None else siblings).items()}
@@ -369,7 +372,9 @@ class Checker:
             if key not in self.reported:
                 self.reported.add(key)
                 kind, config = ('SIBLING', 'sibling') if sibling else ('COMMUNITY', 'community')
-                findings.append(f'{where}: no local checkout of {repo}; its {kind} labels were not verified '
+                findings.append(f'{where}: no local sibling checkout; its SIBLING labels were not verified'
+                                if sibling and self.no_sibling_names else
+                                f'{where}: no local checkout of {repo}; its {kind} labels were not verified '
                                 f'(set .local/verifier/config.json "{config}_checkouts")')
             return None
         head = checkout_head(path)
@@ -377,7 +382,9 @@ class Checker:
             key = ('rev', repo, rev)
             if key not in self.reported:
                 self.reported.add(key)
-                findings.append(f'{where}: checkout of {repo} is at {head or "an unknown revision"}, the label pins '
+                findings.append(f'{where}: sibling checkout revision differs from the label; names were checked as is'
+                                if sibling and self.no_sibling_names else
+                                f'{where}: checkout of {repo} is at {head or "an unknown revision"}, the label pins '
                                 f'{rev}; names were checked against the checkout as it is')
         if sibling:
             return self.sibling_index(repo)
@@ -412,7 +419,9 @@ class Checker:
                         community_names.setdefault(name.split('::')[-1], (repo, index))
                     if all(index.has(name, hint) is None for hint in hints):
                         where_in = name.rsplit('::', 1)[0] if '::' in name else ' or '.join(h for h in hints if h)
-                        findings.append(f'{where}: {name} is labelled {kind}({repo}) but {repo} at {rev} '
+                        findings.append(f'{where}: a SIBLING-labelled name has no declaration in the sibling checkout'
+                                        if sibling and self.no_sibling_names else
+                                        f'{where}: {name} is labelled {kind}({repo}) but {repo} at {rev} '
                                         f'declares no such name{" in " + where_in if where_in else ""}')
             if 'GUESS' in labels and not pins and not sibling_pins:
                 for name in names:
@@ -442,7 +451,10 @@ class Checker:
                                 break
                         if found:
                             scope = name.rsplit('::', 1)[0] if '::' in name else hint
-                            findings.append(f'{where}: {name} is labelled GUESS but sibling {found} declares it in '
+                            findings.append(f'{where}: a sibling declaration exists for this name; '
+                                            'if you took it from there, label it SIBLING'
+                                            if self.no_sibling_names else
+                                            f'{where}: {name} is labelled GUESS but sibling {found} declares it in '
                                             f'{scope}; if you took it from there, label it SIBLING')
                             break
         findings += self.check_enums(rel, text, scopes, community_names)
@@ -479,6 +491,8 @@ class Checker:
                 out.append(f'{rel}: Sibling source {path} does not exist in {repo}')
             elif line and int(line) > len(target.read_text(errors='replace').splitlines()):
                 out.append(f'{rel}: Sibling source {path}:{line} is past the end of the file')
+        if self.no_sibling_names:
+            return [f'{rel}: sibling source citation could not be verified (details omitted)' for _ in out]
         return out
 
     def check_enums(self, rel, text, scopes, community_names):
@@ -598,9 +612,10 @@ def community_excerpts(files, checkouts=None, root=ROOT):
     return out
 
 
-def configured_checkouts(root=ROOT):
+def configured_checkouts(root=ROOT, env=None):
+    config_path = local_dir(root, env) / 'verifier/config.json'
     try:
-        config = json.loads((root / '.local/verifier/config.json').read_text())
+        config = json.loads(config_path.read_text())
     except (OSError, ValueError):
         config = {}
     return config.get('community_checkouts') or DEFAULT_CHECKOUTS
@@ -610,17 +625,18 @@ def default_files(root=ROOT):
     return sorted(p for p in (root / 'reconstruction').rglob('*') if p.suffix in ('.h', '.cpp'))
 
 
-def configured_siblings(root=ROOT):
+def configured_siblings(root=ROOT, env=None):
+    config_path = local_dir(root, env) / 'verifier/config.json'
     try:
-        config = json.loads((root / '.local/verifier/config.json').read_text())
+        config = json.loads(config_path.read_text())
     except (OSError, ValueError):
         config = {}
     return config.get('sibling_checkouts') or DEFAULT_SIBLINGS
 
 
-def check(files, checkouts=None, root=ROOT, siblings=None):
-    checker = Checker(checkouts or configured_checkouts(root), root,
-                      configured_siblings(root) if siblings is None else siblings)
+def check(files, checkouts=None, root=ROOT, siblings=None, no_sibling_names=None, env=None):
+    checker = Checker(checkouts or configured_checkouts(root, env), root,
+                      configured_siblings(root, env) if siblings is None else siblings, no_sibling_names, env)
     findings = []
     for path in files:
         findings += checker.check_file(Path(path) if Path(path).is_absolute() else root / path)
@@ -631,13 +647,16 @@ def main(argv):
     p = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     p.add_argument('files', nargs='*')
     p.add_argument('--checkout', action='append', default=[], metavar='OWNER/REPO=PATH')
+    p.add_argument('--no-sibling-names', action='store_true', default=hide_sibling_names(),
+                   help='omit sibling identifiers from findings (or set SR_NO_SIBLING_NAMES=1); checks are unchanged')
     p.add_argument('--sibling', action='append', default=[], metavar='OWNER/REPO=PATH')
     args = p.parse_args(argv)
     checkouts = dict(configured_checkouts())
     checkouts.update(dict(c.split('=', 1) for c in args.checkout))
     siblings = dict(configured_siblings())
     siblings.update(dict(c.split('=', 1) for c in args.sibling))
-    findings = check(args.files or default_files(), checkouts, siblings=siblings)
+    findings = check(args.files or default_files(), checkouts, siblings=siblings,
+                     no_sibling_names=args.no_sibling_names)
     for f in findings:
         print(f'check_labels: {f}')
     print(f'check_labels: {"PASS" if not findings else "WARN"} ({len(findings)} finding(s))')

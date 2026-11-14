@@ -603,7 +603,8 @@ def prepare(item, frozen):
                 bindings[group['pair']] = signature(frozen, group['pair'])
             requests.append(dict(kind='review', group=name, review=str(f.review_path(root, group).resolve()),
                                  functions=approved, build_id=group['build_id'],
-                                 profile=group.get('profile', f.profiles.DEFAULT), harvests=group.get('harvests')))
+                                 profile=group.get('profile', f.profiles.DEFAULT), harvests=group.get('harvests'),
+                                 record_refresh=group.get('record_refresh', [])))
     return requests, bindings
 
 
@@ -653,7 +654,36 @@ def _source_files(root, request):
             paths.add(name)
             if (root / f.history_name(name)).exists():
                 paths.add(f.history_name(name))
+    paths.update(refreshed_records(root, request, by_rva))
     return by_rva, paths
+
+
+def refreshed_records(root, request, by_rva):
+    if not request.get('record_refresh'):
+        return []
+    allowed = {f.fr.read(root, by_rva[rv]['report'])['source']['compiled'] for rv in request['functions']}
+    selected = {fn['id']: fn for fn in by_rva.values()}
+    _, target = f.af.load(root)
+    records = []
+    for fid in request['record_refresh']:
+        fn = selected[fid]
+        record = f.fr.read(root, fn['report'])
+        if record['source']['compiled'] not in allowed:
+            continue
+        f.refuse(fn['status'] != 'matched', 'matched companion needs its own review selection')
+        f.af.validate_match(dict(fn, status='matched'), target, root)
+        records.append(fn['report'])
+    return records
+
+
+def carry_request(source, tree, request, by_rva):
+    companions = refreshed_records(source, request, by_rva)
+    files = f.carry_into_tree(source, tree, request['functions'], by_rva, request.get('harvests'))
+    for name in companions:
+        destination = tree / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source / name, destination)
+    return sorted(set(files) | set(companions))
 
 
 def copy_private_review(source, tree, review, name=None):
@@ -837,7 +867,7 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
                     pins[rel] = digest
                     input_pins[str(source / rel)] = digest
                     request_pins[str(source / rel)] = digest
-                carried.update(f.carry_into_tree(source, tree, request['functions'], by_rva, request.get('harvests')))
+                carried.update(carry_request(source, tree, request, by_rva))
                 request['item'] = item['id']
                 if request.get('review'):
                     src = Path(request['review'])
@@ -882,7 +912,7 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
         for request in selected:
             source = Path(next(i['root'] for i in receipt['items'] if i['id'] == request['item']))
             by_rva, _ = _source_files(source, request)
-            f.carry_into_tree(source, tree, request['functions'], by_rva, request.get('harvests'))
+            carry_request(source, tree, request, by_rva)
 
     # Remove any partial carry of a request that failed before acceptance.
     if dropped:

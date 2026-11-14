@@ -1,0 +1,57 @@
+name: Public MSVC hash self-test
+# Phase 1 only: already-published source and accepted code-section hashes. PR compilation and
+# unmatched-target manifests remain design-only (docs/ci-hash-check.md).
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-self-test:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.13'
+      - name: Record source revision
+        run: git rev-parse HEAD
+      - name: Install v141 through the runner's VS installer
+        id: install
+        shell: pwsh
+        run: tools/ci_msvc_install.ps1 -Source v141
+      - name: Measure v141 against all toolchain pins
+        id: probe
+        shell: pwsh
+        run: python tools/ci_hash_check.py probe --bin "$env:MSVC_BIN" --out "$env:RUNNER_TEMP/v141/probe.json"
+        env:
+          MSVC_BIN: ${{ steps.install.outputs.bin }}
+      - name: Compile three public units twice and compare their recorded hashes
+        id: selftest
+        continue-on-error: true
+        shell: pwsh
+        run: python tools/ci_hash_check.py self-test --bin "$env:MSVC_BIN" --out "$env:RUNNER_TEMP/v141/self-test.json"
+        env:
+          MSVC_BIN: ${{ steps.install.outputs.bin }}
+      - name: Try official VS2017 bootstrapper with the fixed catalog on mismatch
+        if: steps.probe.outputs.toolset != 'MATCH' || steps.selftest.outcome != 'success'
+        id: fallback
+        shell: pwsh
+        run: tools/ci_msvc_install.ps1 -Source vs2017
+      - name: Measure official VS2017 against the same pins
+        if: steps.fallback.outcome == 'success'
+        id: fallback-probe
+        shell: pwsh
+        run: python tools/ci_hash_check.py probe --bin "$env:MSVC_BIN" --out "$env:RUNNER_TEMP/vs2017/probe.json"
+        env:
+          MSVC_BIN: ${{ steps.fallback.outputs.bin }}
+      - name: Check the three public units with official VS2017
+        if: steps.fallback.outcome == 'success'
+        shell: pwsh
+        run: python tools/ci_hash_check.py self-test --bin "$env:MSVC_BIN" --out "$env:RUNNER_TEMP/vs2017/self-test.json"
+        env:
+          MSVC_BIN: ${{ steps.fallback.outputs.bin }}
+      # No cache or upload-artifact: compiler packages and generated objects stay on the runner.

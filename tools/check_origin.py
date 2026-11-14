@@ -36,6 +36,7 @@ import argparse
 import difflib
 import hashlib
 import json
+from local_paths import local_dir, local_path
 from pathlib import Path
 import re
 import subprocess
@@ -297,9 +298,10 @@ class Clone:
                 yield rel, line, normalise(fns[n]['body'], fns[n]['params'])
 
 
-def configured_sources(root=ROOT):
+def configured_sources(root=ROOT, env=None):
+    config_path = local_dir(root, env) / 'verifier/config.json'
     try:
-        config = json.loads((Path(root) / '.local/verifier/config.json').read_text())
+        config = json.loads(config_path.read_text())
     except (OSError, ValueError):
         config = {}
     sources = dict(DEFAULT_SOURCES)
@@ -312,15 +314,15 @@ def configured_sources(root=ROOT):
     return sources
 
 
-def open_clones(root=ROOT, sources=None, cache=True):
+def open_clones(root=ROOT, sources=None, cache=True, env=None):
     root = Path(root)
     clones, missing = [], []
-    for repo, (path, licence, dirs) in (sources or configured_sources(root)).items():
-        path = Path(path) if Path(path).is_absolute() else root / path
+    for repo, (path, licence, dirs) in (sources or configured_sources(root, env)).items():
+        path = local_path(root, path, env)
         if not path.is_dir():
             missing.append(repo)
             continue
-        clones.append(Clone(repo, path, licence, dirs, root / '.local/analysis/origin-index' if cache else None))
+        clones.append(Clone(repo, path, licence, dirs, local_dir(root, env) / 'analysis/origin-index' if cache else None))
     return clones, missing
 
 
@@ -399,7 +401,9 @@ def check_unit(files, clones, threshold=DEFAULT_THRESHOLD, root=ROOT):
     return hits
 
 
-def describe(hit):
+def describe(hit, no_sibling_names=False):
+    if no_sibling_names and hit['repo'] in SIBLINGS:
+        return 'a sibling body similarity finding exists (details omitted)'
     kind = 'trivial, same as community' if hit['trivial'] else 'adapted'
     if hit.get('fork_of'):
         kind += f'; same body as {hit["fork_of"]}, which the fork carries'

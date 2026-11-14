@@ -1,0 +1,474 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "headers": {
+    "reconstruction/bsengine/BSAudioBulkLayout.h": "7661c26871fa78e81204d96c5647e399fdcd518e43cded866865d33e0e34e145",
+    "reconstruction/bsengine/BSIntrusiveRefCountedBulkLayout.h": "c9a82a458a41e720d9a814e38a3ad8292e1b957feff54e5a4b41b28ce5c9fd3b",
+    "reconstruction/bsengine/IHandlerFunctorBulkLayout.h": "5003e1e754bf503c3396ecdf9c50294ac6002f9c019330b82ee47a83a37c1bef",
+    "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h": "5f943cef4f5688b19cab2604c81d8278d0ae42fb4ce0d1bc44cd1c8e23719a18"
+  },
+  "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+  "layout_commit": "5f41e5eab792a65a4e2e64bdb13c140e09315149",
+  "members": [
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "ConfirmResetCallback",
+      "owner_rtti": ".?AUConfirmResetCallback@@",
+      "owner_slot": 0,
+      "owner_table": 26149952,
+      "rva": 5776192,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "MarketplaceMenu::errorCallback",
+      "owner_rtti": ".?AUerrorCallback@MarketplaceMenu@@",
+      "owner_slot": 0,
+      "owner_table": 26150024,
+      "rva": 5776608,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "ModManager::CloseModManager_ConfirmCallback",
+      "owner_rtti": ".?AUCloseModManager_ConfirmCallback@ModManager@@",
+      "owner_slot": 0,
+      "owner_table": 26167792,
+      "rva": 5995296,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "ModManager::DeleteAllModsConfirmCallback",
+      "owner_rtti": ".?AUDeleteAllModsConfirmCallback@ModManager@@",
+      "owner_slot": 0,
+      "owner_table": 26167744,
+      "rva": 5995344,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "ModManager::ModsChanged_ConfirmResetCallback",
+      "owner_rtti": ".?AUModsChanged_ConfirmResetCallback@ModManager@@",
+      "owner_slot": 0,
+      "owner_table": 26167840,
+      "rva": 5996096,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "BNETSystem::ModsChanged_ConfirmResetCallback",
+      "owner_rtti": ".?AUModsChanged_ConfirmResetCallback@BNETSystem@@",
+      "owner_slot": 0,
+      "owner_table": 26216312,
+      "rva": 6294096,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "allCreationsDownloadedCallback",
+      "owner_rtti": ".?AUallCreationsDownloadedCallback@@",
+      "owner_slot": 0,
+      "owner_table": 26235056,
+      "rva": 6320688,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "downloadConfirmResetCallback",
+      "owner_rtti": ".?AUdownloadConfirmResetCallback@@",
+      "owner_slot": 0,
+      "owner_table": 26235032,
+      "rva": 6320736,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "noCreationsDownloadedCallback",
+      "owner_rtti": ".?AUnoCreationsDownloadedCallback@@",
+      "owner_slot": 0,
+      "owner_table": 26235080,
+      "rva": 6320784,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "DownloadAll::uiCallback",
+      "owner_rtti": ".?AUuiCallback@DownloadAll@@",
+      "owner_slot": 0,
+      "owner_table": 26235008,
+      "rva": 6320832,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "doDownloads::waitingCallback",
+      "owner_rtti": ".?AUwaitingCallback@doDownloads@@",
+      "owner_slot": 0,
+      "owner_table": 26235128,
+      "rva": 6320880,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorBulkLayout::~IHandlerFunctorBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorBulkLayout.h",
+      "object_size": 16,
+      "owner": "IHandlerFunctor<VActor@@VBSFixedStringCI@@>",
+      "owner_rtti": ".?AV?$IHandlerFunctor@VActor@@VBSFixedStringCI@@@@",
+      "owner_slot": 0,
+      "owner_table": 26443312,
+      "rva": 8206080,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorBulkLayout::~IHandlerFunctorBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorBulkLayout.h",
+      "object_size": 16,
+      "owner": "PlayerBedEnterHandler",
+      "owner_rtti": ".?AVPlayerBedEnterHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443912,
+      "rva": 8209632,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorBulkLayout::~IHandlerFunctorBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorBulkLayout.h",
+      "object_size": 16,
+      "owner": "PlayerChairEnterHandler",
+      "owner_rtti": ".?AVPlayerChairEnterHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443864,
+      "rva": 8209680,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "BNetUnavailable::ModsNotMountedCallback",
+      "owner_rtti": ".?AUModsNotMountedCallback@BNetUnavailable@@",
+      "owner_slot": 0,
+      "owner_table": 26720120,
+      "rva": 9823808,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "BNetUnavailable::OpenConnectingToNetworkCallback",
+      "owner_rtti": ".?AUOpenConnectingToNetworkCallback@BNetUnavailable@@",
+      "owner_slot": 0,
+      "owner_table": 26720080,
+      "rva": 9823904,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "BNetUnavailable::OpenMarketplaceCallback",
+      "owner_rtti": ".?AUOpenMarketplaceCallback@BNetUnavailable@@",
+      "owner_slot": 0,
+      "owner_table": 26720008,
+      "rva": 9823952,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "DLCPurchased::OpenVisitCreationClubCallback",
+      "owner_rtti": ".?AUOpenVisitCreationClubCallback@DLCPurchased@@",
+      "owner_slot": 0,
+      "owner_table": 26719752,
+      "rva": 9824000,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackBulkLayout::~IMessageBoxCallbackBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackBulkLayout.h",
+      "object_size": 16,
+      "owner": "DLCPurchased::PurchasedDLCDialogCallback",
+      "owner_rtti": ".?AUPurchasedDLCDialogCallback@DLCPurchased@@",
+      "owner_slot": 0,
+      "owner_table": 26719864,
+      "rva": 9824048,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackBulkLayout"
+    },
+    {
+      "definitions": [
+        "inline BSAudioBulkLayout::~BSAudioBulkLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/BSAudioBulkLayout.h",
+      "object_size": 24,
+      "owner": "BSNullImplAudio",
+      "owner_rtti": ".?AVBSNullImplAudio@@",
+      "owner_slot": 0,
+      "owner_table": 27395896,
+      "rva": 13460144,
+      "size": 43,
+      "stored_rtti": "BSAudio",
+      "stored_table": 27395272,
+      "symbol": "??_GBSAudioBulkLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 27395272,
+          "symbol": "??_7BSAudioBulkLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::BSAudioBulkLayout"
+    }
+  ],
+  "schema": 1
+}
