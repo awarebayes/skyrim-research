@@ -2385,8 +2385,9 @@ def function_only_diff(root, base_revision, commit):
                  'docs/model-trend.svg', 'docs/progress-trend.svg'}
     if 'README.md' in paths:
         start, end = '<!-- model-trend-totals -->', '<!-- /model-trend-totals -->'
-        before = git(root, 'show', base_revision + ':README.md', check=False)
-        after = git(root, 'show', commit + ':README.md', check=False)
+        blobs = [subprocess.run(['git', 'show', revision + ':README.md'], cwd=root,
+                                capture_output=True, text=True) for revision in (base_revision, commit)]
+        before, after = [blob.stdout if blob.returncode == 0 else '' for blob in blobs]
         def outside(text):
             if text.count(start) != 1 or text.count(end) != 1:
                 return None

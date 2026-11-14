@@ -79,6 +79,10 @@ class FunctionOnly(unittest.TestCase):
         path.write_text(path.read_text().replace('Synthetic prose', 'Changed prose'))
         self.git('add', 'README.md')
         self.assertEqual(len(self.checks(self.commit(), base_revision=base)), 3)
+        path.write_text('Synthetic prose\n<!-- model-trend-totals -->new<!-- /model-trend-totals -->\n\n')
+        self.git('add', 'README.md')
+        self.assertEqual(len(self.checks(self.commit(), base_revision=base)), 3,
+                         'even whitespace outside generated totals keeps the full local checks')
 
     def test_renaming_tooling_into_reconstruction_keeps_full_local_checks(self):
         self.write('tools/synthetic.py')
