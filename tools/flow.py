@@ -296,7 +296,7 @@ def prior_holds(root):
 
 # ------------------------------------------------------------------ state of every function
 
-def function_states(root, fdir, branch='main', online=True):
+def function_states(root, fdir, branch='main', online=True, review_rvas=None):
     """{rva hex: {'state', 'id', 'name', 'unit', 'group', 'profile', 'detail'}} for every tracked function."""
     root = Path(root)
     data = inventory(root)
@@ -338,6 +338,8 @@ def function_states(root, fdir, branch='main', online=True):
     gs = groups(fdir)
     for name, g in gs.items():
         if g['kind'] != 'review' or g.get('superseded_by'):
+            continue
+        if review_rvas is not None and not set(g['functions']) & review_rvas:
             continue
         status, blocks = read_review(root, g, data['functions'])
         for rva in g['functions']:
@@ -474,7 +476,8 @@ def plan_family(root, spec_file, fdir=None, supersede=None):
     if supersede:
         return supersede_family(root, fdir or flow_dir(root), supersede, family, first, data, target)
     if any(by_id[fid]['status'] != 'matched' for fid in first):
-        states = function_states(root, fdir or flow_dir(root), online=False)
+        states = function_states(root, fdir or flow_dir(root), online=False,
+                                 review_rvas={hexrva(by_id[fid]['rva']) for fid in first})
         fr.require(all(states.get(hexrva(by_id[fid]['rva']), {}).get('state') == 'confirmed'
                        and not states[hexrva(by_id[fid]['rva'])].get('group') for fid in first),
                    'first 20 must be confirmed and ungrouped before planning a new family')
@@ -928,9 +931,12 @@ def review_group(root, fdir, max_size=DEFAULT_GROUP_MAX, reviewer_model=None, se
             print(f'note: the rule does not admit a {entry["model"]} Reviewer yet; using opus', file=sys.stderr)
             entry = {'model': 'opus', 'harness': 'claude-code'}
     model = entry['model']
-    states = function_states(root, fdir, online=False)
     data = inventory(root)
     by_rva = {f'0x{fn["rva"]:x}': fn for fn in data['functions'] if fn['build_id'] == data['target_build_id']}
+    # Keep whole-inventory acceptance/version counts, but read private review files only
+    # for the selected population. Unrelated shared groups may belong to another input root.
+    scope = {r for r, fn in by_rva.items() if fn['id'] in select} if select is not None else None
+    states = function_states(root, fdir, online=False, review_rvas=scope)
     todo = [r for r, s in states.items() if s['state'] == 'confirmed' and not s.get('group')
             and not family_deferred(root, by_rva[r]) and (select is None or by_rva[r]['id'] in select)]
     units = {}

@@ -129,6 +129,53 @@ class Operations(unittest.TestCase):
         self.assertEqual(result['state'], 'done')
         self.assertFalse(any(call.args[0][:2] == ['git', 'push'] for call in commands.call_args_list))
 
+    def test_stale_tooling_has_resume_and_retire_commands_and_retains_inputs(self):
+        receipt = dict(id='synthetic-tooling', kind='tooling', state='running', root=str(self.root),
+                       branch='main', integrated=None,
+                       owner=dict(pid=999999999, host=socket.gethostname(), birth='dead'))
+        path = self.fdir / 'lane/tooling/synthetic-tooling.json'
+        lane.write(path, receipt)
+        before = path.read_bytes()
+        status = lane.run_status(self.root, self.fdir, receipt)
+        self.assertEqual(status['status'], 'stale')
+        self.assertIn('tooling-push --resume synthetic-tooling', status['resume_command'])
+        self.assertIn('lane-retire synthetic-tooling', status['retire_command'])
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(flow.main(['--root', str(self.root), '--flow-dir', str(self.fdir),
+                                        'lane-status']), 0)
+        self.assertIn('lane-retire synthetic-tooling', output.getvalue())
+        self.assertEqual(path.read_bytes(), before)
+        head = git(self.root, 'rev-parse', 'HEAD')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(flow.main(['--root', str(self.root), '--flow-dir', str(self.fdir),
+                                        'lane-retire', receipt['id'], '--reason', 'synthetic replacement']), 0)
+        self.assertEqual(lane.read(path)['state'], 'retired')
+        self.assertEqual(git(self.root, 'rev-parse', 'HEAD'), head)
+        self.assertFalse((self.fdir / 'lane/runs/synthetic-tooling.json').exists())
+
+    def test_generic_lane_resume_routes_tooling_ci_checkpoint_without_repush(self):
+        self.tooling_commit('import sys\nsys.exit(0 if "--wait" in sys.argv and sys.argv[-1] == "1" else 2)\n')
+        # First allow the base CI query, then leave the pushed commit pending.
+        original = lane.subprocess.run
+        seen = []
+        def command(argv, *args, **kwargs):
+            if 'tools/ci_status.py' in argv:
+                seen.append(argv)
+                return SimpleNamespace(returncode=0 if len(seen) == 1 else 2, stdout='pending', stderr='')
+            return original(argv, *args, **kwargs)
+        with patch.object(lane.subprocess, 'run', side_effect=command), self.assertRaises(flow.FlowError):
+            lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
+        receipt = lane.read(next((self.fdir / 'lane/tooling').glob('*.json')))
+        with patch.object(flow, 'pre_push_checks', side_effect=AssertionError('must not repeat checks')):
+            result = lane.run_lane(self.root, self.fdir, ci_wait=1, python=sys.executable, resume=receipt['id'])
+        self.assertEqual(result['state'], 'done')
+        self.assertEqual(result['integrated']['commit'], receipt['integrated']['commit'])
+        with self.assertRaisesRegex(flow.FlowError, 'cannot retire'):
+            result['state'] = 'running'
+            lane.write(self.fdir / 'lane/tooling' / (receipt['id'] + '.json'), result)
+            lane.retire(self.root, self.fdir, receipt['id'], 'must refuse')
     def test_escalations_are_grouped_by_action_and_category_with_counts(self):
         group = max((flow.load_group(self.fdir, name) for name in self.names), key=lambda g: len(g['functions']))
         self.repo.save_review(group['task_id'], [(r, size, self.repo.digest(r), 'escalate', 'systemic')

@@ -659,6 +659,37 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
         self.assertIn('-r2', redone['task_id'])
         self.assertIn('in this same pass', (self.root / redone['brief']).read_text())
 
+    def test_family_plan_ignores_unrelated_foreign_review_but_rejects_relevant_escape(self):
+        (self.root / self.batch_path).unlink()
+        (self.root / self.family_path).unlink()
+        shutil.rmtree(self.fdir / 'groups')
+        for fn in self.data['functions']:
+            if fn['id'] in self.first:
+                fn['status'] = 'mapped'
+                fn.pop('named', None)
+                (self.root / check.review_record_path(fn)).unlink()
+        self.save_data()
+        foreign = self.root.parent / 'foreign-review.md'
+        foreign.write_text('must not be read\n')
+        group = dict(name='g999', kind='review', task_id='unrelated-review',
+                     functions=[flow.hexrva(self.data['functions'][-1]['rva'])],
+                     saved_review=str(foreign), components={})
+        flow.save_group(self.fdir, group)
+        with self.assertRaisesRegex(flow.FlowError, 'review path escapes private reviews'):
+            flow.review_path(self.root, group)
+        before = foreign.read_bytes()
+        path = flow.plan_family(self.root, '.local/family-spec.json', self.fdir)
+        self.assertTrue((self.root / path).is_file())
+        made = [g for g in flow.groups(self.fdir).values() if g.get('family_review_path') == path]
+        self.assertEqual(len(made), 1)
+        self.assertEqual(len(made[0]['functions']), 20)
+        self.assertEqual(foreign.read_bytes(), before)
+        group['functions'] = [flow.hexrva(self.data['functions'][0]['rva'])]
+        flow.save_group(self.fdir, group)
+        with self.assertRaisesRegex(flow.FlowError, 'review path escapes private reviews'):
+            flow.function_states(self.root, self.fdir, online=False,
+                                 review_rvas=set(group['functions']))
+
     def test_supersede_unapproved_family_preserves_reviews_and_replans(self):
         (self.root / self.batch_path).unlink()
         (self.root / self.family_path).unlink()
