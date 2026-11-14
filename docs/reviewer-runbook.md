@@ -34,7 +34,7 @@ independent Opus does the second pass for a Sol first review.
   reviewed source, the comparator, the validator, reports, `data/progress.json`, gates or git
   state.
 - Shell use is read-only inspection: hashing (`shasum -a 256`, `python3 tools/source_digest.py
-  <unit files>`, `python3 tools/review_packet.py`), `git log`, `git show`, `git diff`, `git
+  <unit files>`, `python3 tools/review_packet.py`, `python3 tools/lint_review_readiness.py`), `git log`, `git show`, `git diff`, `git
   rev-parse`, `ls`, and `python3 tools/check.py` without fix-style options. No other redirection
   into files, no `git` commands that change refs, index or worktree, no installs, no network, no
   comparator or verifier runs.
@@ -49,6 +49,11 @@ independent Opus does the second pass for a Sol first review.
 - Do not push, post publicly, mark `matched`, or start further agents.
 
 ## Start from the review packet
+
+Before source review, run `python3 tools/lint_review_readiness.py --functions <selected RVAs or ids>`
+in the review checkout (or pass `--root <review checkout>` to green-main tooling). It adds checks
+for truncated MIT fragments and a code-origin statement in each reconstruction header. Fixes
+return to the Engineer/Drafter; existing lint, validator and acceptance checks remain required.
 
 Run `python3 tools/review_packet.py <RVA or id> ...` (or `--stale` for every stale acceptance;
 `--template` adds a blank block per function) first. It prints one compact view per unit: the

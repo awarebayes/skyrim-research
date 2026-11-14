@@ -1,5 +1,16 @@
 # Orchestrator runbook (routine queue work, any model)
 
+## Ten-line lane guide
+
+1. Use green-main tools and the shared `--flow-dir`; keep each approved input root available until its receipt completes.
+2. Enqueue with `integrate`, `integrate-groups`, `integrate-family`, or `integrate-labels`; enqueue all ready work first.
+3. Run `lane-run` for one combined acceptance push; arrivals during that run remain queued for the next run.
+4. Engineers commit named tooling files after `check.py --staged`, then use `tooling-push` for checks, push and exact-SHA CI under the same lock.
+5. New lane builds and confirm jobs require 3 GB; below the default 10 GB soft floor, only an explicit `--allow-low-disk` admits them.
+6. Read `lane-status`: stale runs print exact `lane-run --resume <id>` or `tooling-push --resume <id>` commands; resume does not repush a CI checkpoint.
+7. Explicitly retire only unpublished runs with `lane-retire <id> --reason <reason>`; nothing auto-retires a run.
+8. Preview `cleanup --dry-run`, then opt in with `cleanup`; finished clean trees lose working files, evidence and Git refs/stashes remain; `sync` after green CI.
+
 Follow `docs/anti-eu-bureaucracy.md`: ship in bulk, decide rather than stop, and add no ceremony beyond named rules.
 
 Paste into a fresh session started in this repository, naming the profile:
@@ -100,10 +111,12 @@ the input root, selection and options under `.local/flow/lane/`; `lane-status` p
 Label-only re-acceptances use `integrate-labels --functions <ids or RVAs...>`; their existing
 code-section, provenance and sampling requirements remain unchanged.
 
-`lane-run` checks free disk space before taking locks or changing queue state, refusing below
-3 GB (decimal) by default. Set `lane-run --min-free-gb <number>` or
-`SKYRIM_LANE_MIN_FREE_GB` to a finite nonnegative threshold; the CLI option takes precedence.
-The environment setting also applies to integration commands with `--run` or `--no-push`.
+Every new lane build and `tools/verifier/confirm` invocation has a 3 GB hard minimum (decimal).
+A configurable soft floor defaults to 10 GB: `--soft-free-gb` or `SKYRIM_SOFT_FREE_GB`.
+Tooling validation uses the same admission policy. Below the soft floor, a job warns and refuses
+unless `--allow-low-disk` is explicitly supplied. That flag
+never overrides the 3 GB hard minimum. The lane's existing `--min-free-gb` / `SKYRIM_LANE_MIN_FREE_GB`
+can request a higher minimum; neither can admit a new build below 3 GB.
 
 Run `python3 tools/flow.py lane-run` after enqueueing all ready work. One runner takes everything
 queued at its start, carries only the approved input through the existing acceptance path into
@@ -127,8 +140,22 @@ reruns all required checks. It never pushes an unchecked rebased tree.
 acceptance, checks, push and CI; a separate nonblocking `.lane.lock` admits one runner. Record-only
 commands and review saves can proceed during a lane run. Candidate clones and failed attempts
 are retained. No lane operation prunes worktrees, branches or stashes; cleanup is opt-in through
-`flow.py worktrees prune`. Afterwards `flow.py sync` fast-forwards the shared checkout, replacing
+`flow.py cleanup` (preview with `--dry-run`). It considers only DONE+green lane trees, harvested
+drafts without claims, and AGREE reruns. Dirty/locked trees and queued inputs stay intact.
+JSON, text logs and worktree-registration logs are archived under `.local/flow/cleanup/`.
+Independent lane clones keep `.git` in place so borrowed objects, refs and stashes stay usable;
+only their working files are removed. Registered worktrees use plain `git worktree remove`,
+without force, pruning or branch/stash deletion. Afterwards `flow.py sync` fast-forwards the shared checkout, replacing
 only local copies byte-identical to origin; differing files refuse and stay intact.
+
+Tooling publications also use the lane: `flow.py --root <committed-tooling-checkout> --flow-dir
+<shared-flow> tooling-push`. For Git worktrees its default flow directory comes from the common
+Git directory; independent clones must name the shared flow explicitly. It refuses a busy lane
+(or waits with `--wait-lane`),
+runs the full checks once per final tree, rebases/rechecks a lost race, pushes and watches CI.
+`lane-status` reports dead owners using PID, host and process birth, including legacy runs after
+their lock is free; its resume/retire commands preserve the receipt and candidates. A pushed run
+can resume CI but cannot be retired. No run is automatically retired.
 
 ## Approved subsets (Engineer)
 

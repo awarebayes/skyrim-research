@@ -722,7 +722,7 @@ def cleanup_integrated(root):
                         save(directory / 'harvest.json', h)
 
 
-def confirm_one(root, directory, args):
+def confirm_one(root, directory, args, env=None):
     """Confirm from a detached harvest commit, publish only resulting records and unit maps."""
     h = harvest_for_confirmation(directory)
     if not h:
@@ -757,7 +757,7 @@ def confirm_one(root, directory, args):
         binding_list = tree / '.local/harvest-bind.txt'
         binding_list.write_text(h['task'] + '\n')
         command = [sys.executable, str(tree / 'tools/verifier/bind.py'), '--list', str(binding_list), '--unit-maps']
-        proc = subprocess.run(command, cwd=tree)
+        proc = subprocess.run(command, cwd=tree, **({'env': env} if env is not None else {}))
         if proc.returncode:
             return proc.returncode
         command = [sys.executable, str(tree / 'tools/verifier/confirm'), h['task'], *args]
@@ -765,7 +765,7 @@ def confirm_one(root, directory, args):
         paths = [f'reports/{task["build_id"]}/0x{int(str(fn["rva"]), 0):x}.json'
                  for fn in task['functions']]
         before = {rel: (tree / rel).stat().st_mtime_ns if (tree / rel).exists() else None for rel in paths}
-        proc = subprocess.run(command, cwd=tree)
+        proc = subprocess.run(command, cwd=tree, **({'env': env} if env is not None else {}))
         # As in the in-place path, validated records survive a later whole-tree check refusal
         # (for example a regression whose acceptance now needs re-review). Preserve the exit code.
         if '--out' not in args:

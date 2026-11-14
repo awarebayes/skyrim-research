@@ -368,6 +368,8 @@ def main():
     p.add_argument('--resume', action='store_true',
                    help='runner hosts: skip units whose records an earlier run wrote for the same inputs and toolchains '
                         '(journal under .local/verifier/confirm-journal/)')
+    p.add_argument('--soft-free-gb', type=float, help='soft disk floor, default 10 GB')
+    p.add_argument('--allow-low-disk', action='store_true', help='explicit override of the soft disk floor only')
     a = p.parse_args()
     dirs = list(a.task_dirs)
     if a.list:
@@ -375,6 +377,8 @@ def main():
     if not dirs:
         p.error('a task directory is required')
     try:
+        import resource_admission
+        resource_admission.admit(REPO, 'confirm batch', soft_gb=a.soft_free_gb, allow_low_disk=a.allow_low_disk)
         import draft_worktrees
         routed = []
         legacy = []
@@ -386,7 +390,10 @@ def main():
                     options += ['--out', str(a.out.resolve())]
                 if a.boat or a.fork or a.stop:
                     p.error('harvest confirmation uses runner hosts')
-                routed.append(draft_worktrees.confirm_one(REPO, resolved, options))
+                admission_env = None
+                if a.allow_low_disk or a.soft_free_gb is not None:
+                    admission_env = dict(os.environ, SKYRIM_SOFT_FREE_GB=str(3 if a.allow_low_disk else a.soft_free_gb))
+                routed.append(draft_worktrees.confirm_one(REPO, resolved, options, env=admission_env))
             else:
                 legacy.append(directory)
         if not legacy:
