@@ -25,7 +25,7 @@ class Throughput(unittest.TestCase):
 
     def other(self, name, filename, content):
         root = self.tmp / name
-        git(self.root, 'clone', '--quiet', str(self.repo.origin), str(root))
+        git(self.root, 'clone', '--quiet', '--branch', 'main', str(self.repo.origin), str(root))
         git(root, 'config', 'user.name', 'Synthetic')
         git(root, 'config', 'user.email', 'synthetic@example.invalid')
         (root / filename).write_text(content)
@@ -34,6 +34,12 @@ class Throughput(unittest.TestCase):
         git(root, 'add', filename, '.gitignore')
         git(root, 'commit', '--quiet', '-m', 'synthetic tooling ' + name)
         return root
+
+    def test_waiting_input_clone_uses_main_when_bare_head_is_unborn(self):
+        git(self.repo.origin, 'symbolic-ref', 'HEAD', 'refs/heads/unborn')
+        other = self.other('unborn-default', 'other.txt', 'synthetic input\n')
+        self.assertEqual(git(other, 'merge-base', 'HEAD', 'origin/main'),
+                         git(self.repo.origin, 'rev-parse', 'main'))
 
     def test_next_checks_overlap_ci_but_next_push_requires_previous_green(self):
         self.tooling_commit()

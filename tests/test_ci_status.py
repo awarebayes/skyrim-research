@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from unittest import mock
+from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 import ci_status  # noqa: E402
@@ -178,14 +179,18 @@ class CiStatusTests(unittest.TestCase):
     def test_wait_polls_until_finished(self):
         self.runs(run(1, 'A', status='in_progress'), name='list0.json')
         self.runs(run(1, 'A'), name='list1.json')
-        with mock.patch.object(ci_status.time, 'sleep') as sleep:
+        with mock.patch.object(ci_status, 'time', SimpleNamespace(
+                monotonic=ci_status.time.monotonic, sleep=mock.Mock())) as clock:
+            sleep = clock.sleep
             code, _, _ = self.main('--wait', '600')
         self.assertEqual(code, ci_status.GREEN)
         self.assertEqual(sleep.call_count, 1)
 
     def test_no_wait_reports_pending_once(self):
         self.runs(run(1, 'A', status='in_progress'))
-        with mock.patch.object(ci_status.time, 'sleep') as sleep:
+        with mock.patch.object(ci_status, 'time', SimpleNamespace(
+                monotonic=ci_status.time.monotonic, sleep=mock.Mock())) as clock:
+            sleep = clock.sleep
             self.assertEqual(self.main()[0], ci_status.PENDING)
         sleep.assert_not_called()
 
