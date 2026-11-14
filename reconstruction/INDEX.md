@@ -8880,7 +8880,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `TableStoreLeaf82fa70::~TableStoreLeaf82fa70` (GUESS) | `sse-steam-1-7-104` / `0x82fa70` / 11 | - | - | mapped | - | - |
 | - | `TableStoreLeaf82fa80::~TableStoreLeaf82fa80` (GUESS) | `sse-steam-1-7-104` / `0x82fa80` / 11 | - | - | mapped | - | - |
 | - | `DeletingLeaf82fd50::~DeletingLeaf82fd50` (GUESS) | `sse-steam-1-7-104` / `0x82fd50` / 43 | - | - | mapped | - | - |
+| - | `Adjustor82fd7c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x82fd7c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor82fd88 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x82fd88` / 9 | - | - | mapped | - | - |
+| - | `Adjustor82fd94 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x82fd94` / 9 | - | - | mapped | - | - |
+| - | `Adjustor82fda0 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x82fda0` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf82fdb0::~DeletingLeaf82fdb0` (GUESS) | `sse-steam-1-7-104` / `0x82fdb0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor82fddc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x82fddc` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf82fe90::~DeletingLeaf82fe90` (GUESS) | `sse-steam-1-7-104` / `0x82fe90` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf82fec0::~DeletingLeaf82fec0` (GUESS) | `sse-steam-1-7-104` / `0x82fec0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf82fef0::~DeletingLeaf82fef0` (GUESS) | `sse-steam-1-7-104` / `0x82fef0` / 43 | - | - | mapped | - | - |
@@ -8889,12 +8894,22 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf830020::~DeletingLeaf830020` (GUESS) | `sse-steam-1-7-104` / `0x830020` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830050::~DeletingLeaf830050` (GUESS) | `sse-steam-1-7-104` / `0x830050` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830080::~DeletingLeaf830080` (GUESS) | `sse-steam-1-7-104` / `0x830080` / 43 | - | - | mapped | - | - |
+| - | `Adjustor830148 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830148` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830154 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830154` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830160 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830160` / 9 | - | - | mapped | - | - |
+| - | `Adjustor83016c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83016c` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf830180::~DeletingLeaf830180` (GUESS) | `sse-steam-1-7-104` / `0x830180` / 43 | - | - | mapped | - | - |
+| - | `Adjustor8301ac secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8301ac` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf8301c0::~DeletingLeaf8301c0` (GUESS) | `sse-steam-1-7-104` / `0x8301c0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8301f0::~DeletingLeaf8301f0` (GUESS) | `sse-steam-1-7-104` / `0x8301f0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830220::~DeletingLeaf830220` (GUESS) | `sse-steam-1-7-104` / `0x830220` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830330::~DeletingLeaf830330` (GUESS) | `sse-steam-1-7-104` / `0x830330` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830360::~DeletingLeaf830360` (GUESS) | `sse-steam-1-7-104` / `0x830360` / 43 | - | - | mapped | - | - |
+| - | `Adjustor83038c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83038c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830398 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830398` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8303a4 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8303a4` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8303b0 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8303b0` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8303bc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8303bc` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf8303d0::~DeletingLeaf8303d0` (GUESS) | `sse-steam-1-7-104` / `0x8303d0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830400::~DeletingLeaf830400` (GUESS) | `sse-steam-1-7-104` / `0x830400` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8304d0::~DeletingLeaf8304d0` (GUESS) | `sse-steam-1-7-104` / `0x8304d0` / 43 | - | - | mapped | - | - |
@@ -8904,7 +8919,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf830630::~DeletingLeaf830630` (GUESS) | `sse-steam-1-7-104` / `0x830630` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830660::~DeletingLeaf830660` (GUESS) | `sse-steam-1-7-104` / `0x830660` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830690::~DeletingLeaf830690` (GUESS) | `sse-steam-1-7-104` / `0x830690` / 43 | - | - | mapped | - | - |
+| - | `Adjustor8306bc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8306bc` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf8306d0::~DeletingLeaf8306d0` (GUESS) | `sse-steam-1-7-104` / `0x8306d0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor8306fc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8306fc` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830708 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830708` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830714 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830714` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830720 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830720` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf8307d0::~DeletingLeaf8307d0` (GUESS) | `sse-steam-1-7-104` / `0x8307d0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830800::~DeletingLeaf830800` (GUESS) | `sse-steam-1-7-104` / `0x830800` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830830::~DeletingLeaf830830` (GUESS) | `sse-steam-1-7-104` / `0x830830` / 43 | - | - | mapped | - | - |
@@ -8913,12 +8933,22 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf830960::~DeletingLeaf830960` (GUESS) | `sse-steam-1-7-104` / `0x830960` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830990::~DeletingLeaf830990` (GUESS) | `sse-steam-1-7-104` / `0x830990` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8309c0::~DeletingLeaf8309c0` (GUESS) | `sse-steam-1-7-104` / `0x8309c0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor830a88 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830a88` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf830aa0::~DeletingLeaf830aa0` (GUESS) | `sse-steam-1-7-104` / `0x830aa0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor830acc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830acc` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830ad8 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830ad8` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830ae4 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830ae4` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830af0 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830af0` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf830b00::~DeletingLeaf830b00` (GUESS) | `sse-steam-1-7-104` / `0x830b00` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830b30::~DeletingLeaf830b30` (GUESS) | `sse-steam-1-7-104` / `0x830b30` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830b60::~DeletingLeaf830b60` (GUESS) | `sse-steam-1-7-104` / `0x830b60` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830c70::~DeletingLeaf830c70` (GUESS) | `sse-steam-1-7-104` / `0x830c70` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830ca0::~DeletingLeaf830ca0` (GUESS) | `sse-steam-1-7-104` / `0x830ca0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor830ccc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830ccc` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830cd8 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830cd8` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830ce4 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830ce4` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830cf0 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830cf0` / 9 | - | - | mapped | - | - |
+| - | `Adjustor830cfc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x830cfc` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf830d10::~DeletingLeaf830d10` (GUESS) | `sse-steam-1-7-104` / `0x830d10` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830d40::~DeletingLeaf830d40` (GUESS) | `sse-steam-1-7-104` / `0x830d40` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830e10::~DeletingLeaf830e10` (GUESS) | `sse-steam-1-7-104` / `0x830e10` / 43 | - | - | mapped | - | - |
@@ -8929,6 +8959,11 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf830fa0::~DeletingLeaf830fa0` (GUESS) | `sse-steam-1-7-104` / `0x830fa0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf830fd0::~DeletingLeaf830fd0` (GUESS) | `sse-steam-1-7-104` / `0x830fd0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831000::~DeletingLeaf831000` (GUESS) | `sse-steam-1-7-104` / `0x831000` / 43 | - | - | mapped | - | - |
+| - | `Adjustor83102c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83102c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831038 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831038` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831044 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831044` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831050 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831050` / 9 | - | - | mapped | - | - |
+| - | `Adjustor83105c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83105c` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf831110::~DeletingLeaf831110` (GUESS) | `sse-steam-1-7-104` / `0x831110` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831140::~DeletingLeaf831140` (GUESS) | `sse-steam-1-7-104` / `0x831140` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831170::~DeletingLeaf831170` (GUESS) | `sse-steam-1-7-104` / `0x831170` / 43 | - | - | mapped | - | - |
@@ -8938,6 +8973,11 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf8312d0::~DeletingLeaf8312d0` (GUESS) | `sse-steam-1-7-104` / `0x8312d0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831300::~DeletingLeaf831300` (GUESS) | `sse-steam-1-7-104` / `0x831300` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8313d0::~DeletingLeaf8313d0` (GUESS) | `sse-steam-1-7-104` / `0x8313d0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor8313fc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8313fc` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831408 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831408` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831414 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831414` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831420 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831420` / 9 | - | - | mapped | - | - |
+| - | `Adjustor83142c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83142c` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf831440::~DeletingLeaf831440` (GUESS) | `sse-steam-1-7-104` / `0x831440` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831470::~DeletingLeaf831470` (GUESS) | `sse-steam-1-7-104` / `0x831470` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8314a0::~DeletingLeaf8314a0` (GUESS) | `sse-steam-1-7-104` / `0x8314a0` / 43 | - | - | mapped | - | - |
@@ -8947,7 +8987,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf8316e0::~DeletingLeaf8316e0` (GUESS) | `sse-steam-1-7-104` / `0x8316e0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831710::~DeletingLeaf831710` (GUESS) | `sse-steam-1-7-104` / `0x831710` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831740::~DeletingLeaf831740` (GUESS) | `sse-steam-1-7-104` / `0x831740` / 43 | - | - | mapped | - | - |
+| - | `Adjustor831808 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831808` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831814 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831814` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf831820::~DeletingLeaf831820` (GUESS) | `sse-steam-1-7-104` / `0x831820` / 43 | - | - | mapped | - | - |
+| - | `Adjustor83184c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83184c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831858 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831858` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831864 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831864` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf831870::~DeletingLeaf831870` (GUESS) | `sse-steam-1-7-104` / `0x831870` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8318a0::~DeletingLeaf8318a0` (GUESS) | `sse-steam-1-7-104` / `0x8318a0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8318d0::~DeletingLeaf8318d0` (GUESS) | `sse-steam-1-7-104` / `0x8318d0` / 43 | - | - | mapped | - | - |
@@ -8967,6 +9012,11 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf831df0::~DeletingLeaf831df0` (GUESS) | `sse-steam-1-7-104` / `0x831df0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831e20::~DeletingLeaf831e20` (GUESS) | `sse-steam-1-7-104` / `0x831e20` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831e50::~DeletingLeaf831e50` (GUESS) | `sse-steam-1-7-104` / `0x831e50` / 43 | - | - | mapped | - | - |
+| - | `Adjustor831e7c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831e7c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831e88 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831e88` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831f18 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831f18` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831f48 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831f48` / 9 | - | - | mapped | - | - |
+| - | `Adjustor831f54 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x831f54` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf831f60::~DeletingLeaf831f60` (GUESS) | `sse-steam-1-7-104` / `0x831f60` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831f90::~DeletingLeaf831f90` (GUESS) | `sse-steam-1-7-104` / `0x831f90` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf831fc0::~DeletingLeaf831fc0` (GUESS) | `sse-steam-1-7-104` / `0x831fc0` / 43 | - | - | mapped | - | - |
@@ -8986,14 +9036,24 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf8324e0::~DeletingLeaf8324e0` (GUESS) | `sse-steam-1-7-104` / `0x8324e0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf832510::~DeletingLeaf832510` (GUESS) | `sse-steam-1-7-104` / `0x832510` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf832540::~DeletingLeaf832540` (GUESS) | `sse-steam-1-7-104` / `0x832540` / 43 | - | - | mapped | - | - |
+| - | `Adjustor83256c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83256c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor832578 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x832578` / 9 | - | - | mapped | - | - |
+| - | `Adjustor832584 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x832584` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf832590::~DeletingLeaf832590` (GUESS) | `sse-steam-1-7-104` / `0x832590` / 43 | - | - | mapped | - | - |
+| - | `Adjustor8325bc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8325bc` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8325c8 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8325c8` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf8325e0::~DeletingLeaf8325e0` (GUESS) | `sse-steam-1-7-104` / `0x8325e0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf832650::~DeletingLeaf832650` (GUESS) | `sse-steam-1-7-104` / `0x832650` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf832760::~DeletingLeaf832760` (GUESS) | `sse-steam-1-7-104` / `0x832760` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf832790::~DeletingLeaf832790` (GUESS) | `sse-steam-1-7-104` / `0x832790` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8327c0::~DeletingLeaf8327c0` (GUESS) | `sse-steam-1-7-104` / `0x8327c0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8327f0::~DeletingLeaf8327f0` (GUESS) | `sse-steam-1-7-104` / `0x8327f0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor8328b8 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8328b8` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8328c4 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8328c4` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8328d0 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8328d0` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8328dc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8328dc` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf8328f0::~DeletingLeaf8328f0` (GUESS) | `sse-steam-1-7-104` / `0x8328f0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor83291c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83291c` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf832930::~DeletingLeaf832930` (GUESS) | `sse-steam-1-7-104` / `0x832930` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf832960::~DeletingLeaf832960` (GUESS) | `sse-steam-1-7-104` / `0x832960` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf832990::~DeletingLeaf832990` (GUESS) | `sse-steam-1-7-104` / `0x832990` / 43 | - | - | mapped | - | - |
@@ -9025,6 +9085,11 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf838860::~DeletingLeaf838860` (GUESS) | `sse-steam-1-7-104` / `0x838860` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf838930::~DeletingLeaf838930` (GUESS) | `sse-steam-1-7-104` / `0x838930` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf838960::~DeletingLeaf838960` (GUESS) | `sse-steam-1-7-104` / `0x838960` / 43 | - | - | mapped | - | - |
+| - | `Adjustor83898c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83898c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor838998 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x838998` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8389a4 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8389a4` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8389b0 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8389b0` / 9 | - | - | mapped | - | - |
+| - | `Adjustor8389bc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x8389bc` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf8389d0::~DeletingLeaf8389d0` (GUESS) | `sse-steam-1-7-104` / `0x8389d0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf838a00::~DeletingLeaf838a00` (GUESS) | `sse-steam-1-7-104` / `0x838a00` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf8394d0::~DeletingLeaf8394d0` (GUESS) | `sse-steam-1-7-104` / `0x8394d0` / 43 | - | - | mapped | - | - |
@@ -9035,6 +9100,11 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf83b1e0::~DeletingLeaf83b1e0` (GUESS) | `sse-steam-1-7-104` / `0x83b1e0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf83b210::~DeletingLeaf83b210` (GUESS) | `sse-steam-1-7-104` / `0x83b210` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf83b240::~DeletingLeaf83b240` (GUESS) | `sse-steam-1-7-104` / `0x83b240` / 43 | - | - | mapped | - | - |
+| - | `Adjustor83b26c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83b26c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor83b278 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83b278` / 9 | - | - | mapped | - | - |
+| - | `Adjustor83b284 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83b284` / 9 | - | - | mapped | - | - |
+| - | `Adjustor83b290 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83b290` / 9 | - | - | mapped | - | - |
+| - | `Adjustor83b29c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x83b29c` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf83b390::~DeletingLeaf83b390` (GUESS) | `sse-steam-1-7-104` / `0x83b390` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf83b3c0::~DeletingLeaf83b3c0` (GUESS) | `sse-steam-1-7-104` / `0x83b3c0` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf83b3f0::~DeletingLeaf83b3f0` (GUESS) | `sse-steam-1-7-104` / `0x83b3f0` / 43 | - | - | mapped | - | - |
@@ -9489,7 +9559,12 @@ integrated source (`docs/verification.md`, "Stale acceptances and delta reviews"
 | - | `DeletingLeaf84a050::~DeletingLeaf84a050` (GUESS) | `sse-steam-1-7-104` / `0x84a050` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf84a080::~DeletingLeaf84a080` (GUESS) | `sse-steam-1-7-104` / `0x84a080` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf84a190::~DeletingLeaf84a190` (GUESS) | `sse-steam-1-7-104` / `0x84a190` / 43 | - | - | mapped | - | - |
+| - | `Adjustor84a1bc secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x84a1bc` / 9 | - | - | mapped | - | - |
+| - | `Adjustor84a1c8 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x84a1c8` / 9 | - | - | mapped | - | - |
+| - | `Adjustor84a1d4 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x84a1d4` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf84a1e0::~DeletingLeaf84a1e0` (GUESS) | `sse-steam-1-7-104` / `0x84a1e0` / 43 | - | - | mapped | - | - |
+| - | `Adjustor84a20c secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x84a20c` / 9 | - | - | mapped | - | - |
+| - | `Adjustor84a218 secondary destructor adjustor` (GUESS) | `sse-steam-1-7-104` / `0x84a218` / 9 | - | - | mapped | - | - |
 | - | `DeletingLeaf84a230::~DeletingLeaf84a230` (GUESS) | `sse-steam-1-7-104` / `0x84a230` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf84a260::~DeletingLeaf84a260` (GUESS) | `sse-steam-1-7-104` / `0x84a260` / 43 | - | - | mapped | - | - |
 | - | `DeletingLeaf84a330::~DeletingLeaf84a330` (GUESS) | `sse-steam-1-7-104` / `0x84a330` / 43 | - | - | mapped | - | - |
