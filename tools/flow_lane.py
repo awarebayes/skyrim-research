@@ -21,6 +21,8 @@ import uuid
 
 import flow as f
 import resource_admission
+import check as check_gate
+from check_source_digest import source_digest_cache
 from flow_state import state_lock, atomic_write, require_complete
 
 
@@ -553,6 +555,77 @@ def copy_private_review(source, tree, review, name=None):
     return destination
 
 
+def stale_sibling_members(tree, baseline, requests):
+    """Attribute stale existing units to carried members; the whole-tree guard is unchanged.
+
+    Inspect each distinct matched unit/digest once, not once per incoming member. Both old and
+    current include closures matter when a carried header changes another unit's dependencies.
+    Family selections stay atomic because their committed population/draw cannot be pruned.
+    """
+    changed = set(f.git(tree, 'diff', '--name-only', 'HEAD', '--', 'reconstruction').splitlines())
+    changed.update(f.git(tree, 'ls-files', '--others', '--exclude-standard', '--', 'reconstruction').splitlines())
+    if not changed:
+        return requests, []
+    current = f.inventory(tree)
+    by_id = {fn['id']: fn for fn in current['functions']}
+    by_address = {(fn['build_id'], f.hexrva(fn['rva'])): fn for fn in current['functions']}
+    records, checked, affected = {}, set(), {}
+    def source(fn):
+        path = fn.get('report')
+        if path not in records:
+            records[path] = (f.fr.read(tree, path).get('source') or {}) if path else {}
+        return records[path]
+    with source_digest_cache():
+        for original in baseline['functions']:
+            if original['status'] != 'matched':
+                continue
+            fn = by_id[original['id']]
+            src = source(fn)
+            unit = src.get('translation_unit')
+            if not isinstance(unit, list) or not all(isinstance(p, str) for p in unit):
+                continue  # malformed records remain the ordinary validator's responsibility
+            key = (src.get('compiled'), src.get('digest'), tuple(unit))
+            if key in checked:
+                continue
+            checked.add(key)
+            if f.af.acceptance_staleness(fn, tree) != check_gate.STALE_UNIT:
+                continue
+            dependencies = set(unit)
+            try:
+                dependencies.update(check_gate.include_closure(tree, src['compiled']))
+            except (ValueError, OSError):
+                pass  # retain the recorded dependencies; the final guard still checks the closure
+            for name in dependencies & changed:
+                affected.setdefault(name, set()).add(src['compiled'])
+    if not affected:
+        return requests, []
+    accepted, dropped = [], []
+    for request in requests:
+        if not request['functions']:
+            accepted.append(request)
+            continue
+        good, bad = [], []
+        for rva in request['functions']:
+            src = source(by_address[request['build_id'], rva])
+            touched = set(src.get('translation_unit') or ()) & affected.keys()
+            if touched:
+                bad.append(dict(request=dict(request, functions=[rva]), reason='stale-sibling: needs re-confirm',
+                                units=[src['compiled']], changed_paths=sorted(touched),
+                                stale_sibling_units=sorted({u for name in touched for u in affected[name]})))
+            else:
+                good.append(rva)
+        if bad and request['kind'] == 'family':
+            dropped.append(dict(request=request, reason='stale-sibling: needs re-confirm',
+                                units=sorted({u for d in bad for u in d['units']}),
+                                changed_paths=sorted({p for d in bad for p in d['changed_paths']}),
+                                stale_sibling_units=sorted({u for d in bad for u in d['stale_sibling_units']})))
+        else:
+            dropped.extend(bad)
+            if good:
+                accepted.append(dict(request, functions=good))
+    return accepted, dropped
+
+
 def merge_metadata(tree, source, revision):
     # integration_base validated the metadata-only history before this transport step.
     f.git(tree, 'fetch', '--quiet', str(source), revision)
@@ -589,6 +662,7 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
     import flow_tooling
     active_tools, tool_dropped = flow_tooling.merge(tree, receipt.get('tooling', []))
     receipt['tooling_accepted'], receipt['tooling_dropped'] = active_tools, tool_dropped
+    baseline = f.inventory(tree) if receipt['items'] else dict(functions=[])
     carry_base = f.git(tree, 'rev-parse', 'HEAD')
     frozen = tree / '.local/flow'
     snapshot(fdir, frozen)
@@ -690,6 +764,13 @@ def build(root, fdir, receipt, python, branch, soft_free_gb=None, allow_low_disk
 
     # Remove any partial carry of a request that failed before acceptance.
     if dropped:
+        recarry(requests)
+    while requests:
+        remaining, stale = stale_sibling_members(tree, baseline, requests)
+        if not stale:
+            break
+        dropped.extend(stale)
+        requests = remaining
         recarry(requests)
     result = accept(tree, requests, python) if requests else dict(accepted=[], dropped=[], changed=[])
     if not result['accepted'] and not active_tools and not receipt.get('baseline_check'):

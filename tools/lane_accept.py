@@ -26,7 +26,7 @@ def _accept(root, requests, when=None, *, prepare_only=False):
         if member['kind'] == 'label':
             ids = af.resolve_selection(root, data, member['functions'])
             return af.label_only(root, ids, when, prepare_only=True)
-        return af.accept_reviews(root, [member], when, prepare_only=True)
+        return af.accept_reviews(root, [member], when, prepare_only=True, carry_accepted=True)
 
     def add(member, plan):
         af.refuse(bool(plan), 'nothing to accept')
@@ -73,7 +73,7 @@ def _accept(root, requests, when=None, *, prepare_only=False):
         try:
             # p101's single preparation across individually reviewed requests remains the fast path.
             if reviews:
-                plan = af.accept_reviews(root, reviews, when, prepare_only=True)
+                plan = af.accept_reviews(root, reviews, when, prepare_only=True, carry_accepted=True)
                 selected.update(fn['id'] for _, fn, _, _ in plan[3])
                 plans.append((reviews, plan))
         except errors:

@@ -624,7 +624,7 @@ def block_naming(block, where):
     return naming
 
 
-def prepare(root, data, target, index, title, header, block, blob, when):
+def prepare(root, data, target, index, title, header, block, blob, when, *, carry_accepted=False):
     """The review record to write for one function, after every check that needs no write."""
     fn = data['functions'][index]
     refuse(fn.get('report') is not None, f'{fn["id"]} names no match record (report)')
@@ -642,6 +642,24 @@ def prepare(root, data, target, index, title, header, block, blob, when):
     previous = None
     if fn['status'] == 'matched':
         previous = _json_or_none(out)
+        # Integration may carry a completed local acceptance. This is the same approval,
+        # not a second acceptance: keep its bytes/date and recheck its current bindings.
+        # A different review, source, kind or naming finding takes the ordinary path below.
+        if (carry_accepted and previous is not None
+                and previous.get('review_record_schema') == REVIEW_RECORD_SCHEMA
+                and previous.get('source_digest') == record['source']['digest']
+                and previous.get('review_sha256') == _review_sha(blob)
+                and previous.get('review_task_id') == title
+                and previous.get('reviewer_model') == header['reviewer_model']
+                and previous.get('review_kind') == kind
+                and previous.get('naming_findings') == naming):
+            validate_review(fn, record, root)
+            if kind == 'delta':
+                refuse(block.get('previous_source_digest') == previous['previous_source_digest'],
+                       'carried delta review names another previous source digest')
+                refuse(block.get('code_section_unchanged') == 'yes',
+                       'delta review does not state code_section_unchanged: yes')
+            return fn, record, None
         # Label-only and family records have no individual Reviewer pass on this digest; a full
         # review may replace them, which is how their naming findings get closed.
         relabelled = (previous is not None and previous.get('review_kind') in (LABEL_ONLY, 'family')
@@ -793,7 +811,7 @@ def review_profile(root, task_id, requested):
     return profile
 
 
-def prepare_many(root, data, target, review_source, targets, verdict, when, select, profile):
+def prepare_many(root, data, target, review_source, targets, verdict, when, select, profile, *, carry_accepted=False):
     """Prepare one review's acceptances; all per-function checks remain on this path."""
     refuse(verdict == 'approve', f'verdict {verdict!r}: only approve is accepted; '
            'reject goes back to the Drafter or Engineer, escalate per docs/verification.md')
@@ -847,16 +865,19 @@ def prepare_many(root, data, target, review_source, targets, verdict, when, sele
         size = data['functions'][index]['size']
         refuse(len(rest) == 1 and rest[0] == str(size),
                f'review block for {build_id} 0x{rva:x} gives size {" ".join(rest) or "none"}, not the inventory size {size}')
-        prepared.append((index, *prepare(root, data, target, index, title, header, block, blob, when)))
+        prepared.append((index, *prepare(root, data, target, index, title, header, block, blob, when,
+                                        carry_accepted=carry_accepted)))
     return prepared, skipped
 
 
 @source_digest_cache()
-def accept_reviews(root, requests, when=None, *, prepare_only=False):
+def accept_reviews(root, requests, when=None, *, prepare_only=False, carry_accepted=False):
     """Accept several reviews in one transaction with one inventory validation and index rebuild.
 
     Each request names a review, optional functions and profile. Review parsing, admission and
     every function's match and review checks are the same as for individual acceptance.
+    Integration can carry an identical completed local approval with `carry_accepted`; its
+    sanitized record is validated and retained verbatim rather than accepted or dated again.
     """
     root = Path(root)
     refuse(bool(requests), 'no reviews to accept')
@@ -870,7 +891,8 @@ def accept_reviews(root, requests, when=None, *, prepare_only=False):
         if request.get('functions') is not None:
             select = resolve_selection(root, data, request['functions'])
         rows, omitted = prepare_many(root, data, target, request['review'], request.get('targets'),
-                                     request.get('verdict', 'approve'), when, select, request.get('profile'))
+                                     request.get('verdict', 'approve'), when, select, request.get('profile'),
+                                     carry_accepted=carry_accepted)
         ids = {fn['id'] for _, fn, _, _ in rows}
         refuse(not selected & ids, 'reviews select the same function more than once')
         selected.update(ids)
@@ -881,7 +903,8 @@ def accept_reviews(root, requests, when=None, *, prepare_only=False):
         if _batch(root) is not None:
             new['functions'][index] = copy.deepcopy(new['functions'][index])
         new['functions'][index]['status'] = 'matched'
-        set_named(new['functions'], index, named_value(root, record, review['naming_findings']))
+        if review is not None:
+            set_named(new['functions'], index, named_value(root, record, review['naming_findings']))
     if prepare_only:
         return data, new, target, prepared, stale_before - selected, when
     return apply(root, data, new, target, prepared, stale_before - selected, when), skipped

@@ -390,8 +390,15 @@ A lane run may carry approved sampled members and their family bulk together. It
 prepared individual reviews through the normal validator first, staging their records and a
 validated inventory snapshot in memory. The unchanged family gates read that provisional snapshot.
 Preparation shares inventory parsing, global validation, review parsing and hashes within each
-stable snapshot; per-member gates still run. The final transaction validates everything, writes
-progress once and rebuilds the index once. Planning, dropped requests or any final failure
+stable snapshot; per-member gates still run. An already accepted local member carries through
+only when its current digest and exact saved review agree with its validated approval record.
+The lane preserves that record and date, including sampled approvals during re-carry after an
+unrelated refusal. Changed reviews or bindings still take the ordinary acceptance path.
+Before acceptance, the lane drops carried members whose changed unit or header makes an
+existing matched sibling stale, with `stale-sibling: needs re-confirm` and the affected units.
+It re-carries the rest before the unchanged whole-tree guard; a family selection remains atomic.
+Re-confirm the held units and review their deltas together before enqueueing them again.
+The final transaction validates everything, writes progress once and rebuilds the index once. Planning, dropped requests or any final failure
 restore all provisional public files; no sampled or unsampled member gains an exemption.
 
 Function-only lane runs rely on the lane acceptance checks, check.py and CI. The lane compares its exact candidate with its pinned origin base: only `reconstruction/`, `reports/`, `data/progress.json` and the generated progress/model SVGs qualify (README changes qualify only inside the generated model totals markers). Those runs skip the local full unit suite and site build; exact-SHA CI still runs both before a successor may push. Any tooling, test, workflow, prose documentation or other path change keeps all local checks. Acceptance records, bindings, digests, harvest equality and Reviewer admission are unchanged.
