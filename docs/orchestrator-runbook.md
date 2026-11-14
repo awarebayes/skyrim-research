@@ -8,7 +8,7 @@
 4. Engineers commit named tooling files after `check.py --staged`, then use `tooling-push` for checks, push and exact-SHA CI under the same lock.
 5. New lane builds and confirm jobs require 3 GB; below the default 10 GB soft floor, only an explicit `--allow-low-disk` admits them.
 6. Read `lane-status`: stale runs print exact `lane-run --resume <id>` or `tooling-push --resume <id>` commands; resume does not repush a CI checkpoint.
-7. Explicitly retire only unpublished runs with `lane-retire <id> --reason <reason>`; nothing auto-retires a run.
+7. Explicitly retire only unpublished acceptance or tooling runs with `lane-retire <id> --reason <reason>`; nothing auto-retires a run.
 8. Preview `cleanup --dry-run`, then opt in with `cleanup`; finished clean trees lose working files, evidence and Git refs/stashes remain; `sync` after green CI.
 
 Follow `docs/anti-eu-bureaucracy.md`: ship in bulk, decide rather than stop, and add no ceremony beyond named rules.
