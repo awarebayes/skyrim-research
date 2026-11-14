@@ -26,10 +26,12 @@ the config.
 
 Concurrency: each local or ssh host has `max_parallel` slots (file locks under
 .local/verifier/runner-slots/); a run waits for a free slot, so Drafters queue instead of
-overloading the host.
+overloading the host. SSH operations also share `max_sessions` transport slots (default 4)
+under .local/verifier/runner-sessions/, including transfers, probes and cleanup.
 """
 import argparse
 from contextlib import contextmanager
+import errno
 import fcntl
 import io
 import json
@@ -60,10 +62,16 @@ RUN_NAME = re.compile(r'[a-z0-9][a-z0-9.-]{0,80}-[0-9a-f]{12}')
 AGENT = HERE / 'host_agent.py'
 DEFAULT_SLOT_WAIT = 3600
 DEFAULT_TIMEOUT = 900
+DEFAULT_MAX_SESSIONS = 4
+TRANSPORT_ATTEMPTS = 3
 
 
 class RunnerError(Exception):
     pass
+
+
+class TransportError(RunnerError):
+    """No comparator result: the connection failed, possibly after remote execution began."""
 
 
 def config_path():
@@ -131,6 +139,10 @@ def validate(raw, root=None):
             if h['loader'] == 'wine' and not host.get('wine_bin') and sys.platform == 'darwin':
                 raise RunnerError(f'{where}.wine_bin is required for Wine on macOS')
         else:
+            sessions = h.get('max_sessions', DEFAULT_MAX_SESSIONS)
+            if not isinstance(sessions, int) or isinstance(sessions, bool) or not 1 <= sessions <= 64:
+                raise RunnerError(f'{where}.max_sessions must be an integer from 1 to 64')
+            host['max_sessions'] = sessions
             for key in ('ssh_host', 'ssh_config', 'image'):
                 if not isinstance(h.get(key), str) or not h[key]:
                     raise RunnerError(f'{where}.{key} is required')
@@ -306,8 +318,13 @@ class LocalTransport:
 class SshTransport:
     """A host reached with `ssh -F <config> <host>`; files go by scp, never in a command line."""
 
-    def __init__(self, host):
+    def __init__(self, host, log=None):
         self.host = host
+        self.log = log or (lambda message: None)
+        # The selected config is shared by worktrees and by clones using SR_RUNNERS_CONFIG.
+        # SR_VERIFIER_STATE can explicitly choose the same state for independent checkouts.
+        self.state = (starts.state_dir() if os.environ.get('SR_VERIFIER_STATE')
+                      else config_path().resolve().parent)
         # One multiplexed connection: a fresh session to Windows OpenSSH costs seconds, and a run
         # makes five. The socket path stays short (sockets are limited to about 100 bytes); ssh
         # creates it owner-only.
@@ -330,11 +347,54 @@ class SshTransport:
             self.prepared = True
 
     def _scp(self, *args, timeout=900):
-        proc = subprocess.run(['scp', *self.base, '-q', *args], capture_output=True, text=True,
-                              timeout=timeout, env=dict(os.environ, COPYFILE_DISABLE='1'))
+        proc = self._call('scp', ['scp', *self.base, '-q', *args], timeout,
+                          env=dict(os.environ, COPYFILE_DISABLE='1'))
         if proc.returncode != 0:
             raise RunnerError(f'{self.host["host_id"]}: scp failed (exit {proc.returncode}): '
                               f'{(proc.stderr or "").strip()[-200:]}')
+
+    def _transport_error(self, operation, attempt, reason):
+        event = {'at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+                 'host_id': self.host['host_id'], 'operation': operation,
+                 'attempt': attempt, 'kind': 'transport_error', 'reason': reason}
+        self.state.mkdir(parents=True, exist_ok=True)
+        with open(self.state / 'transport-errors.jsonl', 'a') as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            handle.write(json.dumps(event, sort_keys=True) + '\n')
+        self.log(f'{self.host["host_id"]}: transport error ({operation}, attempt '
+                 f'{attempt}/{TRANSPORT_ATTEMPTS}): {reason}')
+
+    def _call(self, operation, command, timeout, **kwargs):
+        """Retry only connection failures, never an SSH command's comparison/build exit.
+
+        Reuse the exact command/run identity: the agent refuses an existing run directory,
+        so a connection lost after launch cannot execute the comparator a second time.
+        Release the session slot during backoff; compile slots are a separate resource.
+        """
+        for attempt in range(1, TRANSPORT_ATTEMPTS + 1):
+            try:
+                with slot(self.host['host_id'], self.host.get('max_sessions', DEFAULT_MAX_SESSIONS),
+                          directory=self.state / 'runner-sessions', log=self.log):
+                    proc = subprocess.run(command, capture_output=True, text=True, timeout=timeout, **kwargs)
+                reason = None
+                if proc.returncode == 255:
+                    reason = 'connection failed (exit 255)'
+                elif operation == 'scp' and proc.returncode != 0:
+                    # scp implementations can use exit 1 for a broken connection. SSH's exit 1
+                    # can be a comparator mismatch, so its stderr never triggers a retry.
+                    reason = next((s for s in ('connection reset', 'connection closed', 'broken pipe')
+                                   if s in (proc.stderr or '').lower()), None)
+                if reason is None:
+                    return proc
+            except OSError as exc:
+                if exc.errno not in (errno.ECONNRESET, errno.ECONNABORTED, errno.EPIPE):
+                    raise
+                reason = 'connection reset' if exc.errno == errno.ECONNRESET else 'connection closed'
+            self._transport_error(operation, attempt, reason)
+            if attempt < TRANSPORT_ATTEMPTS:
+                time.sleep(2 ** (attempt - 1))
+        raise TransportError(f'{self.host["host_id"]}: {operation} transport error after '
+                             f'{TRANSPORT_ATTEMPTS} attempts: {reason}')
 
     def put(self, paths, remote_dir):
         """One scp for all files: per-file round trips dominate on Windows OpenSSH."""
@@ -348,8 +408,7 @@ class SshTransport:
             if not SAFE_TOKEN.fullmatch(token):
                 raise RunnerError(f'refusing to send {token!r} on an ssh command line')
         try:
-            proc = subprocess.run(['ssh', *self.base, self.host['ssh_host'], ' '.join(argv)],
-                                  capture_output=True, text=True, timeout=timeout + 30)
+            proc = self._call('ssh', ['ssh', *self.base, self.host['ssh_host'], ' '.join(argv)], timeout + 30)
         except subprocess.TimeoutExpired:
             return 124, '', 'timeout'
         return proc.returncode, proc.stdout, proc.stderr
@@ -358,8 +417,8 @@ class SshTransport:
         return '/'.join(p.rstrip('/') for p in parts)
 
 
-def transport_for(host):
-    return LocalTransport(host) if host['backend'] == 'local' else SshTransport(host)
+def transport_for(host, log=None):
+    return LocalTransport(host) if host['backend'] == 'local' else SshTransport(host, log=log)
 
 
 # ------------------------------------------------------------------ hosts
@@ -380,7 +439,7 @@ class AgentHost:
         self.fresh_prep = fresh_prep
         self.label = label or host['host_id']
         self.machine = host['host_id']
-        self.transport = transport or transport_for(host)
+        self.transport = transport or transport_for(host, log=log)
         self.log = log or (lambda msg: None)
         self.timeout = timeout
         self.timings = {}
@@ -451,6 +510,10 @@ class AgentHost:
         try:
             self.transport.get(self._remote(self._run + '.out.tar'), archive)
             unpack(archive, part)
+        except TransportError:
+            shutil.rmtree(part, ignore_errors=True)
+            self.clean()
+            raise
         except (OSError, RunnerError, tarfile.TarError):
             shutil.rmtree(part, ignore_errors=True)
             self.clean()
@@ -490,7 +553,7 @@ class BatchHost:
         self.host = host
         self.fresh_prep = fresh_prep
         self.label = host['host_id']
-        self.transport = transport or transport_for(host)
+        self.transport = transport or transport_for(host, log=log)
         self.log = log or (lambda msg: None)
         self.timeout = timeout
         self.timings = {}
@@ -549,6 +612,9 @@ class BatchHost:
             try:
                 self.transport.get(self._remote(name + '.out.tar'), archive)
                 unpack(archive, part)
+            except TransportError:
+                shutil.rmtree(part, ignore_errors=True)
+                raise
             except (OSError, RunnerError, tarfile.TarError):
                 shutil.rmtree(part, ignore_errors=True)
                 raise RunnerError(f'{self.label}: no batch results to fetch') from None
