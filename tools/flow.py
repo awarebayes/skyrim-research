@@ -1480,7 +1480,8 @@ def next_actions(root, fdir, branch='main', now=None, online=True):
     import flow_lane
     stale_runs = [flow_lane.run_status(root, fdir, json.loads(p.read_text()))
                   for directory in ('lane/runs', 'lane/tooling')
-                  for p in (Path(fdir) / directory).glob('*.json')]
+                  for p in (Path(fdir) / directory).glob('*.json')
+                  if json.loads(p.read_text()).get('kind') != 'tooling-request']
     for run in stale_runs:
         if run.get('status') in ('stale', 'paused'):
             command = run['resume_command']
@@ -2561,7 +2562,7 @@ def parser():
     s.add_argument('--ci-wait', type=int, default=600)
     s.add_argument('--resume')
     s.add_argument('--wait-lane', action=argparse.BooleanOptionalAction, default=True,
-                   help='wait for other live publications (default)')
+                   help='queue the committed tip and wait for its batch outcome (default)')
     s.add_argument('--soft-free-gb', type=float)
     s.add_argument('--allow-low-disk', action='store_true')
     s = sub.add_parser('cleanup')

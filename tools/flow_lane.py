@@ -161,9 +161,10 @@ def run_status(root, fdir, receipt, active=None):
         value['status'] = 'stale' if stale else 'running' if active else 'paused'
         value['lane_busy'] = active
         command = 'tooling-push' if receipt.get('kind') == 'tooling' else 'lane-run'
-        value['resume_command'] = prefix + ' ' + command + ' --resume ' + shlex.quote(receipt['id']) + ' --branch ' + shlex.quote(receipt['branch'])
+        resume_id = receipt.get('run') if receipt.get('kind') == 'tooling-request' else receipt['id']
+        value['resume_command'] = prefix + ' ' + command + ' --resume ' + shlex.quote(resume_id) + ' --branch ' + shlex.quote(receipt['branch'])
         if not (receipt.get('integrated') or {}).get('pushed'):
-            value['retire_command'] = prefix + ' lane-retire ' + receipt['id'] + " --reason 'owner stopped; selection superseded'"
+            value['retire_command'] = prefix + ' lane-retire ' + resume_id + " --reason 'owner stopped; selection superseded'"
     return value
 
 
@@ -177,6 +178,9 @@ def receipt_path(fdir, run_id):
 
 
 def retire(root, fdir, run_id, reason):
+    requested = read(receipt_path(fdir, run_id))
+    if requested.get('kind') == 'tooling-request':
+        run_id = requested['run']
     with lane_lock(fdir), state_lock(fdir):
         path = receipt_path(fdir, run_id)
         receipt = read(path)
@@ -218,7 +222,7 @@ def recover_stale(fdir):
             for path in (Path(fdir) / 'lane' / directory).glob('*.json'):
                 receipt = read(path)
                 owner = receipt.get('owner') or {}
-                if (receipt.get('state') != 'running' or not owner or owner.get('host') != socket.gethostname()
+                if (receipt.get('kind') == 'tooling-request' or receipt.get('state') != 'running' or not owner or owner.get('host') != socket.gethostname()
                         or owner_alive(owner) or (receipt.get('integrated') or {}).get('pushed')):
                     continue
                 receipt.update(state=('conflict' if 'git rebase' in receipt.get('error', '') else 'stale'), stale_at=f.utc(),
@@ -237,7 +241,7 @@ def wait_for_owner(root, fdir, directory, resume, wait):
     while True:
         with state_lock(fdir):
             unfinished = [read(p) for p in (Path(fdir) / 'lane' / directory).glob('*.json')
-                          if read(p)['state'] == 'running'
+                          if read(p)['state'] == 'running' and read(p).get('kind') != 'tooling-request'
                           and not (read(p).get('integrated') or {}).get('pushed')]
         blockers = [r for r in unfinished if r['id'] != resume]
         blockers = [r for r in blockers if not (r.get('root') == str(root)
@@ -265,15 +269,27 @@ def require_green(root, commit, python, ci_wait):
 
 def publish_tooling(root, fdir, branch='main', ci_wait=600, python=sys.executable, resume=None, wait_lane=False,
                     soft_free_gb=None, allow_low_disk=False):
+    """Register new tooling requests before taking the shared batching lane."""
+    root, fdir = Path(root).resolve(), Path(fdir).resolve()
+    python = lane_python(python)
+    if not resume:
+        import flow_tooling
+        return flow_tooling.publish(root, fdir, branch, ci_wait, python, soft_free_gb, allow_low_disk, wait_lane)
+    requested = read(receipt_path(fdir, resume))
+    if requested.get('kind') == 'tooling-request':
+        resume = requested['run']
+    if receipt_path(fdir, resume).parent.name == 'runs':
+        return run_lane(root, fdir, branch, True, ci_wait, python, soft_free_gb=soft_free_gb,
+                        allow_low_disk=allow_low_disk, resume=resume, wait_lane=wait_lane)
+    return _publish_legacy_tooling(root, fdir, branch, ci_wait, python, resume, wait_lane,
+                                  soft_free_gb, allow_low_disk)
+
+
+def _publish_legacy_tooling(root, fdir, branch='main', ci_wait=600, python=sys.executable, resume=None, wait_lane=False,
+                    soft_free_gb=None, allow_low_disk=False):
     """Check and publish committed tooling under the same lane lock as acceptance work."""
     root, fdir = Path(root).resolve(), Path(fdir).resolve()
     python = lane_python(python)
-    if resume and receipt_path(fdir, resume).parent.name == 'runs':
-        return run_lane(root, fdir, branch, True, ci_wait, python, soft_free_gb=soft_free_gb,
-                        allow_low_disk=allow_low_disk, resume=resume, wait_lane=wait_lane)
-    if wait_lane and not resume:
-        import flow_tooling
-        return flow_tooling.publish(root, fdir, branch, ci_wait, python, soft_free_gb, allow_low_disk)
     if resume:
         with state_lock(fdir):
             previous = read(receipt_path(fdir, resume))
@@ -285,7 +301,8 @@ def publish_tooling(root, fdir, branch='main', ci_wait=600, python=sys.executabl
     with lane_lock(fdir, wait=wait_lane, purpose='tooling') as lease:
         recover_stale(fdir)
         with state_lock(fdir):
-            pending = [read(p) for p in (fdir / 'lane/tooling').glob('*.json') if read(p)['state'] == 'running' and not (read(p).get('integrated') or {}).get('pushed')]
+            pending = [read(p) for p in (fdir / 'lane/tooling').glob('*.json') if read(p)['state'] == 'running' and read(p).get('kind') != 'tooling-request'
+                       and not (read(p).get('integrated') or {}).get('pushed')]
             if resume:
                 selected = read(receipt_path(fdir, resume))
                 f.refuse(selected['state'] in ('running', 'failed', 'conflict', 'stale'), 'receipt cannot be resumed')
@@ -620,11 +637,11 @@ def accept(tree, requests, python):
 
 def save_run(fdir, receipt):
     with state_lock(fdir):
-        write(fdir / 'lane/runs' / (receipt['id'] + '.json'), receipt)
         for item in receipt['items']:
             write(fdir / 'lane/queue' / (item['id'] + '.json'), item)
         import flow_tooling
         flow_tooling.save_items(fdir, receipt, receipt.get('state') == 'done')
+        write(fdir / 'lane/runs' / (receipt['id'] + '.json'), receipt)
         integ = receipt.get('integrated')
         if integ:
             group_members = {}
@@ -1088,7 +1105,8 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
         recover_stale(fdir)
         with state_lock(fdir):
             require_complete(fdir)
-            unfinished = [read(p) for p in sorted((fdir / 'lane/runs').glob('*.json')) if read(p)['state'] == 'running' and not (read(p).get('integrated') or {}).get('pushed')]
+            unfinished = [read(p) for p in sorted((fdir / 'lane/runs').glob('*.json')) if read(p)['state'] == 'running' and read(p).get('kind') != 'tooling-request'
+                       and not (read(p).get('integrated') or {}).get('pushed')]
             unfinished = [r for r in unfinished if r.get('root') == str(root)]
             if resume:
                 selected = read(receipt_path(fdir, resume))
@@ -1106,8 +1124,6 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                 tooling = [read(p) for p in sorted((fdir / 'lane/tooling-queue').glob('*.json'))
                            if read(p)['state'] == 'queued' and read(p)['branch'] == branch]
                 tooling.sort(key=lambda i: (i['queued_at'], i['id']))
-                if tooling and not flow_tooling.mixed_safe(tooling):
-                    items = []  # Gate-changing tooling publishes before function acceptances.
                 if not items and not tooling:
                     return dict(state='empty')
                 f.refuse(all(i['branch'] == branch for i in items), 'queued requests name different branches')
@@ -1120,11 +1136,21 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                 guard_cleanup(fdir, receipt['tree'])
             receipt['owner'] = process_owner()
             receipt.update(state='running', python=python)
+            receipt.pop('error', None)
             save_run(fdir, receipt)
         try:
             while True:
                 if not receipt.get('integrated'):
-                    if build(root, fdir, receipt, python, branch, soft_free_gb, allow_low_disk, min_free_gb) is None:
+                    try:
+                        tree = build(root, fdir, receipt, python, branch, soft_free_gb, allow_low_disk, min_free_gb)
+                    except f.FlowError as error:
+                        if not receipt.get('tooling_accepted'):
+                            raise
+                        import flow_tooling
+                        flow_tooling.isolate_failure(root, fdir, receipt, python, branch, error,
+                                                    soft_free_gb, allow_low_disk, min_free_gb)
+                        tree = receipt.get('tree')
+                    if tree is None or receipt['state'] == 'done':
                         return receipt
                 tree, integ = Path(receipt['tree']), receipt['integrated']
                 # Avoid checking an obsolete candidate when resuming after a failed check.
@@ -1151,7 +1177,8 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                         if not receipt.get('tooling_accepted'):
                             raise
                         import flow_tooling
-                        flow_tooling.isolate_failure(root, fdir, receipt, python, branch, error)
+                        flow_tooling.isolate_failure(root, fdir, receipt, python, branch, error,
+                                                    soft_free_gb, allow_low_disk, min_free_gb)
                         if receipt['state'] == 'done':
                             return receipt
                         tree, integ = Path(receipt['tree']), receipt['integrated']

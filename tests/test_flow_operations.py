@@ -1,4 +1,4 @@
-"""Operational lane rules, using only tiny synthetic repositories."""
+"""Operational lane rules and legacy receipt recovery, using tiny synthetic repositories."""
 import contextlib
 import io
 import json
@@ -40,7 +40,7 @@ class Operations(unittest.TestCase):
     def test_tooling_push_takes_lane_and_leaves_state_free_during_checks(self):
         self.tooling_commit()
         with lane.lane_lock(self.fdir), self.assertRaisesRegex(flow.FlowError, 'already running'):
-            lane.publish_tooling(self.root, self.fdir)
+            lane._publish_legacy_tooling(self.root, self.fdir)
         original = flow.pre_push_checks
         def checks(root, commit, python, **kwargs):
             self.assertTrue(lane.running(self.fdir))
@@ -54,7 +54,7 @@ class Operations(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             original(root, commit, python, **kwargs)
         with patch.object(flow, 'pre_push_checks', side_effect=checks) as checked:
-            result = lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
+            result = lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
         self.assertEqual(checked.call_count, 1)
         self.assertEqual(result['state'], 'done')
         self.assertEqual(git(self.repo.origin, 'rev-parse', 'main'), result['integrated']['commit'])
@@ -71,11 +71,11 @@ class Operations(unittest.TestCase):
         base = git(self.root, 'rev-parse', 'HEAD')
         self.tooling_commit("from pathlib import Path\nimport sys\nsha=sys.argv[sys.argv.index('--commit')+1]\nsys.exit(0 if sha==" + repr(base) + " or Path('.local/ci-ok').exists() else 2)\n")
         with self.assertRaisesRegex(flow.FlowError, 'tooling CI pending'):
-            lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
+            lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
         receipt = lane.read(next((self.fdir / 'lane/tooling').glob('*.json')))
         (self.root / '.local/ci-ok').write_text('ready')
         with patch.object(flow, 'pre_push_checks', side_effect=AssertionError('duplicate checks')):
-            result = lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable, resume=receipt['id'])
+            result = lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable, resume=receipt['id'])
         self.assertEqual(result['integrated']['commit'], receipt['integrated']['commit'])
         self.assertEqual(result['integrated']['pushed'], receipt['integrated']['pushed'])
 
@@ -107,25 +107,25 @@ class Operations(unittest.TestCase):
         self.tooling_commit("from pathlib import Path\nimport sys\nsys.exit(0 if Path('.local/ci-ok').exists() else 2)\n")
         before = git(self.repo.origin, 'rev-parse', 'main')
         with self.assertRaisesRegex(flow.FlowError, 'origin CI is not green'):
-            lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
+            lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
         self.assertEqual(git(self.repo.origin, 'rev-parse', 'main'), before)
         receipt = lane.read(next((self.fdir / 'lane/tooling').glob('*.json')))
         (self.root / '.local/ci-ok').write_text('green')
         with patch.object(flow, 'pre_push_checks', side_effect=AssertionError('duplicate checks')):
-            result = lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable, resume=receipt['id'])
+            result = lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable, resume=receipt['id'])
         self.assertEqual(result['integrated']['commit'], receipt['integrated']['commit'])
 
     def test_tooling_recovers_server_push_before_checkpoint_without_repushing(self):
         self.tooling_commit("from pathlib import Path\nimport sys\nsys.exit(0 if Path('.local/ci-ok').exists() else 2)\n")
         with self.assertRaisesRegex(flow.FlowError, 'origin CI is not green'):
-            lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
+            lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
         receipt = lane.read(next((self.fdir / 'lane/tooling').glob('*.json')))
         git(self.root, 'push', '--quiet', 'origin', 'HEAD:main')
         (self.root / '.local/ci-ok').write_text('green')
         original = lane.subprocess.run
         with patch.object(flow, 'pre_push_checks', side_effect=AssertionError('duplicate checks')), \
                 patch.object(lane.subprocess, 'run', wraps=original) as commands:
-            result = lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable, resume=receipt['id'])
+            result = lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable, resume=receipt['id'])
         self.assertEqual(result['state'], 'done')
         self.assertFalse(any(call.args[0][:2] == ['git', 'push'] for call in commands.call_args_list))
 
@@ -166,7 +166,7 @@ class Operations(unittest.TestCase):
                 return SimpleNamespace(returncode=0 if len(seen) == 1 else 2, stdout='pending', stderr='')
             return original(argv, *args, **kwargs)
         with patch.object(lane.subprocess, 'run', side_effect=command), self.assertRaises(flow.FlowError):
-            lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
+            lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
         receipt = lane.read(next((self.fdir / 'lane/tooling').glob('*.json')))
         with patch.object(flow, 'pre_push_checks', side_effect=AssertionError('must not repeat checks')):
             result = lane.run_lane(self.root, self.fdir, ci_wait=1, python=sys.executable, resume=receipt['id'])
@@ -202,7 +202,7 @@ class Operations(unittest.TestCase):
                 git(other, 'commit', '--quiet', '-m', 'incoming')
                 git(other, 'push', '--quiet', 'origin', 'main')
         with patch.object(flow, 'pre_push_checks', side_effect=advance):
-            result = lane.publish_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
+            result = lane._publish_legacy_tooling(self.root, self.fdir, ci_wait=0, python=sys.executable)
         self.assertEqual(len(checked), 2)
         self.assertEqual(result['integrated']['commit'], checked[-1])
         self.assertEqual(git(self.repo.origin, 'rev-parse', 'main'), checked[-1])

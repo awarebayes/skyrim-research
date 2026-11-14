@@ -130,8 +130,8 @@ A red CI stops the lane before any later push.
 
 An individual acceptance failure is recorded with its reason and excluded; successful members
 still ship. Family binding/sampling failures hold the entire family batch, never shrink its
-committed population. A whole-tree check failure stops the run without pushing. Inspect dropped
-items in `lane-status`, fix their evidence and enqueue them again. Missing inputs or conflicting
+committed population. A whole-tree check failure stops the run without pushing unless tooling
+inputs can be isolated as described below. Inspect dropped items in `lane-status`, fix their evidence and enqueue them again. Missing inputs or conflicting
 source closures are refusals, not permission to overwrite them. If origin moves, the lane checks
 for overlapping inventory/source changes, replays the combined selection on the winner and
 reruns all required checks. It never pushes an unchecked rebased tree.
@@ -156,9 +156,25 @@ only local copies byte-identical to origin; differing files refuse and stay inta
 
 Tooling publications also use the lane: `flow.py --root <committed-tooling-checkout> --flow-dir
 <shared-flow> tooling-push`. For Git worktrees its default flow directory comes from the common
-Git directory; independent clones must name the shared flow explicitly. It refuses a busy lane
-(or waits with `--wait-lane`),
-runs the full checks once per final tree, rebases/rechecks a lost race, pushes and watches CI.
+Git directory; independent clones must name the shared flow explicitly. It registers the committed
+tip before taking the lane (`--wait-lane` waits for a busy lane). The next runner takes every waiting
+tooling request in queue order together with all queued function selections. This includes lane tooling; the
+running acceptance implementation still enforces the existing gates, and the candidate runs
+all full checks. Waiters do no full checks in their own checkout. Conflicting inputs are bounced
+with their revision and reason while the rest continue. One combined tree gets one check run,
+one push and one exact-SHA CI watch. Arrivals after the snapshot join the next batch.
+
+If combined checks fail, the lane first checks the function/base tree without tooling. A failing
+baseline stops publication without blaming tooling. Otherwise it bisects tooling inputs in
+halves, with at most `ceil(log2(n))` split levels (one bad input needs O(log n) probes; several
+bad inputs may require more probes at a level). Each probe checks the entire surviving combination,
+so its final pass can be published without repeating those checks. Bounced revisions and reasons,
+probe rounds and retained logs are recorded in the batch receipt. Every waiter returns its own
+request outcome and the common pushed SHA, or exits nonzero with its bounce/failure reason.
+Request receipts under `lane/tooling/` refer to their owning `lane/runs/` receipt; the original
+`lane/tooling-queue/` entries and `events.jsonl` remain available. Legacy tooling receipt resume
+commands retain their existing behavior. With `--no-wait-lane`, a busy lane returns nonzero while
+leaving the registered request queued for the next runner.
 `lane-status` reports dead owners using PID, host and process birth, including legacy runs after
 their lock is free; its resume/retire commands preserve the receipt and candidates. A pushed run
 can resume CI but cannot be retired. No run is automatically retired.

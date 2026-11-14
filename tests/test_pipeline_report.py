@@ -81,6 +81,14 @@ class PipelineReport(unittest.TestCase):
         self.assertEqual(pr.distribution(range(1, 11)), dict(n=10, median=5.5, p90=9))
         self.assertEqual(t['lock_acquired']['source'], 'receipt')
 
+    def test_tooling_request_outcomes_do_not_duplicate_the_owning_run(self):
+        _, row = self.receipt()
+        self.write('.local/flow/lane/tooling/request.json',
+                   dict(row, id='request', kind='tooling-request', run=row['id']))
+        result = self.report()
+        self.assertEqual(len(result['timeline']), 1)
+        self.assertEqual(result['summary']['hold_seconds']['n'], 1)
+
     def test_mtime_estimates_are_labelled_and_no_process_birth_as_acquisition(self):
         path, row = self.receipt(lock_acquired_at=None, released_at=None)
         t = pr.timeline_row(path, row, 'lane', {})
