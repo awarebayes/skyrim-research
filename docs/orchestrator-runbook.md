@@ -157,6 +157,16 @@ runs the full checks once per final tree, rebases/rechecks a lost race, pushes a
 their lock is free; its resume/retire commands preserve the receipt and candidates. A pushed run
 can resume CI but cannot be retired. No run is automatically retired.
 
+For read-only bottleneck numbers, run `python3 tools/pipeline_report.py --root <shared-checkout>
+--flow-dir <shared-flow>` (one command), or add `--json`; `--output <file>` saves only that
+file. `--offline` skips GitHub job queries; repeat `--log <file>` for operational logs outside
+the lane and handoff directories. It reports lane/CI timelines, waiters, estimated
+drain time, flow-derived function states with age buckets, handoff stalls and 24-hour refusal
+observations. It never fetches refs or creates locks. Run against the shared checkout for its
+queues and saved reviews; pushed state uses its existing `origin/main` ref. Unknown historical
+times stay unknown; log/receipt-mtime estimates and age proxies are labelled. Process ages
+bound unrecorded tooling waits, and refusal counts are observations, not unique attempts.
+
 ## Approved subsets (Engineer)
 
 When rejected or disputed members hold an individual group, an Engineer may run
