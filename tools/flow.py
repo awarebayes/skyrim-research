@@ -1304,7 +1304,8 @@ def split_group(root, fdir, name, selected):
 def next_actions(root, fdir, branch='main', now=None, online=True):
     """[(kind, text)] with kind 'stop', 'run', 'dispatch', 'wait' or 'done', in the order to do them."""
     lane_pending = any(json.loads(p.read_text()).get('state') in ('queued', 'running')
-                       for p in (Path(fdir) / 'lane/queue').glob('*.json'))
+                       for name in ('queue', 'tooling-queue')
+                       for p in (Path(fdir) / 'lane' / name).glob('*.json'))
     import time
     now = time.time() if now is None else now
     root = Path(root)
@@ -2381,7 +2382,8 @@ def pre_push_checks(root, commit, python, *, candidate=False, log_dir=None):
         refuse(git(root, 'rev-parse', 'HEAD') == commit and not git(root, 'status', '--porcelain', '--untracked-files=no'),
                'lane candidate differs from its commit before checks')
         for name, cmd in [('check', [python, 'tools/check.py']),
-                          ('tests', [python, '-m', 'unittest', 'discover', '-s', 'tests', '-v']),
+                          ('tests', ([python, 'tools/test_suite.py'] if (Path(root) / 'tools/test_suite.py').is_file()
+                                     else [python, '-m', 'unittest', 'discover', '-s', 'tests', '-v'])),
                           ('site', [python, 'tools/build_site.py'])]:
             options = {'log_path': Path(log_dir) / (name + '.log')} if log_dir is not None else {}
             run(cmd, root, {'check': 'check.py', 'tests': 'unit tests', 'site': 'build_site.py'}[name] + ' (lane tree)', **options)
@@ -2394,7 +2396,8 @@ def pre_push_checks(root, commit, python, *, candidate=False, log_dir=None):
     drafts.label(tree, 'flow-check', commit, 'integration-check')
     try:
         run([python, 'tools/check.py'], tree, 'check.py (clean tree)')
-        run([python, '-m', 'unittest', 'discover', '-s', 'tests'], tree, 'unit tests (clean tree)')
+        run([python, 'tools/test_suite.py'] if (tree / 'tools/test_suite.py').is_file()
+            else [python, '-m', 'unittest', 'discover', '-s', 'tests'], tree, 'unit tests (clean tree)')
         run([python, 'tools/build_site.py'], tree, 'build_site.py (clean tree)')
     finally:
         git(root, 'worktree', 'remove', '--force', str(tree), check=False)
@@ -2506,6 +2509,8 @@ def parser():
     s.add_argument('--ci-wait', type=int, default=600)
     s.add_argument('--resume', help='resume this exact unfinished run')
     for command in ('integrate', 'integrate-groups', 'integrate-family', 'integrate-labels', 'lane-run'):
+        sub.choices[command].add_argument('--wait-lane', action=argparse.BooleanOptionalAction, default=True,
+                                         help='wait for a busy lane (default); --no-wait-lane probes without waiting')
         sub.choices[command].add_argument('--soft-free-gb', type=float, help='soft disk floor; default 10 GB')
         sub.choices[command].add_argument('--allow-low-disk', action='store_true', help='explicitly override only the soft floor')
     sub.add_parser('lane-status')
@@ -2516,7 +2521,8 @@ def parser():
     s.add_argument('--branch', default='main')
     s.add_argument('--ci-wait', type=int, default=600)
     s.add_argument('--resume')
-    s.add_argument('--wait-lane', action='store_true', help='wait for the current lane owner before checking this tree')
+    s.add_argument('--wait-lane', action=argparse.BooleanOptionalAction, default=True,
+                   help='wait for other live publications (default)')
     s.add_argument('--soft-free-gb', type=float)
     s.add_argument('--allow-low-disk', action='store_true')
     s = sub.add_parser('cleanup')
@@ -2662,23 +2668,26 @@ def execute(a, root, fdir):
                                      getattr(a, 'name', None))
             print(f'queued {item["id"]}: {kind}; next: python3 tools/flow.py lane-run')
             if a.run or a.no_push:
-                if flow_lane.running(fdir):
+                if flow_lane.running(fdir) and not a.wait_lane:
                     print('push lane is already running; request remains queued for the next run')
                 else:
                     print(json.dumps(flow_lane.run_lane(root, fdir, a.branch, not a.no_push,
-                                     soft_free_gb=a.soft_free_gb, allow_low_disk=a.allow_low_disk), indent=2))
+                                     soft_free_gb=a.soft_free_gb, allow_low_disk=a.allow_low_disk,
+                                     wait_lane=a.wait_lane), indent=2))
         elif a.cmd == 'lane-run':
             import flow_lane
             print(json.dumps(flow_lane.run_lane(root, fdir, a.branch, not a.no_push, a.ci_wait, min_free_gb=a.min_free_gb,
-                             soft_free_gb=a.soft_free_gb, allow_low_disk=a.allow_low_disk, resume=a.resume), indent=2))
+                             soft_free_gb=a.soft_free_gb, allow_low_disk=a.allow_low_disk, resume=a.resume,
+                             wait_lane=a.wait_lane), indent=2))
         elif a.cmd == 'lane-status':
             import flow_lane
             with state_lock(fdir):
                 items = [flow_lane.read(p) for p in sorted((fdir / 'lane/queue').glob('*.json'))]
                 runs = [flow_lane.read(p) for p in sorted((fdir / 'lane/runs').glob('*.json'))]
                 tooling = [flow_lane.read(p) for p in sorted((fdir / 'lane/tooling').glob('*.json'))]
+                inputs = [flow_lane.read(p) for p in sorted((fdir / 'lane/tooling-queue').glob('*.json'))]
             active = flow_lane.running(fdir)
-            print(json.dumps(dict(queue=items, runs=[flow_lane.run_status(root, fdir, r, active) for r in runs],
+            print(json.dumps(dict(queue=items, tooling_inputs=inputs, runs=[flow_lane.run_status(root, fdir, r, active) for r in runs],
                                   tooling=[flow_lane.run_status(root, fdir, r, active) for r in tooling]), indent=2))
         elif a.cmd == 'lane-retire':
             import flow_lane

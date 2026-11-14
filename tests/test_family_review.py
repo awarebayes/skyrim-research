@@ -590,6 +590,59 @@ class FamilyReviewTests(GateFixture, unittest.TestCase):
                   if p.is_file() and '.git' not in p.relative_to(self.root).parts}
         self.assertEqual(expected, actual)
 
+    def combined_sample_inputs(self):
+        def public():
+            return {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()
+                    and not {'.git', '.local'} & set(p.relative_to(self.root).parts)}
+        def restore(before):
+            for p in set(public()) - set(before):
+                p.unlink()
+            for p, blob in before.items():
+                p.write_bytes(blob)
+        before = public()
+        self.approve_members(self.batch['sample'], 'sample')
+        restore(before)
+        self.reload_data()
+        requests = [dict(kind='family', path=self.batch_path, functions=self.unsampled, profile='cheap'),
+                    dict(kind='review', review=str(self.root / '.local/reviews/sample.md'),
+                         functions=list(self.batch['sample']), profile='cheap')]
+        return requests, before, public, restore
+
+    def test_lane_sample_then_family_matches_two_stage_bytes_with_one_index(self):
+        import lane_accept
+        from datetime import datetime, timezone
+        when = datetime(2000, 1, 3, tzinfo=timezone.utc)
+        requests, before, public, restore = self.combined_sample_inputs()
+        af.accept_reviews(self.root, [requests[1]], when)
+        af.accept_family_batch(self.root, self.batch_path, when, 'cheap', self.fdir)
+        expected = public()
+        restore(before)
+        with patch.object(af, 'write_index', wraps=af.write_index) as index:
+            preview = lane_accept.accept(self.root, requests, when, prepare_only=True)
+            self.assertFalse(preview['dropped'])
+            self.assertEqual(public(), before)
+            self.assertEqual(index.call_count, 0)
+            result = lane_accept.accept(self.root, requests, when)
+            self.assertFalse(result['dropped'])
+            self.assertEqual(index.call_count, 1)
+        self.assertEqual(public(), expected)
+
+    def test_combined_family_keeps_second_review_gate_and_rolls_back_samples(self):
+        import lane_accept
+        requests, before, public, restore = self.combined_sample_inputs()
+        (self.root / '.local/reviews/sample-s.md').unlink()
+        result = lane_accept.accept(self.root, requests)
+        self.assertTrue(any(d['request']['kind'] == 'family' for d in result['dropped']))
+        self.assertEqual(public(), before)
+
+    def test_combined_final_failure_restores_sample_and_family_records(self):
+        import lane_accept
+        requests, before, public, restore = self.combined_sample_inputs()
+        with patch.object(af, 'write_index', side_effect=OSError('synthetic combined index failure')):
+            with self.assertRaisesRegex(OSError, 'synthetic combined index failure'):
+                lane_accept.accept(self.root, requests)
+        self.assertEqual(public(), before)
+
     def test_integrate_family_uses_isolated_tree_without_pushing(self):
         self.ready()
         remote = self.root / '.local/origin.git'

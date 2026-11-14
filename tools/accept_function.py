@@ -561,7 +561,7 @@ def prepare(root, data, target, index, title, header, block, blob, when):
     return fn, record, review_record(fn, record, header, title, blob, when, 'delta', naming, previous, old)
 
 
-def apply(root, data, new, target, prepared, tolerated, when):
+def apply(root, data, new, target, prepared, tolerated, when, *, rebuild_index=True):
     """Write the prepared review records and the new inventory, all or nothing; returns changed files.
 
     `prepared` is [(index, fn, record, review record or None)]. From the first write on, any failure,
@@ -583,7 +583,8 @@ def apply(root, data, new, target, prepared, tolerated, when):
         except (ValueError, KeyError, TypeError) as exc:
             raise Refused(f'validator rejects the result: {exc}') from None
         write_progress(root, new)
-        write_index(new, root)
+        if rebuild_index:
+            write_index(new, root)
     except BaseException:
         for name, blob_before in saved.items():
             if blob_before is None:

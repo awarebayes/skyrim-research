@@ -231,7 +231,7 @@ class PushLane(unittest.TestCase):
     def test_cli_busy_lane_returns_normal_refusal_without_traceback(self):
         with lane.lane_lock(self.fdir):
             result = subprocess.run([sys.executable, str(flow.TOOLS / 'flow.py'), '--root', str(self.root),
-                                     '--flow-dir', str(self.fdir), 'lane-run', '--min-free-gb', '0'],
+                                     '--flow-dir', str(self.fdir), 'lane-run', '--no-wait-lane', '--min-free-gb', '0'],
                                     capture_output=True, text=True, timeout=10)
         self.assertEqual(result.returncode, 1)
         self.assertIn('flow: push lane already running', result.stderr)
