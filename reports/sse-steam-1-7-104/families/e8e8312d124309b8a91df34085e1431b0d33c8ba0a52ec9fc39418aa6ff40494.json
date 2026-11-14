@@ -1,0 +1,800 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "6bf71d89b21ea1da2659302269501becec45984942f017f52a1b71d339d08e46",
+      "version": "0.6.1-runtime"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy"
+      ],
+      "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "923a7ef7ea6d9792a66669014f059f40af29e111b065f2ae6b0a6835d7f4e838",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x7d3730": "363e4cf9380c0e654938567c7fcfdac3d70e5dc0aa15d8e58729a6ff663c4567",
+    "sse-steam-1-7-104-0x7d3760": "c58ef3db1951d6d0093f4d7a133f12bc917c832d31db4b8d5466a4916373af7a",
+    "sse-steam-1-7-104-0x7d3790": "e43da7c86ae08600476da9eb2469bca529c3bf711c793755a8654debe3955f8a",
+    "sse-steam-1-7-104-0x7d37c0": "908a1e7c87bdd5abd3fb8b9a97b84fbf33166da36bc952473c51fe9441e13f7e",
+    "sse-steam-1-7-104-0x7d37f0": "63cb90b667b19c8e67a377fc4279bd7359bc0a4a1876b47efde6268edd000269",
+    "sse-steam-1-7-104-0x7d3820": "08c33d148ce2cc8ff47e79afaab6fc4bf727505770c92fa8c6b214c7a9190eed",
+    "sse-steam-1-7-104-0x7d3850": "2b92cdcd1a744bd63e1bd9ad1104f162ab2245383b7e055f6d409b6464b79b35",
+    "sse-steam-1-7-104-0x7d3880": "ad0a6386b7e87af713391e9e595768173ace46f084ecb3452880c0913412ebcb",
+    "sse-steam-1-7-104-0x7d38b0": "bf3b117474c57a4c9681157c8e2f0db3c8db1aee460fe121ea4902e4e3880a96",
+    "sse-steam-1-7-104-0x7d38e0": "eaf6f1718ab13d6100ffc09e64504009154d2e494583e82d850ea592768da8f7",
+    "sse-steam-1-7-104-0x7d3910": "62e1aaa38e7c0c8003601bcc302cd899d9269e9e9a35fa3ae1ec88295a387919",
+    "sse-steam-1-7-104-0x7d3940": "a67f2c3c08c0787a8628430aad22ae4bda8c37336a233a7187e1f43ad67367da",
+    "sse-steam-1-7-104-0x7d3970": "71bc01583e33b0b67bc72d915174af68ddf5531650f064226c4329d92b108f5b",
+    "sse-steam-1-7-104-0x7d39a0": "036cde9e411995be5fece0712931d862c1595153188bd33fe24b56c7c22ef7cf",
+    "sse-steam-1-7-104-0x7d39d0": "a75a053333f3bd6a4005b187d9a255f1e73f94ee3d4992ce48d1053e5a438c73",
+    "sse-steam-1-7-104-0x7d3a00": "6ad35858469f1aa444a76350eaf4e13cfaff228ba36a7b618c2456abb4ecb58e",
+    "sse-steam-1-7-104-0x7d3a30": "52bc4ee21574af2e1e70c3a227d677b96afbc6d1123f23477dfd891ef64dec75",
+    "sse-steam-1-7-104-0x7d3a60": "0cd097940ed8ee9e040756dab0c8328ef22467c1af8e5ea7de81240637549857",
+    "sse-steam-1-7-104-0x7d3a90": "aa8ea51a99d08e596c24d2b8bd3dbee7f39f3e88f093cca8c27632ace31a670e",
+    "sse-steam-1-7-104-0x7d3ac0": "2299e2793f1699ed928ef9059e45f58c0f119c02d06e9bea71249301a35265c8"
+  },
+  "origin": {
+    "family": "scalar-deleting-leaf",
+    "template_digest": "dadc995236a4846bc5fbc3ed98c60c4f40aa5cbd9d39ae419baac760ab8fa84b",
+    "version": "4"
+  },
+  "parameter_ranges": {
+    "rows": [
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206128,
+        "layout-index": 0,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206176,
+        "layout-index": 1,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206224,
+        "layout-index": 2,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206272,
+        "layout-index": 3,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206320,
+        "layout-index": 4,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206368,
+        "layout-index": 5,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206416,
+        "layout-index": 6,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206464,
+        "layout-index": 7,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206512,
+        "layout-index": 8,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206560,
+        "layout-index": 9,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206608,
+        "layout-index": 10,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206656,
+        "layout-index": 11,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206704,
+        "layout-index": 12,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206752,
+        "layout-index": 13,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206800,
+        "layout-index": 14,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206848,
+        "layout-index": 15,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206896,
+        "layout-index": 16,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206944,
+        "layout-index": 17,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8206992,
+        "layout-index": 18,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207040,
+        "layout-index": 19,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207088,
+        "layout-index": 20,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207136,
+        "layout-index": 21,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207184,
+        "layout-index": 22,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207232,
+        "layout-index": 23,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207280,
+        "layout-index": 24,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207328,
+        "layout-index": 25,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207376,
+        "layout-index": 26,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207424,
+        "layout-index": 27,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207472,
+        "layout-index": 28,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207520,
+        "layout-index": 29,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207568,
+        "layout-index": 30,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207616,
+        "layout-index": 31,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207664,
+        "layout-index": 32,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207712,
+        "layout-index": 33,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207760,
+        "layout-index": 34,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207808,
+        "layout-index": 35,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207856,
+        "layout-index": 36,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207904,
+        "layout-index": 37,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8207952,
+        "layout-index": 38,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208000,
+        "layout-index": 39,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208048,
+        "layout-index": 40,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208096,
+        "layout-index": 41,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208144,
+        "layout-index": 42,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208192,
+        "layout-index": 43,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208240,
+        "layout-index": 44,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208288,
+        "layout-index": 45,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208336,
+        "layout-index": 46,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208384,
+        "layout-index": 47,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208432,
+        "layout-index": 48,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208480,
+        "layout-index": 49,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208528,
+        "layout-index": 50,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208576,
+        "layout-index": 51,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208624,
+        "layout-index": 52,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208672,
+        "layout-index": 53,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208720,
+        "layout-index": 54,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208768,
+        "layout-index": 55,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208816,
+        "layout-index": 56,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208864,
+        "layout-index": 57,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208912,
+        "layout-index": 58,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8208960,
+        "layout-index": 59,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209008,
+        "layout-index": 60,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209056,
+        "layout-index": 61,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209104,
+        "layout-index": 62,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209152,
+        "layout-index": 63,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209200,
+        "layout-index": 64,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209248,
+        "layout-index": 65,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209296,
+        "layout-index": 66,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209344,
+        "layout-index": 67,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209392,
+        "layout-index": 68,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209440,
+        "layout-index": 69,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209488,
+        "layout-index": 70,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209536,
+        "layout-index": 71,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209584,
+        "layout-index": 72,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209728,
+        "layout-index": 73,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209776,
+        "layout-index": 74,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209824,
+        "layout-index": 75,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209872,
+        "layout-index": 76,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209920,
+        "layout-index": 77,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8209968,
+        "layout-index": 78,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210016,
+        "layout-index": 79,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210064,
+        "layout-index": 80,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210112,
+        "layout-index": 81,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210160,
+        "layout-index": 82,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210208,
+        "layout-index": 83,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210256,
+        "layout-index": 84,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210304,
+        "layout-index": 85,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210352,
+        "layout-index": 86,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210400,
+        "layout-index": 87,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210448,
+        "layout-index": 88,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210496,
+        "layout-index": 89,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      },
+      {
+        "deallocator-rva": 22705212,
+        "entry-rva": 8210544,
+        "layout-index": 90,
+        "object-size": 16,
+        "size": 43,
+        "table-rva": 26443312
+      }
+    ]
+  },
+  "parameter_source": {
+    "path": "tools/deleting_layout_bindings_v1.py",
+    "sha256": "dde9d76f7f575b87a00294f5bf106ea15ee410cff6852e99771f9cc62a818eee"
+  },
+  "pause_reason": "",
+  "paused": false,
+  "review": null,
+  "supersedes": "reports/sse-steam-1-7-104/families/cca5b18306e0fa7fa46396225ad62f6ce84966b517844713067bcedf87a001e6.json",
+  "template_source": {
+    "path": "tools/deleting_layout_leaf_v4.py",
+    "sha256": "dadc995236a4846bc5fbc3ed98c60c4f40aa5cbd9d39ae419baac760ab8fa84b"
+  }
+}
