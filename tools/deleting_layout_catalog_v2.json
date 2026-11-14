@@ -1,0 +1,3160 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "headers": {
+    "reconstruction/actors/ActorMoverStorageLayout.h": "1f0da88137938f477141879a31c86fbc95e6bd867b352397aa523a4ff6405e19",
+    "reconstruction/actors/CombatBehaviorTreeNodeStorageLayout.h": "9cceef9e0012681cdbc5bf59479e9e09271a821a9b025d60e71dc4c40d8eb652",
+    "reconstruction/actors/CombatInventoryItemMagicStorageLayout.h": "ff42cfcd736f3a84a832386d39a2a6fed2f863e45c0d2ea30bcedfe571f580f8",
+    "reconstruction/actors/CombatInventoryItemPotionStorageLayout.h": "8683ba9c3759df1b56c46604a032dee8d010a8fd2a639fdd12dfddce5a611930",
+    "reconstruction/actors/CombatInventoryItemScrollStorageLayout.h": "b36077173bd9baecdd1891833295deffe79ad7ca7b85c989ebe4479a17c1d5f5",
+    "reconstruction/actors/CombatInventoryItemShoutStorageLayout.h": "43eb99b21de233cda54a6f5c8ad5fdac88d2a700fbf4c8110efe8b34e8411305",
+    "reconstruction/actors/CombatInventoryItemStaffStorageLayout.h": "66d6e483439c9992423346d5a6753e609eb032ddce199f42324c5e056d7ca878",
+    "reconstruction/actors/CombatInventoryItemStorageLayout.h": "53e5b8be720a0b6a1a908880f69347c9708b3ed897906fc95bf351f59029f555",
+    "reconstruction/actors/CombatObjectStorageLayout.h": "41174b940c02b903e62761e282144cfa56499fc44e7c54bc7fd632d55677f6b0",
+    "reconstruction/actors/PlayerInputHandlerStorageLayout.h": "ee55ebcfacc47490eab86d03adfc5d11554e0e0c2a6bf1569451b7334a870cdd",
+    "reconstruction/bsengine/ActivateHandlerStorageLayout.h": "dfedeaff0a95259046d168f406985446aa9c3736d1d45bdd1e01323165303f77",
+    "reconstruction/bsengine/ArrayAllocatorFunctorStorageLayout.h": "b0dc453a19ddf19133f9e547de2b30ce7400c4c91b02ccc461e106f003f0b501",
+    "reconstruction/bsengine/AutoMoveHandlerStorageLayout.h": "b23e87036e6888dba0e24e69aa4ed0152dc216784a75eb4e0bceb733b35a08b2",
+    "reconstruction/bsengine/BSAudioStorageLayout.h": "ce84f768bde4a82e47d808153bdae4ff40aea1859af597d3836429efbce6c600",
+    "reconstruction/bsengine/BSBoundStorageLayout.h": "204a2573b348732f1f5c7ee3825554bc83608d0b9adbabba9186f93e3caa1d78",
+    "reconstruction/bsengine/BSExtraDataStorageLayout.h": "d1a96bdfc6b2b9dbc4b6b9a01229087871ad6829e56c8d47481b7191f900e8ba",
+    "reconstruction/bsengine/BSFixedStringStorageLayout.h": "0505ca649d52fbd2bea0f400e26bc8fd1d7b58832166a434755dcb35f4a1836a",
+    "reconstruction/bsengine/BSIMusicTrackStorageLayout.h": "e6561daf2ab5c847b4649884141f1fbe26708e5cc58ba84a3a769c5175bdd816",
+    "reconstruction/bsengine/BSIntrusiveRefCountedStorageLayout.h": "21120c85871e67b888df4fc33604af65c0511fe53e4fc9fdaa573e43a36ae004",
+    "reconstruction/bsengine/BSLightingShaderMaterialBaseStorageLayout.h": "d748f9f7f962b669fd531135d68d8c19da5d4af4a4ee2bda662226ebaa1a6c33",
+    "reconstruction/bsengine/BSShaderMaterialStorageLayout.h": "e0a02f36fb3c969d2f7d710c314042293d4ed8e0f5414bb152e7240e4b008404",
+    "reconstruction/bsengine/BSSoundHandleStorageLayout.h": "8461a7d1fb3688f9e863af61e887f7ea1695b5e490f36ab1216576866cba081a",
+    "reconstruction/bsengine/BSTaskStorageLayout.h": "6af6e24895b2f39221fbe2035be9a08435fea1a8dbbe5deb12935932fe79bb87",
+    "reconstruction/bsengine/BaseFormComponentStorageLayout.h": "65f079bcf549cd3d1d11ea97de12d982716191638a6ad038d79910de43e4d08d",
+    "reconstruction/bsengine/BhkCollisionObjectStorageLayout.h": "b557e16851441ccef9291b49f4060dc153c77135c472d1c73c2edcb2e9c48641",
+    "reconstruction/bsengine/BhkNiCollisionObjectStorageLayout.h": "2005dfd6af4351f90da3693a93badba3d0d6339fe015713c08962283b648cc46",
+    "reconstruction/bsengine/BhkPCollisionObjectStorageLayout.h": "f071c6a87015597e740809e0bf6b7133a42887ac92c8ca3709204f6508032b29",
+    "reconstruction/bsengine/BhkSPCollisionObjectStorageLayout.h": "ce8c1d55033bd5114ffb31ac91313a0c386cda3ebb29fc1f3565f33411c1b704",
+    "reconstruction/bsengine/CharEventStorageLayout.h": "d72698c9840404a7c4bd3e0c97916ac6bad6ef9917c7f90f3813fd7c158016fc",
+    "reconstruction/bsengine/ClickHandlerStorageLayout.h": "fc561c23fca3f020df3330dfd754667e09454911660636709ac3d4c14e47089b",
+    "reconstruction/bsengine/ConsoleOpenHandlerStorageLayout.h": "71ef867445781444d090b02d80598e9bc332b0936d09964f03c75789359ea281",
+    "reconstruction/bsengine/DeviceConnectEventStorageLayout.h": "581a8697036e6b6e03d346cba611a6b059c52f6b70b16529b97b6d675a27ea85",
+    "reconstruction/bsengine/DirectionHandlerStorageLayout.h": "75438f0e744edb03ba722b080b1f47f2231b7b4d309958f18fff7d813e7bf2ed",
+    "reconstruction/bsengine/ExtraActionStorageLayout.h": "998293346db840f73c92fe464536889c667df0ab4becbe74f9ad1f195e0bad49",
+    "reconstruction/bsengine/ExtraActivateLoopSoundStorageLayout.h": "0b5042c1a878ef8d704de3912bedec9d5a60deb3fc9b2cbffbd08bfe015c7374",
+    "reconstruction/bsengine/ExtraAlphaCutoffStorageLayout.h": "43c9f161dacf579e53377c1890931e0902c16780669d4989baeb29e78cd99702",
+    "reconstruction/bsengine/ExtraAmmoStorageLayout.h": "b3cac064f7d378dcd088e7d9be38ab08d07098b72fa44a0e2f1b77b59ef8e2bb",
+    "reconstruction/bsengine/ExtraBadPositionStorageLayout.h": "75928cd52a770ee7dd19acb4befba1a3216cad8655092f3cdedeba5028167e34",
+    "reconstruction/bsengine/ExtraCanTalkToPlayerStorageLayout.h": "e94a48c4f0aa5d0967e016bfc5760e84cc498df59e9aa4b5c67e0ada872a6875",
+    "reconstruction/bsengine/ExtraCannotWearStorageLayout.h": "13296635a687ea8277c804f2b47164ece938303e3aee414344cab4754b03b793",
+    "reconstruction/bsengine/ExtraCellAcousticSpaceStorageLayout.h": "379cb983a1e7b38f37fb9207a3c6e3b2669057345c78eab65f9147b8987bfd38",
+    "reconstruction/bsengine/ExtraCellImageSpaceStorageLayout.h": "cf7a677c3e65a2e347017c657e18bbbeb054633f88b5d92da080fb32b5af139d",
+    "reconstruction/bsengine/ExtraCellMusicTypeStorageLayout.h": "297205c05a7702e1e92c06187532947780635c100c6cf0388fef99ae4f9cd959",
+    "reconstruction/bsengine/ExtraCellSkyRegionStorageLayout.h": "964d9a82905d33bfc79295d5a07329c0a72b7233c1a8acb06a0d9b8a923b110d",
+    "reconstruction/bsengine/ExtraCellWaterTypeStorageLayout.h": "e08d45993ac98cd5c0654a5ce4016299590bdc053c87078932cdf87bbccb0ec2",
+    "reconstruction/bsengine/ExtraChargeStorageLayout.h": "b6bcc671afaf5952699a6add1c4be645ac76386fca6d1e43400e22cad6cad4cd",
+    "reconstruction/bsengine/ExtraCollisionDataStorageLayout.h": "6df7c8a580e59570bb9a0940523b16456efba51f583ddc7f74affcb1c226566d",
+    "reconstruction/bsengine/ExtraCombatStyleStorageLayout.h": "64d4d3086921a2aa08216987d2efd981ebcdd10eb2d15ce1a72dcec28c51f5c3",
+    "reconstruction/bsengine/ExtraCountStorageLayout.h": "57fe5803a0b2f27862a12c8b6d0bfbb7d1d5cb61c590b4b0aaf15251ace66d5b",
+    "reconstruction/bsengine/ExtraCreatureAwakeSoundStorageLayout.h": "a45def06f668946eb681bd9899ceddfa6651a5f4605cebd87bb7da773d3363a8",
+    "reconstruction/bsengine/ExtraCreatureMovementSoundStorageLayout.h": "ebbb0a2055ca4f6a3be1fd9f2a0c227f70e2a39f94e174c06575006045095e3e",
+    "reconstruction/bsengine/ExtraDecalGroupStorageLayout.h": "25d60cb1e71a0f5ac738f221c7f6765777ea141748602d167cd2e82cdfbeaf81",
+    "reconstruction/bsengine/ExtraDetachTimeStorageLayout.h": "bfde7d29792f6a99636f09c891ca4c7aa3fe9ccd4cf6f7382744145615e287d0",
+    "reconstruction/bsengine/ExtraDistantDataStorageLayout.h": "f397ad84c4ae3550da96fd87ad4e3347fcd3f8157e28cfc2c0024d2c58d22969",
+    "reconstruction/bsengine/ExtraEditorRefMoveDataStorageLayout.h": "10d400712d56dbd8a12e0122d30f82624240e0d65da53745b6b1efdaf8575d6e",
+    "reconstruction/bsengine/ExtraEmittanceSourceStorageLayout.h": "2c8341d56bc88edb6a58b68f14d7ab8a1a86899a6610639d837354e816f44578",
+    "reconstruction/bsengine/ExtraEnchantmentStorageLayout.h": "a4e77cdb64f836554d88fabb350e886a4b369639a67f9ea2f2136ecea8c81b80",
+    "reconstruction/bsengine/ExtraEncounterZoneStorageLayout.h": "fa780ce6933415068ca227338216f45a405abf6c9f31f20a75c9fcdeedad0d66",
+    "reconstruction/bsengine/ExtraFavorCostStorageLayout.h": "da20e6d7deb3d14687b6f965bd32d564106146494736fba555e2f8def940da73",
+    "reconstruction/bsengine/ExtraFlagsStorageLayout.h": "86b3ee69722d817bf43f566eb30c8abbeefcb2424b9b7509a1f1fb040e95456e",
+    "reconstruction/bsengine/ExtraFromAliasStorageLayout.h": "85adfd4f64222878242ff940df574ec2be11aad0b052b0418b13a73901b2864a",
+    "reconstruction/bsengine/ExtraGhostStorageLayout.h": "58da5903ee19a2906f73e08924692c1f6059f8e613a86695f19c5f1b2b390d1b",
+    "reconstruction/bsengine/ExtraGlobalStorageLayout.h": "983034fb851ecf02baf4c417fd950d798228ffa04cacce86477f1f6d609381e3",
+    "reconstruction/bsengine/ExtraHasNoRumorsStorageLayout.h": "79a0b41e671552401245144745528d0e9f5863416bc8dc52a9acde67165fa4fa",
+    "reconstruction/bsengine/ExtraHeadTrackingWeightStorageLayout.h": "7e465ef9552de9f1abdea66146693ca4ac6e894f4c9f07ac35e5fafe219da0ad",
+    "reconstruction/bsengine/ExtraHealthPercStorageLayout.h": "472bad235c1cb945137ed85569f74b261d57028f95c7102d6996e6be0194408c",
+    "reconstruction/bsengine/ExtraHealthStorageLayout.h": "b3391a282d45580736363ebf9e4aef7a79a10f8a79372851d75087a87b3bb490",
+    "reconstruction/bsengine/ExtraHotkeyStorageLayout.h": "1dcce3dd118e14b3f5325dc39de6d7b4739d5cfa66333883375488153d6174c6",
+    "reconstruction/bsengine/ExtraIgnoredBySandboxStorageLayout.h": "d551edfb938e87f0a4c5cc28430cb1bbad39b32a40307116c0357a0e0dde66df",
+    "reconstruction/bsengine/ExtraLevCreaModifierStorageLayout.h": "a1134afb39b975e82f108d672db8c7148f7cf23d86628738ff4512b3f61b2ae4",
+    "reconstruction/bsengine/ExtraLeveledCreatureStorageLayout.h": "712a1bd0054669b8a09f7652f114cffd6bbb217cb4d9118297bd4b26a02ceada",
+    "reconstruction/bsengine/ExtraLeveledItemBaseStorageLayout.h": "632d6d76c7be1feca1ec368a326310983daa31864010aff7c70142d8732cb13a",
+    "reconstruction/bsengine/ExtraLightStorageLayout.h": "955f555a5a1e498d3b3e66f6fef9c82c841f11a0477ff06642a3cebd57bbd2bc",
+    "reconstruction/bsengine/ExtraLocationRefTypeStorageLayout.h": "c701342aa4a4385e82d9ca3614cbfa4dcb16c214617694576c1f460709723f6a",
+    "reconstruction/bsengine/ExtraLocationStorageLayout.h": "ea7261826256d56b3ff0eb4a1be4606ba0d61a2864dc9907db336c974f10ab85",
+    "reconstruction/bsengine/ExtraLockListStorageLayout.h": "234b694878eaf459353ed5750598cfd255fd07ff7af7800eb20b95a2ae295d90",
+    "reconstruction/bsengine/ExtraLockStorageLayout.h": "08085925875c890a579154c3f9b7fc072596ba2ebbf64499155df5fa11392f48",
+    "reconstruction/bsengine/ExtraMagicLightStorageLayout.h": "b166f49f5b152237f7bfe3f5ac2e059c5a98df0077b81ed10b80b6c3b5840d7f",
+    "reconstruction/bsengine/ExtraModelSwapStorageLayout.h": "8e7bcc7e2a191752017c039f42d5432a29522c04437043b37054aea1c93e6bae",
+    "reconstruction/bsengine/ExtraMultiBoundRefStorageLayout.h": "9dccfd14cba008aac3dd65e639060948fd774415aa45a181ff234dd95228b43c",
+    "reconstruction/bsengine/ExtraNorthRotationStorageLayout.h": "9a296eb3907a27521f6b323517537f31aa5f01d47d259f7746d64757d921067c",
+    "reconstruction/bsengine/ExtraObjectHealthStorageLayout.h": "8c459e865f4b47df338887be5cf4d1619871d40d2d058de6e5f4320981fc2fe1",
+    "reconstruction/bsengine/ExtraOcclusionPlaneRefDataStorageLayout.h": "e725d1781023a4773662d0233ca5785e2227b5f6dfb2d76a6d97c00d456a2820",
+    "reconstruction/bsengine/ExtraOwnershipStorageLayout.h": "377e75b8dc539e5358ea3e60c004316a42322b8156cd4356119b6cae08d40459",
+    "reconstruction/bsengine/ExtraPackageDataStorageLayout.h": "6ef117603ed28f08225e5bd4430c090d0c332d6372905ec0e0bef4777ec1b287",
+    "reconstruction/bsengine/ExtraPatrolRefDataStorageLayout.h": "cd959372162f70f8f8b0245094f6aa3ff0b87ff39e7a6edf19c7b9c1e912a2d7",
+    "reconstruction/bsengine/ExtraPatrolRefInUseDataStorageLayout.h": "d94c7a0222cc039782c4466e81a5a1593df093b8e1511f440f91ea941052cb98",
+    "reconstruction/bsengine/ExtraPersistentCellStorageLayout.h": "ad017e9261d149cda2b111ccb52fe964ebeec3df3e1c9450d9e7fdf6c2359572",
+    "reconstruction/bsengine/ExtraPoisonStorageLayout.h": "f9ea8a086b62548bdead29d10c8f9a4f22e004b1a69ba16ffc517b38fe6841a8",
+    "reconstruction/bsengine/ExtraPortalRefDataStorageLayout.h": "802ec4c28811c738d2dba9ff83604383bf5645b749c9218db4e8cce67345dfd6",
+    "reconstruction/bsengine/ExtraProcessMiddleLowStorageLayout.h": "b94c76a445f93f0f93ded0a7ceeb7562d33a0300c047bd4224cda2a71824ed90",
+    "reconstruction/bsengine/ExtraRadiusStorageLayout.h": "8b0a8d2b52f91494fe80cdffc16430496d6203337c13edc34b60731c031a4d0a",
+    "reconstruction/bsengine/ExtraRagDollDataStorageLayout.h": "ffaea645982ade934d8461f41eca2f31ecb820cc07ec3c0c7afc3d96b3c1df5f",
+    "reconstruction/bsengine/ExtraRandomTeleportMarkerStorageLayout.h": "458185cb5b5a99a60925f62bfb03e40a84e72a237f2020cc163980ea39b7e262",
+    "reconstruction/bsengine/ExtraRankStorageLayout.h": "2b45ddcc06bcdc76346d59473098840bfcb516fa95be0867a0ab0598b0e6f5b2",
+    "reconstruction/bsengine/ExtraRefrPathStorageLayout.h": "367be0847a95481472e2c3d6660e2717722ed104913d61f0f1498ae4347e3160",
+    "reconstruction/bsengine/ExtraRefractionPropertyStorageLayout.h": "ffb9a7a745ef60cfc2b21b531b834c07619020edea15241435727afd9a014ca6",
+    "reconstruction/bsengine/ExtraRegionListStorageLayout.h": "8430775f8eb29dea040645503b22957b40c4d9e27f72e5dcc490b1f76e618913",
+    "reconstruction/bsengine/ExtraRoomRefDataStorageLayout.h": "5ba117847bf3cf583e4e85f2ac2b56b7169b6f082165e4d0fb72dc9087e325a1",
+    "reconstruction/bsengine/ExtraScaleStorageLayout.h": "f165845e082e79ef84f7646365bb5c2a327fff6334ca3d82cfa28ecbc63ffeba",
+    "reconstruction/bsengine/ExtraSceneDataStorageLayout.h": "a1d9becd6e7fd77c630247e3f956f22210a1ade7a4285b0514d528222c52ced9",
+    "reconstruction/bsengine/ExtraShouldWearStorageLayout.h": "e45926590a1b5b320d5e61dcd77cc26f20b604ffdef2ff845e7dadbd1e5b64b8",
+    "reconstruction/bsengine/ExtraSoulStorageLayout.h": "f9e42a0cbe83be6676065d83a814eae0b78b0d4626ba200d661fe454281aa067",
+    "reconstruction/bsengine/ExtraSoundStorageLayout.h": "9d48240009bd796ef17cbabb732eb1a3441572e2c65a9baeb37308e1fa4458c0",
+    "reconstruction/bsengine/ExtraStartingWorldOrCellStorageLayout.h": "b33b3993d7d4f375d7b7e5fe846577982d70d627a8b4127f253e25b55a668989",
+    "reconstruction/bsengine/ExtraTeleportNameStorageLayout.h": "1d52921afe92e0211b1779be55ab17d16e616391d0b9cf131578e11d24467ff0",
+    "reconstruction/bsengine/ExtraTeleportStorageLayout.h": "98e675bdb6c0c4d5a9686c45d8f1dfd5bf6bef9367cd6cfefd86e3938073a68f",
+    "reconstruction/bsengine/ExtraTerminalStateStorageLayout.h": "fd0beb6934c651650c6283a768ea98c19f4eb8a607641dd47b9526dc056f97e6",
+    "reconstruction/bsengine/ExtraTimeLeftStorageLayout.h": "cef69c140ea79fbcff7da1bbdc8add2fbea9665a3b9c443a0709ffe9246a3e5f",
+    "reconstruction/bsengine/ExtraWeaponAttackSoundStorageLayout.h": "57bd30bb6df25bc0fbd4368e3fd666d6de634f87981605584c9aa8b618ad78f7",
+    "reconstruction/bsengine/ExtraWeaponIdleSoundStorageLayout.h": "e93dd6cef23233ee60ea231f5d70a4abfa5ceeac397727fc4fac5fbdb4041703",
+    "reconstruction/bsengine/ExtraWornLeftStorageLayout.h": "efa8fa08785c5d85aa7a5cee1b35df9b0ca19a1a16fda0a18ced9fb49798b996",
+    "reconstruction/bsengine/ExtraWornStorageLayout.h": "8ef382bf795be8938b20c0f7edda9be8fdbac4af7970a2273c99e68fe813ac5f",
+    "reconstruction/bsengine/FavoritesHandlerStorageLayout.h": "d84ea4bf621b343d0d53094c1e8980c9b7a57e2d481881156779f5c56f08968f",
+    "reconstruction/bsengine/GridArrayStorageLayout.h": "0c0e97b16934cf11e54ccf9167dc79e216a62a95dbe8dfd4c9f327029214feaf",
+    "reconstruction/bsengine/HeldStateHandlerStorageLayout.h": "4e90baab69d23376d57a9f5240b5354f0cbf43a830f6b8777e170c6e27235387",
+    "reconstruction/bsengine/HkpRayHitCollectorStorageLayout.h": "71d575d5bc08c79a77bf01af093ca538779ede1994772d2256a36930cec4de88",
+    "reconstruction/bsengine/IGiftMenuScriptCallbackStorageLayout.h": "2c23d9fda13aad156793c38a36a7a235f4a0bcca67758c79ed4bf23bac7bb477",
+    "reconstruction/bsengine/IMessageBoxCallbackStorageLayout.h": "8104ca69b35b71987b10fa300977beb7eaca1d5e0e43e69dee276aca5d0efea3",
+    "reconstruction/bsengine/IOTaskStorageLayout.h": "c860c3ec0478b0a2c8f52ef9226ac20372d4bfec9c7f1885b5dccc89c68ebbe7",
+    "reconstruction/bsengine/IUIMessageDataStorageLayout.h": "e8b1bbfe7cfb1b2a13cdf98a5391ea689b82e50e84f1a0e0e96487fe373547b5",
+    "reconstruction/bsengine/ImageSpaceModifierInstanceStorageLayout.h": "88050eee0a6388217ff869e7a4678df37ab3d20890b04d291f3a771de791feed",
+    "reconstruction/bsengine/ImageSpaceModifierInstanceTempStorageLayout.h": "21119ead5d8df61ea8b810368ac4b95bb0bd1acd0bb5110656674c3ba6baecc4",
+    "reconstruction/bsengine/InputEventStorageLayout.h": "09e644ae85e35e3bacc2a26b62026f1ed944a12e81010dc30b76917d557c243c",
+    "reconstruction/bsengine/JumpHandlerStorageLayout.h": "474240ff721f1ab2624fec46d1e47867263149bb9469b3ca0816c6903b9821e7",
+    "reconstruction/bsengine/LoadingMenuDataStorageLayout.h": "e35a1b2a026db1adc36ec9f82ac7a7bba8b0b8e3c88b43901c2f414d5f3cd74d",
+    "reconstruction/bsengine/MagicTargetStorageLayout.h": "09a6927431f8d7e2068d53123c0e2a53b9ca69ac16482a05b5cf223719c5800a",
+    "reconstruction/bsengine/MapInputHandlerStorageLayout.h": "d17c0fc425ba80d087b3048839f6d6af73765fa28a3e604d8d2a8d3ddd1f4876",
+    "reconstruction/bsengine/MapLookHandlerStorageLayout.h": "e03f857725dd00c6a1430c8366b38d83cede91d0a27037f6080c150b4d090532",
+    "reconstruction/bsengine/MapMoveHandlerStorageLayout.h": "faaf2ecfdd9db07cced83d8065df53a396e7a4ba9dd09cac61aca5ee68d116c8",
+    "reconstruction/bsengine/MapZoomHandlerStorageLayout.h": "7984bbd0ef12237a53f8870d877bc629858f3d533aeb32022645514c35edd363",
+    "reconstruction/bsengine/MenuEventHandlerStorageLayout.h": "9c9aab9204ffe94fff2a28d078d5e5abdaa80e2b04b2fcb2bd94c4aa4061fb3a",
+    "reconstruction/bsengine/MenuOpenHandlerStorageLayout.h": "ca889a80126346da034db548181b504df109e318c4c779342ad37bbe6c42c88b",
+    "reconstruction/bsengine/ModManagerDataStorageLayout.h": "ca0ae3d18e1f89087a2c4682e679f5a87ca5b7ca2e9bf51781881c13905e906e",
+    "reconstruction/bsengine/MovementHandlerStorageLayout.h": "06cf6ef089f3ca8f566310dcc84f506b147fae1ac0db0c2158e249ac2ae88073",
+    "reconstruction/bsengine/MultiBoundMarkerDataStorageLayout.h": "0a22c26d0eebaae26cb93889f6ce49c401582e000f7f4dbe83d8a74cb86eb4c3",
+    "reconstruction/bsengine/NativeFunctionStorageLayout.h": "6de4f391bc5e55b9fe1860a97c089d184cd68b16b8ba092de90c27759233185c",
+    "reconstruction/bsengine/NeedToUpdateCreationClubCallbackStorageLayout.h": "f4436d4ec583fed5e98d1ca6ee8d45f17789542002dc1235331dd0f84094f1e0",
+    "reconstruction/bsengine/QueuedFileStorageLayout.h": "a2b585bb5cc7ffc6b1bbbf4db9895d468d2a752d673f527198e8119b450e0a91",
+    "reconstruction/bsengine/QuickSaveLoadHandlerStorageLayout.h": "be815fa130841f22ab167e6a7d906e2eed7a27920a765dc41ab64daf8442d7c2",
+    "reconstruction/bsengine/ReadyWeaponHandlerStorageLayout.h": "afadf83aa83b2bba1261a64fc5492875db2a4c51ce8daacf38a2f64f0e44d429",
+    "reconstruction/bsengine/ReferenceEffectControllerStorageLayout.h": "75cb2a9ff51ef6610b685dc4ef27eba6ce7862612aae9eab10b17618a566699a",
+    "reconstruction/bsengine/RunHandlerStorageLayout.h": "bbf43ec08f2f3f109214b0e92af64d6be2b5e1c0bed981629da0c581b14be77e",
+    "reconstruction/bsengine/ScreenshotHandlerStorageLayout.h": "129b3cf6f333195d5f207e4dc6c430b12dca7ae0567bfd1d89c04507f1f82f28",
+    "reconstruction/bsengine/SneakHandlerStorageLayout.h": "8d9ef84cfd79e37d9c122c2ae94fad13a5b3fa310a964e56ad7040f8d461a4da",
+    "reconstruction/bsengine/SprintHandlerStorageLayout.h": "729120a4fb534a7d3780fd9eed98bcda7c046315de215abc011594129720cb48",
+    "reconstruction/bsengine/SyncQueueObjStorageLayout.h": "cc9b13fa7594d3ebfa666bf050344b918f758e619f4ea853436dc00b679b2d14",
+    "reconstruction/bsengine/TogglePOVHandlerStorageLayout.h": "f25d80b4aba78890590887824085545fe1d55441141f95bbc0f53fcd3cf1c578",
+    "reconstruction/bsengine/ToggleRunHandlerStorageLayout.h": "0db524ed7754438a528564922d7d9e1896de108a83763ac4377e3c31eca55d5c",
+    "reconstruction/forms/BGSMusicSilenceTrackStorageLayout.h": "5fd2c758054463ffa76ce3db524fc621e858d941c2a8c998b56ccd765a4673e7",
+    "reconstruction/forms/BGSMusicTrackStorageLayout.h": "9ae3f3dcd12abfda11eef434a80dd2679bc7842fd818f0c649e62cdc1689311b",
+    "reconstruction/forms/BGSSaveFormBufferStorageLayout.h": "67e3e1716c96b0ad233ad35de2dbddf809110bc0472e5f7079c6d46a0b48ff2b",
+    "reconstruction/forms/BGSSaveGameBufferStorageLayout.h": "353e42bae056bdc887a58222a3b1a60a7e1fc448ce06e33a078b52c73a2a320a",
+    "reconstruction/forms/BGSSceneActionStorageLayout.h": "5be3a6f1176f192ec48b5fa62cd07e051fef8c435e2c54c9454f381dd285f3b2",
+    "reconstruction/forms/TESConditionStorageLayout.h": "447342378f927c69c17be5d7c46b2a9e3b0417a16c91b40adaf013bfc58e714e",
+    "reconstruction/forms/TESIconStorageLayout.h": "c62da2469c58bc1c41e11ed52ea3212396d6ce5da94a8f31882bf3a24d24baa0",
+    "reconstruction/forms/TESTexture1024StorageLayout.h": "343c1d8fca6c21b2603392eb3a64aef375e181d6963ed03eca8292181e50e2c3",
+    "reconstruction/forms/TESTextureStorageLayout.h": "4b0586b7956769abc9157f0ba32f30f2b068860984ce6d77c05328840a70f3a5",
+    "reconstruction/netimmerse/NiAlphaPropertyStorageLayout.h": "eb68d72c668a3f432310a663caf72686f086d08e5e4757f3896cc11fd47adb70",
+    "reconstruction/netimmerse/NiCollisionObjectStorageLayout.h": "48685c4d2883c96be5f6d29f5b5f5d7482af3becc8fe90c7b466ee1a98690426",
+    "reconstruction/netimmerse/NiExtraDataStorageLayout.h": "76f5d09b374765c7d8d242c8b473d8ed7503520851c9a0aa2c74e17818f6d12a",
+    "reconstruction/netimmerse/NiObjectNETStorageLayout.h": "6301e3bd19e760a8e2fbe5be8a5b2fd1ffc36cdd71303adcff084c2318343a3e",
+    "reconstruction/netimmerse/NiObjectStorageLayout.h": "ed66d32df2ada11d7f23e3be49b13573a3cf552adaaa94dec7e36cf026708bd0",
+    "reconstruction/netimmerse/NiPSysGravityModifierStorageLayout.h": "187c1e3e4c44104b47c8827d37d5491e8f3036e75e455d18a47dd01e0eaeadba",
+    "reconstruction/netimmerse/NiPSysModifierStorageLayout.h": "eb7dff151275f67e24fb70d849c03e6e1118cc571c18432b176f0e18364a6170",
+    "reconstruction/netimmerse/NiPropertyStorageLayout.h": "60ca4f40aa1907ceb66734bd90394dc0a3c86d7f270dbb89f2ad96547d01ab4d",
+    "reconstruction/netimmerse/NiRefObjectStorageLayout.h": "9d1df636405fa1ac9cd0fd0a33a3a516b940779f5674300c7a59885bdc11b13f",
+    "reconstruction/netimmerse/NiShadePropertyStorageLayout.h": "7ec8a11c41effa66b0a3fb9abb9d2349c27f23282d42f4c1791ea4bdfd9ae77d",
+    "reconstruction/scaleform/GASExecuteTagStorageLayout.h": "f098fb5aa2216c6ae67d14496710cbf13000b55e30a643241a1e668495a19bbb",
+    "reconstruction/scaleform/GFxInitImportActionsStorageLayout.h": "47f6b2f123b54d45b2cc3d396ab5228edc3857d76578e7248dfc7332751f66f6",
+    "reconstruction/scaleform/GFxPlaceObject2StorageLayout.h": "87ec18e4a3ea638c14931e3ec892b014a3d7a4735213a0d289d28b9c82f0b13f",
+    "reconstruction/scaleform/GFxPlaceObject2aStorageLayout.h": "fa83e4ac478b76be6316926ec276b97166055cbca1344fb4c476887bf40e40b1",
+    "reconstruction/scaleform/GFxPlaceObjectBaseStorageLayout.h": "18b05079da7b83d66339e4feec25f25c6bc96eae3bd65c7a1f2e4a438be61b30",
+    "reconstruction/scaleform/GFxPlaceObjectStorageLayout.h": "eafc8284285e848005378edc52df4eb0e53e293c50e5d32651fb66e7e478a555",
+    "reconstruction/scaleform/GFxRemoveObject2StorageLayout.h": "a1aa807e0a7619e7bfc014ae0d1883120d9dcd985abee3b243709d69f03d1b07",
+    "reconstruction/scaleform/GFxRemoveObjectStorageLayout.h": "01f7c765563af294c89272b2a3c4deca50d8f2910093854efb33240a4165c52e",
+    "reconstruction/scaleform/GFxSetBackgroundColorStorageLayout.h": "4c5295b76880c9d0f6d9bf563c80aa915ca2ec5ee18e5b8441a3eb32418a32ae",
+    "reconstruction/scaleform/GRefCountImplCoreStorageLayout.h": "ac0a1f6f949cafa1f492816f4661fbc3ab7de44cb22129c7b3bb6830474ee9f6",
+    "reconstruction/scaleform/GRefCountImplStorageLayout.h": "aef09a4898f51557f5287efc06608f6e549a7dca131109bd2244c3edc83b8e44"
+  },
+  "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+  "layout_commit": "5f41e5eab792a65a4e2e64bdb13c140e09315149",
+  "members": [
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraActivateLoopSoundStorageLayout::~ExtraActivateLoopSoundStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraActivateLoopSoundStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraActivateLoopSound",
+      "owner_rtti": ".?AVExtraActivateLoopSound@@",
+      "owner_slot": 0,
+      "owner_table": 25076344,
+      "rva": 1556688,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraActivateLoopSoundStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076344,
+          "symbol": "??_7ExtraActivateLoopSoundStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraActivateLoopSoundStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraAlphaCutoffStorageLayout::~ExtraAlphaCutoffStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraAlphaCutoffStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraAlphaCutoff",
+      "owner_rtti": ".?AVExtraAlphaCutoff@@",
+      "owner_slot": 0,
+      "owner_table": 25077368,
+      "rva": 1557024,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraAlphaCutoffStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077368,
+          "symbol": "??_7ExtraAlphaCutoffStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraAlphaCutoffStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraAmmoStorageLayout::~ExtraAmmoStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraAmmoStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraAmmo",
+      "owner_rtti": ".?AVExtraAmmo@@",
+      "owner_slot": 0,
+      "owner_table": 25076632,
+      "rva": 1557072,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraAmmoStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076632,
+          "symbol": "??_7ExtraAmmoStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraAmmoStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraBadPositionStorageLayout::~ExtraBadPositionStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraBadPositionStorageLayout.h",
+      "object_size": 16,
+      "owner": "ExtraBadPosition",
+      "owner_rtti": ".?AVExtraBadPosition@@",
+      "owner_slot": 0,
+      "owner_table": 25077144,
+      "rva": 1557360,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraBadPositionStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077144,
+          "symbol": "??_7ExtraBadPositionStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraBadPositionStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCanTalkToPlayerStorageLayout::~ExtraCanTalkToPlayerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCanTalkToPlayerStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCanTalkToPlayer",
+      "owner_rtti": ".?AVExtraCanTalkToPlayer@@",
+      "owner_slot": 0,
+      "owner_table": 25076376,
+      "rva": 1557456,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCanTalkToPlayerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076376,
+          "symbol": "??_7ExtraCanTalkToPlayerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCanTalkToPlayerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCannotWearStorageLayout::~ExtraCannotWearStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCannotWearStorageLayout.h",
+      "object_size": 16,
+      "owner": "ExtraCannotWear",
+      "owner_rtti": ".?AVExtraCannotWear@@",
+      "owner_slot": 0,
+      "owner_table": 25074584,
+      "rva": 1557504,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCannotWearStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074584,
+          "symbol": "??_7ExtraCannotWearStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCannotWearStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCellAcousticSpaceStorageLayout::~ExtraCellAcousticSpaceStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCellAcousticSpaceStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCellAcousticSpace",
+      "owner_rtti": ".?AVExtraCellAcousticSpace@@",
+      "owner_slot": 0,
+      "owner_table": 25077848,
+      "rva": 1557664,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCellAcousticSpaceStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077848,
+          "symbol": "??_7ExtraCellAcousticSpaceStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCellAcousticSpaceStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCellImageSpaceStorageLayout::~ExtraCellImageSpaceStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCellImageSpaceStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCellImageSpace",
+      "owner_rtti": ".?AVExtraCellImageSpace@@",
+      "owner_slot": 0,
+      "owner_table": 25077912,
+      "rva": 1557712,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCellImageSpaceStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077912,
+          "symbol": "??_7ExtraCellImageSpaceStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCellImageSpaceStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCellMusicTypeStorageLayout::~ExtraCellMusicTypeStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCellMusicTypeStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCellMusicType",
+      "owner_rtti": ".?AVExtraCellMusicType@@",
+      "owner_slot": 0,
+      "owner_table": 25077816,
+      "rva": 1557760,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCellMusicTypeStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077816,
+          "symbol": "??_7ExtraCellMusicTypeStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCellMusicTypeStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCellSkyRegionStorageLayout::~ExtraCellSkyRegionStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCellSkyRegionStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCellSkyRegion",
+      "owner_rtti": ".?AVExtraCellSkyRegion@@",
+      "owner_slot": 0,
+      "owner_table": 25077880,
+      "rva": 1557808,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCellSkyRegionStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077880,
+          "symbol": "??_7ExtraCellSkyRegionStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCellSkyRegionStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCellWaterTypeStorageLayout::~ExtraCellWaterTypeStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCellWaterTypeStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCellWaterType",
+      "owner_rtti": ".?AVExtraCellWaterType@@",
+      "owner_slot": 0,
+      "owner_table": 25077944,
+      "rva": 1557936,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCellWaterTypeStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077944,
+          "symbol": "??_7ExtraCellWaterTypeStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCellWaterTypeStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraChargeStorageLayout::~ExtraChargeStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraChargeStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCharge",
+      "owner_rtti": ".?AVExtraCharge@@",
+      "owner_slot": 0,
+      "owner_table": 25074712,
+      "rva": 1557984,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraChargeStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074712,
+          "symbol": "??_7ExtraChargeStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraChargeStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCombatStyleStorageLayout::~ExtraCombatStyleStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCombatStyleStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCombatStyle",
+      "owner_rtti": ".?AVExtraCombatStyle@@",
+      "owner_slot": 0,
+      "owner_table": 25076664,
+      "rva": 1558096,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCombatStyleStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076664,
+          "symbol": "??_7ExtraCombatStyleStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCombatStyleStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCountStorageLayout::~ExtraCountStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCountStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraCount",
+      "owner_rtti": ".?AVExtraCount@@",
+      "owner_slot": 0,
+      "owner_table": 25074488,
+      "rva": 1558144,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCountStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074488,
+          "symbol": "??_7ExtraCountStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCountStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCreatureAwakeSoundStorageLayout::~ExtraCreatureAwakeSoundStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCreatureAwakeSoundStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraCreatureAwakeSound",
+      "owner_rtti": ".?AVExtraCreatureAwakeSound@@",
+      "owner_slot": 0,
+      "owner_table": 25076216,
+      "rva": 1558192,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCreatureAwakeSoundStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076216,
+          "symbol": "??_7ExtraCreatureAwakeSoundStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCreatureAwakeSoundStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraCreatureMovementSoundStorageLayout::~ExtraCreatureMovementSoundStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraCreatureMovementSoundStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraCreatureMovementSound",
+      "owner_rtti": ".?AVExtraCreatureMovementSound@@",
+      "owner_slot": 0,
+      "owner_table": 25076248,
+      "rva": 1558240,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraCreatureMovementSoundStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076248,
+          "symbol": "??_7ExtraCreatureMovementSoundStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraCreatureMovementSoundStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraDetachTimeStorageLayout::~ExtraDetachTimeStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraDetachTimeStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraDetachTime",
+      "owner_rtti": ".?AVExtraDetachTime@@",
+      "owner_slot": 0,
+      "owner_table": 25078008,
+      "rva": 1558352,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraDetachTimeStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25078008,
+          "symbol": "??_7ExtraDetachTimeStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraDetachTimeStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraEmittanceSourceStorageLayout::~ExtraEmittanceSourceStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraEmittanceSourceStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraEmittanceSource",
+      "owner_rtti": ".?AVExtraEmittanceSource@@",
+      "owner_slot": 0,
+      "owner_table": 25075768,
+      "rva": 1558464,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraEmittanceSourceStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075768,
+          "symbol": "??_7ExtraEmittanceSourceStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraEmittanceSourceStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraEnchantmentStorageLayout::~ExtraEnchantmentStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraEnchantmentStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraEnchantment",
+      "owner_rtti": ".?AVExtraEnchantment@@",
+      "owner_slot": 0,
+      "owner_table": 25075672,
+      "rva": 1558624,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraEnchantmentStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075672,
+          "symbol": "??_7ExtraEnchantmentStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraEnchantmentStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraEncounterZoneStorageLayout::~ExtraEncounterZoneStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraEncounterZoneStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraEncounterZone",
+      "owner_rtti": ".?AVExtraEncounterZone@@",
+      "owner_slot": 0,
+      "owner_table": 25075064,
+      "rva": 1558672,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraEncounterZoneStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075064,
+          "symbol": "??_7ExtraEncounterZoneStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraEncounterZoneStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraFavorCostStorageLayout::~ExtraFavorCostStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraFavorCostStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraFavorCost",
+      "owner_rtti": ".?AVExtraFavorCost@@",
+      "owner_slot": 0,
+      "owner_table": 25077208,
+      "rva": 1558848,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraFavorCostStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077208,
+          "symbol": "??_7ExtraFavorCostStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraFavorCostStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraFlagsStorageLayout::~ExtraFlagsStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraFlagsStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraFlags",
+      "owner_rtti": ".?AVExtraFlags@@",
+      "owner_slot": 0,
+      "owner_table": 25077528,
+      "rva": 1558896,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraFlagsStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077528,
+          "symbol": "??_7ExtraFlagsStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraFlagsStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraFromAliasStorageLayout::~ExtraFromAliasStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraFromAliasStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraFromAlias",
+      "owner_rtti": ".?AVExtraFromAlias@@",
+      "owner_slot": 0,
+      "owner_table": 25074200,
+      "rva": 1559296,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraFromAliasStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074200,
+          "symbol": "??_7ExtraFromAliasStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraFromAliasStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraGlobalStorageLayout::~ExtraGlobalStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraGlobalStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraGlobal",
+      "owner_rtti": ".?AVExtraGlobal@@",
+      "owner_slot": 0,
+      "owner_table": 25074424,
+      "rva": 1559440,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraGlobalStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074424,
+          "symbol": "??_7ExtraGlobalStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraGlobalStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraHasNoRumorsStorageLayout::~ExtraHasNoRumorsStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraHasNoRumorsStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraHasNoRumors",
+      "owner_rtti": ".?AVExtraHasNoRumors@@",
+      "owner_slot": 0,
+      "owner_table": 25076152,
+      "rva": 1559616,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraHasNoRumorsStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076152,
+          "symbol": "??_7ExtraHasNoRumorsStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraHasNoRumorsStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraHeadTrackingWeightStorageLayout::~ExtraHeadTrackingWeightStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraHeadTrackingWeightStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraHeadTrackingWeight",
+      "owner_rtti": ".?AVExtraHeadTrackingWeight@@",
+      "owner_slot": 0,
+      "owner_table": 25077176,
+      "rva": 1559664,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraHeadTrackingWeightStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077176,
+          "symbol": "??_7ExtraHeadTrackingWeightStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraHeadTrackingWeightStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraHealthStorageLayout::~ExtraHealthStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraHealthStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraHealth",
+      "owner_rtti": ".?AVExtraHealth@@",
+      "owner_slot": 0,
+      "owner_table": 25074616,
+      "rva": 1559760,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraHealthStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074616,
+          "symbol": "??_7ExtraHealthStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraHealthStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraHealthPercStorageLayout::~ExtraHealthPercStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraHealthPercStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraHealthPerc",
+      "owner_rtti": ".?AVExtraHealthPerc@@",
+      "owner_slot": 0,
+      "owner_table": 25074648,
+      "rva": 1559808,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraHealthPercStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074648,
+          "symbol": "??_7ExtraHealthPercStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraHealthPercStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraHotkeyStorageLayout::~ExtraHotkeyStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraHotkeyStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraHotkey",
+      "owner_rtti": ".?AVExtraHotkey@@",
+      "owner_slot": 0,
+      "owner_table": 25074808,
+      "rva": 1559904,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraHotkeyStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074808,
+          "symbol": "??_7ExtraHotkeyStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraHotkeyStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraIgnoredBySandboxStorageLayout::~ExtraIgnoredBySandboxStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraIgnoredBySandboxStorageLayout.h",
+      "object_size": 16,
+      "owner": "ExtraIgnoredBySandbox",
+      "owner_rtti": ".?AVExtraIgnoredBySandbox@@",
+      "owner_slot": 0,
+      "owner_table": 25076952,
+      "rva": 1559952,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraIgnoredBySandboxStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076952,
+          "symbol": "??_7ExtraIgnoredBySandboxStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraIgnoredBySandboxStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraLevCreaModifierStorageLayout::~ExtraLevCreaModifierStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraLevCreaModifierStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraLevCreaModifier",
+      "owner_rtti": ".?AVExtraLevCreaModifier@@",
+      "owner_slot": 0,
+      "owner_table": 25075608,
+      "rva": 1560256,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraLevCreaModifierStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075608,
+          "symbol": "??_7ExtraLevCreaModifierStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraLevCreaModifierStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraLeveledItemBaseStorageLayout::~ExtraLeveledItemBaseStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraLeveledItemBaseStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraLeveledItemBase",
+      "owner_rtti": ".?AVExtraLeveledItemBase@@",
+      "owner_slot": 0,
+      "owner_table": 25075320,
+      "rva": 1560352,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraLeveledItemBaseStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075320,
+          "symbol": "??_7ExtraLeveledItemBaseStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraLeveledItemBaseStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraLocationStorageLayout::~ExtraLocationStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraLocationStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraLocation",
+      "owner_rtti": ".?AVExtraLocation@@",
+      "owner_slot": 0,
+      "owner_table": 25074904,
+      "rva": 1560800,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraLocationStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074904,
+          "symbol": "??_7ExtraLocationStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraLocationStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraLocationRefTypeStorageLayout::~ExtraLocationRefTypeStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraLocationRefTypeStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraLocationRefType",
+      "owner_rtti": ".?AVExtraLocationRefType@@",
+      "owner_slot": 0,
+      "owner_table": 25075288,
+      "rva": 1560848,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraLocationRefTypeStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075288,
+          "symbol": "??_7ExtraLocationRefTypeStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraLocationRefTypeStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraModelSwapStorageLayout::~ExtraModelSwapStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraModelSwapStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraModelSwap",
+      "owner_rtti": ".?AVExtraModelSwap@@",
+      "owner_slot": 0,
+      "owner_table": 25076504,
+      "rva": 1561216,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraModelSwapStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076504,
+          "symbol": "??_7ExtraModelSwapStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraModelSwapStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraMultiBoundRefStorageLayout::~ExtraMultiBoundRefStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraMultiBoundRefStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraMultiBoundRef",
+      "owner_rtti": ".?AVExtraMultiBoundRef@@",
+      "owner_slot": 0,
+      "owner_table": 25075800,
+      "rva": 1561376,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraMultiBoundRefStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075800,
+          "symbol": "??_7ExtraMultiBoundRefStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraMultiBoundRefStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraNorthRotationStorageLayout::~ExtraNorthRotationStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraNorthRotationStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraNorthRotation",
+      "owner_rtti": ".?AVExtraNorthRotation@@",
+      "owner_slot": 0,
+      "owner_table": 25077976,
+      "rva": 1561472,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraNorthRotationStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077976,
+          "symbol": "??_7ExtraNorthRotationStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraNorthRotationStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraObjectHealthStorageLayout::~ExtraObjectHealthStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraObjectHealthStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraObjectHealth",
+      "owner_rtti": ".?AVExtraObjectHealth@@",
+      "owner_slot": 0,
+      "owner_table": 25076408,
+      "rva": 1561520,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraObjectHealthStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076408,
+          "symbol": "??_7ExtraObjectHealthStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraObjectHealthStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraOwnershipStorageLayout::~ExtraOwnershipStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraOwnershipStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraOwnership",
+      "owner_rtti": ".?AVExtraOwnership@@",
+      "owner_slot": 0,
+      "owner_table": 25074392,
+      "rva": 1561776,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraOwnershipStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074392,
+          "symbol": "??_7ExtraOwnershipStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraOwnershipStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraRadiusStorageLayout::~ExtraRadiusStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraRadiusStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraRadius",
+      "owner_rtti": ".?AVExtraRadius@@",
+      "owner_slot": 0,
+      "owner_table": 25076536,
+      "rva": 1562352,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraRadiusStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076536,
+          "symbol": "??_7ExtraRadiusStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraRadiusStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraRandomTeleportMarkerStorageLayout::~ExtraRandomTeleportMarkerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraRandomTeleportMarkerStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraRandomTeleportMarker",
+      "owner_rtti": ".?AVExtraRandomTeleportMarker@@",
+      "owner_slot": 0,
+      "owner_table": 25075224,
+      "rva": 1562464,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraRandomTeleportMarkerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25075224,
+          "symbol": "??_7ExtraRandomTeleportMarkerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraRandomTeleportMarkerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraRankStorageLayout::~ExtraRankStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraRankStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraRank",
+      "owner_rtti": ".?AVExtraRank@@",
+      "owner_slot": 0,
+      "owner_table": 25074456,
+      "rva": 1562512,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraRankStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074456,
+          "symbol": "??_7ExtraRankStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraRankStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraRefrPathStorageLayout::~ExtraRefrPathStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraRefrPathStorageLayout.h",
+      "object_size": 104,
+      "owner": "ExtraRefrPath",
+      "owner_rtti": ".?AVExtraRefrPath@@",
+      "owner_slot": 0,
+      "owner_table": 25077560,
+      "rva": 1562864,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraRefrPathStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077560,
+          "symbol": "??_7ExtraRefrPathStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraRefrPathStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraRefractionPropertyStorageLayout::~ExtraRefractionPropertyStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraRefractionPropertyStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraRefractionProperty",
+      "owner_rtti": ".?AVExtraRefractionProperty@@",
+      "owner_slot": 0,
+      "owner_table": 25076088,
+      "rva": 1562912,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraRefractionPropertyStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076088,
+          "symbol": "??_7ExtraRefractionPropertyStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraRefractionPropertyStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraRegionListStorageLayout::~ExtraRegionListStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraRegionListStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraRegionList",
+      "owner_rtti": ".?AVExtraRegionList@@",
+      "owner_slot": 0,
+      "owner_table": 25077784,
+      "rva": 1562960,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraRegionListStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077784,
+          "symbol": "??_7ExtraRegionListStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraRegionListStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraScaleStorageLayout::~ExtraScaleStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraScaleStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraScale",
+      "owner_rtti": ".?AVExtraScale@@",
+      "owner_slot": 0,
+      "owner_table": 25074744,
+      "rva": 1563312,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraScaleStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074744,
+          "symbol": "??_7ExtraScaleStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraScaleStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraSceneDataStorageLayout::~ExtraSceneDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraSceneDataStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraSceneData",
+      "owner_rtti": ".?AVExtraSceneData@@",
+      "owner_slot": 0,
+      "owner_table": 25077112,
+      "rva": 1563360,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraSceneDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25077112,
+          "symbol": "??_7ExtraSceneDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraSceneDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraSoundStorageLayout::~ExtraSoundStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraSoundStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraSound",
+      "owner_rtti": ".?AVExtraSound@@",
+      "owner_slot": 0,
+      "owner_table": 25076184,
+      "rva": 1563536,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraSoundStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076184,
+          "symbol": "??_7ExtraSoundStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraSoundStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraStartingWorldOrCellStorageLayout::~ExtraStartingWorldOrCellStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraStartingWorldOrCellStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraStartingWorldOrCell",
+      "owner_rtti": ".?AVExtraStartingWorldOrCell@@",
+      "owner_slot": 0,
+      "owner_table": 25076120,
+      "rva": 1563680,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraStartingWorldOrCellStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076120,
+          "symbol": "??_7ExtraStartingWorldOrCellStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraStartingWorldOrCellStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraTeleportNameStorageLayout::~ExtraTeleportNameStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraTeleportNameStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraTeleportName",
+      "owner_rtti": ".?AVExtraTeleportName@@",
+      "owner_slot": 0,
+      "owner_table": 25074296,
+      "rva": 1563792,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraTeleportNameStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074296,
+          "symbol": "??_7ExtraTeleportNameStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraTeleportNameStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraTerminalStateStorageLayout::~ExtraTerminalStateStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraTerminalStateStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraTerminalState",
+      "owner_rtti": ".?AVExtraTerminalState@@",
+      "owner_slot": 0,
+      "owner_table": 25076440,
+      "rva": 1563840,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraTerminalStateStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076440,
+          "symbol": "??_7ExtraTerminalStateStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraTerminalStateStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraTimeLeftStorageLayout::~ExtraTimeLeftStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraTimeLeftStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraTimeLeft",
+      "owner_rtti": ".?AVExtraTimeLeft@@",
+      "owner_slot": 0,
+      "owner_table": 25074680,
+      "rva": 1563968,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraTimeLeftStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074680,
+          "symbol": "??_7ExtraTimeLeftStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraTimeLeftStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraWeaponAttackSoundStorageLayout::~ExtraWeaponAttackSoundStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraWeaponAttackSoundStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraWeaponAttackSound",
+      "owner_rtti": ".?AVExtraWeaponAttackSound@@",
+      "owner_slot": 0,
+      "owner_table": 25076312,
+      "rva": 1564336,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraWeaponAttackSoundStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076312,
+          "symbol": "??_7ExtraWeaponAttackSoundStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraWeaponAttackSoundStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraWeaponIdleSoundStorageLayout::~ExtraWeaponIdleSoundStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraWeaponIdleSoundStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraWeaponIdleSound",
+      "owner_rtti": ".?AVExtraWeaponIdleSound@@",
+      "owner_slot": 0,
+      "owner_table": 25076280,
+      "rva": 1564384,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraWeaponIdleSoundStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25076280,
+          "symbol": "??_7ExtraWeaponIdleSoundStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraWeaponIdleSoundStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraWornStorageLayout::~ExtraWornStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraWornStorageLayout.h",
+      "object_size": 16,
+      "owner": "ExtraWorn",
+      "owner_rtti": ".?AVExtraWorn@@",
+      "owner_slot": 0,
+      "owner_table": 25074520,
+      "rva": 1564432,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraWornStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074520,
+          "symbol": "??_7ExtraWornStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraWornStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraWornLeftStorageLayout::~ExtraWornLeftStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraWornLeftStorageLayout.h",
+      "object_size": 16,
+      "owner": "ExtraWornLeft",
+      "owner_rtti": ".?AVExtraWornLeft@@",
+      "owner_slot": 0,
+      "owner_table": 25074552,
+      "rva": 1564480,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraWornLeftStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25074552,
+          "symbol": "??_7ExtraWornLeftStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraWornLeftStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraActionStorageLayout::~ExtraActionStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraActionStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraAction",
+      "owner_rtti": ".?AVExtraAction@@",
+      "owner_slot": 0,
+      "owner_table": 25088752,
+      "rva": 1633504,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraActionStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25088752,
+          "symbol": "??_7ExtraActionStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraActionStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraDistantDataStorageLayout::~ExtraDistantDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraDistantDataStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraDistantData",
+      "owner_rtti": ".?AVExtraDistantData@@",
+      "owner_slot": 0,
+      "owner_table": 25089104,
+      "rva": 1634512,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraDistantDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25089104,
+          "symbol": "??_7ExtraDistantDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraDistantDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraEditorRefMoveDataStorageLayout::~ExtraEditorRefMoveDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraEditorRefMoveDataStorageLayout.h",
+      "object_size": 56,
+      "owner": "ExtraEditorRefMoveData",
+      "owner_rtti": ".?AVExtraEditorRefMoveData@@",
+      "owner_slot": 0,
+      "owner_table": 25089264,
+      "rva": 1634848,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraEditorRefMoveDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25089264,
+          "symbol": "??_7ExtraEditorRefMoveDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraEditorRefMoveDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraGhostStorageLayout::~ExtraGhostStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraGhostStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraGhost",
+      "owner_rtti": ".?AVExtraGhost@@",
+      "owner_slot": 0,
+      "owner_table": 25088848,
+      "rva": 1635040,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraGhostStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25088848,
+          "symbol": "??_7ExtraGhostStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraGhostStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraLeveledCreatureStorageLayout::~ExtraLeveledCreatureStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraLeveledCreatureStorageLayout.h",
+      "object_size": 32,
+      "owner": "ExtraLeveledCreature",
+      "owner_rtti": ".?AVExtraLeveledCreature@@",
+      "owner_slot": 0,
+      "owner_table": 25088688,
+      "rva": 1635392,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraLeveledCreatureStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25088688,
+          "symbol": "??_7ExtraLeveledCreatureStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraLeveledCreatureStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraLockListStorageLayout::~ExtraLockListStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraLockListStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraLockList",
+      "owner_rtti": ".?AVExtraLockList@@",
+      "owner_slot": 0,
+      "owner_table": 25088816,
+      "rva": 1635584,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraLockListStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25088816,
+          "symbol": "??_7ExtraLockListStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraLockListStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraPatrolRefInUseDataStorageLayout::~ExtraPatrolRefInUseDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraPatrolRefInUseDataStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraPatrolRefInUseData",
+      "owner_rtti": ".?AVExtraPatrolRefInUseData@@",
+      "owner_slot": 0,
+      "owner_table": 25089328,
+      "rva": 1635904,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraPatrolRefInUseDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25089328,
+          "symbol": "??_7ExtraPatrolRefInUseDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraPatrolRefInUseDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraPersistentCellStorageLayout::~ExtraPersistentCellStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraPersistentCellStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraPersistentCell",
+      "owner_rtti": ".?AVExtraPersistentCell@@",
+      "owner_slot": 0,
+      "owner_table": 25089040,
+      "rva": 1635952,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraPersistentCellStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25089040,
+          "symbol": "??_7ExtraPersistentCellStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraPersistentCellStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraShouldWearStorageLayout::~ExtraShouldWearStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraShouldWearStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraShouldWear",
+      "owner_rtti": ".?AVExtraShouldWear@@",
+      "owner_slot": 0,
+      "owner_table": 25088880,
+      "rva": 1637360,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraShouldWearStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25088880,
+          "symbol": "??_7ExtraShouldWearStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraShouldWearStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraSoulStorageLayout::~ExtraSoulStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraSoulStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraSoul",
+      "owner_rtti": ".?AVExtraSoul@@",
+      "owner_slot": 0,
+      "owner_table": 25088912,
+      "rva": 1637408,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraSoulStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25088912,
+          "symbol": "??_7ExtraSoulStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraSoulStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline MultiBoundMarkerDataStorageLayout::~MultiBoundMarkerDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MultiBoundMarkerDataStorageLayout.h",
+      "object_size": 32,
+      "owner": "MultiBoundMarkerData",
+      "owner_rtti": ".?AVMultiBoundMarkerData@@",
+      "owner_slot": 0,
+      "owner_table": 25089952,
+      "rva": 1644368,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GMultiBoundMarkerDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25089952,
+          "symbol": "??_7MultiBoundMarkerDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MultiBoundMarkerDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline GridArrayStorageLayout::~GridArrayStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/GridArrayStorageLayout.h",
+      "object_size": 24,
+      "owner": "GridArray",
+      "owner_rtti": ".?AVGridArray@@",
+      "owner_slot": 0,
+      "owner_table": 25183368,
+      "rva": 2256752,
+      "size": 43,
+      "stored_rtti": "GridArray",
+      "stored_table": 25183368,
+      "symbol": "??_GGridArrayStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25183368,
+          "symbol": "??_7GridArrayStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::GridArrayStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSExtraDataStorageLayout::~BSExtraDataStorageLayout() {}",
+        "inline ExtraProcessMiddleLowStorageLayout::~ExtraProcessMiddleLowStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ExtraProcessMiddleLowStorageLayout.h",
+      "object_size": 24,
+      "owner": "ExtraProcessMiddleLow",
+      "owner_rtti": ".?AVExtraProcessMiddleLow@@",
+      "owner_slot": 0,
+      "owner_table": 25313424,
+      "rva": 2963808,
+      "size": 43,
+      "stored_rtti": "BSExtraData",
+      "stored_table": 25059104,
+      "symbol": "??_GExtraProcessMiddleLowStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25059104,
+          "symbol": "??_7BSExtraDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 25313424,
+          "symbol": "??_7ExtraProcessMiddleLowStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ExtraProcessMiddleLowStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSIMusicTrackStorageLayout::~BSIMusicTrackStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/BSIMusicTrackStorageLayout.h",
+      "object_size": 16,
+      "owner": "BSIMusicTrack",
+      "owner_rtti": ".?AVBSIMusicTrack@@",
+      "owner_slot": 0,
+      "owner_table": 25377992,
+      "rva": 3305232,
+      "size": 43,
+      "stored_rtti": "BSIMusicTrack",
+      "stored_table": 25377992,
+      "symbol": "??_GBSIMusicTrackStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25377992,
+          "symbol": "??_7BSIMusicTrackStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::BSIMusicTrackStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BGSSceneActionStorageLayout::~BGSSceneActionStorageLayout() {}"
+      ],
+      "header": "reconstruction/forms/BGSSceneActionStorageLayout.h",
+      "object_size": 32,
+      "owner": "BGSSceneAction",
+      "owner_rtti": ".?AVBGSSceneAction@@",
+      "owner_slot": 0,
+      "owner_table": 25531776,
+      "rva": 3846544,
+      "size": 43,
+      "stored_rtti": "BGSSceneAction",
+      "stored_table": 25531776,
+      "symbol": "??_GBGSSceneActionStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 25531776,
+          "symbol": "??_7BGSSceneActionStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::BGSSceneActionStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/actors/PlayerInputHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "PlayerInputHandler",
+      "owner_rtti": ".?AVPlayerInputHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26135496,
+      "rva": 5625008,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GPlayerInputHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::PlayerInputHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackStorageLayout::~IMessageBoxCallbackStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IMessageBoxCallbackStorageLayout.h",
+      "object_size": 16,
+      "owner": "IMessageBoxCallback",
+      "owner_rtti": ".?AVIMessageBoxCallback@@",
+      "owner_slot": 0,
+      "owner_table": 26143784,
+      "rva": 5724880,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GIMessageBoxCallbackStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IMessageBoxCallbackStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IUIMessageDataStorageLayout::~IUIMessageDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IUIMessageDataStorageLayout.h",
+      "object_size": 16,
+      "owner": "IUIMessageData",
+      "owner_rtti": ".?AVIUIMessageData@@",
+      "owner_slot": 0,
+      "owner_table": 26143768,
+      "rva": 5724928,
+      "size": 43,
+      "stored_rtti": "IUIMessageData",
+      "stored_table": 26143768,
+      "symbol": "??_GIUIMessageDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143768,
+          "symbol": "??_7IUIMessageDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IUIMessageDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MenuEventHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "MenuEventHandler",
+      "owner_rtti": ".?AVMenuEventHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26149600,
+      "rva": 5776512,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GMenuEventHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MenuEventHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline SyncQueueObjStorageLayout::~SyncQueueObjStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/SyncQueueObjStorageLayout.h",
+      "object_size": 16,
+      "owner": "SyncQueueObj",
+      "owner_rtti": ".?AVSyncQueueObj@@",
+      "owner_slot": 0,
+      "owner_table": 26400888,
+      "rva": 7920144,
+      "size": 43,
+      "stored_rtti": "SyncQueueObj",
+      "stored_table": 26400888,
+      "symbol": "??_GSyncQueueObjStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26400888,
+          "symbol": "??_7SyncQueueObjStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::SyncQueueObjStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline ActorMoverStorageLayout::~ActorMoverStorageLayout() {}"
+      ],
+      "header": "reconstruction/actors/ActorMoverStorageLayout.h",
+      "object_size": 16,
+      "owner": "ActorMover",
+      "owner_rtti": ".?AVActorMover@@",
+      "owner_slot": 0,
+      "owner_table": 26403800,
+      "rva": 7941632,
+      "size": 43,
+      "stored_rtti": "ActorMover",
+      "stored_table": 26403800,
+      "symbol": "??_GActorMoverStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26403800,
+          "symbol": "??_7ActorMoverStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ActorMoverStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline HeldStateHandlerStorageLayout::~HeldStateHandlerStorageLayout() {}",
+        "inline ActivateHandlerStorageLayout::~ActivateHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ActivateHandlerStorageLayout.h",
+      "object_size": 32,
+      "owner": "ActivateHandler",
+      "owner_rtti": ".?AUActivateHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432392,
+      "rva": 8067472,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GActivateHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26431496,
+          "symbol": "??_7HeldStateHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432392,
+          "symbol": "??_7ActivateHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ActivateHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline AutoMoveHandlerStorageLayout::~AutoMoveHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/AutoMoveHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "AutoMoveHandler",
+      "owner_rtti": ".?AUAutoMoveHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432472,
+      "rva": 8067680,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GAutoMoveHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432472,
+          "symbol": "??_7AutoMoveHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::AutoMoveHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline HeldStateHandlerStorageLayout::~HeldStateHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/HeldStateHandlerStorageLayout.h",
+      "object_size": 24,
+      "owner": "HeldStateHandler",
+      "owner_rtti": ".?AVHeldStateHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26431496,
+      "rva": 8067808,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GHeldStateHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26431496,
+          "symbol": "??_7HeldStateHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::HeldStateHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline InputEventStorageLayout::~InputEventStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/InputEventStorageLayout.h",
+      "object_size": 24,
+      "owner": "InputEvent",
+      "owner_rtti": ".?AVInputEvent@@",
+      "owner_slot": 0,
+      "owner_table": 26431696,
+      "rva": 8067936,
+      "size": 43,
+      "stored_rtti": "InputEvent",
+      "stored_table": 26431696,
+      "symbol": "??_GInputEventStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26431696,
+          "symbol": "??_7InputEventStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::InputEventStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline JumpHandlerStorageLayout::~JumpHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/JumpHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "JumpHandler",
+      "owner_rtti": ".?AUJumpHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432680,
+      "rva": 8067984,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GJumpHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432680,
+          "symbol": "??_7JumpHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::JumpHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline MovementHandlerStorageLayout::~MovementHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MovementHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "MovementHandler",
+      "owner_rtti": ".?AUMovementHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26431944,
+      "rva": 8068112,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GMovementHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26431944,
+          "symbol": "??_7MovementHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MovementHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline ReadyWeaponHandlerStorageLayout::~ReadyWeaponHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ReadyWeaponHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "ReadyWeaponHandler",
+      "owner_rtti": ".?AUReadyWeaponHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432328,
+      "rva": 8068224,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GReadyWeaponHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432328,
+          "symbol": "??_7ReadyWeaponHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ReadyWeaponHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline HeldStateHandlerStorageLayout::~HeldStateHandlerStorageLayout() {}",
+        "inline RunHandlerStorageLayout::~RunHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/RunHandlerStorageLayout.h",
+      "object_size": 24,
+      "owner": "RunHandler",
+      "owner_rtti": ".?AURunHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432600,
+      "rva": 8068272,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GRunHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26431496,
+          "symbol": "??_7HeldStateHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432600,
+          "symbol": "??_7RunHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::RunHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline SneakHandlerStorageLayout::~SneakHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/SneakHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "SneakHandler",
+      "owner_rtti": ".?AUSneakHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432744,
+      "rva": 8068480,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GSneakHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432744,
+          "symbol": "??_7SneakHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::SneakHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline HeldStateHandlerStorageLayout::~HeldStateHandlerStorageLayout() {}",
+        "inline SprintHandlerStorageLayout::~SprintHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/SprintHandlerStorageLayout.h",
+      "object_size": 24,
+      "owner": "SprintHandler",
+      "owner_rtti": ".?AUSprintHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432008,
+      "rva": 8068528,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GSprintHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26431496,
+          "symbol": "??_7HeldStateHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432008,
+          "symbol": "??_7SprintHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::SprintHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline HeldStateHandlerStorageLayout::~HeldStateHandlerStorageLayout() {}",
+        "inline TogglePOVHandlerStorageLayout::~TogglePOVHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/TogglePOVHandlerStorageLayout.h",
+      "object_size": 32,
+      "owner": "TogglePOVHandler",
+      "owner_rtti": ".?AUTogglePOVHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432872,
+      "rva": 8068576,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GTogglePOVHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26431496,
+          "symbol": "??_7HeldStateHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432872,
+          "symbol": "??_7TogglePOVHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::TogglePOVHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline PlayerInputHandlerStorageLayout::~PlayerInputHandlerStorageLayout() {}",
+        "inline ToggleRunHandlerStorageLayout::~ToggleRunHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ToggleRunHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "ToggleRunHandler",
+      "owner_rtti": ".?AUToggleRunHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26432536,
+      "rva": 8068624,
+      "size": 43,
+      "stored_rtti": "PlayerInputHandler",
+      "stored_table": 26135496,
+      "symbol": "??_GToggleRunHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26135496,
+          "symbol": "??_7PlayerInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26432536,
+          "symbol": "??_7ToggleRunHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ToggleRunHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IMessageBoxCallbackStorageLayout::~IMessageBoxCallbackStorageLayout() {}",
+        "inline NeedToUpdateCreationClubCallbackStorageLayout::~NeedToUpdateCreationClubCallbackStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/NeedToUpdateCreationClubCallbackStorageLayout.h",
+      "object_size": 16,
+      "owner": "NeedToUpdateCreationClubCallback",
+      "owner_rtti": ".?AUNeedToUpdateCreationClubCallback@@",
+      "owner_slot": 0,
+      "owner_table": 26720240,
+      "rva": 9823856,
+      "size": 43,
+      "stored_rtti": "IMessageBoxCallback",
+      "stored_table": 26143784,
+      "symbol": "??_GNeedToUpdateCreationClubCallbackStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143784,
+          "symbol": "??_7IMessageBoxCallbackStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26720240,
+          "symbol": "??_7NeedToUpdateCreationClubCallbackStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::NeedToUpdateCreationClubCallbackStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline ClickHandlerStorageLayout::~ClickHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ClickHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "ClickHandler",
+      "owner_rtti": ".?AUClickHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26722936,
+      "rva": 9833248,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GClickHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26722936,
+          "symbol": "??_7ClickHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ClickHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline ConsoleOpenHandlerStorageLayout::~ConsoleOpenHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ConsoleOpenHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "ConsoleOpenHandler",
+      "owner_rtti": ".?AUConsoleOpenHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26723080,
+      "rva": 9833296,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GConsoleOpenHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26723080,
+          "symbol": "??_7ConsoleOpenHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ConsoleOpenHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline DirectionHandlerStorageLayout::~DirectionHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/DirectionHandlerStorageLayout.h",
+      "object_size": 48,
+      "owner": "DirectionHandler",
+      "owner_rtti": ".?AUDirectionHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26723008,
+      "rva": 9833344,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GDirectionHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26723008,
+          "symbol": "??_7DirectionHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::DirectionHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline FavoritesHandlerStorageLayout::~FavoritesHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/FavoritesHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "FavoritesHandler",
+      "owner_rtti": ".?AUFavoritesHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26723224,
+      "rva": 9833392,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GFavoritesHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26723224,
+          "symbol": "??_7FavoritesHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::FavoritesHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline MenuOpenHandlerStorageLayout::~MenuOpenHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MenuOpenHandlerStorageLayout.h",
+      "object_size": 24,
+      "owner": "MenuOpenHandler",
+      "owner_rtti": ".?AUMenuOpenHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26723152,
+      "rva": 9833504,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GMenuOpenHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26723152,
+          "symbol": "??_7MenuOpenHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MenuOpenHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline QuickSaveLoadHandlerStorageLayout::~QuickSaveLoadHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/QuickSaveLoadHandlerStorageLayout.h",
+      "object_size": 16,
+      "owner": "QuickSaveLoadHandler",
+      "owner_rtti": ".?AUQuickSaveLoadHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26723368,
+      "rva": 9833552,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GQuickSaveLoadHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26723368,
+          "symbol": "??_7QuickSaveLoadHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::QuickSaveLoadHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline ScreenshotHandlerStorageLayout::~ScreenshotHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ScreenshotHandlerStorageLayout.h",
+      "object_size": 24,
+      "owner": "ScreenshotHandler",
+      "owner_rtti": ".?AUScreenshotHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26723296,
+      "rva": 9833600,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GScreenshotHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26723296,
+          "symbol": "??_7ScreenshotHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ScreenshotHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IUIMessageDataStorageLayout::~IUIMessageDataStorageLayout() {}",
+        "inline LoadingMenuDataStorageLayout::~LoadingMenuDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/LoadingMenuDataStorageLayout.h",
+      "object_size": 32,
+      "owner": "LoadingMenuData",
+      "owner_rtti": ".?AULoadingMenuData@@",
+      "owner_slot": 0,
+      "owner_table": 26757544,
+      "rva": 10017072,
+      "size": 43,
+      "stored_rtti": "IUIMessageData",
+      "stored_table": 26143768,
+      "symbol": "??_GLoadingMenuDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143768,
+          "symbol": "??_7IUIMessageDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26757544,
+          "symbol": "??_7LoadingMenuDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::LoadingMenuDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline MapInputHandlerStorageLayout::~MapInputHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MapInputHandlerStorageLayout.h",
+      "object_size": 24,
+      "owner": "MapInputHandler",
+      "owner_rtti": ".?AVMapInputHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26767656,
+      "rva": 10090736,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GMapInputHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26767656,
+          "symbol": "??_7MapInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MapInputHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline MapInputHandlerStorageLayout::~MapInputHandlerStorageLayout() {}",
+        "inline MapLookHandlerStorageLayout::~MapLookHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MapLookHandlerStorageLayout.h",
+      "object_size": 32,
+      "owner": "MapLookHandler",
+      "owner_rtti": ".?AVMapLookHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26767728,
+      "rva": 10090784,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GMapLookHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26767656,
+          "symbol": "??_7MapInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26767728,
+          "symbol": "??_7MapLookHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MapLookHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline MapInputHandlerStorageLayout::~MapInputHandlerStorageLayout() {}",
+        "inline MapMoveHandlerStorageLayout::~MapMoveHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MapMoveHandlerStorageLayout.h",
+      "object_size": 32,
+      "owner": "MapMoveHandler",
+      "owner_rtti": ".?AVMapMoveHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26767800,
+      "rva": 10090944,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GMapMoveHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26767656,
+          "symbol": "??_7MapInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26767800,
+          "symbol": "??_7MapMoveHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MapMoveHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline MenuEventHandlerStorageLayout::~MenuEventHandlerStorageLayout() {}",
+        "inline MapInputHandlerStorageLayout::~MapInputHandlerStorageLayout() {}",
+        "inline MapZoomHandlerStorageLayout::~MapZoomHandlerStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/MapZoomHandlerStorageLayout.h",
+      "object_size": 24,
+      "owner": "MapZoomHandler",
+      "owner_rtti": ".?AVMapZoomHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26767872,
+      "rva": 10090992,
+      "size": 43,
+      "stored_rtti": "MenuEventHandler",
+      "stored_table": 26149600,
+      "symbol": "??_GMapZoomHandlerStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26149600,
+          "symbol": "??_7MenuEventHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26767656,
+          "symbol": "??_7MapInputHandlerStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26767872,
+          "symbol": "??_7MapZoomHandlerStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::MapZoomHandlerStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IUIMessageDataStorageLayout::~IUIMessageDataStorageLayout() {}",
+        "inline ModManagerDataStorageLayout::~ModManagerDataStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/ModManagerDataStorageLayout.h",
+      "object_size": 24,
+      "owner": "ModManagerData",
+      "owner_rtti": ".?AVModManagerData@@",
+      "owner_slot": 0,
+      "owner_table": 26774256,
+      "rva": 10125568,
+      "size": 43,
+      "stored_rtti": "IUIMessageData",
+      "stored_table": 26143768,
+      "symbol": "??_GModManagerDataStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26143768,
+          "symbol": "??_7IUIMessageDataStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 26774256,
+          "symbol": "??_7ModManagerDataStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::ModManagerDataStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IGiftMenuScriptCallbackStorageLayout::~IGiftMenuScriptCallbackStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IGiftMenuScriptCallbackStorageLayout.h",
+      "object_size": 16,
+      "owner": "IGiftMenuScriptCallback",
+      "owner_rtti": ".?AVIGiftMenuScriptCallback@@",
+      "owner_slot": 0,
+      "owner_table": 26824384,
+      "rva": 10540048,
+      "size": 43,
+      "stored_rtti": "IGiftMenuScriptCallback",
+      "stored_table": 26824384,
+      "symbol": "??_GIGiftMenuScriptCallbackStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26824384,
+          "symbol": "??_7IGiftMenuScriptCallbackStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IGiftMenuScriptCallbackStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline BSAudioStorageLayout::~BSAudioStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/BSAudioStorageLayout.h",
+      "object_size": 24,
+      "owner": "BSAudio",
+      "owner_rtti": ".?AVBSAudio@@",
+      "owner_slot": 0,
+      "owner_table": 27395272,
+      "rva": 13454304,
+      "size": 43,
+      "stored_rtti": "BSAudio",
+      "stored_table": 27395272,
+      "symbol": "??_GBSAudioStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 27395272,
+          "symbol": "??_7BSAudioStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::BSAudioStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline InputEventStorageLayout::~InputEventStorageLayout() {}",
+        "inline CharEventStorageLayout::~CharEventStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/CharEventStorageLayout.h",
+      "object_size": 32,
+      "owner": "CharEvent",
+      "owner_rtti": ".?AVCharEvent@@",
+      "owner_slot": 0,
+      "owner_table": 27409376,
+      "rva": 13608192,
+      "size": 43,
+      "stored_rtti": "InputEvent",
+      "stored_table": 26431696,
+      "symbol": "??_GCharEventStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26431696,
+          "symbol": "??_7InputEventStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 27409376,
+          "symbol": "??_7CharEventStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::CharEventStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline InputEventStorageLayout::~InputEventStorageLayout() {}",
+        "inline DeviceConnectEventStorageLayout::~DeviceConnectEventStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/DeviceConnectEventStorageLayout.h",
+      "object_size": 32,
+      "owner": "DeviceConnectEvent",
+      "owner_rtti": ".?AVDeviceConnectEvent@@",
+      "owner_slot": 0,
+      "owner_table": 27409408,
+      "rva": 13608240,
+      "size": 43,
+      "stored_rtti": "InputEvent",
+      "stored_table": 26431696,
+      "symbol": "??_GDeviceConnectEventStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26431696,
+          "symbol": "??_7InputEventStorageLayout@ResearchLayouts@@6B@"
+        },
+        {
+          "rva": 27409408,
+          "symbol": "??_7DeviceConnectEventStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::DeviceConnectEventStorageLayout"
+    }
+  ],
+  "schema": 1
+}
