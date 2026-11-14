@@ -919,7 +919,13 @@
   },
   "pause_reason": "",
   "paused": false,
-  "review": null,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "158907cc99959e6915f991fd9f576b58c71a8fda9d9de6e0d27314331ff5e1f5",
+    "review_task_id": "review-family-d37faf1ed8a46c175ad9",
+    "reviewer_model": "gpt-6.1-terra",
+    "spec_sha256": "6ed8ad5f4434f12c8532547f3236171e32851eb75d31be59e14e0a4c2b72d0aa"
+  },
   "supersedes": "reports/sse-steam-1-7-104/families/3bde3e87d168ee39434b95837801cb4c209b2bb69858733acb7fe640549f4f33.json",
   "template_source": {
     "path": "tools/deleting_layout_leaf_v2.py",
