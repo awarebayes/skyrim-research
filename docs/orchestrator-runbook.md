@@ -140,9 +140,15 @@ reruns all required checks. It never pushes an unchecked rebased tree.
 acceptance, checks, push and CI; a separate nonblocking `.lane.lock` admits one runner. Record-only
 commands and review saves can proceed during a lane run. Candidate clones and failed attempts
 are retained. No lane operation prunes worktrees, branches or stashes; cleanup is opt-in through
-`flow.py cleanup` (preview with `--dry-run`). It considers only DONE+green lane trees, harvested
-drafts without claims, and AGREE reruns. Dirty/locked trees and queued inputs stay intact.
-JSON, text logs and worktree-registration logs are archived under `.local/flow/cleanup/`.
+`flow.py cleanup` (preview with `--dry-run`). It checks each DONE, RETIRED, STALE or FAILED receipt independently, including retry trees;
+running/queued receipts, pending CI and live inputs are retained. Cleanup uses its own lock, so
+an unrelated lane run can continue. Add `--prune-claims` to include completed harvested
+drafts without claims. AGREE reruns are also eligible. Dirty claim/rerun trees, locked
+worktrees and queued inputs stay intact. Finished lane working copies archive any local diff.
+Private JSON, text logs, handoffs, reviews and worktree registrations are archived under
+`.local/archive/cleanup/`; Git object stores, refs and stashes stay intact. Claim pruning requires
+a done marker, a harvest commit present in the object store, no open claim in any tier, and no
+changes outside `.local`. Use repeatable `--keep-task-prefix` to protect named workers.
 Independent lane clones keep `.git` in place so borrowed objects, refs and stashes stay usable;
 only their working files are removed. Registered worktrees use plain `git worktree remove`,
 without force, pruning or branch/stash deletion. Afterwards `flow.py sync` fast-forwards the shared checkout, replacing

@@ -34,6 +34,14 @@ def write(path, value):
     atomic_write(path, (json.dumps(value, indent=2, sort_keys=True) + '\n').encode())
 
 
+def guard_cleanup(fdir, root):
+    # Called under the state lock by every enqueue/resume path.
+    for reservation in (Path(fdir) / 'cleanup/claims').glob('*.json'):
+        claim = read(reservation)
+        f.refuse(not claim.get('active') or not Path(root).resolve().is_relative_to(Path(claim['tree'])),
+                 'input checkout is being cleaned; retry after cleanup with a retained input')
+
+
 def enqueue(root, fdir, kind, selection, branch='main', approved_only=False, with_metadata=False, name=None):
     root, fdir = Path(root).resolve(), Path(fdir).resolve()
     payload = dict(root=str(root), kind=kind, selection=selection, branch=branch,
@@ -42,10 +50,7 @@ def enqueue(root, fdir, kind, selection, branch='main', approved_only=False, wit
     path = fdir / 'lane/queue' / (key + '.json')
     with state_lock(fdir):
         require_complete(fdir)
-        for reservation in (fdir / 'cleanup/claims').glob('*.json'):
-            claim = read(reservation)
-            f.refuse(not claim.get('active') or not root.is_relative_to(Path(claim['tree'])),
-                     'input checkout is being cleaned; retry after cleanup with a retained input')
+        guard_cleanup(fdir, root)
         if path.exists():
             previous = read(path)
             if previous['state'] in ('queued', 'running'):
@@ -295,6 +300,9 @@ def publish_tooling(root, fdir, branch='main', ci_wait=600, python=sys.executabl
                 f.refuse(not resume, 'no unfinished tooling publication with that id')
                 receipt = dict(id=uuid.uuid4().hex[:16], kind='tooling', root=str(root), branch=branch,
                                state='running', integrated=None)
+            guard_cleanup(fdir, root)
+            if receipt.get('tree'):
+                guard_cleanup(fdir, receipt['tree'])
             receipt['owner'] = process_owner()
             receipt.update(state='running', python=python)
             path = fdir / 'lane/tooling' / (receipt['id'] + '.json')
@@ -881,6 +889,9 @@ def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.execu
                 for item in items:
                     item['state'], item['run'] = 'running', receipt['id']
                 save_run(fdir, receipt)
+            guard_cleanup(fdir, root)
+            if receipt.get('tree'):
+                guard_cleanup(fdir, receipt['tree'])
             receipt['owner'] = process_owner()
             receipt.update(state='running', python=python)
             save_run(fdir, receipt)

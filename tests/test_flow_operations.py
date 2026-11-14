@@ -285,13 +285,107 @@ class Operations(unittest.TestCase):
         claim = queue / 'claims/unit-a.lock'
         lane.write(claim, dict(worker='synthetic'))
         self.assertEqual(flow_cleanup.cleanup(self.root, self.fdir), [])
+        self.assertIn('open or drafting', flow_cleanup.cleanup(self.root, self.fdir, prune_claims=True)[0]['reason'])
         claim.unlink()
-        result = flow_cleanup.cleanup(self.root, self.fdir)
+        lane.write(queue / 'done/unit-a.json', {'worker': 'synthetic'})
+        result = flow_cleanup.cleanup(self.root, self.fdir, prune_claims=True)
         self.assertTrue(result[0]['removed'], result)
         self.assertFalse(tree.exists())
         self.assertEqual(git(self.root, 'rev-parse', 'draft/unit-a-first'), head)
         self.assertEqual(harvest.read_bytes(), before)
 
+
+    def cleanup_copy(self, run='finished', number='0', state='done', integrated=None):
+        tree = self.fdir / 'lane/trees' / run / number
+        tree.parent.mkdir(parents=True, exist_ok=True)
+        git(self.root, 'clone', '--quiet', '--shared', str(self.root), str(tree))
+        path = self.fdir / 'lane/runs' / (run + '.json')
+        lane.write(path, dict(id=run, state=state, root=str(self.root), tree=str(tree), integrated=integrated))
+        return tree, path
+
+    def test_cleanup_finished_retries_while_lane_is_busy_and_preserves_dirty_patch(self):
+        old, receipt = self.cleanup_copy(number='0', state='failed')
+        latest, _ = self.cleanup_copy(number='1', state='failed')
+        live, _ = self.cleanup_copy('active', state='running')
+        (old / 'reconstruction/x/Foo.cpp').write_text('int retained_change;\n')
+        log = self.fdir / 'lane/logs/finished/checks.log'
+        lane.write(log, {'evidence': True})
+        original_receipt = receipt.read_bytes()
+        with lane.lane_lock(self.fdir):
+            result = flow_cleanup.cleanup(self.root, self.fdir)
+        removed = {r['tree']: r for r in result if r['removed']}
+        self.assertEqual(set(removed), {str(old), str(latest)})
+        self.assertTrue((live / 'data').exists())
+        self.assertTrue(log.is_file())
+        self.assertEqual(receipt.read_bytes(), original_receipt)
+        self.assertIn('retained_change', (Path(removed[str(old)]['archive']) / 'working-changes.patch').read_text())
+        self.assertTrue((old / '.git').is_dir())
+        self.assertEqual([r for r in flow_cleanup.cleanup(self.root, self.fdir) if r['removed']], [])
+
+    def test_cleanup_terminal_receipts_and_ci_wait(self):
+        for state in ('done', 'retired', 'stale', 'failed'):
+            self.cleanup_copy(state, state=state)
+        pending, _ = self.cleanup_copy('pending', state='failed', integrated={'pushed': 'now', 'ci': 'pending'})
+        unknown_ci, _ = self.cleanup_copy('unknown-ci', state='retired', integrated={'pushed': 'now'})
+        queued, _ = self.cleanup_copy('queued', state='queued')
+        result = flow_cleanup.cleanup(self.root, self.fdir)
+        self.assertEqual(sum(r['removed'] for r in result), 4)
+        for tree in (pending, unknown_ci, queued):
+            self.assertTrue((tree / 'data').exists())
+
+    def test_cleanup_retains_tooling_queue_inputs_and_rechecks_after_archive(self):
+        tree, receipt = self.cleanup_copy()
+        lane.write(self.fdir / 'lane/tooling-queue/input.json', dict(root=str(tree), state='queued'))
+        result = flow_cleanup.cleanup(self.root, self.fdir)
+        self.assertIn('queued/running input', result[0]['reason'])
+        (self.fdir / 'lane/tooling-queue/input.json').unlink()
+        original = flow_cleanup.archive_evidence
+        def race(tree, archive, lane_copy):
+            original(tree, archive, lane_copy)
+            value = lane.read(receipt)
+            value['state'] = 'running'
+            lane.write(receipt, value)
+        with patch.object(flow_cleanup, 'archive_evidence', side_effect=race):
+            result = flow_cleanup.cleanup(self.root, self.fdir)
+        self.assertIn('running', result[0]['reason'])
+        self.assertTrue((tree / 'data').exists())
+
+    def test_cleanup_reservation_blocks_resume_guard_and_enqueue(self):
+        tree, _ = self.cleanup_copy()
+        lane.write(self.fdir / 'cleanup/claims/test.json', dict(tree=str(tree), active=True))
+        with self.assertRaisesRegex(flow.FlowError, 'being cleaned'):
+            lane.guard_cleanup(self.fdir, tree)
+        with self.assertRaisesRegex(flow.FlowError, 'being cleaned'):
+            lane.enqueue(tree, self.fdir, 'groups', ['test'])
+
+    def test_claim_prune_requires_done_harvest_and_preserves_local_diagnostics(self):
+        queue = self.root / '.local/queue/small'
+        queue.mkdir(parents=True, exist_ok=True)
+        directory = self.root / '.local/tasks/g/unit-clean'
+        directory.mkdir(parents=True)
+        (queue / 'queue.tsv').write_text('.local/tasks/g/unit-clean\treconstruction/x/Foo.cpp\t0x1000\t3\n')
+        tree = self.root / '.local/worktrees/draft/unit-clean-first'
+        tree.parent.mkdir(parents=True)
+        git(self.root, 'worktree', 'add', '--quiet', '-b', 'draft/unit-clean-first', str(tree), 'HEAD')
+        flow.drafts.label(tree, 'synthetic', 'unit-clean', 'draft')
+        commit = git(tree, 'rev-parse', 'HEAD')
+        lane.write(queue / 'done/unit-clean.json', {'worker': 'synthetic'})
+        self.assertIn('no completed unit harvest', flow_cleanup.cleanup(self.root, self.fdir, prune_claims=True)[0]['reason'])
+        lane.write(directory / 'harvest-first.json', dict(tier='first', tree=str(tree), commit='a' * 40))
+        self.assertIn('missing from object store', flow_cleanup.cleanup(self.root, self.fdir, prune_claims=True)[0]['reason'])
+        lane.write(directory / 'harvest-first.json', dict(tier='first', tree=str(tree), commit=commit))
+        result = flow_cleanup.cleanup(self.root, self.fdir, prune_claims=True, keep_task_prefixes=['unit-'])
+        self.assertIn('protected worker', result[0]['reason'])
+        (tree / 'keep').write_text('uncommitted')
+        self.assertIn('dirty checkout', flow_cleanup.cleanup(self.root, self.fdir, prune_claims=True)[0]['reason'])
+        (tree / 'keep').unlink()
+        lane.write(tree / '.local/diagnostics/evidence.json', {'original': True})
+        result = flow_cleanup.cleanup(self.root, self.fdir, prune_claims=True)
+        self.assertTrue(result[0]['removed'], result)
+        self.assertFalse(tree.exists())
+        self.assertTrue((Path(result[0]['archive']) / 'files/.local/diagnostics/evidence.json').exists())
+        self.assertEqual(git(self.root, 'rev-parse', 'draft/unit-clean-first'), commit)
+        self.assertEqual(git(self.root, 'rev-parse', 'refs/cleanup/harvests/' + commit), commit)
 
 class AdmissionAndReadiness(unittest.TestCase):
     def test_soft_floor_requires_explicit_override_and_hard_floor_never_does(self):
