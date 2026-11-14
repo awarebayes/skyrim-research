@@ -2474,6 +2474,11 @@ def parser():
     s = sub.add_parser('session-start')
     s.add_argument('--profile', default=profiles.DEFAULT, choices=sorted(profiles.PROFILES))
     sub.add_parser('next-actions')
+    s = sub.add_parser('reconfirm-dropped')
+    s.add_argument('--resume')
+    s.add_argument('--dry-run', action='store_true')
+    s.add_argument('--wake-mac')
+    s.add_argument('--allow-low-disk', action='store_true')
     s = sub.add_parser('status')
     s.add_argument('--functions', action='store_true')
     s = sub.add_parser('review-group')
@@ -2611,7 +2616,7 @@ def main(argv=None):
             print(f'flow: {exc}', file=sys.stderr)
             return 1
     if a.cmd in ('integrate', 'integrate-groups', 'integrate-family', 'integrate-labels', 'lane-run', 'lane-status',
-                 'lane-retire', 'tooling-push', 'cleanup', 'sync'):
+                 'lane-retire', 'tooling-push', 'cleanup', 'sync', 'reconfirm-dropped'):
         return execute(a, root, fdir)
     # Readers take the same short scheduling lock as state mutations.
     with state_lock(fdir):
@@ -2630,6 +2635,11 @@ def execute(a, root, fdir):
             log_event(fdir, 'session-start', profile=a.profile)
             print(f'session started with profile {a.profile}; next: python3 tools/flow.py next-actions')
             print('\n'.join(profiles.show(a.profile)))
+        elif a.cmd == 'reconfirm-dropped':
+            import flow_reconfirm
+            result = flow_reconfirm.execute(root, fdir, resume=a.resume, dry_run=a.dry_run,
+                                            wake_mac=a.wake_mac, allow_low_disk=a.allow_low_disk)
+            print(json.dumps(result, indent=2, sort_keys=True))
         elif a.cmd == 'next-actions':
             for i, (kind, text) in enumerate(next_actions(root, fdir, online=not a.offline), 1):
                 print(f'{i}. [{kind}] {text}')
