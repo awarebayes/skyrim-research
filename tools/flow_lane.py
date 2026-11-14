@@ -138,21 +138,34 @@ def run_status(root, fdir, receipt, active=None):
         value['lane_busy'] = active
         command = 'tooling-push' if receipt.get('kind') == 'tooling' else 'lane-run'
         value['resume_command'] = prefix + ' ' + command + ' --resume ' + shlex.quote(receipt['id']) + ' --branch ' + shlex.quote(receipt['branch'])
-        if command == 'lane-run' and not (receipt.get('integrated') or {}).get('pushed'):
+        if not (receipt.get('integrated') or {}).get('pushed'):
             value['retire_command'] = prefix + ' lane-retire ' + receipt['id'] + " --reason 'owner stopped; selection superseded'"
     return value
 
 
-def retire(root, fdir, run_id, reason):
+def receipt_path(fdir, run_id):
+    """Resolve an explicit run id across acceptance and tooling receipts, never guess."""
     f.refuse(run_id and Path(run_id).name == run_id and run_id not in ('.', '..'), 'invalid run id')
+    paths = [Path(fdir) / 'lane' / kind / (run_id + '.json') for kind in ('runs', 'tooling')]
+    found = [p for p in paths if p.is_file()]
+    f.refuse(len(found) == 1, 'no unique lane or tooling receipt for ' + run_id)
+    return found[0]
+
+
+def retire(root, fdir, run_id, reason):
     with lane_lock(fdir), state_lock(fdir):
-        receipt = read(Path(fdir) / 'lane/runs' / (run_id + '.json'))
+        path = receipt_path(fdir, run_id)
+        receipt = read(path)
         f.refuse(receipt['state'] == 'running', 'only an unfinished run can be retired')
         f.refuse(not (receipt.get('integrated') or {}).get('pushed'), 'pushed run must resume CI; cannot retire it')
         receipt.update(state='retired', retired_at=f.utc(), retirement_reason=reason)
-        for item in receipt['items']:
+        for item in receipt.get('items', []):
             item['state'] = 'retired'
-        save_run(fdir, receipt)
+        if path.parent.name == 'tooling':
+            write(path, receipt)
+        else:
+            save_run(fdir, receipt)
+        f.log_event(Path(fdir), 'lane-retired', lane=run_id, kind=receipt.get('kind', 'integration'), reason=reason)
         return receipt
 
 
@@ -582,6 +595,10 @@ def disk_preflight(fdir, min_free_gb=None):
 def run_lane(root, fdir, branch='main', push=True, ci_wait=600, python=sys.executable, min_free_gb=None,
              soft_free_gb=None, allow_low_disk=False, resume=None):
     root, fdir = Path(root).resolve(), Path(fdir).resolve()
+    if resume and receipt_path(fdir, resume).parent.name == 'tooling':
+        f.refuse(push, 'tooling resume requires push/CI mode; use tooling-push --resume ' + resume)
+        return publish_tooling(root, fdir, branch, ci_wait, python, resume=resume,
+                               soft_free_gb=soft_free_gb, allow_low_disk=allow_low_disk)
     disk_preflight(fdir, min_free_gb)
     with lane_lock(fdir, purpose='integration'):
         settle_legacy_ci(root, fdir, python, ci_wait)
