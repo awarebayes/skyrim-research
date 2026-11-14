@@ -1,0 +1,2105 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "headers": {
+    "reconstruction/bsengine/BSIntrusiveRefCountedStorageLayout.h": "21120c85871e67b888df4fc33604af65c0511fe53e4fc9fdaa573e43a36ae004",
+    "reconstruction/bsengine/IHandlerFunctorStorageLayout.h": "40b2aaa8f9b9e1a7d9a075be0db63614b033628487d5e8da40dce7374e7081ac"
+  },
+  "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+  "layout_commit": "5f41e5eab792a65a4e2e64bdb13c140e09315149",
+  "members": [
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ActionActivateDoneHandler",
+      "owner_rtti": ".?AVActionActivateDoneHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444680,
+      "rva": 8206128,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AddRagdollHandler",
+      "owner_rtti": ".?AVAddRagdollHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444848,
+      "rva": 8206176,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AllowRotationHandler",
+      "owner_rtti": ".?AVAllowRotationHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444920,
+      "rva": 8206224,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AnimatedCameraDeltaStartHandler",
+      "owner_rtti": ".?AVAnimatedCameraDeltaStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445400,
+      "rva": 8206272,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AnimatedCameraEndHandler",
+      "owner_rtti": ".?AVAnimatedCameraEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445424,
+      "rva": 8206320,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AnimatedCameraStartHandler",
+      "owner_rtti": ".?AVAnimatedCameraStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445376,
+      "rva": 8206368,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AnimationDrivenHandler",
+      "owner_rtti": ".?AVAnimationDrivenHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444896,
+      "rva": 8206416,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AnimationObjectDrawHandler",
+      "owner_rtti": ".?AVAnimationObjectDrawHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445232,
+      "rva": 8206464,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AnimationObjectLoadHandler",
+      "owner_rtti": ".?AVAnimationObjectLoadHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445208,
+      "rva": 8206512,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AnticipateAttackHandler",
+      "owner_rtti": ".?AVAnticipateAttackHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443792,
+      "rva": 8206560,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ArrowAttachHandler",
+      "owner_rtti": ".?AVArrowAttachHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444464,
+      "rva": 8206608,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ArrowDetachHandler",
+      "owner_rtti": ".?AVArrowDetachHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444488,
+      "rva": 8206656,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ArrowReleaseHandler",
+      "owner_rtti": ".?AVArrowReleaseHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444512,
+      "rva": 8206704,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AttackStopHandler",
+      "owner_rtti": ".?AVAttackStopHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443432,
+      "rva": 8206752,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AttackWinEndHandler",
+      "owner_rtti": ".?AVAttackWinEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443408,
+      "rva": 8206800,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "AttackWinStartHandler",
+      "owner_rtti": ".?AVAttackWinStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443384,
+      "rva": 8206848,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "BedEnterHandler",
+      "owner_rtti": ".?AVBedEnterHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443888,
+      "rva": 8206896,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "BedFurnitureExitHandler",
+      "owner_rtti": ".?AVBedFurnitureExitHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443960,
+      "rva": 8206944,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "BowDrawnHandler",
+      "owner_rtti": ".?AVBowDrawnHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444416,
+      "rva": 8206992,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "BowReleaseHandler",
+      "owner_rtti": ".?AVBowReleaseHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444440,
+      "rva": 8207040,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "BowZoomStartHandler",
+      "owner_rtti": ".?AVBowZoomStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444536,
+      "rva": 8207088,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "BowZoomStopHandler",
+      "owner_rtti": ".?AVBowZoomStopHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444560,
+      "rva": 8207136,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "CameraOverrideStartHandler",
+      "owner_rtti": ".?AVCameraOverrideStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443720,
+      "rva": 8207184,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "CameraOverrideStopHandler",
+      "owner_rtti": ".?AVCameraOverrideStopHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443744,
+      "rva": 8207232,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "CameraShakeHandler",
+      "owner_rtti": ".?AVCameraShakeHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444752,
+      "rva": 8207280,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ChairEnterHandler",
+      "owner_rtti": ".?AVChairEnterHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443840,
+      "rva": 8207328,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ChairFurnitureExitHandler",
+      "owner_rtti": ".?AVChairFurnitureExitHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443936,
+      "rva": 8207376,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "DeathEmoteHandler",
+      "owner_rtti": ".?AVDeathEmoteHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444824,
+      "rva": 8207424,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "DeathStopHandler",
+      "owner_rtti": ".?AVDeathStopHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444656,
+      "rva": 8207472,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "DecapitateHandler",
+      "owner_rtti": ".?AVDecapitateHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444032,
+      "rva": 8207520,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "DisableCharacterBumperHandler",
+      "owner_rtti": ".?AVDisableCharacterBumperHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445184,
+      "rva": 8207568,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "DisableCharacterPitchHandler",
+      "owner_rtti": ".?AVDisableCharacterPitchHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445280,
+      "rva": 8207616,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "EnableCharacterBumperHandler",
+      "owner_rtti": ".?AVEnableCharacterBumperHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445160,
+      "rva": 8207664,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "EnableCharacterPitchHandler",
+      "owner_rtti": ".?AVEnableCharacterPitchHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445256,
+      "rva": 8207712,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "EndSummonAnimationHandler",
+      "owner_rtti": ".?AVEndSummonAnimationHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444608,
+      "rva": 8207760,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ExitCartBeginHandler",
+      "owner_rtti": ".?AVExitCartBeginHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445064,
+      "rva": 8207808,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ExitCartEndHandler",
+      "owner_rtti": ".?AVExitCartEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445088,
+      "rva": 8207856,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightActionEndHandler",
+      "owner_rtti": ".?AVFlightActionEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444320,
+      "rva": 8207904,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightActionEntryEndHandler",
+      "owner_rtti": ".?AVFlightActionEntryEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444296,
+      "rva": 8207952,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightActionGrabHandler",
+      "owner_rtti": ".?AVFlightActionGrabHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444344,
+      "rva": 8208000,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightActionHandler",
+      "owner_rtti": ".?AVFlightActionHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444272,
+      "rva": 8208048,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightActionReleaseHandler",
+      "owner_rtti": ".?AVFlightActionReleaseHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444368,
+      "rva": 8208096,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightCrashLandStartHandler",
+      "owner_rtti": ".?AVFlightCrashLandStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444392,
+      "rva": 8208144,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightCruisingHandler",
+      "owner_rtti": ".?AVFlightCruisingHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444128,
+      "rva": 8208192,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightHoveringHandler",
+      "owner_rtti": ".?AVFlightHoveringHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444152,
+      "rva": 8208240,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightLandEndHandler",
+      "owner_rtti": ".?AVFlightLandEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444248,
+      "rva": 8208288,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightLandHandler",
+      "owner_rtti": ".?AVFlightLandHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444224,
+      "rva": 8208336,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightLandingHandler",
+      "owner_rtti": ".?AVFlightLandingHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444176,
+      "rva": 8208384,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightPerchingHandler",
+      "owner_rtti": ".?AVFlightPerchingHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444200,
+      "rva": 8208432,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "FlightTakeOffHandler",
+      "owner_rtti": ".?AVFlightTakeOffHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444104,
+      "rva": 8208480,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "GetUpEndHandler",
+      "owner_rtti": ".?AVGetUpEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445016,
+      "rva": 8208528,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "GetUpStartHandler",
+      "owner_rtti": ".?AVGetUpStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444992,
+      "rva": 8208576,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "HeadTrackingOffHandler",
+      "owner_rtti": ".?AVHeadTrackingOffHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444080,
+      "rva": 8208624,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "HeadTrackingOnHandler",
+      "owner_rtti": ".?AVHeadTrackingOnHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444056,
+      "rva": 8208672,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "HitFrameHandler",
+      "owner_rtti": ".?AVHitFrameHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443768,
+      "rva": 8208720,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "IdleDialogueEnterHandler",
+      "owner_rtti": ".?AVIdleDialogueEnterHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445328,
+      "rva": 8208768,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "IdleDialogueExitHandler",
+      "owner_rtti": ".?AVIdleDialogueExitHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445352,
+      "rva": 8208816,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "InterruptCastHandler",
+      "owner_rtti": ".?AVInterruptCastHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444584,
+      "rva": 8208864,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "JumpAnimEventHandler",
+      "owner_rtti": ".?AVJumpAnimEventHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445304,
+      "rva": 8208912,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "KillActorHandler",
+      "owner_rtti": ".?AVKillActorHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444008,
+      "rva": 8208960,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "KillMoveEndHandler",
+      "owner_rtti": ".?AVKillMoveEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444800,
+      "rva": 8209008,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "KillMoveStartHandler",
+      "owner_rtti": ".?AVKillMoveStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444776,
+      "rva": 8209056,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "LeftHandSpellCastHandler",
+      "owner_rtti": ".?AVLeftHandSpellCastHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443552,
+      "rva": 8209104,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "LeftHandSpellFireHandler",
+      "owner_rtti": ".?AVLeftHandSpellFireHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443480,
+      "rva": 8209152,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "MTStateHandler",
+      "owner_rtti": ".?AVMTStateHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445496,
+      "rva": 8209200,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "MotionDrivenHandler",
+      "owner_rtti": ".?AVMotionDrivenHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444872,
+      "rva": 8209248,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "MountDismountEndHandler",
+      "owner_rtti": ".?AVMountDismountEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445040,
+      "rva": 8209296,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "NPCAttachHandler",
+      "owner_rtti": ".?AVNPCAttachHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445112,
+      "rva": 8209344,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "NPCDetachHandler",
+      "owner_rtti": ".?AVNPCDetachHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445136,
+      "rva": 8209392,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "PairedStopHandler",
+      "owner_rtti": ".?AVPairedStopHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444728,
+      "rva": 8209440,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "PickNewIdleHandler",
+      "owner_rtti": ".?AVPickNewIdleHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444632,
+      "rva": 8209488,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "PitchOverrideEndHandler",
+      "owner_rtti": ".?AVPitchOverrideEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445472,
+      "rva": 8209536,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "PitchOverrideStartHandler",
+      "owner_rtti": ".?AVPitchOverrideStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445448,
+      "rva": 8209584,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "PlayerFurnitureExitHandler",
+      "owner_rtti": ".?AVPlayerFurnitureExitHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443984,
+      "rva": 8209728,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "RagdollStartHandler",
+      "owner_rtti": ".?AVRagdollStartHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444968,
+      "rva": 8209776,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "RecoilStopHandler",
+      "owner_rtti": ".?AVRecoilStopHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443456,
+      "rva": 8209824,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "RemoveRagdollHandler",
+      "owner_rtti": ".?AVRemoveRagdollHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444944,
+      "rva": 8209872,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "RightHandSpellCastHandler",
+      "owner_rtti": ".?AVRightHandSpellCastHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443576,
+      "rva": 8209920,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "RightHandSpellFireHandler",
+      "owner_rtti": ".?AVRightHandSpellFireHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443504,
+      "rva": 8209968,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "RightHandWeaponDrawHandler",
+      "owner_rtti": ".?AVRightHandWeaponDrawHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443672,
+      "rva": 8210016,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "RightHandWeaponSheatheHandler",
+      "owner_rtti": ".?AVRightHandWeaponSheatheHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443696,
+      "rva": 8210064,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "StaggeredStopHandler",
+      "owner_rtti": ".?AVStaggeredStopHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443816,
+      "rva": 8210112,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "StopMountCameraHandler",
+      "owner_rtti": ".?AVStopMountCameraHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26444704,
+      "rva": 8210160,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "VampireFeedEndHandler",
+      "owner_rtti": ".?AVVampireFeedEndHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445544,
+      "rva": 8210208,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "VoiceSpellCastHandler",
+      "owner_rtti": ".?AVVoiceSpellCastHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443600,
+      "rva": 8210256,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "VoiceSpellFireHandler",
+      "owner_rtti": ".?AVVoiceSpellFireHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443528,
+      "rva": 8210304,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "WeaponBeginDrawRightHandler",
+      "owner_rtti": ".?AVWeaponBeginDrawRightHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443624,
+      "rva": 8210352,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "WeaponBeginSheatheRightHandler",
+      "owner_rtti": ".?AVWeaponBeginSheatheRightHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443648,
+      "rva": 8210400,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "WeaponLeftSwingHandler",
+      "owner_rtti": ".?AVWeaponLeftSwingHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443360,
+      "rva": 8210448,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "WeaponRightSwingHandler",
+      "owner_rtti": ".?AVWeaponRightSwingHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26443336,
+      "rva": 8210496,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    },
+    {
+      "definitions": [
+        "inline IHandlerFunctorStorageLayout::~IHandlerFunctorStorageLayout() {}"
+      ],
+      "header": "reconstruction/bsengine/IHandlerFunctorStorageLayout.h",
+      "object_size": 16,
+      "owner": "ZeroPitchHandler",
+      "owner_rtti": ".?AVZeroPitchHandler@@",
+      "owner_slot": 0,
+      "owner_table": 26445520,
+      "rva": 8210544,
+      "size": 43,
+      "stored_rtti": "IHandlerFunctor<Actor, BSFixedStringCI>",
+      "stored_table": 26443312,
+      "symbol": "??_GIHandlerFunctorStorageLayout@ResearchLayouts@@UEAAPEAXI@Z",
+      "tables": [
+        {
+          "rva": 26443312,
+          "symbol": "??_7IHandlerFunctorStorageLayout@ResearchLayouts@@6B@"
+        }
+      ],
+      "type": "ResearchLayouts::IHandlerFunctorStorageLayout"
+    }
+  ],
+  "schema": 1
+}
