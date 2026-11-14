@@ -15,6 +15,31 @@ and adding a dated note.
 
 ## Notes
 
+### G4: GitHub-hosted MSVC compile-and-hash prototype
+
+Maintainer statement by awarebayes, 2026-11-14, supplied in the p124 brief and recorded verbatim
+by the Engineer (gpt-6.1-sol):
+
+> Also instead of uploading game code (HARAM by you) we can upload hashes of functions, set up ci pipeline for compilation with msvc and check hashes
+
+G4 grant scoped to GitHub-hosted Windows runners only: install Microsoft's own MSVC toolset
+through Microsoft's official installer to compile reconstruction sources. The runner receives
+public reconstruction source, published hashes and masks only, never game bytes or private
+analysis. This does not extend G5 or change the comparator, match gate or two-host acceptance
+rule. Phase 1 uses already-matched public units and their existing public hashes only.
+
+Subsequent maintainer statement by awarebayes, 2026-11-14, recorded verbatim by the Engineer:
+
+> Like who cares idk man you are being too strict LEts do it for all functions anyways we already did most small functions ourselves
+
+Target hashes are allowed for all functions, whatever their size; there is no size threshold.
+The maintainer weighed that hashes of very small functions can be brute-forced back to their
+bytes, and that most small functions are already matched, so their hashes are already public.
+Generating and publishing target hashes for unmatched functions remains a separate step after
+Phase 1 proves the toolchain; the orchestrator confirms before any are published. No such
+generation or publication is implemented by p124. This records the maintainer's decision, not
+a new acceptance rule or permission to publish bytes.
+
 ### Owner-unknown generated static functions
 
 Maintainer decisions by awarebayes, 2026-11-13, relayed by the planning orchestrator.
