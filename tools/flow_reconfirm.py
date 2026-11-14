@@ -225,7 +225,7 @@ def wake_packet(mac):
 def runner_preflight(view, wake_mac=None):
     sys.path.insert(0, str(view / 'tools/verifier'))
     import runners
-    hosts = runners.for_confirm(runners.load(root=view))
+    hosts = runners.for_confirm()
     f.refuse(hosts and len(hosts) >= 2 and all(h['backend'] != 'boat' for h in hosts),
              're-confirmation requires the configured two runner hosts; no Boat fallback')
     for host in hosts:

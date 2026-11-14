@@ -50,6 +50,16 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(flow.FlowError,'escaping'):
             recovery.source_path(self.root,'reconstruction/synthetic.cpp')
 
+    def test_preflight_uses_canonical_config_and_does_not_wake_online_host(self):
+        import types
+        runners=types.SimpleNamespace(for_confirm=lambda: [dict(backend='local',loader='wine'),
+            dict(backend='ssh',loader='native',ssh_config='shared-config',ssh_host='synthetic')])
+        response=types.SimpleNamespace(returncode=0,stdout='hostname synthetic.invalid\nport 22\n')
+        with patch.dict(sys.modules, runners=runners),patch.object(recovery.subprocess,'run',return_value=response), \
+             patch.object(recovery.socket,'create_connection') as connection,patch.object(recovery.socket,'socket') as wake:
+            self.assertEqual(len(recovery.runner_preflight(self.root)),2)
+            connection.assert_called_once();wake.assert_not_called()
+
     def test_standard_wake_packet(self):
         raw=bytes.fromhex('020000000001')
         self.assertEqual(recovery.wake_packet('02:00:00:00:00:01'),b'\xff'*6+raw*16)
