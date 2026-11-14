@@ -663,7 +663,13 @@
   },
   "pause_reason": "",
   "paused": false,
-  "review": null,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "41ee3ef9b5b3b3fdb0cf60fdb40c35ddf8509bc66dd206ab3690a21672b9f564",
+    "review_task_id": "review-family-b548222ec41fce93148c",
+    "reviewer_model": "gpt-6.1-terra",
+    "spec_sha256": "8ad11dc0b627d7a4442c5111592ea186a969a3e619d3e714a1628d36dde6dea7"
+  },
   "template_source": {
     "path": "tools/deleting_layout_leaf_v6.py",
     "sha256": "ddcf25c44b2bd9a6e64194c4caa59a0689dabc7c636ec745a623777d5cfe1780"
