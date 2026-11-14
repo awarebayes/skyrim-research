@@ -40,6 +40,13 @@ class CheckedCopyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 generator.bindings(image, 4096, 6, obj, 'Example')
 
+    def test_changed_extraction_dependency_refused(self):
+        image, obj, _ = self.fixture()
+        name = next(iter(generator.EXTRACTION_DEPENDENCIES))
+        with patch.dict(generator.EXTRACTION_DEPENDENCIES, {name: "0"*64}):
+            with self.assertRaisesRegex(ValueError, "extraction dependency differs"):
+                generator.bindings(image, 4096, 6, obj, "Example")
+
     def test_extent_and_identity_refused(self):
         image, obj, section = self.fixture()
         with self.assertRaisesRegex(ValueError, 'identity'):
@@ -77,8 +84,26 @@ class CheckedCopyTests(unittest.TestCase):
     def test_source_is_normal_library_wrapper(self):
         owner, symbol, h, cpp = template.emit(4096, 171)
         self.assertIn('return memcpy_s(destination, destinationSize, source, count);', cpp)
-        self.assertIn(symbol, h)
+        self.assertIn('class '+owner, h)
+        self.assertIn('static int Copy(', h)
         self.assertIn('GUESS(low)', h)
+        import lint_review_readiness
+        self.assertEqual(lint_review_readiness.origin_statement_problems(owner+'.h', h), [])
+        self.assertEqual(lint_review_readiness.origin_statement_problems(owner+'.cpp', cpp), [])
+        import tempfile
+        import lint_reconstruction
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            area = root/'reconstruction/buffers'
+            area.mkdir(parents=True)
+            for name in [template.EVIDENCE, template.RECIPE]:
+                path = root/name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('synthetic metadata fixture')
+            for suffix, text in [('.h', h), ('.cpp', cpp)]:
+                name = f'reconstruction/buffers/{owner}{suffix}'
+                (root/name).write_text(text)
+                self.assertEqual(lint_reconstruction.lint_file(root, name, template.BUILD), [])
         self.assertNotIn('struct ', h+cpp)
         self.assertEqual(template.origin()['template_digest'], generator.hashlib.sha256(Path(template.__file__).read_bytes()).hexdigest())
         for rva, size in [(True, 171), (4096, 170), (0, 171)]:

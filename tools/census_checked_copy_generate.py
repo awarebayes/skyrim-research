@@ -22,8 +22,19 @@ from census_buffer_extract import extract, private_output
 from census_leaf_generate import write_new
 import checked_copy_template_v1 as template
 
+# These hashes are part of the manifest-pinned parameter source. A helper edit
+# requires a newly reviewed parameter-source revision, even if template code is unchanged.
+EXTRACTION_DEPENDENCIES = {'tools/census_buffer_extract.py': '81450a6ac69a1a2afe3ce60ea6ad406a3c99f0a629289a39470036962518769d', 'tools/analysis/imagemodel.py': '40d948f70c939015e989dbc333b811ed53dc98f43c986f32ec37780acc432120', 'tools/analysis/x64.py': '11085bc7d8c33eabad00d7649312988426a6f21094f9ad8e99d62bc0c22d83d9', 'tools/pecoff.py': '2d617b4fc0bc619e70e4ef3c64c95a2b3565e9105ae283e281984d14665b3a38', 'tools/census_leaf_generate.py': '76e9ffdd812a10f8c558c316212c8d566bd250e5c12c7ca43d49ed98b1b28edd'}
+
+
+def check_dependencies():
+    for name, expected in EXTRACTION_DEPENDENCIES.items():
+        if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != expected:
+            raise ValueError("pinned extraction dependency differs: " + name)
+
 
 def bindings(image, rva, size, candidate, name):
+    check_dependencies()
     symbols = [s for s in candidate.symbols.values() if s.name == name and s.is_function
                and s.storage == 2 and s.value == 0 and s.section > 0]
     if len(symbols) != 1:
@@ -61,6 +72,7 @@ def bindings(image, rva, size, candidate, name):
 
 
 def generate(population, out, limit=None):
+    check_dependencies()
     out = private_output(out)
     if limit is not None and (type(limit) is not int or limit <= 0):
         raise ValueError('candidate limit must be positive')
@@ -132,7 +144,7 @@ def generate(population, out, limit=None):
         (directory / 'task.json').write_text(json.dumps(task, indent=2)+'\n')
         tasks.append(str(directory))
         accepted.append(dict(id=f'{template.BUILD}-0x{rva:x}', build_id=template.BUILD, rva=rva, size=size,
-                             status='mapped', name=name, name_origin='GUESS', owner='awarebayes',
+                             status='mapped', name=f'{owner}::Copy', name_origin='GUESS', owner='awarebayes',
                              name_source='GUESS(low): checked-copy ABI stand-in; ownership unknown.', evidence=template.EVIDENCE))
         if limit and len(accepted) >= limit:
             break

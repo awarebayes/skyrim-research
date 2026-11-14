@@ -12,7 +12,7 @@ EVIDENCE = 'findings/ghidra-import.md'
 
 
 def origin():
-    return dict(family='census-checked-copy', version='1',
+    return dict(family='census-checked-copy', version='2',
                 template_digest=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
 
 
@@ -20,20 +20,21 @@ def emit(rva, size):
     if type(rva) is not int or rva <= 0 or type(size) is not int or size != 171:
         raise ValueError('unsupported checked-copy identity')
     owner = f'CheckedCopy{rva:x}'
-    symbol = f'CheckedCopyAt{rva:x}'
+    symbol = f'?Copy@{owner}@@SAHPEAX_KPEBX1@Z'
     prefix = f'''// Build: {BUILD}; RVA 0x{rva:x}; {size} bytes
 // Evidence: {EVIDENCE}
 // Recipe: {RECIPE}
 // Source exposure: binary-analysis; pinned compiler headers used normally, not copied.
-// Original wrapper; no external implementation adapted into this file.
+// Original reconstruction: wrapper; no external implementation adapted into this file.
 // Drafted by GPT-6.1 Sol, checked-copy template.
 // Labels: v2
-// {symbol}, destination, destinationSize, source, count: GUESS(low) STANDIN
-// Original name, ownership and linkage unknown; only compiled code is compared.
+// {owner}, Copy, destination, destinationSize, source, count: GUESS(low) STANDIN
+// Original name and ownership unknown; class is an ABI stand-in with no storage.
+// Only compiled code is compared; no original class identity is claimed.
 '''
-    signature = f'extern "C" int {symbol}(void* destination, unsigned __int64 destinationSize, const void* source, unsigned __int64 count)'
-    header = prefix + '#pragma once\n' + signature + ';\n'
-    cpp = prefix + f'#include "{owner}.h"\n#include <string.h>\n' + signature + ''' {
+    arguments = 'void* destination, unsigned __int64 destinationSize, const void* source, unsigned __int64 count'
+    header = prefix + '#pragma once\n' + f'class {owner} {{\npublic:\n    static int Copy({arguments});\n}};\n'
+    cpp = prefix + f'#include "{owner}.h"\n#include <string.h>\nint {owner}::Copy({arguments})' + ''' {
     return memcpy_s(destination, destinationSize, source, count);
 }
 '''
