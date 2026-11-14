@@ -1,0 +1,109 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "cf7e68c444f92558792952b6032ed3f9aeb48a6264d881ef2946a025bd1ca643",
+      "version": "0.7.1-internal"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy",
+        "/Os"
+      ],
+      "recipe_sha256": "c5a91a75efea396d076f547ce668370712db25ba7183678127101dfe90a2be7d"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "c5a91a75efea396d076f547ce668370712db25ba7183678127101dfe90a2be7d",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x1098a0": "ad3c76392f86a66987c650e1bd89cd968d9d42f19d6f5f811e0816fb53e2228f",
+    "sse-steam-1-7-104-0x41410": "ca5b761ae55024057f5e47c886cd8ad9f88ec0540ceeaf0f07307e36c0dea7dd",
+    "sse-steam-1-7-104-0x67e00": "5e675b95ed1a3d92da194d7be7a915ad3ca0570f6fb6cb91b6947b1241c703d4",
+    "sse-steam-1-7-104-0x8640": "ed92f3f25e5e2f38fbe7a217bf3bac61efc27d2c808d0891a4697eea38d7d224",
+    "sse-steam-1-7-104-0x87a0": "ec445011c083685beb3f318d219e10ec8496048c619ffecc82bc15eaa3d871eb",
+    "sse-steam-1-7-104-0x8820": "a1751b840422d952912d9dfc4dcf732715cba87b0bbcfe4b12d68561fb51bfb8",
+    "sse-steam-1-7-104-0x88a0": "c72b3ca8525342aa6d998e4d875d098a166ce8db244168c54bc3b553a6a76682",
+    "sse-steam-1-7-104-0x8920": "5a1469c91fb53010216a65b76e630784b6d0b8f39bfb027c89454065635a0ead",
+    "sse-steam-1-7-104-0x89a0": "5813ae06aed9e6f32fda22bf33cc23e6185e81271a9a62142b6a872c7ef05722",
+    "sse-steam-1-7-104-0x8a20": "a437a0a2948833c7cbb17a4027b4b9f79be81cf3adc7b31ceee19438ad1a0d7b",
+    "sse-steam-1-7-104-0x8aa0": "607ceff517d18e1f95b18ebdccff3690d7f78cc1b4d9654922998854d06c38f2",
+    "sse-steam-1-7-104-0x8b20": "d4c6d328b8de2b54602a2304c2ace60050268d44497abb5ee1ba9a08c87d1365",
+    "sse-steam-1-7-104-0x8ba0": "8ce5ef4cebb0ceadf4e9a2606ce4264ffd59a8a31fcc96f93ceae1ac1b1ca5f5",
+    "sse-steam-1-7-104-0x8c20": "d0ea1b8385e019065501b64c4f8ad4f866edee6e8c34b71c2785929df59d174b",
+    "sse-steam-1-7-104-0x8ca0": "36672cbc2e3fa91cd73d26b55058bc97aa0061daab30fbd2bae1716e9b3b205a",
+    "sse-steam-1-7-104-0x8d20": "b1e717c53693af2d0840d62cd504d790e15903d6307c486e256240e31b8ce5a7",
+    "sse-steam-1-7-104-0xa200": "c02cf5678db2380c2407a492184718b6d7e3c81338507b993aff255542a6c7f0",
+    "sse-steam-1-7-104-0xa280": "9037b6ce7e027e9d91522e9901fe8fe0a5701b92ede4907959d14275773f6a84",
+    "sse-steam-1-7-104-0xa300": "4bb811840a14e11516d32f6e91931f46450f23b9d8d941a9192b796670b588cd",
+    "sse-steam-1-7-104-0xa380": "5b8771945544167b55fe22b18fdbd5dbc02cd9a4ddf7bac4b23983ddcc78e903"
+  },
+  "origin": {
+    "family": "parked-context-resource-initializer",
+    "template_digest": "45d4b0bf4ef34a9b1b4c83a75cbed13034ce293c4ad4509f8f169cfcf6160f1a",
+    "version": "1"
+  },
+  "parameter_ranges": {
+    "atexit-rva": {
+      "max": 67108863,
+      "min": 0
+    },
+    "context-destroy-rva": {
+      "max": 67108863,
+      "min": 0
+    },
+    "entry-rva": {
+      "max": 67108863,
+      "min": 0
+    },
+    "manager-rva": {
+      "max": 67108863,
+      "min": 0
+    },
+    "object-rva": {
+      "max": 67108863,
+      "min": 0
+    },
+    "size": {
+      "values": [
+        116
+      ]
+    },
+    "storage-destroy-rva": {
+      "max": 67108863,
+      "min": 0
+    },
+    "teardown-rva": {
+      "max": 67108863,
+      "min": 0
+    },
+    "tls-offset": {
+      "values": [
+        1896
+      ]
+    }
+  },
+  "parameter_source": {
+    "path": "tools/parked_initializer_generate_v1.py",
+    "sha256": "14cfff1dc67db6c185d8319bd5f28afc4b8ebd0e5c794de37ff1eca8a4e99045"
+  },
+  "pause_reason": "Superseded by a corrected unapproved family.",
+  "paused": true,
+  "review": null,
+  "superseded_by": "reports/sse-steam-1-7-104/families/4e7672908ad2589c8a1824b30391266344647d0e851d2614ebce603239bc24f8.json",
+  "template_source": {
+    "path": "tools/parked_initializer_template_v1.py",
+    "sha256": "45d4b0bf4ef34a9b1b4c83a75cbed13034ce293c4ad4509f8f169cfcf6160f1a"
+  }
+}

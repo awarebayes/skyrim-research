@@ -1,0 +1,115 @@
+{
+  "binding": {
+    "build_id": "sse-steam-1-7-104",
+    "comparator": {
+      "source_sha256": "cf7e68c444f92558792952b6032ed3f9aeb48a6264d881ef2946a025bd1ca643",
+      "version": "0.7.1-internal"
+    },
+    "compiler": {
+      "compiler_binary_sha256": "5d118b3d66dd574616ea5be3b74d20793a4f37a0fa067cf09c52388a8c492e7e",
+      "compiler_version": "19.16.27054 for x64 (toolset dir 14.16.27023, VS 2017 15.9.85 manifest)",
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/MD",
+        "/GS-",
+        "/EHsc",
+        "/GR",
+        "/fp:precise",
+        "/Gy",
+        "/Os"
+      ],
+      "recipe_sha256": "c5a91a75efea396d076f547ce668370712db25ba7183678127101dfe90a2be7d"
+    },
+    "image_sha256": "846efccf0c1374d71f892907f46549560f2fcb0a75cb87a3eed438baa0f1402f",
+    "recipe_sha256": "c5a91a75efea396d076f547ce668370712db25ba7183678127101dfe90a2be7d",
+    "toolchain_sha256": "af2c665cb3fc79c2b267bb1a72f0555412e7e22b8d74bb7d13e19539b5aaebcf"
+  },
+  "family_schema": 1,
+  "first_members": {
+    "sse-steam-1-7-104-0x1098a0": "6a611321b20a9de72edcae7546853490609d7b53c004a1aa95b807a3f0cac3aa",
+    "sse-steam-1-7-104-0x41410": "e0e41537e5e28d2f1b027d118462f9dfb14579a40e8829034c97ff52bd128a52",
+    "sse-steam-1-7-104-0x67e00": "c993b984d633392ce45513e9b0985cafec68f26fc760509deb0e7f211779d983",
+    "sse-steam-1-7-104-0x8640": "6adecf525081058c92e28de593380aef623eb28be07402407a6d0c09e7f40cf3",
+    "sse-steam-1-7-104-0x87a0": "10df752b0c29c90af094fb0d67e9bf4fde8215b77972c1b3f9b431a1aeafc193",
+    "sse-steam-1-7-104-0x8820": "c846e89b9aaf30458f9972a5c08d4e5c4fb2e0c22919cdb3e27eb697b22ed821",
+    "sse-steam-1-7-104-0x88a0": "a1cd6da9db2c9b29d2d5e0c1feb9ba1b7563bbbfa393c0a81d0d35891f99ed81",
+    "sse-steam-1-7-104-0x8920": "f8a8d814677bbb78b51d20c7f1733fe1f985ee19f84c4bac27bb7364e912d390",
+    "sse-steam-1-7-104-0x89a0": "ff51f82cd97c191842a58e1212bff5020260f106175f8bfc0dc3ca406a99d21e",
+    "sse-steam-1-7-104-0x8a20": "4e181539e6625e8b241e0e3c09f7ed8f35070ea2fe616fd0b9c94be9a7c619dd",
+    "sse-steam-1-7-104-0x8aa0": "5b4db5e0ce6d86ae00b3e9f62e3671d3b1ce71d58d62504624f332fef5f75df2",
+    "sse-steam-1-7-104-0x8b20": "98a5b19f0e8a4674d16731930af564616915f7d3050bfaa630592e1d9906ec3c",
+    "sse-steam-1-7-104-0x8ba0": "e64fc454f8cad70ba9e49741d603389b9e36b209e0e4662617ffd2a4e6df4e5a",
+    "sse-steam-1-7-104-0x8c20": "02e08dec005f8a9ba7a7b035730981e5af52d52a488a11c3301bd56d75b35b4c",
+    "sse-steam-1-7-104-0x8ca0": "515c093e396e88717262e2397d834d37828de0b5f5f9d87bf214208585b2037f",
+    "sse-steam-1-7-104-0x8d20": "340b42e89366e5e5c29418e27c54507578a71749ab56d54060565c8ecded071f",
+    "sse-steam-1-7-104-0xa200": "53a603e51babde7cb6e1d3648054d0ea257ed49f7e24e95cda38ea6a67f80af1",
+    "sse-steam-1-7-104-0xa280": "3580ebcc49a26105e0f85e9ab7f3252304d6075b10d46aca705d397578e04e88",
+    "sse-steam-1-7-104-0xa300": "7aaee1f0530f2893340f3f79c3f2c8482453c3e7d5c0079d5b24ef96fb8ee46c",
+    "sse-steam-1-7-104-0xa380": "3bc402f0d8d14af335ab741636341797e2b146784d8f36ab1a3968676a918a9c"
+  },
+  "origin": {
+    "family": "parked-context-resource-initializer",
+    "template_digest": "02571f87257eb9942ea525b9d2619227010017450b4b244c7e68260b5f290f08",
+    "version": "2"
+  },
+  "parameter_ranges": {
+    "atexit-rva": {
+      "max": 59933255,
+      "min": 0
+    },
+    "context-destroy-rva": {
+      "max": 59933255,
+      "min": 0
+    },
+    "entry-rva": {
+      "max": 59933255,
+      "min": 0
+    },
+    "manager-rva": {
+      "max": 59933255,
+      "min": 0
+    },
+    "object-rva": {
+      "max": 59933255,
+      "min": 0
+    },
+    "size": {
+      "values": [
+        116
+      ]
+    },
+    "storage-destroy-rva": {
+      "max": 59933255,
+      "min": 0
+    },
+    "teardown-rva": {
+      "max": 59933255,
+      "min": 0
+    },
+    "tls-offset": {
+      "values": [
+        1896
+      ]
+    }
+  },
+  "parameter_source": {
+    "path": "tools/parked_initializer_generate_v2.py",
+    "sha256": "1b11c4d71ff97e7574708e0299b4a74c8fe38abd621f48b1a5f9d64750fb8f5e"
+  },
+  "pause_reason": "",
+  "paused": false,
+  "review": {
+    "profile": "claude-low",
+    "review_sha256": "a5d5862b9d054e811e7fcfd07e39cb4b6723827d04b647950a23a4c05b5969af",
+    "review_task_id": "review-family-4e7672908ad2589c8a18",
+    "reviewer_model": "gpt-6.1-terra",
+    "spec_sha256": "cbb9cd7d6c0f9ba5edc38321718ac9e0aae0ea98ccff504d0db8907d820cc680"
+  },
+  "supersedes": "reports/sse-steam-1-7-104/families/76047cf81593115565a016d7e4fa5655f1c1b3009edf5324b6dc87f90e57c16b.json",
+  "template_source": {
+    "path": "tools/parked_initializer_template_v2.py",
+    "sha256": "02571f87257eb9942ea525b9d2619227010017450b4b244c7e68260b5f290f08"
+  }
+}
