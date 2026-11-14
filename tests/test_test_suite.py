@@ -68,3 +68,46 @@ class T(unittest.TestCase):
             run = self.run_suite(root)
             self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
             self.assertIn('Ran 1 tests', run.stdout)
+
+    def test_shards_cover_every_test_once_and_preserve_module_fixtures(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name in ('test_a', 'test_b', 'test_c', 'test_d', 'test_e'):
+                self.fixture(root, name, '''import unittest
+class T(unittest.TestCase):
+ @classmethod
+ def setUpClass(cls): cls.seen = 0
+ def test_a(self): type(self).seen += 1; self.assertEqual(self.seen, 1)
+ def test_b(self): self.assertEqual(self.seen, 1)
+''')
+            complete = json.loads(self.run_suite(root, '--list').stdout)
+            combined = {}
+            for index in range(3):
+                args = ('--shard-index', str(index), '--shard-count', '3')
+                shard = json.loads(self.run_suite(root, '--list', *args).stdout)
+                self.assertTrue(combined.keys().isdisjoint(shard))
+                combined.update(shard)
+                run = self.run_suite(root, *args)
+                self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+                report = json.loads((root / f'.local/test-suite-results-{index}-of-3.json').read_text())
+                self.assertEqual(report['discovered'], 10)
+                self.assertEqual(report['selected'], sum(map(len, shard.values())))
+                self.assertEqual(report['executed'], report['selected'])
+                self.assertFalse(report['failed'])
+            self.assertEqual(combined, complete)
+
+    def test_sharded_failure_still_fails_its_job(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.fixture(root, 'test_a', 'import unittest\nclass T(unittest.TestCase):\n def test_bad(self): self.fail("synthetic")\n')
+            self.fixture(root, 'test_b', 'import unittest\nclass T(unittest.TestCase):\n def test_ok(self): pass\n')
+            self.assertNotEqual(self.run_suite(root, '--shard-index', '0', '--shard-count', '2').returncode, 0)
+            self.assertEqual(self.run_suite(root, '--shard-index', '1', '--shard-count', '2').returncode, 0)
+
+    def test_invalid_shards_are_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for index, count in ((0, 0), (0, -1), (-1, 2), (2, 2)):
+                with self.subTest(index=index, count=count):
+                    run = self.run_suite(Path(tmp), '--shard-index', str(index), '--shard-count', str(count))
+                    self.assertNotEqual(run.returncode, 0)
+                    self.assertIn('require --shard-count', run.stderr)
