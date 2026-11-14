@@ -2,14 +2,14 @@
 
 ## Ten-line lane guide
 
-1. Use green-main tools and the shared `--flow-dir`; keep each approved input root available until its receipt completes.
-2. Enqueue with `integrate`, `integrate-groups`, `integrate-family`, or `integrate-labels`; enqueue all ready work first.
-3. Run `lane-run` for one combined acceptance push; arrivals during that run remain queued for the next run.
-4. Engineers commit named tooling files after `check.py --staged`, then use `tooling-push` for checks, push and exact-SHA CI under the same lock.
-5. New lane builds and confirm jobs require 3 GB; below the default 10 GB soft floor, only an explicit `--allow-low-disk` admits them.
-6. Read `lane-status`: stale runs print exact `lane-run --resume <id>` or `tooling-push --resume <id>` commands; resume does not repush a CI checkpoint.
-7. Explicitly retire only unpublished acceptance or tooling runs with `lane-retire <id> --reason <reason>`; nothing auto-retires a run.
-8. Preview `cleanup --dry-run`, then opt in with `cleanup`; finished clean trees lose working files, evidence and Git refs/stashes remain; `sync` after green CI.
+1. Use green-main tools and the shared `--flow-dir`; keep approved input roots and committed tooling tips available until their receipts finish.
+2. Enqueue functions with `integrate`, `integrate-groups`, `integrate-family` or `integrate-labels`; enqueue all ready work first.
+3. Commit named tooling files after the staged guard, then run `tooling-push --wait-lane`; all tooling queued before the lease is taken shares one candidate.
+4. Run `lane-run --wait-lane` to drain the queue; CLI calls wait by default, and `--no-wait-lane` is an explicit nonblocking probe.
+5. After push, the lease is released during exact-SHA CI; the next candidate checks in parallel and may push only after its origin SHA is GREEN.
+6. `lane-status` gives exact resume commands; dead local unpublished owners are skipped automatically, while conflict/stale inputs and candidates remain intact.
+7. Builds require Python 3.13 with pyexpat and 3 GB free; below the 10 GB soft floor only explicit `--allow-low-disk` admits a new heavy job.
+8. Preview `cleanup --dry-run`, then opt in with `cleanup`; working files alone may be removed, evidence and Git refs/stashes remain; `sync` after GREEN.
 
 Follow `docs/anti-eu-bureaucracy.md`: ship in bulk, decide rather than stop, and add no ceremony beyond named rules.
 
@@ -346,3 +346,38 @@ CLI operations use a permanent advisory `.state.lock` in their resolved flow dir
 also lock so multi-file mutations stay consistent. Group, queue and receipt JSON use atomic
 replacement. Run the updated tooling in every concurrent orchestrator; older integration
 processes retain their old whole-run lock until they finish.
+
+## Pipelined publication and tooling batches
+
+`tooling-push --wait-lane` records the clean committed input before waiting. A new runner takes all
+currently queued tooling tips into an independent retained candidate. Input checkouts are never
+rebased or reset. Merge conflicts drop only that input, with its reason. A combined check failure
+first proves the baseline, then isolates failing inputs using checked prefixes; a failed baseline
+stops the whole run. The successful common path runs full checks once.
+
+Queued review groups can share this candidate through the unchanged accept/carry path. Tooling
+that changes gate machinery (validator, comparator, acceptance, review parser, verifier or lane)
+publishes separately before function work; those functions remain queued. Every member still
+passes its original gates. Arrival during a run belongs to the next run.
+
+The build lease ends immediately after push, recorded as `lane_hold_seconds`. Exact-SHA CI and
+post-CI bookkeeping run outside it, including `--resume` of a pushed checkpoint. The next run
+may check on top of that pushed SHA but must see its CI GREEN immediately before pushing.
+A RED or unavailable result aborts the new push. A failed rebase becomes a terminal `conflict`
+receipt with an owner resume command. A dead local unpublished owner becomes `stale` at the next
+lease, retaining every input and candidate; `--resume <id>` recovers that checkpoint explicitly.
+Live owners are waited on, not treated as foreign resume requests.
+
+`SKYRIM_LANE_PYTHON` may select the interpreter, but it must be Python 3.13 with working pyexpat.
+The complete standard unittest discovery inventory runs via `tools/test_suite.py` in isolated
+module processes, preserving module/class fixtures and reporting every test. Existing unittest
+environment decorators retain their usual meaning; no tests are excluded by the runner.
+CI uses the same Python 3.13 runner. Infrastructure performs diff hygiene, metadata/lint, the full
+suite and the site build; Pages consumes only its successful artifact for the exact same SHA,
+then deploys. This removes duplicated work across workflows, with no check removed.
+
+A lane run may carry approved sampled members and their family bulk together. It applies the
+prepared individual reviews through the normal validator first, without rebuilding the derived
+index, then runs the unchanged family gates against that provisional state. The final transaction
+validates everything and rebuilds the index once. Planning, dropped requests or any final failure
+restore all provisional public files; no sampled or unsampled member gains an exemption.
