@@ -79,3 +79,10 @@ class FunctionOnly(unittest.TestCase):
         path.write_text(path.read_text().replace('Synthetic prose', 'Changed prose'))
         self.git('add', 'README.md')
         self.assertEqual(len(self.checks(self.commit(), base_revision=base)), 3)
+
+    def test_renaming_tooling_into_reconstruction_keeps_full_local_checks(self):
+        self.write('tools/synthetic.py')
+        base = self.commit()
+        (self.root / 'reconstruction').mkdir()
+        self.git('mv', 'tools/synthetic.py', 'reconstruction/synthetic.py')
+        self.assertEqual(len(self.checks(self.commit(), base_revision=base)), 3)

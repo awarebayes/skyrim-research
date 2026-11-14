@@ -2380,7 +2380,7 @@ def function_only_diff(root, base_revision, commit):
     """Only the lane's explicit base permits the function-only local check policy."""
     if not base_revision:
         return False
-    paths = git(root, 'diff', '--name-only', base_revision, commit).splitlines()
+    paths = git(root, 'diff', '--no-renames', '--name-only', base_revision, commit).splitlines()
     generated = {'data/progress.json', 'docs/progress.svg', 'docs/progress-map.svg',
                  'docs/model-trend.svg', 'docs/progress-trend.svg'}
     if 'README.md' in paths:
