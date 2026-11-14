@@ -789,9 +789,10 @@
     "path": "tools/deleting_layout_bindings_v1.py",
     "sha256": "dde9d76f7f575b87a00294f5bf106ea15ee410cff6852e99771f9cc62a818eee"
   },
-  "pause_reason": "",
-  "paused": false,
+  "pause_reason": "Superseded by a corrected unapproved family.",
+  "paused": true,
   "review": null,
+  "superseded_by": "reports/sse-steam-1-7-104/families/8fd95631065b3d2d3924bff0a5c2ea7ddc1b05d42bc0f78887cb618ad9bd6b86.json",
   "supersedes": "reports/sse-steam-1-7-104/families/cca5b18306e0fa7fa46396225ad62f6ce84966b517844713067bcedf87a001e6.json",
   "template_source": {
     "path": "tools/deleting_layout_leaf_v4.py",
