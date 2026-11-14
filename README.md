@@ -49,7 +49,7 @@ models are not counted. Distinct model counts exclude tools and unreported claim
 | --- | ---: |
 | Claude | 21,153 |
 | GPT / Codex | 3,151 |
-| Scripts and tools | 688,466 |
+| Scripts and tools | 718,994 |
 | Not reported | 7,196 |
 <!-- /model-trend-totals -->
 
