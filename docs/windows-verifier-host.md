@@ -107,6 +107,25 @@ report come back the same way. Standard input also carries binary data intact to
 started over SSH, which saves the separate sftp session where that matters. Copies made this way
 keep their LF line ends; a Git clone on the host relies on `.gitattributes`.
 
+### Concurrent confirmations and transport failures
+
+Use green-main runner tooling. Each SSH host's private `runners.json` may set `max_sessions`
+(default 4), independently of `max_parallel` compile jobs and batch size. All SSH commands and
+SCP transfers, including probes and cleanup, take a cross-process session slot. Locks live in
+`runner-sessions/` beside the selected shared runner configuration; `SR_VERIFIER_STATE` overrides
+that state directory. Independent worker clones must select the same configuration with
+`SR_RUNNERS_CONFIG` or the same state with `SR_VERIFIER_STATE`, and use the same per-host limit.
+A dead client releases its slots automatically. No Windows service configuration change is needed.
+
+Connection failures (SSH/SCP exit 255, SCP connection-reset/closed errors, or OS connection errors)
+get at most three total attempts, with 1- and 2-second backoff. Each failure is logged as a
+`transport_error` in private `transport-errors.jsonl` and the caller's log. Exhaustion remains an
+infrastructure error, never comparison evidence. Other SSH exits, including a comparator mismatch,
+are returned once. Retries reuse the exact run identity: if the connection failed after the agent
+created its run directory, the agent refuses duplicate execution rather than comparing again.
+Such an incomplete confirmation needs explicit recovery after its worker finishes; transport
+retries never turn a mismatch into a pass.
+
 ## Things that stall from SSH
 
 Background Intelligent Transfer Service downloads, `winget`, the Microsoft Store and the Visual

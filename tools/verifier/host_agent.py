@@ -104,7 +104,10 @@ def prune(root, keep):
 
 def unpack(bundle, dest):
     """Extract the uploaded archive with tarfile's `data` filter (no links out, no absolute paths)."""
-    dest.mkdir(parents=True)
+    try:
+        dest.mkdir(parents=True)
+    except FileExistsError:
+        raise AgentRefusal('run already exists; refusing duplicate execution after reconnect') from None
     with tarfile.open(bundle) as tar:
         if hasattr(tarfile, 'data_filter'):
             tar.extractall(dest, filter='data')
