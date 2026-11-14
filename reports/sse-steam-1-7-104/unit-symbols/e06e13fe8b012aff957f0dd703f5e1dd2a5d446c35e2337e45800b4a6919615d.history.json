@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "map": "reports/sse-steam-1-7-104/unit-symbols/e06e13fe8b012aff957f0dd703f5e1dd2a5d446c35e2337e45800b4a6919615d.json",
+  "versions": [
+    {
+      "sha256": "e06e13fe8b012aff957f0dd703f5e1dd2a5d446c35e2337e45800b4a6919615d",
+      "base": null,
+      "added": [
+        "?initialize@StorageInit4c06c0@@SAIPEAX@Z",
+        "??_7Adapter@@6B@",
+        "?storage_helper@@YAIPEAIPEAUAdapterBase@@II@Z",
+        "??1Adapter@@UEAA@XZ",
+        "__CxxFrameHandler3"
+      ]
+    }
+  ]
+}

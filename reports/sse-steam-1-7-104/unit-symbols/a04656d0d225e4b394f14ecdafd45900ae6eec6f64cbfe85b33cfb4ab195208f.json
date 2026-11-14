@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "?initialize@StorageInit1ea800@@SAIPEAX@Z": {
+      "rva": 2009088,
+      "size": 63
+    },
+    "??_7Adapter@@6B@": {
+      "rva": 25099072,
+      "size": null
+    },
+    "?storage_helper@@YAIPEAIPEAUAdapterBase@@II@Z": {
+      "rva": 13503008,
+      "size": null
+    },
+    "??1Adapter@@UEAA@XZ": {
+      "rva": 1113248,
+      "size": null
+    },
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "note": "Per-member storage and EH bindings; all reconstruction names are guesses.",
+    "entries": [
+      {
+        "name": "?initialize@StorageInit1ea800@@SAIPEAX@Z",
+        "rva": "0x1ea800",
+        "community_name": null,
+        "note": "Independently extracted from the pinned-image member."
+      },
+      {
+        "name": "??_7Adapter@@6B@",
+        "rva": "0x17efb40",
+        "community_name": null,
+        "note": "Independently extracted from the pinned-image member."
+      },
+      {
+        "name": "?storage_helper@@YAIPEAIPEAUAdapterBase@@II@Z",
+        "rva": "0xce0a20",
+        "community_name": null,
+        "note": "Independently extracted from the pinned-image member."
+      },
+      {
+        "name": "??1Adapter@@UEAA@XZ",
+        "rva": "0x10fca0",
+        "community_name": null,
+        "note": "Independently extracted from the pinned-image member."
+      },
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "community_name": null,
+        "note": "Independently extracted from the pinned-image member."
+      }
+    ]
+  }
+}
