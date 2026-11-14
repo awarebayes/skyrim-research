@@ -1,0 +1,23 @@
+{
+  "build_id": "sse-steam-1-7-104",
+  "code_section_sha256": "b0b7fed9678ece14871664950fbf44961e9f8f8a480382202461e1a173bbbee0",
+  "escalation_category": "none",
+  "function_id": "sse-steam-1-7-104-0x388d90",
+  "naming_findings": [
+    "The destructor lacks an explicit name-origin label."
+  ],
+  "previous_code_section_sha256": null,
+  "previous_review_sha256": null,
+  "previous_source_digest": null,
+  "review_date": "2026-11-14",
+  "review_kind": "full",
+  "review_record_schema": 3,
+  "review_sha256": "bde71e70463134d413703ef1d4346fe2dcc0c7dbdfbd440545f5b4c553252b47",
+  "review_task_id": "review-p85-priority-new7",
+  "reviewer_model": "gpt-6.1-terra",
+  "rva": 3706256,
+  "size": 116,
+  "source_digest": "7b2b8a4e97384fda47fb2a2d6ff55c313d66057ded11f0037995d110e39f3e09",
+  "source_digest_method": "tu-sha256-v1",
+  "verdict": "approve"
+}

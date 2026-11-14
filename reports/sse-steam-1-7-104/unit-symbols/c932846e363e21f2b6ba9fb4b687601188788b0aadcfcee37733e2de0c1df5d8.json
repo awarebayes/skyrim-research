@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "?ClearData@BGSOutfit@@UEAAXXZ": {
+      "rva": 2508832,
+      "size": 108
+    },
+    "?OutfitTLS@@3IA": {
+      "kind": "thread-local",
+      "tls_offset": 1896,
+      "size": null
+    },
+    "?ClearOutfitArray@@YAXPEAX@Z": {
+      "rva": 13504208,
+      "size": null
+    },
+    "??1OutfitScope@@QEAA@XZ": {
+      "rva": 1340448,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@BGSOutfit@@UEAAXXZ",
+        "rva": "0x264820",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?OutfitTLS@@3IA",
+        "tls_offset": "0x768",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from a tls: bind hint; the offset is the one the target code adds to the TLS block, the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearOutfitArray@@YAXPEAX@Z",
+        "rva": "0xce0ed0",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1OutfitScope@@QEAA@XZ",
+        "rva": "0x147420",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

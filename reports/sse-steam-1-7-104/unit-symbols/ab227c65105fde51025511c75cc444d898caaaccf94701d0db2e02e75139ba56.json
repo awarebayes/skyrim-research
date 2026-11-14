@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "build_id": "sse-steam-1-7-104",
+  "symbols": {
+    "__CxxFrameHandler3": {
+      "rva": 22714324,
+      "size": null
+    },
+    "?ClearData@BGSMaterialType@@UEAAXXZ": {
+      "rva": 3285584,
+      "size": 105
+    },
+    "??0BSFixedString@@QEAA@PEBD@Z": {
+      "rva": 15404944,
+      "size": null
+    },
+    "??4BSFixedString@@QEAAAEAV0@AEBV0@@Z": {
+      "rva": 15405648,
+      "size": null
+    },
+    "??1BSFixedString@@QEAA@XZ": {
+      "rva": 15405312,
+      "size": null
+    },
+    "?defaultMaterialColor@@3UMaterialColor@@A": {
+      "rva": 34401872,
+      "size": null
+    }
+  },
+  "folds": [],
+  "_provenance": {
+    "entries": [
+      {
+        "name": "__CxxFrameHandler3",
+        "rva": "0x15a97d4",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?ClearData@BGSMaterialType@@UEAAXXZ",
+        "rva": "0x322250",
+        "size_from": "task",
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??0BSFixedString@@QEAA@PEBD@Z",
+        "rva": "0xeb0f90",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??4BSFixedString@@QEAAAEAV0@AEBV0@@Z",
+        "rva": "0xeb1250",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "??1BSFixedString@@QEAA@XZ",
+        "rva": "0xeb1100",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      },
+      {
+        "name": "?defaultMaterialColor@@3UMaterialColor@@A",
+        "rva": "0x20cee50",
+        "size_from": null,
+        "community_name": null,
+        "note": "bound by tools/verifier/bind.py (unknown) from the task pack; the decorated name is the reconstruction's"
+      }
+    ],
+    "note": "Unit reference namespace from the task and candidate object"
+  }
+}

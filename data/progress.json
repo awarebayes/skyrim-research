@@ -3969,12 +3969,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 15790736,
       "size": 19,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "NiAlphaAccumulator::IsEqual",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: powerof3/CommonLibSSE commit 654e55f7979c1733033d5dbef176e43827bac944 (GPL-3.0), virtual slot comment of the class header, joined through the image RTTI vftable slot 28. RVA 0xf0f290; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/fifth-batch-selection.md"
+      "evidence": "findings/fifth-batch-selection.md",
+      "report": "reports/sse-steam-1-7-104/0xf0f290.json"
     },
     {
       "id": "sse-steam-1-7-104-0xf0f4a0",
@@ -128895,12 +128897,14 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 2498496,
       "size": 67,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSHazard::InitializeData",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 4. RVA 0x261fc0; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x261fc0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x262730",
@@ -129303,24 +129307,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 3285584,
       "size": 105,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSMaterialType::ClearData",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 4. RVA 0x322250; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x322250.json"
     },
     {
       "id": "sse-steam-1-7-104-0x264820",
       "build_id": "sse-steam-1-7-104",
       "rva": 2508832,
       "size": 108,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSOutfit::ClearData",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 5. RVA 0x264820; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x264820.json"
     },
     {
       "id": "sse-steam-1-7-104-0x264d80",
@@ -129339,24 +129347,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 3708928,
       "size": 109,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSAssociationType::~BGSAssociationType",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 0. RVA 0x389800; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x389800.json"
     },
     {
       "id": "sse-steam-1-7-104-0x389430",
       "build_id": "sse-steam-1-7-104",
       "rva": 3707952,
       "size": 131,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSAssociationType::InitializeData",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 4. RVA 0x389430; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x389430.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1d9350",
@@ -129387,24 +129399,28 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 3289952,
       "size": 115,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "BGSMenuIcon::~BGSMenuIcon",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 0. RVA 0x323360; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x323360.json"
     },
     {
       "id": "sse-steam-1-7-104-0x388d90",
       "build_id": "sse-steam-1-7-104",
       "rva": 3706256,
       "size": 116,
-      "status": "mapped",
+      "status": "matched",
+      "named": false,
       "name": "TESWordOfPower::~TESWordOfPower",
       "name_origin": "COMMUNITY",
       "name_source": "Community name, not verified: CharmedBaryon/CommonLibSSE-NG commit b93280e832f263dbef44e44cbe2936622a02f91a (MIT), virtual slot comment of the class header, joined through the image RTTI vftable slot 0. RVA 0x388d90; size from the comparator v2 extent.",
       "owner": "awarebayes",
-      "evidence": "findings/p92-unit-supply-selection.md"
+      "evidence": "findings/p92-unit-supply-selection.md",
+      "report": "reports/sse-steam-1-7-104/0x388d90.json"
     },
     {
       "id": "sse-steam-1-7-104-0x435cb0",
@@ -257587,240 +257603,280 @@
       "build_id": "sse-steam-1-7-104",
       "rva": 19236208,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt1258570",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1258570.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12585b0",
       "build_id": "sse-steam-1-7-104",
       "rva": 19236272,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt12585b0",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12585b0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x12585f0",
       "build_id": "sse-steam-1-7-104",
       "rva": 19236336,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt12585f0",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x12585f0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x1258630",
       "build_id": "sse-steam-1-7-104",
       "rva": 19236400,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt1258630",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x1258630.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127ef40",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394368,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127ef40",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127ef40.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127ef80",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394432,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127ef80",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127ef80.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127efc0",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394496,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127efc0",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127efc0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f000",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394560,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f000",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f000.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f040",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394624,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f040",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f040.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f080",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394688,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f080",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f080.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f0c0",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394752,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f0c0",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f0c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f100",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394816,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f100",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f100.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f140",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394880,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f140",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f140.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f180",
       "build_id": "sse-steam-1-7-104",
       "rva": 19394944,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f180",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f180.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f1c0",
       "build_id": "sse-steam-1-7-104",
       "rva": 19395008,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f1c0",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f1c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f200",
       "build_id": "sse-steam-1-7-104",
       "rva": 19395072,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f200",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f200.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f240",
       "build_id": "sse-steam-1-7-104",
       "rva": 19395136,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f240",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f240.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f280",
       "build_id": "sse-steam-1-7-104",
       "rva": 19395200,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f280",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f280.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f2c0",
       "build_id": "sse-steam-1-7-104",
       "rva": 19395264,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f2c0",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f2c0.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f300",
       "build_id": "sse-steam-1-7-104",
       "rva": 19395328,
       "size": 53,
-      "status": "mapped",
+      "status": "matched",
+      "named": true,
       "name": "ConditionalCallAt127f300",
       "name_origin": "GUESS",
       "name_source": "GUESS(low)",
       "owner": "awarebayes",
-      "evidence": "findings/ghidra-import.md"
+      "evidence": "findings/ghidra-import.md",
+      "report": "reports/sse-steam-1-7-104/0x127f300.json"
     },
     {
       "id": "sse-steam-1-7-104-0x127f340",
@@ -264796,7 +264852,7 @@
   ],
   "phase": "First matches",
   "schema_version": 1,
-  "updated_at": "2026-11-14T00:06:47Z",
+  "updated_at": "2026-11-14T11:02:49Z",
   "scope": {
     "functions": null,
     "bytes": null,
